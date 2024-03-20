@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,10 +52,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region TriangleBeforeDoor
-        public Int16 TriangleBeforeDoor { get; set; } = default;
+        public Int16 TriangleBeforeDoor { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Door
         private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
@@ -695,13 +696,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 322,
-            version: 0);
-
-        public const string GUID = "2723707b-8770-415b-8a3b-772ae9a6aa8d";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -733,8 +727,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(DoorTriangleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -772,8 +764,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDoorTriangle item)
         {
             ClearPartial();
-            item.TriangleBeforeDoor = default;
-            item.Unknown = default;
+            item.TriangleBeforeDoor = default(Int16);
+            item.Unknown = default(Int32);
             item.Door.Clear();
         }
         

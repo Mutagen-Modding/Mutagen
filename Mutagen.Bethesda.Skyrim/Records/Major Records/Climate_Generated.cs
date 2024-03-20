@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -101,25 +102,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region SunriseBegin
-        public TimeOnly SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunriseEnd
-        public TimeOnly SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetBegin
-        public TimeOnly SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetEnd
-        public TimeOnly SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default(TimeOnly);
         #endregion
         #region Volatility
-        public Byte Volatility { get; set; } = default;
+        public Byte Volatility { get; set; } = default(Byte);
         #endregion
         #region Moons
-        public Climate.Moon Moons { get; set; } = default;
+        public Climate.Moon Moons { get; set; } = default(Climate.Moon);
         #endregion
         #region PhaseLength
-        public Byte PhaseLength { get; set; } = default;
+        public Byte PhaseLength { get; set; } = default(Byte);
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 64);
         #endregion
 
@@ -785,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -794,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1166,13 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 256,
-            version: 0);
-
-        public const string GUID = "5e6ece21-de78-4014-a7f0-4ea69c8655c9";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
@@ -1213,13 +1207,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.GNAM,
                 RecordTypes.MODL,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1261,13 +1255,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
-            item.Moons = default;
-            item.PhaseLength = default;
+            item.SunriseBegin = default(TimeOnly);
+            item.SunriseEnd = default(TimeOnly);
+            item.SunsetBegin = default(TimeOnly);
+            item.SunsetEnd = default(TimeOnly);
+            item.Volatility = default(Byte);
+            item.Moons = default(Climate.Moon);
+            item.PhaseLength = default(Byte);
             base.Clear(item);
         }
         
@@ -2264,17 +2258,13 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.SunTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Climate_FieldIndex.SunTexture;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunGlareTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.SunGlareTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Climate_FieldIndex.SunGlareTexture;
                 }
                 case RecordTypeInts.MODL:
@@ -2390,11 +2380,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CellBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="CellSubBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Cell" recordType="CELL" baseClass="StarfieldMajorRecord" objType="Record" partialForm="true" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="4" nullable="False" recordType="DATA" />
+      <RefDirect name="Grid" refName="CellGrid" />
+      <RefDirect name="Lighting" refName="CellLighting" />
+      <ByteArray name="MHDT" recordType="MHDT" unknown="true" />
+      <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
+      <Float name="WaterHeight" recordType="XCLW" />
+      <Float name="XILS" recordType="XILS" unknown="true" />
+      <RefList name="XCLAs" refName="CellXCLAItem" />
+      <ByteArray name="XWCN" recordType="XWCN" />
+      <FormLink name="CellSkyRegion" refName="Region" recordType="XCCM" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Location" refName="Location" recordType="XLCN" />
+      <FormLink name="Water" refName="Water" recordType="XCWT" />
+      <String name="WaterType" recordType="XCWM" />
+      <RefList name="ShipBlueprintSnapLinks" refName="CellShipBlueprintSnapLink" recordType="XBPS" />
+      <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
+      <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
+      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <FormLink name="Music" refName="MusicType" recordType="XCMO" />
+      <String name="GlobalDirtLayerMaterial" recordType="XCGD" />
+      <Bool name="XCIB" recordType="XCIB" byteLength="1" />
+      <FormLink name="TimeOfDay" refName="TimeOfDayRecord" recordType="TODD" />
+      <FormLink name="EncounterLocation" refName="Location" recordType="XEZN" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <String name="EnvironmentMap" recordType="XEMP" />
+      <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" overflowRecordType="XXXX" binary="Custom" />
+      <UInt32 name="NumTraversalFluffBytes" binary="NoGeneration" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="UnknownGroupData" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+    </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
+    <LinkInterface>ICellOrObject</LinkInterface>
+    <LinkInterface>ISpaceCellSpawn</LinkInterface>
+  </Object>
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
+    <Fields>
+      <P2Int32 name="Point" />
+      <Enum name="Flags" enumName="CellGrid.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="CellLighting" objType="Subrecord" recordType="XCLL">
+    <Fields>
+      <Color name="AmbientColor" binaryType="Alpha" />
+      <Color name="DirectionalColor" binaryType="Alpha" />
+      <Color name="FogNearColor" binaryType="Alpha" />
+      <Float name="FogNear" />
+      <Float name="FogFar" />
+      <Int32 name="DirectionalRotationXY" />
+      <Int32 name="DirectionalRotationZ" />
+      <Float name="DirectionalFade" />
+      <Float name="FogClipDistance" />
+      <Float name="FogPower" />
+      <Color name="FogFarColor" binaryType="Alpha" />
+      <Float name="FogMax" />
+      <Float name="LightFadeBegin" />
+      <Float name="LightFadeEnd" />
+      <Int32 name="Unknown1" unknown="true" />
+      <Float name="NearHeightMid" />
+      <Float name="NearHeightRange" />
+      <Color name="ForColorHighNear" binaryType="Alpha" />
+      <Color name="ForColorHighFar" binaryType="Alpha" />
+      <Float name="HighDensityScale" />
+      <Float name="FogNearScale" />
+      <Float name="FogFarScale" />
+      <Float name="FogHighNearScale" />
+      <Float name="FogHighFarScale" />
+      <Float name="FarHeightMid" />
+      <Float name="FarHeightRange" />
+      <Int32 name="Unknown2" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU">
+    <Fields>
+      <P3Float name="Offset" />
+      <Int32 name="Unknown" />
+      <P3Float name="Angle" />
+      <ByteArray name="UnknownBytes" />
+    </Fields>
+  </Object>
+  <Object name="CellShipBlueprintSnapLink" objType="Subrecord">
+    <Fields>
+      <FormLink name="ParentReference" refName="PlacedObject" />
+      <FormLink name="LinkedReference" refName="PlacedObject" />
+      <Int32 name="ParentNode" />
+      <Int32 name="LinkedNode" />
+    </Fields>
+  </Object>
+  <Object name="CellXCLAItem" objType="Subrecord">
+    <Fields>
+      <Int32 name="XCLA" recordType="XCLA" unknown="true" />
+      <String name="XCLD" recordType="XCLD" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

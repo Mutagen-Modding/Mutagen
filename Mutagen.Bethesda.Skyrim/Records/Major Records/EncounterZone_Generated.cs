@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -127,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DATADataTypeState
-        public EncounterZone.DATADataType DATADataTypeState { get; set; } = default;
+        public EncounterZone.DATADataType DATADataTypeState { get; set; } = default(EncounterZone.DATADataType);
         #endregion
 
         #region To String
@@ -602,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -611,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -960,13 +961,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 289,
-            version: 0);
-
-        public const string GUID = "d3b68196-d8aa-4fe4-b9c0-10a7b96c98ea";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 14;
@@ -1003,13 +997,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.ECZN,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EncounterZoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1049,11 +1043,11 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Owner.Clear();
             item.Location.Clear();
-            item.Rank = default;
-            item.MinLevel = default;
-            item.Flags = default;
-            item.MaxLevel = default;
-            item.DATADataTypeState = default;
+            item.Rank = default(SByte);
+            item.MinLevel = default(SByte);
+            item.Flags = default(EncounterZone.Flag);
+            item.MaxLevel = default(SByte);
+            item.DATADataTypeState = default(EncounterZone.DATADataType);
             base.Clear(item);
         }
         
@@ -1848,12 +1842,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default;
+        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default(SByte);
         #endregion
         #region MinLevel
         private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default;
+        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default(SByte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
@@ -1863,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxLevel
         private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default;
+        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default(SByte);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

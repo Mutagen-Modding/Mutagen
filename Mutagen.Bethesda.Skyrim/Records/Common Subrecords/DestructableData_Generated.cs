@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Health
-        public Int32 Health { get; set; } = default;
+        public Int32 Health { get; set; } = default(Int32);
         #endregion
         #region DESTCount
-        public Byte DESTCount { get; set; } = default;
+        public Byte DESTCount { get; set; } = default(Byte);
         #endregion
         #region VATSTargetable
-        public Boolean VATSTargetable { get; set; } = default;
+        public Boolean VATSTargetable { get; set; } = default(Boolean);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 149,
-            version: 0);
-
-        public const string GUID = "8708bc55-aa73-4a26-acfe-643ad2546c98";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(DestructableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDestructableData item)
         {
             ClearPartial();
-            item.Health = default;
-            item.DESTCount = default;
-            item.VATSTargetable = default;
-            item.Unknown = default;
+            item.Health = default(Int32);
+            item.DESTCount = default(Byte);
+            item.VATSTargetable = default(Boolean);
+            item.Unknown = default(Int16);
         }
         
         #region Mutagen

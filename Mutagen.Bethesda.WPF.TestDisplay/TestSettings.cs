@@ -17,6 +17,9 @@ public class TestSettings
         
     [Tooltip("This is my Armor")]
     public IFormLinkGetter<IArmorGetter> MyArmor = FormLink<IArmorGetter>.Null;
+        
+    [Tooltip("This is my Item")]
+    public IFormLinkGetter<IItemGetter> MyItem = FormLink<IItemGetter>.Null;
 
     [Tooltip("This is an enum")]
     public MyEnum MyEnum = MyEnum.EnumValue2;
@@ -26,6 +29,8 @@ public class TestSettings
     public List<int> PrimitiveList = new();
 
     public List<SubClass> ObjectList = new();
+
+    public List<IFormLinkGetter<IItemGetter>> MyItems = new();
 
     public Dictionary<int, SubClass> Dictionary = new();
 

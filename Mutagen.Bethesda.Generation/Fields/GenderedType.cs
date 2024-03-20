@@ -34,8 +34,11 @@ public class GenderedType : WrapperType
 
     public RecordType? MaleMarker;
     public RecordType? FemaleMarker;
+    public RecordType? GenderEnumRecord;
     public bool MarkerPerGender;
-
+    public bool ShortCircuit;
+    public bool ParseNonConvertedItems;
+    
     public override void GenerateClear(StructuredStringBuilder sb, Accessor accessorPrefix)
     {
         if (this.Nullable)
@@ -257,6 +260,11 @@ public class GenderedType : WrapperType
             FemaleMarker = new RecordType(femaleMarker);
         }
 
+        if (node.TryGetAttribute<string>("genderEnumRecord", out var genderEnumRecord))
+        {
+            GenderEnumRecord = new RecordType(genderEnumRecord);
+        }
+
         if (MaleMarker.HasValue != FemaleMarker.HasValue)
         {
             throw new ArgumentException("Both submarkers must be set at once.");
@@ -268,6 +276,9 @@ public class GenderedType : WrapperType
         {
             this.SubTypeGeneration.NullableProperty.OnNext((true, true));
         }
+
+        ShortCircuit = node.GetAttribute<bool>("shortCircuit", true);
+        ParseNonConvertedItems = node.GetAttribute<bool>("parseNonConvertedItems", false);
 
         FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
         MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));

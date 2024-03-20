@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -445,13 +446,13 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 NAM5 { get; set; } = NAM5Default;
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2806,7 +2807,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2815,7 +2816,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -3355,13 +3356,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 75,
-            version: 0);
-
-        public const string GUID = "63c41e9b-1707-48b0-906a-573f3c678370";
-
         public const ushort AdditionalFieldCount = 45;
 
         public const ushort FieldCount = 52;
@@ -3458,13 +3452,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.TINC,
                 RecordTypes.TINV,
                 RecordTypes.TIAS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -3534,9 +3528,9 @@ namespace Mutagen.Bethesda.Skyrim
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
             item.NAM5 = Npc.NAM5Default;
-            item.Height = default;
-            item.Weight = default;
-            item.SoundLevel = default;
+            item.Height = default(Single);
+            item.Weight = default(Single);
+            item.SoundLevel = default(SoundLevel);
             item.Sound = null;
             item.DefaultOutfit.Clear();
             item.SleepingOutfit.Clear();
@@ -4894,7 +4888,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -5083,7 +5077,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5104,7 +5098,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -5167,7 +5161,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6075,7 +6069,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6213,7 +6208,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -6229,7 +6224,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryDataMarkerCustom(
             MutagenFrame frame,
-            INpcInternal item);
+            INpcInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -6379,7 +6375,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region DataMarker
         public partial ParseResult DataMarkerCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
@@ -6400,15 +6397,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NAM5
         private int? _NAM5Location;
-        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default;
+        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
@@ -6682,7 +6679,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKID,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
@@ -6719,7 +6716,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DataMarkerCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6735,7 +6733,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;
@@ -6848,7 +6846,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

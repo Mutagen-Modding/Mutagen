@@ -14,12 +14,12 @@ public class OrderListingsTests
         ModKey baseEsm2 = new ModKey("Base2", ModType.Master);
         ModKey ccEsm = new ModKey("CC", ModType.Master);
         ModKey ccEsm2 = new ModKey("CC2", ModType.Master);
-        ModKey ccEsl = new ModKey("CC", ModType.LightMaster);
-        ModKey ccEsl2 = new ModKey("CC2", ModType.LightMaster);
+        ModKey ccEsl = new ModKey("CC", ModType.Light);
+        ModKey ccEsl2 = new ModKey("CC2", ModType.Light);
         ModKey esm = new ModKey("Normal", ModType.Master);
         ModKey esm2 = new ModKey("Normal2", ModType.Master);
-        ModKey esl = new ModKey("Normal", ModType.LightMaster);
-        ModKey esl2 = new ModKey("Normal2", ModType.LightMaster);
+        ModKey esl = new ModKey("Normal", ModType.Light);
+        ModKey esl2 = new ModKey("Normal2", ModType.Light);
         ModKey esp = new ModKey("Normal", ModType.Plugin);
         ModKey esp2 = new ModKey("Normal2", ModType.Plugin);
 

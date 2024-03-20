@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,10 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Type
-        public QuestAlias.TypeEnum Type { get; set; } = default;
+        public QuestAlias.TypeEnum Type { get; set; } = default(QuestAlias.TypeEnum);
         #endregion
         #region Name
         /// <summary>
@@ -2122,13 +2123,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 367,
-            version: 0);
-
-        public const string GUID = "68186d42-9951-43a6-9668-f21dc08c463c";
-
         public const ushort AdditionalFieldCount = 25;
 
         public const ushort FieldCount = 25;
@@ -2160,6 +2154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.ALED);
             var triggers = RecordCollection.Factory(
                 RecordTypes.ALST,
                 RecordTypes.ALLS);
@@ -2200,13 +2195,14 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALFC,
                 RecordTypes.ALPC,
                 RecordTypes.VTCK);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestAliasBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2244,8 +2240,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IQuestAlias item)
         {
             ClearPartial();
-            item.ID = default;
-            item.Type = default;
+            item.ID = default(UInt32);
+            item.Type = default(QuestAlias.TypeEnum);
             item.Name = default;
             item.Flags = default;
             item.AliasIDToForceIntoWhenFilled = default;
@@ -3113,7 +3109,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3190,7 +3186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3209,7 +3205,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Factions.SetTo(
                         rhs.Factions
-                        .Select(r => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3228,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.PackageData.SetTo(
                         rhs.PackageData
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3501,7 +3497,6 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public static partial void WriteBinaryIDParseCustom(
@@ -3529,6 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public void Write(
@@ -4129,7 +4125,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALSP,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Spells;
@@ -4143,7 +4139,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALFC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Factions;
@@ -4157,7 +4153,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALPC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.PackageData;

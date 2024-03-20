@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Emotion
-        public EmotionType Emotion { get; set; } = default;
+        public EmotionType Emotion { get; set; } = default(EmotionType);
         #endregion
         #region EmotionValue
-        public Int32 EmotionValue { get; set; } = default;
+        public Int32 EmotionValue { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region ResponseNumber
-        public Byte ResponseNumber { get; set; } = default;
+        public Byte ResponseNumber { get; set; } = default(Byte);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -760,13 +761,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 187,
-            version: 0);
-
-        public const string GUID = "000d3b32-e5ea-42c0-84d5-1f91f223bf0c";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -805,8 +799,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -844,10 +836,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IDialogResponseData item)
         {
             ClearPartial();
-            item.Emotion = default;
-            item.EmotionValue = default;
-            item.Unknown = default;
-            item.ResponseNumber = default;
+            item.Emotion = default(EmotionType);
+            item.EmotionValue = default(Int32);
+            item.Unknown = default(Int32);
+            item.ResponseNumber = default(Byte);
             item.Unknown2 = new byte[3];
         }
         

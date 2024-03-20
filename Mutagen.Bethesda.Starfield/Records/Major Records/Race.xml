@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <List name="ActorEffect">
+        <FormLink recordType="SPLO">
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
+      </List>
+      <FormLink name="Skin" refName="Armor" recordType="WNAM" />
+      <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
+      <Data recordType="DAT2" >
+        <Fields>
+          <Gendered name="Height" >
+            <Fields>
+              <Float />
+            </Fields>
+          </Gendered>
+          <Gendered name="DefaultWeight" >
+            <Fields>
+              <RefDirect refName="Weight" />
+            </Fields>
+          </Gendered>
+          <Enum name="Flags" enumName="Race.Flag" byteLength="8" />
+          <Float name="AccelerationRate" />
+          <Float name="DecelerationRate" />
+          <Enum name="Size" enumName="Size" byteLength="4" />
+          <ByteArray name="DAT2Unknown1" byteLength="12" nullable="false" unknown="true" />
+          <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BeardBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <ByteArray name="DAT2Unknown2" byteLength="64" nullable="false" unknown="true" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Debris" refName="Debris" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <Float name="OrientationLimitsPitch" />
+          <Float name="OrientationLimitsRoll" />
+          <ByteArray name="DAT2Unknown3" byteLength="61" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
+      <CustomLogic name="MNAMLogic" recordType="MNAM" />
+      <CustomLogic name="FNAMLogic" recordType="FNAM" />
+      <Gendered name="SkeletalModel" binary="CustomWrite">
+        <Fields>
+          <RefDirect refName="SkeletalModel" />
+        </Fields>
+      </Gendered>
+      <List name="MovementTypeNames">
+        <String recordType="MTNM" binaryType="Plain" />
+      </List>
+      <Gendered name="Voices" recordType="VTCK" nullable="False">
+        <Fields>
+          <FormLink refName="VoiceType" />
+        </Fields>
+      </Gendered>
+      <Float name="FacegenMainClamp" recordType="PNAM" nullable="False" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" nullable="False" />
+      <RefList name="Attacks" refName="Attack" />
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
+        <Fields>
+          <RefDirect refName="BodyData" />
+        </Fields>
+      </Gendered>
+      <FormLink name="AimAssistPose" recordType="ENAM" refName="AimAssistPose" />
+      <CustomLogic name="NAM3" recordType="NAM3" />
+      <FormLink name="ImpactMaterialType" recordType="NAM4" refName="MaterialType" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />
+      <Dict name="BipedObjects" binary="Custom" recordType="NAME">
+        <Key>
+          <Enum enumName="BipedObject" />
+        </Key>
+        <Value>
+          <RefDirect refName="BipedObjectData" />
+        </Value>
+      </Dict>
+      <RefList name="MovementDataOverrides" refName="MovementDataOverride" />
+      <Enum name="EquipmentFlags" enumName="EquipTypeFlag" byteLength="4" recordType="VNAM" />
+      <RefList name="EquipmentSlots" refName="EquipmentSlot" />
+      <FormLink name="UnarmedWeapon" recordType="UNWP" refName="Weapon" />
+      <FormLink name="BaseMovementDefault" refName="MovementType" recordType="WKMV" />
+      <FormLink name="BaseMovementSwimDefault" refName="MovementType" recordType="SWMV" />
+      <FormLink name="BaseMovementFlyDefault" refName="MovementType" recordType="FLMV" />
+      <Gendered name="ChargenAndSkintones" maleMarker="MNAM" femaleMarker="FNAM">
+        <FemaleTypeOverrides>
+          <Mapping From="RPRM" To="RPRF" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="ChargenAndSkintones" />
+        </Fields>
+      </Gendered>
+      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
+      <FormLink name="SubgraphTemplateRace" refName="Race" recordType="SRAC" />
+      <RefList name="Subgraphs" refName="Subgraph" />
+      <Float name="IdleChatterTimeMin" recordType="PTOP" />
+      <Float name="IdleChatterTimeMax" recordType="NTOP" />
+      <FormLink name="DialogueQuest" refName="Quest" recordType="QSTI" />
+      <Gendered name="HeadPartsAndBoneModifiers" maleMarker="MNAM" femaleMarker="FNAM" >
+        <Fields>
+          <RefDirect refName="HeadPartsAndBoneModifiers" />
+        </Fields>
+      </Gendered>
+      <RefList name="MannequinSkinSwaps" refName="MannequinSkinSwap" />
+      <String name="PluralName" translated="Normal" recordType="SNAM" />
+    </Fields>
+    <AdditionalContainedRecordType>RBPC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FTSM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AHCM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DFTM</AdditionalContainedRecordType>
+    <LinkInterface>IRelatable</LinkInterface>
+  </Object>
+  <Object name="BodyData" objType="Subrecord">
+    <Fields>
+      <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+  </Object>
+  <Object name="MovementDataOverride" objType="Subrecord">
+    <Fields>
+      <FormLink name="MovementType" recordType="MTYP" refName="MovementType" />
+      <ByteArray name="SPED" recordType="SPED" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="MovementRotationData" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused1" />
+      <Float name="Walk" isRotation="true" />
+      <Float name="Run" isRotation="true" />
+      <Int32 name="Unused2" />
+    </Fields>
+  </Object>
+  <Object name="EquipmentSlot" objType="Subrecord">
+    <Fields>
+      <FormLink name="Slot" recordType="QNAM" refName="EquipType" />
+      <String name="Node" recordType="ZNAM" />
+    </Fields>
+  </Object>
+  <Object name="SkeletalModel" objType="Subrecord" >
+    <Fields>
+      <RefDirect name="Model" refName="Model" >
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="ANAM" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <AssetLink name="Rig" recordType="NAM5" assetType="StarfieldRig" />
+      <AssetLink name="AnimationText" recordType="NAM6" assetType="StarfieldAnimationText" />
+      <String name="DNAM" recordType="DNAM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="BipedObjectData" objType="Subrecord">
+    <Fields>
+      <String name="Name" binary="NoGeneration" />
+      <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
+    <Fields>
+      <List name="ActorKeywords">
+        <FormLink recordType="SAKD" refName="Keyword" />
+      </List>
+      <String name="BehaviorGraph" recordType="SGNM" />
+      <List name="AnimationPaths">
+        <String recordType="SAPT" />
+      </List>
+      <List name="TargetKeywords">
+        <FormLink recordType="STKD" refName="Keyword" />
+      </List>
+      <Enum name="Role" enumName="Subgraph.SubgraphRole" binary="Custom" recordType="SRAF" nullable="False" />
+      <Enum name="Perspective" enumName="Perspective" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="HeadPartsAndBoneModifiers" objType="Subrecord">
+    <Fields>
+      <RefList name="HeadParts" refName="RaceHeadPart" />
+      <List name="BoneModifiers" >
+        <FormLink recordType="BNAM" refName="BoneModifier" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="RaceHeadPart" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="INDX" nullable="False" />
+      <FormLink name="Part" recordType="HEAD" refName="HeadPart" />
+    </Fields>
+  </Object>
+  <Object name="MannequinSkinSwap" objType="Subrecord">
+    <Fields>
+      <ByteArray name="MSSS" recordType="MSSS" unknown="true" />
+      <RefList name="Items" refName="MannequinSkinSwapItem" />
+    </Fields>
+  </Object>
+  <Object name="MannequinSkinSwapItem" objType="Subrecord">
+    <Fields>
+      <ByteArray name="MSSI" recordType="MSSI" unknown="true" />
+      <FormLink name="MaterialSwap" recordType="MSSA" refName="LayeredMaterialSwap" />
+    </Fields>
+  </Object>
+  <Object name="ChargenAndSkintones" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Chargen" refName="Chargen" />
+      <String name="BodySkinTones" recordType="BSTT" />
+      <String name="HandSkinTones" recordType="HSTT" />
+      <String name="FCTP" recordType="FCTP" />
+      <String name="FaceSkinTones" recordType="FSTT" />
+    </Fields>
+  </Object>
+  <Object name="Chargen" objType="Subrecord" markerType="NAM0">
+    <Fields>
+      <ByteArray name="NNAM" recordType="NNAM" />
+      <List name="RacePresets" >
+        <FormLink refName="Npc" recordType="RPRM" />
+      </List>
+      <RefList name="MorphGroups" refName="MorphGroup" />
+      <RefList name="FaceMorphs" refName="FaceMorph" />
+      <RefList name="FaceDials" refName="FaceDial" />
+    </Fields>
+  </Object>
+  <Object name="MorphGroup" objType="Subrecord">
+    <Fields>
+      <String name="Name" recordType="MPGN" />
+      <List name="Morphs" >
+        <String recordType="MPGM" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="FaceMorph" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FMRI" />
+      <String name="FMRU" recordType="FMRU" unknown="true" />
+      <String name="Name" recordType="FMRN" translated="Normal" />
+      <String name="FMRS" recordType="FMRS" unknown="true" />
+      <RefList name="Items" refName="FaceMorphItem" />
+    </Fields>
+  </Object>
+  <Object name="FaceMorphItem" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FMSR" />
+      <String name="FMRU" recordType="FMRU" unknown="true" />
+      <String name="Name" recordType="FMRN" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="FaceDial" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FDSI" />
+      <String name="Label" recordType="FDSL" translated="Normal" />
+    </Fields>
+  </Object>
+</Loqui>

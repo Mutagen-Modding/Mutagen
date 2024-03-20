@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region SetFlags
-        public Package.Flag SetFlags { get; set; } = default;
+        public Package.Flag SetFlags { get; set; } = default(Package.Flag);
         #endregion
         #region ClearFlags
-        public Package.Flag ClearFlags { get; set; } = default;
+        public Package.Flag ClearFlags { get; set; } = default(Package.Flag);
         #endregion
         #region SetInterruptFlags
-        public Package.InterruptFlag SetInterruptFlags { get; set; } = default;
+        public Package.InterruptFlag SetInterruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region ClearInterruptFlags
-        public Package.InterruptFlag ClearInterruptFlags { get; set; } = default;
+        public Package.InterruptFlag ClearInterruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region PreferredSpeed
-        public Package.Speed PreferredSpeed { get; set; } = default;
+        public Package.Speed PreferredSpeed { get; set; } = default(Package.Speed);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -796,13 +797,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 385,
-            version: 0);
-
-        public const string GUID = "e3e10acf-4fd7-462e-a251-b778ee0d9c5e";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -841,8 +835,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PackageFlagsOverrideBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -880,11 +872,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageFlagsOverride item)
         {
             ClearPartial();
-            item.SetFlags = default;
-            item.ClearFlags = default;
-            item.SetInterruptFlags = default;
-            item.ClearInterruptFlags = default;
-            item.PreferredSpeed = default;
+            item.SetFlags = default(Package.Flag);
+            item.ClearFlags = default(Package.Flag);
+            item.SetInterruptFlags = default(Package.InterruptFlag);
+            item.ClearInterruptFlags = default(Package.InterruptFlag);
+            item.PreferredSpeed = default(Package.Speed);
             item.Unknown = new byte[3];
         }
         

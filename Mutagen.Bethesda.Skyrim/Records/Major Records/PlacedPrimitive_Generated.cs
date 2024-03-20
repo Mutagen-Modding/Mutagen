@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,16 +52,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Bounds
-        public P3Float Bounds { get; set; } = default;
+        public P3Float Bounds { get; set; } = default(P3Float);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region Type
-        public PlacedPrimitive.TypeEnum Type { get; set; } = default;
+        public PlacedPrimitive.TypeEnum Type { get; set; } = default(PlacedPrimitive.TypeEnum);
         #endregion
 
         #region To String
@@ -717,13 +718,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 300,
-            version: 0);
-
-        public const string GUID = "0714886f-0394-47a5-9d24-61178136903e";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -762,8 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PlacedPrimitiveBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -801,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPlacedPrimitive item)
         {
             ClearPartial();
-            item.Bounds = default;
-            item.Color = default;
-            item.Unknown = default;
-            item.Type = default;
+            item.Bounds = default(P3Float);
+            item.Color = default(Color);
+            item.Unknown = default(Single);
+            item.Type = default(PlacedPrimitive.TypeEnum);
         }
         
         #region Mutagen

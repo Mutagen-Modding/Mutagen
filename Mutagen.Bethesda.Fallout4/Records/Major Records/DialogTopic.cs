@@ -199,7 +199,7 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryInfoCountCustom(MutagenFrame frame, IDialogTopicInternal item)
+    public static partial ParseResult FillBinaryInfoCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         frame.ReadSubrecord(RecordTypes.TIFC);
         return (int)DialogTopic_FieldIndex.SubtypeName;
@@ -301,7 +301,7 @@ partial class DialogTopicBinaryOverlay
         }
     }
 
-    public partial ParseResult InfoCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult InfoCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecord(RecordTypes.TIFC);
         return (int)DialogTopic_FieldIndex.SubtypeName;

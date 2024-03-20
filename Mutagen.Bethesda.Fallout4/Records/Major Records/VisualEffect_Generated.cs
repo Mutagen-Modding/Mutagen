@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -75,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
         #endregion
         #region Flags
-        public VisualEffect.Flag Flags { get; set; } = default;
+        public VisualEffect.Flag Flags { get; set; } = default(VisualEffect.Flag);
         #endregion
 
         #region To String
@@ -425,9 +426,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = VisualEffect_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VisualEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectSetterCommon.Instance.RemapLinks(this, mapping);
-        public VisualEffect(FormKey formKey)
+        public VisualEffect(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -436,7 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -450,12 +454,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public VisualEffect(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public VisualEffect(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -764,13 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 285,
-            version: 0);
-
-        public const string GUID = "a392cd2c-a76b-42c0-ac4f-02dab056aac8";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 10;
@@ -807,13 +808,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.RFCT,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(VisualEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.EffectArt.Clear();
             item.Shader.Clear();
-            item.Flags = default;
+            item.Flags = default(VisualEffect.Flag);
             base.Clear(item);
         }
         
@@ -1137,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new VisualEffect(formKey);
+            var newRec = new VisualEffect(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

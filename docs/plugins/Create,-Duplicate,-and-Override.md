@@ -1,12 +1,13 @@
+---
+order: 250
+---
 # Create, Duplicate, and Override
 ## Create New Records
 New records can be constructed in a few ways.  Note that a record's FormKey is required during construction, and immutable.  If you want to change the FormKey of a record, a new one should be made.  Any desired fields can be brought over via [CopyIn](Copy-Functionality.md#deepcopyin) mechanics.
 ### By Constructor
 Any standalone record can be made by using its constructor.
-```cs
-// Verbose example, showing all the components
-var modKey = ModKey.Factory("Oblivion", master: true);
-var formKey = new FormKey(modKey, 0x123456);
+``` { .cs hl_lines="2" }
+FormKey formKey = ...;
 var potion = new Potion(formKey);
 ```
 ### From a Mod's Group
@@ -14,18 +15,41 @@ If you have an `IMod` object that you want the record to originate from, you can
 ```cs
 var potion = mod.Potions.AddNew();
 ```
-The new record will have the next available `FormKey` from that mod based on the metadata in its header, and automatically be added to the Group it originated from.  Note this is not applicable to Binary Overlays, as they are getter only interfaces, so this concept is not applicable.  This is instead meant for new Mod objects that have been created for the purpose of modification and eventual export.
-
+!!! into "Claims Next Available FormKey"
+    The new record will have the next available `FormKey` from that mod based on the metadata in its header, and automatically be added to the Group it originated from.  
+    
 ### By Duplication
 Duplicating a record is the equivalent of creating a fresh record, and then copying in data to match a different record.  This can be done via [CopyIn](Copy-Functionality.md#deepcopyin) API, but there are some convenience methods for this as well
 
-```csharp
-INpcGetter sourceNpc = ...;
-// Add a new record with a new FormKey to our mod, with the given record's data
-var copy = myMod.Npcs.DuplicateInAsNewRecord(sourceNpc);
-// Modify the name of our new separate record
-copy.Name = "My Name";
-```
+=== "Claim Next FormID"
+    ``` { .cs hl_lines=4 }
+    INpcGetter sourceNpc = ...;
+    ISkyrimMod myMod = ...;
+
+    var copy = myMod.Npcs.DuplicateInAsNewRecord(sourceNpc);
+    ```
+=== "Specific FormKey"
+    ``` { .cs hl_lines=5 }
+    INpcGetter sourceNpc = ...;
+    ISkyrimMod myMod = ...;
+    FormKey formKey = ...;
+
+    var copy = myMod.Npcs.DuplicateInAsNewRecord(sourceNpc, formKey);
+    ```
+=== "Synced"
+    ``` { .cs hl_lines=5 }
+    INpcGetter sourceNpc = ...;
+    ISkyrimMod myMod = ...;
+
+    var copy = myMod.Npcs.DuplicateInAsNewRecord(sourceNpc, "SomeUniqueEditorID");
+    ```
+
+    !!! Bug "Extra Requirements"
+        If the supplied EditorID is not unique, it will throw an exception.
+
+        [:octicons-arrow-right-24: FormID Allocation](FormKey-Allocation-and-Persistence.md#keep-editorids-unique)
+
+
 
 ## Overriding Records
 It is very common to want to modify a record that is from another mod.  This just entails making a copy of the original record and adding it to your output mod.  The fact that the FormKey doesn't originate from your output mod implicitly means that it's an override.
@@ -40,7 +64,8 @@ var override = myMod.Npcs.GetOrAddAsOverride(sourceNpc);
 override.Name = "My New Name";
 ```
 
-NOTE:  With this pattern, it is preferable to call `GetOrAddAsOverride` as late as possible, after all filtering has been done and you know you want to override and modify the record.  This avoids adding records to your mod that have no changes.
+!!! tip "Call After Filters to Avoid ITPOs"
+    With this pattern, it is preferable to call `GetOrAddAsOverride` as late as possible, after all filtering has been done and you know you want to override and modify the record.  This avoids adding records to your mod that have no changes.
 
 ### Deep Copy Then Insert
 This pattern is an alternative to `GetOrAddAsOverride`.  It is sometimes preferable if it's hard to delay the `GetOrAddAsOverride` call, and you want more control over when a record actually gets added to the outgoing mod.
@@ -49,15 +74,20 @@ This pattern is an alternative to `GetOrAddAsOverride`.  It is sometimes prefera
 INpcGetter sourceNpc = ...;
 // Make a new mutable object that is a copy of the record to override
 var npcCopy = sourceNpc.DeepCopy();
+
 // Modify the name
 npcCopy.Name = "My New Name";
-// Add the record to the mod we want to contain it
-// Note that the copy has the same FormKey as the original, so it's considered an "override" when added to
-// a new mod that will be loaded after it
+
+// Apply some late filter logic
+if (!SomeFilter(npcCopy)) return;
+
+// Add the record as an override after the filter
 outputMod.Npcs.Add(npcCopy);
 ```
 
 This strategy works well if you might change your mind and not add the copied record to the outgoing mod.  It lets you get a mutable version of the record without adding it to your outgoing mod until you are certain you want to include it.
 
 ### Nested Records
-Some records like Placed Objects and Cells are often nested underneath other records.  This makes it harder to follow the above patterns.  For these you will want to make use of the [../linkcache/ModContexts.md] concepts.
+Some records like Placed Objects and Cells are often nested underneath other records.  This makes it harder to follow the above patterns.  For these you will want to make use of [ModContext](../linkcache/ModContexts.md) concepts.
+
+[:octicons-arrow-right-24: Mod Contexts](../linkcache/ModContexts.md)

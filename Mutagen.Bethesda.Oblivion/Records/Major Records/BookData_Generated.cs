@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Book.BookFlag Flags { get; set; } = default;
+        public Book.BookFlag Flags { get; set; } = default(Book.BookFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default;
+        public Skill Teaches { get; set; } = default(Skill);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 177,
-            version: 0);
-
-        public const string GUID = "aefa2aca-68c8-4782-941f-593ea5528f3e";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(BookDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IBookData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Teaches = default;
-            item.Value = default;
-            item.Weight = default;
+            item.Flags = default(Book.BookFlag);
+            item.Teaches = default(Skill);
+            item.Value = default(Single);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

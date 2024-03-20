@@ -28,51 +28,64 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg
 
 extra_css:
-  - Custom/Stylesheets/extra.css
+  - stylesheets/extra.css
 
 plugins:
   - search
 
 theme:
   name: material
+  font:
+    text: Inter
   palette:
-    primary: deep purple
-    accent: deep orange
+    primary: custom 
+    accent: custom
     scheme: slate
+  favicon: mutagen-icon.png
+  logo: mutagen-icon.png
   features:
+    - content.tooltips
+    - content.code.copy
     - navigation.instant
     - navigation.tracking
     - navigation.indexes 
+    - navigation.path
     
 nav:
   - Home: index.md
-  - Big Cheat Sheet: top/Big-Cheat-Sheet.md
+  - Big Cheat Sheet: Big-Cheat-Sheet.md
   - Plugin Record Suite:
     - plugins/index.md
-    - ModKey, FormKey, FormLink: plugins/ModKey,-FormKey,-FormLink.md
-    - Generated Classes: plugins/Generated-Classes.md
-    - Binary Importing: plugins/Binary-Importing.md
-    - Binary Overlay: plugins/Binary-Overlay.md
-    - Interfaces (Aspect/Link/Getters): plugins/Interfaces-(Aspect-Link-Getters).md
+    - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
+    - Importing: plugins/Binary-Importing.md
+    - Exporting: plugins/Binary-Exporting.md
+    - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
-    - Binary Exporting: plugins/Binary-Exporting.md
     - Equality Checks: plugins/Equality-Checks.md
     - Translation Masks: plugins/Translation-Masks.md
     - Flags and Enums: plugins/Flags-and-Enums.md
     - Asset Links: plugins/AssetLink.md
-    - Binary Format Complexity Abstraction: plugins/Binary-Format-Complexity-Abstraction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
-    - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Printing: plugins/Printing.md
-    - Typical Mod Construction and Importing: plugins/Typical-Mod-Construction-and-Importing.md
-    - FormKey Allocation and Persistence: FormKey-Allocation-and-Persistence.md
+    - Mod Construction and Importing: plugins/Mod-Construction-and-Importing.md
+    - Abstract Subclassing: plugins/Abstract-Subclassing.md
+    - Bethesda Format Abstraction: plugins/Bethesda-Format-Abstraction.md
+    - FormKey Allocation and Persistence: plugins/FormKey-Allocation-and-Persistence.md
+  - Specific Records:
+    - plugins/specific/index.md
+    - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+    # - Perks:
+    # - Magic Effects:
+    # - Conditions:
+    # - Npcs:
   - Environment:
     - environment/index.md
     - Environment Construction: environment/Environment-Construction.md
     - Game Locations: environment/Game-Locations.md
   - Link Cache:
     - linkcache/index.md
-    - Record Lookup: linkcache/Record-Lookup.md
+    - Record Resolves: linkcache/Record-Resolves.md
+    - Scoping Type: linkcache/Scoping-Type.md
     - Mod Contexts: linkcache/ModContexts.md
     - Previous Override Iteration: linkcache/Previous-Override-Iteration.md
   - Load Order:
@@ -80,24 +93,18 @@ nav:
     - Winning Override Iteration: loadorder/Winning-Overrides.md
     # - Has Mod Assertions
     # - Live File Monitoring
-  - Archives (BSAs): top/Archives.md
-  - Strings:
-    - Translated Strings: strings/Translated-Strings.md
-    # - Strings Overlays
-  - Examples:
-    - Print Some Content: examples/Print-Some-Content.md
-    # - Record Overrides and Duplication
-    - Low Level Examples: examples/Low-Level-Examples.md
+  - Archives (BSAs): Archives.md
+  - Strings: Strings.md
   - Getting Familiar with C#:
     - Namespaces: familiar/Namespaces.md
     # - Intellisense
     - Nullability to Indicate Record Presence: familiar/Nullability-to-Indicate-Record-Presence.md
     # - Inspect Class Definitions
     # - Debugging
-  - Best Practices and Optimizations:
-    - Getters Everywhere: best-practices/Getters-Everywhere.md
+  - Best Practices:
+    - Prefer Readonly Types: best-practices/Read-Only.md
     - Accessing Known Records: best-practices/Accessing-Known-Records.md
-    - FormLinks Always Target Getter Interfaces: best-practices/FormLinks-Always-Target-Getter-Interfaces.md
+    - FormLinks Target Getter Interfaces: best-practices/FormLinks-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
     - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
     # - FormLinks vs FormID/FormKey as Identifiers:
@@ -121,10 +128,9 @@ nav:
     - Reflection Powered Settings: wpf/Reflection-Powered-Settings.md
     - Adding Required Resources: wpf/Adding-Required-Resources.md
   # - Dependency Injection: Dependency Injection
-  - FormKey Allocation/Persistence: FormKey-Allocation-and-Persistence.md
-  - Json: top/Json.md
+  - Json: Json.md
   - Low Level Tools:
-    - index.md
+    - lowlevel/index.md
     - C# Span: lowlevel/C#-Span.md
     - Header Structs: lowlevel/Header-Structs.md
     - Game Constants: lowlevel/Game-Constants.md
@@ -138,6 +144,4 @@ nav:
       - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
       - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
       - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
-  - Correctness: top/Correctness.md
-
-index: Pages/index.md
+  - Correctness: Correctness.md

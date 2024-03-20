@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="RagdollData" objType="Subrecord" >
+    <Fields>
+      <UInt8 name="BoneId" />
+      <ByteArray name="Unused" byteLength="3" nullable="false" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+    </Fields>
+  </Object>
+</Loqui>

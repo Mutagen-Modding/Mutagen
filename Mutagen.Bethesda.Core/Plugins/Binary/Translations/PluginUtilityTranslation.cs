@@ -266,7 +266,7 @@ internal static class PluginUtilityTranslation
                 previousSubrecordParse: lastParsed,
                 recordParseCount: recordParseCount,
                 nextRecordType: subMeta.RecordType,
-                contentLength: subMeta.ContentLength,
+                contentLength: lastParsed.LengthOverride ?? subMeta.ContentLength,
                 translationParams: translationParams);
             if (!parsed.KeepParsing)
             {

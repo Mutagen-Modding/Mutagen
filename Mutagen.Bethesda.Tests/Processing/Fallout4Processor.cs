@@ -64,7 +64,6 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
         AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
         AddDynamicProcessing(RecordTypes.SMQN, ProcessStoryManagerQuestNodes);
-        AddDynamicProcessing(RecordTypes.EQUP, ProcessEquipTypes);
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
@@ -110,7 +109,7 @@ public class Fallout4Processor : Processor
                     writable.FormVersion = 0x83;
                     
                     // Insert partial formed record
-                    _instructions.SetAddition(
+                    Instructions.SetAddition(
                         rec.Location + group.Location.Min,
                         bytes);
                     added += bytes.Length;
@@ -161,13 +160,13 @@ public class Fallout4Processor : Processor
 
             byte[] sub = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(sub, max);
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 fileOffset + mlsi.Location + mlsi.HeaderLength,
                 sub);
         }
         else
         {
-            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
+            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
             ProcessLengths(
                 majorFrame,
                 -mlsi.TotalLength,
@@ -190,12 +189,6 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.FormID.ID == 0x05D672)
-        {
-            int wer = 23;
-            wer++;
-        }
-        
         const int blockSize = 0x104; 
         foreach (var mnam in majorFrame.FindEnumerateSubrecords(RecordTypes.MNAM)) 
         { 
@@ -206,7 +199,7 @@ public class Fallout4Processor : Processor
                 if (zeroIndex == -1) break; 
                 var index = fileOffset + mnam.Location + mnam.HeaderLength + zeroIndex + i; 
                 var byteSize = blockSize - zeroIndex; 
-                _instructions.SetSubstitution(index, new byte[byteSize]); 
+                Instructions.SetSubstitution(index, new byte[byteSize]); 
             } 
         } 
     }
@@ -272,7 +265,7 @@ public class Fallout4Processor : Processor
         {
             var bytes = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 fileOffset + frame.Location + frame.HeaderLength,
                 bytes);
         }
@@ -290,18 +283,15 @@ public class Fallout4Processor : Processor
     }
 
     public void GameSettingStringHandler(
-        IMutagenReadStream stream,
-        MajorRecordHeader major,
+        long loc,
+        MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        stream.Position -= major.HeaderLength;
-        var majorRec = stream.GetMajorRecord();
-        if (!majorRec.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
+        if (!major.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
-        stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+        if (!major.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
+        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, dataRec);
     }
 
     private void ProcessRegions(
@@ -335,7 +325,7 @@ public class Fallout4Processor : Processor
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
-            _instructions.SetMove(
+            Instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }
@@ -349,6 +339,20 @@ public class Fallout4Processor : Processor
         {
             int loc = 0;
             ProcessZeroFloats(xtel, fileOffset, ref loc, 6);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
         }
         if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
         {
@@ -377,7 +381,7 @@ public class Fallout4Processor : Processor
             && !majorFrame.TryFindSubrecord(RecordTypes.INAM, out _)
             && !majorFrame.TryFindSubrecord(RecordTypes.XLRM, out _))
         {
-            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + xrmr.Location, xrmr.TotalLength));
+            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + xrmr.Location, xrmr.TotalLength));
             ProcessLengths(
                 majorFrame,
                 -xrmr.TotalLength,
@@ -401,12 +405,12 @@ public class Fallout4Processor : Processor
                 var following = xwpgs[i];
                 var amount = following.AsUInt32();
                 firstAmount += amount;
-                _instructions.SetRemove(RangeInt64.FromLength(fileOffset + following.Location, following.TotalLength));
+                Instructions.SetRemove(RangeInt64.FromLength(fileOffset + following.Location, following.TotalLength));
                 removed += following.TotalLength;
             }
             byte[] b = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(), firstAmount);
-            _instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
+            Instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
         }
 
         FixVMADs(majorFrame, fileOffset);
@@ -449,6 +453,20 @@ public class Fallout4Processor : Processor
         {
             int offset = 8;
             ProcessBool(xown, fileOffset, offset, 4, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
         }
     }
 
@@ -517,7 +535,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] b = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
                     b);
             }
@@ -538,7 +556,7 @@ public class Fallout4Processor : Processor
             int i = BinaryPrimitives.ReadInt32LittleEndian(ctda.Content.Slice(12));
             if (i == 0x0100087C)
             {
-                _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
+                Instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
             }
         }
     }
@@ -657,16 +675,17 @@ public class Fallout4Processor : Processor
             ProcessFormIDOverflow(rec, fileOffset);
         }
     }
+    
     private void ProcessMaterialTypes(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-
         if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
         {
             ProcessColorFloat(cnam, fileOffset, alpha: false);
         }
     }
+    
     private void ProcessDefaultObjects(
         MajorRecordFrame majorFrame,
         long fileOffset)
@@ -690,21 +709,7 @@ public class Fallout4Processor : Processor
             int i = BinaryPrimitives.ReadInt32LittleEndian(ctda.Content.Slice(12));
             if (i == 0x0100080E)
             {
-                _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
-            }
-        }
-    }
-
-    private void ProcessEquipTypes(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.ANAM))
-        {
-            int i = BinaryPrimitives.ReadInt32LittleEndian(subRec.Content);
-            if (i == -1)
-            {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, new byte[4]);
+                Instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
             }
         }
     }
@@ -753,11 +758,11 @@ public class Fallout4Processor : Processor
         {
             if (subRec.Content[2] == 3)
             {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 2, 2);
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 2, 2);
             }
             if (subRec.Content[3] == 3)
             {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
             }
         }
     }
@@ -838,7 +843,7 @@ public class Fallout4Processor : Processor
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
                 var dataSlice = majorFrame.Content.Slice(anamPos.Value,
                     anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
-                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) ==
+                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncoding._1252) ==
                     "Bool"
                     && recs[1] != null)
                 {
@@ -888,7 +893,7 @@ public class Fallout4Processor : Processor
             var subLoc = startLoc;
             foreach (var item in dataValues.OrderBy(i => i.Index))
             {
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     item.Data.ToArray());
                 subLoc += item.Data.Length;
@@ -898,7 +903,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
                 bytes[6] = (byte)item.Index;
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     bytes.ToArray());
                 subLoc += bytes.Length;
@@ -954,7 +959,7 @@ public class Fallout4Processor : Processor
 
         foreach (var item in inputValues.OrderBy(i => i.Index))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 writeLoc,
                 item.Data.ToArray());
             writeLoc += item.Data.Length;
@@ -994,7 +999,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] sub = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + anamRec.Location + anamRec.HeaderLength,
                     sub);
             }
@@ -1194,42 +1199,32 @@ public class Fallout4Processor : Processor
     }
 
     public void PerkStringHandler(
-        IMutagenReadStream stream,
-        MajorRecordHeader major,
+        long loc,
+        MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        var majorCompletePos = stream.Position + major.ContentLength;
-        long? lastepft = null;
-        while (stream.Position < majorCompletePos)
+        SubrecordPinFrame? lastepft = null; 
+        foreach (var sub in major.EnumerateSubrecords())
         {
-            var sub = stream.GetSubrecordHeader();
             switch (sub.RecordTypeInt)
             {
                 case RecordTypeInts.FULL:
                 case RecordTypeInts.EPF2:
-                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+                    AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     break;
                 case RecordTypeInts.EPFT:
-                    lastepft = stream.Position;
+                    lastepft = sub; 
                     break;
                 case RecordTypeInts.EPFD:
-                    var pos = stream.Position;
-                    stream.Position = lastepft.Value;
-                    var epftFrame = stream.ReadSubrecord();
-                    if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                    if (lastepft!.Value.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
-                        stream.Position = pos;
-                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+                        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     }
-
-                    stream.Position = pos;
                     break;
                 default:
                     break;
             }
-
-            stream.Position += sub.TotalLength;
         }
     }
 

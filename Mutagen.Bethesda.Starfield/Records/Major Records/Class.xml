@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Class" recordType="CLAS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <Data>
+        <Fields>
+          <Int32 name="Unknown" />
+          <Break />
+          <Float name="BleedoutDefault" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

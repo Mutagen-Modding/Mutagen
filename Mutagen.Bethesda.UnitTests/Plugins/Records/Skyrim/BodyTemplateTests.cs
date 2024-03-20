@@ -20,7 +20,7 @@ public abstract class ABodyTemplateTests
     private void AssertBinaryEquality(IRaceGetter race, string path)
     {
         var fs = new MockFileSystem();
-        using (var writer = new MutagenWriter(fs.FileStream.Create($"{PathingUtil.DrivePrefix}output", FileMode.Create),
+        using (var writer = new MutagenWriter(fs.FileStream.New($"{PathingUtil.DrivePrefix}output", FileMode.Create),
                    new WritingBundle(GameConstants.SkyrimSE)
                    {
                        MasterReferences = new MasterReferenceCollection("Skyrim.esm"),

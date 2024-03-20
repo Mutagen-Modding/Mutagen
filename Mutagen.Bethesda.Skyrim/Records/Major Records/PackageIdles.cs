@@ -21,12 +21,12 @@ public partial class PackageIdles
 
 partial class PackageIdlesBinaryCreateTranslation
 {
-    public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
+    public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item, PreviousParse lastParsed)
     {
-        FillBinaryAnimationsCustom(frame, item);
+        FillBinaryAnimationsCustom(frame, item, lastParsed);
     }
 
-    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
+    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item, PreviousParse lastParsed)
     {
         byte? count = null;
         for (int i = 0; i < 3; i++)
@@ -117,13 +117,13 @@ partial class PackageIdlesBinaryOverlay
     private float _timerSetting;
     public partial Single GetTimerSettingCustom() => _timerSetting;
 
-    partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void TimerSettingCustomParse(OverlayStream stream, int finalPos, int offset)
     {
     }
 
     partial void AnimationsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

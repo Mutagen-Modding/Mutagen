@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -18,12 +19,12 @@ public class OblivionPassthroughTest : PassthroughTest
     {
     }
 
-    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
+    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
         return OblivionModBinaryOverlay.OblivionModFactory(new ModPath(ModKey, FilePath.Path));
     }
 
-    protected override async Task<IMod> ImportBinary(FilePath path)
+    protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
         return OblivionMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,61 +51,61 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NoseLongVsShort
-        public Single NoseLongVsShort { get; set; } = default;
+        public Single NoseLongVsShort { get; set; } = default(Single);
         #endregion
         #region NoseUpVsDown
-        public Single NoseUpVsDown { get; set; } = default;
+        public Single NoseUpVsDown { get; set; } = default(Single);
         #endregion
         #region JawUpVsDown
-        public Single JawUpVsDown { get; set; } = default;
+        public Single JawUpVsDown { get; set; } = default(Single);
         #endregion
         #region JawNarrowVsWide
-        public Single JawNarrowVsWide { get; set; } = default;
+        public Single JawNarrowVsWide { get; set; } = default(Single);
         #endregion
         #region JawForwardVsBack
-        public Single JawForwardVsBack { get; set; } = default;
+        public Single JawForwardVsBack { get; set; } = default(Single);
         #endregion
         #region CheeksUpVsDown
-        public Single CheeksUpVsDown { get; set; } = default;
+        public Single CheeksUpVsDown { get; set; } = default(Single);
         #endregion
         #region CheeksForwardVsBack
-        public Single CheeksForwardVsBack { get; set; } = default;
+        public Single CheeksForwardVsBack { get; set; } = default(Single);
         #endregion
         #region EyesUpVsDown
-        public Single EyesUpVsDown { get; set; } = default;
+        public Single EyesUpVsDown { get; set; } = default(Single);
         #endregion
         #region EyesInVsOut
-        public Single EyesInVsOut { get; set; } = default;
+        public Single EyesInVsOut { get; set; } = default(Single);
         #endregion
         #region BrowsUpVsDown
-        public Single BrowsUpVsDown { get; set; } = default;
+        public Single BrowsUpVsDown { get; set; } = default(Single);
         #endregion
         #region BrowsInVsOut
-        public Single BrowsInVsOut { get; set; } = default;
+        public Single BrowsInVsOut { get; set; } = default(Single);
         #endregion
         #region BrowsForwardVsBack
-        public Single BrowsForwardVsBack { get; set; } = default;
+        public Single BrowsForwardVsBack { get; set; } = default(Single);
         #endregion
         #region LipsUpVsDown
-        public Single LipsUpVsDown { get; set; } = default;
+        public Single LipsUpVsDown { get; set; } = default(Single);
         #endregion
         #region LipsInVsOut
-        public Single LipsInVsOut { get; set; } = default;
+        public Single LipsInVsOut { get; set; } = default(Single);
         #endregion
         #region ChinNarrowVsWide
-        public Single ChinNarrowVsWide { get; set; } = default;
+        public Single ChinNarrowVsWide { get; set; } = default(Single);
         #endregion
         #region ChinUpVsDown
-        public Single ChinUpVsDown { get; set; } = default;
+        public Single ChinUpVsDown { get; set; } = default(Single);
         #endregion
         #region ChinUnderbiteVsOverbite
-        public Single ChinUnderbiteVsOverbite { get; set; } = default;
+        public Single ChinUnderbiteVsOverbite { get; set; } = default(Single);
         #endregion
         #region EyesForwardVsBack
-        public Single EyesForwardVsBack { get; set; } = default;
+        public Single EyesForwardVsBack { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1256,13 +1257,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 216,
-            version: 0);
-
-        public const string GUID = "914508a1-6dea-4c9c-937e-de17e8bfc18c";
-
         public const ushort AdditionalFieldCount = 19;
 
         public const ushort FieldCount = 19;
@@ -1301,8 +1295,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NpcFaceMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1340,25 +1332,25 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INpcFaceMorph item)
         {
             ClearPartial();
-            item.NoseLongVsShort = default;
-            item.NoseUpVsDown = default;
-            item.JawUpVsDown = default;
-            item.JawNarrowVsWide = default;
-            item.JawForwardVsBack = default;
-            item.CheeksUpVsDown = default;
-            item.CheeksForwardVsBack = default;
-            item.EyesUpVsDown = default;
-            item.EyesInVsOut = default;
-            item.BrowsUpVsDown = default;
-            item.BrowsInVsOut = default;
-            item.BrowsForwardVsBack = default;
-            item.LipsUpVsDown = default;
-            item.LipsInVsOut = default;
-            item.ChinNarrowVsWide = default;
-            item.ChinUpVsDown = default;
-            item.ChinUnderbiteVsOverbite = default;
-            item.EyesForwardVsBack = default;
-            item.Unknown = default;
+            item.NoseLongVsShort = default(Single);
+            item.NoseUpVsDown = default(Single);
+            item.JawUpVsDown = default(Single);
+            item.JawNarrowVsWide = default(Single);
+            item.JawForwardVsBack = default(Single);
+            item.CheeksUpVsDown = default(Single);
+            item.CheeksForwardVsBack = default(Single);
+            item.EyesUpVsDown = default(Single);
+            item.EyesInVsOut = default(Single);
+            item.BrowsUpVsDown = default(Single);
+            item.BrowsInVsOut = default(Single);
+            item.BrowsForwardVsBack = default(Single);
+            item.LipsUpVsDown = default(Single);
+            item.LipsInVsOut = default(Single);
+            item.ChinNarrowVsWide = default(Single);
+            item.ChinUpVsDown = default(Single);
+            item.ChinUnderbiteVsOverbite = default(Single);
+            item.EyesForwardVsBack = default(Single);
+            item.Unknown = default(Single);
         }
         
         #region Mutagen

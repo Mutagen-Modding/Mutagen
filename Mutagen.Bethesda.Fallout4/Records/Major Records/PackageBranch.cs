@@ -1,6 +1,8 @@
+using System;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -15,7 +17,7 @@ partial class PackageBranch
 
 partial class PackageBranchBinaryCreateTranslation
 {
-    public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
+    public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item, PreviousParse lastParsed)
     {
         item.FlagsOverride = PackageFlagsOverride.CreateFromBinary(frame);
         if (frame.Reader.TryGetSubrecordHeader(RecordTypes.PFO2, out var rec))
@@ -41,7 +43,7 @@ partial class PackageBranchBinaryOverlay
     private IPackageFlagsOverrideGetter? _flagsOverride;
     public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
 
-    partial void FlagsOverrideCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsOverrideCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _flagsOverride = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
             new MutagenInterfaceReadStream(stream, _package.MetaData)));

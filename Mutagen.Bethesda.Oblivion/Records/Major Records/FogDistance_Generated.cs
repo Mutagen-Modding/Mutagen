@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DayNear
-        public Single DayNear { get; set; } = default;
+        public Single DayNear { get; set; } = default(Single);
         #endregion
         #region DayFar
-        public Single DayFar { get; set; } = default;
+        public Single DayFar { get; set; } = default(Single);
         #endregion
         #region NightNear
-        public Single NightNear { get; set; } = default;
+        public Single NightNear { get; set; } = default(Single);
         #endregion
         #region NightFar
-        public Single NightFar { get; set; } = default;
+        public Single NightFar { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 216,
-            version: 0);
-
-        public const string GUID = "a3f0f446-a754-4889-b7b0-4a5d2d368107";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(FogDistanceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IFogDistance item)
         {
             ClearPartial();
-            item.DayNear = default;
-            item.DayFar = default;
-            item.NightNear = default;
-            item.NightFar = default;
+            item.DayNear = default(Single);
+            item.DayFar = default(Single);
+            item.NightNear = default(Single);
+            item.NightFar = default(Single);
         }
         
         #region Mutagen

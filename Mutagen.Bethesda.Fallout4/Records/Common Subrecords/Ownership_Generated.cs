@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,10 +62,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region NoCrime
-        public Boolean NoCrime { get; set; } = default;
+        public Boolean NoCrime { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -695,13 +696,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 458,
-            version: 0);
-
-        public const string GUID = "818a652b-094d-4aef-8854-d66f76b2037e";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -740,8 +734,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(OwnershipBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -780,8 +772,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Owner.Clear();
-            item.Unknown = default;
-            item.NoCrime = default;
+            item.Unknown = default(Int32);
+            item.NoCrime = default(Boolean);
         }
         
         #region Mutagen
@@ -1207,12 +1199,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _XOWNLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _XOWNLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region NoCrime
         private int _NoCrimeLocation => _XOWNLocation!.Value.Min + 0x8;
         private bool _NoCrime_IsSet => _XOWNLocation.HasValue;
-        public Boolean NoCrime => _NoCrime_IsSet ? _recordData.Slice(_NoCrimeLocation, 4)[0] >= 1 : default;
+        public Boolean NoCrime => _NoCrime_IsSet ? _recordData.Slice(_NoCrimeLocation, 4)[0] >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

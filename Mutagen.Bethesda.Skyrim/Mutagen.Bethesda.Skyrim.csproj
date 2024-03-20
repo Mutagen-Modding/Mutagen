@@ -2,21 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>Noggog</Authors>
-    <Company>Mutagen</Company>
-    <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
-    <Copyright>2021</Copyright>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Skyrim.xml</DocumentationFile>
@@ -57,6 +47,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
+    <Compile Include="Enums\ActorValueMapper.cs" />
     <Compile Include="Enums\AdvanceAction.cs" />
     <Compile Include="Enums\Aggression.cs" />
     <Compile Include="Enums\Alignment.cs" />
@@ -97,11 +88,13 @@
     <Compile Include="Enums\WardState.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
     <Compile Include="Enums\Emotion.cs" />
+    <Compile Include="Extensions\CellGroupExt.cs" />
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Extensions\PlacedContextExt.cs" />
+    <Compile Include="Extensions\WorldspaceExt.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -1456,6 +1449,9 @@
     </Compile>
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneScriptFragments.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
@@ -4668,6 +4664,9 @@
     </Compile>
     <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlphaLayerData_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

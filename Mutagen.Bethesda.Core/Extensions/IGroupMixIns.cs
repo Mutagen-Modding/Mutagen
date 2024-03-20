@@ -172,11 +172,25 @@ public static class IGroupMixIns
     /// <param name="source">Source record to duplicate</param>
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
     /// <returns>Duplicated and added record</returns>
-    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
+    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid, FormKey? formKey = null)
         where TMajor : class, IMajorRecord, TMajorGetter
         where TMajorGetter : IMajorRecordGetter
     {
-        return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, edid);
+        return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, edid, formKey);
+    }
+
+    /// <summary>
+    /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
+    /// </summary>
+    /// <param name="group">Group to add to</param>
+    /// <param name="source">Source record to duplicate</param>
+    /// <param name="formKey">FormKey to use for the record</param>
+    /// <returns>Duplicated and added record</returns>
+    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, FormKey? formKey)
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : IMajorRecordGetter
+    {
+        return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, formKey);
     }
 
     /// <summary>
@@ -185,15 +199,16 @@ public static class IGroupMixIns
     /// <param name="group">Group to add to</param>
     /// <param name="source">Source record to duplicate</param>
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
+    /// <param name="formKey">FormKey to use for the record.  If non null, EditorID will not be used</param>
     /// <returns>Duplicated and added record</returns>
-    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
+    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, string? edid, FormKey? formKey = null)
         where TMajor : class, IMajorRecord, TSharedParent
         where TMajorGetter : TSharedParent
         where TSharedParent : IMajorRecordGetter
     {
         try
         {
-            var newRec = (source.Duplicate(group.SourceMod.GetNextFormKey(edid)) as TMajor)!;
+            var newRec = (source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid)) as TMajor)!;
             group.Add(newRec);
             return newRec;
         }
@@ -208,13 +223,29 @@ public static class IGroupMixIns
     /// </summary>
     /// <param name="group">Group to add to</param>
     /// <param name="source">Source record to duplicate</param>
-    /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
+    /// <param name="formKey">FormKey to use for the record</param>
     /// <returns>Duplicated and added record</returns>
-    public static IMajorRecord DuplicateInAsNewUntypedRecord(this IGroup group, IMajorRecord source, string? edid)
+    public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, FormKey? formKey)
+        where TMajor : class, IMajorRecord, TSharedParent
+        where TMajorGetter : TSharedParent
+        where TSharedParent : IMajorRecordGetter
+    {
+        return DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(group, source, default(string?), formKey);
+    }
+
+    /// <summary>
+    /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
+    /// </summary>
+    /// <param name="group">Group to add to</param>
+    /// <param name="source">Source record to duplicate</param>
+    /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
+    /// <param name="formKey">FormKey to use for the record.  If non null, EditorID will not be used</param>
+    /// <returns>Duplicated and added record</returns>
+    public static IMajorRecord DuplicateInAsNewUntypedRecord(this IGroup group, IMajorRecord source, string? edid, FormKey? formKey = null)
     {
         try
         {
-            var newRec = source.Duplicate(group.SourceMod.GetNextFormKey(edid));
+            var newRec = source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid));
             group.AddUntyped(newRec);
             return newRec;
         }
@@ -222,6 +253,18 @@ public static class IGroupMixIns
         {
             throw RecordException.Enrich(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
         }
+    }
+
+    /// <summary>
+    /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
+    /// </summary>
+    /// <param name="group">Group to add to</param>
+    /// <param name="source">Source record to duplicate</param>
+    /// <param name="formKey">FormKey to use for the record</param>
+    /// <returns>Duplicated and added record</returns>
+    public static IMajorRecord DuplicateInAsNewUntypedRecord(this IGroup group, IMajorRecord source, FormKey? formKey)
+    {
+        return DuplicateInAsNewUntypedRecord(group, source, default(string?), formKey);
     }
 
     /// <summary>

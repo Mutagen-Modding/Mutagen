@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MeleeAimAssistModel" recordType="MAAM" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Data recordType="SNAM" >
+        <Fields>
+          <Float name="OuterConeAngleDegrees" />
+          <Float name="InnerConeAngleDegrees" />
+          <Float name="SteeringDegreesPerSec" />
+          <Float name="SnapSteeringMultiplierOuterRing" />
+          <Float name="SnapSteeringMultiplierInnerRing" />
+          <Float name="MaxAimAssistDistance" />
+          <Bool name="MeleeAimAssistEnabled" byteLength="1" />
+          <Float name="Unknown" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

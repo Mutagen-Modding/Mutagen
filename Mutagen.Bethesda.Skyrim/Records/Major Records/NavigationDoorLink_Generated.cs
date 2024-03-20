@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,10 +62,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<INavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
         #endregion
         #region TeleportMarkerTriangle
-        public Int16 TeleportMarkerTriangle { get; set; } = default;
+        public Int16 TeleportMarkerTriangle { get; set; } = default(Int16);
         #endregion
         #region Unused
-        public Int16 Unused { get; set; } = default;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -695,13 +696,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 310,
-            version: 0);
-
-        public const string GUID = "3dfc5897-6afc-4b57-9d2a-1946257205ed";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -740,8 +734,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NavigationDoorLinkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -780,8 +772,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.NavMesh.Clear();
-            item.TeleportMarkerTriangle = default;
-            item.Unused = default;
+            item.TeleportMarkerTriangle = default(Int16);
+            item.Unused = default(Int16);
         }
         
         #region Mutagen

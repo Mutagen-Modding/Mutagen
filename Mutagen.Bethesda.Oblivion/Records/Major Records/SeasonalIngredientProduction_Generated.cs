@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Spring
-        public Byte Spring { get; set; } = default;
+        public Byte Spring { get; set; } = default(Byte);
         #endregion
         #region Summer
-        public Byte Summer { get; set; } = default;
+        public Byte Summer { get; set; } = default(Byte);
         #endregion
         #region Fall
-        public Byte Fall { get; set; } = default;
+        public Byte Fall { get; set; } = default(Byte);
         #endregion
         #region Winter
-        public Byte Winter { get; set; } = default;
+        public Byte Winter { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 190,
-            version: 0);
-
-        public const string GUID = "00b07de3-bac8-4cf6-8f3d-947654512854";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(SeasonalIngredientProductionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISeasonalIngredientProduction item)
         {
             ClearPartial();
-            item.Spring = default;
-            item.Summer = default;
-            item.Fall = default;
-            item.Winter = default;
+            item.Spring = default(Byte);
+            item.Summer = default(Byte);
+            item.Fall = default(Byte);
+            item.Winter = default(Byte);
         }
         
         #region Mutagen

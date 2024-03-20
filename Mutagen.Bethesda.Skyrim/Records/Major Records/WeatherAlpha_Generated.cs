@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public Single Sunrise { get; set; } = default;
+        public Single Sunrise { get; set; } = default(Single);
         #endregion
         #region Day
-        public Single Day { get; set; } = default;
+        public Single Day { get; set; } = default(Single);
         #endregion
         #region Sunset
-        public Single Sunset { get; set; } = default;
+        public Single Sunset { get; set; } = default(Single);
         #endregion
         #region Night
-        public Single Night { get; set; } = default;
+        public Single Night { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 251,
-            version: 0);
-
-        public const string GUID = "ace388c8-f968-415d-906d-d637cc011500";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -754,8 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WeatherAlphaBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -793,10 +785,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWeatherAlpha item)
         {
             ClearPartial();
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
+            item.Sunrise = default(Single);
+            item.Day = default(Single);
+            item.Sunset = default(Single);
+            item.Night = default(Single);
         }
         
         #region Mutagen

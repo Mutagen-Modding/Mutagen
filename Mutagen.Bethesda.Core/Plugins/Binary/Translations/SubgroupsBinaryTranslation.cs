@@ -92,7 +92,7 @@ internal sealed class SubgroupsBinaryTranslation<T>
         byte[] bytes = new byte[package.MetaData.Constants.MajorConstants.HeaderLength + group.TotalLength];
         MajorRecordHeaderWritable majorWritable = new MajorRecordHeaderWritable(package.MetaData, bytes);
         majorWritable.FormID = formId;
-        majorWritable.FormVersion = package.MetaData.Constants.Release.GetDefaultFormVersion()!.Value;
+        majorWritable.FormVersion = package.MetaData.Constants.DefaultFormVersion!.Value;
         group.HeaderAndContentData.Span.CopyTo(bytes.AsSpan().Slice(majorWritable.HeaderLength));
         record = LoquiBinaryOverlayTranslation<T>.Create(new OverlayStream(bytes, package.MetaData), package, recordTypeConverter: null);
         return true;

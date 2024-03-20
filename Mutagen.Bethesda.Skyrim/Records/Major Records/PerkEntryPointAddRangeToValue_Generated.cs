@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region From
-        public Single From { get; set; } = default;
+        public Single From { get; set; } = default(Single);
         #endregion
         #region To
-        public Single To { get; set; } = default;
+        public Single To { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -617,13 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 418,
-            version: 0);
-
-        public const string GUID = "a626d85f-ad59-47fc-b686-15e424b8ec6f";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 7;
@@ -662,8 +656,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddRangeToValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -701,8 +693,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkEntryPointAddRangeToValue item)
         {
             ClearPartial();
-            item.From = default;
-            item.To = default;
+            item.From = default(Single);
+            item.To = default(Single);
             base.Clear(item);
         }
         
@@ -1136,6 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

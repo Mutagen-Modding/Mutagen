@@ -74,6 +74,7 @@ public class PluginModule : GenerationModule
         var data = field.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
         data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
         data.BinaryOverlay = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryOverlay, default);
+        data.ShortCircuit = node.GetAttribute(Constants.ShortCircuit, false);
         ModifyGRUPAttributes(field);
         await base.PostFieldLoad(obj, field, node);
         data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);

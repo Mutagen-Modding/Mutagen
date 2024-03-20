@@ -195,8 +195,8 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.MultiplyActorValueMult:
                             case APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult:
                             case APerkEntryPointEffect.FunctionType.AddActorValueMult:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyActorValue)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyActorValue)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
                                 if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
@@ -219,8 +219,8 @@ partial class PerkBinaryCreateTranslation
                                 break;
                             case APerkEntryPointEffect.FunctionType.AbsoluteValue:
                             case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointAbsoluteValue)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointAbsoluteValue)} had EPF3 unexpectedly");
                                 if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                 {
                                     throw new MalformedDataException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -231,8 +231,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddLeveledList:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointAddLeveledItem)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointAddLeveledItem)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                                 {
@@ -262,8 +262,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectSpell:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectSpell)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectSpell)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                 {
@@ -275,8 +275,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectText:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectText)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectText)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                 {
@@ -288,8 +288,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SetText:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSetText)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSetText)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                 {
@@ -334,7 +334,7 @@ partial class PerkBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item, PreviousParse lastParsed)
     {
         item.Effects.SetTo(ParseEffects(frame.Reader));
     }
@@ -540,7 +540,7 @@ partial class PerkBinaryOverlay
 
     partial void EffectsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

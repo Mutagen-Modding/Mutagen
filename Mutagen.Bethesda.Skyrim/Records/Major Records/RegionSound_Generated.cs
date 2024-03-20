@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,10 +62,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
-        public RegionSound.Flag Flags { get; set; } = default;
+        public RegionSound.Flag Flags { get; set; } = default(RegionSound.Flag);
         #endregion
         #region Chance
-        public Single Chance { get; set; } = default;
+        public Single Chance { get; set; } = default(Single);
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
@@ -696,13 +697,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 263,
-            version: 0);
-
-        public const string GUID = "32a58ffc-1995-4c02-8ffd-9fea3d78ede2";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -734,8 +728,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -774,8 +766,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Sound.Clear();
-            item.Flags = default;
-            item.Chance = default;
+            item.Flags = default(RegionSound.Flag);
+            item.Chance = default(Single);
         }
         
         #region Mutagen

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationAliasIndex
-        public Int32 LocationAliasIndex { get; set; } = default;
+        public Int32 LocationAliasIndex { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -709,13 +710,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 10300,
-            version: 0);
-
-        public const string GUID = "a0234443-1573-48d1-9e29-a31e20af3ada";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 9;
@@ -747,8 +741,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LocAliasIsLocationConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -786,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILocAliasIsLocationConditionData item)
         {
             ClearPartial();
-            item.LocationAliasIndex = default;
+            item.LocationAliasIndex = default(Int32);
             item.FirstUnusedStringParameter = default;
             item.Location.Clear();
             item.SecondUnusedStringParameter = default;

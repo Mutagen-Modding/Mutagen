@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FeedbackPercent
-        public Single FeedbackPercent { get; set; } = default;
+        public Single FeedbackPercent { get; set; } = default(Single);
         #endregion
         #region WetMixPercent
-        public Single WetMixPercent { get; set; } = default;
+        public Single WetMixPercent { get; set; } = default(Single);
         #endregion
         #region Milliseconds
-        public UInt32 Milliseconds { get; set; } = default;
+        public UInt32 Milliseconds { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -640,13 +641,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 668,
-            version: 0);
-
-        public const string GUID = "c0faca2b-1580-4bde-b690-31b748d41f5f";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 4;
@@ -678,8 +672,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(DelayAudioEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -717,9 +709,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDelayAudioEffect item)
         {
             ClearPartial();
-            item.FeedbackPercent = default;
-            item.WetMixPercent = default;
-            item.Milliseconds = default;
+            item.FeedbackPercent = default(Single);
+            item.WetMixPercent = default(Single);
+            item.Milliseconds = default(UInt32);
             base.Clear(item);
         }
         

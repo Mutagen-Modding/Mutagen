@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -217,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region OpenByDefault
-        public Boolean OpenByDefault { get; set; } = default;
+        public Boolean OpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1652,13 +1653,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 121,
-            version: 0);
-
-        public const string GUID = "7a559a46-7ef9-49e9-98c1-ec16c3df81f2";
-
         public const ushort AdditionalFieldCount = 24;
 
         public const ushort FieldCount = 29;
@@ -1718,13 +1712,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XSCL,
                 RecordTypes.XSOL,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1781,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.ActionFlags = default;
             item.Count = default;
             item.MapMarker = null;
-            item.OpenByDefault = default;
+            item.OpenByDefault = default(Boolean);
             item.RagdollData = default;
             item.Scale = default;
             item.ContainedSoul.Clear();
@@ -3246,7 +3240,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     PlacedObjectBinaryCreateTranslation.FillBinaryOpenByDefaultCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PlacedObject_FieldIndex.OpenByDefault;
                 }
                 case RecordTypeInts.XRGD:
@@ -3287,7 +3282,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryOpenByDefaultCustom(
             MutagenFrame frame,
-            IPlacedObjectInternal item);
+            IPlacedObjectInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -3412,7 +3408,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region OpenByDefault
         partial void OpenByDefaultCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Boolean GetOpenByDefaultCustom();
         public Boolean OpenByDefault => GetOpenByDefaultCustom();

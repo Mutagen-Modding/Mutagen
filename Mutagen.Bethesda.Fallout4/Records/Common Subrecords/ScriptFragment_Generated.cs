@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -681,13 +682,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 124,
-            version: 0);
-
-        public const string GUID = "82853f4c-012a-4c5e-8fce-a74708283750";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -719,8 +713,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ScriptFragmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1178,6 +1170,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScriptFragmentParseEndingPositions(
+            ScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IScriptFragmentGetter ScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1193,8 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            ScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

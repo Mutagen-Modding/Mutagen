@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PhotoModeFeature" recordType="PMFT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="FNAM" >
+        <Fields>
+          <Enum name="FeatureType" byteLength="1" enumName="PhotoModeFeature.Mode" />
+          <Float name="XOffset" />
+          <Float name="YOffset" />
+          <Int64 name="UnknownFNAM1" />
+          <UInt32 name="Width" />
+          <UInt32 name="Height" />
+          <UInt32 name="UnknownFNAM2" />
+        </Fields>
+      </Data>
+      <String name="Texture" recordType="HNAM" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" />
+    </Fields>
+  </Object>
+</Loqui>

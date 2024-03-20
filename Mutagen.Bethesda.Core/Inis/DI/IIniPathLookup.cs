@@ -1,4 +1,6 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
+using Noggog;
 
 namespace Mutagen.Bethesda.Inis.DI;
 
@@ -9,45 +11,31 @@ public interface IIniPathLookup
 
 public class IniPathLookup : IIniPathLookup
 {
+    private readonly IGameDirectoryLookup _gameDirectoryLookup;
+
+    public IniPathLookup(IGameDirectoryLookup gameDirectoryLookup)
+    {
+        _gameDirectoryLookup = gameDirectoryLookup;
+    }
+    
     public FilePath Get(GameRelease release)
     {
-        var docsString = ToMyDocumentsString(release);
+        var constants = GameConstants.Get(release);
+        var docsString = constants.MyDocumentsString;
+        if (docsString == null)
+        {
+            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
+        }
+        
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "My Games",
             docsString, 
-            $"{ToIniName(release)}.ini");
+            ToIniFileName(release));
     }
 
-    public static string ToMyDocumentsString(GameRelease release)
+    public static string ToIniFileName(GameRelease release)
     {
-        return release switch
-        {
-            GameRelease.Oblivion => "Oblivion",
-            GameRelease.SkyrimLE => "Skyrim",
-            GameRelease.EnderalLE => "Enderal",
-            GameRelease.SkyrimSE => "Skyrim Special Edition",
-            GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
-            GameRelease.EnderalSE => "Enderal Special Edition",
-            GameRelease.SkyrimVR => "Skyrim VR",
-            GameRelease.Fallout4 => "Fallout4",
-            _ => throw new NotImplementedException(),
-        };
-    }
-
-    public static string ToIniName(GameRelease release)
-    {
-        return release switch
-        {
-            GameRelease.Oblivion => "Oblivion",
-            GameRelease.SkyrimLE => "Skyrim",
-            GameRelease.SkyrimSE => "Skyrim",
-            GameRelease.SkyrimSEGog => "Skyrim",
-            GameRelease.EnderalLE => "Enderal",
-            GameRelease.EnderalSE => "Enderal",
-            GameRelease.SkyrimVR => "SkyrimVR",
-            GameRelease.Fallout4 => "Fallout4",
-            _ => throw new NotImplementedException(),
-        };
+        return $"{GameConstants.Get(release).IniName}.ini";
     }
 }

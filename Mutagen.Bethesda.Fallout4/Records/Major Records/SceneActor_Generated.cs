@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public SceneActor.Flag Flags { get; set; } = default;
+        public SceneActor.Flag Flags { get; set; } = default(SceneActor.Flag);
         #endregion
         #region BehaviorFlags
-        public SceneActor.BehaviorFlag BehaviorFlags { get; set; } = default;
+        public SceneActor.BehaviorFlag BehaviorFlags { get; set; } = default(SceneActor.BehaviorFlag);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 554,
-            version: 0);
-
-        public const string GUID = "7207acbd-3ab0-405e-9095-37d4a5dc8568";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -724,13 +718,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ALID,
                 RecordTypes.LNAM,
                 RecordTypes.DNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SceneActorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -768,9 +762,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISceneActor item)
         {
             ClearPartial();
-            item.ID = default;
-            item.Flags = default;
-            item.BehaviorFlags = default;
+            item.ID = default(UInt32);
+            item.Flags = default(SceneActor.Flag);
+            item.BehaviorFlags = default(SceneActor.BehaviorFlag);
         }
         
         #region Mutagen
@@ -1199,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Flags
         private int? _FlagsLocation;

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MiscItem" recordType="MISC" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <RefDirect name="CraftingSound" recordType="CUSH" refName="SoundReference" />
+      <RefDirect name="PickupSound" recordType="PUSH" refName="SoundReference" />
+      <RefDirect name="DropdownSound" recordType="PDSH" refName="SoundReference" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Resources" refName="ItemResource" recordType="CVPA" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <ByteArray name="FLAG" recordType="FLAG" />
+      <String name="ShortName" recordType="NNAM" translated="Normal" />
+    </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

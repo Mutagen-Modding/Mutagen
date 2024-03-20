@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="Fallout4MajorRecord" GUID="41703d5d-cf96-4b22-9b54-6bbdbb24fabb" ID="273">
+  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="Fallout4MajorRecord">
     <Fields>
       <Data recordType="DNAM">
         <Fields>
@@ -75,13 +75,13 @@
       <RefList name="Unknown54" refName="KeyFrame" recordTypeHex="0x44414954" />
     </Fields>
   </Object>
-  <Object name="KeyFrame" objType="Subrecord" GUID="a142fc98-5296-427a-966e-69c7e59e2599" ID="239">
+  <Object name="KeyFrame" objType="Subrecord">
     <Fields>
       <Float name="Time" />
       <Float name="Value" />
     </Fields>
   </Object>
-  <Object name="ColorFrame" objType="Subrecord" GUID="d47b46e4-4e4b-405f-b0a2-df87b4a5231e" ID="269">
+  <Object name="ColorFrame" objType="Subrecord">
     <Fields>
       <Float name="Time" />
       <Color name="Color" binaryType="AlphaFloat" />

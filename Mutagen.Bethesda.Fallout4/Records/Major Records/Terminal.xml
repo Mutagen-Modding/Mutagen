@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Terminal" recordType="TERM" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="fc083bd7-24db-4bc1-995b-b6a767179566" ID="193">
+  <Object name="Terminal" recordType="TERM" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -13,10 +13,10 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" nullable="True" binary="NoGeneration" />
       <CustomLogic name="LoopingSoundExport" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <RefList name="Holotapes" refName="TerminalHolotapeEntry" counterRecType="COCT" />
       <Enum name="Flags" enumName="Terminal.Flag" recordType="MNAM" binary="Custom" />
       <ByteArray name="WorkbenchData" recordType="WBDT" />
@@ -32,19 +32,19 @@
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>MNAM</AdditionalContainedRecordType>
   </Object>
-  <Object name="TerminalHolotapeEntry" objType="Subrecord" recordType="CNTO" GUID="75a1eb63-312c-4870-b12e-a3530123d3d9" ID="431">
+  <Object name="TerminalHolotapeEntry" objType="Subrecord" recordType="CNTO">
     <Fields>
       <FormLink name="Holotape" refName="Holotape" />
       <Int32 name="Count" />
     </Fields>
   </Object>
-  <Object name="TerminalBodyText" objType="Subrecord" GUID="7d1bab97-5ccd-43fc-9e54-9602f1e5a3a8" ID="432">
+  <Object name="TerminalBodyText" objType="Subrecord">
     <Fields>
       <String name="Text" translated="Normal" recordType="BTXT" nullable="False" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="TerminalMenuItem" objType="Subrecord" GUID="5c3241c0-0af2-47d2-9277-b4b3d314e700" ID="433">
+  <Object name="TerminalMenuItem" objType="Subrecord">
     <Fields>
       <String name="ItemText" translated="Normal" recordType="ITXT" nullable="False" />
       <String name="ResponseText" translated="Normal" recordType="RNAM" />

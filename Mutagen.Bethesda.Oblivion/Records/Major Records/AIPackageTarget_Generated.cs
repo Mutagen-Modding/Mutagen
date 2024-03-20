@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ObjectType
-        public AIPackageTarget.ObjectTypes ObjectType { get; set; } = default;
+        public AIPackageTarget.ObjectTypes ObjectType { get; set; } = default(AIPackageTarget.ObjectTypes);
         #endregion
         #region Object
-        public Int32 Object { get; set; } = default;
+        public Int32 Object { get; set; } = default(Int32);
         #endregion
         #region Count
-        public Int32 Count { get; set; } = default;
+        public Int32 Count { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 159,
-            version: 0);
-
-        public const string GUID = "52649554-81f8-4583-82cd-dbff72bc7bd5";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageTarget item)
         {
             ClearPartial();
-            item.ObjectType = default;
-            item.Object = default;
-            item.Count = default;
+            item.ObjectType = default(AIPackageTarget.ObjectTypes);
+            item.Object = default(Int32);
+            item.Count = default(Int32);
         }
         
         #region Mutagen

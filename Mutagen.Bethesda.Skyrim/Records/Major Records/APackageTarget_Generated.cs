@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region CountOrDistance
-        public Int32 CountOrDistance { get; set; } = default;
+        public Int32 CountOrDistance { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -593,13 +594,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 375,
-            version: 0);
-
-        public const string GUID = "d99aa9dc-0c39-4321-ac3f-9fd29accd256";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
@@ -631,8 +625,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(APackageTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -670,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(IAPackageTarget item)
         {
             ClearPartial();
-            item.CountOrDistance = default;
+            item.CountOrDistance = default(Int32);
         }
         
         #region Mutagen

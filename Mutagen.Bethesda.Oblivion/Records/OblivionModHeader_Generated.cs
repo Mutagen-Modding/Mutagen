@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,13 +52,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public OblivionModHeader.HeaderFlag Flags { get; set; } = default;
+        public OblivionModHeader.HeaderFlag Flags { get; set; } = default(OblivionModHeader.HeaderFlag);
         #endregion
         #region FormID
-        public UInt32 FormID { get; set; } = default;
+        public UInt32 FormID { get; set; } = default(UInt32);
         #endregion
         #region Version
-        public Int32 Version { get; set; } = default;
+        public Int32 Version { get; set; } = default(Int32);
         #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
@@ -1004,13 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 2,
-            version: 0);
-
-        public const string GUID = "d26d9f2a-53af-4c45-9490-dfdb377b6655";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -1053,13 +1047,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SNAM,
                 RecordTypes.MAST,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1097,9 +1091,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IOblivionModHeader item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FormID = default;
-            item.Version = default;
+            item.Flags = default(OblivionModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
@@ -1707,7 +1701,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     OblivionModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }
                 default:
@@ -1718,7 +1713,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IOblivionModHeader item);
+            IOblivionModHeader item,
+            PreviousParse lastParsed);
 
     }
 

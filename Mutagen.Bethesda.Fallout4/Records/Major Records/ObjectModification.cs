@@ -51,14 +51,21 @@ partial class AObjectModification
                 }
             }
             var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
-            return type.TypeInt switch
+            switch (type.TypeInt)
             {
-                RecordTypeInts.ARMO => ArmorModification.CreateFromBinary(frame),
-                RecordTypeInts.NPC_ => NpcModification.CreateFromBinary(frame),
-                RecordTypeInts.WEAP => WeaponModification.CreateFromBinary(frame),
-                RecordTypeInts.NONE => ObjectModification.CreateFromBinary(frame),
-                _ => UnknownObjectModification.CreateFromBinary(frame),
-            };
+                case RecordTypeInts.ARMO:
+                    return ArmorModification.CreateFromBinary(frame);
+                case RecordTypeInts.NPC_:
+                    return NpcModification.CreateFromBinary(frame);
+                case RecordTypeInts.WEAP:
+                    return WeaponModification.CreateFromBinary(frame);
+                case RecordTypeInts.NONE:
+                    return ObjectModification.CreateFromBinary(frame);
+                default:
+                    var unknown = UnknownObjectModification.CreateFromBinary(frame);
+                    unknown.ModificationType = type;
+                    return unknown;
+            }
         }
         catch (Exception e)
         {
@@ -74,7 +81,8 @@ partial class AObjectModificationBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryDataParseCustom(
         MutagenFrame frame,
-        IAObjectModificationInternal item)
+        IAObjectModificationInternal item,
+        PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.DATA);
         var includeCount = frame.ReadInt32();
@@ -257,7 +265,8 @@ partial class AObjectModificationBinaryOverlay
 
     public partial ParseResult DataParseCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         _dataBytes = HeaderTranslation.ExtractSubrecordMemory(_recordData, stream.Position - offset, _package.MetaData.Constants);
         var includeCount = BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes);

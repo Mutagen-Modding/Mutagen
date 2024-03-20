@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,16 +52,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public AlchemicalApparatus.ApparatusType Type { get; set; } = default;
+        public AlchemicalApparatus.ApparatusType Type { get; set; } = default(AlchemicalApparatus.ApparatusType);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Quality
-        public Single Quality { get; set; } = default;
+        public Single Quality { get; set; } = default(Single);
         public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
         #endregion
 
@@ -720,13 +721,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 174,
-            version: 0);
-
-        public const string GUID = "32ff30be-3aff-4ff7-bdff-41f63ebaf293";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -765,8 +759,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -804,10 +796,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAlchemicalApparatusData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Value = default;
-            item.Weight = default;
-            item.Quality = default;
+            item.Type = default(AlchemicalApparatus.ApparatusType);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Quality = default(Single);
         }
         
         #region Mutagen

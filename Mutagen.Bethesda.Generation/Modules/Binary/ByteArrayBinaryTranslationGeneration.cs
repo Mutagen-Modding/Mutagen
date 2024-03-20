@@ -31,6 +31,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
+        
         using (var args = sb.Call(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
@@ -48,6 +49,10 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             if (data.OverflowRecordType.HasValue)
             {
                 args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
+            }
+            if (data.MarkerType.HasValue)
+            {
+                args.Add($"markerType: RecordTypes.{data.MarkerType.Value.Type}");
             }
         }
     }
@@ -95,7 +100,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             });
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
@@ -178,7 +183,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             if (dataType != null) throw new ArgumentException();
             if (data.OverflowRecordType.HasValue)
             {
-                sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
+                OverflowGenerationHelper.GenerateWrapperOverflowMember(sb, typeGen);
                 using (var args = sb.Call(
                            $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                 {
@@ -221,7 +226,12 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "ReadOnlyMemorySlice<byte>.Empty")};");
+                var expLen = (await this.ExpectedLength(objGen, typeGen))?.ToString();
+                if (expLen == null)
+                {
+                    expLen = $"_{dataType.GetFieldData().RecordType}Location!.Value.Max - _{typeGen.Name}Location + 1";
+                }
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location{(expLen != null ? $", {expLen}" : null)}).ToArray() : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "ReadOnlyMemorySlice<byte>.Empty")};");
             }
         }
     }
@@ -258,17 +268,12 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
-        if (data.OverflowRecordType.HasValue
-            && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
+        if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
-            sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
-            }
+            sb.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
+        await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+        OverflowGenerationHelper.GenerateWrapperOverflowParse(sb, typeGen, data);
     }
 
     public override string GenerateForTypicalWrapper(

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public MapMarker.Flag Flags { get; set; } = default;
+        public MapMarker.Flag Flags { get; set; } = default(MapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -91,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Type
-        public MapMarker.MarkerType Type { get; set; } = default;
+        public MapMarker.MarkerType Type { get; set; } = default(MapMarker.MarkerType);
         #endregion
 
         #region To String
@@ -731,13 +732,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 316,
-            version: 0);
-
-        public const string GUID = "20f60842-6b59-4470-979e-93cd7fe472a3";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -775,13 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.FNAM,
                 RecordTypes.FULL,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -819,9 +813,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMapMarker item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(MapMarker.Flag);
             item.Name = default;
-            item.Type = default;
+            item.Type = default(MapMarker.MarkerType);
         }
         
         #region Mutagen

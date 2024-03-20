@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Scene" recordType="SCEN" objType="Record" baseClass="SkyrimMajorRecord" GUID="1b4d8bf2-2bfe-484e-9447-4dda9d66a0f1" ID="464">
+  <Object name="Scene" recordType="SCEN" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Enum name="Flags" enumName="Scene.Flag" byteLength="4" recordType="FNAM" />
@@ -15,17 +15,17 @@
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="a0b825f4-0bce-4fbd-8655-db9ba9e77e0e" ID="465">
+  <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
     <Fields>
       <RefDirect name="ScriptFragments" refName="SceneScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
-  <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord" GUID="17cf35cc-e0fd-4a46-ae82-c3f779d2fdcd" ID="466">
+  <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord">
     <Fields>
-      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="ScenePhaseFragment" objType="Subrecord" GUID="85dc02e5-bd8b-4912-bf75-efda4c03ab35" ID="467">
+  <Object name="ScenePhaseFragment" objType="Subrecord">
     <Fields>
       <Enum name="Flags" enumName="ScenePhaseFragment.Flag" byteLength="1" />
       <UInt8 name="Index" />
@@ -34,7 +34,7 @@
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="ScenePhase" objType="Subrecord" GUID="0520e1b4-d605-4812-8177-c80e8d49733d" ID="468" >
+  <Object name="ScenePhase" objType="Subrecord">
     <Fields>
       <Marker name="StartMarker" recordType="HNAM" nullable="False" />
       <String name="Name" recordType="NAM0" />
@@ -46,7 +46,7 @@
       <Marker name="EndMarker" recordType="HNAM" />
     </Fields>
   </Object>
-  <Object name="ScenePhaseUnusedData" objType="Subrecord" GUID="51d4b3f1-35b7-4c35-9ec4-e5ffcf4c6bb5" ID="469">
+  <Object name="ScenePhaseUnusedData" objType="Subrecord">
     <Fields>
       <ByteArray name="SCHR" recordType="SCHR" />
       <ByteArray name="SCDA" recordType="SCDA" />
@@ -55,14 +55,14 @@
       <ByteArray name="SCRO" recordType="SCRO" />
     </Fields>
   </Object>
-  <Object name="SceneActor" objType="Subrecord" GUID="5663098c-807a-46e0-ae5d-d4b95dba4ba8" ID="470">
+  <Object name="SceneActor" objType="Subrecord">
     <Fields>
       <UInt32 name="ID" recordType="ALID" nullable="False" />
       <Enum name="Flags" enumName="SceneActor.Flag" recordType="LNAM" byteLength="4" />
       <Enum name="BehaviorFlags" enumName="SceneActor.BehaviorFlag" recordType="DNAM" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="SceneAction" objType="Subrecord" GUID="3f2b0ff3-2e6d-4fce-958e-40dffd9c696d" ID="471">
+  <Object name="SceneAction" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="SceneAction.TypeEnum" byteLength="2" recordType="ANAM" nullable="False" />
       <String name="Name" recordType="NAM0" />

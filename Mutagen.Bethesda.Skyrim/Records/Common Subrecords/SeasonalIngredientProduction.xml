@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SeasonalIngredientProduction" objType="Subrecord" recordType="PFPC" GUID="b4cb24d1-19a3-4df4-839a-7375f8b8e3a0" ID="189">
+  <Object name="SeasonalIngredientProduction" objType="Subrecord" recordType="PFPC">
     <Fields>
       <UInt8 name="Spring" />
       <UInt8 name="Summer" />

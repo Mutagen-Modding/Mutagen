@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Point
-        public P2Int Point { get; set; } = default;
+        public P2Int Point { get; set; } = default(P2Int);
         #endregion
         #region Flags
-        public CellGrid.Flag Flags { get; set; } = default;
+        public CellGrid.Flag Flags { get; set; } = default(CellGrid.Flag);
         #endregion
 
         #region To String
@@ -644,13 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 283,
-            version: 0);
-
-        public const string GUID = "c2bbbc23-29b3-49d3-8ed4-623753703bae";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -689,8 +683,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(CellGridBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -728,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICellGrid item)
         {
             ClearPartial();
-            item.Point = default;
-            item.Flags = default;
+            item.Point = default(P2Int);
+            item.Flags = default(CellGrid.Flag);
         }
         
         #region Mutagen

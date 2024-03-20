@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -994,13 +995,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 552,
-            version: 0);
-
-        public const string GUID = "a5a36fc6-c2d3-46f2-ac45-b1abb11f56b0";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -1044,13 +1038,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.WNAM,
                 RecordTypes.FNAM,
                 RecordTypes.SCQS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1675,14 +1669,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryStartConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.StartConditions;
                 }
                 case RecordTypeInts.NEXT:
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.CompletionConditions;
                 }
                 case RecordTypeInts.WNAM:
@@ -1711,11 +1707,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1792,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region StartConditions
         partial void StartConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1800,7 +1798,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CompletionConditions
         partial void CompletionConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1897,11 +1895,15 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 stream.ReadSubrecord();
                                 return new ParseResult(default(int?), type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

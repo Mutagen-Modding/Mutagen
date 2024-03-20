@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -128,19 +129,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Trait
-        public Boolean Trait { get; set; } = default;
+        public Boolean Trait { get; set; } = default(Boolean);
         #endregion
         #region Level
-        public Byte Level { get; set; } = default;
+        public Byte Level { get; set; } = default(Byte);
         #endregion
         #region NumRanks
-        public Byte NumRanks { get; set; } = default;
+        public Byte NumRanks { get; set; } = default(Byte);
         #endregion
         #region Playable
-        public Boolean Playable { get; set; } = default;
+        public Boolean Playable { get; set; } = default(Boolean);
         #endregion
         #region Hidden
-        public Boolean Hidden { get; set; } = default;
+        public Boolean Hidden { get; set; } = default(Boolean);
         #endregion
         #region Sound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -994,9 +995,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSetterCommon.Instance.RemapLinks(this, mapping);
-        public Perk(FormKey formKey)
+        public Perk(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1005,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1019,12 +1023,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Perk(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Perk(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1403,13 +1411,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 129,
-            version: 0);
-
-        public const string GUID = "137b6882-7400-436a-8cb1-aca1870f6bc4";
-
         public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 21;
@@ -1460,13 +1461,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
                 RecordTypes.PRKC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1509,11 +1510,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description.Clear();
             item.Icon = default;
             item.Conditions.Clear();
-            item.Trait = default;
-            item.Level = default;
-            item.NumRanks = default;
-            item.Playable = default;
-            item.Hidden = default;
+            item.Trait = default(Boolean);
+            item.Level = default(Byte);
+            item.NumRanks = default(Byte);
+            item.Playable = default(Boolean);
+            item.Hidden = default(Boolean);
             item.Sound.Clear();
             item.NextPerk.Clear();
             item.Swf = default;
@@ -1987,7 +1988,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Perk(formKey);
+            var newRec = new Perk(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2567,13 +2568,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Perk_FieldIndex.Effects;
                 }
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2589,7 +2591,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryEffectsCustom(
             MutagenFrame frame,
-            IPerkInternal item);
+            IPerkInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2670,7 +2673,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
@@ -2685,12 +2688,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Hidden
         private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Sound
         private int? _SoundLocation;
@@ -2707,7 +2710,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Effects
         partial void EffectsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -2854,7 +2857,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

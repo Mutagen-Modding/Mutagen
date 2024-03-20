@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -59,10 +60,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -405,9 +406,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
-        public Fallout4MajorRecord(FormKey formKey)
+        public Fallout4MajorRecord(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -416,7 +420,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -430,12 +434,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -971,13 +979,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 18,
-            version: 0);
-
-        public const string GUID = "31e44987-0e57-41ce-8b90-094434216c76";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 7;
@@ -1009,8 +1010,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1048,9 +1047,9 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IFallout4MajorRecordInternal item)
         {
             ClearPartial();
-            item.FormVersion = default;
-            item.Version2 = default;
-            item.Fallout4MajorRecordFlags = default;
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
+            item.Fallout4MajorRecordFlags = default(Fallout4MajorRecord.Fallout4MajorRecordFlag);
             base.Clear(item);
         }
         

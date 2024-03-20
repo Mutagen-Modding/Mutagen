@@ -47,7 +47,11 @@ public partial class MainSettingsView : MainSettingsViewBase
                 
             this.OneWayBind(ViewModel, x => x.SkippedRecordTypes, x => x.SkippedTypes.ItemsSource)
                 .DisposeWith(disposable);
+            this.OneWayBind(ViewModel, x => x.InterestingRecordTypes, x => x.IncludedTypes.ItemsSource)
+                .DisposeWith(disposable);
             this.OneWayBind(ViewModel, x => x.AddSkipCommand, x => x.AddSkipButton.Command)
+                .DisposeWith(disposable);
+            this.OneWayBind(ViewModel, x => x.AddIncludeCommand, x => x.AddIncludeButton.Command)
                 .DisposeWith(disposable);
             this.Bind(ViewModel, x => x.SkipInput, x => x.SkipInput.Text)
                 .DisposeWith(disposable);

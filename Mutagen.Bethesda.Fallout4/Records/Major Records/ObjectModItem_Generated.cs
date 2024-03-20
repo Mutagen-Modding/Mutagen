@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Value1
-        public UInt32 Value1 { get; set; } = default;
+        public UInt32 Value1 { get; set; } = default(UInt32);
         #endregion
         #region Value2
-        public UInt32 Value2 { get; set; } = default;
+        public UInt32 Value2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -644,13 +645,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 654,
-            version: 0);
-
-        public const string GUID = "f8b8c99c-63f5-42ba-897c-2ee4dc442e9d";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -682,8 +676,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ObjectModItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -721,8 +713,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectModItem item)
         {
             ClearPartial();
-            item.Value1 = default;
-            item.Value2 = default;
+            item.Value1 = default(UInt32);
+            item.Value2 = default(UInt32);
         }
         
         #region Mutagen

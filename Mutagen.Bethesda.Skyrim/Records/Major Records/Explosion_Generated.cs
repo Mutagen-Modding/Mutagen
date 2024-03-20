@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -232,16 +233,16 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
         #endregion
         #region Force
-        public Single Force { get; set; } = default;
+        public Single Force { get; set; } = default(Single);
         #endregion
         #region Damage
-        public Single Damage { get; set; } = default;
+        public Single Damage { get; set; } = default(Single);
         #endregion
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region ISRadius
-        public Single ISRadius { get; set; } = default;
+        public Single ISRadius { get; set; } = default(Single);
         #endregion
         #region VerticalOffsetMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -286,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DATADataTypeState
-        public Explosion.DATADataType DATADataTypeState { get; set; } = default;
+        public Explosion.DATADataType DATADataTypeState { get; set; } = default(Explosion.DATADataType);
         #endregion
 
         #region To String
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1620,13 +1621,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 109,
-            version: 0);
-
-        public const string GUID = "ce166e0d-db1e-4510-b8f6-af429a302425";
-
         public const ushort AdditionalFieldCount = 20;
 
         public const ushort FieldCount = 27;
@@ -1670,13 +1664,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.EITM,
                 RecordTypes.MNAM,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1726,14 +1720,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.ImpactDataSet.Clear();
             item.PlacedObject.Clear();
             item.SpawnProjectile.Clear();
-            item.Force = default;
-            item.Damage = default;
-            item.Radius = default;
-            item.ISRadius = default;
-            item.VerticalOffsetMult = default;
-            item.Flags = default;
-            item.SoundLevel = default;
-            item.DATADataTypeState = default;
+            item.Force = default(Single);
+            item.Damage = default(Single);
+            item.Radius = default(Single);
+            item.ISRadius = default(Single);
+            item.VerticalOffsetMult = default(Single);
+            item.Flags = default(Explosion.Flag);
+            item.SoundLevel = default(SoundLevel);
+            item.DATADataTypeState = default(Explosion.DATADataType);
             base.Clear(item);
         }
         
@@ -2960,7 +2954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3089,27 +3083,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Force
         private int _ForceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default;
+        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default(Single);
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default(Single);
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value.Min + 0x20;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
         #endregion
         #region ISRadius
         private int _ISRadiusLocation => _DATALocation!.Value.Min + 0x24;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default;
+        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region VerticalOffsetMult
         private int _VerticalOffsetMultLocation => _DATALocation!.Value.Min + 0x28;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break0);
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;
@@ -3249,7 +3243,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

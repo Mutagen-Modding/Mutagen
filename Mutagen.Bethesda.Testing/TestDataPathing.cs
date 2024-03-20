@@ -43,7 +43,9 @@ public class TestDataPathing
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
     public static string VoiceTypeTesting = "Files/Skyrim/VoiceTypeTestPlugin.esm";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
+    public static string CountMissing = "Files/Core/CountMissing.esp";
     public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
+    public static string SmallOblivionMod = "Plugins/Binary/Headers/SmallOblivionMod.esp";
 
     public static byte[] GetBytes(FilePath path)
     {

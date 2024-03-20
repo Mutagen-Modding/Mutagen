@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 partial class FootstepSetBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item)
+    public static partial ParseResult FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item, PreviousParse lastParsed)
     {
         var counts = GetListCounts(frame);
 
@@ -106,7 +106,7 @@ partial class FootstepSetBinaryOverlay
 
     public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public partial ParseResult CountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         int[] counts = FootstepSetBinaryCreateTranslation.GetListCounts(stream);
 

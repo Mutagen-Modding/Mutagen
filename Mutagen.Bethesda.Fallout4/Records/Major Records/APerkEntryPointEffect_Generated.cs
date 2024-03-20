@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -56,10 +57,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EntryPoint
-        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default;
+        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default(APerkEntryPointEffect.EntryType);
         #endregion
         #region PerkConditionTabCount
-        public Byte PerkConditionTabCount { get; set; } = default;
+        public Byte PerkConditionTabCount { get; set; } = default(Byte);
         #endregion
         #region PerkEntryID
         public UInt16? PerkEntryID { get; set; }
@@ -640,13 +641,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 601,
-            version: 0);
-
-        public const string GUID = "e4e8e0fb-a27a-40e9-a45e-72e384f78670";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 6;
@@ -684,13 +678,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.PRKE,
                 RecordTypes.EPFB,
                 RecordTypes.EPFT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APerkEntryPointEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -728,8 +722,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IAPerkEntryPointEffect item)
         {
             ClearPartial();
-            item.EntryPoint = default;
-            item.PerkConditionTabCount = default;
+            item.EntryPoint = default(APerkEntryPointEffect.EntryType);
+            item.PerkConditionTabCount = default(Byte);
             item.PerkEntryID = default;
             base.Clear(item);
         }
@@ -1142,6 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

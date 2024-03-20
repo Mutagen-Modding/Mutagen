@@ -50,6 +50,18 @@ public static class FormLinkRemappingMixIn
         }
     }
 
+    public static void RemapLinks<TMajorGetter>(this IArray2d<IFormLinkGetter<TMajorGetter>> linkArr, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        for (int x = 0; x < linkArr.Width; x++)
+        {
+            for (int y = 0; y < linkArr.Height; y++)
+            {
+                linkArr[x, y] = linkArr[x, y].RelinkToNew(mapping);
+            }
+        }
+    }
+
     public static void RemapLinks<TItem>(this IList<TItem> linkList, IReadOnlyDictionary<FormKey, FormKey> mapping)
         where TItem : IFormLinkContainer
     {

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,16 +52,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; } = default;
+        public FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; } = default(FurnitureMarkerParameters.VersioningBreaks);
         #endregion
         #region Enabled
-        public Boolean Enabled { get; set; } = default;
+        public Boolean Enabled { get; set; } = default(Boolean);
         #endregion
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region RotationZ
-        public Single RotationZ { get; set; } = default;
+        public Single RotationZ { get; set; } = default(Single);
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IKeywordGetter> IFurnitureMarkerParametersGetter.Keyword => this.Keyword;
         #endregion
         #region EntryTypes
-        public Furniture.EntryParameterType EntryTypes { get; set; } = default;
+        public Furniture.EntryParameterType EntryTypes { get; set; } = default(Furniture.EntryParameterType);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -853,13 +854,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 334,
-            version: 0);
-
-        public const string GUID = "c75d9213-af7a-438c-a3d9-d953c0001d6a";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -891,8 +885,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureMarkerParametersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -930,12 +922,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFurnitureMarkerParameters item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Enabled = default;
-            item.Offset = default;
-            item.RotationZ = default;
+            item.Versioning = default(FurnitureMarkerParameters.VersioningBreaks);
+            item.Enabled = default(Boolean);
+            item.Offset = default(P3Float);
+            item.RotationZ = default(Single);
             item.Keyword.Clear();
-            item.EntryTypes = default;
+            item.EntryTypes = default(Furniture.EntryParameterType);
             item.Unknown = new byte[3];
         }
         

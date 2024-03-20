@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FragmentIndex
-        public UInt16 FragmentIndex { get; set; } = default;
+        public UInt16 FragmentIndex { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+        public SByte Unknown2 { get; set; } = default(SByte);
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 431,
-            version: 0);
-
-        public const string GUID = "1424338d-bd44-4134-9c37-7896873a998c";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -790,8 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(IndexedScriptFragmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -829,9 +821,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIndexedScriptFragment item)
         {
             ClearPartial();
-            item.FragmentIndex = default;
-            item.Unknown = default;
-            item.Unknown2 = default;
+            item.FragmentIndex = default(UInt16);
+            item.Unknown = default(Int16);
+            item.Unknown2 = default(SByte);
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }
@@ -1285,6 +1277,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void IndexedScriptFragmentParseEndingPositions(
+            IndexedScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x5 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x5)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IIndexedScriptFragmentGetter IndexedScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1300,8 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new IndexedScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x5 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x5)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            IndexedScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

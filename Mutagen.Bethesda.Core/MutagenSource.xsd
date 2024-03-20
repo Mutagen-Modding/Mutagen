@@ -123,6 +123,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="abstractSplitter" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether there is a custom splitting factory from this abstract class
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -211,6 +218,20 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="unknown" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether field is unknown or not
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="notDuplicate" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to consider duplicate logic
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -267,6 +288,13 @@
             </xs:annotation>
           </xs:attribute>
           <xs:attribute name="markerType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the discarded marker type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endMarkerType" type="xs:string">
             <xs:annotation>
               <xs:documentation>
                 Typical four letter ASCII tag used for the discarded marker type.
@@ -437,6 +465,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="alwaysWriteEndMarker" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to write the end marker, even if list is empty
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -467,6 +502,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="expectedLengthLength" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to export the expected length before the content, and with what byte size
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="nullIfCounterZero" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
@@ -485,6 +527,27 @@
             <xs:annotation>
               <xs:documentation>
                 RecordType of an ending marker
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="alwaysWriteEndMarker" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to write the end marker, even if list is empty
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="itemMarkerType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an starting marker for each item
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="itemEndMarkerType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an ending marker for each item
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -517,6 +580,7 @@
         <xs:element name="Gendered" type="NGenderedItem" />
         <xs:element name="Break" />
         <xs:element name="Zero" type="ZeroType"/>
+        <xs:element name="Guid" type="NGuid" />
       </xs:choice>
     </xs:group>
 
@@ -526,14 +590,15 @@
         <xs:element name="FormLink" type="FormLink"/>
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="FormKey" type="FormKey"/>
-		<xs:element name="ModKey" type="ModKey"/>
-		<xs:element name="AssetLink" type="AssetLink"/>
+        <xs:element name="ModKey" type="ModKey"/>
+        <xs:element name="AssetLink" type="AssetLink"/>
         <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Marker" type="MarkerType"/>
         <xs:element name="Gendered" type="GenderedItem" />
         <xs:element name="Break" />
+        <xs:element name="Guid" type="Guid" />
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -569,6 +634,7 @@
       <xs:enumeration value="Normal" />
       <xs:enumeration value="NoGeneration" />
       <xs:enumeration value="Custom" />
+      <xs:enumeration value="CustomWrite" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -585,6 +651,8 @@
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
       <xs:enumeration value="PrependLengthUShort" />
+      <xs:enumeration value="NullTerminateIfNotEmpty" />
+      <xs:enumeration value="PrependLengthWithNullIfContent" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -683,10 +751,10 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="negOneIsNull" type="xs:boolean" >
+        <xs:attribute name="maxIsNone" type="xs:boolean" >
           <xs:annotation>
             <xs:documentation>
-              Whether negative one is interpreted as null
+              Whether max value is interpreted as None
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
@@ -703,6 +771,14 @@
   </xs:complexType>
 
   <xs:complexType name="NFormLinkOrAlias" >
+    <xs:complexContent>
+      <xs:extension base="NFormLink">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NFormLinkOrIndex" >
     <xs:complexContent>
       <xs:extension base="NFormLink">
         <xs:attribute name="name" type="xs:string" use="required" />
@@ -752,6 +828,20 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="Guid" >
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NGuid" >
+    <xs:complexContent>
+      <xs:extension base="Guid">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="RecordType" >
     <xs:complexContent>
       <xs:extension base="Field" />
@@ -777,6 +867,8 @@
         <xs:attribute name="maleMarker" type="xs:string" />
         <xs:attribute name="femaleMarker" type="xs:string" />
         <xs:attribute name="markerPerGender" type="xs:boolean" />
+        <xs:attribute name="shortCircuit" type="xs:boolean" />
+        <xs:attribute name="parseNonConvertedItems" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

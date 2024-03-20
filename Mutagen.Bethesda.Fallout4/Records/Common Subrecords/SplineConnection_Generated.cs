@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public SplineConnection.VersioningBreaks Versioning { get; set; } = default;
+        public SplineConnection.VersioningBreaks Versioning { get; set; } = default(SplineConnection.VersioningBreaks);
         #endregion
         #region Ref
         private readonly IFormLink<IPlacedSimpleGetter> _Ref = new FormLink<IPlacedSimpleGetter>();
@@ -64,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedSimpleGetter> ISplineConnectionGetter.Ref => this.Ref;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -700,13 +701,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 490,
-            version: 0);
-
-        public const string GUID = "381b9149-f078-443e-a1fb-e39651cd6b24";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -745,8 +739,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(SplineConnectionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -784,9 +776,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISplineConnection item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(SplineConnection.VersioningBreaks);
             item.Ref.Clear();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

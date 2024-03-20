@@ -7,9 +7,9 @@ public interface IMutagenEncodingProvider
     IMutagenEncoding GetEncoding(GameRelease release, Language language);
 }
 
-public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
+public static class MutagenEncoding
 {
-    public static readonly MutagenEncodingProvider Instance = new();
+    public static readonly IMutagenEncodingProvider Default = new MutagenEncodingProvider();
     public static readonly IMutagenEncoding _932;
     public static readonly IMutagenEncoding _1250;
     public static readonly IMutagenEncoding _1251;
@@ -26,8 +26,8 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
     public static readonly IMutagenEncoding _utf8_1253;
     public static readonly IMutagenEncoding _utf8_1254;
     public static readonly IMutagenEncoding _utf8_1256;
-        
-    static MutagenEncodingProvider()
+
+    static MutagenEncoding()
     {
         _932 = new MutagenEncodingWrapper(
             CodePagesEncodingProvider.Instance.GetEncoding(932)!);
@@ -66,8 +66,8 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
             _utf8,
             _1256);
     }
-        
-    public IMutagenEncoding GetEncoding(GameRelease release, Language language)
+    
+    public static IMutagenEncoding GetEncoding(GameRelease release, Language language)
     {
         switch (release)
         {
@@ -79,13 +79,15 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalSE:
             case GameRelease.Fallout4:
+            case GameRelease.Fallout4VR:
+            case GameRelease.Starfield:
                 return GetSkyrimSeEncoding(language);
             default:
                 throw new NotImplementedException();
         }
     }
 
-    private IMutagenEncoding GetSkyrimLeEncoding(Language language)
+    private static IMutagenEncoding GetSkyrimLeEncoding(Language language)
     {
         switch (language)
         {
@@ -115,6 +117,7 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
                 return _1256;
             case Language.Korean:
             case Language.Chinese:
+            case Language.ChineseSimplified:
             case Language.Japanese:
             case Language.Thai:
                 return _utf8;
@@ -123,7 +126,7 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
         }
     }
 
-    private IMutagenEncoding GetSkyrimSeEncoding(Language language)
+    private static IMutagenEncoding GetSkyrimSeEncoding(Language language)
     {
         switch (language)
         {
@@ -155,10 +158,19 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
             case Language.Arabic:
                 return _utf8_1256;
             case Language.Chinese:
+            case Language.ChineseSimplified:
             case Language.Korean:
             case Language.Thai:
             default:
                 return _utf8;
         }
+    }
+}
+
+internal sealed class MutagenEncodingProvider : IMutagenEncodingProvider
+{
+    public IMutagenEncoding GetEncoding(GameRelease release, Language language)
+    {
+        return MutagenEncoding.GetEncoding(release, language);
     }
 }

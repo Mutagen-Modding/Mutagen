@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -98,10 +99,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Role
-        public Subgraph.SubgraphRole Role { get; set; } = default;
+        public Subgraph.SubgraphRole Role { get; set; } = default(Subgraph.SubgraphRole);
         #endregion
         #region Perspective
-        public Perspective Perspective { get; set; } = default;
+        public Perspective Perspective { get; set; } = default(Perspective);
         #endregion
 
         #region To String
@@ -1032,13 +1033,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 263,
-            version: 0);
-
-        public const string GUID = "ffb4e210-de52-4021-a797-6384123f8a01";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -1081,8 +1075,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(SubgraphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1124,8 +1116,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ActorKeywords.Clear();
             item.TargetKeywords.Clear();
             item.AnimationPaths.Clear();
-            item.Role = default;
-            item.Perspective = default;
+            item.Role = default(Subgraph.SubgraphRole);
+            item.Perspective = default(Perspective);
         }
         
         #region Mutagen
@@ -1391,7 +1383,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ActorKeywords.SetTo(
                         rhs.ActorKeywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1410,7 +1402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.TargetKeywords.SetTo(
                         rhs.TargetKeywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1691,7 +1683,8 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     SubgraphBinaryCreateTranslation.FillBinaryRoleCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Subgraph_FieldIndex.Role;
                 }
                 default:
@@ -1701,7 +1694,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryRoleCustom(
             MutagenFrame frame,
-            ISubgraph item);
+            ISubgraph item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1777,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Role
         partial void RoleCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Subgraph.SubgraphRole GetRoleCustom();
         public Subgraph.SubgraphRole Role => GetRoleCustom();
@@ -1861,7 +1855,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SAKD,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.ActorKeywords;
@@ -1876,7 +1870,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.STKD,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.TargetKeywords;
@@ -1891,7 +1885,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SAPT,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.AnimationPaths;

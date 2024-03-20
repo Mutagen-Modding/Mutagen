@@ -10,7 +10,7 @@ public enum ModType
     /// <summary>
     /// .esl
     /// </summary>
-    LightMaster,
+    Light,
 
     /// <summary>
     /// .esp
@@ -25,7 +25,7 @@ public static class ModTypeExt
         return modType switch
         {
             ModType.Master => Mutagen.Bethesda.Kernel.Constants.Esm,
-            ModType.LightMaster => Mutagen.Bethesda.Kernel.Constants.Esl,
+            ModType.Light => Mutagen.Bethesda.Kernel.Constants.Esl,
             ModType.Plugin => Mutagen.Bethesda.Kernel.Constants.Esp,
             _ => throw new NotImplementedException()
         };

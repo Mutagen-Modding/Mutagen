@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region IdleTime
-        public Single IdleTime { get; set; } = default;
+        public Single IdleTime { get; set; } = default(Single);
         #endregion
         #region Idle
         private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
@@ -860,13 +861,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 315,
-            version: 0);
-
-        public const string GUID = "45767f39-c2cf-4ba6-98b0-f63df2d4ff70";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -907,13 +901,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SCHR,
                 RecordTypes.SCTX,
                 RecordTypes.PDTO);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -951,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPatrol item)
         {
             ClearPartial();
-            item.IdleTime = default;
+            item.IdleTime = default(Single);
             item.Idle.Clear();
             item.SCHR = default;
             item.SCTX = default;
@@ -1452,7 +1446,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
@@ -1467,7 +1462,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
-            IPatrol item);
+            IPatrol item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1535,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region PatrolScriptMarker
         public partial ParseResult PatrolScriptMarkerCustomParse(
@@ -1558,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Topics
         partial void TopicsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

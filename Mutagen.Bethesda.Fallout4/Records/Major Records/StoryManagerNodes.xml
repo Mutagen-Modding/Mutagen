@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AStoryManagerNode" abstract="true" baseClass="Fallout4MajorRecord" objType="Record" GUID="372524a9-a5a3-45af-b0dd-3536af5c6f58" ID="625">
+  <Object name="AStoryManagerNode" abstract="true" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
       <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
     </Fields>
   </Object>
-  <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record" GUID="76a6d852-f331-4dc0-8006-ca8ee30ec1a3" ID="626">
+  <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record">
     <Fields>
       <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
       <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
     </Fields>
   </Object>
-  <Object name="StoryManagerQuestNode" recordType="SMQN" baseClass="AStoryManagerNode" objType="Record" GUID="486db3f7-2958-47a7-9344-ac18d213f276" ID="627">
+  <Object name="StoryManagerQuestNode" recordType="SMQN" baseClass="AStoryManagerNode" objType="Record">
     <Fields>
       <Data recordType="DNAM">
         <Fields>
@@ -27,18 +27,18 @@
       <RefList name="Quests" counterRecType="QNAM" nullable="False" refName="StoryManagerQuest" />
     </Fields>
   </Object>
-  <Object name="StoryManagerQuest" objType="Subrecord" GUID="eebb201a-5a9c-477b-820f-e31b4b10a7dd" ID="628">
+  <Object name="StoryManagerQuest" objType="Subrecord">
     <Fields>
       <FormLink name="Quest" recordType="NNAM" refName="Quest" />
       <UInt32 name="FNAM" recordType="FNAM" />
       <Float name="HoursUntilReset" recordType="RNAM" divisor="24" />
     </Fields>
   </Object>
-  <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record" GUID="b2aa4737-9af9-49f3-80cc-850fbc8001d8" ID="629">
+  <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record">
     <Fields>
       <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
       <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
-      <RecordType name="Type" recordType="ENAM" />
+      <Enum name="Type" enumName="StoryManagerEventNode.Types" byteLength="4" recordType="ENAM" />
     </Fields>
     <AdditionalContainedRecordType>ADBO</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>ADCR</AdditionalContainedRecordType>

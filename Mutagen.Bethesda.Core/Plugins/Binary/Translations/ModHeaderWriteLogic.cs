@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
@@ -17,9 +18,10 @@ public sealed class ModHeaderWriteLogic
     private readonly ModKey _modKey;
     private readonly Dictionary<ModKey, FormKey> _modKeys = new();
     private uint _numRecords;
-    private uint _nextFormID;
+    private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
+    private readonly GameCategory _category;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
@@ -28,7 +30,7 @@ public sealed class ModHeaderWriteLogic
     {
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
-        _nextFormID = modHeader.MinimumCustomFormID;
+        _category = mod.GameRelease.ToCategory();
     }
 
     public static void WriteHeader(
@@ -57,7 +59,7 @@ public sealed class ModHeaderWriteLogic
         AddRecordCount();
         AddNextFormIDActions();
         AddFormIDUniqueness();
-        AddLightMasterFormLimit(modHeader);
+        AddLightFormLimit(modHeader);
         AddCompressionCheck();
     }
 
@@ -73,11 +75,15 @@ public sealed class ModHeaderWriteLogic
                 {
                     majAction(maj);
                 }
-                foreach (var linkInfo in maj.EnumerateFormLinks())
+
+                if (_formLinkIterationActions.Count > 0)
                 {
-                    foreach (var formLinkAction in _formLinkIterationActions)
+                    foreach (var linkInfo in maj.EnumerateFormLinks())
                     {
-                        formLinkAction(maj.FormKey, linkInfo);
+                        foreach (var formLinkAction in _formLinkIterationActions)
+                        {
+                            formLinkAction(maj.FormKey, linkInfo);
+                        }
                     }
                 }
             }
@@ -93,7 +99,8 @@ public sealed class ModHeaderWriteLogic
         SortMasters(modKeysList);
         ret.SetTo(modKeysList.Select(m => new MasterReference()
         {
-            Master = m
+            Master = m,
+            FileSize = mod.GameRelease.ToCategory().IncludesMasterReferenceDataSubrecords() ? 0 : null
         }));
         return ret;
     }
@@ -111,9 +118,12 @@ public sealed class ModHeaderWriteLogic
         }
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
-            modHeader.NextFormID = _nextFormID + 1;
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : modHeader.MinimumCustomFormID;
         }
-        if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
+
+        var lightIndex = _category.GetLightFlagIndex();
+        if (lightIndex.HasValue 
+            && Enums.HasFlag(modHeader.RawFlags, lightIndex.Value)
             && _uniqueRecordsFromMod > Constants.LightMasterLimit)
         {
             throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
@@ -200,7 +210,7 @@ public sealed class ModHeaderWriteLogic
                 {
                     var fk = maj.FormKey;
                     if (fk.ModKey != _modKey) return;
-                    if (fk.ID > _nextFormID)
+                    if (!_nextFormID.HasValue || fk.ID > _nextFormID)
                     {
                         _nextFormID = fk.ID;
                     }
@@ -256,21 +266,24 @@ public sealed class ModHeaderWriteLogic
             case MasterFlagOption.NoCheck:
                 break;
             case MasterFlagOption.ChangeToMatchModKey:
-                header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
+                header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), _modKey.Type == ModType.Master);
                 if (_modKey.Type != ModType.Plugin)
                 {
-                    header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
+                    header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), true);
                 }
                 break;
             case MasterFlagOption.ExceptionOnMismatch:
-                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
+                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, _category.GetMasterFlagIndex()))
                 {
                     throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
                 }
-                if ((_modKey.Type == ModType.LightMaster) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster))
+
+                var lightIndex = _category.GetLightFlagIndex();
+                if (lightIndex.HasValue && (_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, lightIndex.Value))
                 {
-                    throw new ArgumentException($"LightMaster flag did not match ModKey type. ({_modKey})");
+                    throw new ArgumentException($"Light flag did not match ModKey type. ({_modKey})");
                 }
+                
                 break;
             default:
                 break;
@@ -279,9 +292,10 @@ public sealed class ModHeaderWriteLogic
     #endregion
 
     #region Light Master Form Limit
-    private void AddLightMasterFormLimit(IModHeaderCommon header)
+    private void AddLightFormLimit(IModHeaderCommon header)
     {
-        if (!Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster)) return;
+        var lightIndex = _category.GetLightFlagIndex();
+        if (!lightIndex.HasValue || !Enums.HasFlag(header.RawFlags, lightIndex.Value)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)

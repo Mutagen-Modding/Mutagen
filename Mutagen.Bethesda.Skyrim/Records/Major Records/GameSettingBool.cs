@@ -14,7 +14,7 @@ public partial class GameSettingBool
 
 partial class GameSettingBoolBinaryCreateTranslation
 {
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item, PreviousParse lastParsed)
     {
         var subFrame = frame.ReadSubrecord();
         item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
@@ -38,7 +38,7 @@ partial class GameSettingBoolBinaryOverlay
     private int? _DataLocation;
     bool GetDataIsSetCustom() => _DataLocation.HasValue;
     public partial bool? GetDataCustom() => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants)) != 0 : default;
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _DataLocation = (ushort)(stream.Position - offset);
     }

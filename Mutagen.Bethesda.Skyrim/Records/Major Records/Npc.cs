@@ -58,7 +58,7 @@ partial class NpcCommon
 
 partial class NpcBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
+    public static partial ParseResult FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item, PreviousParse lastParsed)
     {
         // Skip marker
         frame.ReadSubrecord();
@@ -76,7 +76,7 @@ partial class NpcBinaryWriteTranslation
 
 partial class NpcBinaryOverlay
 {
-    public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         // Skip marker
         stream.ReadSubrecord();

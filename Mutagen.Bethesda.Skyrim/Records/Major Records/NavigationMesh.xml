@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMesh" recordType="NAVM" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="225085bf-6162-4178-8f6a-de8d829916c2" ID="272">
+  <Object name="NavigationMesh" recordType="NAVM" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="Data" refName="NavigationMeshData" overflowRecordType="XXXX" />
       <ByteArray name="ONAM" recordType="ONAM" />
@@ -8,24 +8,24 @@
       <ByteArray name="NNAM" recordType="NNAM" />
     </Fields>
   </Object>
-  <Object name="ANavmeshParent" abstract="true" objType="Subrecord" GUID="f17e54aa-50b3-4be9-b075-63bb799d1068" ID="482">
+  <Object name="ANavmeshParent" abstract="true" objType="Subrecord">
   </Object>
-  <Object name="WorldspaceNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent" GUID="bb417d46-40c9-4c4a-a9f8-dfdf77750b70" ID="483">
+  <Object name="WorldspaceNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
     <Fields>
       <FormLink name="Parent" refName="Worldspace" />
       <P2Int16 name="Coordinates" />
     </Fields>
   </Object>
-  <Object name="CellNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent" GUID="ade210ed-9dba-497c-803d-e37ff35cc602" ID="484">
+  <Object name="CellNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
     <Fields>
       <FormLink name="UnusedWorldspaceParent" refName="Worldspace" />
       <FormLink name="Parent" refName="Cell" />
     </Fields>
   </Object>
-  <Object name="NavigationMeshData" objType="Subrecord" recordType="NVNM" GUID="0f14b502-0797-43b9-810a-e958643a5d68" ID="324">
+  <Object name="NavigationMeshData" objType="Subrecord" recordType="NVNM">
     <Fields>
       <UInt32 name="NavmeshVersion" default="12" />
-      <UInt32 name="Magic" default="0xA5E9A03C" />
+      <UInt32 name="CrcHash" default="0xA5E9A03C" />
       <RefDirect name="Parent" refName="ANavmeshParent" binary="Custom" byteLength="8" />
       <List name="Vertices" counterLength="4">
         <P3Float />
@@ -42,7 +42,7 @@
       <ByteArray name="NavmeshGrid" binaryOverlay="NoGeneration" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="NavmeshTriangle" objType="Subrecord" GUID="1b0eb710-fc34-463b-8f7b-03859bb6c879" ID="320">
+  <Object name="NavmeshTriangle" objType="Subrecord">
     <Fields>
       <P3Int16 name="Vertices" />
       <Int16 name="EdgeLink_0_1" />
@@ -54,14 +54,14 @@
       <Bool name="IsCover" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="EdgeLink" objType="Subrecord" GUID="d5312308-0813-41dc-87c0-d45119a5615e" ID="321">
+  <Object name="EdgeLink" objType="Subrecord">
     <Fields>
       <Int32 name="Unknown" />
       <FormLink name="Mesh" refName="NavigationMesh" />
       <Int16 name="TriangleIndex" />
     </Fields>
   </Object>
-  <Object name="DoorTriangle" objType="Subrecord" GUID="2723707b-8770-415b-8a3b-772ae9a6aa8d" ID="322">
+  <Object name="DoorTriangle" objType="Subrecord">
     <Fields>
       <Int16 name="TriangleBeforeDoor" />
       <Int32 name="Unknown" />

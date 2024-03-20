@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Flags
         public QuestObjective.Flag? Flags { get; set; }
@@ -806,13 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 365,
-            version: 0);
-
-        public const string GUID = "f9edb5c0-0f4d-4d98-b7ba-462d08c9820d";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -854,13 +848,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestObjectiveBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -898,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IQuestObjective item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(UInt16);
             item.Flags = default;
             item.DisplayText = default;
             item.Targets.Clear();
@@ -1414,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Index
         private int? _IndexLocation;
-        public UInt16 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region Flags
         private int? _FlagsLocation;

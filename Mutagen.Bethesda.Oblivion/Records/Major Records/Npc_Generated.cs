@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -2100,13 +2101,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 84,
-            version: 0);
-
-        public const string GUID = "96396343-a32a-4165-b745-e038c5e06eeb";
-
         public const ushort AdditionalFieldCount = 23;
 
         public const ushort FieldCount = 28;
@@ -2165,13 +2159,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FGGA,
                 RecordTypes.FGTS,
                 RecordTypes.FNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -3081,7 +3075,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3154,7 +3148,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.AIPackages.SetTo(
                         rhs.AIPackages
-                        .Select(r => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3239,7 +3233,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IEyeGetter>>();
                     }
                     else
@@ -4111,7 +4105,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SPLO,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.Spells;
@@ -4150,7 +4144,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKID,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.AIPackages;

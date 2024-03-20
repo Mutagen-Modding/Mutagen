@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -760,9 +761,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = IdleMarker_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IdleMarkerCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerSetterCommon.Instance.RemapLinks(this, mapping);
-        public IdleMarker(FormKey formKey)
+        public IdleMarker(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -771,7 +775,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -785,12 +789,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public IdleMarker(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public IdleMarker(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1162,13 +1170,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 233,
-            version: 0);
-
-        public const string GUID = "50c1215a-a33e-41ac-87a8-9b94874cb2ef";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 14;
@@ -1216,13 +1217,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODC,
                 RecordTypes.MODT,
                 RecordTypes.MODS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1667,7 +1668,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new IdleMarker(formKey);
+            var newRec = new IdleMarker(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1763,7 +1764,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -1798,7 +1799,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else
@@ -2187,7 +2188,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.IDLT:
                 {
@@ -2199,7 +2201,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)IdleMarker_FieldIndex.Animations;
                 }
                 case RecordTypeInts.QNAM:
@@ -2232,11 +2235,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryAnimationCountCustom(
             MutagenFrame frame,
-            IIdleMarkerInternal item);
+            IIdleMarkerInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
-            IIdleMarkerInternal item);
+            IIdleMarkerInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2302,7 +2307,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region AnimationCount
         public partial ParseResult AnimationCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region IdleTimer
         private int? _IdleTimerLocation;
@@ -2311,7 +2317,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Animations
         partial void AnimationsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -2417,7 +2423,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AnimationCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.IDLT:
                 {

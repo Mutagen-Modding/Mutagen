@@ -52,8 +52,6 @@ public partial class Race
         UseAdvancedAvoidance = 0x0000_0001_0000_0000,
         NonHostile = 0x0000_0002_0000_0000,
         Floats = 0x0000_0004_0000_0000,
-        Unknown3 = 0x0000_0008_0000_0000,
-        Unknown4 = 0x0000_0010_0000_0000,
         HeadAxisBit0 = 0x0000_0020_0000_0000,
         HeadAxisBit1 = 0x0000_0040_0000_0000,
         CanMeleeWhenKnockedDown = 0x0000_0080_0000_0000,
@@ -63,7 +61,6 @@ public partial class Race
         UseLargeActorPathing = 0x0000_0800_0000_0000,
         UseSubsegmentedDamage = 0x0000_1000_0000_0000,
         FlightDeferKill = 0x0000_2000_0000_0000,
-        Unknown14 = 0x0000_4000_0000_0000,
         FlightAllowProceduralCrashLand = 0x0000_8000_0000_0000,
         DisableWeaponCulling = 0x0001_0000_0000_0000,
         UseOptimalSpeeds = 0x0002_0000_0000_0000,
@@ -72,6 +69,14 @@ public partial class Race
         UseQuadrupedController = 0x0010_0000_0000_0000,
         LowPriorityPushable = 0x0020_0000_0000_0000,
         CannotUsePlayableItems = 0x0040_0000_0000_0000
+    }
+
+    partial void CustomCtor()
+    {      
+        for (int key = 0; key < 32; ++key)
+        {
+            this.BipedObjects[(BipedObject)key] = new BipedObjectData();
+        }
     }
 }
 
@@ -99,7 +104,7 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryBipedObjectsCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBipedObjectsCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         FillBinaryBipedObjectsDictionary(frame, item.FormVersion, item.BipedObjects);
     }
@@ -139,11 +144,11 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-    public static partial void FillBinaryMorphValuesCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryMorphValuesCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         item.MorphValues.SetTo(
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphValue>.Instance.Parse(
@@ -155,7 +160,7 @@ partial class RaceBinaryCreateTranslation
         frame.ReadSubrecord(RecordTypes.MLSI);
     }
 
-    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         var genderFrame = frame.ReadSubrecord(RecordTypes.BSMP);
                 
@@ -212,7 +217,7 @@ partial class RaceBinaryOverlay
     {
     }
 
-    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
@@ -254,13 +259,13 @@ partial class RaceBinaryOverlay
         BipedObjects = dict.Covariant<BipedObject, BipedObjectData, IBipedObjectDataGetter>();
     }
 
-    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        FaceFxPhonemesRawParsingCustomParse(stream, offset);
+        FaceFxPhonemesRawParsingCustomParse(stream, offset, lastParsed);
         return null;
     }
 
-    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_faceFxPhonemesLoc == null)
         {
@@ -280,7 +285,7 @@ partial class RaceBinaryOverlay
         return ret;
     }
 
-    partial void MorphValuesCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MorphValuesCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         this.MorphValues = this.ParseRepeatedTypelessSubrecord<IMorphValueGetter>(
             stream: stream,

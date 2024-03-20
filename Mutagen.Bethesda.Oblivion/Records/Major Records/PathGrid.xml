@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PathGrid" objType="Record" baseClass="OblivionMajorRecord" recordType="PGRD" GUID="9fc6e922-dfb7-4ad4-81d3-bea823f22198" ID="129">
+  <Object name="PathGrid" objType="Record" baseClass="OblivionMajorRecord" recordType="PGRD">
     <Fields>
       <RefList name="PointToPointConnections" refName="PathGridPoint" recordType="DATA" binary="Custom" />
       <ByteArray name="PGAG" recordType="PGAG" binary="NoGeneration" />
@@ -9,25 +9,25 @@
     </Fields>
     <AdditionalContainedRecordType>PGRR</AdditionalContainedRecordType>
   </Object>
-  <Object name="PathGridPoint" objType="Subrecord" GUID="6091ea9f-d0f5-4697-b89d-90083da7fde3" ID="130">
+  <Object name="PathGridPoint" objType="Subrecord">
     <Fields>
       <P3Float name="Point" />
       <UInt8 name="NumConnections" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
-      <List name="Connections" binary="NoGeneration" >
+      <List name="Connections" binary="NoGeneration">
         <Int16 />
       </List>
     </Fields>
   </Object>
-  <Object name="InterCellPoint" objType="Subrecord" GUID="550dc884-f88b-403d-832e-130d9a0ddfd1" ID="135">
+  <Object name="InterCellPoint" objType="Subrecord">
     <Fields>
       <Int32 name="PointID" />
       <P3Float name="Point" />
     </Fields>
   </Object>
-  <Object name="PointToReferenceMapping" recordType="PGRL" objType="Subrecord" GUID="4d524dea-fd8a-4f29-bd85-50c3db4b81e0" ID="136">
+  <Object name="PointToReferenceMapping" recordType="PGRL" objType="Subrecord">
     <Fields>
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>IPlaced</Interface>
       </FormLink>
       <List name="Points">

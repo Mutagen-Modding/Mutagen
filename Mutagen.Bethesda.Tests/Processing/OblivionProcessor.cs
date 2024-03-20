@@ -88,7 +88,7 @@ public class OblivionProcessor : Processor
         {
             var lvld = majorFrame.FindSubrecordHeader(RecordTypes.LVLD);
             var index = lvld.EndLocation + 1;
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 loc: index + fileOffset,
                 addition: new byte[]
                 {
@@ -110,14 +110,14 @@ public class OblivionProcessor : Processor
             {
                 writer.Write((ushort)(existingLen - 7));
             }
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: fileOffset + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength,
                 sub: lenData);
         }
 
         // Remove DATA
         var dataRange = new RangeInt64(dataFrame.Location + fileOffset, dataFrame.Location + fileOffset + 7 - 1);
-        _instructions.SetRemove(dataRange);
+        Instructions.SetRemove(dataRange);
         amount -= (int)dataRange.Width;
 
         ProcessLengths(
@@ -151,7 +151,7 @@ public class OblivionProcessor : Processor
         foreach (var item in rdats.Reverse())
         {
             if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
-            _instructions.SetMove(
+            Instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }
@@ -167,7 +167,7 @@ public class OblivionProcessor : Processor
             // Get icon string
             var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
             stream.Position = iconLoc.Min + 20;
-            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)), MutagenEncodingProvider._1252);
+            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)), MutagenEncoding._1252);
 
             // Get icon bytes
             MemoryStream memStream = new MemoryStream();
@@ -183,10 +183,10 @@ public class OblivionProcessor : Processor
             }
 
             var arr = memStream.ToArray();
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 loc: locToPlace,
                 addition: arr);
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: iconLoc);
             amount += arr.Length;
             amount -= (int)iconLoc.Width;
@@ -208,10 +208,10 @@ public class OblivionProcessor : Processor
         {
             ModifyLengthTracking(fileOffset, -4);
             var removeStart = fileOffset + xlocFrame.Location + xlocFrame.HeaderLength + 12;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: fileOffset + xlocFrame.Location + 4,
                 sub: new byte[] { 12, 0 });
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: new RangeInt64(
                     removeStart,
                     removeStart + 3));
@@ -224,10 +224,10 @@ public class OblivionProcessor : Processor
             {
                 ModifyLengthTracking(fileOffset, -3);
                 var removeStart = fileOffset + xsedFrame.Location + xsedFrame.HeaderLength + 1;
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     loc: fileOffset + xsedFrame.Location + 4,
                     sub: new byte[] { 1, 0 });
-                _instructions.SetRemove(
+                Instructions.SetRemove(
                     section: new RangeInt64(
                         removeStart,
                         removeStart + 2));
@@ -315,10 +315,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -328,12 +328,12 @@ public class OblivionProcessor : Processor
         {
             var existingLen = schd.ContentLength;
             var diff = existingLen - 0x14;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: schd.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'R', 0x14 });
             if (diff == 0) continue;
             var locToRemove = fileOffset + schd.Location + schd.HeaderLength + 0x14;
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: new RangeInt64(
                     locToRemove,
                     locToRemove + diff - 1));
@@ -353,10 +353,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -375,10 +375,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -387,17 +387,17 @@ public class OblivionProcessor : Processor
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.PKDT))
         {
             if (ctdt.ContentLength != 4) continue;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: fileOffset + ctdt.Location + 4,
                 sub: new byte[] { 0x8 });
             var first1 = ctdt.Content[0];
             var first2 = ctdt.Content[1];
             var second1 = ctdt.Content[2];
             var second2 = ctdt.Content[3];
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: fileOffset + ctdt.Location + 6,
                 sub: new byte[] { first1, first2, 0, 0 });
-            _instructions.SetAddition(
+            Instructions.SetAddition(
                 loc: fileOffset + ctdt.Location + 10,
                 addition: new byte[] { second1, 0, 0, 0 });
             amount += 4;
@@ -417,32 +417,32 @@ public class OblivionProcessor : Processor
         {
             var len = ctsd.ContentLength;
             var move = 2;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + move);
             move = 38;
             if (len < 2 + move) return;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + move);
             move = 53;
             if (len < 3 + move) return;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 53);
             move = 69;
             if (len < 3 + move) return;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 69);
             move = 82;
             if (len < 2 + move) return;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 82);
             move = 113;
             if (len < 3 + move) return;
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 113);
         }
@@ -458,10 +458,10 @@ public class OblivionProcessor : Processor
             var len = dataRec.ContentLength; 
             if (len == 0x02) 
             { 
-                _instructions.SetSubstitution( 
+                Instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0, 0 }); 
-                _instructions.SetRemove( 
+                Instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation, 
                         length: 2)); 
@@ -470,10 +470,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x56) 
             { 
-                _instructions.SetSubstitution( 
+                Instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x54, 0 }); 
-                _instructions.SetRemove( 
+                Instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x54, 
                         length: 2)); 
@@ -482,10 +482,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x2A) 
             { 
-                _instructions.SetSubstitution( 
+                Instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x28, 0 }); 
-                _instructions.SetRemove( 
+                Instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x28, 
                         length: 2)); 
@@ -494,10 +494,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x3E) 
             { 
-                _instructions.SetSubstitution( 
+                Instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x3C, 0 }); 
-                _instructions.SetRemove( 
+                Instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x3C, 
                         length: 2)); 
@@ -507,7 +507,7 @@ public class OblivionProcessor : Processor
             var move = 0x39; 
             if (len >= 3 + move) 
             { 
-                _instructions.SetSubstitution( 
+                Instructions.SetSubstitution( 
                     sub: new byte[] { 0, 0, 0 }, 
                     loc: fileOffset + dataRec.EndLocation + move); 
             } 

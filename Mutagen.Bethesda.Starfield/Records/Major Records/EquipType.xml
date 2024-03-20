@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <List name="SlotParents" recordType="PNAM">
+        <FormLink refName="EquipType" />
+      </List>
+      <Enum name="Flag" byteLength="4" recordType="DATA" enumName="EquipType.Flags" />
+      <FormLink name="ConditionActorValue" recordType="ANAM" refName="ActorValueInformation" maxIsNone="true" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public SoundRepeat.VersioningBreaks Versioning { get; set; } = default;
+        public SoundRepeat.VersioningBreaks Versioning { get; set; } = default(SoundRepeat.VersioningBreaks);
         #endregion
         #region MinTime
-        public Single MinTime { get; set; } = default;
+        public Single MinTime { get; set; } = default(Single);
         #endregion
         #region MaxTime
-        public Single MaxTime { get; set; } = default;
+        public Single MaxTime { get; set; } = default(Single);
         #endregion
         #region Stackable
-        public Boolean Stackable { get; set; } = default;
+        public Boolean Stackable { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -724,13 +725,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 94,
-            version: 0);
-
-        public const string GUID = "beab6506-5f95-4dd2-b8ee-02655c76538c";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -769,8 +763,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(SoundRepeatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -808,10 +800,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundRepeat item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.MinTime = default;
-            item.MaxTime = default;
-            item.Stackable = default;
+            item.Versioning = default(SoundRepeat.VersioningBreaks);
+            item.MinTime = default(Single);
+            item.MaxTime = default(Single);
+            item.Stackable = default(Boolean);
         }
         
         #region Mutagen

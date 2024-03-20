@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public DialogResponses.Flag Flags { get; set; } = default;
+        public DialogResponses.Flag Flags { get; set; } = default(DialogResponses.Flag);
         #endregion
         #region ResetHours
-        public Single ResetHours { get; set; } = default;
+        public Single ResetHours { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -644,13 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 359,
-            version: 0);
-
-        public const string GUID = "8f8feabd-8d62-4c94-8fb7-3edfc3c31f25";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -689,8 +683,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseFlagsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -728,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDialogResponseFlags item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.ResetHours = default;
+            item.Flags = default(DialogResponses.Flag);
+            item.ResetHours = default(Single);
         }
         
         #region Mutagen

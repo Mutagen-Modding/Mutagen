@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Creature" objType="Record" baseClass="OblivionMajorRecord" recordType="CREA" GUID="9859ec12-21c5-4de8-9caa-404330da8b79" ID="89">
+  <Object name="Creature" objType="Record" baseClass="OblivionMajorRecord" recordType="CREA">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -8,7 +8,7 @@
         <RefDirect refName="ItemEntry" />
       </List>
       <List name="Spells">
-        <FormLink recordType="SPLO" >
+        <FormLink recordType="SPLO">
           <Interface>ISpellRecord</Interface>
         </FormLink>
       </List>
@@ -20,7 +20,7 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" recordType="INAM" >
+      <FormLink name="DeathItem" recordType="INAM">
         <Interface>IItem</Interface>
       </FormLink>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
@@ -45,7 +45,7 @@
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>INpcRecord</LinkInterface>
   </Object>
-  <Object name="CreatureConfiguration" objType="Subrecord" recordType="ACBS" GUID="47d2aad4-4bca-4222-8f0c-6a7ed5899187" ID="183">
+  <Object name="CreatureConfiguration" objType="Subrecord" recordType="ACBS">
     <Fields>
       <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
       <UInt16 name="BaseSpellPoints" />
@@ -56,7 +56,7 @@
       <UInt16 name="CalcMax" />
     </Fields>
   </Object>
-  <Object name="CreatureAIData" objType="Subrecord" recordType="AIDT" GUID="0776da7a-c4ea-4359-86dc-ef07a4bc558e" ID="184">
+  <Object name="CreatureAIData" objType="Subrecord" recordType="AIDT">
     <Fields>
       <UInt8 name="Aggression" />
       <UInt8 name="Confidence" />
@@ -68,7 +68,7 @@
       <Zero byteLength="2" />
     </Fields>
   </Object>
-  <Object name="CreatureData" objType="Subrecord" recordType="DATA" GUID="20d1cf07-b67d-4565-835c-0dc6b3249a60" ID="185">
+  <Object name="CreatureData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Enum name="Type" enumName="Creature.Types" byteLength="1" />
       <UInt8 name="CombatSkill" />
@@ -87,13 +87,13 @@
       <UInt8 name="Luck" />
     </Fields>
   </Object>
-  <Object name="CreatureSound" objType="Subrecord" GUID="f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3" ID="90">
+  <Object name="CreatureSound" objType="Subrecord">
     <Fields>
       <Enum name="SoundType" enumName="CreatureSound.CreatureSoundType" byteLength="4" recordType="CSDT" />
       <RefList name="Sounds" refName="SoundItem" />
     </Fields>
   </Object>
-  <Object name="SoundItem" objType="Subrecord" GUID="bed98725-1f58-4853-aba1-311221e7aa4e" ID="91">
+  <Object name="SoundItem" objType="Subrecord">
     <Fields>
       <FormLink name="Sound" refName="Sound" recordType="CSDI" />
       <UInt8 name="Chance" recordType="CSDC" />

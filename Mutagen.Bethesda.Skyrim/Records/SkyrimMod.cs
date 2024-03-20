@@ -14,12 +14,21 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    public const uint DefaultInitialNextFormID = 0x800;
-    private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
+    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 
     partial void CustomCtor()
     {
-        this.ModHeader.FormVersion = this.SkyrimRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+        this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
+    }
+
+    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    {
+        if (headerVersion >= 1.71f)
+        {
+            return 1;
+        }
+
+        return 800;
     }
 }
 

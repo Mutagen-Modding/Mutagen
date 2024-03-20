@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Message" recordType="MESG" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Int32 name="INAM" recordType="INAM" nullable="False" unknown="true" />
+      <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
+      <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
+      <UInt32 name="DisplayTime" recordType="TNAM" />
+      <UInt32 name="BNAM" recordType="BNAM" unknown="true" />
+      <String name="ShortTitle" recordType="NNAM" translated="Normal" />
+      <RefList name="MenuButtons" refName="MessageButton" />
+    </Fields>
+  </Object>
+  <Object name="MessageButton" objType="Subrecord">
+    <Fields>
+      <String name="Text" recordType="ITXT" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="Reference" refName="PlacedObject" recordType="DODT" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActorValueModulation" recordType="AVMD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Enum name="Type" enumName="ActorValueModulation.TypeEnum" byteLength="4" recordType="MNAM" nullable="False" />
+      <String name="YNAM" recordType="YNAM" />
+      <String name="Name" recordType="TNAM" nullable="False" />
+      <RefList name="Entries" refName="ActorValueModulationEntry" counterRecType="ITMC" />
+      <Enum name="TextureType" enumName="ActorValueModulation.TextureTypeEnum" recordType="MODT" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="ActorValueModulationEntry" objType="Subrecord">
+    <Fields>
+      <String name="LNAM" recordType="LNAM" nullable="False" />
+      <String name="VNAM" recordType="VNAM" />
+      <Color name="Color" recordType="NNAM" binaryType="Alpha" />
+    </Fields>
+  </Object>
+</Loqui>

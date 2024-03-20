@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
-        public Quadrant Quadrant { get; set; } = default;
+        public Quadrant Quadrant { get; set; } = default(Quadrant);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region LayerNumber
-        public UInt16 LayerNumber { get; set; } = default;
+        public UInt16 LayerNumber { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -731,13 +732,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 519,
-            version: 0);
-
-        public const string GUID = "2b790a33-5c87-492a-8e18-c37e07ec53b9";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -776,8 +770,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LayerHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -816,9 +808,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Texture.Clear();
-            item.Quadrant = default;
-            item.Unused = default;
-            item.LayerNumber = default;
+            item.Quadrant = default(Quadrant);
+            item.Unused = default(Byte);
+            item.LayerNumber = default(UInt16);
         }
         
         #region Mutagen

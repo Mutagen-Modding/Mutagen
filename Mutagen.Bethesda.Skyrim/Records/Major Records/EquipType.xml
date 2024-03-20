@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="SkyrimMajorRecord" GUID="8aeacc80-2d8c-45fc-8cf1-48c04bc3a4ca" ID="69">
+  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
-      <List name="SlotParents" recordType="PNAM" >
+      <List name="SlotParents" recordType="PNAM">
         <FormLink refName="EquipType" />
       </List>
       <Bool name="UseAllParents" byteLength="4" recordType="DATA" />

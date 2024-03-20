@@ -156,7 +156,7 @@ public class Api
     [Fact]
     public static void FormLink()
     {
-        var mod = new SkyrimMod(TestConstants.LightMasterModKey, SkyrimRelease.SkyrimLE);
+        var mod = new SkyrimMod(TestConstants.LightModKey, SkyrimRelease.SkyrimLE);
         var light = mod.Lights.AddNew();
         var cache = mod.ToImmutableLinkCache();
 
@@ -233,13 +233,13 @@ public class Api
     public static void LoadOrderTryGetValue()
     {
         var lo = new LoadOrder<ISkyrimModGetter>();
-        lo.TryGetValue(TestConstants.LightMasterModKey, out var item);
+        lo.TryGetValue(TestConstants.LightModKey, out var item);
     }
 
     [Fact]
     public static void GroupAccessors()
     {
-        var mod = new SkyrimMod(TestConstants.LightMasterModKey, SkyrimRelease.SkyrimSE);
+        var mod = new SkyrimMod(TestConstants.LightModKey, SkyrimRelease.SkyrimSE);
         var group = new SkyrimGroup<Npc>(mod);
         if (group.TryGetValue(TestConstants.Form1, out var npc))
         {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ShaderParticleGeometry" recordType="SPGD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Data>
+        <Fields>
+          <Float name="GravityVelocity" />
+          <Float name="Unknown1" />
+          <Float name="RotationVelocity" />
+          <Float name="Unknown2" />
+          <Float name="ParticleSizeX" />
+          <Float name="Unknown3" />
+          <Float name="ParticleSizeY" />
+          <Float name="Unknown4" />
+          <Float name="CenterOffsetMin" />
+          <Float name="Unknown5" />
+          <Float name="CenterOffsetMax" />
+          <Float name="Unknown6" />
+          <Float name="InitialRotation" />
+          <Float name="Unknown7" />
+          <Float name="NumSubtexturesX" />
+          <Float name="Unknown8" />
+          <Float name="NumSubtexturesY" />
+          <Float name="Unknown9" />
+          <Enum name="Type" enumName="ShaderParticleGeometry.ShaderParticleType" byteLength="4" />
+          <Float name="Unknown10" />
+          <UInt32 name="BoxSize" />
+          <Float name="Unknown11" />
+          <Float name="ParticleDensity" />
+          <Float name="Unknown12" />
+        </Fields>
+      </Data>
+      <String name="ParticleTexture" recordType="MNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -62,13 +63,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Flags
-        public TeleportDestination.Flag Flags { get; set; } = default;
+        public TeleportDestination.Flag Flags { get; set; } = default(TeleportDestination.Flag);
         #endregion
         #region TransitionInterior
         private readonly IFormLink<ICellGetter> _TransitionInterior = new FormLink<ICellGetter>();
@@ -777,13 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 496,
-            version: 0);
-
-        public const string GUID = "68a9c725-3177-42ef-989c-8b2bb257bc39";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -822,8 +816,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -862,9 +854,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Door.Clear();
-            item.Position = default;
-            item.Rotation = default;
-            item.Flags = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.Flags = default(TeleportDestination.Flag);
             item.TransitionInterior.Clear();
         }
         

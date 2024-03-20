@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Enchantment.EnchantmentType Type { get; set; } = default;
+        public Enchantment.EnchantmentType Type { get; set; } = default(Enchantment.EnchantmentType);
         #endregion
         #region ChargeAmount
-        public UInt32 ChargeAmount { get; set; } = default;
+        public UInt32 ChargeAmount { get; set; } = default(UInt32);
         #endregion
         #region EnchantCost
-        public UInt32 EnchantCost { get; set; } = default;
+        public UInt32 EnchantCost { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public Enchantment.Flag Flags { get; set; } = default;
+        public Enchantment.Flag Flags { get; set; } = default(Enchantment.Flag);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 189,
-            version: 0);
-
-        public const string GUID = "76cd10d5-9756-4d70-92e8-be1435a44a35";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IEnchantmentData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.ChargeAmount = default;
-            item.EnchantCost = default;
-            item.Flags = default;
+            item.Type = default(Enchantment.EnchantmentType);
+            item.ChargeAmount = default(UInt32);
+            item.EnchantCost = default(UInt32);
+            item.Flags = default(Enchantment.Flag);
         }
         
         #region Mutagen

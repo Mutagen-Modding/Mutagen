@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     #region Class
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord, StarfieldMajorRecord]
     /// </summary>
     public abstract partial class MajorRecord :
         IEquatable<IMajorRecordGetter>,
@@ -57,7 +58,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
 
         #region MajorRecordFlagsRaw
-        public Int32 MajorRecordFlagsRaw { get; set; } = default;
+        public Int32 MajorRecordFlagsRaw { get; set; } = default(Int32);
         #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; } = FormKey.Null;
@@ -69,7 +70,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
         #region VersionControl
-        public UInt32 VersionControl { get; set; } = default;
+        public UInt32 VersionControl { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -569,7 +570,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
     #region Interface
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord, StarfieldMajorRecord]
     /// </summary>
     public partial interface IMajorRecord :
         IAssetLinkContainer,
@@ -590,7 +591,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     }
 
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord, StarfieldMajorRecord]
     /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,
@@ -1030,13 +1031,6 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
-            msgID: 1,
-            version: 0);
-
-        public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -1068,8 +1062,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static readonly Type BinaryWriteTranslation = typeof(MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1107,8 +1099,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void Clear(IMajorRecordInternal item)
         {
             ClearPartial();
-            item.MajorRecordFlagsRaw = default;
-            item.VersionControl = default;
+            item.MajorRecordFlagsRaw = default(Int32);
+            item.VersionControl = default(UInt32);
             item.EditorID = default;
         }
         

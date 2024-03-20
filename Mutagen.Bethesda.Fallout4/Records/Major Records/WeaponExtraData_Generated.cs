@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,28 +52,28 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AnimationFireSeconds
-        public Single AnimationFireSeconds { get; set; } = default;
+        public Single AnimationFireSeconds { get; set; } = default(Single);
         #endregion
         #region RumbleLeftMotorStrength
-        public Single RumbleLeftMotorStrength { get; set; } = default;
+        public Single RumbleLeftMotorStrength { get; set; } = default(Single);
         #endregion
         #region RumbleRightMotorStrength
-        public Single RumbleRightMotorStrength { get; set; } = default;
+        public Single RumbleRightMotorStrength { get; set; } = default(Single);
         #endregion
         #region RumbleDuration
-        public Single RumbleDuration { get; set; } = default;
+        public Single RumbleDuration { get; set; } = default(Single);
         #endregion
         #region AnimationReloadSeconds
-        public Single AnimationReloadSeconds { get; set; } = default;
+        public Single AnimationReloadSeconds { get; set; } = default(Single);
         #endregion
         #region BoltAnimSeconds
-        public Single BoltAnimSeconds { get; set; } = default;
+        public Single BoltAnimSeconds { get; set; } = default(Single);
         #endregion
         #region SightedTransitionSeconds
-        public Single SightedTransitionSeconds { get; set; } = default;
+        public Single SightedTransitionSeconds { get; set; } = default(Single);
         #endregion
         #region NumProjectiles
-        public Byte NumProjectiles { get; set; } = default;
+        public Byte NumProjectiles { get; set; } = default(Byte);
         #endregion
         #region ProjectileOverride
         private readonly IFormLink<IProjectileGetter> _ProjectileOverride = new FormLink<IProjectileGetter>();
@@ -85,10 +86,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IProjectileGetter> IWeaponExtraDataGetter.ProjectileOverride => this.ProjectileOverride;
         #endregion
         #region Pattern
-        public Weapon.PatternType Pattern { get; set; } = default;
+        public Weapon.PatternType Pattern { get; set; } = default(Weapon.PatternType);
         #endregion
         #region RumblePeriodMs
-        public UInt32 RumblePeriodMs { get; set; } = default;
+        public UInt32 RumblePeriodMs { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -983,13 +984,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 338,
-            version: 0);
-
-        public const string GUID = "b3385307-2448-44ed-a1c7-048de4a5e39d";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1028,8 +1022,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(WeaponExtraDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1067,17 +1059,17 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWeaponExtraData item)
         {
             ClearPartial();
-            item.AnimationFireSeconds = default;
-            item.RumbleLeftMotorStrength = default;
-            item.RumbleRightMotorStrength = default;
-            item.RumbleDuration = default;
-            item.AnimationReloadSeconds = default;
-            item.BoltAnimSeconds = default;
-            item.SightedTransitionSeconds = default;
-            item.NumProjectiles = default;
+            item.AnimationFireSeconds = default(Single);
+            item.RumbleLeftMotorStrength = default(Single);
+            item.RumbleRightMotorStrength = default(Single);
+            item.RumbleDuration = default(Single);
+            item.AnimationReloadSeconds = default(Single);
+            item.BoltAnimSeconds = default(Single);
+            item.SightedTransitionSeconds = default(Single);
+            item.NumProjectiles = default(Byte);
             item.ProjectileOverride.Clear();
-            item.Pattern = default;
-            item.RumblePeriodMs = default;
+            item.Pattern = default(Weapon.PatternType);
+            item.RumblePeriodMs = default(UInt32);
         }
         
         #region Mutagen

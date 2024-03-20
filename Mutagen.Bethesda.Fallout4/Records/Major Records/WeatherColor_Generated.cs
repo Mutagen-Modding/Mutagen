@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,31 +52,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public WeatherColor.VersioningBreaks Versioning { get; set; } = default;
+        public WeatherColor.VersioningBreaks Versioning { get; set; } = default(WeatherColor.VersioningBreaks);
         #endregion
         #region Sunrise
-        public Color Sunrise { get; set; } = default;
+        public Color Sunrise { get; set; } = default(Color);
         #endregion
         #region Day
-        public Color Day { get; set; } = default;
+        public Color Day { get; set; } = default(Color);
         #endregion
         #region Sunset
-        public Color Sunset { get; set; } = default;
+        public Color Sunset { get; set; } = default(Color);
         #endregion
         #region Night
-        public Color Night { get; set; } = default;
+        public Color Night { get; set; } = default(Color);
         #endregion
         #region EarlySunrise
-        public Color EarlySunrise { get; set; } = default;
+        public Color EarlySunrise { get; set; } = default(Color);
         #endregion
         #region LateSunrise
-        public Color LateSunrise { get; set; } = default;
+        public Color LateSunrise { get; set; } = default(Color);
         #endregion
         #region EarlySunset
-        public Color EarlySunset { get; set; } = default;
+        public Color EarlySunset { get; set; } = default(Color);
         #endregion
         #region LateSunset
-        public Color LateSunset { get; set; } = default;
+        public Color LateSunset { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -905,13 +906,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 438,
-            version: 0);
-
-        public const string GUID = "5f63507e-d3ab-4460-8be0-b36e02a9d2af";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -943,8 +937,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(WeatherColorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -982,15 +974,15 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWeatherColor item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
-            item.EarlySunrise = default;
-            item.LateSunrise = default;
-            item.EarlySunset = default;
-            item.LateSunset = default;
+            item.Versioning = default(WeatherColor.VersioningBreaks);
+            item.Sunrise = default(Color);
+            item.Day = default(Color);
+            item.Sunset = default(Color);
+            item.Night = default(Color);
+            item.EarlySunrise = default(Color);
+            item.LateSunrise = default(Color);
+            item.EarlySunset = default(Color);
+            item.LateSunset = default(Color);
         }
         
         #region Mutagen

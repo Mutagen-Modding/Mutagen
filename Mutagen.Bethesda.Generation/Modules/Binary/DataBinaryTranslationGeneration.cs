@@ -25,7 +25,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     {
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
@@ -273,19 +273,21 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         TypeGeneration typeGen,
         Accessor dataAccessor, 
         int? passedLength,
-        string passedLengthAccessor)
+        string passedLengthAccessor,
+        DataType? data = null)
     {
         var dataType = typeGen as DataType;
         var lengths = await this.Module.IteratePassedLengths(
                 objGen,
                 dataType.SubFields,
+                passedLenPrefix: "ret.",
                 forOverlay: true)
             .ToListAsync();
         foreach (var field in dataType.IterateFieldsWithMeta())
         {
             if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
-            var data = field.Field.GetFieldData();
-            switch (data.BinaryOverlayFallback)
+            var fieldData = field.Field.GetFieldData();
+            switch (fieldData.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                 case BinaryGenerationType.Custom:
@@ -293,11 +295,11 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 default:
                     continue;
             }
-            if (data.HasTrigger) continue;
+            if (fieldData.HasTrigger) continue;
             var amount = await subTypeGen.GetPassedAmount(objGen, field.Field);
             if (amount != null) continue;
             if (field.Field is CustomLogic) continue;
-            switch (data.BinaryOverlayFallback)
+            switch (fieldData.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Custom:
                     sb.AppendLine($"ret.Custom{field.Field.Name}EndPos();");
@@ -310,13 +312,22 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         throw new ArgumentException();
                     }
+
+                    var passedLenForField = length.PassedAccessor;
+                    if (length.PassedType == BinaryTranslationModule.PassedType.Direct)
+                    {
+                        passedLenForField =
+                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)}{(passedLenForField.IsNullOrWhitespace() ? null : $" + {passedLenForField}")}";
+                    }
+                    
                     await subTypeGen.GenerateWrapperUnknownLengthParse(
                         sb,
                         objGen,
                         field.Field,
                         dataAccessor,
                         length.PassedLength,
-                        $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}");
+                        passedLenForField,
+                        data: dataType);
                     break;
             }
         }

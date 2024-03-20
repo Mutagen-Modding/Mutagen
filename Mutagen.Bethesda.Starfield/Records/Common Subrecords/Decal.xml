@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Decal" objType="Subrecord" recordType="DODT">
+    <Fields>
+      <Float name="MinWidth" />
+      <Float name="MaxWidth" />
+      <Float name="MinHeight" />
+      <Float name="MaxHeight" />
+      <Float name="Depth" />
+      <Float name="Shininess" />
+    </Fields>
+  </Object>
+</Loqui>

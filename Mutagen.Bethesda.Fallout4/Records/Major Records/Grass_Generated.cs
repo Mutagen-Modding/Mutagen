@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -94,40 +95,40 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Density
-        public Byte Density { get; set; } = default;
+        public Byte Density { get; set; } = default(Byte);
         #endregion
         #region MinSlope
-        public Byte MinSlope { get; set; } = default;
+        public Byte MinSlope { get; set; } = default(Byte);
         #endregion
         #region MaxSlope
-        public Byte MaxSlope { get; set; } = default;
+        public Byte MaxSlope { get; set; } = default(Byte);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region UnitsFromWater
-        public UInt16 UnitsFromWater { get; set; } = default;
+        public UInt16 UnitsFromWater { get; set; } = default(UInt16);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region UnitsFromWaterType
-        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType { get; set; } = default;
+        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType { get; set; } = default(Grass.UnitsFromWaterTypeEnum);
         #endregion
         #region PositionRange
-        public Single PositionRange { get; set; } = default;
+        public Single PositionRange { get; set; } = default(Single);
         #endregion
         #region HeightRange
-        public Single HeightRange { get; set; } = default;
+        public Single HeightRange { get; set; } = default(Single);
         #endregion
         #region ColorRange
-        public Single ColorRange { get; set; } = default;
+        public Single ColorRange { get; set; } = default(Single);
         #endregion
         #region WavePeriod
-        public Single WavePeriod { get; set; } = default;
+        public Single WavePeriod { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Grass.Flag Flags { get; set; } = default;
+        public Grass.Flag Flags { get; set; } = default(Grass.Flag);
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -858,9 +859,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GrassCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassSetterCommon.Instance.RemapLinks(this, mapping);
-        public Grass(FormKey formKey)
+        public Grass(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -869,7 +873,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -883,12 +887,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Grass(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Grass(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1255,13 +1263,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 98,
-            version: 0);
-
-        public const string GUID = "1c394d4c-178d-4ee4-be0e-06aa0f5d85f6";
-
         public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
@@ -1303,13 +1304,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1349,18 +1350,18 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.Density = default;
-            item.MinSlope = default;
-            item.MaxSlope = default;
-            item.Unknown = default;
-            item.UnitsFromWater = default;
-            item.Unknown2 = default;
-            item.UnitsFromWaterType = default;
-            item.PositionRange = default;
-            item.HeightRange = default;
-            item.ColorRange = default;
-            item.WavePeriod = default;
-            item.Flags = default;
+            item.Density = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Unknown = default(Byte);
+            item.UnitsFromWater = default(UInt16);
+            item.Unknown2 = default(UInt16);
+            item.UnitsFromWaterType = default(Grass.UnitsFromWaterTypeEnum);
+            item.PositionRange = default(Single);
+            item.HeightRange = default(Single);
+            item.ColorRange = default(Single);
+            item.WavePeriod = default(Single);
+            item.Flags = default(Grass.Flag);
             item.Unknown3 = new byte[3];
             base.Clear(item);
         }
@@ -1785,7 +1786,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Grass(formKey);
+            var newRec = new Grass(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2375,12 +2376,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region UnitsFromWater
         private int _UnitsFromWaterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _UnitsFromWater_IsSet => _DATALocation.HasValue;
-        public UInt16 UnitsFromWater => _UnitsFromWater_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnitsFromWaterLocation, 2)) : default;
+        public UInt16 UnitsFromWater => _UnitsFromWater_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnitsFromWaterLocation, 2)) : default(UInt16);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0x6;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default(UInt16);
         #endregion
         #region UnitsFromWaterType
         private int _UnitsFromWaterTypeLocation => _DATALocation!.Value.Min + 0x8;
@@ -2390,22 +2391,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
-        public Single PositionRange => _PositionRange_IsSet ? _recordData.Slice(_PositionRangeLocation, 4).Float() : default;
+        public Single PositionRange => _PositionRange_IsSet ? _recordData.Slice(_PositionRangeLocation, 4).Float() : default(Single);
         #endregion
         #region HeightRange
         private int _HeightRangeLocation => _DATALocation!.Value.Min + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
-        public Single HeightRange => _HeightRange_IsSet ? _recordData.Slice(_HeightRangeLocation, 4).Float() : default;
+        public Single HeightRange => _HeightRange_IsSet ? _recordData.Slice(_HeightRangeLocation, 4).Float() : default(Single);
         #endregion
         #region ColorRange
         private int _ColorRangeLocation => _DATALocation!.Value.Min + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
-        public Single ColorRange => _ColorRange_IsSet ? _recordData.Slice(_ColorRangeLocation, 4).Float() : default;
+        public Single ColorRange => _ColorRange_IsSet ? _recordData.Slice(_ColorRangeLocation, 4).Float() : default(Single);
         #endregion
         #region WavePeriod
         private int _WavePeriodLocation => _DATALocation!.Value.Min + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
-        public Single WavePeriod => _WavePeriod_IsSet ? _recordData.Slice(_WavePeriodLocation, 4).Float() : default;
+        public Single WavePeriod => _WavePeriod_IsSet ? _recordData.Slice(_WavePeriodLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;

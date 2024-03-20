@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -583,13 +584,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 425,
-            version: 0);
-
-        public const string GUID = "d22ea2b4-5063-4bc9-9a70-29081a7e9650";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 6;
@@ -628,8 +622,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointSetTextBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1086,6 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(
@@ -1205,6 +1198,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void PerkEntryPointSetTextParseEndingPositions(
+            PerkEntryPointSetTextBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Text = (TranslatedString)BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x2), package.MetaData.Encodings.NonTranslated);
+            ret.TextEndingPos = 0x2 + 5;
+        }
+
         public static IPerkEntryPointSetTextGetter PerkEntryPointSetTextFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1220,8 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new PerkEntryPointSetTextBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Text = (TranslatedString)BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x2), package.MetaData.Encodings.NonTranslated);
-            ret.TextEndingPos = 0x2 + 5;
+            PerkEntryPointSetTextParseEndingPositions(ret, package);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

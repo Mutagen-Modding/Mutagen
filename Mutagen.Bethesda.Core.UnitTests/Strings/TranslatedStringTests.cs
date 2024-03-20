@@ -336,6 +336,16 @@ public class TranslatedString_ByCtor : ATranslatedStringTests
 [Collection("TranslatedString")]
 public class TranslatedString_ByLookup : ATranslatedStringTests
 {
+    [Fact]
+    public void NumLanguagesReturnsMany()
+    {
+        TranslatedString.DefaultLanguage = Language.English;
+        ITranslatedString str = Create(
+            new KeyValuePair<Language, string>(Language.English, EnglishString),
+            new KeyValuePair<Language, string>(Language.French, FrenchString));
+        str.NumLanguages.Should().Be(2);
+    }
+    
     public class ManualStringsLookup : IStringsFolderLookup
     {
         private readonly StringsSource _source;

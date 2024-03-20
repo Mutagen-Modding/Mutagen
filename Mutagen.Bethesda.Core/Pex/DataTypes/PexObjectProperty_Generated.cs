@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectPropertyGetter.DocString => this.DocString;
         #endregion
         #region Flags
-        public PropertyFlags Flags { get; set; } = default;
+        public PropertyFlags Flags { get; set; } = default(PropertyFlags);
         #endregion
         #region AutoVarName
         public String? AutoVarName { get; set; }
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Pex
         IPexObjectFunctionGetter? IPexObjectPropertyGetter.WriteHandler => this.WriteHandler;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -820,13 +820,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 11,
-            version: 0);
-
-        public const string GUID = "0dfa3f68-af0f-47a9-afbb-2d5d6b4bb994";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -857,8 +850,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -899,11 +890,11 @@ namespace Mutagen.Bethesda.Pex
             item.Name = default;
             item.TypeName = default;
             item.DocString = default;
-            item.Flags = default;
+            item.Flags = default(PropertyFlags);
             item.AutoVarName = default;
             item.ReadHandler = null;
             item.WriteHandler = null;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
         }
         
     }

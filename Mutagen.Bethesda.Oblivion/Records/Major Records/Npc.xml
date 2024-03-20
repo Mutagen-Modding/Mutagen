@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" baseClass="OblivionMajorRecord" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
+  <Object name="Npc" baseClass="OblivionMajorRecord" objType="Record" recordType="NPC_">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -8,12 +8,12 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" recordType="INAM" >
+      <FormLink name="DeathItem" recordType="INAM">
         <Interface>IItem</Interface>
       </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormLink recordType="SPLO" >
+        <FormLink recordType="SPLO">
           <Interface>ISpellRecord</Interface>
         </FormLink>
       </List>
@@ -46,7 +46,7 @@
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>INpcRecord</LinkInterface>
   </Object>
-  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="01742ef6-ce08-4574-bb21-c03ac0e59d3a" ID="198">
+  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS">
     <Fields>
       <Enum name="Flags" enumName="Npc.NpcFlag" byteLength="4" />
       <UInt16 name="BaseSpellPoints" />
@@ -57,7 +57,7 @@
       <UInt16 name="CalcMax" />
     </Fields>
   </Object>
-  <Object name="AIData" objType="Subrecord" recordType="AIDT" GUID="4c031ad6-6a9d-4855-81b4-81ff0b43a9af" ID="199">
+  <Object name="AIData" objType="Subrecord" recordType="AIDT">
     <Fields>
       <UInt8 name="Aggression" />
       <UInt8 name="Confidence" />
@@ -69,7 +69,7 @@
       <Int16 name="Unused" />
     </Fields>
   </Object>
-  <Object name="NpcData" objType="Subrecord" recordType="DATA" GUID="6ec3a936-c2df-43d5-a3a1-641ca180cdaa" ID="200">
+  <Object name="NpcData" objType="Subrecord" recordType="DATA">
     <Fields>
       <UInt8 name="Armorer" />
       <UInt8 name="Athletics" />
@@ -103,14 +103,14 @@
       <UInt8 name="Luck" />
     </Fields>
   </Object>
-  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="825729c0-9865-4e99-87a2-ea87f3fc373a" ID="85">
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <Int8 name="Rank" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
     </Fields>
   </Object>
-  <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
+  <Object name="ItemEntry" objType="Subrecord" recordType="CNTO">
     <Fields>
       <FormLink name="Item">
         <Interface>IItem</Interface>

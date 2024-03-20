@@ -1,3 +1,4 @@
+using System;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -9,7 +10,9 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -264,8 +267,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectSpell:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectSpell)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectSpell)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                 {
@@ -277,8 +280,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectText:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectText)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectText)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                 {
@@ -290,8 +293,8 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SetText:
-                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSetText)} had EPF2 unexpectedly");
+                                if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSetText)} had EPF3 unexpectedly");
                                 if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                 {
@@ -344,7 +347,7 @@ partial class PerkBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item, PreviousParse lastParsed)
     {
         item.Effects.SetTo(ParseEffects(frame.Reader));
     }
@@ -564,7 +567,7 @@ partial class PerkBinaryOverlay
 
     partial void EffectsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

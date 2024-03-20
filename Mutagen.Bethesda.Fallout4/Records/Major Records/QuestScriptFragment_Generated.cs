@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Stage
-        public UInt16 Stage { get; set; } = default;
+        public UInt16 Stage { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region StageIndex
-        public Int32 StageIndex { get; set; } = default;
+        public Int32 StageIndex { get; set; } = default(Int32);
         #endregion
         #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+        public SByte Unknown2 { get; set; } = default(SByte);
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -788,13 +789,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 523,
-            version: 0);
-
-        public const string GUID = "8ff23dfb-2469-43ad-b9f1-8e01b5962f0b";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -826,8 +820,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(QuestScriptFragmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -865,10 +857,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestScriptFragment item)
         {
             ClearPartial();
-            item.Stage = default;
-            item.Unknown = default;
-            item.StageIndex = default;
-            item.Unknown2 = default;
+            item.Stage = default(UInt16);
+            item.Unknown = default(Int16);
+            item.StageIndex = default(Int32);
+            item.Unknown2 = default(SByte);
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }
@@ -1339,6 +1331,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void QuestScriptFragmentParseEndingPositions(
+            QuestScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x9 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x9)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IQuestScriptFragmentGetter QuestScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1354,8 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new QuestScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x9 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x9)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            QuestScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

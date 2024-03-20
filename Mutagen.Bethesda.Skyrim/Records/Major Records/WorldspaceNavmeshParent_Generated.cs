@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -63,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavmeshParentGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
-        public P2Int16 Coordinates { get; set; } = default;
+        public P2Int16 Coordinates { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -617,13 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 483,
-            version: 0);
-
-        public const string GUID = "bb417d46-40c9-4c4a-a9f8-dfdf77750b70";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -655,8 +649,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceNavmeshParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -695,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Parent.Clear();
-            item.Coordinates = default;
+            item.Coordinates = default(P2Int16);
             base.Clear(item);
         }
         

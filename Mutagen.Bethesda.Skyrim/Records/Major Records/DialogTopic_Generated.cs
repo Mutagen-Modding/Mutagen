@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -95,7 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Priority
-        public Single Priority { get; set; } = default;
+        public static readonly Single PriorityDefault = 50;
+        public Single Priority { get; set; } = PriorityDefault;
         #endregion
         #region Branch
         private readonly IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
@@ -118,22 +120,22 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
         #endregion
         #region TopicFlags
-        public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
+        public DialogTopic.TopicFlag TopicFlags { get; set; } = default(DialogTopic.TopicFlag);
         #endregion
         #region Category
-        public DialogTopic.CategoryEnum Category { get; set; } = default;
+        public DialogTopic.CategoryEnum Category { get; set; } = default(DialogTopic.CategoryEnum);
         #endregion
         #region Subtype
-        public DialogTopic.SubtypeEnum Subtype { get; set; } = default;
+        public DialogTopic.SubtypeEnum Subtype { get; set; } = default(DialogTopic.SubtypeEnum);
         #endregion
         #region SubtypeName
         public RecordType SubtypeName { get; set; } = RecordType.Null;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -807,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -816,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1444,13 +1446,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 314,
-            version: 0);
-
-        public const string GUID = "29f5de6a-ecd3-4ce8-8ffb-b443aad13295";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
@@ -1515,13 +1510,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ANAM,
                 RecordTypes.TWAT,
                 RecordTypes.ONAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1560,15 +1555,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name = default;
-            item.Priority = default;
+            item.Priority = DialogTopic.PriorityDefault;
             item.Branch.Clear();
             item.Quest.Clear();
-            item.TopicFlags = default;
-            item.Category = default;
-            item.Subtype = default;
+            item.TopicFlags = default(DialogTopic.TopicFlag);
+            item.Category = default(DialogTopic.CategoryEnum);
+            item.Subtype = default(DialogTopic.SubtypeEnum);
             item.SubtypeName = RecordType.Null;
-            item.Timestamp = default;
-            item.Unknown = default;
+            item.Timestamp = default(Int32);
+            item.Unknown = default(Int32);
             item.Responses.Clear();
             base.Clear(item);
         }
@@ -2145,7 +2140,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IModContext? parent,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<ISkyrimMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -2168,9 +2163,9 @@ namespace Mutagen.Bethesda.Skyrim
                         parent.Responses.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
                         return dup;
                     });
@@ -2185,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<ISkyrimMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -2245,9 +2240,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Responses.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
                                     return dup;
                                 });
@@ -2615,9 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Priority,
-                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
-                divisor: 50f,
-                multiplier: null);
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
@@ -2781,10 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        multiplier: 50f,
-                        divisor: null);
+                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
@@ -2827,7 +2817,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2843,7 +2834,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryResponseCountCustom(
             MutagenFrame frame,
-            IDialogTopicInternal item);
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
@@ -2924,7 +2916,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() * 50f : default;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Branch
         private int? _BranchLocation;
@@ -2957,7 +2949,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region ResponseCount
         public partial ParseResult ResponseCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3071,7 +3064,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return ResponseCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

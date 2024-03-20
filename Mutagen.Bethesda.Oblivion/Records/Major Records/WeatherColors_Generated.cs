@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,16 +52,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sunrise
-        public Color Sunrise { get; set; } = default;
+        public Color Sunrise { get; set; } = default(Color);
         #endregion
         #region Day
-        public Color Day { get; set; } = default;
+        public Color Day { get; set; } = default(Color);
         #endregion
         #region Sunset
-        public Color Sunset { get; set; } = default;
+        public Color Sunset { get; set; } = default(Color);
         #endregion
         #region Night
-        public Color Night { get; set; } = default;
+        public Color Night { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -717,13 +718,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 103,
-            version: 0);
-
-        public const string GUID = "8a3ac7e7-7e81-4f9c-b318-c1c40ed00f8c";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -755,8 +749,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(WeatherColorsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -794,10 +786,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IWeatherColors item)
         {
             ClearPartial();
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
+            item.Sunrise = default(Color);
+            item.Day = default(Color);
+            item.Sunset = default(Color);
+            item.Night = default(Color);
         }
         
         #region Mutagen

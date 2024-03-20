@@ -20,6 +20,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -60,10 +61,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Type
-        public GroupTypeEnum Type { get; set; } = default;
+        public GroupTypeEnum Type { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region RecordCache
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -694,13 +695,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 170,
-            version: 0);
-
-        public const string GUID = "284f4b98-0fd4-45a4-aeb7-16a9c4cbc7f0";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -733,8 +727,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(OblivionGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -780,8 +772,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IOblivionGroup<T> item)
         {
             ClearPartial();
-            item.Type = default;
-            item.LastModified = default;
+            item.Type = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
             item.RecordCache.Clear();
         }
         

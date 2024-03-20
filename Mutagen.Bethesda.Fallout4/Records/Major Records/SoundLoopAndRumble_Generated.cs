@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Loop
-        public SoundDescriptor.LoopType Loop { get; set; } = default;
+        public SoundDescriptor.LoopType Loop { get; set; } = default(SoundDescriptor.LoopType);
         #endregion
         #region Sidechain
-        public Byte Sidechain { get; set; } = default;
+        public Byte Sidechain { get; set; } = default(Byte);
         #endregion
         #region RumbleValues
-        public Byte RumbleValues { get; set; } = default;
+        public Byte RumbleValues { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 637,
-            version: 0);
-
-        public const string GUID = "467d5def-de15-4d90-9f73-ca2c0d129436";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(SoundLoopAndRumbleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundLoopAndRumble item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Loop = default;
-            item.Sidechain = default;
-            item.RumbleValues = default;
+            item.Unknown = default(Byte);
+            item.Loop = default(SoundDescriptor.LoopType);
+            item.Sidechain = default(Byte);
+            item.RumbleValues = default(Byte);
         }
         
         #region Mutagen

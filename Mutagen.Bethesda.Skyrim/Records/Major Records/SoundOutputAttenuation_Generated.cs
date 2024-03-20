@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region MinDistance
-        public Single MinDistance { get; set; } = default;
+        public Single MinDistance { get; set; } = default(Single);
         #endregion
         #region MaxDistance
-        public Single MaxDistance { get; set; } = default;
+        public Single MaxDistance { get; set; } = default(Single);
         #endregion
         #region Curve
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -768,13 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 477,
-            version: 0);
-
-        public const string GUID = "421ae9ea-44b0-4005-a8f9-8b12258cf8f3";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -813,8 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputAttenuationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -852,9 +844,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundOutputAttenuation item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.MinDistance = default;
-            item.MaxDistance = default;
+            item.Unknown = default(Int32);
+            item.MinDistance = default(Single);
+            item.MaxDistance = default(Single);
             item.Curve = new byte[5];
             item.Unknown2 = new byte[3];
         }

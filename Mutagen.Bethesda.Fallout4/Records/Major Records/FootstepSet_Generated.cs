@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -867,9 +868,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepSetCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetSetterCommon.Instance.RemapLinks(this, mapping);
-        public FootstepSet(FormKey formKey)
+        public FootstepSet(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -878,7 +882,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -892,12 +896,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public FootstepSet(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public FootstepSet(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1212,13 +1220,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 141,
-            version: 0);
-
-        public const string GUID = "27d5ff53-19ed-484c-b612-3cc8c2bf2fef";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 12;
@@ -1255,13 +1256,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.FSTS,
                 RecordTypes.XCNT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FootstepSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1693,7 +1694,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new FootstepSet(formKey);
+            var newRec = new FootstepSet(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1765,7 +1766,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.WalkFootsteps.SetTo(
                         rhs.WalkFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1784,7 +1785,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RunFootsteps.SetTo(
                         rhs.RunFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1803,7 +1804,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.SprintFootsteps.SetTo(
                         rhs.SprintFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1822,7 +1823,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.SneakFootsteps.SetTo(
                         rhs.SneakFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1841,7 +1842,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.SwimFootsteps.SetTo(
                         rhs.SwimFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2133,7 +2134,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2149,7 +2151,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryCountCustom(
             MutagenFrame frame,
-            IFootstepSetInternal item);
+            IFootstepSetInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2201,7 +2204,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Count
         public partial ParseResult CountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2276,7 +2280,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return CountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

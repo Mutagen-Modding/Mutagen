@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -117,28 +118,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> INpcGetter.AnimationSound => this.AnimationSound;
         #endregion
         #region Flags
-        public Npc.Flag Flags { get; set; } = default;
+        public Npc.Flag Flags { get; set; } = default(Npc.Flag);
         #endregion
         #region XpValueOffset
-        public Int16 XpValueOffset { get; set; } = default;
+        public Int16 XpValueOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMinLevel
-        public Int16 CalcMinLevel { get; set; } = default;
+        public Int16 CalcMinLevel { get; set; } = default(Int16);
         #endregion
         #region CalcMaxLevel
-        public Int16 CalcMaxLevel { get; set; } = default;
+        public Int16 CalcMaxLevel { get; set; } = default(Int16);
         #endregion
         #region DispositionBase
-        public Int16 DispositionBase { get; set; } = default;
+        public Int16 DispositionBase { get; set; } = default(Int16);
         #endregion
         #region UseTemplateActors
-        public Npc.TemplateActorType UseTemplateActors { get; set; } = default;
+        public Npc.TemplateActorType UseTemplateActors { get; set; } = default(Npc.TemplateActorType);
         #endregion
         #region BleedoutOverride
-        public Int16 BleedoutOverride { get; set; } = default;
+        public Int16 BleedoutOverride { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -417,37 +418,37 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Aggression
-        public Npc.AggressionType Aggression { get; set; } = default;
+        public Npc.AggressionType Aggression { get; set; } = default(Npc.AggressionType);
         #endregion
         #region Confidence
-        public Npc.ConfidenceType Confidence { get; set; } = default;
+        public Npc.ConfidenceType Confidence { get; set; } = default(Npc.ConfidenceType);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Npc.ResponsibilityType Responsibility { get; set; } = default;
+        public Npc.ResponsibilityType Responsibility { get; set; } = default(Npc.ResponsibilityType);
         #endregion
         #region Mood
-        public Npc.MoodType Mood { get; set; } = default;
+        public Npc.MoodType Mood { get; set; } = default(Npc.MoodType);
         #endregion
         #region Assistance
-        public Npc.AssistanceType Assistance { get; set; } = default;
+        public Npc.AssistanceType Assistance { get; set; } = default(Npc.AssistanceType);
         #endregion
         #region AggroRadiusBehaviorEnabled
-        public Boolean AggroRadiusBehaviorEnabled { get; set; } = default;
+        public Boolean AggroRadiusBehaviorEnabled { get; set; } = default(Boolean);
         #endregion
         #region AggroRadiusWarn
-        public UInt32 AggroRadiusWarn { get; set; } = default;
+        public UInt32 AggroRadiusWarn { get; set; } = default(UInt32);
         #endregion
         #region AggroRadiusWarnOrAttack
-        public UInt32 AggroRadiusWarnOrAttack { get; set; } = default;
+        public UInt32 AggroRadiusWarnOrAttack { get; set; } = default(UInt32);
         #endregion
         #region AggroRadiusAttack
-        public UInt32 AggroRadiusAttack { get; set; } = default;
+        public UInt32 AggroRadiusAttack { get; set; } = default(UInt32);
         #endregion
         #region NoSlowApproach
-        public Boolean NoSlowApproach { get; set; } = default;
+        public Boolean NoSlowApproach { get; set; } = default(Boolean);
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -563,20 +564,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? INpcGetter.ShortName => this.ShortName;
         #endregion
-        #region BaseHealth
-        public UInt16 BaseHealth { get; set; } = default;
+        #region CalculatedHealth
+        public UInt16 CalculatedHealth { get; set; } = default(UInt16);
         #endregion
-        #region BaseActionPoints
-        public UInt16 BaseActionPoints { get; set; } = default;
+        #region CalculatedActionPoints
+        public UInt16 CalculatedActionPoints { get; set; } = default(UInt16);
         #endregion
         #region FarAwayModelDistance
-        public UInt16 FarAwayModelDistance { get; set; } = default;
+        public UInt16 FarAwayModelDistance { get; set; } = default(UInt16);
         #endregion
         #region GearedUpWeapons
-        public Byte GearedUpWeapons { get; set; } = default;
+        public Byte GearedUpWeapons { get; set; } = default(Byte);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -644,7 +645,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? INpcGetter.NAM5 => this.NAM5;
         #endregion
         #region HeightMin
-        public Single HeightMin { get; set; } = default;
+        public Single HeightMin { get; set; } = default(Single);
         #endregion
         #region NAM7
         public Single? NAM7 { get; set; }
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? INpcGetter.NAM7 => this.NAM7;
         #endregion
         #region HeightMax
-        public Single HeightMax { get; set; } = default;
+        public Single HeightMax { get; set; } = default(Single);
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4
         INpcWeightGetter? INpcGetter.Weight => this.Weight;
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -912,8 +913,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Class = initialValue;
                 this.Name = initialValue;
                 this.ShortName = initialValue;
-                this.BaseHealth = initialValue;
-                this.BaseActionPoints = initialValue;
+                this.CalculatedHealth = initialValue;
+                this.CalculatedActionPoints = initialValue;
                 this.FarAwayModelDistance = initialValue;
                 this.GearedUpWeapons = initialValue;
                 this.Unused = initialValue;
@@ -1010,8 +1011,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Class,
                 TItem Name,
                 TItem ShortName,
-                TItem BaseHealth,
-                TItem BaseActionPoints,
+                TItem CalculatedHealth,
+                TItem CalculatedActionPoints,
                 TItem FarAwayModelDistance,
                 TItem GearedUpWeapons,
                 TItem Unused,
@@ -1107,8 +1108,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Class = Class;
                 this.Name = Name;
                 this.ShortName = ShortName;
-                this.BaseHealth = BaseHealth;
-                this.BaseActionPoints = BaseActionPoints;
+                this.CalculatedHealth = CalculatedHealth;
+                this.CalculatedActionPoints = CalculatedActionPoints;
                 this.FarAwayModelDistance = FarAwayModelDistance;
                 this.GearedUpWeapons = GearedUpWeapons;
                 this.Unused = Unused;
@@ -1206,8 +1207,8 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Class;
             public TItem Name;
             public TItem ShortName;
-            public TItem BaseHealth;
-            public TItem BaseActionPoints;
+            public TItem CalculatedHealth;
+            public TItem CalculatedActionPoints;
             public TItem FarAwayModelDistance;
             public TItem GearedUpWeapons;
             public TItem Unused;
@@ -1307,8 +1308,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Class, rhs.Class)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
-                if (!object.Equals(this.BaseHealth, rhs.BaseHealth)) return false;
-                if (!object.Equals(this.BaseActionPoints, rhs.BaseActionPoints)) return false;
+                if (!object.Equals(this.CalculatedHealth, rhs.CalculatedHealth)) return false;
+                if (!object.Equals(this.CalculatedActionPoints, rhs.CalculatedActionPoints)) return false;
                 if (!object.Equals(this.FarAwayModelDistance, rhs.FarAwayModelDistance)) return false;
                 if (!object.Equals(this.GearedUpWeapons, rhs.GearedUpWeapons)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
@@ -1400,8 +1401,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Class);
                 hash.Add(this.Name);
                 hash.Add(this.ShortName);
-                hash.Add(this.BaseHealth);
-                hash.Add(this.BaseActionPoints);
+                hash.Add(this.CalculatedHealth);
+                hash.Add(this.CalculatedActionPoints);
                 hash.Add(this.FarAwayModelDistance);
                 hash.Add(this.GearedUpWeapons);
                 hash.Add(this.Unused);
@@ -1624,8 +1625,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Class)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.ShortName)) return false;
-                if (!eval(this.BaseHealth)) return false;
-                if (!eval(this.BaseActionPoints)) return false;
+                if (!eval(this.CalculatedHealth)) return false;
+                if (!eval(this.CalculatedActionPoints)) return false;
                 if (!eval(this.FarAwayModelDistance)) return false;
                 if (!eval(this.GearedUpWeapons)) return false;
                 if (!eval(this.Unused)) return false;
@@ -1908,8 +1909,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Class)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.ShortName)) return true;
-                if (eval(this.BaseHealth)) return true;
-                if (eval(this.BaseActionPoints)) return true;
+                if (eval(this.CalculatedHealth)) return true;
+                if (eval(this.CalculatedActionPoints)) return true;
                 if (eval(this.FarAwayModelDistance)) return true;
                 if (eval(this.GearedUpWeapons)) return true;
                 if (eval(this.Unused)) return true;
@@ -2209,8 +2210,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Class = eval(this.Class);
                 obj.Name = eval(this.Name);
                 obj.ShortName = eval(this.ShortName);
-                obj.BaseHealth = eval(this.BaseHealth);
-                obj.BaseActionPoints = eval(this.BaseActionPoints);
+                obj.CalculatedHealth = eval(this.CalculatedHealth);
+                obj.CalculatedActionPoints = eval(this.CalculatedActionPoints);
                 obj.FarAwayModelDistance = eval(this.FarAwayModelDistance);
                 obj.GearedUpWeapons = eval(this.GearedUpWeapons);
                 obj.Unused = eval(this.Unused);
@@ -2710,13 +2711,13 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ShortName, "ShortName");
                     }
-                    if (printMask?.BaseHealth ?? true)
+                    if (printMask?.CalculatedHealth ?? true)
                     {
-                        sb.AppendItem(BaseHealth, "BaseHealth");
+                        sb.AppendItem(CalculatedHealth, "CalculatedHealth");
                     }
-                    if (printMask?.BaseActionPoints ?? true)
+                    if (printMask?.CalculatedActionPoints ?? true)
                     {
-                        sb.AppendItem(BaseActionPoints, "BaseActionPoints");
+                        sb.AppendItem(CalculatedActionPoints, "CalculatedActionPoints");
                     }
                     if (printMask?.FarAwayModelDistance ?? true)
                     {
@@ -2982,8 +2983,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Class;
             public Exception? Name;
             public Exception? ShortName;
-            public Exception? BaseHealth;
-            public Exception? BaseActionPoints;
+            public Exception? CalculatedHealth;
+            public Exception? CalculatedActionPoints;
             public Exception? FarAwayModelDistance;
             public Exception? GearedUpWeapons;
             public Exception? Unused;
@@ -3134,10 +3135,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return Name;
                     case Npc_FieldIndex.ShortName:
                         return ShortName;
-                    case Npc_FieldIndex.BaseHealth:
-                        return BaseHealth;
-                    case Npc_FieldIndex.BaseActionPoints:
-                        return BaseActionPoints;
+                    case Npc_FieldIndex.CalculatedHealth:
+                        return CalculatedHealth;
+                    case Npc_FieldIndex.CalculatedActionPoints:
+                        return CalculatedActionPoints;
                     case Npc_FieldIndex.FarAwayModelDistance:
                         return FarAwayModelDistance;
                     case Npc_FieldIndex.GearedUpWeapons:
@@ -3376,11 +3377,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.ShortName:
                         this.ShortName = ex;
                         break;
-                    case Npc_FieldIndex.BaseHealth:
-                        this.BaseHealth = ex;
+                    case Npc_FieldIndex.CalculatedHealth:
+                        this.CalculatedHealth = ex;
                         break;
-                    case Npc_FieldIndex.BaseActionPoints:
-                        this.BaseActionPoints = ex;
+                    case Npc_FieldIndex.CalculatedActionPoints:
+                        this.CalculatedActionPoints = ex;
                         break;
                     case Npc_FieldIndex.FarAwayModelDistance:
                         this.FarAwayModelDistance = ex;
@@ -3651,11 +3652,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.ShortName:
                         this.ShortName = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.BaseHealth:
-                        this.BaseHealth = (Exception?)obj;
+                    case Npc_FieldIndex.CalculatedHealth:
+                        this.CalculatedHealth = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.BaseActionPoints:
-                        this.BaseActionPoints = (Exception?)obj;
+                    case Npc_FieldIndex.CalculatedActionPoints:
+                        this.CalculatedActionPoints = (Exception?)obj;
                         break;
                     case Npc_FieldIndex.FarAwayModelDistance:
                         this.FarAwayModelDistance = (Exception?)obj;
@@ -3812,8 +3813,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Class != null) return true;
                 if (Name != null) return true;
                 if (ShortName != null) return true;
-                if (BaseHealth != null) return true;
-                if (BaseActionPoints != null) return true;
+                if (CalculatedHealth != null) return true;
+                if (CalculatedActionPoints != null) return true;
                 if (FarAwayModelDistance != null) return true;
                 if (GearedUpWeapons != null) return true;
                 if (Unused != null) return true;
@@ -4187,10 +4188,10 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(ShortName, "ShortName");
                 }
                 {
-                    sb.AppendItem(BaseHealth, "BaseHealth");
+                    sb.AppendItem(CalculatedHealth, "CalculatedHealth");
                 }
                 {
-                    sb.AppendItem(BaseActionPoints, "BaseActionPoints");
+                    sb.AppendItem(CalculatedActionPoints, "CalculatedActionPoints");
                 }
                 {
                     sb.AppendItem(FarAwayModelDistance, "FarAwayModelDistance");
@@ -4419,8 +4420,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
-                ret.BaseHealth = this.BaseHealth.Combine(rhs.BaseHealth);
-                ret.BaseActionPoints = this.BaseActionPoints.Combine(rhs.BaseActionPoints);
+                ret.CalculatedHealth = this.CalculatedHealth.Combine(rhs.CalculatedHealth);
+                ret.CalculatedActionPoints = this.CalculatedActionPoints.Combine(rhs.CalculatedActionPoints);
                 ret.FarAwayModelDistance = this.FarAwayModelDistance.Combine(rhs.FarAwayModelDistance);
                 ret.GearedUpWeapons = this.GearedUpWeapons.Combine(rhs.GearedUpWeapons);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
@@ -4529,8 +4530,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Class;
             public bool Name;
             public bool ShortName;
-            public bool BaseHealth;
-            public bool BaseActionPoints;
+            public bool CalculatedHealth;
+            public bool CalculatedActionPoints;
             public bool FarAwayModelDistance;
             public bool GearedUpWeapons;
             public bool Unused;
@@ -4614,8 +4615,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Class = defaultOn;
                 this.Name = defaultOn;
                 this.ShortName = defaultOn;
-                this.BaseHealth = defaultOn;
-                this.BaseActionPoints = defaultOn;
+                this.CalculatedHealth = defaultOn;
+                this.CalculatedActionPoints = defaultOn;
                 this.FarAwayModelDistance = defaultOn;
                 this.GearedUpWeapons = defaultOn;
                 this.Unused = defaultOn;
@@ -4703,8 +4704,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Class, null));
                 ret.Add((Name, null));
                 ret.Add((ShortName, null));
-                ret.Add((BaseHealth, null));
-                ret.Add((BaseActionPoints, null));
+                ret.Add((CalculatedHealth, null));
+                ret.Add((CalculatedActionPoints, null));
                 ret.Add((FarAwayModelDistance, null));
                 ret.Add((GearedUpWeapons, null));
                 ret.Add((Unused, null));
@@ -4749,9 +4750,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
-        public Npc(FormKey formKey)
+        public Npc(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -4760,7 +4764,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -4774,12 +4778,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Npc(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Npc(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -4963,8 +4971,8 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString? ShortName { get; set; }
-        new UInt16 BaseHealth { get; set; }
-        new UInt16 BaseActionPoints { get; set; }
+        new UInt16 CalculatedHealth { get; set; }
+        new UInt16 CalculatedActionPoints { get; set; }
         new UInt16 FarAwayModelDistance { get; set; }
         new Byte GearedUpWeapons { get; set; }
         new Byte Unused { get; set; }
@@ -5109,8 +5117,8 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter? ShortName { get; }
-        UInt16 BaseHealth { get; }
-        UInt16 BaseActionPoints { get; }
+        UInt16 CalculatedHealth { get; }
+        UInt16 CalculatedActionPoints { get; }
         UInt16 FarAwayModelDistance { get; }
         Byte GearedUpWeapons { get; }
         Byte Unused { get; }
@@ -5377,8 +5385,8 @@ namespace Mutagen.Bethesda.Fallout4
         Class = 60,
         Name = 61,
         ShortName = 62,
-        BaseHealth = 63,
-        BaseActionPoints = 64,
+        CalculatedHealth = 63,
+        CalculatedActionPoints = 64,
         FarAwayModelDistance = 65,
         GearedUpWeapons = 66,
         Unused = 67,
@@ -5418,13 +5426,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Npc_Registration Instance = new Npc_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
-
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 166,
-            version: 0);
-
-        public const string GUID = "8074d783-8164-453f-bdd2-f39627cf7a6b";
 
         public const ushort AdditionalFieldCount = 88;
 
@@ -5480,11 +5481,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.WNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ATKR,
@@ -5554,13 +5550,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FMRS,
                 RecordTypes.FMIN,
                 RecordTypes.ATTX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -5602,15 +5598,15 @@ namespace Mutagen.Bethesda.Fallout4
             item.ObjectBounds.Clear();
             item.PreviewTransform.Clear();
             item.AnimationSound.Clear();
-            item.Flags = default;
-            item.XpValueOffset = default;
+            item.Flags = default(Npc.Flag);
+            item.XpValueOffset = default(Int16);
             item.Level.Clear();
-            item.CalcMinLevel = default;
-            item.CalcMaxLevel = default;
-            item.DispositionBase = default;
-            item.UseTemplateActors = default;
-            item.BleedoutOverride = default;
-            item.Unknown = default;
+            item.CalcMinLevel = default(Int16);
+            item.CalcMaxLevel = default(Int16);
+            item.DispositionBase = default(Int16);
+            item.UseTemplateActors = default(Npc.TemplateActorType);
+            item.BleedoutOverride = default(Int16);
+            item.Unknown = default(Int16);
             item.Factions.Clear();
             item.DeathItem.Clear();
             item.Voice.Clear();
@@ -5636,17 +5632,17 @@ namespace Mutagen.Bethesda.Fallout4
             item.ForcedLocRefType.Clear();
             item.NativeTerminal.Clear();
             item.Items = null;
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.Mood = default;
-            item.Assistance = default;
-            item.AggroRadiusBehaviorEnabled = default;
-            item.AggroRadiusWarn = default;
-            item.AggroRadiusWarnOrAttack = default;
-            item.AggroRadiusAttack = default;
-            item.NoSlowApproach = default;
+            item.Aggression = default(Npc.AggressionType);
+            item.Confidence = default(Npc.ConfidenceType);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Npc.ResponsibilityType);
+            item.Mood = default(Npc.MoodType);
+            item.Assistance = default(Npc.AssistanceType);
+            item.AggroRadiusBehaviorEnabled = default(Boolean);
+            item.AggroRadiusWarn = default(UInt32);
+            item.AggroRadiusWarnOrAttack = default(UInt32);
+            item.AggroRadiusAttack = default(UInt32);
+            item.NoSlowApproach = default(Boolean);
             item.Packages.Clear();
             item.Keywords = null;
             item.AttachParentSlots = null;
@@ -5654,22 +5650,22 @@ namespace Mutagen.Bethesda.Fallout4
             item.Class.Clear();
             item.Name = default;
             item.ShortName = default;
-            item.BaseHealth = default;
-            item.BaseActionPoints = default;
-            item.FarAwayModelDistance = default;
-            item.GearedUpWeapons = default;
-            item.Unused = default;
+            item.CalculatedHealth = default(UInt16);
+            item.CalculatedActionPoints = default(UInt16);
+            item.FarAwayModelDistance = default(UInt16);
+            item.GearedUpWeapons = default(Byte);
+            item.Unused = default(Byte);
             item.HeadParts.Clear();
             item.HairColor.Clear();
             item.FacialHairColor.Clear();
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
             item.NAM5 = default;
-            item.HeightMin = default;
+            item.HeightMin = default(Single);
             item.NAM7 = default;
-            item.HeightMax = default;
+            item.HeightMax = default(Single);
             item.Weight = null;
-            item.SoundLevel = default;
+            item.SoundLevel = default(SoundLevel);
             item.Sounds = null;
             item.SoundsFinalize = default;
             item.InheritsSoundsFrom.Clear();
@@ -5914,8 +5910,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Class = item.Class.Equals(rhs.Class);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
-            ret.BaseHealth = item.BaseHealth == rhs.BaseHealth;
-            ret.BaseActionPoints = item.BaseActionPoints == rhs.BaseActionPoints;
+            ret.CalculatedHealth = item.CalculatedHealth == rhs.CalculatedHealth;
+            ret.CalculatedActionPoints = item.CalculatedActionPoints == rhs.CalculatedActionPoints;
             ret.FarAwayModelDistance = item.FarAwayModelDistance == rhs.FarAwayModelDistance;
             ret.GearedUpWeapons = item.GearedUpWeapons == rhs.GearedUpWeapons;
             ret.Unused = item.Unused == rhs.Unused;
@@ -6354,13 +6350,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(ShortNameItem, "ShortName");
             }
-            if (printMask?.BaseHealth ?? true)
+            if (printMask?.CalculatedHealth ?? true)
             {
-                sb.AppendItem(item.BaseHealth, "BaseHealth");
+                sb.AppendItem(item.CalculatedHealth, "CalculatedHealth");
             }
-            if (printMask?.BaseActionPoints ?? true)
+            if (printMask?.CalculatedActionPoints ?? true)
             {
-                sb.AppendItem(item.BaseActionPoints, "BaseActionPoints");
+                sb.AppendItem(item.CalculatedActionPoints, "CalculatedActionPoints");
             }
             if (printMask?.FarAwayModelDistance ?? true)
             {
@@ -6835,13 +6831,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CalculatedHealth) ?? true))
             {
-                if (lhs.BaseHealth != rhs.BaseHealth) return false;
+                if (lhs.CalculatedHealth != rhs.CalculatedHealth) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CalculatedActionPoints) ?? true))
             {
-                if (lhs.BaseActionPoints != rhs.BaseActionPoints) return false;
+                if (lhs.CalculatedActionPoints != rhs.CalculatedActionPoints) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
             {
@@ -7070,8 +7066,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ShortNameitem);
             }
-            hash.Add(item.BaseHealth);
-            hash.Add(item.BaseActionPoints);
+            hash.Add(item.CalculatedHealth);
+            hash.Add(item.CalculatedActionPoints);
             hash.Add(item.FarAwayModelDistance);
             hash.Add(item.GearedUpWeapons);
             hash.Add(item.Unused);
@@ -7379,7 +7375,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Npc(formKey);
+            var newRec = new Npc(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -7637,7 +7633,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -7896,7 +7892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7917,7 +7913,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -7944,7 +7940,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -8006,13 +8002,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ShortName = rhs.ShortName?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalculatedHealth) ?? true))
             {
-                item.BaseHealth = rhs.BaseHealth;
+                item.CalculatedHealth = rhs.CalculatedHealth;
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalculatedActionPoints) ?? true))
             {
-                item.BaseActionPoints = rhs.BaseActionPoints;
+                item.CalculatedActionPoints = rhs.CalculatedActionPoints;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
             {
@@ -8033,7 +8029,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8749,8 +8745,8 @@ namespace Mutagen.Bethesda.Fallout4
             using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                writer.Write(item.BaseHealth);
-                writer.Write(item.BaseActionPoints);
+                writer.Write(item.CalculatedHealth);
+                writer.Write(item.CalculatedActionPoints);
                 writer.Write(item.FarAwayModelDistance);
                 writer.Write(item.GearedUpWeapons);
                 writer.Write(item.Unused);
@@ -9157,11 +9153,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -9409,9 +9400,9 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 2) return null;
-                    item.BaseHealth = dataFrame.ReadUInt16();
+                    item.CalculatedHealth = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 2) return null;
-                    item.BaseActionPoints = dataFrame.ReadUInt16();
+                    item.CalculatedActionPoints = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 2) return null;
                     item.FarAwayModelDistance = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 1) return null;
@@ -9564,7 +9555,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return NpcBinaryCreateTranslation.FillBinaryMorphParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TETI:
                 {
@@ -9611,7 +9603,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -9635,7 +9627,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryMorphParsingCustom(
             MutagenFrame frame,
-            INpcInternal item);
+            INpcInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -9713,22 +9706,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region XpValueOffset
         private int _XpValueOffsetLocation => _ACBSLocation!.Value.Min + 0x4;
         private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
-        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default;
+        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default(Int16);
         #endregion
         #region CalcMinLevel
         private int _CalcMinLevelLocation => _ACBSLocation!.Value.Min + 0x8;
         private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default;
+        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default(Int16);
         #endregion
         #region CalcMaxLevel
         private int _CalcMaxLevelLocation => _ACBSLocation!.Value.Min + 0xA;
         private bool _CalcMaxLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default;
+        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default(Int16);
         #endregion
         #region DispositionBase
         private int _DispositionBaseLocation => _ACBSLocation!.Value.Min + 0xC;
         private bool _DispositionBase_IsSet => _ACBSLocation.HasValue;
-        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default;
+        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default(Int16);
         #endregion
         #region UseTemplateActors
         private int _UseTemplateActorsLocation => _ACBSLocation!.Value.Min + 0xE;
@@ -9738,12 +9731,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region BleedoutOverride
         private int _BleedoutOverrideLocation => _ACBSLocation!.Value.Min + 0x10;
         private bool _BleedoutOverride_IsSet => _ACBSLocation.HasValue;
-        public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_BleedoutOverrideLocation, 2)) : default;
+        public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_BleedoutOverrideLocation, 2)) : default(Int16);
         #endregion
         #region Unknown
         private int _UnknownLocation => _ACBSLocation!.Value.Min + 0x12;
         private bool _Unknown_IsSet => _ACBSLocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
@@ -9858,27 +9851,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region AggroRadiusBehaviorEnabled
         private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value.Min + 0x6;
         private bool _AggroRadiusBehaviorEnabled_IsSet => _AIDTLocation.HasValue;
-        public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _recordData.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default;
+        public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _recordData.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default(Boolean);
         #endregion
         #region AggroRadiusWarn
         private int _AggroRadiusWarnLocation => _AIDTLocation!.Value.Min + 0x8;
         private bool _AggroRadiusWarn_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnLocation, 4)) : default;
+        public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnLocation, 4)) : default(UInt32);
         #endregion
         #region AggroRadiusWarnOrAttack
         private int _AggroRadiusWarnOrAttackLocation => _AIDTLocation!.Value.Min + 0xC;
         private bool _AggroRadiusWarnOrAttack_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default;
+        public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default(UInt32);
         #endregion
         #region AggroRadiusAttack
         private int _AggroRadiusAttackLocation => _AIDTLocation!.Value.Min + 0x10;
         private bool _AggroRadiusAttack_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusAttackLocation, 4)) : default;
+        public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusAttackLocation, 4)) : default(UInt32);
         #endregion
         #region NoSlowApproach
         private int _NoSlowApproachLocation => _AIDTLocation!.Value.Min + 0x14;
         private bool _NoSlowApproach_IsSet => _AIDTLocation.HasValue;
-        public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _recordData.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default;
+        public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _recordData.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Keywords
@@ -9908,20 +9901,20 @@ namespace Mutagen.Bethesda.Fallout4
         public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        #region BaseHealth
-        private int _BaseHealthLocation => _DNAMLocation!.Value.Min;
-        private bool _BaseHealth_IsSet => _DNAMLocation.HasValue;
-        public UInt16 BaseHealth => _BaseHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseHealthLocation, 2)) : default;
+        #region CalculatedHealth
+        private int _CalculatedHealthLocation => _DNAMLocation!.Value.Min;
+        private bool _CalculatedHealth_IsSet => _DNAMLocation.HasValue;
+        public UInt16 CalculatedHealth => _CalculatedHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedHealthLocation, 2)) : default(UInt16);
         #endregion
-        #region BaseActionPoints
-        private int _BaseActionPointsLocation => _DNAMLocation!.Value.Min + 0x2;
-        private bool _BaseActionPoints_IsSet => _DNAMLocation.HasValue;
-        public UInt16 BaseActionPoints => _BaseActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseActionPointsLocation, 2)) : default;
+        #region CalculatedActionPoints
+        private int _CalculatedActionPointsLocation => _DNAMLocation!.Value.Min + 0x2;
+        private bool _CalculatedActionPoints_IsSet => _DNAMLocation.HasValue;
+        public UInt16 CalculatedActionPoints => _CalculatedActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedActionPointsLocation, 2)) : default(UInt16);
         #endregion
         #region FarAwayModelDistance
         private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _FarAwayModelDistance_IsSet => _DNAMLocation.HasValue;
-        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default;
+        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default(UInt16);
         #endregion
         #region GearedUpWeapons
         private int _GearedUpWeaponsLocation => _DNAMLocation!.Value.Min + 0x6;
@@ -9956,7 +9949,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HeightMin
         private int? _HeightMinLocation;
-        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region NAM7
         private int? _NAM7Location;
@@ -9964,7 +9957,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HeightMax
         private int? _HeightMaxLocation;
-        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Weight
         private RangeInt32? _WeightLocation;
@@ -10014,7 +10007,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region MorphParsing
         public partial ParseResult MorphParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = Array.Empty<INpcFaceTintingLayerGetter>();
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
@@ -10192,11 +10186,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -10326,7 +10315,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKID,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
@@ -10403,7 +10392,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;
@@ -10523,7 +10512,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return MorphParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TETI:
                 {
@@ -10566,7 +10556,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

@@ -19,8 +19,12 @@ public sealed class AlignmentSubRule : AlignmentRule
  
     public override IEnumerable<RecordType> RecordTypes => SubTypes; 
  
-    public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream) 
-    { 
+    public override ReadOnlyMemorySlice<byte> ReadBytes(IMutagenReadStream inputStream, int? lengthOverride) 
+    {
+        if (lengthOverride != null)
+        {
+            throw new NotImplementedException();
+        }
         Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>(); 
         MutagenWriter stream; 
         while (!inputStream.Complete) 

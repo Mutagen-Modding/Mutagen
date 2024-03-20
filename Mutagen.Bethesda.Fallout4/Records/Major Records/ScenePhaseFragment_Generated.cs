@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public ScenePhaseFragment.Flag Flags { get; set; } = default;
+        public ScenePhaseFragment.Flag Flags { get; set; } = default(ScenePhaseFragment.Flag);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 551,
-            version: 0);
-
-        public const string GUID = "8e0c10d8-bf69-4184-9b23-103367224b08";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -790,8 +784,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseFragmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -829,9 +821,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IScenePhaseFragment item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Index = default;
-            item.Unknown = default;
+            item.Flags = default(ScenePhaseFragment.Flag);
+            item.Index = default(Byte);
+            item.Unknown = default(UInt32);
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }
@@ -1290,6 +1282,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScenePhaseFragmentParseEndingPositions(
+            ScenePhaseFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x6 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x6)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1305,8 +1305,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScenePhaseFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x6 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x6)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            ScenePhaseFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -20,7 +20,7 @@ public partial class CameraPath
 
 partial class CameraPathBinaryCreateTranslation
 {
-    public static partial void FillBinaryZoomCustom(MutagenFrame frame, ICameraPathInternal item)
+    public static partial void FillBinaryZoomCustom(MutagenFrame frame, ICameraPathInternal item, PreviousParse lastParsed)
     {
         var subFrame = frame.ReadSubrecord();
         if (subFrame.Content.Length != 1)
@@ -56,7 +56,7 @@ partial class CameraPathBinaryOverlay
 
     public bool ZoomMustHaveCameraShots => _zoomLoc.HasValue && HeaderTranslation.ExtractSubrecordMemory(_recordData, _zoomLoc.Value, _package.MetaData.Constants)[0] < 128;
 
-    partial void ZoomCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void ZoomCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _zoomLoc = stream.Position - offset;
     }

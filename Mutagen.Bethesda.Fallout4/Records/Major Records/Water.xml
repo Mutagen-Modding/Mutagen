@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Water" recordType="WATR" objType="Record" baseClass="Fallout4MajorRecord" GUID="ae105b0f-70dd-40cb-b5be-e41cac5b0530" ID="131">
+  <Object name="Water" recordType="WATR" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
@@ -10,11 +10,11 @@
       <FormLink name="ConsumeSpell" refName="Spell" recordType="XNAM" />
       <FormLink name="ContactSpell" refName="Spell" recordType="YNAM" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" />
-      <ByteArray name="DATA" recordType="DATA" />
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
       <Data recordType="DNAM">
         <Fields>
           <Float name="FogDepthAmount" />
-          <Color name="FogShallowCo_rlor" binaryType="Alpha" />
+          <Color name="FogShallowColor" binaryType="Alpha" />
           <Color name="FogDeepColor" binaryType="Alpha" />
           <Float name="FogColorShallowRange" />
           <Float name="FogColorDeepRange" />
@@ -56,7 +56,7 @@
       <RefDirect name="NoiseLayerOne" refName="WaterNoiseProperties" binary="NoGeneration" />
       <RefDirect name="NoiseLayerTwo" refName="WaterNoiseProperties" binary="NoGeneration" />
       <RefDirect name="NoiseLayerThree" refName="WaterNoiseProperties" binary="NoGeneration" />
-      <ByteArray name="GNAM" recordType="GNAM" />
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
       <P3Float name="LinearVelocity" recordType="NAM0" />
       <P3Float name="AngularVelocity" recordType="NAM1" />
       <CustomLogic name="NoiseTextureParsing">
@@ -68,7 +68,7 @@
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
-  <Object name="WaterNoiseProperties" objType="Subrecord" GUID="94f64240-9ef5-4c59-a0d6-ee19ebbcff0d" ID="592">
+  <Object name="WaterNoiseProperties" objType="Subrecord">
     <Fields>
       <Float name="WindDirection" binary="NoGeneration" />
       <Float name="WindSpeed" binary="NoGeneration" />

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BendableSpline" recordType="BNDS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="DefaultNumberOfTiles" />
+          <UInt16 name="DefaultNumberOfSlices" />
+          <Bool name="DefaultNumberOfTilesIsRelativeToLength" byteLength="2" />
+          <Color name="DefaultColor" binaryType="NoAlphaFloat" />
+          <Float name="WindSensibility" />
+          <Break />
+          <Float name="WindFlexibility" />
+        </Fields>
+      </Data>
+      <FormLink name="MaterialPath" refName="MaterialPath" recordType="MNAM" />
+    </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

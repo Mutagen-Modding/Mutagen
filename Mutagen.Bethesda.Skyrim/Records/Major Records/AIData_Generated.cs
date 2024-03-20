@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,37 +51,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Aggression
-        public Aggression Aggression { get; set; } = default;
+        public Aggression Aggression { get; set; } = default(Aggression);
         #endregion
         #region Confidence
-        public Confidence Confidence { get; set; } = default;
+        public Confidence Confidence { get; set; } = default(Confidence);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Responsibility Responsibility { get; set; } = default;
+        public Responsibility Responsibility { get; set; } = default(Responsibility);
         #endregion
         #region Mood
-        public Mood Mood { get; set; } = default;
+        public Mood Mood { get; set; } = default(Mood);
         #endregion
         #region Assistance
-        public Assistance Assistance { get; set; } = default;
+        public Assistance Assistance { get; set; } = default(Assistance);
         #endregion
         #region AggroRadiusBehavior
-        public Boolean AggroRadiusBehavior { get; set; } = default;
+        public Boolean AggroRadiusBehavior { get; set; } = default(Boolean);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region Warn
-        public UInt32 Warn { get; set; } = default;
+        public UInt32 Warn { get; set; } = default(UInt32);
         #endregion
         #region WarnOrAttack
-        public UInt32 WarnOrAttack { get; set; } = default;
+        public UInt32 WarnOrAttack { get; set; } = default(UInt32);
         #endregion
         #region Attack
-        public UInt32 Attack { get; set; } = default;
+        public UInt32 Attack { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -968,13 +969,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 207,
-            version: 0);
-
-        public const string GUID = "10ac7ce5-4e83-4006-92a0-9976062da7be";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1013,8 +1007,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(AIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1052,17 +1044,17 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IAIData item)
         {
             ClearPartial();
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.Mood = default;
-            item.Assistance = default;
-            item.AggroRadiusBehavior = default;
-            item.Unused = default;
-            item.Warn = default;
-            item.WarnOrAttack = default;
-            item.Attack = default;
+            item.Aggression = default(Aggression);
+            item.Confidence = default(Confidence);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Responsibility);
+            item.Mood = default(Mood);
+            item.Assistance = default(Assistance);
+            item.AggroRadiusBehavior = default(Boolean);
+            item.Unused = default(Byte);
+            item.Warn = default(UInt32);
+            item.WarnOrAttack = default(UInt32);
+            item.Attack = default(UInt32);
         }
         
         #region Mutagen

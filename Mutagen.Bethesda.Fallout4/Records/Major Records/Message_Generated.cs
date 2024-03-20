@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -97,7 +98,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region INAM
-        public Int32 INAM { get; set; } = default;
+        public Int32 INAM { get; set; } = default(Int32);
         #endregion
         #region OwnerQuest
         private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
@@ -110,7 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IQuestGetter> IMessageGetter.OwnerQuest => this.OwnerQuest;
         #endregion
         #region Flags
-        public Message.Flag Flags { get; set; } = default;
+        public Message.Flag Flags { get; set; } = default(Message.Flag);
         #endregion
         #region DisplayTime
         public UInt32? DisplayTime { get; set; }
@@ -734,9 +735,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Message_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MessageCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageSetterCommon.Instance.RemapLinks(this, mapping);
-        public Message(FormKey formKey)
+        public Message(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -745,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -759,12 +763,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Message(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Message(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1107,13 +1115,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 152,
-            version: 0);
-
-        public const string GUID = "8a368675-cfab-43a2-a05b-2d2532d538fd";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 16;
@@ -1161,13 +1162,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MessageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1207,9 +1208,9 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = default;
+            item.INAM = default(Int32);
             item.OwnerQuest.Clear();
-            item.Flags = default;
+            item.Flags = default(Message.Flag);
             item.DisplayTime = default;
             item.Swf = default;
             item.ShortTitle = default;
@@ -1593,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Message(formKey);
+            var newRec = new Message(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2156,7 +2157,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;

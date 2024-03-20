@@ -14,7 +14,7 @@ public partial class Fallout4ModHeader
     {
         Master = 0x0000_0001,
         Localized = 0x0000_0080,
-        LightMaster = 0x0000_0200,
+        Light = 0x0000_0200,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,7 +39,7 @@ public partial class Fallout4ModHeader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => Fallout4Mod.DefaultInitialNextFormID;
+    uint IModHeaderCommon.MinimumCustomFormID => Fallout4Mod.GetDefaultInitialNextFormID(this.Stats.Version);
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
@@ -50,7 +50,7 @@ public partial interface IFallout4ModHeader : IModHeaderCommon
 
 partial class Fallout4ModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

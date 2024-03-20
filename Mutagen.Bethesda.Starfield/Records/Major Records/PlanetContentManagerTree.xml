@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlanetContentManagerTree" recordType="PCMT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <ByteArray name="NAM1" recordType="NAM1" nullable="False" unknown="true" />
+      <ByteArray name="NAM2" recordType="NAM2" nullable="False" unknown="true" />
+      <ByteArray name="NAM5" recordType="NAM5" nullable="False" unknown="true" />
+      <List name="Nodes" >
+        <FormLink recordType="PCCB" refName="PlanetContentManagerBranchNode" />
+      </List>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class RegionBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, PreviousParse lastParsed)
     {
         var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
         while (rdat.Equals(RecordTypes.RDAT))
@@ -151,7 +151,8 @@ partial class RegionBinaryOverlay : IRegionGetter
 
     public partial ParseResult RegionAreaLogicCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset, 
+        PreviousParse lastParsed)
     {
         var rdat = stream.GetSubrecordHeader();
         while (rdat.RecordType.Equals(RecordTypes.RDAT))
@@ -164,7 +165,7 @@ partial class RegionBinaryOverlay : IRegionGetter
         return null;
     }
 
-    partial void IconCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void IconCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _iconLocation = (ushort)(stream.Position - offset);
     }

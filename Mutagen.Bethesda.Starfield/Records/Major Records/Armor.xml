@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Armor" recordType="ARMO" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="ObjectEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <Gendered name="WorldModel" parseNonConvertedItems="true">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MOLM" To="MLM2" />
+          <Mapping From="MODC" To="MO2C" />
+          <Mapping From="MODF" To="MO2F" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MOLM" To="MLM4" />
+          <Mapping From="MODC" To="MO4C" />
+          <Mapping From="MODF" To="MO4F" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
+      <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
+      <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Description" recordType="DESC" translated="DL" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <RefList name="Armatures" refName="ArmorAddonModel" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+          <UInt32 name="Health" />
+        </Fields>
+      </Data>
+      <Data recordType="FNAM">
+        <Fields>
+          <UInt16 name="ArmorRating" />
+          <UInt16 name="BaseAddonIndex" />
+          <UInt8 name="StaggerRating" />
+          <ByteArray name="Unused" byteLength="3" nullable="false" />
+        </Fields>
+      </Data>
+      <RefList name="Resistances" refName="DamageTypeValue" recordType="DAMA" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <RefDirect name="Voice" refName="ArmorCategoryValue" recordType="AVSG" />
+      <RefDirect name="Footstep" refName="ArmorCategoryValue" recordType="AFSG" />
+    </Fields>
+    <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IBindableEquipment</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+  <Object name="ArmorMorph" objType="Subrecord" >
+    <Fields>
+      <FormLink name="WorldMorph" recordType="NAM4" refName="MorphableObject" />
+      <FormLink name="FirstPersonMorph" recordType="NAM5" refName="MorphableObject" />
+    </Fields>
+  </Object>
+  <Object name="ArmorAddonModel" objType="Subrecord">
+    <Fields>
+      <UInt16 name="AddonIndex" recordType="INDX" />
+      <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
+    </Fields>
+  </Object>
+  <Object name="ArmorCategoryValue" objType="Subrecord">
+    <Fields>
+      <Guid name="Category" />
+      <Guid name="Value" />
+    </Fields>
+  </Object>
+</Loqui>

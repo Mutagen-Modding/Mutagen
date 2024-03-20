@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ComparisonValue
-        public Single ComparisonValue { get; set; } = default;
+        public Single ComparisonValue { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -621,13 +622,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 290,
-            version: 0);
-
-        public const string GUID = "cf1fcd5b-c409-46de-9632-e01722c0779b";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 5;
@@ -666,8 +660,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ConditionFloatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -705,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IConditionFloat item)
         {
             ClearPartial();
-            item.ComparisonValue = default;
+            item.ComparisonValue = default(Single);
             item.Data.Clear();
             base.Clear(item);
         }
@@ -1264,6 +1256,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ConditionFloatParseEndingPositions(
+            ConditionFloatBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomDataEndPos();
+        }
+
         public static IConditionFloatGetter ConditionFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ConditionFloatBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomDataEndPos();
+            ConditionFloatParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

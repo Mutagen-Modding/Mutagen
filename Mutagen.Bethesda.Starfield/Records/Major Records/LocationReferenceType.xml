@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <ByteArray name="TNAM" recordType="TNAM" unknown="true" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+    </Fields>
+    <LinkInterface>ILocationRecord</LinkInterface>
+  </Object>
+</Loqui>

@@ -33,6 +33,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
@@ -61,32 +64,54 @@
         <TextBlock Grid.Row="4"
                    FontSize="{StaticResource HeaderFontSize}"
                    FontWeight="Bold"
-                   Text="Skipped Groups" />
+                   Text="Filter Groups" />
         <CheckBox Grid.Row="5" x:Name="TrimmedGroupsEnable" Content="Enable" Margin="5" />
-        <ListBox x:Name="SkippedTypes" Grid.Row="6" MaxHeight="200" Margin="5">
+        <TextBlock Grid.Row="6"
+                   FontWeight="Bold"
+                   Text="Skipped Groups" />
+        <ListBox x:Name="SkippedTypes" Grid.Row="7" MaxHeight="200" Margin="5">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
-                        <Button Command="{Binding DeleteCommand}">
+                        <Button Command="{Binding DeleteSkippedCommand}">
                             <icon:PackIconMaterial
                                 Width="10"
                                 Height="10"
                                 Kind="Close" />
-                            </Button>
+                        </Button>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,0,5">
-            <TextBox x:Name="SkipInput" Width="80" />
-            <Button Content="Add" x:Name="AddSkipButton" />
-        </StackPanel>
         <TextBlock Grid.Row="8"
+                   FontWeight="Bold"
+                   Text="Included Groups" />
+        <ListBox x:Name="IncludedTypes" Grid.Row="9" MaxHeight="200" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
+                        <Button Command="{Binding DeleteIncludedCommand}">
+                            <icon:PackIconMaterial
+                                Width="10"
+                                Height="10"
+                                Kind="Close" />
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="0,0,0,5">
+            <TextBox x:Name="SkipInput" Width="80" />
+            <Button Content="Add to Skip List" x:Name="AddSkipButton" Margin="15,0,0,0" />
+            <Button Content="Add to Include List" x:Name="AddIncludeButton" Margin="15,0,0,0" />
+        </StackPanel>
+        <TextBlock Grid.Row="11"
                    FontSize="{StaticResource HeaderFontSize}"
                    FontWeight="Bold"
                    Text="Data Folders" />
-        <ItemsControl Grid.Row="9"
+        <ItemsControl Grid.Row="12"
             x:Name="DataFolders"
             Margin="0,5,0,0">
             <ItemsControl.ItemTemplate>

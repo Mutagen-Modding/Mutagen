@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,22 +55,22 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region MinDelay
-        public Single MinDelay { get; set; } = default;
+        public Single MinDelay { get; set; } = default(Single);
         #endregion
         #region MaxDelay
-        public Single MaxDelay { get; set; } = default;
+        public Single MaxDelay { get; set; } = default(Single);
         #endregion
         #region RequiresLineOfSight
-        public Boolean RequiresLineOfSight { get; set; } = default;
+        public Boolean RequiresLineOfSight { get; set; } = default(Boolean);
         #endregion
         #region IsCombatTarget
-        public Boolean IsCombatTarget { get; set; } = default;
+        public Boolean IsCombatTarget { get; set; } = default(Boolean);
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -507,9 +508,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AttractionRule_Registration.TriggeringRecordType;
-        public AttractionRule(FormKey formKey)
+        public AttractionRule(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -518,7 +522,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -532,12 +536,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public AttractionRule(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public AttractionRule(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -853,13 +861,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 31,
-            version: 0);
-
-        public const string GUID = "ef7fcf3c-9d9e-47a9-aaf1-f79e945aceee";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -896,13 +897,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.AORU,
                 RecordTypes.AOR2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AttractionRuleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -940,12 +941,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAttractionRuleInternal item)
         {
             ClearPartial();
-            item.Radius = default;
-            item.MinDelay = default;
-            item.MaxDelay = default;
-            item.RequiresLineOfSight = default;
-            item.IsCombatTarget = default;
-            item.Unused = default;
+            item.Radius = default(Single);
+            item.MinDelay = default(Single);
+            item.MaxDelay = default(Single);
+            item.RequiresLineOfSight = default(Boolean);
+            item.IsCombatTarget = default(Boolean);
+            item.Unused = default(UInt16);
             base.Clear(item);
         }
         
@@ -1255,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AttractionRule(formKey);
+            var newRec = new AttractionRule(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1681,32 +1682,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Radius
         private int _RadiusLocation => _AOR2Location!.Value.Min;
         private bool _Radius_IsSet => _AOR2Location.HasValue;
-        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
         #endregion
         #region MinDelay
         private int _MinDelayLocation => _AOR2Location!.Value.Min + 0x4;
         private bool _MinDelay_IsSet => _AOR2Location.HasValue;
-        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default;
+        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default(Single);
         #endregion
         #region MaxDelay
         private int _MaxDelayLocation => _AOR2Location!.Value.Min + 0x8;
         private bool _MaxDelay_IsSet => _AOR2Location.HasValue;
-        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default;
+        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default(Single);
         #endregion
         #region RequiresLineOfSight
         private int _RequiresLineOfSightLocation => _AOR2Location!.Value.Min + 0xC;
         private bool _RequiresLineOfSight_IsSet => _AOR2Location.HasValue;
-        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default;
+        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region IsCombatTarget
         private int _IsCombatTargetLocation => _AOR2Location!.Value.Min + 0xD;
         private bool _IsCombatTarget_IsSet => _AOR2Location.HasValue;
-        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default;
+        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Unused
         private int _UnusedLocation => _AOR2Location!.Value.Min + 0xE;
         private bool _Unused_IsSet => _AOR2Location.HasValue;
-        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default(UInt16);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

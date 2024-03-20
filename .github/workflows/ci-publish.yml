@@ -91,16 +91,16 @@ jobs:
     - name: Build
       run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
-      if: ${{ success() && github.event.release.prerelease }}
+      if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
-      if: ${{ success() && !github.event.release.prerelease }}
+      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
-      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/release' }}
+      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       with:
         file: "**/*.nupkg"
         repo_token: ${{ secrets.GITHUB_TOKEN }}

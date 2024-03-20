@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Vertices
-        public P3Int16 Vertices { get; set; } = default;
+        public P3Int16 Vertices { get; set; } = default(P3Int16);
         #endregion
         #region EdgeLink_0_1
-        public Int16 EdgeLink_0_1 { get; set; } = default;
+        public Int16 EdgeLink_0_1 { get; set; } = default(Int16);
         #endregion
         #region EdgeLink_1_2
-        public Int16 EdgeLink_1_2 { get; set; } = default;
+        public Int16 EdgeLink_1_2 { get; set; } = default(Int16);
         #endregion
         #region EdgeLink_2_0
-        public Int16 EdgeLink_2_0 { get; set; } = default;
+        public Int16 EdgeLink_2_0 { get; set; } = default(Int16);
         #endregion
         #region Flags
-        public NavmeshTriangle.Flag Flags { get; set; } = default;
+        public NavmeshTriangle.Flag Flags { get; set; } = default(NavmeshTriangle.Flag);
         #endregion
         #region CoverFlags
-        public UInt16 CoverFlags { get; set; } = default;
+        public UInt16 CoverFlags { get; set; } = default(UInt16);
         #endregion
         #region IsCover
-        public Boolean IsCover { get; set; } = default;
+        public Boolean IsCover { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -824,13 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 320,
-            version: 0);
-
-        public const string GUID = "1b0eb710-fc34-463b-8f7b-03859bb6c879";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -862,8 +856,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshTriangleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -901,13 +893,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INavmeshTriangle item)
         {
             ClearPartial();
-            item.Vertices = default;
-            item.EdgeLink_0_1 = default;
-            item.EdgeLink_1_2 = default;
-            item.EdgeLink_2_0 = default;
-            item.Flags = default;
-            item.CoverFlags = default;
-            item.IsCover = default;
+            item.Vertices = default(P3Int16);
+            item.EdgeLink_0_1 = default(Int16);
+            item.EdgeLink_1_2 = default(Int16);
+            item.EdgeLink_2_0 = default(Int16);
+            item.Flags = default(NavmeshTriangle.Flag);
+            item.CoverFlags = default(UInt16);
+            item.IsCover = default(Boolean);
         }
         
         #region Mutagen

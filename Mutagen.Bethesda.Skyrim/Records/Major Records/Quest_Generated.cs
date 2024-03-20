@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -107,20 +108,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region QuestFormVersion
         public static readonly Byte QuestFormVersionDefault = byte.MaxValue;
         public Byte QuestFormVersion { get; set; } = QuestFormVersionDefault;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        public Quest.TypeEnum Type { get; set; } = default(Quest.TypeEnum);
         #endregion
         #region Event
         public RecordType? Event { get; set; }
@@ -1361,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1370,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1769,13 +1770,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 351,
-            version: 0);
-
-        public const string GUID = "480d7a0d-3841-44f9-9a48-b53a29731f22";
-
         public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 23;
@@ -1866,13 +1860,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALFC,
                 RecordTypes.ALPC,
                 RecordTypes.VTCK);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1912,11 +1906,11 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.Flags = default;
-            item.Priority = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
             item.QuestFormVersion = Quest.QuestFormVersionDefault;
-            item.Unknown = default;
-            item.Type = default;
+            item.Unknown = default(Int32);
+            item.Type = default(Quest.TypeEnum);
             item.Event = default;
             item.TextDisplayGlobals.Clear();
             item.Filter = default;
@@ -2664,7 +2658,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3242,14 +3236,16 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Quest_FieldIndex.DialogConditions;
                 }
                 case RecordTypeInts.NEXT:
                 {
                     return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3275,7 +3271,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3300,7 +3297,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3316,15 +3313,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryDialogConditionsCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryNextAliasIDCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -3411,7 +3411,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region Type
         private int _TypeLocation => _DNAMLocation!.Value.Min + 0x8;
@@ -3430,7 +3430,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DialogConditions
         partial void DialogConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -3438,14 +3438,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnusedConditionsLogic
         public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region NextAliasID
         public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestAliasGetter>();
         #region Description
@@ -3555,7 +3557,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QTGL,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
@@ -3579,7 +3581,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return UnusedConditionsLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3603,7 +3606,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return NextAliasIDCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3623,7 +3627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Package" recordType="PACK" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" overflowRecordType="XXXX" />
+      <Data recordType="PKDT">
+        <Fields>
+          <Enum name="Flags" enumName="Package.Flag" byteLength="4" />
+          <Enum name="Type" enumName="Package.Types" byteLength="1" />
+          <Enum name="InterruptOverride" enumName="Package.Interrupt" byteLength="1" />
+          <Enum name="PreferredSpeed" enumName="Package.Speed" byteLength="1" />
+          <UInt8 name="Unknown" />
+          <Enum name="InteruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
+          <UInt16 name="Unknown2" />
+        </Fields>
+      </Data>
+      <Data recordType="PSDT">
+        <Fields>
+          <Int8 name="ScheduleMonth" />
+          <Enum name="ScheduleDayOfWeek" enumName="Package.DayOfWeek" byteLength="1" />
+          <UInt8 name="ScheduleDate" />
+          <Int8 name="ScheduleHour" />
+          <Int8 name="ScheduleMinute" />
+          <ByteArray name="Unknown3" byteLength="3" nullable="False" />
+          <Int32 name="ScheduleDurationInMinutes" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
+      <RefDirect name="IdleAnimations" refName="PackageIdles" />
+      <FormLink name="CombatStyle" recordType="CNAM" refName="CombatStyle" />
+      <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
+      <FormLink name="AnimationFlavor" recordType="FLAV" refName="Keyword" />
+      <FormLink name="PackageTemplate" recordType="PKCU" refName="Package" nullable="False" binary="Custom" byteLength="8" />
+      <Int32 name="DataInputVersion" binary="NoGeneration" byteLength="4" />
+      <Dict name="Data" binary="NoGeneration">
+        <Key>
+          <Int8 />
+        </Key>
+        <Value>
+          <RefDirect refName="APackageData" />
+        </Value>
+      </Dict>
+      <Enum name="PackageGroup" enumName="Package.Group" recordType="XNAM" byteLength="1" nullable="false" />
+      <RefList name="ProcedureTree" refName="PackageBranch" recordType="ANAM" binary="Custom" nullable="false" />
+      <RefDirect name="OnBegin" refName="PackageEvent" markerType="POBA" />
+      <RefDirect name="OnEnd" refName="PackageEvent" markerType="POEA" />
+      <RefDirect name="OnChange" refName="PackageEvent" markerType="POCA" />
+    </Fields>
+  </Object>
+  <Object name="PackageAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="PackageScriptFragments" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PackageScriptFragments" objType="Subrecord">
+    <Fields>
+      <UInt8 name="ExtraBindDataVersion" default="3" />
+      <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
+      <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnChange" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+    </Fields>
+  </Object>
+  <Object name="PackageIdles" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="PackageIdles.Types" byteLength="1" nullable="False" recordType="IDLF" />
+      <Float name="TimerSetting" recordType="IDLT" binary="Custom" />
+      <List name="Animations" recordType="IDLA" counterRecType="IDLC" counterLength="4" binary="Custom">
+        <FormLink refName="IdleAnimation" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="APackageData" objType="Subrecord">
+    <Fields>
+      <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
+      <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataBool" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <Bool name="Data" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataInt" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <UInt32 name="Data" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataFloat" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <Float name="Data" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataObjectList" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <Float name="Data" binary="NoGeneration" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataLocation" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <RefDirect name="Location" refName="LocationTargetRadius" recordType="PLDT" nullable="False" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataScene" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <FormLink name="Scene" refName="Scene" nullable="True" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataTarget" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <Enum name="Type" enumName="PackageDataTarget.Types" binary="NoGeneration" />
+      <RefDirect name="Target" refName="APackageTarget" recordType="PTDA" binary="NoGeneration" nullable="False" generateClassMembers="false" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="NoGeneration" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="PackageDataTopic" objType="Subrecord" baseClass="APackageData">
+    <Fields>
+      <RefList name="Topics" refName="ATopicReference" binary="NoGeneration" />
+      <ByteArray name="TPIC" recordType="TPIC" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="APackageTarget" abstract="true" objType="Subrecord">
+    <Fields>
+      <CustomLogic name="DataParse" byteLength="8" />
+      <Int32 name="CountOrDistance" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetSpecificReference" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageTargetObjectID" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IObjectId</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageTargetObjectType" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="TargetObjectType" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference" refName="StarfieldMajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetAlias" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Int32 name="Alias" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetInterruptData" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetSelf" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetKeyword" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Keyword" refName="Keyword" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetUnknown" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="PackageBranch" objType="Subrecord">
+    <Fields>
+      <String name="BranchType" recordType="ANAM" nullable="False" />
+      <String name="Note" recordType="NNAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
+      <RefDirect name="Root" recordType="PRCB" refName="PackageRoot" />
+      <String name="ProcedureType" recordType="PNAM" />
+      <Enum name="Flags" enumName="PackageBranch.Flag" byteLength="4" recordType="FNAM" />
+      <List name="DataInputIndices">
+        <UInt8 recordType="PKC2" />
+      </List>
+      <RefDirect name="FlagsOverride" refName="PackageFlagsOverride" binary="Custom" />
+      <RefDirect name="FlagsOverrideUnused" refName="PackageFlagsOverride" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PackageFlagsOverride" objType="Subrecord" recordType="PFO2">
+    <Fields>
+      <Enum name="SetFlags" enumName="Package.Flag" byteLength="4" />
+      <Enum name="ClearFlags" enumName="Package.Flag" byteLength="4" />
+      <Enum name="SetInterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
+      <Enum name="ClearInterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
+      <Enum name="PreferredSpeed" enumName="Package.Speed" byteLength="1" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="PackageRoot" objType="Subrecord">
+    <Fields>
+      <Int32 name="BranchCount" />
+      <Enum name="Flags" enumName="PackageRoot.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PackageEvent" objType="Subrecord">
+    <Fields>
+      <FormLink name="Idle" refName="IdleAnimation" recordType="INAM" nullable="False" />
+      <RefList name="Topics" refName="ATopicReference" binary="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

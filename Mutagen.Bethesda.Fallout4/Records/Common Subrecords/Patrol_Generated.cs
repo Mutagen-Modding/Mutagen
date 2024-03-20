@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region IdleTime
-        public Single IdleTime { get; set; } = default;
+        public Single IdleTime { get; set; } = default(Single);
         #endregion
         #region Idle
         private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
@@ -815,13 +816,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 485,
-            version: 0);
-
-        public const string GUID = "268951c1-1f84-40b9-9f69-078f8ef2b858";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -861,13 +855,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.INAM,
                 RecordTypes.PDTO,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -905,7 +899,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPatrol item)
         {
             ClearPartial();
-            item.IdleTime = default;
+            item.IdleTime = default(Single);
             item.Idle.Clear();
             item.Topics.Clear();
             item.Topic.Clear();
@@ -1358,7 +1352,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Patrol_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TNAM:
@@ -1379,7 +1374,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
-            IPatrol item);
+            IPatrol item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1447,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region PatrolScriptMarker
         public partial ParseResult PatrolScriptMarkerCustomParse(
@@ -1462,7 +1458,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Topics
         partial void TopicsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

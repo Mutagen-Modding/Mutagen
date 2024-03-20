@@ -32,8 +32,8 @@ internal static class ModContextExt
     public static readonly Road.TranslationMask? RoadCopyMask = null;
     public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-    private static readonly ObjectKey CellObjectKey =
-        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).ObjectKey; 
+    private static readonly string CellObjectKey =
+        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).FullName; 
 
     public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,
@@ -76,7 +76,7 @@ internal static class ModContextExt
                     record: readOnlySubBlock);
                 foreach (var readOnlyCell in readOnlySubBlock.Cells)
                 {
-                    Func<IOblivionMod, ICellGetter, bool, string?, ICell> cellGetter = (mod, copyCell, dup, edid) =>
+                    Func<IOblivionMod, ICellGetter, bool, string?, FormKey?, ICell> cellGetter = (mod, copyCell, dup, edid, newFormKey) =>
                     {
                         var formKey = copyCell.FormKey;
                         var retrievedBlock = mod.Cells.Records.FirstOrDefault(x => x.BlockNumber == blockNum);
@@ -106,7 +106,7 @@ internal static class ModContextExt
                         {
                             if (dup)
                             {
-                                cell = copyCell.Duplicate(mod.GetNextFormKey(edid), CellCopyMask);
+                                cell = copyCell.Duplicate(newFormKey ?? mod.GetNextFormKey(edid), CellCopyMask);
                             }
                             else
                             {
@@ -123,8 +123,8 @@ internal static class ModContextExt
                         yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>(
                             modKey: modKey,
                             record: readOnlyCell,
-                            getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),
-                            duplicateInto: (m, r, e) => cellGetter(m, (ICellGetter)r, true, e),
+                            getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?), default(FormKey?)),
+                            duplicateInto: (m, r, e, f) => cellGetter(m, (ICellGetter)r, true, e, f),
                             parent: subBlockContext);
                     }
                     
@@ -137,8 +137,8 @@ internal static class ModContextExt
                                      modKey, 
                                      subBlockContext, 
                                      throwIfUnknown, 
-                                     (m, c) => cellGetter(m, c, false, default(string?)),
-                                     (m, c, e) => cellGetter(m, c, true, e)))
+                                     (m, c) => cellGetter(m, c, false, default(string?), default(FormKey?)),
+                                     (m, c, e, f) => cellGetter(m, c, true, e, f)))
                         {
                             yield return con;
                         }
@@ -178,7 +178,7 @@ internal static class ModContextExt
                     record: readOnlySubBlock);
                 foreach (var readOnlyCell in readOnlySubBlock.Items)
                 {
-                    Func<IOblivionMod, ICellGetter, bool, string?, ICell> cellGetter = (mod, copyCell, dup, edid) =>
+                    Func<IOblivionMod, ICellGetter, bool, string?, FormKey?, ICell> cellGetter = (mod, copyCell, dup, edid, newFormKey) =>
                     {
                         var worldspaceCopy = getOrAddAsOverride(mod, worldspace);
                         var formKey = copyCell.FormKey;
@@ -211,7 +211,7 @@ internal static class ModContextExt
                         {
                             if (dup)
                             {
-                                cell = copyCell.Duplicate(mod.GetNextFormKey(edid), CellCopyMask);
+                                cell = copyCell.Duplicate(newFormKey ?? mod.GetNextFormKey(edid), CellCopyMask);
                             }
                             else
                             {
@@ -228,8 +228,8 @@ internal static class ModContextExt
                         yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>(
                             modKey: modKey,
                             record: readOnlyCell,
-                            getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),
-                            duplicateInto: (m, r, e) => cellGetter(m, (ICellGetter)r, true, e),
+                            getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?), default(FormKey?)),
+                            duplicateInto: (m, r, e, f) => cellGetter(m, (ICellGetter)r, true, e, f),
                             parent: subBlockContext);
                     }
                     
@@ -242,8 +242,8 @@ internal static class ModContextExt
                                      modKey, 
                                      subBlockContext, 
                                      throwIfUnknown, 
-                                     (m, c) => cellGetter(m, c, false, default(string?)),
-                                     (m, c, e) => cellGetter(m, c, true, e)))
+                                     (m, c) => cellGetter(m, c, false, default(string?), default(FormKey?)),
+                                     (m, c, e, f) => cellGetter(m, c, true, e, f)))
                         {
                             yield return con;
                         }

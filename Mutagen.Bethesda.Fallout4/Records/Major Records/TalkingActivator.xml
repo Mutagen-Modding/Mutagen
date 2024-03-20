@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="TalkingActivator" recordType="TACT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="35acf778-664b-44b6-943f-e76f9ee48f3d" ID="132">
+  <Object name="TalkingActivator" recordType="TACT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

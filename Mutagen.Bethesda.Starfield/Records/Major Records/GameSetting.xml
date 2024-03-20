@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GameSetting" recordType="GMST" baseClass="StarfieldMajorRecord" objType="Record" abstract="true">
+    <Fields>
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record">
+    <Fields>
+      <Int32 name="Data" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record">
+    <Fields>
+      <Float name="Data" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record">
+    <Fields>
+      <String name="Data" recordType="DATA" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record">
+    <Fields>
+      <Bool name="Data" recordType="DATA" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record">
+    <Fields>
+      <UInt32 name="Data" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

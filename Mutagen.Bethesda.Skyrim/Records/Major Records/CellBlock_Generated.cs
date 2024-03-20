@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,16 +55,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BlockNumber
-        public Int32 BlockNumber { get; set; } = default;
+        public Int32 BlockNumber { get; set; } = default(Int32);
         #endregion
         #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        public GroupTypeEnum GroupType { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region SubBlocks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1097,13 +1098,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 290,
-            version: 0);
-
-        public const string GUID = "98f34198-f0b3-4f1d-825d-37d3f343a365";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -1136,8 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(CellBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1175,10 +1167,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICellBlock item)
         {
             ClearPartial();
-            item.BlockNumber = default;
-            item.GroupType = default;
-            item.LastModified = default;
-            item.Unknown = default;
+            item.BlockNumber = default(Int32);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.SubBlocks.Clear();
         }
         

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AudioCategorySnapshot" recordType="SCSN" objType="Record" baseClass="Fallout4MajorRecord" GUID="10412589-d75c-4cc4-a402-740780b35d64" ID="671">
+  <Object name="AudioCategorySnapshot" recordType="SCSN" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <UInt16 name="Priority" recordType="PNAM" />
       <RefList name="Multipliers" refName="AudioCategoryMultiplier" />
     </Fields>
   </Object>
-  <Object name="AudioCategoryMultiplier" recordType="CNAM" objType="Subrecord" GUID="80f0eec6-4b06-4b42-9e23-7eaf483b68c0" ID="672">
+  <Object name="AudioCategoryMultiplier" recordType="CNAM" objType="Subrecord">
     <Fields>
       <FormLink name="Category" refName="SoundCategory" />
       <Float name="Multiplier" />

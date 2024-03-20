@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ShaderParticleGeometry" baseClass="SkyrimMajorRecord" objType="Record" recordType="SPGD" GUID="3221c39f-42d8-4126-82c3-c4e33a1d65be" ID="245">
+  <Object name="ShaderParticleGeometry" baseClass="SkyrimMajorRecord" objType="Record" recordType="SPGD">
     <Fields>
       <Data>
         <Fields>
@@ -11,8 +11,8 @@
           <Float name="CenterOffsetMin" />
           <Float name="CenterOffsetMax" />
           <Float name="InitialRotationRange" />
-          <UInt32 name="NumSubtexturesX"/>
-          <UInt32 name="NumSubtexturesY"/>
+          <UInt32 name="NumSubtexturesX" />
+          <UInt32 name="NumSubtexturesY" />
           <Enum name="Type" enumName="ShaderParticleGeometry.TypeEnum" byteLength="4" />
           <Break />
           <UInt32 name="BoxSize" />

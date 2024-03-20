@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -119,13 +120,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region MaxRank
-        public Byte MaxRank { get; set; } = default;
+        public Byte MaxRank { get; set; } = default(Byte);
         #endregion
         #region LevelTierScaledOffset
-        public Byte LevelTierScaledOffset { get; set; } = default;
+        public Byte LevelTierScaledOffset { get; set; } = default(Byte);
         #endregion
         #region AttachPoint
         private readonly IFormLink<IKeywordGetter> _AttachPoint = new FormLink<IKeywordGetter>();
@@ -1271,9 +1272,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = AObjectModification_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AObjectModificationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AObjectModificationSetterCommon.Instance.RemapLinks(this, mapping);
-        public AObjectModification(FormKey formKey)
+        public AObjectModification(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1282,7 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1296,12 +1300,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public AObjectModification(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public AObjectModification(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1669,13 +1677,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 236,
-            version: 0);
-
-        public const string GUID = "a0536c2f-a2a1-4faf-b038-9ebe8e076f1c";
-
         public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
@@ -1724,13 +1725,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.LNAM,
                 RecordTypes.NAM1,
                 RecordTypes.FLTR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AObjectModificationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1771,9 +1772,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.Name = default;
             item.Description = default;
             item.Model = null;
-            item.Unknown = default;
-            item.MaxRank = default;
-            item.LevelTierScaledOffset = default;
+            item.Unknown = default(UInt16);
+            item.MaxRank = default(Byte);
+            item.LevelTierScaledOffset = default(Byte);
             item.AttachPoint.Clear();
             item.AttachParentSlots.Clear();
             item.Items.Clear();
@@ -2438,7 +2439,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.AttachParentSlots.SetTo(
                         rhs.AttachParentSlots
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2507,7 +2508,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.TargetOmodKeywords = 
                             rhs.TargetOmodKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2534,7 +2535,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.FilterKeywords = 
                             rhs.FilterKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2924,7 +2925,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AObjectModificationBinaryCreateTranslation.FillBinaryDataParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2980,7 +2982,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryDataParseCustom(
             MutagenFrame frame,
-            IAObjectModificationInternal item);
+            IAObjectModificationInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -3048,7 +3051,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataParse
         public partial ParseResult DataParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
@@ -3118,7 +3122,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DataParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.MNAM:
                 {

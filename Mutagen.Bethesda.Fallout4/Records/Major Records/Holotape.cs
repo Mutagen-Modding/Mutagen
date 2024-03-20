@@ -20,7 +20,7 @@ public partial class Holotape
 
 partial class HolotapeBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryTypeParseCustom(MutagenFrame frame, IHolotapeInternal item)
+    public static partial ParseResult FillBinaryTypeParseCustom(MutagenFrame frame, IHolotapeInternal item, PreviousParse lastParsed)
     {
         var sub = frame.ReadSubrecordHeader(RecordTypes.DNAM);
         var type = EnumBinaryTranslation<Holotape.Types, MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
@@ -46,7 +46,7 @@ partial class HolotapeBinaryCreateTranslation
         return (int)Holotape_FieldIndex.PickUpSound;
     }
 
-    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, IHolotapeInternal item)
+    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, IHolotapeInternal item, PreviousParse lastParsed)
     {
         var sub = frame.ReadSubrecordHeader();
         switch (sub.RecordTypeInt)
@@ -76,7 +76,7 @@ partial class HolotapeBinaryCreateTranslation
                 switch (item.Data)
                 {
                     case HolotapeProgram prog:
-                        prog.File = StringBinaryTranslation.Instance.Parse(frame);
+                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate);
                         break;
                     case HolotapeSound _:
                     case HolotapeVoice _:
@@ -214,13 +214,13 @@ partial class HolotapeBinaryOverlay
         }
     }
 
-    public partial ParseResult TypeParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TypeParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _dataTypeLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.Data;
     }
 
-    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _dataContentLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.PickUpSound;

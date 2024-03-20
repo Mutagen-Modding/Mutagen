@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,37 +52,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MinWidth
-        public Single MinWidth { get; set; } = default;
+        public Single MinWidth { get; set; } = default(Single);
         #endregion
         #region MaxWidth
-        public Single MaxWidth { get; set; } = default;
+        public Single MaxWidth { get; set; } = default(Single);
         #endregion
         #region MinHeight
-        public Single MinHeight { get; set; } = default;
+        public Single MinHeight { get; set; } = default(Single);
         #endregion
         #region MaxHeight
-        public Single MaxHeight { get; set; } = default;
+        public Single MaxHeight { get; set; } = default(Single);
         #endregion
         #region Depth
-        public Single Depth { get; set; } = default;
+        public Single Depth { get; set; } = default(Single);
         #endregion
         #region Shininess
-        public Single Shininess { get; set; } = default;
+        public Single Shininess { get; set; } = default(Single);
         #endregion
         #region ParallaxScale
-        public Single ParallaxScale { get; set; } = default;
+        public Single ParallaxScale { get; set; } = default(Single);
         #endregion
         #region ParallaxPasses
-        public Byte ParallaxPasses { get; set; } = default;
+        public Byte ParallaxPasses { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Decal.Flag Flags { get; set; } = default;
+        public Decal.Flag Flags { get; set; } = default(Decal.Flag);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -969,13 +970,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 24,
-            version: 0);
-
-        public const string GUID = "8e13d6f4-ab4a-46fb-aad6-a31589952a1b";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1014,8 +1008,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(DecalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1053,17 +1045,17 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDecal item)
         {
             ClearPartial();
-            item.MinWidth = default;
-            item.MaxWidth = default;
-            item.MinHeight = default;
-            item.MaxHeight = default;
-            item.Depth = default;
-            item.Shininess = default;
-            item.ParallaxScale = default;
-            item.ParallaxPasses = default;
-            item.Flags = default;
-            item.Unknown = default;
-            item.Color = default;
+            item.MinWidth = default(Single);
+            item.MaxWidth = default(Single);
+            item.MinHeight = default(Single);
+            item.MaxHeight = default(Single);
+            item.Depth = default(Single);
+            item.Shininess = default(Single);
+            item.ParallaxScale = default(Single);
+            item.ParallaxPasses = default(Byte);
+            item.Flags = default(Decal.Flag);
+            item.Unknown = default(UInt16);
+            item.Color = default(Color);
         }
         
         #region Mutagen

@@ -15,7 +15,7 @@ public partial class Book
     [Flags]
     public enum Flag
     {
-        CantBeTaken = 0x02
+        CantBeTaken = 0x02,
     }
 
     public enum BookType : byte

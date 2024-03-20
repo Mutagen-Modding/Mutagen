@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ArtObject" objType="Record" recordType="ARTO" baseClass="Fallout4MajorRecord" GUID="fb3eec42-b062-441b-ab25-da703ad31526" ID="139">
+  <Object name="ArtObject" objType="Record" recordType="ARTO" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />

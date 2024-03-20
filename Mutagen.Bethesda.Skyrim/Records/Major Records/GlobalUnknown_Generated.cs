@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TypeChar
-        public Char TypeChar { get; set; } = default;
+        public Char TypeChar { get; set; } = default(Char);
         #endregion
         #region Data
         public Single? Data { get; set; }
@@ -382,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -391,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -718,13 +719,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 489,
-            version: 0);
-
-        public const string GUID = "8783e16b-176f-4b40-852d-74a2b6ef5c1c";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 9;
@@ -762,13 +756,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.GLOB,
                 RecordTypes.FNAM,
                 RecordTypes.FLTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GlobalUnknownBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -806,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGlobalUnknownInternal item)
         {
             ClearPartial();
-            item.TypeChar = default;
+            item.TypeChar = default(Char);
             item.Data = default;
             base.Clear(item);
         }
@@ -1527,7 +1521,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     GlobalUnknownBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalUnknown_FieldIndex.TypeChar;
                 }
                 case RecordTypeInts.FLTV:
@@ -1550,7 +1545,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalUnknownInternal item);
+            IGlobalUnknownInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1601,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region TypeChar
         partial void TypeCharCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Char GetTypeCharCustom();
         public Char TypeChar => GetTypeCharCustom();

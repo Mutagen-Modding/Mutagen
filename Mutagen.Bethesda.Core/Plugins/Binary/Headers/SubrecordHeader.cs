@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
@@ -256,7 +257,7 @@ public readonly struct SubrecordFrame
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => (ushort)Content.Length;
+    public int ContentLength => Content.Length;
     #endregion
 
     public static implicit operator SubrecordHeader(SubrecordFrame frame)
@@ -286,11 +287,15 @@ public readonly struct SubrecordPinFrame
     /// E.g., relative to the position of the RecordType of the parent MajorRecord.
     /// </summary>
     public int Location { get; }
+
+    public int ContentLocation => Location + Meta.SubConstants.HeaderLength;
     
     /// <summary>
     /// Location where the subrecord ends.  This is equivalent to Location + TotalLength
     /// </summary>
     public int EndLocation => Location + TotalLength;
+    
+    public int? LengthOverrideRecordLocation { get; }
 
     /// <summary>
     /// Constructor
@@ -308,6 +313,13 @@ public readonly struct SubrecordPinFrame
     {
         Frame = frame;
         Location = pinLocation;
+    }
+    
+    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation, int? lengthOverrideRecordLocation)
+    {
+        Frame = frame;
+        Location = pinLocation;
+        LengthOverrideRecordLocation = lengthOverrideRecordLocation;
     }
 
     /// <summary>
@@ -334,6 +346,15 @@ public readonly struct SubrecordPinFrame
         return new SubrecordPinFrame(
             SubrecordFrame.FactoryNoTrim(header, span),
             pinLocation);
+    }
+
+    public static SubrecordPinFrame FactoryWithOverrideLength(SubrecordHeader header, ReadOnlyMemorySlice<byte> span,
+        int pinLocation, int overrideSubrecLocation)
+    {
+        return new SubrecordPinFrame(
+            SubrecordFrame.FactoryNoTrim(header, span),
+            pinLocation,
+            overrideSubrecLocation);
     }
 
     /// <inheritdoc/>
@@ -393,7 +414,7 @@ public readonly struct SubrecordPinFrame
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => Frame.ContentLength;
+    public int ContentLength => Frame.ContentLength;
     #endregion
 
     public static implicit operator SubrecordHeader(SubrecordPinFrame pin)
@@ -409,5 +430,21 @@ public readonly struct SubrecordPinFrame
     public static implicit operator SubrecordPinHeader(SubrecordPinFrame pin)
     {
         return new SubrecordPinHeader(pin.Header, pin.Location);
+    }
+
+    public SubrecordPinFrame Shift(int offset)
+    {
+        return new SubrecordPinFrame(
+            this.Frame,
+            Location + offset,
+            LengthOverrideRecordLocation + offset);
+    }
+
+    public SubrecordPinFrame WithoutOverflow()
+    {
+        return new SubrecordPinFrame(
+            this.Frame,
+            Location,
+            lengthOverrideRecordLocation: null);
     }
 }

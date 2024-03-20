@@ -5,6 +5,7 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
 ### IHasIcons
+
 - AlchemicalApparatus
 - Ammunition
 - ArmorModel
@@ -20,6 +21,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoulGem
 - Weapon
 ### IKeyworded
+
 - Activator
 - Ammunition
 - Armor
@@ -41,6 +43,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - Weapon
 ### IModeled
+
 - Activator
 - AddonNode
 - AlchemicalApparatus
@@ -81,6 +84,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Tree
 - Weapon
 ### INamed
+
 - Activator
 - ActorValueInformation
 - AlchemicalApparatus
@@ -158,6 +162,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - WordOfPower
 - Worldspace
 ### IObjectBounded
+
 - AcousticSpace
 - Activator
 - AddonNode
@@ -197,6 +202,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Tree
 - Weapon
 ### IWeightValue
+
 - AlchemicalApparatus
 - Ammunition
 - Armor
@@ -210,29 +216,37 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoulGem
 - WeaponBasicStats
 ### Keyword
+
 - Keyword
 ## Concrete Classes to Interfaces
 ### AcousticSpace
+
 - IObjectBounded
 ### Activator
+
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 ### ActorValueInformation
+
 - INamed
 ### AddonNode
+
 - IModeled
 - IObjectBounded
 ### AlchemicalApparatus
+
 - IHasIcons
 - IModeled
 - INamed
 - IObjectBounded
 - IWeightValue
 ### AlternateTexture
+
 - INamed
 ### Ammunition
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -240,27 +254,36 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### AnimatedObject
+
 - IModeled
 ### APackageData
+
 - INamed
 ### Armor
+
 - IKeyworded
 - INamed
 - IObjectBounded
 - IWeightValue
 ### ArmorModel
+
 - IHasIcons
 - IModeled
 ### ArtObject
+
 - IModeled
 - IObjectBounded
 ### BodyData
+
 - IModeled
 ### BodyPart
+
 - INamed
 ### BodyPartData
+
 - IModeled
 ### Book
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -268,67 +291,90 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### CameraShot
+
 - IModeled
 ### Cell
+
 - INamed
 ### Class
+
 - INamed
 ### Climate
+
 - IModeled
 ### CollisionLayer
+
 - INamed
 ### ColorRecord
+
 - INamed
 ### Container
+
 - IModeled
 - INamed
 - IObjectBounded
 ### DestructionStage
+
 - IModeled
 ### DialogTopic
+
 - INamed
 ### Door
+
 - IModeled
 - INamed
 - IObjectBounded
 ### DualCastData
+
 - IObjectBounded
 ### Explosion
+
 - IModeled
 - INamed
 - IObjectBounded
 ### Eyes
+
 - INamed
 ### Faction
+
 - INamed
 ### Flora
+
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 ### Furniture
+
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 ### Grass
+
 - IModeled
 - IObjectBounded
 ### Hazard
+
 - IModeled
 - INamed
 - IObjectBounded
 ### HeadData
+
 - IModeled
 ### HeadPart
+
 - IModeled
 - INamed
 ### IdleMarker
+
 - IModeled
 - IObjectBounded
 ### Impact
+
 - IModeled
 ### Ingestible
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -336,6 +382,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### Ingredient
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -343,6 +390,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### Key
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -350,37 +398,50 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### Keyword
+
 - Keyword
 ### LeveledItem
+
 - IObjectBounded
 ### LeveledNpc
+
 - IModeled
 - IObjectBounded
 ### LeveledSpell
+
 - IObjectBounded
 ### Light
+
 - IHasIcons
 - IModeled
 - INamed
 - IObjectBounded
 - IWeightValue
 ### LoadScreen
+
 - IHasIcons
 ### Location
+
 - IKeyworded
 - INamed
 ### MagicEffect
+
 - IKeyworded
 - INamed
 ### MapMarker
+
 - INamed
 ### MaterialObject
+
 - IModeled
 ### MaterialType
+
 - INamed
 ### Message
+
 - INamed
 ### MiscItem
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -388,90 +449,126 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### MoveableStatic
+
 - IModeled
 - INamed
 - IObjectBounded
 ### MovementType
+
 - INamed
 ### Npc
+
 - IKeyworded
 - INamed
 - IObjectBounded
 ### ObjectEffect
+
 - INamed
 - IObjectBounded
 ### PackageDataBool
+
 - INamed
 ### PackageDataFloat
+
 - INamed
 ### PackageDataInt
+
 - INamed
 ### PackageDataLocation
+
 - INamed
 ### PackageDataObjectList
+
 - INamed
 ### PackageDataTarget
+
 - INamed
 ### PackageDataTopic
+
 - INamed
 ### Perk
+
 - IHasIcons
 - INamed
 ### Phoneme
+
 - INamed
 ### Projectile
+
 - IModeled
 - INamed
 - IObjectBounded
 ### Quest
+
 - INamed
 ### QuestAlias
+
 - IKeyworded
 - INamed
 ### Race
+
 - IKeyworded
 - INamed
 ### RegionData
+
 - IHasIcons
 ### RegionMap
+
 - INamed
 ### SceneAction
+
 - INamed
 ### ScenePhase
+
 - INamed
 ### ScriptBoolListProperty
+
 - INamed
 ### ScriptBoolProperty
+
 - INamed
 ### ScriptEntry
+
 - INamed
 ### ScriptFloatListProperty
+
 - INamed
 ### ScriptFloatProperty
+
 - INamed
 ### ScriptIntListProperty
+
 - INamed
 ### ScriptIntProperty
+
 - INamed
 ### ScriptObjectListProperty
+
 - INamed
 ### ScriptObjectProperty
+
 - INamed
 ### ScriptProperty
+
 - INamed
 ### ScriptStringListProperty
+
 - INamed
 ### ScriptStringProperty
+
 - INamed
 ### Scroll
+
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 - IWeightValue
 ### Shout
+
 - INamed
 ### SoulGem
+
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -479,38 +576,50 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### SoundCategory
+
 - INamed
 ### SoundMarker
+
 - IObjectBounded
 ### Spell
+
 - IKeyworded
 - INamed
 - IObjectBounded
 ### Static
+
 - IModeled
 - IObjectBounded
 ### TalkingActivator
+
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 ### TextureSet
+
 - IObjectBounded
 ### Tree
+
 - IModeled
 - INamed
 - IObjectBounded
 ### Water
+
 - INamed
 ### Weapon
+
 - IHasIcons
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 ### WeaponBasicStats
+
 - IWeightValue
 ### WordOfPower
+
 - INamed
 ### Worldspace
+
 - INamed

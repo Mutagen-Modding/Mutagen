@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -75,19 +76,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region DefaultNumberOfTiles
-        public Single DefaultNumberOfTiles { get; set; } = default;
+        public Single DefaultNumberOfTiles { get; set; } = default(Single);
         #endregion
         #region DefaultNumberOfSlices
-        public UInt16 DefaultNumberOfSlices { get; set; } = default;
+        public UInt16 DefaultNumberOfSlices { get; set; } = default(UInt16);
         #endregion
         #region DefaultNumberOfTilesIsRelativeToLength
-        public Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; } = default;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; } = default(Boolean);
         #endregion
         #region DefaultColor
-        public Color DefaultColor { get; set; } = default;
+        public Color DefaultColor { get; set; } = default(Color);
         #endregion
         #region WindSensibility
-        public Single WindSensibility { get; set; } = default;
+        public Single WindSensibility { get; set; } = default(Single);
         #endregion
         #region WindFlexibility
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -113,7 +114,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ITextureSetGetter> IBendableSplineGetter.Texture => this.Texture;
         #endregion
         #region DNAMDataTypeState
-        public BendableSpline.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public BendableSpline.DNAMDataType DNAMDataTypeState { get; set; } = default(BendableSpline.DNAMDataType);
         #endregion
 
         #region To String
@@ -648,9 +649,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = BendableSpline_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BendableSplineCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BendableSplineSetterCommon.Instance.RemapLinks(this, mapping);
-        public BendableSpline(FormKey formKey)
+        public BendableSpline(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -659,7 +663,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -673,12 +677,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public BendableSpline(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public BendableSpline(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1026,13 +1034,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 358,
-            version: 0);
-
-        public const string GUID = "c227e451-8bde-4557-99ba-dce962318e50";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 16;
@@ -1071,13 +1072,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.OBND,
                 RecordTypes.DNAM,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BendableSplineBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1116,14 +1117,14 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ObjectBounds = null;
-            item.DefaultNumberOfTiles = default;
-            item.DefaultNumberOfSlices = default;
-            item.DefaultNumberOfTilesIsRelativeToLength = default;
-            item.DefaultColor = default;
-            item.WindSensibility = default;
-            item.WindFlexibility = default;
+            item.DefaultNumberOfTiles = default(Single);
+            item.DefaultNumberOfSlices = default(UInt16);
+            item.DefaultNumberOfTilesIsRelativeToLength = default(Boolean);
+            item.DefaultColor = default(Color);
+            item.WindSensibility = default(Single);
+            item.WindFlexibility = default(Single);
             item.Texture.Clear();
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(BendableSpline.DNAMDataType);
             base.Clear(item);
         }
         
@@ -1480,7 +1481,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new BendableSpline(formKey);
+            var newRec = new BendableSpline(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1999,32 +2000,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region DefaultNumberOfTiles
         private int _DefaultNumberOfTilesLocation => _DNAMLocation!.Value.Min;
         private bool _DefaultNumberOfTiles_IsSet => _DNAMLocation.HasValue;
-        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default;
+        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default(Single);
         #endregion
         #region DefaultNumberOfSlices
         private int _DefaultNumberOfSlicesLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DefaultNumberOfSlices_IsSet => _DNAMLocation.HasValue;
-        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default;
+        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default(UInt16);
         #endregion
         #region DefaultNumberOfTilesIsRelativeToLength
         private int _DefaultNumberOfTilesIsRelativeToLengthLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DefaultNumberOfTilesIsRelativeToLength_IsSet => _DNAMLocation.HasValue;
-        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default(Boolean);
         #endregion
         #region DefaultColor
         private int _DefaultColorLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _DefaultColor_IsSet => _DNAMLocation.HasValue;
-        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 16).ReadColor(ColorBinaryType.AlphaFloat) : default;
+        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 16).ReadColor(ColorBinaryType.AlphaFloat) : default(Color);
         #endregion
         #region WindSensibility
         private int _WindSensibilityLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _WindSensibility_IsSet => _DNAMLocation.HasValue;
-        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default;
+        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default(Single);
         #endregion
         #region WindFlexibility
         private int _WindFlexibilityLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _WindFlexibility_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(BendableSpline.DNAMDataType.Break0);
-        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default;
+        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default(Single);
         #endregion
         #region Texture
         private int? _TextureLocation;

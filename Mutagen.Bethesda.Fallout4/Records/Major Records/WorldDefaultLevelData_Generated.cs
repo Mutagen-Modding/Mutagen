@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region NorthwestCellCoords
-        public P2UInt8 NorthwestCellCoords { get; set; } = default;
+        public P2UInt8 NorthwestCellCoords { get; set; } = default(P2UInt8);
         #endregion
         #region NorthwestCellSize
-        public P2UInt8 NorthwestCellSize { get; set; } = default;
+        public P2UInt8 NorthwestCellSize { get; set; } = default(P2UInt8);
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -688,13 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 511,
-            version: 0);
-
-        public const string GUID = "40c8c9de-51f2-488e-b290-c9dc65e380d1";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -731,13 +725,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.WLEV,
                 RecordTypes.XXXX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WorldDefaultLevelDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -775,8 +769,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWorldDefaultLevelData item)
         {
             ClearPartial();
-            item.NorthwestCellCoords = default;
-            item.NorthwestCellSize = default;
+            item.NorthwestCellCoords = default(P2UInt8);
+            item.NorthwestCellSize = default(P2UInt8);
             item.Data = default;
         }
         
@@ -1168,7 +1162,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return ParseResult.Stop;
@@ -1242,12 +1236,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region NorthwestCellCoords
         private int _NorthwestCellCoordsLocation => _WLEVLocation!.Value.Min;
         private bool _NorthwestCellCoords_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellCoordsLocation, 2)) : default;
+        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellCoordsLocation, 2)) : default(P2UInt8);
         #endregion
         #region NorthwestCellSize
         private int _NorthwestCellSizeLocation => _WLEVLocation!.Value.Min + 0x2;
         private bool _NorthwestCellSize_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellSizeLocation, 2)) : default;
+        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellSizeLocation, 2)) : default(P2UInt8);
         #endregion
         #region Data
         private int? _DataLocation;
@@ -1344,10 +1338,13 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                                 _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
+                            }
                             case 1:
+                            {
                                 _DataLocation = (stream.Position - offset);
                                 _DataLengthOverride = lastParsed.LengthOverride;
                                 if (lastParsed.LengthOverride.HasValue)
@@ -1355,6 +1352,7 @@ namespace Mutagen.Bethesda.Fallout4
                                     stream.Position += lastParsed.LengthOverride.Value;
                                 }
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -1363,7 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return ParseResult.Stop;

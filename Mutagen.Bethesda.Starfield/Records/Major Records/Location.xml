@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Location" recordType="LCTN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
+    <Fields>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
+      <RefList name="LocationCellUniqueReferences" refName="LocationCellUniqueReference" recordType="LCUR" />
+      <RefList name="LocationCellUniques" refName="LocationCellUnique" recordType="LCUN" />
+      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" />
+      <List name="LocationCellEncounterCell">
+        <RefDirect refName="LocationCoordinate" recordType="LCEC" />
+      </List>
+      <List name="LocationCellMarkerReference" recordType="LCID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <RefList name="LocationCellEnablePoint" refName="LocationCellEnablePoint" recordType="LCEP" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties2" refName="ObjectProperty" recordType="PRPS" />
+      <Data>
+        <Fields>
+          <FormLink name="Faction" refName="Faction" />
+          <Int8 name="UnknownDATA" />
+          <Int8 name="SystemLevel" />
+          <Int16 name="UnknownDATA2" />
+        </Fields>
+      </Data>
+      <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
+      <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
+      <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Float name="WorldLocationRadius" recordType="RNAM" />
+      <Float name="ActorFadeMult" recordType="ANAM" />
+      <Float name="TNAM" recordType="TNAM" unknown="true" />
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <Int32 name="StarID" recordType="XNAM" />
+      <Int32 name="PlanetID" recordType="YNAM" />
+    </Fields>
+  </Object>
+  <Object name="LocationReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="LocationCellUniqueReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="GenericBaseForm" refName="GenericBaseForm" />
+      <FormLink name="Ref" refName="PlacedObject" />
+      <FormLink name="Location" refName="Location" />
+    </Fields>
+  </Object>
+  <Object name="LocationCellUnique" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor" refName="Npc" />
+      <FormLink name="Ref" refName="PlacedNpc" />
+      <FormLink name="Location" refName="Location" />
+    </Fields>
+  </Object>
+  <Object name="LocationCellStaticReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="LocationRefType" refName="LocationReferenceType" />
+      <FormLink name="Marker">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="LocationCoordinate" objType="Subrecord">
+    <Fields>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <List name="Coordinates">
+        <P2Int16 swapCoords="true" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="LocationCellEnablePoint" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <FormLink name="Ref">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Bool name="SetEnableStateToOppositeOfParent" byteLength="4" importantByteLength="1" />
+    </Fields>
+  </Object>
+</Loqui>

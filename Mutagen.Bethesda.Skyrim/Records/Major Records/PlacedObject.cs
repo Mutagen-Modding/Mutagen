@@ -172,7 +172,7 @@ partial class PlacedObjectBinaryCreateTranslation
     public const byte HasImageSpaceFlag = 0x40;
     public const byte HasLightingTemplateFlag = 0x80;
 
-    public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
+    public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item, PreviousParse lastParsed)
     {
         var header = frame.ReadSubrecord();
         if (header.Content.Length != 4)
@@ -262,7 +262,7 @@ partial class PlacedObjectBinaryOverlay
     int? _imageSpaceLoc;
     public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
 
-    public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _boundDataLoc = stream.Position - offset;
         var header = stream.ReadSubrecord();

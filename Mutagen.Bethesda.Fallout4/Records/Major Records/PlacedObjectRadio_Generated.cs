@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Frequency
-        public Single Frequency { get; set; } = default;
+        public Single Frequency { get; set; } = default(Single);
         #endregion
         #region MinWeakDistance
-        public Single MinWeakDistance { get; set; } = default;
+        public Single MinWeakDistance { get; set; } = default(Single);
         #endregion
         #region MaxWeakDistance
-        public Single MaxWeakDistance { get; set; } = default;
+        public Single MaxWeakDistance { get; set; } = default(Single);
         #endregion
         #region Flags
-        public PlacedObjectRadio.Flag Flags { get; set; } = default;
+        public PlacedObjectRadio.Flag Flags { get; set; } = default(PlacedObjectRadio.Flag);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 498,
-            version: 0);
-
-        public const string GUID = "2b9ff158-2747-4d81-b71e-053c508e5244";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectRadioBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectRadio item)
         {
             ClearPartial();
-            item.Frequency = default;
-            item.MinWeakDistance = default;
-            item.MaxWeakDistance = default;
-            item.Flags = default;
+            item.Frequency = default(Single);
+            item.MinWeakDistance = default(Single);
+            item.MaxWeakDistance = default(Single);
+            item.Flags = default(PlacedObjectRadio.Flag);
         }
         
         #region Mutagen

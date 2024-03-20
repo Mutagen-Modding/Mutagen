@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -64,9 +65,9 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? IStoryManagerEventNodeGetter.MaxConcurrentQuests => this.MaxConcurrentQuests;
         #endregion
         #region Type
-        public RecordType? Type { get; set; }
+        public StoryManagerEventNode.Types? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RecordType? IStoryManagerEventNodeGetter.Type => this.Type;
+        StoryManagerEventNode.Types? IStoryManagerEventNodeGetter.Type => this.Type;
         #endregion
 
         #region To String
@@ -420,9 +421,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerEventNode_Registration.TriggeringRecordType;
-        public StoryManagerEventNode(FormKey formKey)
+        public StoryManagerEventNode(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -431,7 +435,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -445,12 +449,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public StoryManagerEventNode(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public StoryManagerEventNode(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -547,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new AStoryManagerNode.Flag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
-        new RecordType? Type { get; set; }
+        new StoryManagerEventNode.Types? Type { get; set; }
     }
 
     public partial interface IStoryManagerEventNodeInternal :
@@ -567,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         UInt32? MaxConcurrentQuests { get; }
-        RecordType? Type { get; }
+        StoryManagerEventNode.Types? Type { get; }
 
     }
 
@@ -760,13 +768,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 629,
-            version: 0);
-
-        public const string GUID = "b2aa4737-9af9-49f3-80cc-850fbc8001d8";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 13;
@@ -848,13 +849,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DNAM,
                 RecordTypes.XNAM,
                 RecordTypes.ENAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StoryManagerEventNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1247,7 +1248,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new StoryManagerEventNode(formKey);
+            var newRec = new StoryManagerEventNode(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1531,9 +1532,10 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.MaxConcurrentQuests,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM));
-            RecordTypeBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Type,
+            EnumBinaryTranslation<StoryManagerEventNode.Types, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
         }
 
@@ -1648,7 +1650,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<StoryManagerEventNode.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)StoryManagerEventNode_FieldIndex.Type;
                 }
                 default:
@@ -1719,7 +1723,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Type
         private int? _TypeLocation;
-        public RecordType? Type => _TypeLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        public StoryManagerEventNode.Types? Type => _TypeLocation.HasValue ? (StoryManagerEventNode.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerEventNode.Types?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

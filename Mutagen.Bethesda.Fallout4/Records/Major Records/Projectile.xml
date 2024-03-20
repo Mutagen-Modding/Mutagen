@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="12c18f9e-ca09-4481-b659-f8d7c4498b9e" ID="270">
+  <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />

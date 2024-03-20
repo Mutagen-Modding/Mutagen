@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -92,28 +93,28 @@ namespace Mutagen.Bethesda.Skyrim
         public String IkStartNode { get; set; } = string.Empty;
         #endregion
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region Flags
-        public BodyPart.Flag Flags { get; set; } = default;
+        public BodyPart.Flag Flags { get; set; } = default(BodyPart.Flag);
         #endregion
         #region Type
-        public BodyPart.PartType Type { get; set; } = default;
+        public BodyPart.PartType Type { get; set; } = default(BodyPart.PartType);
         #endregion
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default;
+        public Byte HealthPercent { get; set; } = default(Byte);
         #endregion
         #region ActorValue
-        public ActorValue ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default(ActorValue);
         #endregion
         #region ToHitChance
-        public Byte ToHitChance { get; set; } = default;
+        public Byte ToHitChance { get; set; } = default(Byte);
         #endregion
         #region ExplodableExplosionChance
-        public Byte ExplodableExplosionChance { get; set; } = default;
+        public Byte ExplodableExplosionChance { get; set; } = default(Byte);
         #endregion
         #region ExplodableDebrisCount
-        public UInt16 ExplodableDebrisCount { get; set; } = default;
+        public UInt16 ExplodableDebrisCount { get; set; } = default(UInt16);
         #endregion
         #region ExplodableDebris
         private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
@@ -136,13 +137,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
         #region TrackingMaxAngle
-        public Single TrackingMaxAngle { get; set; } = default;
+        public Single TrackingMaxAngle { get; set; } = default(Single);
         #endregion
         #region ExplodableDebrisScale
-        public Single ExplodableDebrisScale { get; set; } = default;
+        public Single ExplodableDebrisScale { get; set; } = default(Single);
         #endregion
         #region SeverableDebrisCount
-        public Int32 SeverableDebrisCount { get; set; } = default;
+        public Int32 SeverableDebrisCount { get; set; } = default(Int32);
         #endregion
         #region SeverableDebris
         private readonly IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
@@ -165,13 +166,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
         #region SeverableDebrisScale
-        public Single SeverableDebrisScale { get; set; } = default;
+        public Single SeverableDebrisScale { get; set; } = default(Single);
         #endregion
         #region GorePositioning
-        public P3Float GorePositioning { get; set; } = default;
+        public P3Float GorePositioning { get; set; } = default(P3Float);
         #endregion
         #region GoreRotation
-        public P3Float GoreRotation { get; set; } = default;
+        public P3Float GoreRotation { get; set; } = default(P3Float);
         #endregion
         #region SeverableImpactData
         private readonly IFormLink<IImpactDataSetGetter> _SeverableImpactData = new FormLink<IImpactDataSetGetter>();
@@ -194,16 +195,16 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData;
         #endregion
         #region SeverableDecalCount
-        public Byte SeverableDecalCount { get; set; } = default;
+        public Byte SeverableDecalCount { get; set; } = default(Byte);
         #endregion
         #region ExplodableDecalCount
-        public Byte ExplodableDecalCount { get; set; } = default;
+        public Byte ExplodableDecalCount { get; set; } = default(Byte);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region LimbReplacementScale
-        public Single LimbReplacementScale { get; set; } = default;
+        public Single LimbReplacementScale { get; set; } = default(Single);
         #endregion
         #region LimbReplacementModel
         public String LimbReplacementModel { get; set; } = string.Empty;
@@ -1820,13 +1821,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 432,
-            version: 0);
-
-        public const string GUID = "8a2f315d-0fc0-40ef-abc2-ee949928ba76";
-
         public const ushort AdditionalFieldCount = 32;
 
         public const ushort FieldCount = 32;
@@ -1870,13 +1864,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.NAM1,
                 RecordTypes.NAM4,
                 RecordTypes.NAM5);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1919,30 +1913,30 @@ namespace Mutagen.Bethesda.Skyrim
             item.PartNode = string.Empty;
             item.VatsTarget = string.Empty;
             item.IkStartNode = string.Empty;
-            item.DamageMult = default;
-            item.Flags = default;
-            item.Type = default;
-            item.HealthPercent = default;
-            item.ActorValue = default;
-            item.ToHitChance = default;
-            item.ExplodableExplosionChance = default;
-            item.ExplodableDebrisCount = default;
+            item.DamageMult = default(Single);
+            item.Flags = default(BodyPart.Flag);
+            item.Type = default(BodyPart.PartType);
+            item.HealthPercent = default(Byte);
+            item.ActorValue = default(ActorValue);
+            item.ToHitChance = default(Byte);
+            item.ExplodableExplosionChance = default(Byte);
+            item.ExplodableDebrisCount = default(UInt16);
             item.ExplodableDebris.Clear();
             item.ExplodableExplosion.Clear();
-            item.TrackingMaxAngle = default;
-            item.ExplodableDebrisScale = default;
-            item.SeverableDebrisCount = default;
+            item.TrackingMaxAngle = default(Single);
+            item.ExplodableDebrisScale = default(Single);
+            item.SeverableDebrisCount = default(Int32);
             item.SeverableDebris.Clear();
             item.SeverableExplosion.Clear();
-            item.SeverableDebrisScale = default;
-            item.GorePositioning = default;
-            item.GoreRotation = default;
+            item.SeverableDebrisScale = default(Single);
+            item.GorePositioning = default(P3Float);
+            item.GoreRotation = default(P3Float);
             item.SeverableImpactData.Clear();
             item.ExplodableImpactData.Clear();
-            item.SeverableDecalCount = default;
-            item.ExplodableDecalCount = default;
-            item.Unknown = default;
-            item.LimbReplacementScale = default;
+            item.SeverableDecalCount = default(Byte);
+            item.ExplodableDecalCount = default(Byte);
+            item.Unknown = default(UInt16);
+            item.LimbReplacementScale = default(Single);
             item.LimbReplacementModel = string.Empty;
             item.GoreTargetBone = string.Empty;
             item.TextureFilesHashes = default;
@@ -3023,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default;
+        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x4;
@@ -3058,7 +3052,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value.Min + 0xA;
         private bool _ExplodableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ExplodableDebrisCountLocation, 2)) : default;
+        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ExplodableDebrisCountLocation, 2)) : default(UInt16);
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0xC;
@@ -3073,17 +3067,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region TrackingMaxAngle
         private int _TrackingMaxAngleLocation => _BPNDLocation!.Value.Min + 0x14;
         private bool _TrackingMaxAngle_IsSet => _BPNDLocation.HasValue;
-        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _recordData.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
+        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _recordData.Slice(_TrackingMaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
         private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x1C;
         private bool _SeverableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SeverableDebrisCountLocation, 4)) : default;
+        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SeverableDebrisCountLocation, 4)) : default(Int32);
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _BPNDLocation!.Value.Min + 0x20;
@@ -3098,17 +3092,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x28;
         private bool _SeverableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region GorePositioning
         private int _GorePositioningLocation => _BPNDLocation!.Value.Min + 0x2C;
         private bool _GorePositioning_IsSet => _BPNDLocation.HasValue;
-        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GorePositioningLocation, 12)) : default;
+        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GorePositioningLocation, 12)) : default(P3Float);
         #endregion
         #region GoreRotation
         private int _GoreRotationLocation => _BPNDLocation!.Value.Min + 0x38;
         private bool _GoreRotation_IsSet => _BPNDLocation.HasValue;
-        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GoreRotationLocation, 12)) : default;
+        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GoreRotationLocation, 12)) : default(P3Float);
         #endregion
         #region SeverableImpactData
         private int _SeverableImpactDataLocation => _BPNDLocation!.Value.Min + 0x44;
@@ -3133,12 +3127,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _BPNDLocation!.Value.Min + 0x4E;
         private bool _Unknown_IsSet => _BPNDLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
         #endregion
         #region LimbReplacementScale
         private int _LimbReplacementScaleLocation => _BPNDLocation!.Value.Min + 0x50;
         private bool _LimbReplacementScale_IsSet => _BPNDLocation.HasValue;
-        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _recordData.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
+        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _recordData.Slice(_LimbReplacementScaleLocation, 4).Float() : default(Single);
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;

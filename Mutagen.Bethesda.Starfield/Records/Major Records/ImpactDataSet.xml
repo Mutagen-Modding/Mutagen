@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImpactDataSet" recordType="IPDS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Impacts" refName="ImpactData" />
+    </Fields>
+  </Object>
+  <Object name="ImpactData" objType="Subrecord" recordType="PNAM">
+    <Fields>
+      <FormLink name="Material" refName="MaterialType" />
+      <FormLink name="Impact" refName="Impact" />
+    </Fields>
+  </Object>
+</Loqui>

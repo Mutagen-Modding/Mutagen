@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" resolvedAssets="true" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal" GUID="29f5de6a-ecd3-4ce8-8ffb-b443aad13295" ID="314">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" resolvedAssets="true" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Float name="Priority" recordType="PNAM" nullable="False" multiplier="50" />
+      <Float name="Priority" recordType="PNAM" nullable="False" default="50" />
       <FormLink name="Branch" recordType="BNAM" refName="DialogBranch" />
       <FormLink name="Quest" recordType="QNAM" refName="Quest" />
       <Data>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LegendaryItem" recordType="LGDI" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
+      <FormLink name="ApplicableItemList" refName="LeveledItem" recordType="ANAM" />
+      <FormLink name="LegendaryTemplateList" refName="LegendaryItem" recordType="ENAM" />
+      <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
+      <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
+      <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+  <Object name="LegendaryMod" objType="Subrecord">
+    <Fields>
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
+      <FormLink name="LegendaryModifier" refName="AObjectModification" />
+    </Fields>
+  </Object>
+  <Object name="LegendaryFilter" objType="Subrecord">
+    <Fields>
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
+      <FormLink name="ReferencedModifier" refName="Keyword" />
+      <FormLink name="Keyword" refName="Keyword" />
+    </Fields>
+  </Object>
+</Loqui>

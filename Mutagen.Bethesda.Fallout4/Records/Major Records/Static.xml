@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Static" recordType="STAT" objType="Record" baseClass="Fallout4MajorRecord" majorFlags="true" GUID="ecd28406-13ba-4ad0-b206-c6b54b791a0b" ID="155">
+  <Object name="Static" recordType="STAT" objType="Record" baseClass="Fallout4MajorRecord" majorFlags="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -30,7 +30,7 @@
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="DistantLod" objType="Subrecord" GUID="795bff20-ec22-4c22-a3f5-bfb3b2ee105e" ID="331">
+  <Object name="DistantLod" objType="Subrecord">
     <Fields>
       <String name="Mesh" maxLength="259" binary="Custom" />
     </Fields>

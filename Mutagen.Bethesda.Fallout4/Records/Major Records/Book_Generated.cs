@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -244,13 +245,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IMessageGetter> IBookGetter.FeaturedItemMessage => this.FeaturedItemMessage;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Book.Flag Flags { get; set; } = default;
+        public Book.Flag Flags { get; set; } = default(Book.Flag);
         #endregion
         #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -264,10 +265,10 @@ namespace Mutagen.Bethesda.Fallout4
         IBookTeachTargetGetter? IBookGetter.Teaches => this.Teaches;
         #endregion
         #region TextOffsetX
-        public UInt32 TextOffsetX { get; set; } = default;
+        public UInt32 TextOffsetX { get; set; } = default(UInt32);
         #endregion
         #region TextOffsetY
-        public UInt32 TextOffsetY { get; set; } = default;
+        public UInt32 TextOffsetY { get; set; } = default(UInt32);
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1239,9 +1240,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSetterCommon.Instance.RemapLinks(this, mapping);
-        public Book(FormKey formKey)
+        public Book(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1250,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1264,12 +1268,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Book(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Book(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1716,13 +1724,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 156,
-            version: 0);
-
-        public const string GUID = "c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a";
-
         public const ushort AdditionalFieldCount = 20;
 
         public const ushort FieldCount = 27;
@@ -1773,11 +1774,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.YNAM,
                 RecordTypes.ZNAM,
                 RecordTypes.KWDA,
@@ -1787,13 +1783,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DNAM,
                 RecordTypes.CNAM,
                 RecordTypes.INAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1843,12 +1839,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.PutDownSound.Clear();
             item.Keywords = null;
             item.FeaturedItemMessage.Clear();
-            item.Value = default;
-            item.Weight = default;
-            item.Flags = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Flags = default(Book.Flag);
             item.Teaches = null;
-            item.TextOffsetX = default;
-            item.TextOffsetY = default;
+            item.TextOffsetX = default(UInt32);
+            item.TextOffsetY = default(UInt32);
             item.Description = default;
             item.InventoryArt.Clear();
             base.Clear(item);
@@ -2451,7 +2447,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Book(formKey);
+            var newRec = new Book(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2671,7 +2667,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3173,11 +3169,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -3259,7 +3250,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3382,12 +3373,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region Flags
@@ -3403,12 +3394,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region TextOffsetX
         private int _TextOffsetXLocation => _DNAMLocation!.Value.Min + 0x5;
         private bool _TextOffsetX_IsSet => _DNAMLocation.HasValue;
-        public UInt32 TextOffsetX => _TextOffsetX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetXLocation, 4)) : default;
+        public UInt32 TextOffsetX => _TextOffsetX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetXLocation, 4)) : default(UInt32);
         #endregion
         #region TextOffsetY
         private int _TextOffsetYLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _TextOffsetY_IsSet => _DNAMLocation.HasValue;
-        public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetYLocation, 4)) : default;
+        public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetYLocation, 4)) : default(UInt32);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3540,11 +3531,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -3603,7 +3589,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

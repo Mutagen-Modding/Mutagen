@@ -56,7 +56,7 @@ public class AlignmentRepeatedRuleTests
         AssertBytes(
             AlignmentRepeatedRule.Basic(
                 TestRecordTypes.TX00,
-                TestRecordTypes.TX01).GetBytes(read),
+                TestRecordTypes.TX01).ReadBytes(read, null),
             TestRecordTypes.TX00,
             TestRecordTypes.TX01,
             TestRecordTypes.TX00,
@@ -76,7 +76,7 @@ public class AlignmentRepeatedRuleTests
         AssertBytes(
             AlignmentRepeatedRule.Basic(
                 TestRecordTypes.TX00,
-                TestRecordTypes.TX01).GetBytes(read),
+                TestRecordTypes.TX01).ReadBytes(read, null),
             TestRecordTypes.TX01,
             TestRecordTypes.TX00,
             TestRecordTypes.TX01);
@@ -95,7 +95,7 @@ public class AlignmentRepeatedRuleTests
         AssertBytes(
             AlignmentRepeatedRule.Basic(
                 TestRecordTypes.TX00,
-                TestRecordTypes.TX01).GetBytes(read),
+                TestRecordTypes.TX01).ReadBytes(read, null),
             TestRecordTypes.TX01,
             TestRecordTypes.TX00,
             TestRecordTypes.TX00,
@@ -116,7 +116,7 @@ public class AlignmentRepeatedRuleTests
             AlignmentRepeatedRule.Sorted(
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX00, true),
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true))
-                .GetBytes(read),
+                .ReadBytes(read, null),
             TestRecordTypes.TX00,
             TestRecordTypes.TX01,
             TestRecordTypes.TX00,
@@ -137,7 +137,7 @@ public class AlignmentRepeatedRuleTests
             AlignmentRepeatedRule.Sorted(
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX00, false),
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true))
-                .GetBytes(read),
+                .ReadBytes(read, null),
             TestRecordTypes.TX00,
             TestRecordTypes.TX00,
             TestRecordTypes.TX01,
@@ -161,7 +161,7 @@ public class AlignmentRepeatedRuleTests
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX00, true),
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true),
                     new AlignmentRepeatedSubrule(TestRecordTypes.TX02, true))
-                .GetBytes(read),
+                .ReadBytes(read, null),
             TestRecordTypes.TX00,
             TestRecordTypes.TX01,
             TestRecordTypes.TX02,

@@ -87,7 +87,7 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         for (int i = 0; i < NumBipedObjectNames; i++)
         {
@@ -101,9 +101,9 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
     public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceInternal item)
     {
@@ -116,7 +116,7 @@ partial class RaceBinaryCreateTranslation
         item.Flags |= ((Race.Flag)flags2);
     }
 
-    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
     }
@@ -159,13 +159,13 @@ partial class RaceBinaryOverlay
         PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
     }
 
-    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        FaceFxPhonemesRawParsingCustomParse(stream, offset);
+        FaceFxPhonemesRawParsingCustomParse(stream, offset, lastParsed);
         return null;
     }
 
-    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_faceFxPhonemesLoc == null)
         {
@@ -204,7 +204,7 @@ partial class RaceBinaryOverlay
     public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_recordData.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
     public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
-    partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void BodyTemplateCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _BodyTemplateLocation = (stream.Position - offset);
     }

@@ -20,6 +20,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,16 +55,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumberY
-        public Int16 BlockNumberY { get; set; } = default;
+        public Int16 BlockNumberY { get; set; } = default(Int16);
         #endregion
         #region BlockNumberX
-        public Int16 BlockNumberX { get; set; } = default;
+        public Int16 BlockNumberX { get; set; } = default(Int16);
         #endregion
         #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        public GroupTypeEnum GroupType { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1097,13 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 140,
-            version: 0);
-
-        public const string GUID = "ffc71d01-f9a7-406b-9c9f-a5760acd87ea";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -1136,8 +1130,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1175,10 +1167,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IWorldspaceBlock item)
         {
             ClearPartial();
-            item.BlockNumberY = default;
-            item.BlockNumberX = default;
-            item.GroupType = default;
-            item.LastModified = default;
+            item.BlockNumberY = default(Int16);
+            item.BlockNumberX = default(Int16);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
             item.Items.Clear();
         }
         

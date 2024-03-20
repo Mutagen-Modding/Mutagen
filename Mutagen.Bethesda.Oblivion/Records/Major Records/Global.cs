@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -15,9 +14,6 @@ public partial interface IGlobalGetter
 
 public partial class Global : GlobalCustomParsing.IGlobalCommon
 {
-    public static readonly RecordType FNAM = new RecordType("FNAM");
-    public static readonly RecordType FLTV = new RecordType("FLTV");
-
     public abstract float? RawFloat { get; set; }
 
     char IGlobalGetter.TypeChar => throw new NotImplementedException();
@@ -60,7 +56,7 @@ partial class GlobalBinaryWriteTranslation
 
 partial class GlobalBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+    public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item, PreviousParse lastParsed)
     {
         return null;
     }
@@ -102,7 +98,7 @@ abstract partial class GlobalBinaryOverlay
         }
     }
 
-    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
     }

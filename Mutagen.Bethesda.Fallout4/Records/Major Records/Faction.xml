@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" recordType="FACT" objType="Record" baseClass="Fallout4MajorRecord" GUID="83706bf6-d13c-488f-9a03-71aef37baf12" ID="70">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
@@ -24,7 +24,7 @@
     <LinkInterface>IRelatable</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
   </Object>
-  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA" GUID="77a3ccd4-90c4-4e3f-a3e4-792e1cea129e" ID="71">
+  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA">
     <Fields>
       <Bool name="Arrest" byteLength="1" />
       <Bool name="AttackOnSight" byteLength="1" />
@@ -40,7 +40,7 @@
       <UInt16 name="WerewolfUnused" />
     </Fields>
   </Object>
-  <Object name="VendorValues" objType="Subrecord" recordType="VENV" GUID="50bc2008-dfc0-4d20-b61c-de2f1849a173" ID="72">
+  <Object name="VendorValues" objType="Subrecord" recordType="VENV">
     <Fields>
       <UInt16 name="StartHour" />
       <UInt16 name="EndHour" />
@@ -52,7 +52,7 @@
       <UInt8 name="Unknown2" />
     </Fields>
   </Object>
-  <Object name="Rank" objType="Subrecord" GUID="597ac075-f8e4-4a14-b4c2-a9363ba4a8a1" ID="73">
+  <Object name="Rank" objType="Subrecord">
     <Fields>
       <UInt32 name="Number" recordType="RNAM" />
       <Gendered name="Title" maleMarker="MNAM" femaleMarker="FNAM">

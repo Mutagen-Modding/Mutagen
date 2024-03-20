@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledSpell" objType="Record" recordType="LVSP" baseClass="OblivionMajorRecord" GUID="ebf4d53e-7995-458e-b9a8-5521f7d86bd5" ID="164">
+  <Object name="LeveledSpell" objType="Record" recordType="LVSP" baseClass="OblivionMajorRecord">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
@@ -8,11 +8,11 @@
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
   </Object>
-  <Object name="LeveledSpellEntry" objType="Subrecord" recordType="LVLO" GUID="0d385b6f-0595-48f1-a299-ba0c1526329d" ID="223">
+  <Object name="LeveledSpellEntry" objType="Subrecord" recordType="LVLO">
     <Fields>
       <Int16 name="Level" />
       <Int16 name="Unknown" />
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>ISpellRecord</Interface>
       </FormLink>
       <Int16 name="Count" nullable="True" />

@@ -133,7 +133,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
             });  
     }  
   
-    public override void GenerateCopyInRet(  
+    public override async Task GenerateCopyInRet(  
         StructuredStringBuilder sb,  
         ObjectGeneration objGen,  
         TypeGeneration targetGen,  
@@ -219,12 +219,23 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         }  
         else  
         {  
+            var data = typeGen.GetFieldData();  
+            var gendered = data.Parent as GenderedType;  
             switch (str.BinaryType)  
             {  
-                case StringBinaryType.Plain:  
-                case StringBinaryType.NullTerminate:  
-                    var data = typeGen.GetFieldData();  
-                    var gendered = data.Parent as GenderedType;  
+                case StringBinaryType.Plain:
+                    if (data.HasTrigger  
+                        || (gendered?.MaleMarker.HasValue ?? false))  
+                    {  
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                    }  
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                case StringBinaryType.NullTerminate:
+                case StringBinaryType.NullTerminateIfNotEmpty:
+                {
                     if (data.HasTrigger  
                         || (gendered?.MaleMarker.HasValue ?? false))  
                     {  
@@ -234,7 +245,9 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     {  
                         return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
-                case StringBinaryType.PrependLength:  
+                }
+                case StringBinaryType.PrependLength:
+                case StringBinaryType.PrependLengthWithNullIfContent: 
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 case StringBinaryType.PrependLengthUShort:  
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
@@ -250,12 +263,14 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         TypeGeneration typeGen,  
         Accessor dataAccessor, 
         int? passedLength,  
-        string? passedLengthAccessor)  
+        string? passedLengthAccessor,
+        DataType? data = null)  
     {  
         StringType str = typeGen as StringType;  
         switch (str.BinaryType)  
         {  
-            case StringBinaryType.PrependLength:  
+            case StringBinaryType.PrependLength:
+            case StringBinaryType.PrependLengthWithNullIfContent:
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");  
                 break;  
             case StringBinaryType.PrependLengthUShort:  

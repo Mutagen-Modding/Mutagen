@@ -42,7 +42,7 @@ public class CreationClubListingsIntegrationTests
             new string[]
             {
                 existingModPath.ModKey.FileName,
-                TestConstants.LightMasterModKey2.FileName,
+                TestConstants.LightModKey2.FileName,
             });
         var results = CreationClubListings.LoadOrderListingsFromPath(
                 cccFilePath: cccPath.Path!.Value,

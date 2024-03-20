@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -58,34 +59,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region GravityVelocity
-        public Single GravityVelocity { get; set; } = default;
+        public Single GravityVelocity { get; set; } = default(Single);
         #endregion
         #region RotationVelocity
-        public Single RotationVelocity { get; set; } = default;
+        public Single RotationVelocity { get; set; } = default(Single);
         #endregion
         #region ParticleSizeX
-        public Single ParticleSizeX { get; set; } = default;
+        public Single ParticleSizeX { get; set; } = default(Single);
         #endregion
         #region ParticleSizeY
-        public Single ParticleSizeY { get; set; } = default;
+        public Single ParticleSizeY { get; set; } = default(Single);
         #endregion
         #region CenterOffsetMin
-        public Single CenterOffsetMin { get; set; } = default;
+        public Single CenterOffsetMin { get; set; } = default(Single);
         #endregion
         #region CenterOffsetMax
-        public Single CenterOffsetMax { get; set; } = default;
+        public Single CenterOffsetMax { get; set; } = default(Single);
         #endregion
         #region InitialRotationRange
-        public Single InitialRotationRange { get; set; } = default;
+        public Single InitialRotationRange { get; set; } = default(Single);
         #endregion
         #region NumSubtexturesX
-        public UInt32 NumSubtexturesX { get; set; } = default;
+        public UInt32 NumSubtexturesX { get; set; } = default(UInt32);
         #endregion
         #region NumSubtexturesY
-        public UInt32 NumSubtexturesY { get; set; } = default;
+        public UInt32 NumSubtexturesY { get; set; } = default(UInt32);
         #endregion
         #region Type
-        public ShaderParticleGeometry.TypeEnum Type { get; set; } = default;
+        public ShaderParticleGeometry.TypeEnum Type { get; set; } = default(ShaderParticleGeometry.TypeEnum);
         #endregion
         #region BoxSize
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
         AssetLinkGetter<SkyrimTextureAssetType>? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
         #endregion
         #region DATADataTypeState
-        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; } = default;
+        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; } = default(ShaderParticleGeometry.DATADataType);
         #endregion
 
         #region To String
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -811,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1185,13 +1186,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 245,
-            version: 0);
-
-        public const string GUID = "3221c39f-42d8-4126-82c3-c4e33a1d65be";
-
         public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 21;
@@ -1229,13 +1223,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SPGD,
                 RecordTypes.DATA,
                 RecordTypes.ICON);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1273,20 +1267,20 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IShaderParticleGeometryInternal item)
         {
             ClearPartial();
-            item.GravityVelocity = default;
-            item.RotationVelocity = default;
-            item.ParticleSizeX = default;
-            item.ParticleSizeY = default;
-            item.CenterOffsetMin = default;
-            item.CenterOffsetMax = default;
-            item.InitialRotationRange = default;
-            item.NumSubtexturesX = default;
-            item.NumSubtexturesY = default;
-            item.Type = default;
-            item.BoxSize = default;
-            item.ParticleDensity = default;
+            item.GravityVelocity = default(Single);
+            item.RotationVelocity = default(Single);
+            item.ParticleSizeX = default(Single);
+            item.ParticleSizeY = default(Single);
+            item.CenterOffsetMin = default(Single);
+            item.CenterOffsetMax = default(Single);
+            item.InitialRotationRange = default(Single);
+            item.NumSubtexturesX = default(UInt32);
+            item.NumSubtexturesY = default(UInt32);
+            item.Type = default(ShaderParticleGeometry.TypeEnum);
+            item.BoxSize = default(UInt32);
+            item.ParticleDensity = default(Single);
             item.ParticleTexture = default;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(ShaderParticleGeometry.DATADataType);
             base.Clear(item);
         }
         
@@ -2182,9 +2176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
@@ -2251,47 +2243,47 @@ namespace Mutagen.Bethesda.Skyrim
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value.Min;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
-        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default(Single);
         #endregion
         #region RotationVelocity
         private int _RotationVelocityLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
-        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default(Single);
         #endregion
         #region ParticleSizeX
         private int _ParticleSizeXLocation => _DATALocation!.Value.Min + 0x8;
         private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default(Single);
         #endregion
         #region ParticleSizeY
         private int _ParticleSizeYLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default(Single);
         #endregion
         #region CenterOffsetMin
         private int _CenterOffsetMinLocation => _DATALocation!.Value.Min + 0x10;
         private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default(Single);
         #endregion
         #region CenterOffsetMax
         private int _CenterOffsetMaxLocation => _DATALocation!.Value.Min + 0x14;
         private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default(Single);
         #endregion
         #region InitialRotationRange
         private int _InitialRotationRangeLocation => _DATALocation!.Value.Min + 0x18;
         private bool _InitialRotationRange_IsSet => _DATALocation.HasValue;
-        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _recordData.Slice(_InitialRotationRangeLocation, 4).Float() : default;
+        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _recordData.Slice(_InitialRotationRangeLocation, 4).Float() : default(Single);
         #endregion
         #region NumSubtexturesX
         private int _NumSubtexturesXLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _NumSubtexturesX_IsSet => _DATALocation.HasValue;
-        public UInt32 NumSubtexturesX => _NumSubtexturesX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesXLocation, 4)) : default;
+        public UInt32 NumSubtexturesX => _NumSubtexturesX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesXLocation, 4)) : default(UInt32);
         #endregion
         #region NumSubtexturesY
         private int _NumSubtexturesYLocation => _DATALocation!.Value.Min + 0x20;
         private bool _NumSubtexturesY_IsSet => _DATALocation.HasValue;
-        public UInt32 NumSubtexturesY => _NumSubtexturesY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesYLocation, 4)) : default;
+        public UInt32 NumSubtexturesY => _NumSubtexturesY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesYLocation, 4)) : default(UInt32);
         #endregion
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x24;
@@ -2301,16 +2293,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region BoxSize
         private int _BoxSizeLocation => _DATALocation!.Value.Min + 0x28;
         private bool _BoxSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default;
+        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default(UInt32);
         #endregion
         #region ParticleDensity
         private int _ParticleDensityLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _ParticleDensity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default(Single);
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weight" objType="Subrecord" >
+    <Fields>
+      <Float name="Thin" />
+      <Float name="Muscular" />
+      <Float name="Fat" />
+    </Fields>
+  </Object>
+</Loqui>

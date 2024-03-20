@@ -42,7 +42,7 @@ partial class TerminalBinaryCreateTranslation
         // Let later custom logic parse
     }
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, ITerminalInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, ITerminalInternal item, PreviousParse lastParsed)
     {
         // Clear out old stuff
         // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption
@@ -87,7 +87,7 @@ partial class TerminalBinaryCreateTranslation
         return marker;
     }
 
-    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, ITerminalInternal item)
+    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, ITerminalInternal item, PreviousParse lastParsed)
     {
         if (item.Flags != null)
         {
@@ -192,7 +192,7 @@ partial class TerminalBinaryOverlay
         return marker;
     }
 
-    partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MarkerParametersCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         if (_flags == null)
         {
@@ -204,7 +204,7 @@ partial class TerminalBinaryOverlay
         }
     }
 
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         this._flags = TerminalBinaryCreateTranslation.FillBinaryFlags(
             stream,

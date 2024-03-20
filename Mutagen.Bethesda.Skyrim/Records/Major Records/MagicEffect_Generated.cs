@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -145,10 +146,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Flags
-        public MagicEffect.Flag Flags { get; set; } = default;
+        public MagicEffect.Flag Flags { get; set; } = default(MagicEffect.Flag);
         #endregion
         #region BaseCost
-        public Single BaseCost { get; set; } = default;
+        public Single BaseCost { get; set; } = default(Single);
         #endregion
         #region MagicSkill
         public static readonly ActorValue MagicSkillDefault = ActorValue.None;
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ActorValue ResistValue { get; set; } = ResistValueDefault;
         #endregion
         #region Unknown1
-        public UInt16 Unknown1 { get; set; } = default;
+        public UInt16 Unknown1 { get; set; } = default(UInt16);
         #endregion
         #region CastingLight
         private readonly IFormLink<ILightGetter> _CastingLight = new FormLink<ILightGetter>();
@@ -172,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight;
         #endregion
         #region TaperWeight
-        public Single TaperWeight { get; set; } = default;
+        public Single TaperWeight { get; set; } = default(Single);
         #endregion
         #region HitShader
         private readonly IFormLink<IEffectShaderGetter> _HitShader = new FormLink<IEffectShaderGetter>();
@@ -195,22 +196,22 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader;
         #endregion
         #region MinimumSkillLevel
-        public UInt32 MinimumSkillLevel { get; set; } = default;
+        public UInt32 MinimumSkillLevel { get; set; } = default(UInt32);
         #endregion
         #region SpellmakingArea
-        public UInt32 SpellmakingArea { get; set; } = default;
+        public UInt32 SpellmakingArea { get; set; } = default(UInt32);
         #endregion
         #region SpellmakingCastingTime
-        public Single SpellmakingCastingTime { get; set; } = default;
+        public Single SpellmakingCastingTime { get; set; } = default(Single);
         #endregion
         #region TaperCurve
-        public Single TaperCurve { get; set; } = default;
+        public Single TaperCurve { get; set; } = default(Single);
         #endregion
         #region TaperDuration
-        public Single TaperDuration { get; set; } = default;
+        public Single TaperDuration { get; set; } = default(Single);
         #endregion
         #region SecondActorValueWeight
-        public Single SecondActorValueWeight { get; set; } = default;
+        public Single SecondActorValueWeight { get; set; } = default(Single);
         #endregion
         #region Archetype
         public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
@@ -238,10 +239,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion;
         #endregion
         #region CastType
-        public CastType CastType { get; set; } = default;
+        public CastType CastType { get; set; } = default(CastType);
         #endregion
         #region TargetType
-        public TargetType TargetType { get; set; } = default;
+        public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
         #region SecondActorValue
         public static readonly ActorValue SecondActorValueDefault = ActorValue.None;
@@ -278,7 +279,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData;
         #endregion
         #region SkillUsageMultiplier
-        public Single SkillUsageMultiplier { get; set; } = default;
+        public Single SkillUsageMultiplier { get; set; } = default(Single);
         #endregion
         #region DualCastArt
         private readonly IFormLink<IDualCastDataGetter> _DualCastArt = new FormLink<IDualCastDataGetter>();
@@ -291,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt;
         #endregion
         #region DualCastScale
-        public Single DualCastScale { get; set; } = default;
+        public Single DualCastScale { get; set; } = default(Single);
         #endregion
         #region EnchantArt
         private readonly IFormLink<IArtObjectGetter> _EnchantArt = new FormLink<IArtObjectGetter>();
@@ -354,13 +355,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;
         #endregion
         #region CastingSoundLevel
-        public SoundLevel CastingSoundLevel { get; set; } = default;
+        public SoundLevel CastingSoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region ScriptEffectAIScore
-        public Single ScriptEffectAIScore { get; set; } = default;
+        public Single ScriptEffectAIScore { get; set; } = default(Single);
         #endregion
         #region ScriptEffectAIDelayTime
-        public Single ScriptEffectAIDelayTime { get; set; } = default;
+        public Single ScriptEffectAIDelayTime { get; set; } = default(Single);
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2266,7 +2267,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2275,7 +2276,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2775,13 +2776,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 90,
-            version: 0);
-
-        public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
-
         public const ushort AdditionalFieldCount = 44;
 
         public const ushort FieldCount = 51;
@@ -2830,13 +2824,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2878,42 +2872,42 @@ namespace Mutagen.Bethesda.Skyrim
             item.Name = default;
             item.MenuDisplayObject.Clear();
             item.Keywords = null;
-            item.Flags = default;
-            item.BaseCost = default;
+            item.Flags = default(MagicEffect.Flag);
+            item.BaseCost = default(Single);
             item.MagicSkill = MagicEffect.MagicSkillDefault;
             item.ResistValue = MagicEffect.ResistValueDefault;
-            item.Unknown1 = default;
+            item.Unknown1 = default(UInt16);
             item.CastingLight.Clear();
-            item.TaperWeight = default;
+            item.TaperWeight = default(Single);
             item.HitShader.Clear();
             item.EnchantShader.Clear();
-            item.MinimumSkillLevel = default;
-            item.SpellmakingArea = default;
-            item.SpellmakingCastingTime = default;
-            item.TaperCurve = default;
-            item.TaperDuration = default;
-            item.SecondActorValueWeight = default;
+            item.MinimumSkillLevel = default(UInt32);
+            item.SpellmakingArea = default(UInt32);
+            item.SpellmakingCastingTime = default(Single);
+            item.TaperCurve = default(Single);
+            item.TaperDuration = default(Single);
+            item.SecondActorValueWeight = default(Single);
             item.Archetype.Clear();
             item.Projectile.Clear();
             item.Explosion.Clear();
-            item.CastType = default;
-            item.TargetType = default;
+            item.CastType = default(CastType);
+            item.TargetType = default(TargetType);
             item.SecondActorValue = MagicEffect.SecondActorValueDefault;
             item.CastingArt.Clear();
             item.HitEffectArt.Clear();
             item.ImpactData.Clear();
-            item.SkillUsageMultiplier = default;
+            item.SkillUsageMultiplier = default(Single);
             item.DualCastArt.Clear();
-            item.DualCastScale = default;
+            item.DualCastScale = default(Single);
             item.EnchantArt.Clear();
             item.HitVisuals.Clear();
             item.EnchantVisuals.Clear();
             item.EquipAbility.Clear();
             item.ImageSpaceModifier.Clear();
             item.PerkToApply.Clear();
-            item.CastingSoundLevel = default;
-            item.ScriptEffectAIScore = default;
-            item.ScriptEffectAIDelayTime = default;
+            item.CastingSoundLevel = default(SoundLevel);
+            item.ScriptEffectAIScore = default(Single);
+            item.ScriptEffectAIDelayTime = default(Single);
             item.CounterEffects.Clear();
             item.Sounds = null;
             item.Description = default;
@@ -3915,7 +3909,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4102,7 +4096,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.CounterEffects.SetTo(
                         rhs.CounterEffects
-                        .Select(r => (IFormLinkGetter<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4814,13 +4808,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4848,7 +4843,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
-            IMagicEffectInternal item);
+            IMagicEffectInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -4933,7 +4929,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
-        public Single BaseCost => _BaseCost_IsSet ? _recordData.Slice(_BaseCostLocation, 4).Float() : default;
+        public Single BaseCost => _BaseCost_IsSet ? _recordData.Slice(_BaseCostLocation, 4).Float() : default(Single);
         #endregion
         #region AssociatedItem
         private int _AssociatedItemLocation => _DATALocation!.Value.Min + 0x8;
@@ -4962,7 +4958,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown1_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown1Location, 2)) : default;
+        public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown1Location, 2)) : default(UInt16);
         #endregion
         #region CastingLight
         private int _CastingLightLocation => _DATALocation!.Value.Min + 0x18;
@@ -4972,7 +4968,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region TaperWeight
         private int _TaperWeightLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _TaperWeight_IsSet => _DATALocation.HasValue;
-        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default;
+        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default(Single);
         #endregion
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value.Min + 0x20;
@@ -4987,32 +4983,32 @@ namespace Mutagen.Bethesda.Skyrim
         #region MinimumSkillLevel
         private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x28;
         private bool _MinimumSkillLevel_IsSet => _DATALocation.HasValue;
-        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_MinimumSkillLevelLocation, 4)) : default;
+        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_MinimumSkillLevelLocation, 4)) : default(UInt32);
         #endregion
         #region SpellmakingArea
         private int _SpellmakingAreaLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _SpellmakingArea_IsSet => _DATALocation.HasValue;
-        public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SpellmakingAreaLocation, 4)) : default;
+        public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SpellmakingAreaLocation, 4)) : default(UInt32);
         #endregion
         #region SpellmakingCastingTime
         private int _SpellmakingCastingTimeLocation => _DATALocation!.Value.Min + 0x30;
         private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
-        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _recordData.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _recordData.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default(Single);
         #endregion
         #region TaperCurve
         private int _TaperCurveLocation => _DATALocation!.Value.Min + 0x34;
         private bool _TaperCurve_IsSet => _DATALocation.HasValue;
-        public Single TaperCurve => _TaperCurve_IsSet ? _recordData.Slice(_TaperCurveLocation, 4).Float() : default;
+        public Single TaperCurve => _TaperCurve_IsSet ? _recordData.Slice(_TaperCurveLocation, 4).Float() : default(Single);
         #endregion
         #region TaperDuration
         private int _TaperDurationLocation => _DATALocation!.Value.Min + 0x38;
         private bool _TaperDuration_IsSet => _DATALocation.HasValue;
-        public Single TaperDuration => _TaperDuration_IsSet ? _recordData.Slice(_TaperDurationLocation, 4).Float() : default;
+        public Single TaperDuration => _TaperDuration_IsSet ? _recordData.Slice(_TaperDurationLocation, 4).Float() : default(Single);
         #endregion
         #region SecondActorValueWeight
         private int _SecondActorValueWeightLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
-        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _recordData.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _recordData.Slice(_SecondActorValueWeightLocation, 4).Float() : default(Single);
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x40;
@@ -5062,7 +5058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region SkillUsageMultiplier
         private int _SkillUsageMultiplierLocation => _DATALocation!.Value.Min + 0x68;
         private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
-        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _recordData.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _recordData.Slice(_SkillUsageMultiplierLocation, 4).Float() : default(Single);
         #endregion
         #region DualCastArt
         private int _DualCastArtLocation => _DATALocation!.Value.Min + 0x6C;
@@ -5072,7 +5068,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DualCastScale
         private int _DualCastScaleLocation => _DATALocation!.Value.Min + 0x70;
         private bool _DualCastScale_IsSet => _DATALocation.HasValue;
-        public Single DualCastScale => _DualCastScale_IsSet ? _recordData.Slice(_DualCastScaleLocation, 4).Float() : default;
+        public Single DualCastScale => _DualCastScale_IsSet ? _recordData.Slice(_DualCastScaleLocation, 4).Float() : default(Single);
         #endregion
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x74;
@@ -5112,12 +5108,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region ScriptEffectAIScore
         private int _ScriptEffectAIScoreLocation => _DATALocation!.Value.Min + 0x90;
         private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _recordData.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _recordData.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default(Single);
         #endregion
         #region ScriptEffectAIDelayTime
         private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value.Min + 0x94;
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _recordData.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _recordData.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default(Single);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = Array.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
@@ -5128,7 +5124,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Conditions
         partial void ConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -5249,7 +5245,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ESCE,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)MagicEffect_FieldIndex.CounterEffects;
@@ -5284,7 +5280,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

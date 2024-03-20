@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -83,10 +84,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Zoom
-        public CameraPath.ZoomType Zoom { get; set; } = default;
+        public CameraPath.ZoomType Zoom { get; set; } = default(CameraPath.ZoomType);
         #endregion
         #region ZoomMustHaveCameraShots
-        public Boolean ZoomMustHaveCameraShots { get; set; } = default;
+        public Boolean ZoomMustHaveCameraShots { get; set; } = default(Boolean);
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -723,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1061,13 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 438,
-            version: 0);
-
-        public const string GUID = "181b38f0-80c5-4352-98e0-16b822f6ad83";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 12;
@@ -1109,13 +1103,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ANAM,
                 RecordTypes.DATA,
                 RecordTypes.SNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CameraPathBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1155,8 +1149,8 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Conditions.Clear();
             item.RelatedPaths.Clear();
-            item.Zoom = default;
-            item.ZoomMustHaveCameraShots = default;
+            item.Zoom = default(CameraPath.ZoomType);
+            item.ZoomMustHaveCameraShots = default(Boolean);
             item.Shots.Clear();
             base.Clear(item);
         }
@@ -1607,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1634,7 +1628,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1976,7 +1970,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     CameraPathBinaryCreateTranslation.FillBinaryZoomCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
@@ -2002,7 +1997,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryZoomCustom(
             MutagenFrame frame,
-            ICameraPathInternal item);
+            ICameraPathInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2056,7 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Zoom
         partial void ZoomCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial CameraPath.ZoomType GetZoomCustom();
         public CameraPath.ZoomType Zoom => GetZoomCustom();
@@ -2175,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)CameraPath_FieldIndex.Shots;

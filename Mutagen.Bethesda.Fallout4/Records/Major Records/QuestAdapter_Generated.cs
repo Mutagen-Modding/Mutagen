@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
+        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default(QuestAdapter.VersioningBreaks);
         #endregion
         #region ExtraBindDataVersion
         public static readonly Byte ExtraBindDataVersionDefault = 3;
@@ -892,13 +893,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 522,
-            version: 0);
-
-        public const string GUID = "ac22ba38-9b50-49b1-99fd-c1b057879549";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 8;
@@ -937,8 +931,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(QuestAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -976,7 +968,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestAdapter item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(QuestAdapter.VersioningBreaks);
             item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.Fragments.Clear();
@@ -1715,6 +1707,17 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void QuestAdapterParseEndingPositions(
+            QuestAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
+            ret.CustomFragmentsEndPos();
+            ret.CustomAliasesEndPos();
+        }
+
         public static IQuestAdapterGetter QuestAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1730,8 +1733,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new QuestAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomFragmentsEndPos();
-            ret.CustomAliasesEndPos();
+            QuestAdapterParseEndingPositions(ret, package);
             if (ret._structData.Length <= ret.ScriptsEndingPos)
             {
                 ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;

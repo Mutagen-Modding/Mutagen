@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,10 +53,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        public Int32 AliasID { get; set; } = default(Int32);
         #endregion
         #region Flags
-        public Quest.TargetFlag Flags { get; set; } = default;
+        public Quest.TargetFlag Flags { get; set; } = default(Quest.TargetFlag);
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -82,7 +83,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region QSTADataTypeState
-        public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; } = default;
+        public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; } = default(QuestObjectiveTarget.QSTADataType);
         #endregion
 
         #region To String
@@ -849,13 +850,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 528,
-            version: 0);
-
-        public const string GUID = "6214f476-ee0e-4f6a-a175-53d9d2d8f2b6";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -894,13 +888,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestObjectiveTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -938,11 +932,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestObjectiveTarget item)
         {
             ClearPartial();
-            item.AliasID = default;
-            item.Flags = default;
+            item.AliasID = default(Int32);
+            item.Flags = default(Quest.TargetFlag);
             item.Keyword.Clear();
             item.Conditions.Clear();
-            item.QSTADataTypeState = default;
+            item.QSTADataTypeState = default(QuestObjectiveTarget.QSTADataType);
         }
         
         #region Mutagen
@@ -1478,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AliasID
         private int _AliasIDLocation => _QSTALocation!.Value.Min;
         private bool _AliasID_IsSet => _QSTALocation.HasValue;
-        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default;
+        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default(Int32);
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;

@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord"
-          GUID="d5eebb15-76fe-43cd-9ba9-7ad6eac2b785" ID="165">
+  <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False"/>
-      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN"/>
-      <String name="Name" recordType="FULL" translated="Normal"/>
-      <RefDirect name="Model" refName="Model"/>
-      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry"/>
-      <RefDirect name="Destructible" refName="Destructible"/>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+      <RefDirect name="Destructible" refName="Destructible" />
       <Data>
         <Fields>
-          <Enum name="Flags" enumName="Container.Flag" byteLength="1"/>
-          <Float name="Weight"/>
+          <Enum name="Flags" enumName="Container.Flag" byteLength="1" />
+          <Float name="Weight" />
         </Fields>
       </Data>
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
-        <FormLink refName="Keyword"/>
+        <FormLink refName="Keyword" />
       </List>
-      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP"/>
-      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS"/>
-      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM"/>
-      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM"/>
-      <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM"/>
-      <FormLink name="TakeAllSound" refName="SoundDescriptor" recordType="TNAM"/>
-      <FormLink name="FilterList" refName="FormList" recordType="ONAM"/>
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
+      <FormLink name="TakeAllSound" refName="SoundDescriptor" recordType="TNAM" />
+      <FormLink name="FilterList" refName="FormList" recordType="ONAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>

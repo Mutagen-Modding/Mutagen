@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -652,13 +653,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 212,
-            version: 0);
-
-        public const string GUID = "06a4db94-b0bb-42fd-bfdf-18343fc53a61";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 3;
@@ -690,8 +684,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ScriptStructListPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1204,7 +1196,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Structs
-        public IReadOnlyList<IScriptEntryStructsGetter> Structs => BinaryOverlayList.FactoryByLazyParse<IScriptEntryStructsGetter>(_structData, _package, countLength: 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
+        public IReadOnlyList<IScriptEntryStructsGetter> Structs { get; private set; } = null!;
         protected int StructsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1223,6 +1215,19 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScriptStructListPropertyParseEndingPositions(
+            ScriptStructListPropertyBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                };
+                ret.Structs = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
+                ret.StructsEndingPos = tempStream.Position;
+            }
+        }
+
         public static IScriptStructListPropertyGetter ScriptStructListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1238,6 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptStructListPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            ScriptStructListPropertyParseEndingPositions(ret, package);
             stream.Position += ret.StructsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

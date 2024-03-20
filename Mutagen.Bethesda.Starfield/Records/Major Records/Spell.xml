@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
+      <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="false" />
+      <Data recordType="SPIT" >
+        <Fields>
+          <UInt32 name="BaseCost" />
+          <Enum name="Flags" enumName="Spell.Flag" byteLength="4" />
+          <Enum name="Type" enumName="Spell.SpellType" byteLength="1" />
+          <Float name="ChargeTime" />
+          <Enum name="CastType" enumName="CastType" byteLength="1" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="1" />
+          <Float name="CastDuration" />
+          <Float name="Range" />
+          <FormLink name="CastingPerk" refName="Perk" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+    <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IEffectRecord</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

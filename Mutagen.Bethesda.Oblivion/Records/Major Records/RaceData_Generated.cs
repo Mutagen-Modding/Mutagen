@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -86,18 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         ISkillBoostGetter IRaceDataGetter.SkillBoost6 => SkillBoost6;
         #endregion
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
         #region Height
-        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceDataGetter.Height => this.Height;
         #endregion
         #region Weight
-        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceDataGetter.Weight => this.Weight;
         #endregion
         #region Flags
-        public Race.Flag Flags { get; set; } = default;
+        public Race.Flag Flags { get; set; } = default(Race.Flag);
         #endregion
 
         #region To String
@@ -1022,13 +1023,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 205,
-            version: 0);
-
-        public const string GUID = "a601027e-c79b-4987-bfae-8c172c8b13e5";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1067,8 +1061,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(RaceDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1113,12 +1105,12 @@ namespace Mutagen.Bethesda.Oblivion
             item.SkillBoost4.Clear();
             item.SkillBoost5.Clear();
             item.SkillBoost6.Clear();
-            item.Unused = default;
-            item.Height.Male = default;
-            item.Height.Female = default;
-            item.Weight.Male = default;
-            item.Weight.Female = default;
-            item.Flags = default;
+            item.Unused = default(Int32);
+            item.Height.Male = default(Single);
+            item.Height.Female = default(Single);
+            item.Weight.Male = default(Single);
+            item.Weight.Female = default(Single);
+            item.Flags = default(Race.Flag);
         }
         
         #region Mutagen

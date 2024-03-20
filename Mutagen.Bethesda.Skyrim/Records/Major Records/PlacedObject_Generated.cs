@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -150,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBoundingGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region LightingTemplate
         private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
@@ -187,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region IsMultiBoundPrimitive
-        public Boolean IsMultiBoundPrimitive { get; set; } = default;
+        public Boolean IsMultiBoundPrimitive { get; set; } = default(Boolean);
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -485,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region Owner
         private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
@@ -574,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.FavorCost => this.FavorCost;
         #endregion
         #region IsOpenByDefault
-        public Boolean IsOpenByDefault { get; set; } = default;
+        public Boolean IsOpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region MapMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3123,7 +3124,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -3132,7 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -3659,13 +3660,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 30,
-            version: 0);
-
-        public const string GUID = "15cab6c0-7390-410a-b2a8-7ee0e58569a6";
-
         public const ushort AdditionalFieldCount = 59;
 
         public const ushort FieldCount = 66;
@@ -3761,13 +3755,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.XATR,
                 RecordTypes.XLOD,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -3813,11 +3807,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.OcclusionPlane = null;
             item.Portals = null;
             item.RoomPortal = null;
-            item.Unknown = default;
+            item.Unknown = default(Int16);
             item.LightingTemplate.Clear();
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
-            item.IsMultiBoundPrimitive = default;
+            item.IsMultiBoundPrimitive = default(Boolean);
             item.RagdollData = default;
             item.RagdollBipedData = default;
             item.Radius = default;
@@ -3847,7 +3841,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.EncounterZone.Clear();
             item.NavigationDoorLink = null;
             item.LocationRefTypes = null;
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.Owner.Clear();
             item.FactionRank = default;
             item.ItemCount = default;
@@ -3859,7 +3853,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Action = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
-            item.IsOpenByDefault = default;
+            item.IsOpenByDefault = default(Boolean);
             item.MapMarker = null;
             item.AttachRef.Clear();
             item.DistantLodData = default;
@@ -5490,7 +5484,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LinkedRooms.SetTo(
                         rhs.LinkedRooms
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5563,7 +5557,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LitWater.SetTo(
                         rhs.LitWater
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5858,7 +5852,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -6699,7 +6693,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XMBP:
                 {
@@ -6998,7 +6993,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -7014,7 +7009,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryBoundDataCustom(
             MutagenFrame frame,
-            IPlacedObjectInternal item);
+            IPlacedObjectInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -7092,11 +7088,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region BoundData
         public partial ParseResult BoundDataCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region IsMultiBoundPrimitive
         private int? _IsMultiBoundPrimitiveLocation;
-        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default;
+        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default(Boolean);
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
@@ -7204,7 +7201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Owner
         private int? _OwnerLocation;
@@ -7246,7 +7243,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IsOpenByDefault
         private int? _IsOpenByDefaultLocation;
-        public Boolean IsOpenByDefault => _IsOpenByDefaultLocation.HasValue ? true : default;
+        public Boolean IsOpenByDefault => _IsOpenByDefaultLocation.HasValue ? true : default(Boolean);
         #endregion
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
@@ -7394,7 +7391,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return BoundDataCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XMBP:
                 {
@@ -7440,7 +7438,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.XLTW,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)PlacedObject_FieldIndex.LitWater;
@@ -7680,7 +7678,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Action
-        public ActorValue Action { get; set; } = default;
+        public ActorValue Action { get; set; } = default(ActorValue);
         #endregion
         #region Attribute
-        public ActorValue Attribute { get; set; } = default;
+        public ActorValue Attribute { get; set; } = default(ActorValue);
         #endregion
         #region Specialization
-        public Specialization Specialization { get; set; } = default;
+        public Specialization Specialization { get; set; } = default(Specialization);
         #endregion
         #region UseValueFirst
-        public Single UseValueFirst { get; set; } = default;
+        public Single UseValueFirst { get; set; } = default(Single);
         #endregion
         #region UseValueSecond
-        public Single UseValueSecond { get; set; } = default;
+        public Single UseValueSecond { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 209,
-            version: 0);
-
-        public const string GUID = "7d77fda3-ca94-4126-b35e-52098fb45b40";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -797,8 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(SkillDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -836,11 +828,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISkillData item)
         {
             ClearPartial();
-            item.Action = default;
-            item.Attribute = default;
-            item.Specialization = default;
-            item.UseValueFirst = default;
-            item.UseValueSecond = default;
+            item.Action = default(ActorValue);
+            item.Attribute = default(ActorValue);
+            item.Specialization = default(Specialization);
+            item.UseValueFirst = default(Single);
+            item.UseValueSecond = default(Single);
         }
         
         #region Mutagen

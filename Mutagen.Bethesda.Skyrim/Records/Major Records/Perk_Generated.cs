@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -143,19 +144,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Trait
-        public Boolean Trait { get; set; } = default;
+        public Boolean Trait { get; set; } = default(Boolean);
         #endregion
         #region Level
-        public Byte Level { get; set; } = default;
+        public Byte Level { get; set; } = default(Byte);
         #endregion
         #region NumRanks
-        public Byte NumRanks { get; set; } = default;
+        public Byte NumRanks { get; set; } = default(Byte);
         #endregion
         #region Playable
-        public Boolean Playable { get; set; } = default;
+        public Boolean Playable { get; set; } = default(Boolean);
         #endregion
         #region Hidden
-        public Boolean Hidden { get; set; } = default;
+        public Boolean Hidden { get; set; } = default(Boolean);
         #endregion
         #region NextPerk
         private readonly IFormLinkNullable<IPerkGetter> _NextPerk = new FormLinkNullable<IPerkGetter>();
@@ -944,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1363,13 +1364,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 114,
-            version: 0);
-
-        public const string GUID = "dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c";
-
         public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 19;
@@ -1418,13 +1412,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
                 RecordTypes.PRKC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1467,11 +1461,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.Description.Clear();
             item.Icons = null;
             item.Conditions.Clear();
-            item.Trait = default;
-            item.Level = default;
-            item.NumRanks = default;
-            item.Playable = default;
-            item.Hidden = default;
+            item.Trait = default(Boolean);
+            item.Level = default(Byte);
+            item.NumRanks = default(Byte);
+            item.Playable = default(Boolean);
+            item.Hidden = default(Boolean);
             item.NextPerk.Clear();
             item.Effects.Clear();
             base.Clear(item);
@@ -2552,13 +2546,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Perk_FieldIndex.Effects;
                 }
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2574,7 +2569,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryEffectsCustom(
             MutagenFrame frame,
-            IPerkInternal item);
+            IPerkInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2653,7 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
@@ -2668,12 +2664,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Hidden
         private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
@@ -2682,7 +2678,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Effects
         partial void EffectsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -2822,7 +2818,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

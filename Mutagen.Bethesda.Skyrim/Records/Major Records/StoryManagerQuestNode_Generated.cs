@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,10 +56,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public AStoryManagerNode.Flag Flags { get; set; } = default;
+        public AStoryManagerNode.Flag Flags { get; set; } = default(AStoryManagerNode.Flag);
         #endregion
         #region QuestFlags
-        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default;
+        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default(StoryManagerQuestNode.QuestFlag);
         #endregion
         #region MaxConcurrentQuests
         public UInt32? MaxConcurrentQuests { get; set; }
@@ -568,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -577,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -918,13 +919,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 455,
-            version: 0);
-
-        public const string GUID = "2f1031e5-dcff-4f22-aad3-7472e3300692";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 15;
@@ -967,13 +961,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.FNAM,
                 RecordTypes.RNAM,
                 RecordTypes.QNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StoryManagerQuestNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1011,8 +1005,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IStoryManagerQuestNodeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.QuestFlags = default;
+            item.Flags = default(AStoryManagerNode.Flag);
+            item.QuestFlags = default(StoryManagerQuestNode.QuestFlag);
             item.MaxConcurrentQuests = default;
             item.MaxNumQuestsToRun = default;
             item.Quests.Clear();

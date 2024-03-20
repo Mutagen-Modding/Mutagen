@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region ModificationTime
-        public DateTime ModificationTime { get; set; } = default;
+        public DateTime ModificationTime { get; set; } = default(DateTime);
         #endregion
         #region Functions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -868,13 +868,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 1,
-            version: 0);
-
-        public const string GUID = "8adc2f6d-0800-4851-b0bf-f6d812a4d25b";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -905,8 +898,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -944,7 +935,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IDebugInfo item)
         {
             ClearPartial();
-            item.ModificationTime = default;
+            item.ModificationTime = default(DateTime);
             item.Functions.Clear();
             item.PropertyGroups.Clear();
             item.StructOrders.Clear();

@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -288,25 +289,33 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Value
-        public Int32 Value { get; set; } = default;
+        public Int32 Value { get; set; } = default(Int32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region ArmorRating
-        public UInt16 ArmorRating { get; set; } = default;
+        public UInt16 ArmorRating { get; set; } = default(UInt16);
         #endregion
         #region BaseAddonIndex
-        public UInt16 BaseAddonIndex { get; set; } = default;
+        public UInt16 BaseAddonIndex { get; set; } = default(UInt16);
         #endregion
         #region StaggerRating
-        public UInt16 StaggerRating { get; set; } = default;
+        public Byte StaggerRating { get; set; } = default(Byte);
         #endregion
-        #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IArmorGetter.Unused => this.Unused;
         #endregion
         #region Resistances
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -409,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArmorRating = initialValue;
                 this.BaseAddonIndex = initialValue;
                 this.StaggerRating = initialValue;
-                this.Unknown = initialValue;
+                this.Unused = initialValue;
                 this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
                 this.TemplateArmor = initialValue;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -448,7 +457,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ArmorRating,
                 TItem BaseAddonIndex,
                 TItem StaggerRating,
-                TItem Unknown,
+                TItem Unused,
                 TItem Resistances,
                 TItem TemplateArmor,
                 TItem AttachParentSlots,
@@ -486,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArmorRating = ArmorRating;
                 this.BaseAddonIndex = BaseAddonIndex;
                 this.StaggerRating = StaggerRating;
-                this.Unknown = Unknown;
+                this.Unused = Unused;
                 this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
                 this.TemplateArmor = TemplateArmor;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
@@ -526,7 +535,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ArmorRating;
             public TItem BaseAddonIndex;
             public TItem StaggerRating;
-            public TItem Unknown;
+            public TItem Unused;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>? Resistances;
             public TItem TemplateArmor;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
@@ -568,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ArmorRating, rhs.ArmorRating)) return false;
                 if (!object.Equals(this.BaseAddonIndex, rhs.BaseAddonIndex)) return false;
                 if (!object.Equals(this.StaggerRating, rhs.StaggerRating)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Resistances, rhs.Resistances)) return false;
                 if (!object.Equals(this.TemplateArmor, rhs.TemplateArmor)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
@@ -602,7 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ArmorRating);
                 hash.Add(this.BaseAddonIndex);
                 hash.Add(this.StaggerRating);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unused);
                 hash.Add(this.Resistances);
                 hash.Add(this.TemplateArmor);
                 hash.Add(this.AttachParentSlots);
@@ -680,7 +689,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ArmorRating)) return false;
                 if (!eval(this.BaseAddonIndex)) return false;
                 if (!eval(this.StaggerRating)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused)) return false;
                 if (this.Resistances != null)
                 {
                     if (!eval(this.Resistances.Overall)) return false;
@@ -788,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ArmorRating)) return true;
                 if (eval(this.BaseAddonIndex)) return true;
                 if (eval(this.StaggerRating)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused)) return true;
                 if (this.Resistances != null)
                 {
                     if (eval(this.Resistances.Overall)) return true;
@@ -894,7 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ArmorRating = eval(this.ArmorRating);
                 obj.BaseAddonIndex = eval(this.BaseAddonIndex);
                 obj.StaggerRating = eval(this.StaggerRating);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unused = eval(this.Unused);
                 if (Resistances != null)
                 {
                     obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>());
@@ -1087,9 +1096,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(StaggerRating, "StaggerRating");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((printMask?.Resistances?.Overall ?? true)
                         && Resistances is {} ResistancesItem)
@@ -1189,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ArmorRating;
             public Exception? BaseAddonIndex;
             public Exception? StaggerRating;
-            public Exception? Unknown;
+            public Exception? Unused;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>? Resistances;
             public Exception? TemplateArmor;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
@@ -1250,8 +1259,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return BaseAddonIndex;
                     case Armor_FieldIndex.StaggerRating:
                         return StaggerRating;
-                    case Armor_FieldIndex.Unknown:
-                        return Unknown;
+                    case Armor_FieldIndex.Unused:
+                        return Unused;
                     case Armor_FieldIndex.Resistances:
                         return Resistances;
                     case Armor_FieldIndex.TemplateArmor:
@@ -1342,8 +1351,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Armor_FieldIndex.StaggerRating:
                         this.StaggerRating = ex;
                         break;
-                    case Armor_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Armor_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case Armor_FieldIndex.Resistances:
                         this.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(ex, null);
@@ -1440,8 +1449,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Armor_FieldIndex.StaggerRating:
                         this.StaggerRating = (Exception?)obj;
                         break;
-                    case Armor_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Armor_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.Resistances:
                         this.Resistances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>)obj;
@@ -1488,7 +1497,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ArmorRating != null) return true;
                 if (BaseAddonIndex != null) return true;
                 if (StaggerRating != null) return true;
-                if (Unknown != null) return true;
+                if (Unused != null) return true;
                 if (Resistances != null) return true;
                 if (TemplateArmor != null) return true;
                 if (AttachParentSlots != null) return true;
@@ -1617,7 +1626,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(StaggerRating, "StaggerRating");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 if (Resistances is {} ResistancesItem)
                 {
@@ -1710,7 +1719,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ArmorRating = this.ArmorRating.Combine(rhs.ArmorRating);
                 ret.BaseAddonIndex = this.BaseAddonIndex.Combine(rhs.BaseAddonIndex);
                 ret.StaggerRating = this.StaggerRating.Combine(rhs.StaggerRating);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
                 ret.TemplateArmor = this.TemplateArmor.Combine(rhs.TemplateArmor);
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
@@ -1761,7 +1770,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ArmorRating;
             public bool BaseAddonIndex;
             public bool StaggerRating;
-            public bool Unknown;
+            public bool Unused;
             public ArmorResistance.TranslationMask? Resistances;
             public bool TemplateArmor;
             public bool AttachParentSlots;
@@ -1792,7 +1801,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArmorRating = defaultOn;
                 this.BaseAddonIndex = defaultOn;
                 this.StaggerRating = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unused = defaultOn;
                 this.TemplateArmor = defaultOn;
                 this.AttachParentSlots = defaultOn;
             }
@@ -1826,7 +1835,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ArmorRating, null));
                 ret.Add((BaseAddonIndex, null));
                 ret.Add((StaggerRating, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unused, null));
                 ret.Add((Resistances == null ? DefaultOn : !Resistances.GetCrystal().CopyNothing, Resistances?.GetCrystal()));
                 ret.Add((TemplateArmor, null));
                 ret.Add((AttachParentSlots, null));
@@ -1845,9 +1854,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
-        public Armor(FormKey formKey)
+        public Armor(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1856,7 +1868,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1870,12 +1882,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Armor(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Armor(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -2029,8 +2045,8 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32 Health { get; set; }
         new UInt16 ArmorRating { get; set; }
         new UInt16 BaseAddonIndex { get; set; }
-        new UInt16 StaggerRating { get; set; }
-        new UInt16 Unknown { get; set; }
+        new Byte StaggerRating { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new ExtendedList<ArmorResistance>? Resistances { get; set; }
         new IFormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
@@ -2120,8 +2136,8 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32 Health { get; }
         UInt16 ArmorRating { get; }
         UInt16 BaseAddonIndex { get; }
-        UInt16 StaggerRating { get; }
-        UInt16 Unknown { get; }
+        Byte StaggerRating { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         IReadOnlyList<IArmorResistanceGetter>? Resistances { get; }
         IFormLinkNullableGetter<IArmorGetter> TemplateArmor { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
@@ -2330,7 +2346,7 @@ namespace Mutagen.Bethesda.Fallout4
         ArmorRating = 28,
         BaseAddonIndex = 29,
         StaggerRating = 30,
-        Unknown = 31,
+        Unused = 31,
         Resistances = 32,
         TemplateArmor = 33,
         AttachParentSlots = 34,
@@ -2344,13 +2360,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Armor_Registration Instance = new Armor_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
-
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 136,
-            version: 0);
-
-        public const string GUID = "c4d097a3-85cc-49c7-8a94-606c9086f0ca";
 
         public const ushort AdditionalFieldCount = 29;
 
@@ -2408,11 +2417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.YNAM,
                 RecordTypes.ZNAM,
                 RecordTypes.ETYP,
@@ -2434,7 +2438,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.OBTF,
                 RecordTypes.OBTS,
                 RecordTypes.STOP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -2465,8 +2471,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MO2S));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2522,13 +2526,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description = default;
             item.InstanceNaming.Clear();
             item.Armatures.Clear();
-            item.Value = default;
-            item.Weight = default;
-            item.Health = default;
-            item.ArmorRating = default;
-            item.BaseAddonIndex = default;
-            item.StaggerRating = default;
-            item.Unknown = default;
+            item.Value = default(Int32);
+            item.Weight = default(Single);
+            item.Health = default(UInt32);
+            item.ArmorRating = default(UInt16);
+            item.BaseAddonIndex = default(UInt16);
+            item.StaggerRating = default(Byte);
+            item.Unused = new byte[3];
             item.Resistances = null;
             item.TemplateArmor.Clear();
             item.AttachParentSlots = null;
@@ -2681,7 +2685,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ArmorRating = item.ArmorRating == rhs.ArmorRating;
             ret.BaseAddonIndex = item.BaseAddonIndex == rhs.BaseAddonIndex;
             ret.StaggerRating = item.StaggerRating == rhs.StaggerRating;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Resistances = item.Resistances.CollectionEqualsHelper(
                 rhs.Resistances,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2867,9 +2871,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.StaggerRating, "StaggerRating");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if ((printMask?.Resistances?.Overall ?? true)
                 && item.Resistances is {} ResistancesItem)
@@ -3082,9 +3086,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.StaggerRating != rhs.StaggerRating) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Unused) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
@@ -3172,7 +3176,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ArmorRating);
             hash.Add(item.BaseAddonIndex);
             hash.Add(item.StaggerRating);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unused);
             hash.Add(item.Resistances);
             hash.Add(item.TemplateArmor);
             hash.Add(item.AttachParentSlots);
@@ -3308,7 +3312,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Armor(formKey);
+            var newRec = new Armor(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3532,7 +3536,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3606,9 +3610,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.StaggerRating = rhs.StaggerRating;
             }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Unused) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unused = rhs.Unused.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
@@ -3655,7 +3659,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3987,7 +3991,9 @@ namespace Mutagen.Bethesda.Fallout4
                 writer.Write(item.ArmorRating);
                 writer.Write(item.BaseAddonIndex);
                 writer.Write(item.StaggerRating);
-                writer.Write(item.Unknown);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IArmorResistanceGetter>.Instance.Write(
                 writer: writer,
@@ -4174,11 +4180,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -4280,11 +4281,10 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ArmorRating = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 2) return null;
                     item.BaseAddonIndex = dataFrame.ReadUInt16();
-                    if (dataFrame.Remaining < 2) return null;
-                    item.StaggerRating = dataFrame.ReadUInt16();
-                    if (dataFrame.Remaining < 2) return null;
-                    item.Unknown = dataFrame.ReadUInt16();
-                    return (int)Armor_FieldIndex.Unknown;
+                    if (dataFrame.Remaining < 1) return null;
+                    item.StaggerRating = dataFrame.ReadUInt8();
+                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)Armor_FieldIndex.Unused;
                 }
                 case RecordTypeInts.DAMA:
                 {
@@ -4328,7 +4328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4471,38 +4471,38 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(Int32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region Health
         private int _HealthLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Health_IsSet => _DATALocation.HasValue;
-        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default(UInt32);
         #endregion
         private RangeInt32? _FNAMLocation;
         #region ArmorRating
         private int _ArmorRatingLocation => _FNAMLocation!.Value.Min;
         private bool _ArmorRating_IsSet => _FNAMLocation.HasValue;
-        public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ArmorRatingLocation, 2)) : default;
+        public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ArmorRatingLocation, 2)) : default(UInt16);
         #endregion
         #region BaseAddonIndex
         private int _BaseAddonIndexLocation => _FNAMLocation!.Value.Min + 0x2;
         private bool _BaseAddonIndex_IsSet => _FNAMLocation.HasValue;
-        public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseAddonIndexLocation, 2)) : default;
+        public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseAddonIndexLocation, 2)) : default(UInt16);
         #endregion
         #region StaggerRating
         private int _StaggerRatingLocation => _FNAMLocation!.Value.Min + 0x4;
         private bool _StaggerRating_IsSet => _FNAMLocation.HasValue;
-        public UInt16 StaggerRating => _StaggerRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_StaggerRatingLocation, 2)) : default;
+        public Byte StaggerRating => _StaggerRating_IsSet ? _recordData.Span[_StaggerRatingLocation] : default;
         #endregion
-        #region Unknown
-        private int _UnknownLocation => _FNAMLocation!.Value.Min + 0x6;
-        private bool _Unknown_IsSet => _FNAMLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        #region Unused
+        private int _UnusedLocation => _FNAMLocation!.Value.Min + 0x5;
+        private bool _Unused_IsSet => _FNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         public IReadOnlyList<IArmorResistanceGetter>? Resistances { get; private set; }
         #region TemplateArmor
@@ -4625,7 +4625,7 @@ namespace Mutagen.Bethesda.Fallout4
                     _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IArmorModelGetter>(
                         package: _package,
                         stream: stream,
-                        creator: (s, p, r) => ArmorModelBinaryOverlay.ArmorModelFactory(s, p, r),
+                        creator: static (s, p, r) => ArmorModelBinaryOverlay.ArmorModelFactory(s, p, r),
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter);
                     return (int)Armor_FieldIndex.WorldModel;
@@ -4638,11 +4638,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -4721,7 +4716,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Armor_FieldIndex.Unknown;
+                    return (int)Armor_FieldIndex.Unused;
                 }
                 case RecordTypeInts.DAMA:
                 {
@@ -4768,7 +4763,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

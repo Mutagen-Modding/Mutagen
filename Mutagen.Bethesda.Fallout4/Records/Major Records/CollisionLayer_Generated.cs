@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -62,13 +63,13 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ICollisionLayerGetter.Description => this.Description;
         #endregion
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region DebugColor
-        public Color DebugColor { get; set; } = default;
+        public Color DebugColor { get; set; } = default(Color);
         #endregion
         #region Flags
-        public CollisionLayer.Flag Flags { get; set; } = default;
+        public CollisionLayer.Flag Flags { get; set; } = default(CollisionLayer.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -595,9 +596,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = CollisionLayer_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CollisionLayerCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerSetterCommon.Instance.RemapLinks(this, mapping);
-        public CollisionLayer(FormKey formKey)
+        public CollisionLayer(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -606,7 +610,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -620,12 +624,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public CollisionLayer(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public CollisionLayer(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -953,13 +961,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 234,
-            version: 0);
-
-        public const string GUID = "02047758-1851-41b7-b34c-81b802520b8f";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -1002,13 +1003,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MNAM,
                 RecordTypes.CNAM,
                 RecordTypes.INTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollisionLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1047,9 +1048,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Description.Clear();
-            item.Index = default;
-            item.DebugColor = default;
-            item.Flags = default;
+            item.Index = default(UInt32);
+            item.DebugColor = default(Color);
+            item.Flags = default(CollisionLayer.Flag);
             item.Name = string.Empty;
             item.CollidesWith = null;
             base.Clear(item);
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new CollisionLayer(formKey);
+            var newRec = new CollisionLayer(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1477,7 +1478,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.CollidesWith = 
                             rhs.CollidesWith
-                            .Select(r => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
                     }
                     else
@@ -1890,11 +1891,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Index
         private int? _IndexLocation;
-        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region DebugColor
         private int? _DebugColorLocation;
-        public Color DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Flags
         private int? _FlagsLocation;

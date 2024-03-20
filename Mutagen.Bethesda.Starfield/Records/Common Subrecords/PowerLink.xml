@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PowerLink" objType="Subrecord" recordType="XPLK">
+    <Fields>
+      <FormLink name="Ref">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Break />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

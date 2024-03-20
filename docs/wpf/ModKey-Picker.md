@@ -2,6 +2,7 @@
 The ModKey Picker helps users select mod(s) by typing in their names.
 
 The picker can reference certain objects to know what mods actually exist on a user's active load order:
+
 - A [Load Order](../loadorder/index.md) object
 - Any enumerable of type `ModKey` or `IModListingGetter`
 - An `IObservable<IChangeSet<T>>` of type `ModKey` or `IModListingGetter`. (Reactive Extension concepts)

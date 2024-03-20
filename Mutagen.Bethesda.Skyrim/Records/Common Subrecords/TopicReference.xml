@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ATopicReference" abstract="true" objType="Subrecord" recordType="PDTO" GUID="5bb62f45-9a55-4c05-a849-d896ec097522" ID="311" />
-  <Object name="TopicReference" objType="Subrecord" baseClass="ATopicReference" GUID="51ca6b56-5b22-4348-a374-e28200136e2f" ID="312">
+  <Object name="ATopicReference" abstract="true" objType="Subrecord" recordType="PDTO" />
+  <Object name="TopicReference" objType="Subrecord" baseClass="ATopicReference">
     <Fields>
       <FormLink name="Reference" refName="DialogTopic" />
     </Fields>
   </Object>
-  <Object name="TopicReferenceSubtype" objType="Subrecord" baseClass="ATopicReference" GUID="dcc1faed-8bae-45b8-bff2-a195b884c570" ID="313">
+  <Object name="TopicReferenceSubtype" objType="Subrecord" baseClass="ATopicReference">
     <Fields>
       <RecordType name="Subtype" />
     </Fields>

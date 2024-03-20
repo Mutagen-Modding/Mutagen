@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region UsableDimensions
-        public P2Int UsableDimensions { get; set; } = default;
+        public P2Int UsableDimensions { get; set; } = default(P2Int);
         #endregion
         #region CellCoordinatesNWCell
-        public P2Int16 CellCoordinatesNWCell { get; set; } = default;
+        public P2Int16 CellCoordinatesNWCell { get; set; } = default(P2Int16);
         #endregion
         #region CellCoordinatesSECell
-        public P2Int16 CellCoordinatesSECell { get; set; } = default;
+        public P2Int16 CellCoordinatesSECell { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 146,
-            version: 0);
-
-        public const string GUID = "493c28c6-8dd0-40cd-9c54-87243564a406";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(MapDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IMapData item)
         {
             ClearPartial();
-            item.UsableDimensions = default;
-            item.CellCoordinatesNWCell = default;
-            item.CellCoordinatesSECell = default;
+            item.UsableDimensions = default(P2Int);
+            item.CellCoordinatesNWCell = default(P2Int16);
+            item.CellCoordinatesSECell = default(P2Int16);
         }
         
         #region Mutagen

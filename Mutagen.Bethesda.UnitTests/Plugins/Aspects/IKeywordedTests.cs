@@ -1,127 +1,182 @@
+using System.Collections.Immutable;
+
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Mutagen.Bethesda.Testing;
+using Mutagen.Bethesda.Testing.AutoData;
+
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Aspects;
 
 public class IKeywordedTests
 {
-    [Fact]
-    public void HasKeyword_ByFormKey_Empty()
+    #region Single Tests
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByFormKey_Empty(Npc npc, FormKey form)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
-        npc.HasKeyword(TestConstants.Form2).Should().BeFalse();
+        npc.HasKeyword(form).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByFormKey_NotFound()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByFormKey_NotFound(Npc npc, FormKey form1, FormKey form2)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
-        npc.Keywords.Add(TestConstants.Form3);
-        npc.HasKeyword(TestConstants.Form2).Should().BeFalse();
+        npc.Keywords.Add(form1);
+        npc.HasKeyword(form2).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByFormKey_Found()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByFormKey_Found(Npc npc, FormKey form)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
-        npc.Keywords.Add(TestConstants.Form2);
-        npc.HasKeyword(TestConstants.Form2).Should().BeTrue();
+        npc.Keywords.Add(form);
+        npc.HasKeyword(form).Should().BeTrue();
     }
 
-    [Fact]
-    public void HasKeyword_ByRecord_Empty()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByRecord_Empty(Npc npc, Keyword keyword)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
-        Keyword keyword = new Keyword(TestConstants.Form4, SkyrimRelease.SkyrimSE);
         npc.HasKeyword(keyword).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByRecord_NotFound()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByRecord_NotFound(Npc npc, Keyword keyword1, Keyword keyword2)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
-        Keyword keyword = new Keyword(TestConstants.Form4, SkyrimRelease.SkyrimSE);
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
-        npc.Keywords.Add(TestConstants.Form3);
-        npc.HasKeyword(keyword).Should().BeFalse();
+        npc.Keywords.Add(keyword1);
+        npc.HasKeyword(keyword2).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByRecord_Found()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByRecord_Found(Npc npc, Keyword keyword)
     {
-        Npc npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
-        Keyword keyword = new Keyword(TestConstants.Form4, SkyrimRelease.SkyrimSE);
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
         npc.Keywords.Add(keyword);
         npc.HasKeyword(keyword).Should().BeTrue();
     }
-
-    [Fact]
-    public void HasKeyword_ByEditorID_Empty()
+    
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByEditorID_Empty(SkyrimMod mod, Npc npc)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         var cache = mod.ToImmutableLinkCache();
         npc.HasKeyword(TestConstants.Edid1, cache).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByEditorID_NotFound()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByEditorID_NotFound(SkyrimMod mod, Npc npc, Keyword keyword)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         var cache = mod.ToImmutableLinkCache();
-        Keyword keyword = mod.Keywords.AddNew();
         keyword.EditorID = TestConstants.Edid2;
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
         npc.Keywords.Add(keyword);
         npc.HasKeyword(TestConstants.Edid1, cache).Should().BeFalse();
     }
 
-    [Fact]
-    public void HasKeyword_ByEditorID_Found()
+    [Theory, MutagenModAutoData]
+    public void HasKeyword_ByEditorID_Found(SkyrimMod mod, Npc npc, Keyword keyword)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         var cache = mod.ToImmutableLinkCache();
-        Keyword keyword = mod.Keywords.AddNew();
         keyword.EditorID = TestConstants.Edid1;
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
         npc.Keywords.Add(keyword);
-        npc.HasKeyword(TestConstants.Edid1, cache).Should().BeTrue();
+        npc.HasKeyword(keyword.EditorID, cache).Should().BeTrue();
     }
 
-    [Fact]
-    public void TryResolveKeyword_ByFormKey_Found()
+    [Theory, MutagenModAutoData]
+    public void TryResolveKeyword_ByFormKey_Found(SkyrimMod mod, Npc npc, Keyword keyword)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         var cache = mod.ToImmutableLinkCache();
-        Keyword keyword = mod.Keywords.AddNew();
-        keyword.EditorID = TestConstants.Edid1;
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
         npc.Keywords.Add(keyword);
         npc.TryResolveKeyword(keyword.FormKey, cache, out var kw).Should().BeTrue();
         kw.Should().Be(keyword);
     }
 
-    [Fact]
-    public void TryResolveKeyword_ByEditorID_Found()
+    [Theory, MutagenModAutoData]
+    public void TryResolveKeyword_ByEditorID_Found(SkyrimMod mod, Npc npc, Keyword keyword)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         var cache = mod.ToImmutableLinkCache();
-        Keyword keyword = mod.Keywords.AddNew();
         keyword.EditorID = TestConstants.Edid1;
         npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
         npc.Keywords.Add(keyword);
-        npc.TryResolveKeyword(TestConstants.Edid1, cache, out var kw).Should().BeTrue();
+        npc.TryResolveKeyword(keyword.EditorID, cache, out var kw).Should().BeTrue();
         kw.Should().Be(keyword);
     }
+    #endregion
+    
+    #region List Tests
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByFormKeyList_Empty(Npc npc, FormKey form1, FormKey form2)
+    {
+        npc.HasAnyKeyword(ImmutableList.Create(form1, form2)).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByFormKeyList_NotFound(Npc npc, Keyword keyword, FormKey form1, FormKey form2)
+    {
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword.ToLink());
+        npc.HasAnyKeyword(ImmutableList.Create(form1, form2)).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByFormKeyList_Found(Npc npc, Keyword keyword, FormKey form)
+    {
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword.ToLink());
+        npc.HasAnyKeyword(ImmutableList.Create(form, keyword.ToLink().FormKey)).Should().BeTrue();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByRecordList_Empty(Npc npc, Keyword keyword1, Keyword keyword2)
+    {
+        npc.HasAnyKeyword(ImmutableList.Create(keyword1, keyword2)).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByRecordList_NotFound(Npc npc, Keyword keyword1, Keyword keyword2, Keyword keyword3)
+    {
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword1);
+        npc.HasAnyKeyword(ImmutableList.Create(keyword2, keyword3)).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByRecordList_Found(Npc npc, Keyword keyword1, Keyword keyword2)
+    {
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword2);
+        npc.HasAnyKeyword(ImmutableList.Create(keyword1, keyword2)).Should().BeTrue();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByEditorIDList_Empty(SkyrimMod mod, Npc npc)
+    {
+        var cache = mod.ToImmutableLinkCache();
+        npc.HasAnyKeyword(ImmutableList.Create(TestConstants.Edid1), cache).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByEditorIDList_NotFound(SkyrimMod mod, Npc npc, Keyword keyword)
+    {
+        var cache = mod.ToImmutableLinkCache();
+        keyword.EditorID = TestConstants.Edid2;
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword);
+        npc.HasAnyKeyword(ImmutableList.Create(TestConstants.Edid1), cache).Should().BeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void HasAnyKeyword_ByEditorIDList_Found(SkyrimMod mod, Npc npc, Keyword keyword)
+    {
+        var cache = mod.ToImmutableLinkCache();
+        keyword.EditorID = TestConstants.Edid1;
+        npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        npc.Keywords.Add(keyword);
+        npc.HasAnyKeyword(ImmutableList.Create(TestConstants.Edid2, keyword.EditorID), cache).Should().BeTrue();
+    }
+    #endregion
 }

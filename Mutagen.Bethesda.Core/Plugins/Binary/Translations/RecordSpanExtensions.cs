@@ -14,7 +14,7 @@ public static class RecordSpanExtensions
         var loc = overflow.EndLocation;
         var nextSpan = data.Slice(loc, checked((int)(nextLen + overflow.Meta.SubConstants.HeaderLength)));
         var subHeader = new SubrecordHeader(overflow.Meta, nextSpan);
-        return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
+        return SubrecordPinFrame.FactoryWithOverrideLength(subHeader, nextSpan, loc, overflow.Location);
     }
     
     /// <summary>
@@ -104,6 +104,39 @@ public static class RecordSpanExtensions
             lenParsed += subMeta.TotalLength;
         }
 
+        return list;
+    }
+
+    /// <summary>
+    /// Parses span data and locates all uninterrupted repeating instances of target record type
+    /// 
+    /// It is assumed the span contains only subrecords
+    /// </summary>
+    /// <param name="span">Bytes containing subrecords</param>
+    /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <param name="recordType">Repeating type to locate</param>
+    /// <param name="offset">Location in the source span to begin looking</param>
+    /// <param name="lenParsed">The amount of data located subrecords cover</param>
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static IReadOnlyList<SubrecordPinFrame> ParseRepeatingSubrecord(
+        ReadOnlyMemorySlice<byte> span, 
+        GameConstants meta,
+        RecordType recordType, 
+        int offset,
+        out int lenParsed)
+    {
+        lenParsed = offset;
+        
+        List<SubrecordPinFrame> list = new List<SubrecordPinFrame>();
+        while (span.Length > lenParsed)
+        {
+            var subMeta = meta.SubrecordHeader(span.Slice(lenParsed));
+            if (subMeta.RecordType != recordType) break;
+            list.Add(new SubrecordPinFrame(meta, span.Slice(lenParsed), lenParsed));
+            lenParsed += subMeta.TotalLength;
+        }
+
+        lenParsed -= offset;
         return list;
     }
 

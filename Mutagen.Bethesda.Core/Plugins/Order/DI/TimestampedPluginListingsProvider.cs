@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Environments.DI;
+﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
@@ -8,6 +9,7 @@ public interface ITimestampedPluginListingsProvider : IListingsProvider
 
 public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListingsProvider
 {
+    private readonly IFileSystem _fileSystem;
     public ITimestampAligner Aligner { get; }
     public ITimestampedPluginListingsPreferences Prefs { get; }
     public IPluginRawListingsReader RawListingsReader { get; }
@@ -15,12 +17,14 @@ public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListin
     public IPluginListingsPathContext ListingsPathContext { get; }
 
     public TimestampedPluginListingsProvider(
+        IFileSystem fileSystem,
         ITimestampAligner timestampAligner,
         ITimestampedPluginListingsPreferences prefs,
         IPluginRawListingsReader rawListingsReader,
         IDataDirectoryProvider dataDirectoryProvider,
         IPluginListingsPathContext pluginListingsPathContext)
     {
+        _fileSystem = fileSystem;
         Aligner = timestampAligner;
         Prefs = prefs;
         RawListingsReader = rawListingsReader;
@@ -30,6 +34,10 @@ public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListin
 
     public IEnumerable<ILoadOrderListingGetter> Get()
     {
+        if (!_fileSystem.File.Exists(ListingsPathContext.Path))
+        {
+            return Enumerable.Empty<ILoadOrderListingGetter>();
+        }
         var mods = RawListingsReader.Read(ListingsPathContext.Path);
         return Aligner.AlignToTimestamps(
             mods,

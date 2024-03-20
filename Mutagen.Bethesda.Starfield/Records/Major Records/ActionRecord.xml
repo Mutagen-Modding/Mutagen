@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActionRecord" recordType="AACT" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <String name="Notes" recordType="DNAM" />
+      <Enum name="Type" enumName="ActionRecord.TypeEnum" byteLength="4" recordType="TNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+    </Fields>
+    <LinkInterface>IIdleRelation</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+  </Object>
+</Loqui>

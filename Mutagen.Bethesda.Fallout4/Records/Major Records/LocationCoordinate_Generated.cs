@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -737,13 +738,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 620,
-            version: 0);
-
-        public const string GUID = "da3a7d17-3aa5-449e-a1ed-444b2963d613";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -775,8 +769,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LocationCoordinateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1252,6 +1244,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void LocationCoordinateParseEndingPositions(
+            LocationCoordinateBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CoordinatesEndingPos = ret._structData.Length;
+        }
+
         public static ILocationCoordinateGetter LocationCoordinateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1267,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new LocationCoordinateBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CoordinatesEndingPos = ret._structData.Length;
+            LocationCoordinateParseEndingPositions(ret, package);
             stream.Position += ret.CoordinatesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,26 +51,26 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; set; } = default;
+        public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; set; } = default(ImageSpaceDepthOfField.VersioningBreaks);
         #endregion
         #region Strength
-        public Single Strength { get; set; } = default;
+        public Single Strength { get; set; } = default(Single);
         #endregion
         #region Distance
-        public Single Distance { get; set; } = default;
+        public Single Distance { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region BlurRadius
-        public Byte BlurRadius { get; set; } = default;
+        public Byte BlurRadius { get; set; } = default(Byte);
         public static RangeUInt8 BlurRadius_Range = new RangeUInt8(0, 7);
         #endregion
         #region Sky
-        public Boolean Sky { get; set; } = default;
+        public Boolean Sky { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -833,13 +834,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 409,
-            version: 0);
-
-        public const string GUID = "78ab71b8-6b57-4e09-bc44-6f48ba86d023";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -878,8 +872,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceDepthOfFieldBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -917,13 +909,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceDepthOfField item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Strength = default;
-            item.Distance = default;
-            item.Range = default;
-            item.Unknown = default;
-            item.BlurRadius = default;
-            item.Sky = default;
+            item.Versioning = default(ImageSpaceDepthOfField.VersioningBreaks);
+            item.Strength = default(Single);
+            item.Distance = default(Single);
+            item.Range = default(Single);
+            item.Unknown = default(Int16);
+            item.BlurRadius = default(Byte);
+            item.Sky = default(Boolean);
         }
         
         #region Mutagen

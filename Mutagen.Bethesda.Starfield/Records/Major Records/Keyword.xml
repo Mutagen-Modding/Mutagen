@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Keyword" recordType="KYWD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <String name="Notes" recordType="DNAM" />
+      <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <String name="ENAM" recordType="ENAM" unknown="true" />
+      <FormLink name="AttractionRule" refName="AttractionRule" recordType="DATA" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+    </Fields>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
+  </Object>
+</Loqui>

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Nose
-        public UInt32 Nose { get; set; } = default;
+        public UInt32 Nose { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region Eyes
-        public UInt32 Eyes { get; set; } = default;
+        public UInt32 Eyes { get; set; } = default(UInt32);
         #endregion
         #region Mouth
-        public UInt32 Mouth { get; set; } = default;
+        public UInt32 Mouth { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 217,
-            version: 0);
-
-        public const string GUID = "249f629e-c964-4c45-b472-59536575c289";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NpcFacePartsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INpcFaceParts item)
         {
             ClearPartial();
-            item.Nose = default;
-            item.Unknown = default;
-            item.Eyes = default;
-            item.Mouth = default;
+            item.Nose = default(UInt32);
+            item.Unknown = default(UInt32);
+            item.Eyes = default(UInt32);
+            item.Mouth = default(UInt32);
         }
         
         #region Mutagen

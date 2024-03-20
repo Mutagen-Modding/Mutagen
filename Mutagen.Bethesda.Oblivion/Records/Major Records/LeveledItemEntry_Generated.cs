@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,10 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Reference
         private readonly IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
@@ -771,13 +772,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 222,
-            version: 0);
-
-        public const string GUID = "71008cec-6776-4778-81b4-0110ed02d6fc";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -816,8 +810,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -855,8 +847,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILeveledItemEntry item)
         {
             ClearPartial();
-            item.Level = default;
-            item.Unknown = default;
+            item.Level = default(Int16);
+            item.Unknown = default(Int16);
             item.Reference.Clear();
             item.Count = default;
             item.Unknown2 = default;

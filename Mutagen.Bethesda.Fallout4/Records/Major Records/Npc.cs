@@ -154,7 +154,8 @@ partial class NpcBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryMorphParsingCustom(
         MutagenFrame frame,
-        INpcInternal item)
+        INpcInternal item, 
+        PreviousParse lastParsed)
     {
         var subrec = frame.ReadSubrecordHeader();
         switch (subrec.RecordTypeInt)
@@ -293,7 +294,7 @@ partial class NpcBinaryOverlay
         }
     }
 
-    public partial ParseResult MorphParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult MorphParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subRec = stream.GetSubrecordHeader();
         switch (subRec.RecordTypeInt)

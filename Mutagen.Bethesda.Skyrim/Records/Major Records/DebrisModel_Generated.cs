@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Percentage
-        public Byte Percentage { get; set; } = default;
+        public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
         public AssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
         #endregion
         #region DATADataTypeState
-        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
+        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default(DebrisModel.DATADataType);
         #endregion
 
         #region To String
@@ -789,13 +790,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 404,
-            version: 0);
-
-        public const string GUID = "efe281d8-06f2-4ae1-940f-05501d82853c";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -832,13 +826,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.DATA,
                 RecordTypes.MODT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -876,11 +870,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Percentage = default;
+            item.Percentage = default(Byte);
             item.ModelFilename.SetToNull();
-            item.Flags = default;
+            item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(DebrisModel.DATADataType);
         }
         
         #region Mutagen

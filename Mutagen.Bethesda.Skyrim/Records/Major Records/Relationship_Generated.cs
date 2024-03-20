@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -75,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Child => this.Child;
         #endregion
         #region Rank
-        public Relationship.RankType Rank { get; set; } = default;
+        public Relationship.RankType Rank { get; set; } = default(Relationship.RankType);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Relationship.Flag Flags { get; set; } = default;
+        public Relationship.Flag Flags { get; set; } = default(Relationship.Flag);
         #endregion
         #region AssociationType
         private readonly IFormLink<IAssociationTypeGetter> _AssociationType = new FormLink<IAssociationTypeGetter>();
@@ -536,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -545,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -899,13 +900,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 463,
-            version: 0);
-
-        public const string GUID = "8d5e6837-c926-4b13-9d68-132c96ca3319";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -942,13 +936,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.RELA,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RelationshipBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -988,9 +982,9 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Parent.Clear();
             item.Child.Clear();
-            item.Rank = default;
-            item.Unknown = default;
-            item.Flags = default;
+            item.Rank = default(Relationship.RankType);
+            item.Unknown = default(Byte);
+            item.Flags = default(Relationship.Flag);
             item.AssociationType.Clear();
             base.Clear(item);
         }

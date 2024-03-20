@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundDescriptor" objType="Record" recordType="SNDR" baseClass="SkyrimMajorRecord" GUID="8ef28a33-b4e1-488e-bd9a-9231e58a3aad" ID="82">
+  <Object name="SoundDescriptor" objType="Record" recordType="SNDR" baseClass="SkyrimMajorRecord">
     <Fields>
       <Enum name="Type" enumName="SoundDescriptor.DescriptorType" recordType="CNAM" byteLength="4" />
       <FormLink name="Category" refName="SoundCategory" recordType="GNAM" />
@@ -24,7 +24,7 @@
     </Fields>
     <LinkInterface>ISound</LinkInterface>
   </Object>
-  <Object name="SoundLoopAndRumble" objType="Subrecord" recordType="LNAM" GUID="97e1c779-cd41-49df-bf1c-a6d6644860dc" ID="474">
+  <Object name="SoundLoopAndRumble" objType="Subrecord" recordType="LNAM">
     <Fields>
       <UInt8 name="Unknown" />
       <Enum name="Loop" enumName="SoundDescriptor.LoopType" byteLength="1" />

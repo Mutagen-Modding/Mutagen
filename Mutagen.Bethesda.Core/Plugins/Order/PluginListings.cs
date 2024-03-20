@@ -147,12 +147,6 @@ public static class PluginListings
                 gameReleaseInjection).Path);
     }
 
-    public static bool HasEnabledMarkers(GameRelease game)
-    {
-        return new HasEnabledMarkersProvider(
-            new GameReleaseInjection(game)).HasEnabledMarkers;
-    }
-
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
@@ -167,6 +161,7 @@ public static class PluginListings
         var provider = new PluginListingsProvider(
             gameContext,
             new TimestampedPluginListingsProvider(
+                fs,
                 new TimestampAligner(fs),
                 new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
                 new PluginRawListingsReader(
@@ -175,6 +170,7 @@ public static class PluginListings
                 dataDirectory,
                 listingsPathContext),
             new EnabledPluginListingsProvider(
+                fs,
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),

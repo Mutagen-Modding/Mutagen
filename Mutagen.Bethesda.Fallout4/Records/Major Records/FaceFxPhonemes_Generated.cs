@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ForceNames
-        public Boolean ForceNames { get; set; } = default;
+        public Boolean ForceNames { get; set; } = default(Boolean);
         #endregion
         #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1505,13 +1506,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 252,
-            version: 0);
-
-        public const string GUID = "9319b560-0d83-4c5a-9133-281ed67d8d2f";
-
         public const ushort AdditionalFieldCount = 18;
 
         public const ushort FieldCount = 18;
@@ -1543,8 +1537,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(FaceFxPhonemesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1582,7 +1574,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.ForceNames = default;
+            item.ForceNames = default(Boolean);
             item.Aah_LipBigAah = null;
             item.BigAah_LipDST = null;
             item.BMP_LipEee = null;

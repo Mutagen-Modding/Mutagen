@@ -331,4 +331,10 @@ public static class ObjectGenerationExt
             sb.AppendLine($"case \"{obj.Interface(getter: false, internalInterface: true)}\":");
         }
     }
+
+    public static bool IsBaseClassField(this ObjectGeneration obj, TypeGeneration field)
+    {
+        if (obj.BaseClass == null) return false;
+        return obj.BaseClass.IterateFields(includeBaseClass: true).Any(x => x == field);
+    }
 }

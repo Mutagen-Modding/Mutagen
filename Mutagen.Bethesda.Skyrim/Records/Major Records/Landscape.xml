@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="SkyrimMajorRecord" GUID="12cbe5c3-cdb2-4514-8003-c80a6fe6305e" ID="292">
+  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <Enum name="Flags" enumName="Landscape.Flag" recordType="DATA" byteLength="4" />
       <Array2d name="VertexNormals" recordType="VNML" fixedWidth="33" fixedHeight="33">
@@ -16,34 +16,39 @@
       </List>
     </Fields>
   </Object>
-  <Object name="BaseLayer" objType="Subrecord" GUID="689f0717-0560-4275-a721-cc7c612062ae" ID="346">
+  <Object name="BaseLayer" objType="Subrecord">
     <Fields>
       <RefDirect name="Header" refName="LayerHeader" />
     </Fields>
   </Object>
-  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer" GUID="5a9a0528-b3b8-4e01-85cb-f0f41578f8cb" ID="347">
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer">
     <Fields>
-      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+      <RefList name="AlphaLayerData" refName="AlphaLayerData" recordType="VTXT" />
     </Fields>
     <BaseRecordTypeOverrides>
       <Mapping From="BTXT" To="ATXT" />
     </BaseRecordTypeOverrides>
   </Object>
-  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord" GUID="6d96352d-8353-4eb9-b1dd-658a76b55abf" ID="348">
+  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord">
     <Fields>
       <FormLink name="Texture" refName="LandscapeTexture" />
-      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />1
-      <UInt8 name="Unused" />
-      <UInt16 name="LayerNumber" />
-    </Fields>
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
+      <UInt8 name="Unused" /><UInt16 name="LayerNumber" /></Fields>
   </Object>
-  <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord" GUID="541ce40b-10dc-4f08-81cb-1f9b29b291aa" ID="480">
+  <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord">
     <Fields>
       <Float name="Offset" />
       <Array2d name="HeightMap" fixedWidth="33" fixedHeight="33">
         <UInt8 />
       </Array2d>
       <P3UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayerData" objType="Subrecord">
+    <Fields>
+      <UInt16 name="Position" />
+      <UInt16 name="Unused" />
+      <Float name="Opacity" />
     </Fields>
   </Object>
 </Loqui>

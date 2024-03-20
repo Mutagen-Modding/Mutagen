@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region StartHour
-        public UInt16 StartHour { get; set; } = default;
+        public UInt16 StartHour { get; set; } = default(UInt16);
         #endregion
         #region EndHour
-        public UInt16 EndHour { get; set; } = default;
+        public UInt16 EndHour { get; set; } = default(UInt16);
         #endregion
         #region Radius
-        public UInt16 Radius { get; set; } = default;
+        public UInt16 Radius { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region OnlyBuysStolenItems
-        public Boolean OnlyBuysStolenItems { get; set; } = default;
+        public Boolean OnlyBuysStolenItems { get; set; } = default(Boolean);
         #endregion
         #region NotSellBuy
-        public Boolean NotSellBuy { get; set; } = default;
+        public Boolean NotSellBuy { get; set; } = default(Boolean);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -824,13 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 34,
-            version: 0);
-
-        public const string GUID = "31dd7308-ffd1-4311-a69c-f6c0bed71382";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -869,8 +863,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -908,13 +900,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IVendorValues item)
         {
             ClearPartial();
-            item.StartHour = default;
-            item.EndHour = default;
-            item.Radius = default;
-            item.Unknown = default;
-            item.OnlyBuysStolenItems = default;
-            item.NotSellBuy = default;
-            item.Unknown2 = default;
+            item.StartHour = default(UInt16);
+            item.EndHour = default(UInt16);
+            item.Radius = default(UInt16);
+            item.Unknown = default(UInt16);
+            item.OnlyBuysStolenItems = default(Boolean);
+            item.NotSellBuy = default(Boolean);
+            item.Unknown2 = default(UInt16);
         }
         
         #region Mutagen

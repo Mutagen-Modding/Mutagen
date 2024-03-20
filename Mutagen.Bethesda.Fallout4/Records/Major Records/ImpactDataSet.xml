@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="Fallout4MajorRecord" GUID="4b59c619-ab19-4dd5-a1d9-3cdd472926a9" ID="615">
+  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="Impacts" refName="ImpactData" />
     </Fields>
   </Object>
-  <Object name="ImpactData" objType="Subrecord" recordType="PNAM" GUID="ef6c6834-ddac-4615-ab03-92598d50af87" ID="616">
+  <Object name="ImpactData" objType="Subrecord" recordType="PNAM">
     <Fields>
       <FormLink name="Material" refName="MaterialType" />
       <FormLink name="Impact" refName="Impact" />

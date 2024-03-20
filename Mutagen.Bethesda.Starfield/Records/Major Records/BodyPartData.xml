@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyPartData" recordType="BPTD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Parts" refName="BodyPart" />
+    </Fields>
+  </Object>
+  <Object name="BodyPart" objType="Subrecord">
+    <Fields>
+      <String name="Name" recordType="BPTN" translated="Normal" />
+      <String name="PartNode" recordType="BPNN" nullable="False" />
+      <String name="VatsTarget" recordType="BPNT" nullable="False" />
+      <Data recordType="BPD2">
+        <Fields>
+          <Float name="DamageMult" />
+          <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
+          <Enum name="Type" enumName="BodyPart.PartType" byteLength="1" />
+          <Percent name="HealthPercent" integerType="Byte" />
+          <FormLink name="ActorValue" refName="ActorValueInformation" />
+          <Percent name="ToHitChance" integerType="Byte" />
+          <FormLink name="OnCrippleArtObject" refName="ArtObject" />
+          <FormLink name="OnCrippleDebris" refName="Debris" />
+          <FormLink name="OnCrippleExplosion" refName="Explosion" />
+          <FormLink name="OnCrippleImpactData" refName="ImpactDataSet" />
+          <Float name="OnCrippleDebrisScale" />
+          <UInt8 name="OnCrippleDebrisCount" />
+          <UInt8 name="OnCrippleDecalCount" />
+        </Fields>
+      </Data>
+      <String name="GoreTargetBone" recordType="NAM4" nullable="False" />
+      <String name="HitReactionStart" recordType="ENAM" />
+      <String name="HitReactionEnd" recordType="FNAM" />
+      <FormLink name="GoreEffectsBloodImpactMaterialType" refName="MaterialType" recordType="INAM" />
+      <FormLink name="OnCrippleBloodImpactMaterialType" refName="MaterialType" recordType="JNAM" />
+      <String name="TwistVariablePrefix" recordType="DNAM" />
+    </Fields>
+  </Object>
+</Loqui>

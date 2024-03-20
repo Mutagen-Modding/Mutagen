@@ -15,7 +15,7 @@ public class FormLinkType : ClassType
         EDIDChars
     }
 
-    public bool NegativeOneIsNull { get; private set; }
+    public bool MaxIsNone { get; private set; }
 
     public override string ProtectedName => base.ProtectedName;
     private FormIDType _rawFormID;
@@ -23,6 +23,7 @@ public class FormLinkType : ClassType
     public FormIDTypeEnum FormIDType;
     public override bool IsEnumerable => false;
     public override bool CanBeNullable(bool getter) => false;
+    public string GenericString => LoquiType.TypeNameInternal(getter: true, internalInterface: true);
 
     public virtual string ClassTypeStringPrefix => this.FormIDType switch
     {
@@ -43,14 +44,14 @@ public class FormLinkType : ClassType
 
     public override string TypeName(bool getter, bool needsCovariance = false)
     {
-        return $"I{DirectNonGenericTypeName()}{(needsCovariance || getter ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        return $"I{DirectNonGenericTypeName()}{(needsCovariance || getter ? "Getter" : null)}<{GenericString}>";
     }
 
     public override Type Type(bool getter) => typeof(FormID);
 
     public string DirectTypeName(bool getter, bool internalInterface = false)
     {
-        return $"{DirectNonGenericTypeName()}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        return $"{DirectNonGenericTypeName()}<{GenericString}>";
     }
 
     public string DirectNonGenericTypeName()
@@ -73,7 +74,7 @@ public class FormLinkType : ClassType
         this.NullableProperty.Subscribe(i => LoquiType.NullableProperty.OnNext(i));
         this.NullableProperty.Subscribe(i => _rawFormID.NullableProperty.OnNext(i));
         this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
-        NegativeOneIsNull = node.GetAttribute("negOneIsNull", false);
+        MaxIsNone = node.GetAttribute("maxIsNone", false);
         this.Singleton = true;
         this.SetPermission = AccessModifier.Private;
     }
@@ -162,9 +163,10 @@ public class FormLinkType : ClassType
         sb.AppendLine($"{identifier}.Clear();");
     }
 
-    public override void GenerateCopySetToConverter(StructuredStringBuilder sb)
+    public override string ReturnForCopySetToConverter(Accessor itemAccessor)
     {
-        sb.AppendLine($".Select(r => ({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
+        return
+            $"({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}({itemAccessor}.{FormIDTypeString})";
     }
 
     public override async Task GenerateForClass(StructuredStringBuilder sb)
@@ -207,7 +209,7 @@ public class FormLinkType : ClassType
 
     public override string GetDefault(bool getter)
     {
-        if (this.Nullable) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
-        return $"FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
+        if (this.Nullable) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>.Null";
+        return $"FormLink<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>.Null";
     }
 }

@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -59,10 +60,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -410,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -419,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -978,13 +979,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 65,
-            version: 0);
-
-        public const string GUID = "7fb2c257-4be7-4aaf-a3c8-4e7f76deaa60";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 7;
@@ -1016,8 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimMajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1055,9 +1047,9 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(ISkyrimMajorRecordInternal item)
         {
             ClearPartial();
-            item.FormVersion = default;
-            item.Version2 = default;
-            item.SkyrimMajorRecordFlags = default;
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
+            item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
             base.Clear(item);
         }
         

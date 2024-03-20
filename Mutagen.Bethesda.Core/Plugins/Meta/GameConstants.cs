@@ -46,6 +46,16 @@ public sealed record GameConstants
 
     public IReadOnlyCollection<RecordType> HeaderOverflow { get; } = new SingleCollection<RecordType>(RecordTypes.XXXX);
 
+    public bool HasEnabledMarkers { get; init; }
+    
+    public ushort? DefaultFormVersion { get; init; }
+    
+    public string? MyDocumentsString { get; init; }
+    
+    public string IniName { get; init; }
+    
+    public StringsLanguageFormat? StringsLanguageFormat { get; init; }
+    
     /// <summary> 
     /// Constructor 
     /// </summary> 
@@ -64,7 +74,12 @@ public sealed record GameConstants
         MajorRecordConstants majorConstants,
         RecordHeaderConstants subConstants,
         Language[] languages,
-        EncodingBundle encodings)
+        StringsLanguageFormat? languageFormat,
+        EncodingBundle encodings,
+        bool hasEnabledMarkers,
+        ushort? defaultFormVersion,
+        string? myDocumentsString,
+        string iniName)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -74,6 +89,11 @@ public sealed record GameConstants
         SubConstants = subConstants;
         Languages = languages;
         Encodings = encodings;
+        HasEnabledMarkers = hasEnabledMarkers;
+        DefaultFormVersion = defaultFormVersion;
+        MyDocumentsString = myDocumentsString;
+        StringsLanguageFormat = languageFormat;
+        IniName = iniName;
     }
 
     /// <summary> 
@@ -129,7 +149,12 @@ public sealed record GameConstants
             headerLength: 6,
             lengthLength: 2),
         languages: Array.Empty<Language>(),
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        languageFormat: null,
+        hasEnabledMarkers: false,
+        defaultFormVersion: null,
+        myDocumentsString: "Oblivion",
+        iniName: "Oblivion",
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -191,17 +216,56 @@ public sealed record GameConstants
             Language.Chinese,
             Language.Russian,
         },
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        languageFormat: Strings.StringsLanguageFormat.FullName,
+        hasEnabledMarkers: false,
+        defaultFormVersion: 43,
+        myDocumentsString: "Skyrim",
+        iniName: "Skyrim",
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    public static readonly GameConstants EnderalLE = SkyrimLE with
+    {
+        Release = GameRelease.EnderalLE,
+        MyDocumentsString = "Enderal",
+        IniName = "Enderal",
+    };
+    
+    /// <summary> 
+    /// Readonly singleton of Skyrim SE game constants 
+    /// </summary> 
+    public static readonly GameConstants SkyrimSE = SkyrimLE with
+    {
+        Release = GameRelease.SkyrimSE,
+        HasEnabledMarkers = true,
+        DefaultFormVersion = 44,
+        MyDocumentsString = "Skyrim Special Edition",
+    };
+    
+    /// <summary> 
+    /// Readonly singleton of Skyrim SE game constants 
+    /// </summary> 
+    public static readonly GameConstants SkyrimSEGog = SkyrimSE with
+    {
+        Release = GameRelease.SkyrimSEGog,
+        MyDocumentsString = "Skyrim Special Edition GOG",
+    };
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
     /// </summary> 
-    public static readonly GameConstants SkyrimSE = SkyrimLE with { Release = GameRelease.SkyrimSE };
+    public static readonly GameConstants SkyrimVR = SkyrimSE with
+    {
+        Release = GameRelease.SkyrimVR,
+        MyDocumentsString = "Skyrim VR",
+        IniName = "SkyrimVR",
+    };
 
-    /// <summary> 
-    /// Readonly singleton of Skyrim SE game constants 
-    /// </summary> 
-    public static readonly GameConstants SkyrimVR = SkyrimLE with { Release = GameRelease.SkyrimVR };
+    public static readonly GameConstants EnderalSE = SkyrimSE with
+    {
+        Release = GameRelease.EnderalSE,
+        MyDocumentsString = "Enderal Special Edition",
+        IniName = "Enderal",
+    };
 
     /// <summary> 
     /// Readonly singleton of Fallout4 game constants 
@@ -270,7 +334,93 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        languageFormat: Strings.StringsLanguageFormat.Iso,
+        hasEnabledMarkers: true,
+        defaultFormVersion: 131,
+        myDocumentsString: "Fallout4",
+        iniName: "Fallout4",
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    public static readonly GameConstants Fallout4VR = Fallout4 with
+    {
+        Release = GameRelease.Fallout4VR,
+        MyDocumentsString = null,
+        IniName = "Fallout4",
+    };
+
+    /// <summary> 
+    /// Readonly singleton of Starfield game constants 
+    /// </summary> 
+    public static readonly GameConstants Starfield = new GameConstants(
+        release: GameRelease.Starfield,
+        modHeaderLength: 24,
+        modHeaderFluffLength: 16,
+        groupConstants: new GroupConstants(
+            ObjectType.Group,
+            headerLength: 24,
+            lengthLength: 4,
+            cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+            world: new GroupWorldConstants(
+                TopGroupType: 1,
+                CellGroupTypes: new[] { 2, 4 },
+                CellSubGroupTypes: new[] { 3, 5 }),
+            topic: new GroupTopicConstants(7),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            new GroupNesting[]
+            {
+                new GroupNesting(2,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9)))),
+                new GroupNesting(HasTopLevelRecordType: true, GroupType: 10,
+                    new GroupNesting(GroupType: 7)),
+                new GroupNesting(
+                    HasTopLevelRecordType: true, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9)),
+                    new GroupNesting(4,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9))))),
+            })
+        {
+            Quest = new GroupQuestConstants(10)
+        },
+        majorConstants: new MajorRecordConstants(
+            headerLength: 24,
+            lengthLength: 4,
+            flagsLoc: 8,
+            formIDloc: 12,
+            formVersionLoc: 20),
+        subConstants: new RecordHeaderConstants(
+            ObjectType.Subrecord,
+            headerLength: 6,
+            lengthLength: 2),
+        languages: new Language[]
+        {
+            Language.English,
+            Language.German,
+            Language.Italian,
+            Language.Spanish,
+            Language.Spanish_Mexico,
+            Language.French,
+            Language.Polish,
+            Language.Portuguese_Brazil,
+            Language.Chinese,
+            Language.Russian,
+            Language.Japanese,
+        },
+        languageFormat: Strings.StringsLanguageFormat.Iso,
+        hasEnabledMarkers: true,
+        defaultFormVersion: 555,
+        myDocumentsString: null,
+        iniName: "Starfield",
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Returns record constants related to a certain ObjectType 
@@ -295,24 +445,20 @@ public sealed record GameConstants
     /// <returns>GameConstant readonly singleton associated with mode</returns> 
     public static GameConstants Get(GameRelease release)
     {
-        switch (release)
+        return release switch
         {
-            case GameRelease.Oblivion:
-                return Oblivion;
-            case GameRelease.SkyrimLE:
-            case GameRelease.EnderalLE:
-                return SkyrimLE;
-            case GameRelease.SkyrimSE:
-            case GameRelease.SkyrimSEGog:
-            case GameRelease.EnderalSE:
-                return SkyrimSE;
-            case GameRelease.SkyrimVR:
-                return SkyrimVR;
-            case GameRelease.Fallout4:
-                return Fallout4;
-            default:
-                throw new NotImplementedException();
-        }
+            GameRelease.Oblivion => Oblivion,
+            GameRelease.SkyrimLE => SkyrimLE,
+            GameRelease.EnderalLE => EnderalLE,
+            GameRelease.SkyrimSE => SkyrimSE,
+            GameRelease.SkyrimSEGog => SkyrimSEGog,
+            GameRelease.EnderalSE => EnderalSE,
+            GameRelease.SkyrimVR => SkyrimVR,
+            GameRelease.Fallout4 => Fallout4,
+            GameRelease.Fallout4VR => Fallout4VR,
+            GameRelease.Starfield => Starfield,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public static implicit operator GameConstants(GameRelease mode)

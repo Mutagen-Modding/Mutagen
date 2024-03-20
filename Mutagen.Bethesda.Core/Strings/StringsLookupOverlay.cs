@@ -3,6 +3,7 @@ using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 
 namespace Mutagen.Bethesda.Strings;
 
@@ -57,9 +58,11 @@ public sealed class StringsLookupOverlay : IStringsLookup
     /// <param name="path">Path to read in</param>
     /// <param name="source">Source type</param>
     /// <param name="encoding">Encoding to read strings with</param>
-    public StringsLookupOverlay(string path, StringsSource source, IMutagenEncoding encoding)
+    /// <param name="fileSystem">Filesystem to use</param>
+    public StringsLookupOverlay(string path, StringsSource source, IMutagenEncoding encoding, IFileSystem? fileSystem = null)
     {
-        Init(File.ReadAllBytes(path), StringsUtility.GetFormat(source), encoding);
+        fileSystem ??= fileSystem.GetOrDefault();
+        Init(fileSystem.File.ReadAllBytes(path), StringsUtility.GetFormat(source), encoding);
     }
 
     private void Init(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, IMutagenEncoding encoding)

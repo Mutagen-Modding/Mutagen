@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -737,13 +738,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 136,
-            version: 0);
-
-        public const string GUID = "4d524dea-fd8a-4f29-bd85-50c3db4b81e0";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -782,8 +776,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(PointToReferenceMappingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1258,6 +1250,13 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
+        public static void PointToReferenceMappingParseEndingPositions(
+            PointToReferenceMappingBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.PointsEndingPos = ret._structData.Length;
+        }
+
         public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1273,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new PointToReferenceMappingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.PointsEndingPos = ret._structData.Length;
+            PointToReferenceMappingParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="SkyrimMajorRecord" GUID="f6e8d6f6-773c-4c3b-b09b-d892c0114ed7" ID="130">
+  <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="MaterialType" refName="MaterialType" recordType="MNAM" nullable="False" />
-      <Data recordType="HNAM" >
+      <Data recordType="HNAM">
         <Fields>
           <UInt8 name="HavokFriction" />
           <UInt8 name="HavokRestitution" />
@@ -14,7 +14,7 @@
       <List name="Grasses">
         <FormLink refName="Grass" recordType="GNAM" />
       </List>
-      <Enum name="Flags" enumName="LandscapeTexture.Flag" byteLength="4" recordType="INAM" >
+      <Enum name="Flags" enumName="LandscapeTexture.Flag" byteLength="4" recordType="INAM">
         <Versioning formVersion="43" />
       </Enum>
     </Fields>

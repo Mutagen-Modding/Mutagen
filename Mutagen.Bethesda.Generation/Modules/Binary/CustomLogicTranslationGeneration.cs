@@ -47,7 +47,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             useReturnValue: true);
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
@@ -98,7 +98,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             {
                 args.Add($"{nameof(MutagenFrame)} frame");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                if (returningParseResult && obj.GetObjectType() == ObjectType.Subrecord)
+                if (fieldData.HasTrigger)
                 {
                     args.Add($"{nameof(PreviousParse)} lastParsed");
                 }
@@ -170,7 +170,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
             args.AddPassArg("item");
-            if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+            if (data.HasTrigger)
             {
                 args.AddPassArg("lastParsed");
             }
@@ -195,7 +195,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                        $"partial void {typeGen.Name}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
-                args.Add($"long finalPos");
+                args.Add($"int finalPos");
                 args.Add($"int offset");
             }
             if (typeGen.Nullable && !typeGen.CanBeNullable(getter: true))
@@ -256,7 +256,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add($"{nameof(OverlayStream)} stream");
             args.Add($"int offset");
-            if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+            if (fieldData.HasTrigger)
             {
                 args.Add($"{nameof(PreviousParse)} lastParsed");
             }
@@ -278,7 +278,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add("stream");
             args.Add("offset");
-            if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+            if (fieldData.HasTrigger) 
             {
                 args.AddPassArg("lastParsed");
             }

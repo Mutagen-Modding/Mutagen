@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
         #endregion
         #region AliasID
-        public Int16 AliasID { get; set; } = default;
+        public Int16 AliasID { get; set; } = default(Int16);
         #endregion
         #region Create
-        public CreateReferenceToObject.CreateEnum Create { get; set; } = default;
+        public CreateReferenceToObject.CreateEnum Create { get; set; } = default(CreateReferenceToObject.CreateEnum);
         #endregion
         #region Level
-        public Level Level { get; set; } = default;
+        public Level Level { get; set; } = default(Level);
         #endregion
 
         #region To String
@@ -731,13 +732,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 370,
-            version: 0);
-
-        public const string GUID = "e41a23e7-3945-4c1a-b550-a51f7d5de2ba";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -775,13 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALCO,
                 RecordTypes.ALCA,
                 RecordTypes.ALCL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreateReferenceToObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -820,9 +814,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Object.Clear();
-            item.AliasID = default;
-            item.Create = default;
-            item.Level = default;
+            item.AliasID = default(Int16);
+            item.Create = default(CreateReferenceToObject.CreateEnum);
+            item.Level = default(Level);
         }
         
         #region Mutagen
@@ -1281,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AliasID
         private int _AliasIDLocation => _ALCALocation!.Value.Min;
         private bool _AliasID_IsSet => _ALCALocation.HasValue;
-        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default;
+        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default(Int16);
         #endregion
         #region Create
         private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;

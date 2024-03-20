@@ -141,6 +141,10 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                     }
                 }
+                if (data.EndMarkerType.HasValue)
+                {
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }}");
+                }
             }
         }
     }
@@ -217,13 +221,18 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
  
                     if (trans.Count > 0)
                     {
-                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)}).DoNotShortCircuit()");
+                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)}){(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
                     }
                     else if (await NeedsRecordTypeConverter(loqui))
                     {
-                        args.Add($"translationParams: translationParams.DoNotShortCircuit()");
+                        args.Add($"translationParams: translationParams{(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
                     }
                 }
+            }
+
+            if (data.EndMarkerType.HasValue)
+            {
+                sb.AppendLine($"{frameAccessor}.TryReadSubrecord(RecordTypes.{data.EndMarkerType.Value}, out _);");
             }
         }
         else
@@ -245,7 +254,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         return false;
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
@@ -395,7 +404,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
 
                     if (data.OverflowRecordType.HasValue)
                     {
-                        sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
+                        OverflowGenerationHelper.GenerateWrapperOverflowMember(sb, typeGen);
                     }
                     sb.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
                     using (sb.Line())
@@ -476,8 +485,15 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 else
                 {
-                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, {structDataAccessor}.Length - {passedLengthAccessor})" : null; 
-                    sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter});"); 
+                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, {structDataAccessor}.Length - {passedLengthAccessor})" : null;
+                    if (data.IsAfterBreak)
+                    {
+                        sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {structDataAccessor}.Length > {passedLengthAccessor} ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter}) : new {loqui.TargetObjectGeneration.Name}();"); 
+                    }
+                    else
+                    {
+                        sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter});"); 
+                    }
                 }
             }
         }
@@ -503,13 +519,15 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
 
         LoquiType loqui = typeGen as LoquiType;
         if (loqui.TargetObjectGeneration == null) return null;
-
+        
         var sum = 0;
         foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
         {
+            var fieldData = item.GetFieldData();
             if (item.Nullable) return null;
             if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-            if (item.GetFieldData().Binary == BinaryGenerationType.NoGeneration) continue;
+            if (fieldData.HasTrigger) return null;
+            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
             var len = await gen.ExpectedLength(loqui.TargetObjectGeneration, item);
             if (len == null) return null;
             sum += len.Value;
@@ -610,16 +628,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 sb.AppendLine($"_{typeGen.Name}Type = type;");
             }
-            if (data.OverflowRecordType.HasValue
-                && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
-            {
-                sb.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
-                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
-                }
-            }
+            OverflowGenerationHelper.GenerateWrapperOverflowParse(sb, typeGen, data);
         }
         else
         {
@@ -636,8 +645,12 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     args.AddPassArg($"finalPos");
                 }
-                args.Add($"translationParams: {converterAccessor}.DoNotShortCircuit()");
+                args.Add($"translationParams: {converterAccessor}{(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
             }
+        }
+        if (data.EndMarkerType.HasValue)
+        {
+            sb.AppendLine($"stream.TryReadSubrecord(RecordTypes.{data.EndMarkerType.Value}, out _); // Skip marker");
         }
     }
 

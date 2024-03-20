@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IColorRecordGetter> ITintTemplateColorGetter.Color => this.Color;
         #endregion
         #region Alpha
-        public Single Alpha { get; set; } = default;
+        public Single Alpha { get; set; } = default(Single);
         #endregion
         #region TemplateIndex
-        public Int16 TemplateIndex { get; set; } = default;
+        public Int16 TemplateIndex { get; set; } = default(Int16);
         #endregion
         #region BlendOperation
-        public BlendOperation BlendOperation { get; set; } = default;
+        public BlendOperation BlendOperation { get; set; } = default(BlendOperation);
         #endregion
 
         #region To String
@@ -731,13 +732,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 259,
-            version: 0);
-
-        public const string GUID = "7a65ccac-22b3-4b22-999c-e7041d1116d9";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -769,8 +763,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(TintTemplateColorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -809,9 +801,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Color.Clear();
-            item.Alpha = default;
-            item.TemplateIndex = default;
-            item.BlendOperation = default;
+            item.Alpha = default(Single);
+            item.TemplateIndex = default(Int16);
+            item.BlendOperation = default(BlendOperation);
         }
         
         #region Mutagen

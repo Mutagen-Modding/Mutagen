@@ -94,7 +94,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
         var data = typeGen.GetFieldData();
         if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+            sb.AppendLine($"using (HeaderExport.Subrecord(writer, RecordTypes.{data.MarkerType.Value.Type})) {{ }}");
         }
         var binaryType = GetDictType(dict);
         if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var valTransl))
@@ -272,7 +272,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
         }
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,

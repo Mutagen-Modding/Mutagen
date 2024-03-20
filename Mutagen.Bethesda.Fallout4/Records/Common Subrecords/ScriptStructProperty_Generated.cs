@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -652,13 +653,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 210,
-            version: 0);
-
-        public const string GUID = "3049aa54-5ced-4a9f-b8e0-29de5476f60e";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 3;
@@ -690,8 +684,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ScriptStructPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1229,6 +1221,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScriptStructPropertyParseEndingPositions(
+            ScriptStructPropertyBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 0 + 4;
+        }
+
         public static IScriptStructPropertyGetter ScriptStructPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1244,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptStructPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 0 + 4;
+            ScriptStructPropertyParseEndingPositions(ret, package);
             stream.Position += ret.MembersEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

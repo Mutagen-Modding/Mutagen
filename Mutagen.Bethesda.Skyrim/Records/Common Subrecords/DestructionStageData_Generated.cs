@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,19 +52,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default;
+        public Byte HealthPercent { get; set; } = default(Byte);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region ModelDamageStage
-        public Byte ModelDamageStage { get; set; } = default;
+        public Byte ModelDamageStage { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public DestructionStageData.Flag Flags { get; set; } = default;
+        public DestructionStageData.Flag Flags { get; set; } = default(DestructionStageData.Flag);
         #endregion
         #region SelfDamagePerSecond
-        public Int32 SelfDamagePerSecond { get; set; } = default;
+        public Int32 SelfDamagePerSecond { get; set; } = default(Int32);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -86,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
-        public Int32 DebrisCount { get; set; } = default;
+        public Int32 DebrisCount { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -882,13 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 141,
-            version: 0);
-
-        public const string GUID = "6c5320be-ca47-498f-a1ff-e1f756517873";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -927,8 +921,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -966,14 +958,14 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDestructionStageData item)
         {
             ClearPartial();
-            item.HealthPercent = default;
-            item.Index = default;
-            item.ModelDamageStage = default;
-            item.Flags = default;
-            item.SelfDamagePerSecond = default;
+            item.HealthPercent = default(Byte);
+            item.Index = default(Byte);
+            item.ModelDamageStage = default(Byte);
+            item.Flags = default(DestructionStageData.Flag);
+            item.SelfDamagePerSecond = default(Int32);
             item.Explosion.Clear();
             item.Debris.Clear();
-            item.DebrisCount = default;
+            item.DebrisCount = default(Int32);
         }
         
         #region Mutagen

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Pex
         public String FunctionName { get; set; } = string.Empty;
         #endregion
         #region FunctionType
-        public DebugFunctionType FunctionType { get; set; } = default;
+        public DebugFunctionType FunctionType { get; set; } = default(DebugFunctionType);
         #endregion
         #region Instructions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -753,13 +753,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 2,
-            version: 0);
-
-        public const string GUID = "d0eebac8-b25e-4eae-a95d-5bf054772260";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -790,8 +783,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -832,7 +823,7 @@ namespace Mutagen.Bethesda.Pex
             item.ObjectName = string.Empty;
             item.StateName = string.Empty;
             item.FunctionName = string.Empty;
-            item.FunctionType = default;
+            item.FunctionType = default(DebugFunctionType);
             item.Instructions.Clear();
         }
         

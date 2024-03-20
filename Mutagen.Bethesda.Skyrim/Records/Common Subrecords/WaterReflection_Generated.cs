@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
+        public WaterReflection.VersioningBreaks Versioning { get; set; } = default(WaterReflection.VersioningBreaks);
         #endregion
         #region Water
         private readonly IFormLink<IPlacedObjectGetter> _Water = new FormLink<IPlacedObjectGetter>();
@@ -64,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
         #endregion
         #region Type
-        public WaterReflection.Flag Type { get; set; } = default;
+        public WaterReflection.Flag Type { get; set; } = default(WaterReflection.Flag);
         #endregion
 
         #region To String
@@ -700,13 +701,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 296,
-            version: 0);
-
-        public const string GUID = "8c522fb1-bb37-49e5-836a-814d1dfba258";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -745,8 +739,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WaterReflectionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -784,9 +776,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWaterReflection item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(WaterReflection.VersioningBreaks);
             item.Water.Clear();
-            item.Type = default;
+            item.Type = default(WaterReflection.Flag);
         }
         
         #region Mutagen

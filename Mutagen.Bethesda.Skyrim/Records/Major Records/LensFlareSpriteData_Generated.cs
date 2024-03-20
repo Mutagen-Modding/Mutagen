@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,25 +52,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Tint
-        public Color Tint { get; set; } = default;
+        public Color Tint { get; set; } = default(Color);
         #endregion
         #region Width
-        public Single Width { get; set; } = default;
+        public Single Width { get; set; } = default(Single);
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Position
-        public Single Position { get; set; } = default;
+        public Single Position { get; set; } = default(Single);
         #endregion
         #region AngularFade
-        public Single AngularFade { get; set; } = default;
+        public Single AngularFade { get; set; } = default(Single);
         #endregion
         #region Opacity
-        public Single Opacity { get; set; } = default;
+        public Single Opacity { get; set; } = default(Single);
         #endregion
         #region Flags
-        public LensFlareSpriteData.Flag Flags { get; set; } = default;
+        public LensFlareSpriteData.Flag Flags { get; set; } = default(LensFlareSpriteData.Flag);
         #endregion
 
         #region To String
@@ -825,13 +826,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 10427,
-            version: 0);
-
-        public const string GUID = "766ec241-ca88-4b93-9e56-f1c0302e1b8f";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -870,8 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LensFlareSpriteDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -909,13 +901,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILensFlareSpriteData item)
         {
             ClearPartial();
-            item.Tint = default;
-            item.Width = default;
-            item.Height = default;
-            item.Position = default;
-            item.AngularFade = default;
-            item.Opacity = default;
-            item.Flags = default;
+            item.Tint = default(Color);
+            item.Width = default(Single);
+            item.Height = default(Single);
+            item.Position = default(Single);
+            item.AngularFade = default(Single);
+            item.Opacity = default(Single);
+            item.Flags = default(LensFlareSpriteData.Flag);
         }
         
         #region Mutagen

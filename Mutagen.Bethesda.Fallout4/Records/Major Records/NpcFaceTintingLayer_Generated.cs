@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,13 +52,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region DataType
-        public NpcFaceTintingLayer.Type DataType { get; set; } = default;
+        public NpcFaceTintingLayer.Type DataType { get; set; } = default(NpcFaceTintingLayer.Type);
         #endregion
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Color
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +87,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region TENDDataTypeState
-        public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; set; } = default;
+        public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; set; } = default(NpcFaceTintingLayer.TENDDataType);
         #endregion
 
         #region To String
@@ -817,13 +818,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 348,
-            version: 0);
-
-        public const string GUID = "e0af3cb4-0181-4e98-b6e0-f18875696958";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -860,13 +854,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.TETI,
                 RecordTypes.TEND);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcFaceTintingLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -904,12 +898,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcFaceTintingLayer item)
         {
             ClearPartial();
-            item.DataType = default;
-            item.Index = default;
-            item.Value = default;
-            item.Color = default;
-            item.TemplateColorIndex = default;
-            item.TENDDataTypeState = default;
+            item.DataType = default(NpcFaceTintingLayer.Type);
+            item.Index = default(UInt16);
+            item.Value = default(Single);
+            item.Color = default(Color);
+            item.TemplateColorIndex = default(Int16);
+            item.TENDDataTypeState = default(NpcFaceTintingLayer.TENDDataType);
         }
         
         #region Mutagen
@@ -1424,24 +1418,24 @@ namespace Mutagen.Bethesda.Fallout4
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(UInt16);
         #endregion
         private RangeInt32? _TENDLocation;
         public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _TENDLocation!.Value.Min;
         private bool _Value_IsSet => _TENDLocation.HasValue;
-        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_ValueLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default;
+        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_ValueLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default(Single);
         #endregion
         #region Color
         private int _ColorLocation => _TENDLocation!.Value.Min + 0x1;
         private bool _Color_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
-        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region TemplateColorIndex
         private int _TemplateColorIndexLocation => _TENDLocation!.Value.Min + 0x5;
         private bool _TemplateColorIndex_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
-        public Int16 TemplateColorIndex => _TemplateColorIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_TemplateColorIndexLocation, 2)) : default;
+        public Int16 TemplateColorIndex => _TemplateColorIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_TemplateColorIndexLocation, 2)) : default(Int16);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -9,6 +9,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 internal sealed class GenderedItemBinaryTranslation
 {
+    internal enum GenderEnum
+    {
+        Male = 0,
+        Female = 1,
+    }
+    
     public static GenderedItem<TItem> Parse<TItem>(
         MutagenFrame frame,
         BinarySubParseDelegate<MutagenFrame, TItem> transl)
@@ -20,6 +26,46 @@ internal sealed class GenderedItemBinaryTranslation
         if (!transl(frame, out var female))
         {
             throw new ArgumentException();
+        }
+        return new GenderedItem<TItem>(male, female);
+    }
+    
+    public static GenderedItem<TItem> Parse<TItem>(
+        MutagenFrame frame,
+        RecordType genderEnumRecord,
+        RecordType contentMarker,
+        BinarySubParseDelegate<MutagenFrame, TItem> transl)
+        where TItem : new()
+    {
+        int i = 0;
+        TItem? male = default, female = default;
+        while (i < 2 && frame.TryReadSubrecord(genderEnumRecord, out var markerRec))
+        {
+            i++;
+            switch ((GenderEnum)markerRec.AsInt32())
+            {
+                case GenderEnum.Male:
+                    if (!transl(frame, out male))
+                    {
+                        throw new ArgumentException();
+                    }
+                    break;
+                case GenderEnum.Female:
+                    if (!transl(frame, out female))
+                    {
+                        throw new ArgumentException();
+                    }
+                    break;
+            }
+        }
+
+        if (male == null)
+        {
+            male = new TItem();
+        }
+        if (female == null)
+        {
+            female = new TItem();
         }
         return new GenderedItem<TItem>(male, female);
     }
@@ -43,20 +89,21 @@ internal sealed class GenderedItemBinaryTranslation
         MutagenFrame frame,
         BinaryMasterParseDelegate<TItem> transl,
         RecordTypeConverter femaleRecordConverter,
-        RecordTypeConverter? maleRecordConverter = null)
+        RecordTypeConverter? maleRecordConverter = null,
+        bool shortCircuit = true)
         where TItem : class
     {
         if (!transl(frame, out var male, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: maleRecordConverter,
-                doNotShortCircuit: true)))
+                doNotShortCircuit: !shortCircuit)))
         {
             male = null;
         }
         if (!transl(frame, out var female, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: femaleRecordConverter,
-                doNotShortCircuit: true)))
+                doNotShortCircuit: !shortCircuit)))
         {
             female = null;
         }
@@ -187,15 +234,17 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem>(male, female);
     }
 
+
     public static GenderedItem<TItem?> Parse<TItem>(
         MutagenFrame frame,
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
-        TypedParseParams translationParams = default)
+        TypedParseParams maleRecordConverter = default,
+        TypedParseParams femaleRecordConverter = default)
         where TItem : class
     {
-        translationParams = translationParams.ShortCircuit();
+        femaleRecordConverter = femaleRecordConverter.ShortCircuit();
         TItem? male = default, female = default;
         for (int i = 0; i < 2; i++)
         {
@@ -205,7 +254,7 @@ internal sealed class GenderedItemBinaryTranslation
             if (type == maleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out male, translationParams))
+                if (!transl(frame, out male, maleRecordConverter))
                 {
                     male = null;
                 }
@@ -213,7 +262,7 @@ internal sealed class GenderedItemBinaryTranslation
             else if (type == femaleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out female, translationParams))
+                if (!transl(frame, out female, femaleRecordConverter))
                 {
                     female = null;
                 }
@@ -224,6 +273,19 @@ internal sealed class GenderedItemBinaryTranslation
             }
         }
         return new GenderedItem<TItem?>(male, female);
+    }
+
+    public static GenderedItem<TItem?> Parse<TItem>(
+        MutagenFrame frame,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterParseDelegate<TItem> transl,
+        TypedParseParams translationParams)
+        where TItem : class
+    {
+        return Parse<TItem>(frame, maleMarker, femaleMarker,
+            transl, maleRecordConverter: translationParams,
+            femaleRecordConverter: translationParams);
     }
 
     public static GenderedItem<TItem?> Parse<TItem>(
@@ -284,7 +346,7 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem?>(male, female);
     }
 
-    public static GenderedItem<TItem?> ParseMarkerPerItem<TItem>(
+    public static GenderedItem<TItem?> ParseMarkerAheadOfItem<TItem>(
         MutagenFrame frame,
         RecordType marker,
         RecordType maleMarker,
@@ -331,6 +393,55 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem?>(male, female);
     }
 
+    public static GenderedItem<TItem?> ParseMarkerWithinItem<TItem>(
+        MutagenFrame frame,
+        RecordType marker,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterParseDelegate<TItem> transl,
+        RecordTypeConverter? femaleRecordConverter = null)
+        where TItem : class
+    {
+        TItem? male = default, female = default;
+        for (int i = 0; i < 2; i++)
+        {
+            if (frame.Reader.Complete) break;
+
+            var genderedHeader = frame.GetSubrecordHeader();
+            RecordType type = genderedHeader.RecordType;
+            if (type != maleMarker && type != femaleMarker)
+            {
+                break;
+            }
+            frame.Position += genderedHeader.TotalLength;
+            
+            var markerHeader = frame.GetSubrecordHeader();
+            if (markerHeader.RecordType != marker) break;
+            frame.Position += markerHeader.TotalLength;
+            
+            TypedParseParams p = new TypedParseParams(null, 
+                recordTypeConverter: type == maleMarker ? null : femaleRecordConverter,
+                doNotShortCircuit: false);
+            if (!transl(frame, out var item, p))
+            {
+                continue;
+            }
+            if (type == maleMarker)
+            {
+                male = item;
+            }
+            else if (type == femaleMarker)
+            {
+                female = item;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+        return new GenderedItem<TItem?>(male, female);
+    }
+
     public static void Write<T>(
         MutagenWriter writer,
         IGenderedItemGetter<T>? item,
@@ -347,6 +458,26 @@ internal sealed class GenderedItemBinaryTranslation
         {
             transl(writer, female);
         }
+    }
+
+    public static void WriteGenderedEnumRecord<T>(
+        MutagenWriter writer,
+        IGenderedItemGetter<T> item,
+        RecordType genderEnumRecord,
+        BinarySubWriteDelegate<MutagenWriter, T> transl)
+    {
+        var male = item.Male;
+        using (HeaderExport.Subrecord(writer, genderEnumRecord))
+        {
+            writer.Write((int)GenderEnum.Male);
+        }
+        transl(writer, male);
+        using (HeaderExport.Subrecord(writer, genderEnumRecord))
+        {
+            writer.Write((int)GenderEnum.Female);
+        }
+        var female = item.Female;
+        transl(writer, female);
     }
 
     public static void Write<T>(
@@ -416,7 +547,8 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType femaleMarker,
         BinaryMasterWriteDelegate<T> transl,
         bool markerWrap = true,
-        RecordTypeConverter? recordTypeConverter = null)
+        RecordTypeConverter? maleRecordConverter = null,
+        RecordTypeConverter? femaleRecordConverter = null)
     {
         if (item == null) return;
         try
@@ -426,12 +558,12 @@ internal sealed class GenderedItemBinaryTranslation
             {
                 if (markerWrap)
                 {
-                    transl(writer, male, recordTypeConverter);
+                    transl(writer, male, maleRecordConverter);
                 }
             }
             if (!markerWrap)
             {
-                transl(writer, male, recordTypeConverter);
+                transl(writer, male, maleRecordConverter);
             }
         }
         catch (Exception ex)
@@ -445,18 +577,31 @@ internal sealed class GenderedItemBinaryTranslation
             {
                 if (markerWrap)
                 {
-                    transl(writer, female, recordTypeConverter);
+                    transl(writer, female, femaleRecordConverter);
                 }
             }
             if (!markerWrap)
             {
-                transl(writer, female, recordTypeConverter);
+                transl(writer, female, femaleRecordConverter);
             }
         }
         catch (Exception ex)
         {
             throw SubrecordException.Enrich(ex, femaleMarker);
         }
+    }
+
+    public static void Write<T>(
+        MutagenWriter writer,
+        IGenderedItemGetter<T>? item,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterWriteDelegate<T> transl,
+        RecordTypeConverter? recordTypeConverter,
+        bool markerWrap = true)
+    {
+        Write<T>(writer, item, maleMarker, femaleMarker, transl, markerWrap,
+            maleRecordConverter: recordTypeConverter, femaleRecordConverter: recordTypeConverter);
     }
 
     public static void Write<TMajor>(
@@ -614,7 +759,7 @@ internal sealed class GenderedItemBinaryTranslation
         }
     }
 
-    public static void WriteMarkerPerItem<T>(
+    public static void WriteMarkerAheadOfItem<T>(
         MutagenWriter writer,
         IGenderedItemGetter<T>? item,
         RecordType markerType,

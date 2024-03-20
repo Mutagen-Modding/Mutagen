@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectTemplate" objType="Subrecord">
+    <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
+      <Where>struct</Where>
+      <Where>Enum</Where>
+    </Generic>
+    <Fields>
+      <Bool name="IsEditorOnly" recordType="OBTF" boolAsMarker="True" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <CustomLogic name="OBTSLogic" recordType="OBTS" />
+      <Int16 name="AddonIndex" binary="NoGeneration" default="-1" />
+      <UInt16 name="LevelMin" binary="NoGeneration" />
+      <UInt16 name="LevelMax" binary="NoGeneration" />
+      <Bool name="Default" byteLength="1" binary="NoGeneration" />
+      <List name="Keywords" counterLength="1" binary="NoGeneration">
+        <FormLink refName="Keyword" />
+      </List>
+      <UInt8 name="MinLevelForRanks" binary="NoGeneration" />
+      <UInt8 name="AltLevelsPerTier" binary="NoGeneration" />
+      <RefList name="Includes" refName="ObjectTemplateInclude" binary="NoGeneration" />
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="T" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ObjectTemplateInclude" objType="Subrecord">
+    <Fields>
+      <FormLink name="Mod" refName="AObjectModification" />
+      <UInt8 name="AttachPointIndex" />
+      <Bool name="Optional" byteLength="1" />
+      <Bool name="DontUseAll" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="AObjectModProperty" abstract="true" objType="Subrecord">
+    <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
+      <Where>struct</Where>
+      <Where>Enum</Where>
+    </Generic>
+    <Fields>
+      <Enum name="Property" enumName="T" byteLength="1" />
+      <Float name="Step" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModIntProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Value" />
+      <UInt32 name="Value2" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModFloatProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <Float name="Value" />
+      <Float name="Value2" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModBoolProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <Bool name="Value" />
+      <Bool name="Value2" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.BoolFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModStringProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <String name="Value" />
+      <UInt32 name="Unused" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModFormLinkIntProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <FormLink name="Record" refName="StarfieldMajorRecord" />
+      <UInt32 name="Value" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.FormLinkFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModEnumProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <UInt32 name="EnumIntValue" />
+      <UInt32 name="Unused" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.EnumFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModFormLinkFloatProperty" baseClass="AObjectModProperty" objType="Subrecord">
+    <Fields>
+      <FormLink name="Record" refName="StarfieldMajorRecord" />
+      <Float name="Value" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
+    </Fields>
+  </Object>
+</Loqui>

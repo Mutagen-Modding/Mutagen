@@ -11,37 +11,17 @@ public static class ByteArrayBinaryTranslationExt
         this ByteArrayBinaryTranslation<TReader, MutagenWriter> transl,
         MutagenWriter writer,
         ReadOnlyMemorySlice<byte>? item,
-        RecordType header)
-        where TReader : IMutagenReadStream
-    {
-        try
-        {
-            if (!item.HasValue) return;
-            using (HeaderExport.Subrecord(writer, header))
-            {
-                transl.Write(writer, item.Value.Span);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw SubrecordException.Enrich(ex, header);
-        }
-    }
-
-    public static void Write<TReader>(
-        this ByteArrayBinaryTranslation<TReader, MutagenWriter> transl,
-        MutagenWriter writer,
-        ReadOnlyMemorySlice<byte>? item,
         RecordType header,
-        RecordType overflowRecord)
+        RecordType? overflowRecord = null,
+        RecordType? markerType = null)
         where TReader : IMutagenReadStream
     {
         try
         {
             if (!item.HasValue) return;
-            if (item.Value.Length > ushort.MaxValue)
+            if (overflowRecord.HasValue && item.Value.Length > ushort.MaxValue)
             {
-                using (HeaderExport.Subrecord(writer, overflowRecord))
+                using (HeaderExport.Subrecord(writer, overflowRecord.Value))
                 {
                     writer.Write(item.Value.Length);
                 }
@@ -52,6 +32,12 @@ public static class ByteArrayBinaryTranslationExt
             }
             else
             {
+                if (markerType.HasValue)
+                {
+                    using (HeaderExport.Subrecord(writer, markerType.Value))
+                    {
+                    }
+                }
                 using (HeaderExport.Subrecord(writer, header))
                 {
                     transl.Write(writer, item.Value.Span);

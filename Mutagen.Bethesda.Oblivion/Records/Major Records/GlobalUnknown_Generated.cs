@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TypeChar
-        public Char TypeChar { get; set; } = default;
+        public Char TypeChar { get; set; } = default(Char);
         #endregion
         #region Data
         public Single? Data { get; set; }
@@ -695,13 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 224,
-            version: 0);
-
-        public const string GUID = "b17187a9-3abf-4818-952e-46101a060efe";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 7;
@@ -739,13 +733,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.GLOB,
                 RecordTypes.FNAM,
                 RecordTypes.FLTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GlobalUnknownBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -783,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IGlobalUnknownInternal item)
         {
             ClearPartial();
-            item.TypeChar = default;
+            item.TypeChar = default(Char);
             item.Data = default;
             base.Clear(item);
         }
@@ -1496,7 +1490,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     GlobalUnknownBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalUnknown_FieldIndex.TypeChar;
                 }
                 case RecordTypeInts.FLTV:
@@ -1519,7 +1514,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalUnknownInternal item);
+            IGlobalUnknownInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1570,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region TypeChar
         partial void TypeCharCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Char GetTypeCharCustom();
         public Char TypeChar => GetTypeCharCustom();

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region GridPosition
-        public P2Int16 GridPosition { get; set; } = default;
+        public P2Int16 GridPosition { get; set; } = default(P2Int16);
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -729,13 +730,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 337,
-            version: 0);
-
-        public const string GUID = "2b2e308e-dd80-4d45-aff5-be2729f904dd";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -774,8 +768,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceGridReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -813,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceGridReference item)
         {
             ClearPartial();
-            item.GridPosition = default;
+            item.GridPosition = default(P2Int16);
             item.References.Clear();
         }
         
@@ -1269,6 +1261,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void WorldspaceGridReferenceParseEndingPositions(
+            WorldspaceGridReferenceBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
+        }
+
         public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new WorldspaceGridReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
+            WorldspaceGridReferenceParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

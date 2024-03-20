@@ -9,6 +9,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Tests.GUI;
@@ -71,7 +72,9 @@ public class MainVM : ViewModel
     public ObservableCollectionExtended<PassthroughGroupVM> Groups { get; } = new();
 
     public ObservableCollectionExtended<RecordTypeVm> SkippedRecordTypes { get; } = new();
+    public ObservableCollectionExtended<RecordTypeVm> InterestingRecordTypes { get; } = new();
     public ICommand AddSkipCommand { get; }
+    public ICommand AddIncludeCommand { get; }
 
     [Reactive] 
     public string SkipInput { get; set; } = string.Empty;
@@ -94,6 +97,7 @@ public class MainVM : ViewModel
     {
         // Set up selected config swapping and loading
         _selectedSettings = this.WhenAnyValue(x => x.SelectedConfigPath.TargetPath)
+            .Skip(1)
             .Select(x =>
             {
                 TestingSettings? settings = null;
@@ -103,6 +107,85 @@ public class MainVM : ViewModel
                     {
                         settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(x));
                     }
+                    else
+                    {
+                        var gameReleases = Enum.GetValues<GameRelease>();
+                        var locator = new GameLocator();
+                        
+                        // Data folder locations
+                        var dataFolderLocations = new DataFolderLocations();
+                        foreach (var release in gameReleases)
+                        {
+                            try 
+                            {
+                                var dataDir = locator.GetDataDirectory(release);
+                                dataFolderLocations.Set(release, dataDir);
+                            }
+                            catch (NotImplementedException)
+                            {
+                                continue;
+                            }
+                            catch (DirectoryNotFoundException)
+                            {
+                                continue;
+                            }
+                        }
+                        
+                        // Target groups
+                        var targetGroups = gameReleases
+                            .Select(release => new TargetGroup
+                            {
+                                GameRelease = release,
+                                NicknameSuffix = string.Empty,
+                                Do = false,
+                                Targets = Implicits.Get(release).BaseMasters
+                                    .Select(implicitMods =>
+                                    {
+                                        try
+                                        {
+                                            return new Target
+                                            {
+                                                Do = true,
+                                                Path = Path.Combine(locator.GetDataDirectory(release), implicitMods.FileName)
+                                            };
+                                        }
+                                        catch (DirectoryNotFoundException)
+                                        {
+                                            return null;
+                                        }
+                                    })
+                                    .NotNull()
+                                    .ToList()
+                            })
+                            .ToList();
+
+                        settings = new TestingSettings
+                        {
+                            PassthroughSettings = new PassthroughSettings
+                            {
+                                CacheReuse = new CacheReuse(true),
+                                TestNormal = true,
+                                TestBinaryOverlay = true,
+                                DeleteCachesAfter = false,
+                                TestImport = false,
+                                ParallelWriting = false,
+                                TestCopyIn = false,
+                                ParallelProcessingSteps = false,
+                                Trimming = new TrimmingSettings()
+                                {
+                                    Enabled = false
+                                }
+                            },
+                            TargetGroups = targetGroups,
+                            TestFlattenedMod = false,
+                            TestBenchmarks = false,
+                            TestEquality = false,
+                            TestPex = false,
+                            TestGroupMasks = false,
+                            TestRecordEnumerables = false,
+                            DataFolderLocations = dataFolderLocations
+                        };
+                    }
                 }
                 catch (Exception)
                 {
@@ -111,17 +194,28 @@ public class MainVM : ViewModel
                 }
                 return (Path: x, Settings: settings);
             })
-            .Skip(1)
-            .Pairwise()
             .Select(p =>
             {
-                if (p.Previous.Settings != null)
+                if (p.Settings != null)
                 {
-                    SaveToSettings(p.Previous.Settings);
-                    File.WriteAllText(p.Previous.Path, JsonConvert.SerializeObject(p.Previous.Settings, Formatting.Indented));
+                    if (p.Path.IsNullOrWhitespace())
+                    {
+                        // Put into Tests project
+                        var mutagenFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()))));
+                        if (mutagenFolder is not null)
+                        {
+                            var testsFolder = Path.Combine(mutagenFolder, "Mutagen.Bethesda.Tests");
+                            if (testsFolder is not null)
+                            {
+                                p.Path = SelectedConfigPath.TargetPath = Path.Combine(testsFolder, "TestingSettings.json");
+                            }
+                        }
+                    }
+
+                    File.WriteAllText(p.Path, JsonConvert.SerializeObject(p.Settings, Formatting.Indented));
                 }
-                ReadInSettings(p.Current.Settings ?? new TestingSettings());
-                return p.Current.Settings;
+                ReadInSettings(p.Settings ?? new TestingSettings());
+                return p.Settings;
             })
             .ToGuiProperty(this, nameof(SelectedSettings), default);
 
@@ -153,6 +247,15 @@ public class MainVM : ViewModel
             () =>
             {
                 SkippedRecordTypes.Add(new RecordTypeVm(this, new RecordType(SkipInput)));
+                SkipInput = string.Empty;
+            },
+            this.WhenAnyValue(x => x.SkipInput)
+                .Select(x => x.Length == 4));
+
+        AddIncludeCommand = ReactiveCommand.Create(
+            () =>
+            {
+                InterestingRecordTypes.Add(new RecordTypeVm(this, new RecordType(SkipInput)));
                 SkipInput = string.Empty;
             },
             this.WhenAnyValue(x => x.SkipInput)
@@ -214,6 +317,8 @@ public class MainVM : ViewModel
         TrimmingEnabled = settings.PassthroughSettings.Trimming.Enabled;
         this.SkippedRecordTypes.Clear();
         this.SkippedRecordTypes.SetTo(settings.PassthroughSettings.Trimming.TypesToTrim.Select(x => new RecordTypeVm(this, x)));
+        this.InterestingRecordTypes.Clear();
+        this.InterestingRecordTypes.SetTo(settings.PassthroughSettings.Trimming.TypesToInclude.Select(x => new RecordTypeVm(this, x)));
 
         this.Groups.Clear();
         this.Groups.AddRange(settings.TargetGroups
@@ -242,6 +347,11 @@ public class MainVM : ViewModel
         if (DataFolders.TryGetValue(GameRelease.Fallout4, out df))
         {
             df.DataFolder.TargetPath = settings.DataFolderLocations.Fallout4;
+        }
+
+        if (DataFolders.TryGetValue(GameRelease.Starfield, out df))
+        {
+            df.DataFolder.TargetPath = settings.DataFolderLocations.Starfield;
         }
 
     }
@@ -282,12 +392,14 @@ public class MainVM : ViewModel
             .ToList();
         settings.PassthroughSettings.Trimming.Enabled = TrimmingEnabled;
         settings.PassthroughSettings.Trimming.TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList();
+        settings.PassthroughSettings.Trimming.TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList();
 
         settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
         settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
         settings.DataFolderLocations.Fallout4 = DataFolders.Get(GameRelease.Fallout4).DataFolder.TargetPath;
+        settings.DataFolderLocations.Starfield = DataFolders.Get(GameRelease.Starfield).DataFolder.TargetPath;
     }
 
     public PassthroughSettings GetPassthroughSettings()
@@ -312,6 +424,7 @@ public class MainVM : ViewModel
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),
+                TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList(),
                 Enabled = TrimmingEnabled
             }
         };

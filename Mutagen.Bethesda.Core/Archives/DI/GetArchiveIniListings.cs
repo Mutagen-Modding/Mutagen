@@ -65,6 +65,10 @@ public sealed class GetArchiveIniListings : IGetArchiveIniListings
     /// <inheritdoc />
     public IEnumerable<FileName> Get(FilePath path)
     {
+        if (!_fileSystem.File.Exists(path))
+        {
+            return Enumerable.Empty<FileName>();
+        }
         return Get(_fileSystem.File.OpenRead(path.Path));
     }
 

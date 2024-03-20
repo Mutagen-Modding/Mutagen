@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default;
+        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; } = default;
+        public Condition.Flag Flags { get; set; } = default(Condition.Flag);
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -679,13 +680,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 288,
-            version: 0);
-
-        public const string GUID = "1b57168a-8fd1-45b8-95ec-c949be34cc65";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -723,13 +717,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -767,8 +761,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default;
-            item.Flags = default;
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
             item.Unknown1 = new byte[3];
         }
         

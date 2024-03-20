@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -805,13 +806,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 449,
-            version: 0);
-
-        public const string GUID = "f7237b6b-a1d8-4fe8-a020-ace4beff46eb";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -850,8 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PreferredPathingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1399,6 +1391,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void PreferredPathingParseEndingPositions(
+            PreferredPathingBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomNavmeshSetsEndPos();
+            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+        }
+
         public static IPreferredPathingGetter PreferredPathingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1414,8 +1414,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new PreferredPathingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomNavmeshSetsEndPos();
-            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+            PreferredPathingParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

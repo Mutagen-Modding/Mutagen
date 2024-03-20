@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -659,13 +660,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 673,
-            version: 0);
-
-        public const string GUID = "c75bfb66-f9be-40f6-9022-766acf50869b";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -704,8 +698,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(AnimationSoundTagBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1154,6 +1146,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void AnimationSoundTagParseEndingPositions(
+            AnimationSoundTagBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
+            ret.ActionEndingPos = 0x4 + ret.Action.Length + 1;
+        }
+
         public static IAnimationSoundTagGetter AnimationSoundTagFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1169,8 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new AnimationSoundTagBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
-            ret.ActionEndingPos = 0x4 + ret.Action.Length + 1;
+            AnimationSoundTagParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

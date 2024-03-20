@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,37 +53,37 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public CellLighting.VersioningBreaks Versioning { get; set; } = default;
+        public CellLighting.VersioningBreaks Versioning { get; set; } = default(CellLighting.VersioningBreaks);
         #endregion
         #region AmbientColor
-        public Color AmbientColor { get; set; } = default;
+        public Color AmbientColor { get; set; } = default(Color);
         #endregion
         #region DirectionalColor
-        public Color DirectionalColor { get; set; } = default;
+        public Color DirectionalColor { get; set; } = default(Color);
         #endregion
         #region FogNearColor
-        public Color FogNearColor { get; set; } = default;
+        public Color FogNearColor { get; set; } = default(Color);
         #endregion
         #region FogNear
-        public Single FogNear { get; set; } = default;
+        public Single FogNear { get; set; } = default(Single);
         #endregion
         #region FogFar
-        public Single FogFar { get; set; } = default;
+        public Single FogFar { get; set; } = default(Single);
         #endregion
         #region DirectionalRotationXY
-        public Int32 DirectionalRotationXY { get; set; } = default;
+        public Int32 DirectionalRotationXY { get; set; } = default(Int32);
         #endregion
         #region DirectionalRotationZ
-        public Int32 DirectionalRotationZ { get; set; } = default;
+        public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
         #region DirectionalFade
-        public Single DirectionalFade { get; set; } = default;
+        public Single DirectionalFade { get; set; } = default(Single);
         #endregion
         #region FogClipDistance
-        public Single FogClipDistance { get; set; } = default;
+        public Single FogClipDistance { get; set; } = default(Single);
         #endregion
         #region FogPower
-        public Single FogPower { get; set; } = default;
+        public Single FogPower { get; set; } = default(Single);
         #endregion
         #region AmbientColors
         public AmbientColors AmbientColors { get; set; } = new AmbientColors();
@@ -90,52 +91,52 @@ namespace Mutagen.Bethesda.Fallout4
         IAmbientColorsGetter ICellLightingGetter.AmbientColors => AmbientColors;
         #endregion
         #region FogFarColor
-        public Color FogFarColor { get; set; } = default;
+        public Color FogFarColor { get; set; } = default(Color);
         #endregion
         #region FogMax
-        public Single FogMax { get; set; } = default;
+        public Single FogMax { get; set; } = default(Single);
         #endregion
         #region LightFadeBegin
-        public Single LightFadeBegin { get; set; } = default;
+        public Single LightFadeBegin { get; set; } = default(Single);
         #endregion
         #region LightFadeEnd
-        public Single LightFadeEnd { get; set; } = default;
+        public Single LightFadeEnd { get; set; } = default(Single);
         #endregion
         #region Inherits
-        public CellLighting.Inherit Inherits { get; set; } = default;
+        public CellLighting.Inherit Inherits { get; set; } = default(CellLighting.Inherit);
         #endregion
         #region NearHeightMid
-        public Single NearHeightMid { get; set; } = default;
+        public Single NearHeightMid { get; set; } = default(Single);
         #endregion
         #region NearHeightRange
-        public Single NearHeightRange { get; set; } = default;
+        public Single NearHeightRange { get; set; } = default(Single);
         #endregion
         #region ForColorHighNear
-        public Color ForColorHighNear { get; set; } = default;
+        public Color ForColorHighNear { get; set; } = default(Color);
         #endregion
         #region ForColorHighFar
-        public Color ForColorHighFar { get; set; } = default;
+        public Color ForColorHighFar { get; set; } = default(Color);
         #endregion
         #region HighDensityScale
-        public Single HighDensityScale { get; set; } = default;
+        public Single HighDensityScale { get; set; } = default(Single);
         #endregion
         #region FogNearScale
-        public Single FogNearScale { get; set; } = default;
+        public Single FogNearScale { get; set; } = default(Single);
         #endregion
         #region FogFarScale
-        public Single FogFarScale { get; set; } = default;
+        public Single FogFarScale { get; set; } = default(Single);
         #endregion
         #region FogHighNearScale
-        public Single FogHighNearScale { get; set; } = default;
+        public Single FogHighNearScale { get; set; } = default(Single);
         #endregion
         #region FogHighFarScale
-        public Single FogHighFarScale { get; set; } = default;
+        public Single FogHighFarScale { get; set; } = default(Single);
         #endregion
         #region FarHeightMid
-        public Single FarHeightMid { get; set; } = default;
+        public Single FarHeightMid { get; set; } = default(Single);
         #endregion
         #region FarHeightRange
-        public Single FarHeightRange { get; set; } = default;
+        public Single FarHeightRange { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1599,13 +1600,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 457,
-            version: 0);
-
-        public const string GUID = "edebd51b-a10e-4441-b1dd-730eef1d9b1b";
-
         public const ushort AdditionalFieldCount = 28;
 
         public const ushort FieldCount = 28;
@@ -1644,8 +1638,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(CellLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1683,34 +1675,34 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ICellLighting item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.AmbientColor = default;
-            item.DirectionalColor = default;
-            item.FogNearColor = default;
-            item.FogNear = default;
-            item.FogFar = default;
-            item.DirectionalRotationXY = default;
-            item.DirectionalRotationZ = default;
-            item.DirectionalFade = default;
-            item.FogClipDistance = default;
-            item.FogPower = default;
+            item.Versioning = default(CellLighting.VersioningBreaks);
+            item.AmbientColor = default(Color);
+            item.DirectionalColor = default(Color);
+            item.FogNearColor = default(Color);
+            item.FogNear = default(Single);
+            item.FogFar = default(Single);
+            item.DirectionalRotationXY = default(Int32);
+            item.DirectionalRotationZ = default(Int32);
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
+            item.FogPower = default(Single);
             item.AmbientColors.Clear();
-            item.FogFarColor = default;
-            item.FogMax = default;
-            item.LightFadeBegin = default;
-            item.LightFadeEnd = default;
-            item.Inherits = default;
-            item.NearHeightMid = default;
-            item.NearHeightRange = default;
-            item.ForColorHighNear = default;
-            item.ForColorHighFar = default;
-            item.HighDensityScale = default;
-            item.FogNearScale = default;
-            item.FogFarScale = default;
-            item.FogHighNearScale = default;
-            item.FogHighFarScale = default;
-            item.FarHeightMid = default;
-            item.FarHeightRange = default;
+            item.FogFarColor = default(Color);
+            item.FogMax = default(Single);
+            item.LightFadeBegin = default(Single);
+            item.LightFadeEnd = default(Single);
+            item.Inherits = default(CellLighting.Inherit);
+            item.NearHeightMid = default(Single);
+            item.NearHeightRange = default(Single);
+            item.ForColorHighNear = default(Color);
+            item.ForColorHighFar = default(Color);
+            item.HighDensityScale = default(Single);
+            item.FogNearScale = default(Single);
+            item.FogFarScale = default(Single);
+            item.FogHighNearScale = default(Single);
+            item.FogHighFarScale = default(Single);
+            item.FarHeightMid = default(Single);
+            item.FarHeightRange = default(Single);
         }
         
         #region Mutagen

@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -854,13 +855,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 105,
-            version: 0);
-
-        public const string GUID = "4cbfc6ca-72eb-48e2-9b76-578e8078efff";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -895,29 +889,24 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
-                RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS);
+                RecordTypes.DSTD);
             var all = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
+                RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.DMDC,
                 RecordTypes.DMDT,
-                RecordTypes.DMDS,
-                RecordTypes.DSTF);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+                RecordTypes.DMDC,
+                RecordTypes.DMDS);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1449,11 +1438,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     item.Stages.SetTo(
@@ -1622,11 +1606,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(

@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Spell" objType="Record" recordType="SPEL" baseClass="OblivionMajorRecord" GUID="6e7673df-39d3-4704-b1ef-ac774f9d01c3" ID="28">
+  <Object name="Spell" objType="Record" recordType="SPEL" baseClass="OblivionMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Data" refName="SpellData" />
@@ -8,7 +8,7 @@
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
   </Object>
-  <Object name="SpellData" objType="Subrecord" recordType="SPIT" GUID="c86b5362-efcd-44e9-b6f4-85a6b0759f63" ID="211">
+  <Object name="SpellData" objType="Subrecord" recordType="SPIT">
     <Fields>
       <Enum name="Type" enumName="Spell.SpellType" byteLength="4" />
       <UInt32 name="Cost" />

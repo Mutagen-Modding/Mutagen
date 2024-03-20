@@ -19,7 +19,7 @@ public partial class Region
 
 partial class RegionBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, PreviousParse lastParsed)
     {
         var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
         while (rdat.Equals(RecordTypes.RDAT))
@@ -145,7 +145,8 @@ partial class RegionBinaryOverlay
 
     public partial ParseResult RegionAreaLogicCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         var rdat = stream.GetSubrecordHeader();
         while (rdat.RecordType.Equals(RecordTypes.RDAT))

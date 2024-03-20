@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -56,10 +57,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EntryPoint
-        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default;
+        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default(APerkEntryPointEffect.EntryType);
         #endregion
         #region PerkConditionTabCount
-        public Byte PerkConditionTabCount { get; set; } = default;
+        public Byte PerkConditionTabCount { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -602,13 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 415,
-            version: 0);
-
-        public const string GUID = "e1dd9360-79b5-43f6-bac0-d7eb2b3cb6f7";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 5;
@@ -645,13 +639,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.PRKE,
                 RecordTypes.EPFT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APerkEntryPointEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -689,8 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(IAPerkEntryPointEffect item)
         {
             ClearPartial();
-            item.EntryPoint = default;
-            item.PerkConditionTabCount = default;
+            item.EntryPoint = default(APerkEntryPointEffect.EntryType);
+            item.PerkConditionTabCount = default(Byte);
             base.Clear(item);
         }
         
@@ -1080,6 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

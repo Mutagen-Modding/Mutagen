@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -91,19 +92,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region FalloffScale
-        public Single FalloffScale { get; set; } = default;
+        public Single FalloffScale { get; set; } = default(Single);
         #endregion
         #region FalloffBias
-        public Single FalloffBias { get; set; } = default;
+        public Single FalloffBias { get; set; } = default(Single);
         #endregion
         #region NoiseUvScale
-        public Single NoiseUvScale { get; set; } = default;
+        public Single NoiseUvScale { get; set; } = default(Single);
         #endregion
         #region MaterialUvScale
-        public Single MaterialUvScale { get; set; } = default;
+        public Single MaterialUvScale { get; set; } = default(Single);
         #endregion
         #region ProjectionVector
-        public P3Float ProjectionVector { get; set; } = default;
+        public P3Float ProjectionVector { get; set; } = default(P3Float);
         #endregion
         #region NormalDampener
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -162,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DATADataTypeState
-        public MaterialObject.DATADataType DATADataTypeState { get; set; } = default;
+        public MaterialObject.DATADataType DATADataTypeState { get; set; } = default(MaterialObject.DATADataType);
         #endregion
 
         #region To String
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -868,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1250,13 +1251,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 183,
-            version: 0);
-
-        public const string GUID = "5902e694-f48d-4a53-8531-3f763fcf5f27";
-
         public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 19;
@@ -1295,13 +1289,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.MODL,
                 RecordTypes.DNAM,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1341,16 +1335,16 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Model = null;
             item.DNAMs.Clear();
-            item.FalloffScale = default;
-            item.FalloffBias = default;
-            item.NoiseUvScale = default;
-            item.MaterialUvScale = default;
-            item.ProjectionVector = default;
-            item.NormalDampener = default;
-            item.SinglePassColor = default;
-            item.Flags = default;
-            item.HasSnow = default;
-            item.DATADataTypeState = default;
+            item.FalloffScale = default(Single);
+            item.FalloffBias = default(Single);
+            item.NoiseUvScale = default(Single);
+            item.MaterialUvScale = default(Single);
+            item.ProjectionVector = default(P3Float);
+            item.NormalDampener = default(Single);
+            item.SinglePassColor = default(Color);
+            item.Flags = default(MaterialObject.Flag);
+            item.HasSnow = default(Boolean);
+            item.DATADataTypeState = default(MaterialObject.DATADataType);
             base.Clear(item);
         }
         
@@ -2385,37 +2379,37 @@ namespace Mutagen.Bethesda.Skyrim
         #region FalloffScale
         private int _FalloffScaleLocation => _DATALocation!.Value.Min;
         private bool _FalloffScale_IsSet => _DATALocation.HasValue;
-        public Single FalloffScale => _FalloffScale_IsSet ? _recordData.Slice(_FalloffScaleLocation, 4).Float() : default;
+        public Single FalloffScale => _FalloffScale_IsSet ? _recordData.Slice(_FalloffScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FalloffBias
         private int _FalloffBiasLocation => _DATALocation!.Value.Min + 0x4;
         private bool _FalloffBias_IsSet => _DATALocation.HasValue;
-        public Single FalloffBias => _FalloffBias_IsSet ? _recordData.Slice(_FalloffBiasLocation, 4).Float() : default;
+        public Single FalloffBias => _FalloffBias_IsSet ? _recordData.Slice(_FalloffBiasLocation, 4).Float() : default(Single);
         #endregion
         #region NoiseUvScale
         private int _NoiseUvScaleLocation => _DATALocation!.Value.Min + 0x8;
         private bool _NoiseUvScale_IsSet => _DATALocation.HasValue;
-        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _recordData.Slice(_NoiseUvScaleLocation, 4).Float() : default;
+        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _recordData.Slice(_NoiseUvScaleLocation, 4).Float() : default(Single);
         #endregion
         #region MaterialUvScale
         private int _MaterialUvScaleLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MaterialUvScale_IsSet => _DATALocation.HasValue;
-        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _recordData.Slice(_MaterialUvScaleLocation, 4).Float() : default;
+        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _recordData.Slice(_MaterialUvScaleLocation, 4).Float() : default(Single);
         #endregion
         #region ProjectionVector
         private int _ProjectionVectorLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
-        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_ProjectionVectorLocation, 12)) : default;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_ProjectionVectorLocation, 12)) : default(P3Float);
         #endregion
         #region NormalDampener
         private int _NormalDampenerLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _NormalDampener_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0);
-        public Single NormalDampener => _NormalDampener_IsSet ? _recordData.Slice(_NormalDampenerLocation, 4).Float() : default;
+        public Single NormalDampener => _NormalDampener_IsSet ? _recordData.Slice(_NormalDampenerLocation, 4).Float() : default(Single);
         #endregion
         #region SinglePassColor
         private int _SinglePassColorLocation => _DATALocation!.Value.Min + 0x20;
         private bool _SinglePassColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public Color SinglePassColor => _SinglePassColor_IsSet ? _recordData.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color SinglePassColor => _SinglePassColor_IsSet ? _recordData.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;
@@ -2425,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HasSnow
         private int _HasSnowLocation => _DATALocation!.Value.Min + 0x30;
         private bool _HasSnow_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break2);
-        public Boolean HasSnow => _HasSnow_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HasSnowLocation, 4)) >= 1 : default;
+        public Boolean HasSnow => _HasSnow_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HasSnowLocation, 4)) >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2513,7 +2507,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.DNAM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)MaterialObject_FieldIndex.DNAMs;

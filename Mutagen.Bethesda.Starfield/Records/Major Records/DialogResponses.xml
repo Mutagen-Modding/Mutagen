@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Flags" refName="DialogResponseFlags" />
+      <FormLink name="SharedDialog" recordType="DNAM" refName="DialogResponses" />
+      <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="Condition" />
+      <String name="Prompt" recordType="RNAM" translated="Normal" />
+      <FormLink name="Speaker" recordType="ANAM" refName="Npc" />
+      <FormLink name="StartScene" recordType="TSCE" refName="Scene" />
+      <ByteArray name="INTV" recordType="INTV" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="SetParentQuestStage" refName="DialogSetParentQuestStage" />
+      <String name="StartScenePhase" recordType="NAM0" />
+      <FormLink name="ResetGlobal" refName="Global" recordType="MODQ" />
+      <Enum name="SubtitlePriority" enumName="DialogResponses.SubtitlePriorityLevel" recordType="INAM" byteLength="4" />
+      <Bool name="COCT" recordType="COCT" boolAsMarker="True" unknown="true" />
+      <FormLink name="NAM8" refName="AffinityEvent" recordType="NAM8" unknown="true" />
+      <FormLink name="Perk" refName="Perk" recordType="PERK" />
+      <FormLink name="SpeechChallenge" refName="SpeechChallenge" recordType="SCSP" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
+    <Fields>
+      <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
+      <Float name="ResetHours" integerType="UShort" divisor="65535" multiplier="24" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord">
+    <Fields>
+      <Data recordType="TRDA">
+        <Fields>
+          <FormLink name="Emotion" refName="Keyword" maxIsNone="true" />
+          <UInt32 name="WEMFile" />
+          <Float name="TRDAUnknown" unknown="true" />
+        </Fields>
+      </Data>
+      <RefList name="TROTs" refName="DialogResponseTROT" />
+      <String name="Text" recordType="NAM1" translated="IL" nullable="False" />
+      <String name="ScriptNotes" recordType="NAM2" nullable="False" />
+      <String name="Edits" recordType="NAM3" nullable="False" />
+      <String name="AlternateLipText" recordType="NAM4" nullable="False" />
+      <ByteArray name="TextHash" recordType="NAM9" />
+      <FormLink name="BNAM" refName="IdleAnimation" recordType="BNAM" unknown="true" />
+      <String name="STRV" recordType="STRV" unknown="true" />
+      <FormLink name="VCLR" refName="Keyword" recordType="VCLR" unknown="true" />
+      <ByteArray name="FLMV" recordType="FLMV" unknown="true" />
+      <ByteArray name="FLAV" recordType="FLAV" unknown="true" />
+      <Bool name="QUAL" recordType="QUAL" boolAsMarker="True" unknown="true" />
+      <Bool name="DOFT" recordType="DOFT" boolAsMarker="True" unknown="true" />
+      <Bool name="DPLT" recordType="DPLT" boolAsMarker="True" unknown="true" />
+      <Bool name="OCOR" recordType="OCOR" boolAsMarker="True" unknown="true" />
+      <Float name="LVCR" recordType="LVCR" unknown="true" />
+      <ByteArray name="ATAC" recordType="ATAC" unknown="true" />
+      <Bool name="PLRL" recordType="PLRL" boolAsMarker="True" unknown="true" />
+      <Bool name="XNAM" recordType="XNAM" boolAsMarker="True" unknown="true" />
+      <RefDirect name="HNAM" refName="HnamHnam" />
+      <RefDirect name="RVSH" recordType="RVSH" unknown="true" refName="SoundReference" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseTROT" objType="Subrecord" recordType="TROT" >
+    <Fields>
+      <FormLink name="UnknownVoiceType" refName="VoiceType" unknown="true" />
+      <Float name="UnknownFloat" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="DialogSetParentQuestStage" objType="Subrecord" recordType="TIQS">
+    <Fields>
+      <Int16 name="OnBegin" />
+      <Int16 name="OnEnd" />
+    </Fields>
+  </Object>
+</Loqui>

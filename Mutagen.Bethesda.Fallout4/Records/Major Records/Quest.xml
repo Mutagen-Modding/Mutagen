@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Quest" recordType="QUST" objType="Record" majorFlag="true" partialForm="true" baseClass="Fallout4MajorRecord" GUID="3299b1c9-621b-4a10-961a-698116d54617" ID="154">
+  <Object name="Quest" recordType="QUST" objType="Record" majorFlag="true" partialForm="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -36,7 +36,7 @@
     </Fields>
     <SubgroupType>10</SubgroupType>
   </Object>
-  <Object name="QuestData" objType="Subrecord" recordType="DNAM" GUID="c70aba81-4a1f-4922-ac95-ca821ed8b31a" ID="681">
+  <Object name="QuestData" objType="Subrecord" recordType="DNAM">
     <Fields>
       <Enum name="Flags" enumName="Quest.Flag" byteLength="2" />
       <UInt8 name="Priority" />
@@ -45,7 +45,7 @@
       <Enum name="Type" enumName="Quest.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="ac22ba38-9b50-49b1-99fd-c1b057879549" ID="522">
+  <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD">
     <Fields>
       <Break />
       <UInt8 name="ExtraBindDataVersion" default="3" />
@@ -55,7 +55,7 @@
       <RefList name="Aliases" refName="QuestFragmentAlias" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="QuestScriptFragment" objType="Subrecord" GUID="8ff23dfb-2469-43ad-b9f1-8e01b5962f0b" ID="523">
+  <Object name="QuestScriptFragment" objType="Subrecord">
     <Fields>
       <UInt16 name="Stage" />
       <Int16 name="Unknown" />
@@ -65,7 +65,7 @@
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="QuestFragmentAlias" objType="Subrecord" GUID="aac4bf35-ba29-479f-abbd-720430fa7a40" ID="524">
+  <Object name="QuestFragmentAlias" objType="Subrecord">
     <Fields>
       <RefDirect name="Property" refName="ScriptObjectProperty" binary="Custom" />
       <Int16 name="Version" default="6" />
@@ -73,7 +73,7 @@
       <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="QuestStage" objType="Subrecord" GUID="3796e983-d6a9-4345-b72e-6f380b10bebc" ID="525">
+  <Object name="QuestStage" objType="Subrecord">
     <Fields>
       <Data recordType="INDX">
         <Fields>
@@ -85,7 +85,7 @@
       <RefList name="LogEntries" refName="QuestLogEntry" />
     </Fields>
   </Object>
-  <Object name="QuestLogEntry" objType="Subrecord" GUID="427802a1-7951-4acf-a117-a7ae92c3d960" ID="526">
+  <Object name="QuestLogEntry" objType="Subrecord">
     <Fields>
       <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
       <RefList name="Conditions" refName="Condition" />
@@ -94,7 +94,7 @@
       <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
     </Fields>
   </Object>
-  <Object name="QuestObjective" objType="Subrecord" GUID="7d5e2504-dde4-449a-8683-5c287a9d86fc" ID="527">
+  <Object name="QuestObjective" objType="Subrecord">
     <Fields>
       <UInt16 name="Index" recordType="QOBJ" nullable="False" />
       <Enum name="Flags" enumName="QuestObjective.Flag" recordType="FNAM" byteLength="4" />
@@ -102,7 +102,7 @@
       <RefList name="Targets" refName="QuestObjectiveTarget" />
     </Fields>
   </Object>
-  <Object name="QuestObjectiveTarget" objType="Subrecord" GUID="6214f476-ee0e-4f6a-a175-53d9d2d8f2b6" ID="528">
+  <Object name="QuestObjectiveTarget" objType="Subrecord">
     <Fields>
       <Data recordType="QSTA">
         <Fields>
@@ -115,8 +115,8 @@
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="AQuestAlias" objType="Subrecord" abstract="true" GUID="da8f3845-9824-46ef-ab82-9b4d5b86dfbc" ID="529" />
-  <Object name="QuestReferenceAlias" objType="Subrecord" baseClass="AQuestAlias" endMarkerType="ALED" GUID="88f99ee1-ef08-4525-97ce-3f7d5b82a96a" ID="530">
+  <Object name="AQuestAlias" objType="Subrecord" abstract="true" />
+  <Object name="QuestReferenceAlias" objType="Subrecord" baseClass="AQuestAlias" endMarkerType="ALED">
     <Fields>
       <UInt32 name="ID" binary="NoGeneration" />
       <String name="Name" recordType="ALID" />
@@ -159,7 +159,7 @@
       </FormLink>
     </Fields>
   </Object>
-  <Object name="QuestLocationAlias" objType="Subrecord" baseClass="AQuestAlias" endMarkerType="ALED" GUID="07fa667b-b166-45c5-8023-68aee9456549" ID="531">
+  <Object name="QuestLocationAlias" objType="Subrecord" baseClass="AQuestAlias" endMarkerType="ALED">
     <Fields>
       <UInt32 name="ID" binary="NoGeneration" />
       <String name="Name" recordType="ALID" />
@@ -173,37 +173,37 @@
       <Int32 name="ClosestToAlias" recordType="ALCC" />
     </Fields>
   </Object>
-  <Object name="QuestCollectionAlias" objType="Subrecord" baseClass="AQuestAlias" GUID="5b1ef4fd-c97e-43a8-a26e-804a95769f28" ID="532">
+  <Object name="QuestCollectionAlias" objType="Subrecord" baseClass="AQuestAlias">
     <Fields>
       <RefList name="Collection" refName="CollectionAlias" />
     </Fields>
   </Object>
-  <Object name="CollectionAlias" objType="Subrecord" baseClass="AQuestAlias" GUID="9d9b0a54-e7ff-4fe2-b89c-f24c187bb991" ID="533">
+  <Object name="CollectionAlias" objType="Subrecord" >
     <Fields>
       <Int32 name="AliasID" recordType="ALCS" nullable="False" />
       <UInt8 name="MaxInitialFillCount" recordType="ALMI" />
     </Fields>
   </Object>
-  <Object name="LocationAliasReference" objType="Subrecord" GUID="916f3418-602e-42c1-bec3-28e67c047ab8" ID="534">
+  <Object name="LocationAliasReference" objType="Subrecord">
     <Fields>
       <Int32 name="AliasID" recordType="ALFA" />
       <FormLink name="Keyword" refName="Keyword" recordType="KNAM" />
       <FormLink name="RefType" refName="LocationReferenceType" recordType="ALRT" />
     </Fields>
   </Object>
-  <Object name="ReferenceAliasLocation" objType="Subrecord" GUID="46c260b1-10a2-40ea-991d-d803c399e689" ID="535">
+  <Object name="ReferenceAliasLocation" objType="Subrecord">
     <Fields>
       <Int32 name="AliasID" recordType="ALFA" />
       <FormLink name="Keyword" refName="Keyword" recordType="KNAM" />
     </Fields>
   </Object>
-  <Object name="ExternalAliasReference" objType="Subrecord" GUID="7cfbba56-c07e-47f0-a791-bc861f652e59" ID="536">
+  <Object name="ExternalAliasReference" objType="Subrecord">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="ALEQ" />
       <Int32 name="AliasID" recordType="ALEA" />
     </Fields>
   </Object>
-  <Object name="CreateReferenceToObject" objType="Subrecord" GUID="68905922-ee74-431d-a019-73a843c77800" ID="537">
+  <Object name="CreateReferenceToObject" objType="Subrecord">
     <Fields>
       <FormLink name="Object" refName="Fallout4MajorRecord" recordType="ALCO" nullable="False" />
       <Data recordType="ALCA">
@@ -215,25 +215,25 @@
       <Enum name="Level" enumName="Level" byteLength="4" recordType="ALCL" nullable="False" />
     </Fields>
   </Object>
-  <Object name="FindMatchingRefNearAlias" objType="Subrecord" GUID="a7a6ee33-b10f-4a52-a207-0aee36c760a0" ID="538">
+  <Object name="FindMatchingRefNearAlias" objType="Subrecord">
     <Fields>
       <Int16 name="AliasID" recordType="ALNA" binary="Custom" />
       <Enum name="Type" enumName="FindMatchingRefNearAlias.TypeEnum" byteLength="4" recordType="ALNT" />
     </Fields>
   </Object>
-  <Object name="FindMatchingRefFromEvent" objType="Subrecord" GUID="9cafbfc1-0e48-4eb8-8b43-a88948d8b755" ID="539">
+  <Object name="FindMatchingRefFromEvent" objType="Subrecord">
     <Fields>
       <RecordType name="FromEvent" recordType="ALFE" />
       <ByteArray name="EventData" recordType="ALFD" />
     </Fields>
   </Object>
-  <Object name="ExternalAliasLocation" objType="Subrecord" GUID="5004366d-189f-416a-8f2e-db76bdd299f6" ID="540">
+  <Object name="ExternalAliasLocation" objType="Subrecord">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="ALEQ" />
       <Int32 name="AliasID" recordType="ALEA" />
     </Fields>
   </Object>
-  <Object name="LinkedAlias" objType="Subrecord" GUID="c8c966c1-259f-487d-948b-163110b48a51" ID="541">
+  <Object name="LinkedAlias" objType="Subrecord">
     <Fields>
       <FormLink name="Keyword" refName="Keyword" />
       <Int32 name="AliasID" />

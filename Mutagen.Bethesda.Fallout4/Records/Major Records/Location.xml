@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Location" recordType="LCTN" baseClass="Fallout4MajorRecord" majorFlag="true" partialForm="true" objType="Record" GUID="09ffb45f-a070-402d-a2eb-a6bcdeb35cdc" ID="467">
+  <Object name="Location" recordType="LCTN" baseClass="Fallout4MajorRecord" majorFlag="true" partialForm="true" objType="Record">
     <Fields>
       <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
       <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
@@ -58,7 +58,7 @@
     </Fields>
     <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
-  <Object name="LocationReference" objType="Subrecord" GUID="cc8d5cc8-cf0f-45a8-b5d3-13a067e71fc8" ID="617">
+  <Object name="LocationReference" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
         <Interface>ILinkedReference</Interface>
@@ -69,14 +69,14 @@
       <P2Int16 name="Grid" swapCoords="true" />
     </Fields>
   </Object>
-  <Object name="LocationCellUnique" objType="Subrecord" GUID="28984c56-32ff-4418-8bf0-d0e9c087b718" ID="618">
+  <Object name="LocationCellUnique" objType="Subrecord">
     <Fields>
       <FormLink name="Actor" refName="Npc" />
       <FormLink name="Ref" refName="PlacedNpc" />
       <FormLink name="Location" refName="Location" />
     </Fields>
   </Object>
-  <Object name="LocationCellStaticReference" objType="Subrecord" GUID="3a488f9a-9fdb-45d1-8ffc-cfc06558ceb9" ID="619">
+  <Object name="LocationCellStaticReference" objType="Subrecord">
     <Fields>
       <FormLink name="LocationRefType" refName="LocationReferenceType" />
       <FormLink name="Marker">
@@ -88,7 +88,7 @@
       <P2Int16 name="Grid" swapCoords="true" />
     </Fields>
   </Object>
-  <Object name="LocationCoordinate" objType="Subrecord" GUID="da3a7d17-3aa5-449e-a1ed-444b2963d613" ID="620">
+  <Object name="LocationCoordinate" objType="Subrecord">
     <Fields>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>
@@ -98,7 +98,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="LocationCellEnablePoint" objType="Subrecord" GUID="f6613531-7ebd-49e8-9309-fce63126edb5" ID="621">
+  <Object name="LocationCellEnablePoint" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
         <Interface>IPlaced</Interface>

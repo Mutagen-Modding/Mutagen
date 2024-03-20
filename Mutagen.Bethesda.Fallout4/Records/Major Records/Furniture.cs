@@ -14,6 +14,7 @@ public partial class Furniture
     [Flags]
     public enum MajorFlag
     {
+        HasContainer = 0x0000_0004,
         IsPerch = 0x0000_0080,
         HasDistantLod = 0x0000_8000,
         RandomAnimStart = 0x0001_0000,
@@ -94,14 +95,14 @@ partial class FurnitureBinaryCreateTranslation
     public const uint UpperFlagsMask = 0xFFC0_0000;
     public const uint NumSlots = 22;
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         var subFrame = frame.ReadSubrecord();
         // Read flags like normal
         item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
 
-    public static partial ParseResult FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial ParseResult FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         // Clear out old stuff
         // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption
@@ -154,7 +155,7 @@ partial class FurnitureBinaryCreateTranslation
         return marker;
     }
 
-    public static partial void FillBinaryEnabledEntryPointsCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryEnabledEntryPointsCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         item.EnabledEntryPoints = ParseBinaryEnabledEntryPointsCustom(frame);
     }
@@ -177,7 +178,7 @@ partial class FurnitureBinaryCreateTranslation
         return (Furniture.EntryPointType)BinaryPrimitives.ReadInt16LittleEndian(name0.Content.Slice(2));
     }
 
-    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
     }
@@ -297,14 +298,14 @@ partial class FurnitureBinaryOverlay
         return marker;
     }
 
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var subFrame = stream.ReadSubrecord();
         // Read flags like normal
         _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
 
-    public partial ParseResult Flags2CustomParse(OverlayStream stream, int offset)
+    public partial ParseResult Flags2CustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         this._flags = FurnitureBinaryCreateTranslation.FillBinaryFlags2(
             stream,
@@ -315,13 +316,13 @@ partial class FurnitureBinaryOverlay
             
     partial void EnabledEntryPointsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _enabledEntryPoints = FurnitureBinaryCreateTranslation.ParseBinaryEnabledEntryPointsCustom(stream);
     }
 
-    partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MarkerParametersCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         FurnitureBinaryCreateTranslation.FillBinaryMarkers(new MutagenFrame(stream), GetNthMarker);
     }

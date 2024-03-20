@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,10 +56,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FovMult
-        public Single FovMult { get; set; } = default;
+        public Single FovMult { get; set; } = default(Single);
         #endregion
         #region Overlay
-        public Zoom.OverlayType Overlay { get; set; } = default;
+        public Zoom.OverlayType Overlay { get; set; } = default(Zoom.OverlayType);
         #endregion
         #region ImagespaceModifier
         private readonly IFormLink<IImageSpaceAdapterGetter> _ImagespaceModifier = new FormLink<IImageSpaceAdapterGetter>();
@@ -71,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IImageSpaceAdapterGetter> IZoomGetter.ImagespaceModifier => this.ImagespaceModifier;
         #endregion
         #region CameraOffset
-        public P3Float CameraOffset { get; set; } = default;
+        public P3Float CameraOffset { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -451,9 +452,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Zoom_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ZoomCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ZoomSetterCommon.Instance.RemapLinks(this, mapping);
-        public Zoom(FormKey formKey)
+        public Zoom(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -462,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -476,12 +480,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Zoom(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Zoom(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -793,13 +801,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 336,
-            version: 0);
-
-        public const string GUID = "7c3747ae-d998-47c1-8b4e-0c5b0d325b84";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 11;
@@ -836,13 +837,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.ZOOM,
                 RecordTypes.GNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ZoomBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -880,10 +881,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IZoomInternal item)
         {
             ClearPartial();
-            item.FovMult = default;
-            item.Overlay = default;
+            item.FovMult = default(Single);
+            item.Overlay = default(Zoom.OverlayType);
             item.ImagespaceModifier.Clear();
-            item.CameraOffset = default;
+            item.CameraOffset = default(P3Float);
             base.Clear(item);
         }
         
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Zoom(formKey);
+            var newRec = new Zoom(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1593,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region FovMult
         private int _FovMultLocation => _GNAMLocation!.Value.Min;
         private bool _FovMult_IsSet => _GNAMLocation.HasValue;
-        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default;
+        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default(Single);
         #endregion
         #region Overlay
         private int _OverlayLocation => _GNAMLocation!.Value.Min + 0x4;
@@ -1608,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CameraOffset
         private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;
         private bool _CameraOffset_IsSet => _GNAMLocation.HasValue;
-        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default;
+        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default(P3Float);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

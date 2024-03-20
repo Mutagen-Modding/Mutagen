@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimAssistPose" recordType="AAPD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="AttachPoints" refName="AimAssistPosePoint" markerType="AAAP" />
+      <RefList name="Connections" refName="AimAssistPosePoint" counterRecType="AAPS" />
+    </Fields>
+  </Object>
+  <Object name="AimAssistPosePoint" objType="Subrecord" >
+    <Fields>
+      <String name="ANAM" recordType="ANAM" unknown="true" />
+      <String name="BNAM" recordType="BNAM" unknown="true" />
+      <Float name="RADR" recordType="RADR" unknown="true" />
+      <Float name="WTMX" recordType="WTMX" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

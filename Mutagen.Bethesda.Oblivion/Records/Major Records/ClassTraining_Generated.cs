@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,14 +51,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        public Skill TrainedSkill { get; set; } = default;
+        public Skill TrainedSkill { get; set; } = default(Skill);
         #endregion
         #region MaximumTrainingLevel
-        public Byte MaximumTrainingLevel { get; set; } = default;
+        public Byte MaximumTrainingLevel { get; set; } = default(Byte);
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -681,13 +682,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 19,
-            version: 0);
-
-        public const string GUID = "db3e6d59-8545-4d81-8531-4eb0b56c4a47";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -719,8 +713,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(ClassTrainingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -758,9 +750,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClassTraining item)
         {
             ClearPartial();
-            item.TrainedSkill = default;
-            item.MaximumTrainingLevel = default;
-            item.Unknown = default;
+            item.TrainedSkill = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
+            item.Unknown = default(Int16);
         }
         
         #region Mutagen

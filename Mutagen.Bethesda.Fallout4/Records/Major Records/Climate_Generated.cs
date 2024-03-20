@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -98,25 +99,25 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region SunriseBegin
-        public TimeOnly SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunriseEnd
-        public TimeOnly SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetBegin
-        public TimeOnly SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetEnd
-        public TimeOnly SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default(TimeOnly);
         #endregion
         #region Volatility
-        public Byte Volatility { get; set; } = default;
+        public Byte Volatility { get; set; } = default(Byte);
         #endregion
         #region Moons
-        public Climate.Moon Moons { get; set; } = default;
+        public Climate.Moon Moons { get; set; } = default(Climate.Moon);
         #endregion
         #region PhaseLength
-        public Byte PhaseLength { get; set; } = default;
+        public Byte PhaseLength { get; set; } = default(Byte);
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 64);
         #endregion
 
@@ -777,9 +778,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateSetterCommon.Instance.RemapLinks(this, mapping);
-        public Climate(FormKey formKey)
+        public Climate(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -788,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -802,12 +806,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Climate(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Climate(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1150,13 +1158,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 444,
-            version: 0);
-
-        public const string GUID = "3555492f-6e21-477f-99e9-65ff465443bc";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
@@ -1200,13 +1201,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1248,13 +1249,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
-            item.Moons = default;
-            item.PhaseLength = default;
+            item.SunriseBegin = default(TimeOnly);
+            item.SunriseEnd = default(TimeOnly);
+            item.SunsetBegin = default(TimeOnly);
+            item.SunsetEnd = default(TimeOnly);
+            item.Volatility = default(Byte);
+            item.Moons = default(Climate.Moon);
+            item.PhaseLength = default(Byte);
             base.Clear(item);
         }
         
@@ -1664,7 +1665,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Climate(formKey);
+            var newRec = new Climate(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="9c510483-e3ef-4271-b240-0bd227beab19" ID="36">
+  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA">
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
@@ -12,12 +12,12 @@
     <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
   </Object>
-  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37">
+  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal">
     <Fields>
       <FormLink name="ComparisonValue" refName="Global" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="7add21ad-ed61-4e3d-8cf5-c80dbaa322db" ID="38">
+  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal">
     <Fields>
       <Float name="ComparisonValue" binary="NoGeneration" />
     </Fields>

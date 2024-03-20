@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -39,7 +40,10 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Global :
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalBool]
+    /// </summary>
+    public abstract partial class Global :
         Fallout4MajorRecord,
         IEquatable<IGlobalGetter>,
         IGlobalInternal,
@@ -53,16 +57,6 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region TypeChar
-        public Char? TypeChar { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Char? IGlobalGetter.TypeChar => this.TypeChar;
-        #endregion
-        #region Data
-        public Single? Data { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IGlobalGetter.Data => this.Data;
-        #endregion
 
         #region To String
 
@@ -88,8 +82,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.TypeChar = initialValue;
-                this.Data = initialValue;
             }
 
             public Mask(
@@ -99,9 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout4MajorRecordFlags,
-                TItem TypeChar,
-                TItem Data)
+                TItem Fallout4MajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -111,8 +101,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.TypeChar = TypeChar;
-                this.Data = Data;
             }
 
             #pragma warning disable CS8618
@@ -121,11 +109,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public TItem TypeChar;
-            public TItem Data;
             #endregion
 
             #region Equals
@@ -139,15 +122,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.TypeChar, rhs.TypeChar)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.TypeChar);
-                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -158,8 +137,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.TypeChar)) return false;
-                if (!eval(this.Data)) return false;
                 return true;
             }
             #endregion
@@ -168,8 +145,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.TypeChar)) return true;
-                if (eval(this.Data)) return true;
                 return false;
             }
             #endregion
@@ -185,8 +160,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.TypeChar = eval(this.TypeChar);
-                obj.Data = eval(this.Data);
             }
             #endregion
 
@@ -205,14 +178,6 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Global.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.TypeChar ?? true)
-                    {
-                        sb.AppendItem(TypeChar, "TypeChar");
-                    }
-                    if (printMask?.Data ?? true)
-                    {
-                        sb.AppendItem(Data, "Data");
-                    }
                 }
             }
             #endregion
@@ -223,21 +188,12 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public Exception? TypeChar;
-            public Exception? Data;
-            #endregion
-
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Global_FieldIndex enu = (Global_FieldIndex)index;
                 switch (enu)
                 {
-                    case Global_FieldIndex.TypeChar:
-                        return TypeChar;
-                    case Global_FieldIndex.Data:
-                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -248,12 +204,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Global_FieldIndex enu = (Global_FieldIndex)index;
                 switch (enu)
                 {
-                    case Global_FieldIndex.TypeChar:
-                        this.TypeChar = ex;
-                        break;
-                    case Global_FieldIndex.Data:
-                        this.Data = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -265,12 +215,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Global_FieldIndex enu = (Global_FieldIndex)index;
                 switch (enu)
                 {
-                    case Global_FieldIndex.TypeChar:
-                        this.TypeChar = (Exception?)obj;
-                        break;
-                    case Global_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -280,8 +224,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (TypeChar != null) return true;
-                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -308,12 +250,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(TypeChar, "TypeChar");
-                }
-                {
-                    sb.AppendItem(Data, "Data");
-                }
             }
             #endregion
 
@@ -322,8 +258,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.TypeChar = this.TypeChar.Combine(rhs.TypeChar);
-                ret.Data = this.Data.Combine(rhs.Data);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -345,29 +279,15 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
-            #region Members
-            public bool TypeChar;
-            public bool Data;
-            #endregion
-
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.TypeChar = defaultOn;
-                this.Data = defaultOn;
             }
 
             #endregion
-
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                base.GetCrystal(ret);
-                ret.Add((TypeChar, null));
-                ret.Add((Data, null));
-            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -379,9 +299,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
-        public Global(FormKey formKey)
+        public Global(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -390,7 +313,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -404,12 +327,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Global(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Global(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -418,8 +345,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             return MajorRecordPrinter<Global>.ToString(this);
         }
-
-        protected override Type LinkType => typeof(IGlobal);
 
         public MajorFlag MajorFlags
         {
@@ -460,32 +385,6 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        #region Binary Create
-        public new static Global CreateFromBinary(
-            MutagenFrame frame,
-            TypedParseParams translationParams = default)
-        {
-            var ret = new Global();
-            ((GlobalSetterCommon)((IGlobalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                item: ret,
-                frame: frame,
-                translationParams: translationParams);
-            return ret;
-        }
-
-        #endregion
-
-        public static bool TryCreateFromBinary(
-            MutagenFrame frame,
-            out Global item,
-            TypedParseParams translationParams = default)
-        {
-            var startPos = frame.Position;
-            item = CreateFromBinary(
-                frame: frame,
-                translationParams: translationParams);
-            return startPos != frame.Position;
-        }
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
@@ -497,20 +396,21 @@ namespace Mutagen.Bethesda.Fallout4
 
         internal static new Global GetNew()
         {
-            return new Global();
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalBool]
+    /// </summary>
     public partial interface IGlobal :
         IFallout4MajorRecordInternal,
         IGlobalGetter,
         ILoquiObjectSetter<IGlobalInternal>
     {
-        new Char? TypeChar { get; set; }
-        new Single? Data { get; set; }
         #region Mutagen
         new Global.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -524,16 +424,15 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.GLOB)]
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalBool]
+    /// </summary>
     public partial interface IGlobalGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalGetter>,
-        IMapsToGetter<IGlobalGetter>
+        ILoquiObject<IGlobalGetter>
     {
         static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
-        Char? TypeChar { get; }
-        Single? Data { get; }
 
         #region Mutagen
         Global.MajorFlag MajorFlags { get; }
@@ -714,8 +613,6 @@ namespace Mutagen.Bethesda.Fallout4
         FormVersion = 4,
         Version2 = 5,
         Fallout4MajorRecordFlags = 6,
-        TypeChar = 7,
-        Data = 8,
     }
     #endregion
 
@@ -726,16 +623,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 38,
-            version: 0);
+        public const ushort AdditionalFieldCount = 0;
 
-        public const string GUID = "c7d0e2c2-7592-4900-b500-6ee7da100519";
-
-        public const ushort AdditionalFieldCount = 2;
-
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Global.Mask<>);
 
@@ -768,15 +658,14 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(RecordTypes.GLOB);
             var all = RecordCollection.Factory(
                 RecordTypes.GLOB,
-                RecordTypes.FNAM,
-                RecordTypes.FLTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+                RecordTypes.FNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -811,11 +700,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void ClearPartial();
         
-        public void Clear(IGlobalInternal item)
+        public virtual void Clear(IGlobalInternal item)
         {
             ClearPartial();
-            item.TypeChar = default;
-            item.Data = default;
             base.Clear(item);
         }
         
@@ -900,8 +787,6 @@ namespace Mutagen.Bethesda.Fallout4
             Global.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.TypeChar = item.TypeChar == rhs.TypeChar;
-            ret.Data = item.Data.EqualsWithin(rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -951,16 +836,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.TypeChar ?? true)
-                && item.TypeChar is {} TypeCharItem)
-            {
-                sb.AppendItem(TypeCharItem, "TypeChar");
-            }
-            if ((printMask?.Data ?? true)
-                && item.Data is {} DataItem)
-            {
-                sb.AppendItem(DataItem, "Data");
-            }
         }
         
         public static Global_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1011,14 +886,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.TypeChar) ?? true))
-            {
-                if (lhs.TypeChar != rhs.TypeChar) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.Data) ?? true))
-            {
-                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
-            }
             return true;
         }
         
@@ -1047,14 +914,6 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IGlobalGetter item)
         {
             var hash = new HashCode();
-            if (item.TypeChar is {} TypeCharitem)
-            {
-                hash.Add(TypeCharitem);
-            }
-            if (item.Data is {} Dataitem)
-            {
-                hash.Add(Dataitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1088,14 +947,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public Global Duplicate(
+        public virtual Global Duplicate(
             IGlobalGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Global(formKey);
-            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
-            return newRec;
+            throw new NotImplementedException();
         }
         
         public override Fallout4MajorRecord Duplicate(
@@ -1130,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
+        public virtual void DeepCopyIn(
             IGlobalInternal item,
             IGlobalGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1145,7 +1002,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
         }
         
-        public void DeepCopyIn(
+        public virtual void DeepCopyIn(
             IGlobal item,
             IGlobalGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1158,14 +1015,6 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.TypeChar) ?? true))
-            {
-                item.TypeChar = rhs.TypeChar;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.Data) ?? true))
-            {
-                item.Data = rhs.Data;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1323,17 +1172,25 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            GlobalBinaryWriteTranslation.WriteBinaryTypeChar(
                 writer: writer,
-                item: item.TypeChar,
-                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.Data,
-                header: translationParams.ConvertToCustom(RecordTypes.FLTV));
+                item: item);
         }
 
-        public void Write(
+        public static partial void WriteBinaryTypeCharCustom(
+            MutagenWriter writer,
+            IGlobalGetter item);
+
+        public static void WriteBinaryTypeChar(
+            MutagenWriter writer,
+            IGlobalGetter item)
+        {
+            WriteBinaryTypeCharCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public virtual void Write(
             MutagenWriter writer,
             IGlobalGetter item,
             TypedWriteParams translationParams)
@@ -1403,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.GLOB;
+        public override RecordType RecordType => throw new ArgumentException();
         public static ParseResult FillBinaryRecordTypes(
             IGlobalInternal item,
             MutagenFrame frame,
@@ -1418,15 +1275,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TypeChar = frame.ReadChar();
-                    return (int)Global_FieldIndex.TypeChar;
-                }
-                case RecordTypeInts.FLTV:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Data = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Global_FieldIndex.Data;
+                    return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1439,6 +1291,11 @@ namespace Mutagen.Bethesda.Fallout4
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinaryTypeCharCustom(
+            MutagenFrame frame,
+            IGlobalInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1455,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class GlobalBinaryOverlay :
+    internal abstract partial class GlobalBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IGlobalGetter
     {
@@ -1483,17 +1340,13 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGlobal);
-
         public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region TypeChar
-        private int? _TypeCharLocation;
-        public Char? TypeChar => _TypeCharLocation.HasValue ? (char)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeCharLocation.Value, _package.MetaData.Constants)[0] : default(Char?);
-        #endregion
-        #region Data
-        private int? _DataLocation;
-        public Single? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public partial ParseResult TypeCharCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1511,46 +1364,6 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IGlobalGetter GlobalFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = Decompression.DecompressStream(stream);
-            stream = ExtractRecordMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new GlobalBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            ret._package.FormVersion = ret;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset);
-            ret.FillSubrecordTypes(
-                majorReference: ret,
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset,
-                translationParams: translationParams,
-                fill: ret.FillRecordType);
-            return ret;
-        }
-
-        public static IGlobalGetter GlobalFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return GlobalFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
 
         public override ParseResult FillRecordType(
             OverlayStream stream,
@@ -1566,13 +1379,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FNAM:
                 {
-                    _TypeCharLocation = (stream.Position - offset);
-                    return (int)Global_FieldIndex.TypeChar;
-                }
-                case RecordTypeInts.FLTV:
-                {
-                    _DataLocation = (stream.Position - offset);
-                    return (int)Global_FieldIndex.Data;
+                    return TypeCharCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

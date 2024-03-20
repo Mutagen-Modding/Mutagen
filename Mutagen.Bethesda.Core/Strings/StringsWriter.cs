@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
@@ -34,7 +35,7 @@ public sealed class StringsWriter : IDisposable
         ModKey = modKey;
         EncodingProvider = encodingProvider;
         FileSystem = fileSystem.GetOrDefault();
-        LanguageFormat = release.GetLanguageFormat();
+        LanguageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
         WriteDir = writeDirectory;
     }
 
@@ -120,7 +121,7 @@ public sealed class StringsWriter : IDisposable
         {
             var encoding = EncodingProvider.GetEncoding(_release, language.Key);
             using var writer = new MutagenWriter(
-                FileSystem.FileStream.Create(
+                FileSystem.FileStream.New(
                     Path.Combine(WriteDir.Path, StringsUtility.GetFileName(LanguageFormat, ModKey, language.Key, source)), 
                     FileMode.Create, FileAccess.Write),
                 meta: null!);
@@ -164,7 +165,7 @@ public sealed class StringsWriter : IDisposable
                         break;
                     case StringsSource.IL:
                     case StringsSource.DL:
-                        writer.Write(item.String.Length + 1);
+                        writer.Write(encoding.GetByteCount(item.String) + 1);
                         writer.Write(item.String, StringBinaryType.NullTerminate, encoding);
                         break;
                     default:

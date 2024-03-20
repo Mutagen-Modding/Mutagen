@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 1.7f;
+        public static readonly Single VersionDefault = 1.71f;
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
-        public UInt32 NumRecords { get; set; } = default;
+        public UInt32 NumRecords { get; set; } = default(UInt32);
         #endregion
         #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x800;
+        public static readonly UInt32 NextFormIDDefault = 0x1;
         public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
@@ -682,13 +683,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 64,
-            version: 0);
-
-        public const string GUID = "14fe521a-e32e-433c-9915-71a5f7ca5c5b";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -727,8 +721,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(ModStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -767,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Version = ModStats.VersionDefault;
-            item.NumRecords = default;
+            item.NumRecords = default(UInt32);
             item.NextFormID = ModStats.NextFormIDDefault;
         }
         

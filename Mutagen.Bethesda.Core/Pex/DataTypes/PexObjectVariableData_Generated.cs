@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region VariableType
-        public VariableType VariableType { get; set; } = default;
+        public VariableType VariableType { get; set; } = default(VariableType);
         #endregion
         #region StringValue
         public String? StringValue { get; set; }
@@ -683,13 +683,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 10,
-            version: 0);
-
-        public const string GUID = "5abe0b17-91a4-4c71-ae9b-f733317a4a31";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -720,8 +713,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -759,7 +750,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexObjectVariableData item)
         {
             ClearPartial();
-            item.VariableType = default;
+            item.VariableType = default(VariableType);
             item.StringValue = default;
             item.IntValue = default;
             item.FloatValue = default;

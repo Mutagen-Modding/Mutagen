@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region RunOnType
-        public Condition.RunOnType RunOnType { get; set; } = default;
+        public Condition.RunOnType RunOnType { get; set; } = default(Condition.RunOnType);
         #endregion
         #region Reference
         private readonly IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
@@ -71,10 +72,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown3 { get; set; } = Unknown3Default;
         #endregion
         #region UseAliases
-        public Boolean UseAliases { get; set; } = default;
+        public Boolean UseAliases { get; set; } = default(Boolean);
         #endregion
         #region UsePackageData
-        public Boolean UsePackageData { get; set; } = default;
+        public Boolean UsePackageData { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -751,13 +752,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 41,
-            version: 0);
-
-        public const string GUID = "01abc3c5-fb9d-4e48-a375-fe2f3a4fa044";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -789,8 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(ConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -828,11 +820,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(IConditionData item)
         {
             ClearPartial();
-            item.RunOnType = default;
+            item.RunOnType = default(Condition.RunOnType);
             item.Reference.Clear();
             item.Unknown3 = ConditionData.Unknown3Default;
-            item.UseAliases = default;
-            item.UsePackageData = default;
+            item.UseAliases = default(Boolean);
+            item.UsePackageData = default(Boolean);
         }
         
         #region Mutagen

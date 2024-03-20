@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -75,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion
         #region HavokFriction
-        public Byte HavokFriction { get; set; } = default;
+        public Byte HavokFriction { get; set; } = default(Byte);
         #endregion
         #region HavokRestitution
-        public Byte HavokRestitution { get; set; } = default;
+        public Byte HavokRestitution { get; set; } = default(Byte);
         #endregion
         #region TextureSpecularExponent
-        public Byte TextureSpecularExponent { get; set; } = default;
+        public Byte TextureSpecularExponent { get; set; } = default(Byte);
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -642,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -651,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -997,13 +998,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 130,
-            version: 0);
-
-        public const string GUID = "f6e8d6f6-773c-4c3b-b09b-d892c0114ed7";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 14;
@@ -1045,13 +1039,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SNAM,
                 RecordTypes.GNAM,
                 RecordTypes.INAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1091,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.TextureSet.Clear();
             item.MaterialType.Clear();
-            item.HavokFriction = default;
-            item.HavokRestitution = default;
-            item.TextureSpecularExponent = default;
+            item.HavokFriction = default(Byte);
+            item.HavokRestitution = default(Byte);
+            item.TextureSpecularExponent = default(Byte);
             item.Grasses.Clear();
             item.Flags = default;
             base.Clear(item);
@@ -1536,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Grasses.SetTo(
                         rhs.Grasses
-                        .Select(r => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2062,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.GNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)LandscapeTexture_FieldIndex.Grasses;

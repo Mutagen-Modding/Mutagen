@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -2528,7 +2529,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2537,7 +2538,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2963,13 +2964,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 286,
-            version: 0);
-
-        public const string GUID = "9450f7b5-2485-4eb3-ad52-910e7f254018";
-
         public const ushort AdditionalFieldCount = 25;
 
         public const ushort FieldCount = 32;
@@ -3031,13 +3025,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.RNAM,
                 RecordTypes.NAM0,
                 RecordTypes.CNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -4136,7 +4130,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ReferenceCellPersistentReferences = 
                             rhs.ReferenceCellPersistentReferences
-                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
@@ -4227,7 +4221,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ReferenceCellUnique = 
                             rhs.ReferenceCellUnique
-                            .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<INpcGetter>>();
                     }
                     else
@@ -4318,7 +4312,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ReferenceCellStaticReferences = 
                             rhs.ReferenceCellStaticReferences
-                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
@@ -4417,7 +4411,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ActorCellMarkerReference = 
                             rhs.ActorCellMarkerReference
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -4444,7 +4438,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.LocationCellMarkerReference = 
                             rhs.LocationCellMarkerReference
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -4539,7 +4533,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

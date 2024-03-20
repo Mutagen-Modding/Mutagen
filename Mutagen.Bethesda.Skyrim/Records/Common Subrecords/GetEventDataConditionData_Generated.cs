@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,10 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Function
-        public GetEventDataConditionData.EventFunction Function { get; set; } = default;
+        public GetEventDataConditionData.EventFunction Function { get; set; } = default(GetEventDataConditionData.EventFunction);
         #endregion
         #region Member
-        public GetEventDataConditionData.EventMember Member { get; set; } = default;
+        public GetEventDataConditionData.EventMember Member { get; set; } = default(GetEventDataConditionData.EventMember);
         #endregion
         #region Record
         private readonly IFormLink<ISkyrimMajorRecordGetter> _Record = new FormLink<ISkyrimMajorRecordGetter>();
@@ -744,13 +745,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 40,
-            version: 0);
-
-        public const string GUID = "a7f88d12-4a14-4be4-ad02-ffa74d2fa3db";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 10;
@@ -782,8 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(GetEventDataConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -821,8 +813,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetEventDataConditionData item)
         {
             ClearPartial();
-            item.Function = default;
-            item.Member = default;
+            item.Function = default(GetEventDataConditionData.EventFunction);
+            item.Member = default(GetEventDataConditionData.EventMember);
             item.Record.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedStringParameter = default;

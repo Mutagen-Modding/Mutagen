@@ -23,4 +23,8 @@ public enum GameRelease
     Fallout4 = 4,
     [Description("Skyrim Special Edition GOG")]
     SkyrimSEGog = 7,
+    [Description("Starfield")]
+    Starfield = 8,
+    [Description("Fallout 4 VR")]
+    Fallout4VR = 9,
 }

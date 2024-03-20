@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Flora" recordType="FLOR" baseClass="Fallout4MajorRecord" objType="Record" GUID="d58de0e7-4b5b-45f8-ad85-5491e0c56509" ID="203">
+  <Object name="Flora" recordType="FLOR" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <ByteArray name="PNAM" recordType="PNAM" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>

@@ -133,10 +133,10 @@ partial class ClimateBinaryWriteTranslation
 
 partial class ClimateBinaryOverlay
 {
-    public partial TimeOnly GetSunriseBeginCustom() => ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 0]);
-    public partial TimeOnly GetSunriseEndCustom() => ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 1]);
-    public partial TimeOnly GetSunsetBeginCustom() => ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 2]);
-    public partial TimeOnly GetSunsetEndCustom() => ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 3]);
+    public partial TimeOnly GetSunriseBeginCustom() => _TNAMLocation.HasValue ? ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation.Value.Min + 0]) : default;
+    public partial TimeOnly GetSunriseEndCustom() => _TNAMLocation.HasValue ? ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 1]) : default;
+    public partial TimeOnly GetSunsetBeginCustom() => _TNAMLocation.HasValue ? ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 2]) : default;
+    public partial TimeOnly GetSunsetEndCustom() => _TNAMLocation.HasValue ? ClimateBinaryCreateTranslation.GetTime(_recordData.Span[_TNAMLocation!.Value.Min + 3]) : default;
 
     public Climate.Moon Moons
     {

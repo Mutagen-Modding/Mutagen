@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -881,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1219,13 +1220,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 441,
-            version: 0);
-
-        public const string GUID = "7bc68bd1-2eb5-4094-8e32-00eec9922c48";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 12;
@@ -1262,13 +1256,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.FSTS,
                 RecordTypes.XCNT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FootstepSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1772,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardFootsteps.SetTo(
                         rhs.WalkForwardFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1791,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RunForwardFootsteps.SetTo(
                         rhs.RunForwardFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1810,7 +1804,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardAlternateFootsteps.SetTo(
                         rhs.WalkForwardAlternateFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1829,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RunForwardAlternateFootsteps.SetTo(
                         rhs.RunForwardAlternateFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1848,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardAlternateFootsteps2.SetTo(
                         rhs.WalkForwardAlternateFootsteps2
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2140,7 +2134,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2156,7 +2151,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryCountCustom(
             MutagenFrame frame,
-            IFootstepSetInternal item);
+            IFootstepSetInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2208,7 +2204,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Count
         public partial ParseResult CountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2283,7 +2280,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return CountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

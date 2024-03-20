@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,10 +56,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Property
-        public T Property { get; set; } = default;
+        public T Property { get; set; } = default(T);
         #endregion
         #region Step
-        public Single Step { get; set; } = default;
+        public Single Step { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -365,13 +366,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 294,
-            version: 0);
-
-        public const string GUID = "b778bd5b-1695-4263-bbcb-daaf62236a7a";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -403,8 +397,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(AObjectModPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -450,8 +442,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IAObjectModProperty<T> item)
         {
             ClearPartial();
-            item.Property = default;
-            item.Step = default;
+            item.Property = default(T);
+            item.Step = default(Single);
         }
         
         #region Mutagen

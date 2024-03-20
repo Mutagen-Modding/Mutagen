@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public DialogItemData.VersioningBreaks Versioning { get; set; } = default;
+        public DialogItemData.VersioningBreaks Versioning { get; set; } = default(DialogItemData.VersioningBreaks);
         #endregion
         #region DialogType
-        public DialogType DialogType { get; set; } = default;
+        public DialogType DialogType { get; set; } = default(DialogType);
         #endregion
         #region Flags
-        public DialogItem.Flag Flags { get; set; } = default;
+        public DialogItem.Flag Flags { get; set; } = default(DialogItem.Flag);
         #endregion
 
         #region To String
@@ -688,13 +689,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 186,
-            version: 0);
-
-        public const string GUID = "2261ed10-f5dd-4b02-b71a-8eedb897e41e";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -733,8 +727,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -772,9 +764,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IDialogItemData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.DialogType = default;
-            item.Flags = default;
+            item.Versioning = default(DialogItemData.VersioningBreaks);
+            item.DialogType = default(DialogType);
+            item.Flags = default(DialogItem.Flag);
         }
         
         #region Mutagen

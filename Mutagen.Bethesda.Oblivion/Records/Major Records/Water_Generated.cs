@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -919,13 +920,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 127,
-            version: 0);
-
-        public const string GUID = "31d50641-f6df-4533-89c3-e764dc35a702";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 12;
@@ -968,13 +962,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SNAM,
                 RecordTypes.DATA,
                 RecordTypes.GNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1852,7 +1846,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     WaterBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Water_FieldIndex.Data;
                 }
                 case RecordTypeInts.GNAM:
@@ -1874,7 +1869,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IWaterInternal item);
+            IWaterInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1946,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IWaterDataGetter? GetDataCustom();
         public IWaterDataGetter? Data => GetDataCustom();

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region OpCode
-        public InstructionOpcode OpCode { get; set; } = default;
+        public InstructionOpcode OpCode { get; set; } = default(InstructionOpcode);
         #endregion
         #region Arguments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -644,13 +644,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 16,
-            version: 0);
-
-        public const string GUID = "c72c53ef-3e02-4cdb-81c0-81f8ad2d19b4";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -681,8 +674,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -720,7 +711,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexObjectFunctionInstruction item)
         {
             ClearPartial();
-            item.OpCode = default;
+            item.OpCode = default(InstructionOpcode);
             item.Arguments.Clear();
         }
         

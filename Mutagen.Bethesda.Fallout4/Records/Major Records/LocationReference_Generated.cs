@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -71,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
-        public P2Int16 Grid { get; set; } = default;
+        public P2Int16 Grid { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -702,13 +703,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 617,
-            version: 0);
-
-        public const string GUID = "cc8d5cc8-cf0f-45a8-b5d3-13a067e71fc8";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -740,8 +734,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -781,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Actor.Clear();
             item.Location.Clear();
-            item.Grid = default;
+            item.Grid = default(P2Int16);
         }
         
         #region Mutagen

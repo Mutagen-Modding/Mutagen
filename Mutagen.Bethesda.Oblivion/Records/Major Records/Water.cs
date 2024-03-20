@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Oblivion;
 
@@ -74,7 +75,7 @@ partial class WaterBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IWaterInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, IWaterInternal item, PreviousParse lastParsed)
     {
         item.Data = CreateCustom(frame);
     }
@@ -93,7 +94,7 @@ partial class WaterBinaryOverlay
 {
     private WaterData? _waterData;
 
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         this._waterData = WaterBinaryCreateTranslation.CreateCustom(new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)));
     }

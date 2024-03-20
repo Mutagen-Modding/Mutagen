@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MaterialType" recordType="MATT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <FormLink name="Parent" refName="MaterialType" recordType="PNAM" />
+      <String name="Name" recordType="MNAM" />
+      <Color name="HavokDisplayColor" recordType="CNAM" binaryType="NoAlphaFloat" />
+      <Float name="Buoyancy" recordType="BNAM" />
+      <Enum name="Flags" enumName="MaterialType.Flag" recordType="FNAM" />
+      <FormLink name="HavokImpactDataSet" recordType="HNAM" refName="ImpactDataSet" />
+      <String name="BreakableFX" recordType="ANAM" />
+      <ByteArray name="ModelData" recordType="FLLD" />
+    </Fields>
+  </Object>
+</Loqui>

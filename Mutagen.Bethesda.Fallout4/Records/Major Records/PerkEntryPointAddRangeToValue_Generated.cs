@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,10 +53,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region From
-        public Single From { get; set; } = default;
+        public Single From { get; set; } = default(Single);
         #endregion
         #region To
-        public Single To { get; set; } = default;
+        public Single To { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -620,13 +621,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 603,
-            version: 0);
-
-        public const string GUID = "c9831f67-aa2e-4d1f-b87a-1326749bac47";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 8;
@@ -665,8 +659,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddRangeToValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -704,8 +696,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPerkEntryPointAddRangeToValue item)
         {
             ClearPartial();
-            item.From = default;
-            item.To = default;
+            item.From = default(Single);
+            item.To = default(Single);
             base.Clear(item);
         }
         
@@ -1141,6 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

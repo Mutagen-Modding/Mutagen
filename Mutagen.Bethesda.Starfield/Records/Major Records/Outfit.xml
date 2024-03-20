@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Outfit" recordType="OTFT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <List name="Items" recordType="INAM">
+        <FormLink >
+          <Interface>IOutfitTarget</Interface>
+        </FormLink>
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

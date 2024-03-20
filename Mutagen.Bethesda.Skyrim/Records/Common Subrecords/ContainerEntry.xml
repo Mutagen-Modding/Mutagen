@@ -1,14 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ContainerEntry" objType="Subrecord" GUID="012b2a3c-ad31-4b45-a5ca-f54760049575" ID="171">
+  <Object name="ContainerEntry" objType="Subrecord">
     <Fields>
       <RefDirect name="Item" refName="ContainerItem" nullable="False" />
       <RefDirect name="Data" refName="ExtraData" />
     </Fields>
   </Object>
-  <Object name="ContainerItem" recordType="CNTO" objType="Subrecord" GUID="9136f361-686d-4ce5-a654-fda162ea6bf8" ID="172">
+  <Object name="ContainerItem" recordType="CNTO" objType="Subrecord">
     <Fields>
-      <FormLink name="Item" >
+      <FormLink name="Item">
         <Interface>IItem</Interface>
       </FormLink>
       <Int32 name="Count" />

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
         #region NumConnectionsFluffBytes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -766,13 +767,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 142,
-            version: 0);
-
-        public const string GUID = "40edd2d1-a707-454b-93c4-d833df08a2dd";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -804,8 +798,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(RoadPointBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -843,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IRoadPoint item)
         {
             ClearPartial();
-            item.Point = default;
+            item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = new byte[3];
             item.Connections.Clear();
         }
@@ -1286,6 +1278,13 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
+        public static void RoadPointParseEndingPositions(
+            RoadPointBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ConnectionsEndingPos = ret._structData.Length;
+        }
+
         public static IRoadPointGetter RoadPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RoadPointBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ConnectionsEndingPos = ret._structData.Length;
+            RoadPointParseEndingPositions(ret, package);
             stream.Position += ret.ConnectionsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

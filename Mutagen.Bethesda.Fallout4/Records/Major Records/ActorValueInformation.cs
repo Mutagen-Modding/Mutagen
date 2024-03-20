@@ -5,7 +5,11 @@ partial class ActorValueInformation
     [Flags]
     public enum Flag : uint
     {
+        Skill = 0x02,
+        UsesEnum = 0x04,
         DoNotAllowScriptEdits = 0x8,
+        IsFullAvCached = 0x10,
+        IsPermanentAvCached = 0x020,
         DefaultToZero = 0x400,
         DefaultToOne = 0x800,
         DefaultToOneHundred = 0x1000,
@@ -27,7 +31,7 @@ partial class ActorValueInformation
         SpecialAttribute,
         Skill,
         AiAttribute,
-        Resistence,
+        Resistance,
         Condition,
         Charge,
         IntValue,

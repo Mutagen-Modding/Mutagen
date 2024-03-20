@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,28 +51,28 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region L
-        public Byte L { get; set; } = default;
+        public Byte L { get; set; } = default(Byte);
         #endregion
         #region R
-        public Byte R { get; set; } = default;
+        public Byte R { get; set; } = default(Byte);
         #endregion
         #region C
-        public Byte C { get; set; } = default;
+        public Byte C { get; set; } = default(Byte);
         #endregion
         #region LFE
-        public Byte LFE { get; set; } = default;
+        public Byte LFE { get; set; } = default(Byte);
         #endregion
         #region RL
-        public Byte RL { get; set; } = default;
+        public Byte RL { get; set; } = default(Byte);
         #endregion
         #region RR
-        public Byte RR { get; set; } = default;
+        public Byte RR { get; set; } = default(Byte);
         #endregion
         #region BL
-        public Byte BL { get; set; } = default;
+        public Byte BL { get; set; } = default(Byte);
         #endregion
         #region BR
-        public Byte BR { get; set; } = default;
+        public Byte BR { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -860,13 +861,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 476,
-            version: 0);
-
-        public const string GUID = "3ab2f42e-9b99-4513-b8ed-86d9255d4c29";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -898,8 +892,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputChannelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -937,14 +929,14 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundOutputChannel item)
         {
             ClearPartial();
-            item.L = default;
-            item.R = default;
-            item.C = default;
-            item.LFE = default;
-            item.RL = default;
-            item.RR = default;
-            item.BL = default;
-            item.BR = default;
+            item.L = default(Byte);
+            item.R = default(Byte);
+            item.C = default(Byte);
+            item.LFE = default(Byte);
+            item.RL = default(Byte);
+            item.RR = default(Byte);
+            item.BL = default(Byte);
+            item.BR = default(Byte);
         }
         
         #region Mutagen

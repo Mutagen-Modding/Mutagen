@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Climate" recordType="CLMT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Weathers" refName="WeatherType" recordType="WLST" />
+      <RefList name="WeatherSettings" refName="ClimateWeatherSettings" recordType="WSLT" />
+      <Data recordType="TNAM">
+        <Fields>
+          <TimeOnly name="SunriseBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunriseEnd" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetEnd" binary="Custom" byteLength="1" />
+          <UInt8 name="Volatility" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="ClimateWeatherSettings" objType="Subrecord">
+    <Fields>
+      <FormLink name="Settings" refName="WeatherSetting" />
+      <Int32 name="Chance" />
+      <FormLink name="Global" refName="Global" />
+    </Fields>
+  </Object>
+</Loqui>

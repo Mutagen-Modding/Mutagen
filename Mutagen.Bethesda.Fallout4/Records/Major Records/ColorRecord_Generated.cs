@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda.Fallout4
         IAColorRecordDataGetter IColorRecordGetter.Data => Data;
         #endregion
         #region Flags
-        public ColorRecord.Flag Flags { get; set; } = default;
+        public ColorRecord.Flag Flags { get; set; } = default(ColorRecord.Flag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -562,9 +563,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ColorRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ColorRecordSetterCommon.Instance.RemapLinks(this, mapping);
-        public ColorRecord(FormKey formKey)
+        public ColorRecord(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -573,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -587,12 +591,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public ColorRecord(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public ColorRecord(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -604,6 +612,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IColorRecord);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -699,6 +712,10 @@ namespace Mutagen.Bethesda.Fallout4
         new AColorRecordData Data { get; set; }
         new ColorRecord.Flag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
+        #region Mutagen
+        new ColorRecord.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IColorRecordInternal :
@@ -730,6 +747,10 @@ namespace Mutagen.Bethesda.Fallout4
         IAColorRecordDataGetter Data { get; }
         ColorRecord.Flag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
+
+        #region Mutagen
+        ColorRecord.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -920,13 +941,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 79,
-            version: 0);
-
-        public const string GUID = "4776d5fb-36ec-48ab-9106-fa275bfd7cc4";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 11;
@@ -968,13 +982,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ColorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1014,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Name = default;
             item.Data.Clear();
-            item.Flags = default;
+            item.Flags = default(ColorRecord.Flag);
             item.Conditions.Clear();
             base.Clear(item);
         }
@@ -1332,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ColorRecord(formKey);
+            var newRec = new ColorRecord(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1755,14 +1769,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ColorRecordBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ColorRecord_FieldIndex.Data;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     ColorRecordBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ColorRecord_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
@@ -1789,11 +1805,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IColorRecordInternal item);
+            IColorRecordInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            IColorRecordInternal item);
+            IColorRecordInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1841,6 +1859,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         protected override Type LinkType => typeof(IColorRecord);
 
+        public ColorRecord.MajorFlag MajorFlags => (ColorRecord.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;
@@ -1857,7 +1876,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IAColorRecordDataGetter GetDataCustom();
         public IAColorRecordDataGetter Data => GetDataCustom();
@@ -1865,7 +1884,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial ColorRecord.Flag GetFlagsCustom();
         public ColorRecord.Flag Flags => GetFlagsCustom();

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BodyPartData" recordType="BPTD" baseClass="Fallout4MajorRecord" objType="Record" GUID="0baa72a5-3d0b-4b1e-a29b-fc65129d62af" ID="96">
+  <Object name="BodyPartData" recordType="BPTD" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefList name="Parts" refName="BodyPart" />
     </Fields>
   </Object>
-  <Object name="BodyPart" objType="Subrecord" GUID="776b6f1c-d6fa-47db-a84a-450e3a2d36a4" ID="612">
+  <Object name="BodyPart" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="BPTN" translated="Normal" />
       <String name="PartNode" recordType="BPNN" nullable="False" />

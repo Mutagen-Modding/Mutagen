@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Month
-        public Month Month { get; set; } = default;
+        public Month Month { get; set; } = default(Month);
         #endregion
         #region DayOfWeek
-        public Weekday DayOfWeek { get; set; } = default;
+        public Weekday DayOfWeek { get; set; } = default(Weekday);
         #endregion
         #region Day
-        public Byte Day { get; set; } = default;
+        public Byte Day { get; set; } = default(Byte);
         #endregion
         #region Time
-        public Byte Time { get; set; } = default;
+        public Byte Time { get; set; } = default(Byte);
         #endregion
         #region Duration
-        public Int32 Duration { get; set; } = default;
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 158,
-            version: 0);
-
-        public const string GUID = "152fbe7f-93c5-46fd-992e-79638d01367a";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -797,8 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageScheduleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -836,11 +828,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageSchedule item)
         {
             ClearPartial();
-            item.Month = default;
-            item.DayOfWeek = default;
-            item.Day = default;
-            item.Time = default;
-            item.Duration = default;
+            item.Month = default(Month);
+            item.DayOfWeek = default(Weekday);
+            item.Day = default(Byte);
+            item.Time = default(Byte);
+            item.Duration = default(Int32);
         }
         
         #region Mutagen

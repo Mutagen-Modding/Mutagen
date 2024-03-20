@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="SkyrimMajorRecord" GUID="20096909-ee8d-4c38-9022-999ed7e75418" ID="238">
+  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <UInt32 name="Index" recordType="BNAM" nullable="False" />
       <Color name="DebugColor" binaryType="Alpha" recordType="FNAM" nullable="False" />
       <Enum name="Flags" enumName="CollisionLayer.Flag" recordType="GNAM" nullable="False" />
       <String name="Name" recordType="MNAM" nullable="False" />
-      <List name="CollidesWith" counterRecType="INTV" recordType="CNAM" nullIfCounterZero="true" >
+      <List name="CollidesWith" counterRecType="INTV" recordType="CNAM" nullIfCounterZero="true">
         <FormLink refName="CollisionLayer" />
       </List>
     </Fields>

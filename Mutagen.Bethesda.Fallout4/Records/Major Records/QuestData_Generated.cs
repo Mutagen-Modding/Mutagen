@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region DelayTime
-        public Single DelayTime { get; set; } = default;
+        public Single DelayTime { get; set; } = default(Single);
         #endregion
         #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        public Quest.TypeEnum Type { get; set; } = default(Quest.TypeEnum);
         #endregion
 
         #region To String
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 681,
-            version: 0);
-
-        public const string GUID = "c70aba81-4a1f-4922-ac95-ca821ed8b31a";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -797,8 +791,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(QuestDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -836,11 +828,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
-            item.Unused = default;
-            item.DelayTime = default;
-            item.Type = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
+            item.Unused = default(Byte);
+            item.DelayTime = default(Single);
+            item.Type = default(Quest.TypeEnum);
         }
         
         #region Mutagen

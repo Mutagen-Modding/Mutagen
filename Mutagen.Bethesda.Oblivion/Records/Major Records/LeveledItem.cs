@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class LeveledItemBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
+    public static partial ParseResult FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item, PreviousParse lastParsed)
     {
         var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
         if (length != 1)
@@ -59,12 +59,12 @@ partial class LeveledItemBinaryOverlay
         }
         return ret;
     }
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _FlagsLocation = (ushort)(stream.Position - offset);
     }
 
-    public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subMeta = stream.ReadSubrecordHeader();
         if (subMeta.ContentLength != 1)

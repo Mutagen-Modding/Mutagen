@@ -12,7 +12,6 @@ public partial class Static
     {
         HeadingMarker = 0x0000_0004,
         NonOccluder = 0x0000_0010,
-        Deleted = 0x0000_0020,
         HasTreeLod = 0x0000_0040,
         AddOnLodObject = 0x0000_0080,
         HiddenFromLocalMap = 0x0000_0200,
@@ -40,7 +39,8 @@ partial class StaticBinaryOverlay
 
     public partial ParseResult DistantLodParsingCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         var amount = StaticBinaryCreateTranslation.ReadHeader(stream);
         if (amount == 0) return (int)Static_FieldIndex.DistantLods;
@@ -59,7 +59,8 @@ partial class StaticBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryDistantLodParsingCustom(
         MutagenFrame frame,
-        IStaticInternal item)
+        IStaticInternal item, 
+        PreviousParse lastParsed)
     {
         var amount = StaticBinaryCreateTranslation.ReadHeader(frame);
         if (amount == 0) return (int)Static_FieldIndex.DistantLods;

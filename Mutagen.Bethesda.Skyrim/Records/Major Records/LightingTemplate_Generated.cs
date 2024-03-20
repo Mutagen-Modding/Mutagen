@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,34 +56,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region AmbientColor
-        public Color AmbientColor { get; set; } = default;
+        public Color AmbientColor { get; set; } = default(Color);
         #endregion
         #region DirectionalColor
-        public Color DirectionalColor { get; set; } = default;
+        public Color DirectionalColor { get; set; } = default(Color);
         #endregion
         #region FogNearColor
-        public Color FogNearColor { get; set; } = default;
+        public Color FogNearColor { get; set; } = default(Color);
         #endregion
         #region FogNear
-        public Single FogNear { get; set; } = default;
+        public Single FogNear { get; set; } = default(Single);
         #endregion
         #region FogFar
-        public Single FogFar { get; set; } = default;
+        public Single FogFar { get; set; } = default(Single);
         #endregion
         #region DirectionalRotationXY
-        public Int32 DirectionalRotationXY { get; set; } = default;
+        public Int32 DirectionalRotationXY { get; set; } = default(Int32);
         #endregion
         #region DirectionalRotationZ
-        public Int32 DirectionalRotationZ { get; set; } = default;
+        public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
         #region DirectionalFade
-        public Single DirectionalFade { get; set; } = default;
+        public Single DirectionalFade { get; set; } = default(Single);
         #endregion
         #region FogClipDistance
-        public Single FogClipDistance { get; set; } = default;
+        public Single FogClipDistance { get; set; } = default(Single);
         #endregion
         #region FogPower
-        public Single FogPower { get; set; } = default;
+        public Single FogPower { get; set; } = default(Single);
         #endregion
         #region AmbientColors
         public AmbientColors AmbientColors { get; set; } = new AmbientColors();
@@ -166,7 +167,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAmbientColorsGetter? ILightingTemplateGetter.DirectionalAmbientColors => this.DirectionalAmbientColors;
         #endregion
         #region DATADataTypeState
-        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default;
+        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default(LightingTemplate.DATADataType);
         #endregion
 
         #region To String
@@ -979,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1368,13 +1369,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 285,
-            version: 0);
-
-        public const string GUID = "e6740b74-8860-4887-854c-5e668986332a";
-
         public const ushort AdditionalFieldCount = 18;
 
         public const ushort FieldCount = 25;
@@ -1412,13 +1406,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.LGTM,
                 RecordTypes.DATA,
                 RecordTypes.DALC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightingTemplateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1456,24 +1450,24 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILightingTemplateInternal item)
         {
             ClearPartial();
-            item.AmbientColor = default;
-            item.DirectionalColor = default;
-            item.FogNearColor = default;
-            item.FogNear = default;
-            item.FogFar = default;
-            item.DirectionalRotationXY = default;
-            item.DirectionalRotationZ = default;
-            item.DirectionalFade = default;
-            item.FogClipDistance = default;
-            item.FogPower = default;
+            item.AmbientColor = default(Color);
+            item.DirectionalColor = default(Color);
+            item.FogNearColor = default(Color);
+            item.FogNear = default(Single);
+            item.FogFar = default(Single);
+            item.DirectionalRotationXY = default(Int32);
+            item.DirectionalRotationZ = default(Int32);
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
+            item.FogPower = default(Single);
             item.AmbientColors.Clear();
-            item.FogFarColor = default;
-            item.FogMax = default;
-            item.LightFadeStartDistance = default;
-            item.LightFadeEndDistance = default;
-            item.Unknown = default;
+            item.FogFarColor = default(Color);
+            item.FogMax = default(Single);
+            item.LightFadeStartDistance = default(Single);
+            item.LightFadeEndDistance = default(Single);
+            item.Unknown = default(Int32);
             item.DirectionalAmbientColors = null;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(LightingTemplate.DATADataType);
             base.Clear(item);
         }
         
@@ -2528,52 +2522,52 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientColor
         private int _AmbientColorLocation => _DATALocation!.Value.Min;
         private bool _AmbientColor_IsSet => _DATALocation.HasValue;
-        public Color AmbientColor => _AmbientColor_IsSet ? _recordData.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color AmbientColor => _AmbientColor_IsSet ? _recordData.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region DirectionalColor
         private int _DirectionalColorLocation => _DATALocation!.Value.Min + 0x4;
         private bool _DirectionalColor_IsSet => _DATALocation.HasValue;
-        public Color DirectionalColor => _DirectionalColor_IsSet ? _recordData.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DirectionalColor => _DirectionalColor_IsSet ? _recordData.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogNearColor
         private int _FogNearColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _FogNearColor_IsSet => _DATALocation.HasValue;
-        public Color FogNearColor => _FogNearColor_IsSet ? _recordData.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogNearColor => _FogNearColor_IsSet ? _recordData.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogNear
         private int _FogNearLocation => _DATALocation!.Value.Min + 0xC;
         private bool _FogNear_IsSet => _DATALocation.HasValue;
-        public Single FogNear => _FogNear_IsSet ? _recordData.Slice(_FogNearLocation, 4).Float() : default;
+        public Single FogNear => _FogNear_IsSet ? _recordData.Slice(_FogNearLocation, 4).Float() : default(Single);
         #endregion
         #region FogFar
         private int _FogFarLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FogFar_IsSet => _DATALocation.HasValue;
-        public Single FogFar => _FogFar_IsSet ? _recordData.Slice(_FogFarLocation, 4).Float() : default;
+        public Single FogFar => _FogFar_IsSet ? _recordData.Slice(_FogFarLocation, 4).Float() : default(Single);
         #endregion
         #region DirectionalRotationXY
         private int _DirectionalRotationXYLocation => _DATALocation!.Value.Min + 0x14;
         private bool _DirectionalRotationXY_IsSet => _DATALocation.HasValue;
-        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationXYLocation, 4)) : default;
+        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationXYLocation, 4)) : default(Int32);
         #endregion
         #region DirectionalRotationZ
         private int _DirectionalRotationZLocation => _DATALocation!.Value.Min + 0x18;
         private bool _DirectionalRotationZ_IsSet => _DATALocation.HasValue;
-        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationZLocation, 4)) : default;
+        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationZLocation, 4)) : default(Int32);
         #endregion
         #region DirectionalFade
         private int _DirectionalFadeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
-        public Single DirectionalFade => _DirectionalFade_IsSet ? _recordData.Slice(_DirectionalFadeLocation, 4).Float() : default;
+        public Single DirectionalFade => _DirectionalFade_IsSet ? _recordData.Slice(_DirectionalFadeLocation, 4).Float() : default(Single);
         #endregion
         #region FogClipDistance
         private int _FogClipDistanceLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
-        public Single FogClipDistance => _FogClipDistance_IsSet ? _recordData.Slice(_FogClipDistanceLocation, 4).Float() : default;
+        public Single FogClipDistance => _FogClipDistance_IsSet ? _recordData.Slice(_FogClipDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region FogPower
         private int _FogPowerLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FogPower_IsSet => _DATALocation.HasValue;
-        public Single FogPower => _FogPower_IsSet ? _recordData.Slice(_FogPowerLocation, 4).Float() : default;
+        public Single FogPower => _FogPower_IsSet ? _recordData.Slice(_FogPowerLocation, 4).Float() : default(Single);
         #endregion
         #region AmbientColors
         private int _AmbientColorsLocation => _DATALocation!.Value.Min + 0x28;
@@ -2584,27 +2578,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region FogFarColor
         private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;
         private bool _FogFarColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Color FogFarColor => _FogFarColor_IsSet ? _recordData.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogFarColor => _FogFarColor_IsSet ? _recordData.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogMax
         private int _FogMaxLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single FogMax => _FogMax_IsSet ? _recordData.Slice(_FogMaxLocation, 4).Float() : default;
+        public Single FogMax => _FogMax_IsSet ? _recordData.Slice(_FogMaxLocation, 4).Float() : default(Single);
         #endregion
         #region LightFadeStartDistance
         private int _LightFadeStartDistanceLocation => _DATALocation!.Value.Min + 0x50;
         private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _recordData.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
+        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _recordData.Slice(_LightFadeStartDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region LightFadeEndDistance
         private int _LightFadeEndDistanceLocation => _DATALocation!.Value.Min + 0x54;
         private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _recordData.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
+        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _recordData.Slice(_LightFadeEndDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x58;
         private bool _Unknown_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         partial void CustomFactoryEnd(

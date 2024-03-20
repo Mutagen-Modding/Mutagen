@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -688,13 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 450,
-            version: 0);
-
-        public const string GUID = "945414e9-610f-4f53-881e-0fe4c68f2dfa";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
@@ -726,8 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -941,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1183,6 +1175,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void NavmeshSetParseEndingPositions(
+            NavmeshSetBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
+        }
+
         public static INavmeshSetGetter NavmeshSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1198,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new NavmeshSetBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
+            NavmeshSetParseEndingPositions(ret, package);
             stream.Position += ret.NavmeshesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

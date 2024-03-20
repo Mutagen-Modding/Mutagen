@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Relationship" objType="Record" recordType="RELA" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="8d5e6837-c926-4b13-9d68-132c96ca3319" ID="463">
+  <Object name="Relationship" objType="Record" recordType="RELA" majorFlag="true" baseClass="SkyrimMajorRecord">
     <Fields>
       <Data>
         <Fields>

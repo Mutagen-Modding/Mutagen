@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Fallout4Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="8e7b174b-b559-42d9-9f79-88051db16fff" ID="22">
+  <Object name="Fallout4Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false">
     <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
       <Where>Fallout4MajorRecord</Where>
     </Generic>
@@ -18,7 +18,7 @@
       </Dict>
     </Fields>
   </Object>
-  <Object name="Fallout4ListGroup" objType="Group" recordType="GRUP" GUID="6d98964a-cd8e-4463-84bc-97f8b32cb4eb" ID="452">
+  <Object name="Fallout4ListGroup" objType="Group" recordType="GRUP">
     <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
       <Where>CellBlock</Where>
     </Generic>

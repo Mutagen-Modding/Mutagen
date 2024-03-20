@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
-        public UInt32 NumRecords { get; set; } = default;
+        public UInt32 NumRecords { get; set; } = default(UInt32);
         #endregion
         #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x800;
+        public static readonly UInt32 NextFormIDDefault = 0x1;
         public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
@@ -682,13 +683,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 21,
-            version: 0);
-
-        public const string GUID = "4011569e-322f-4e65-b436-d7c6667be637";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -727,8 +721,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ModStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -767,7 +759,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Version = ModStats.VersionDefault;
-            item.NumRecords = default;
+            item.NumRecords = default(UInt32);
             item.NextFormID = ModStats.NextFormIDDefault;
         }
         

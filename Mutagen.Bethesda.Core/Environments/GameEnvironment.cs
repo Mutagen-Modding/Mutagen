@@ -188,12 +188,14 @@ public sealed class GameEnvironmentState :
                         new PluginListingsProvider(
                             gameReleaseInjection,
                             new TimestampedPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 new TimestampAligner(IFileSystemExt.DefaultFilesystem),
                                 new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                                 pluginRawListingsReader,
                                 dataDirectory,
                                 pluginListingsPathProvider),
                             new EnabledPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 pluginRawListingsReader,
                                 pluginListingsPathProvider)),
                         new CreationClubListingsProvider(
@@ -304,12 +306,14 @@ public sealed class GameEnvironmentState<TMod> :
                         new PluginListingsProvider(
                             gameReleaseInjection,
                             new TimestampedPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 new TimestampAligner(IFileSystemExt.DefaultFilesystem),
                                 new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                                 pluginRawListingsReader,
                                 dataDirectory,
                                 pluginListingsPathProvider),
                             new EnabledPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 pluginRawListingsReader,
                                 pluginListingsPathProvider)),
                         new CreationClubListingsProvider(
@@ -429,12 +433,14 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                         new PluginListingsProvider(
                             gameReleaseInjection,
                             new TimestampedPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 new TimestampAligner(IFileSystemExt.DefaultFilesystem),
                                 new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = false},
                                 pluginRawListingsReader,
                                 dataDirectory,
                                 pluginListingsPathProvider),
                             new EnabledPluginListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
                                 pluginRawListingsReader,
                                 pluginListingsPathProvider)),
                         new CreationClubListingsProvider(

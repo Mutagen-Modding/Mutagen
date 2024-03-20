@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public EnableParent.VersioningBreaks Versioning { get; set; } = default;
+        public EnableParent.VersioningBreaks Versioning { get; set; } = default(EnableParent.VersioningBreaks);
         #endregion
         #region Reference
         private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
@@ -64,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
-        public EnableParent.Flag Flags { get; set; } = default;
+        public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -744,13 +745,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 470,
-            version: 0);
-
-        public const string GUID = "9d4ea708-9dc6-499a-b801-f2136f9bd331";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -789,8 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(EnableParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -828,9 +820,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(EnableParent.VersioningBreaks);
             item.Reference.Clear();
-            item.Flags = default;
+            item.Flags = default(EnableParent.Flag);
             item.Unknown = new byte[3];
         }
         

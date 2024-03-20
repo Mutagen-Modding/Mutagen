@@ -49,7 +49,8 @@ partial class MaterialSwapBinaryCreateTranslation
 
     public static partial void FillBinaryTreeFolderCustom(
         MutagenFrame frame,
-        IMaterialSwapInternal item)
+        IMaterialSwapInternal item,
+        PreviousParse lastParsed)
     {
         var header = frame.ReadSubrecordHeader();
         item.TreeFolder = StringBinaryTranslation.Instance.Parse(
@@ -57,7 +58,7 @@ partial class MaterialSwapBinaryCreateTranslation
             stringBinaryType: StringBinaryType.NullTerminate);
     }
 
-    public static partial void FillBinarySubstitutionsCustom(MutagenFrame frame, IMaterialSwapInternal item)
+    public static partial void FillBinarySubstitutionsCustom(MutagenFrame frame, IMaterialSwapInternal item, PreviousParse lastParsed)
     {
         item.Substitutions.SetTo(
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MaterialSubstitution>.Instance.Parse(
@@ -120,7 +121,7 @@ partial class MaterialSwapBinaryWriteTranslation
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
-                    StringBinaryTranslation.Instance.Write(writer, treeFolder, RecordTypes.FNAM);
+                    StringBinaryTranslation.Instance.Write(writer, treeFolder, RecordTypes.FNAM, StringBinaryType.NullTerminate);
                 });
         }
     }
@@ -162,7 +163,7 @@ partial class MaterialSwapBinaryOverlay
 
     partial void TreeFolderCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _fnamLoc = (stream.Position - offset);

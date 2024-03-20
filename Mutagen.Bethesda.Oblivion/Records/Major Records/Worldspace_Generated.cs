@@ -21,6 +21,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -175,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICellGetter? IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
-        public Int32 SubCellsTimestamp { get; set; } = default;
+        public Int32 SubCellsTimestamp { get; set; } = default(Int32);
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1606,13 +1607,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 75,
-            version: 0);
-
-        public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
-
         public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 20;
@@ -1678,13 +1672,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.ACRE,
                 RecordTypes.ACHR,
                 RecordTypes.REFR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1735,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.OffsetData = default;
             item.Road = null;
             item.TopCell = null;
-            item.SubCellsTimestamp = default;
+            item.SubCellsTimestamp = default(Int32);
             item.SubCells.Clear();
             base.Clear(item);
         }
@@ -2707,7 +2701,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             IModContext? parent,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<IOblivionMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<IOblivionMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -2730,10 +2724,10 @@ namespace Mutagen.Bethesda.Oblivion
                             baseRec.Road = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
                             baseRec.Road = dupRec;
                             return dupRec;
                         });
@@ -2754,10 +2748,10 @@ namespace Mutagen.Bethesda.Oblivion
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         });
@@ -2774,10 +2768,10 @@ namespace Mutagen.Bethesda.Oblivion
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         }))
@@ -2807,7 +2801,7 @@ namespace Mutagen.Bethesda.Oblivion
             IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<IOblivionMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<IOblivionMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -2865,10 +2859,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.Road = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
                                     baseRec.Road = dupRec;
                                     return dupRec;
                                 });
@@ -2894,10 +2888,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 });
@@ -2916,10 +2910,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -2977,10 +2971,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -3023,10 +3017,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -3069,10 +3063,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -3115,10 +3109,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -3161,10 +3155,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -3861,7 +3855,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4134,7 +4128,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -561,13 +562,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 355,
-            version: 0);
-
-        public const string GUID = "600c5389-62be-4b50-bc98-093fa0e20fb6";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
@@ -599,8 +593,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(HolotapeProgramBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1084,6 +1076,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void HolotapeProgramParseEndingPositions(
+            HolotapeProgramBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
+            ret.FileEndingPos = ret.File.Length + 1;
+        }
+
         public static IHolotapeProgramGetter HolotapeProgramFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1099,8 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new HolotapeProgramBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
-            ret.FileEndingPos = ret.File.Length + 1;
+            HolotapeProgramParseEndingPositions(ret, package);
             stream.Position += ret.FileEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GenericBaseForm" recordType="GBFM" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Filter" recordType="FLTR" />
+      <FormLink name="Template" recordType="ANAM" refName="GenericBaseFormTemplate" />
+      <List name="STRVs" >
+        <String recordType="STRV"/>
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <Marker name="STOP1" recordType="STOP" />
+      <Marker name="STOP2" recordType="STOP" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
+    </Fields>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IExternalBaseTemplate</LinkInterface>
+    <LinkInterface>ILeveledBaseFormTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

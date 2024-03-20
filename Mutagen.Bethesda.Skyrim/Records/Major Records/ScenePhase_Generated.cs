@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1005,13 +1006,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 468,
-            version: 0);
-
-        public const string GUID = "0520e1b4-d605-4812-8177-c80e8d49733d";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -1058,13 +1052,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.QNAM,
                 RecordTypes.SCRO,
                 RecordTypes.WNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1720,7 +1714,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryStartConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.StartConditions;
                 }
                 case RecordTypeInts.NEXT:
@@ -1730,7 +1725,8 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                             frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                            item: item);
+                            item: item,
+                            lastParsed: lastParsed);
                         return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.Unused)
@@ -1748,7 +1744,8 @@ namespace Mutagen.Bethesda.Skyrim
                             case 0:
                                 ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                                     frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                                    item: item);
+                                    item: item,
+                                    lastParsed: lastParsed);
                                 return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
@@ -1785,11 +1782,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1866,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region StartConditions
         partial void StartConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1874,7 +1873,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region CompletionConditions
         partial void CompletionConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1965,11 +1964,15 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 stream.ReadSubrecord();
                                 return new ParseResult(default(int?), type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -2017,6 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 CompletionConditionsCustomParse(
                                     stream: stream,
                                     finalPos: finalPos,
@@ -2024,13 +2028,16 @@ namespace Mutagen.Bethesda.Skyrim
                                     type: type,
                                     lastParsed: lastParsed);
                                 return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, type);
+                            }
                             case 1:
+                            {
                                 stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                                 this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                                     stream: stream,
                                     package: _package,
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

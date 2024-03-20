@@ -27,7 +27,7 @@ partial class AudioEffectChainBinaryCreateTranslation
         return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
     });
     
-    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IAudioEffectChainInternal item)
+    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IAudioEffectChainInternal item, PreviousParse lastParsed)
     {
         item.Effects.SetTo( 
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AAudioEffect>.Instance.Parse(
@@ -97,7 +97,7 @@ partial class AudioEffectChainBinaryOverlay
 {
     public IReadOnlyList<IAAudioEffectGetter> Effects { get; private set; } = Array.Empty<IAAudioEffectGetter>();
     
-    partial void EffectsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void EffectsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         this.Effects = this.ParseRepeatedTypelessSubrecord<IAAudioEffectGetter>(
             stream: stream,

@@ -1,32 +1,45 @@
 # Previous Override Iteration
-A lot of functionality like [Record Lookup](Record-Lookup) or [Winning Overrides](Winning-Overrides) deals with the "winning" version of a record, as in the record as it exists in the last Mod to override it on the Load Order.
+LinkCache offers an easy way to dig deeper past winning overrides into the load order and access the non-winning versions of records from previous mods.
 
-LinkCache offers an easy way to dig deeper into the load order and access the non-winning versions of records from previous mods.
+Some important concepts to consider when Resolving:
+
+[:octicons-arrow-right-24: Scoping Type](Scoping-Type.md)
+
+[:octicons-arrow-right-24: Resolve Target](index.md#resolve-target)
 
 ## ResolveAll
-While you can call it on a LinkCache directly, typically the preferred way to tap into this functionality is off a [FormLink](../plugins/ModKey,-FormKey,-FormLink.md):
-```cs
-IFormLinkGetter<INpcGetter> npcLink = ...;
+This call will loop over all versions of a record.  If given a ResolveTarget, it will start looping at the end given.  For example, ResolveTarget.Winning will return the winning record first, and then loop all the way to the originating version last.
 
-// Will loop over every version of that Npc
-// starting from the winning override, and ending with its originating definition
-foreach (INpcGetter npcRecord in npcLink.ResolveAll(myLinkCache))
-{
-    Console.WriteLine($"The Npc's EditorID is {npcRecord.EditorID}");
-}
-```
+=== "By FormLink"
+    ``` { .cs hl_lines=4 }
+    IFormLinkGetter<INpcGetter> myLink = ...;
+    ILinkCache myLinkCache = ...;
 
-With this pattern, you can loop over and interact with every override a record has from within a load order.
+    foreach (var record in myLink.ResolveAll(myLinkCache))
+    {
+        Console.WriteLine($"EditorID is {record.EditorID}");
+    }
+    ```
+
+=== "By LinkCache"
+    ``` { .cs hl_lines=4 }
+    IFormLinkGetter<INpcGetter> myLink = ...;
+    ILinkCache myLinkCache = ...;
+
+    foreach (var record in myLink.ResolveAll(myLinkCache))
+    {
+        Console.WriteLine($"EditorID is {record.EditorID}");
+    }
+    ```
+
+!!! tip "Context Variants Preferred"
+    This call only returns the records themselves.  The context variants will be able to inform you on where the record came from
 
 ## ResolveAllContexts
-If you look at the above code snippet, it's not as useful as it could be.  It will print all the EditorIDs, but if anything interesting happened you would not be able to tell what mod was responsible.
-
-This is because `ResolveAll` enumerates over records directly, and records do not have knowledge of what mod contained them.  They know what mod defined the record in the first place (as that's part of its FormKey), but that might not be the mod that originated the record's state being interacted with.
-
 `ResolveAllContexts` is an alternative that returns [ModContext](ModContexts.md) objects instead, which have a lot more information/tooling about where a record came from.
 
 ```cs
-IFormLinkGetter<INpcGetter> npcLink = ...;
+IFormLinkGetter<INpcGetter> formLink = ...;
 
 foreach (var npcRecordContext in npcLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(myLinkCache))
 {
@@ -34,12 +47,14 @@ foreach (var npcRecordContext in npcLink.ResolveAllContexts<ISkyrimMod, ISkyrimM
 }
 ```
 
-This will now print more interesting information, as we can now tell what mod made what change.
+Refer to the Mod Contexts documentation for more information about type requirements on the call
 
-However, you will notice that the call is much more complex, and requires you specify a lot more details.  You can read about why [here](ModContexts.md#complex-call-signature).
+[:octicons-arrow-right-24: Mod Contexts](ModContexts.md)
 
-## Lazy Enumeration
-This is discussed in more detail [here](../best-practices/Enumerable-Laziness.md), but it is important to only loop over what you need.  This allows the Link Cache to only parse as deep into the Load Order as it needs.
+## Best Practices
+It is important to only loop over what you need.  This allows the Link Cache to only parse as deep into the Load Order as it needs.
+
+[:octicons-arrow-right-24: Enumerable Laziness](../best-practices/Enumerable-Laziness.md)
 
 ```cs
 // Break out of your loops if you're done

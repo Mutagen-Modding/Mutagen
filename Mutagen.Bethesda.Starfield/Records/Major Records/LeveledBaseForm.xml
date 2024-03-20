@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledBaseForm" recordType="LVLB" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ChanceNone" recordType="LVLD" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />
+      <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledBaseFormEntry" counterLength="1" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+    <LinkInterface>IExternalBaseTemplate</LinkInterface>
+    <LinkInterface>ILeveledBaseFormTarget</LinkInterface>
+  </Object>
+  <Object name="LeveledBaseFormEntry" objType="Subrecord">
+    <Fields>
+      <Data recordType="LVLO">
+        <Fields>
+          <Int16 name="Level" />
+          <Int16 name="Unused" />
+          <FormLink name="Reference">
+            <Interface>ILeveledBaseFormTarget</Interface>
+          </FormLink>
+          <Int16 name="Count" />
+          <Percent name="ChanceNone" integerType="Byte" />
+          <Int8 name="Unused2" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+</Loqui>

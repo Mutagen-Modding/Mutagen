@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,10 +54,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Function
-        public Condition.Function Function { get; set; } = default;
+        public Condition.Function Function { get; set; } = default(Condition.Function);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region ParameterOneRecord
         private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
@@ -69,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
-        public Int32 ParameterOneNumber { get; set; } = default;
+        public Int32 ParameterOneNumber { get; set; } = default(Int32);
         #endregion
         #region ParameterOneString
         public String? ParameterOneString { get; set; }
@@ -87,7 +88,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
-        public Int32 ParameterTwoNumber { get; set; } = default;
+        public Int32 ParameterTwoNumber { get; set; } = default(Int32);
         #endregion
         #region ParameterTwoString
         public String? ParameterTwoString { get; set; }
@@ -853,13 +854,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 292,
-            version: 0);
-
-        public const string GUID = "48451500-fe33-46bd-b637-8988397ec6f8";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 11;
@@ -891,8 +885,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(FunctionConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -930,13 +922,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFunctionConditionData item)
         {
             ClearPartial();
-            item.Function = default;
-            item.Unknown2 = default;
+            item.Function = default(Condition.Function);
+            item.Unknown2 = default(UInt16);
             item.ParameterOneRecord.Clear();
-            item.ParameterOneNumber = default;
+            item.ParameterOneNumber = default(Int32);
             item.ParameterOneString = default;
             item.ParameterTwoRecord.Clear();
-            item.ParameterTwoNumber = default;
+            item.ParameterTwoNumber = default(Int32);
             item.ParameterTwoString = default;
             base.Clear(item);
         }

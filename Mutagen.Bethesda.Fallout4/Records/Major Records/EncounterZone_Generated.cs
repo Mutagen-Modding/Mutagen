@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -75,16 +76,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
         #endregion
         #region Rank
-        public SByte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default(SByte);
         #endregion
         #region MinLevel
-        public SByte MinLevel { get; set; } = default;
+        public SByte MinLevel { get; set; } = default(SByte);
         #endregion
         #region Flags
-        public EncounterZone.Flag Flags { get; set; } = default;
+        public EncounterZone.Flag Flags { get; set; } = default(EncounterZone.Flag);
         #endregion
         #region MaxLevel
-        public SByte MaxLevel { get; set; } = default;
+        public SByte MaxLevel { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -524,9 +525,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = EncounterZone_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EncounterZoneCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneSetterCommon.Instance.RemapLinks(this, mapping);
-        public EncounterZone(FormKey formKey)
+        public EncounterZone(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -535,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -549,12 +553,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public EncounterZone(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public EncounterZone(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -872,13 +880,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 464,
-            version: 0);
-
-        public const string GUID = "c458c51c-ed0d-4453-b148-737ce5c34e4d";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -915,13 +916,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.ECZN,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EncounterZoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -961,10 +962,10 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Owner.Clear();
             item.Location.Clear();
-            item.Rank = default;
-            item.MinLevel = default;
-            item.Flags = default;
-            item.MaxLevel = default;
+            item.Rank = default(SByte);
+            item.MinLevel = default(SByte);
+            item.Flags = default(EncounterZone.Flag);
+            item.MaxLevel = default(SByte);
             base.Clear(item);
         }
         
@@ -1278,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new EncounterZone(formKey);
+            var newRec = new EncounterZone(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1718,12 +1719,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
-        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default;
+        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default(SByte);
         #endregion
         #region MinLevel
         private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue;
-        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default;
+        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default(SByte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
@@ -1733,7 +1734,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MaxLevel
         private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue;
-        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default;
+        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default(SByte);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedNpc" recordType="ACHR" baseClass="Fallout4MajorRecord" objType="Record" majorFlag="true" GUID="49a147f4-d981-40c5-837b-4d6c09623a62" ID="237">
-    <Interface>IPositionRotation</Interface>
+  <Object name="PlacedNpc" recordType="ACHR" baseClass="Fallout4MajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
-      <ByteArray name="RagdollData" recordType="XRGD" />
-      <ByteArray name="RagdollBipedData" recordType="XRGB" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <RefDirect name="Patrol" refName="Patrol" />
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <Int32 name="Count" recordType="XCNT" />
@@ -37,7 +36,7 @@
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
-      <FormLink name="MultiboundReference" recordType="XMBR" >
+      <FormLink name="MultiboundReference" recordType="XMBR">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <!-- Possibly unneeded.  Never seen, just listed in xEdit -->
@@ -54,5 +53,6 @@
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
 </Loqui>

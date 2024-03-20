@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Model" objType="Subrecord">
+    <Fields>
+      <AssetLink name="File" recordType="MODL" assetType="StarfieldModel" />
+      <ByteArray name="TextureFileHashes" recordType="MODT" />
+      <List name="MaterialSwaps" recordType="MOLM" counterLength="2"  >
+        <FormLink refName="LayeredMaterialSwap" />
+      </List>
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
+      <Float name="ColorRemappingIndex" recordType="MODC" />
+      <Enum name="Flags" enumName="Model.Flag" byteLength="1" recordType="MODF" />
+    </Fields>
+  </Object>
+  <Object name="FirstPersonModel" objType="Subrecord">
+    <Fields>
+      <AssetLink name="File" recordType="MOD4" assetType="StarfieldModel" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <FormLink name="MaterialSwap" refName="LayeredMaterialSwap" recordType="MO4S" />
+    </Fields>
+  </Object>
+</Loqui>

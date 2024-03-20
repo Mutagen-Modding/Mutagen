@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        public HavokData.MaterialType Material { get; set; } = default;
+        public HavokData.MaterialType Material { get; set; } = default(HavokData.MaterialType);
         #endregion
         #region Friction
-        public Byte Friction { get; set; } = default;
+        public Byte Friction { get; set; } = default(Byte);
         #endregion
         #region Restitution
-        public Byte Restitution { get; set; } = default;
+        public Byte Restitution { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 52,
-            version: 0);
-
-        public const string GUID = "f6f11f54-031d-4243-9a36-a9ccf61f08c1";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(HavokDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IHavokData item)
         {
             ClearPartial();
-            item.Material = default;
-            item.Friction = default;
-            item.Restitution = default;
+            item.Material = default(HavokData.MaterialType);
+            item.Friction = default(Byte);
+            item.Restitution = default(Byte);
         }
         
         #region Mutagen

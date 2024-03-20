@@ -17,6 +17,8 @@ public static class Implicits
     private static readonly ImplicitRegistration EnderalSE;
     private static readonly ImplicitRegistration SkyrimVR;
     private static readonly ImplicitRegistration Fallout4;
+    private static readonly ImplicitRegistration Fallout4VR;
+    private static readonly ImplicitRegistration Starfield;
 
     static Implicits()
     {
@@ -129,6 +131,27 @@ public static class Implicits
             {
                 // ToDo
             });
+        Fallout4VR = Fallout4 with
+        {
+            GameRelease = GameRelease.Fallout4VR,
+            BaseMasters = new ImplicitModKeyCollection(Fallout4.BaseMasters.And("Fallout4_VR.esm")),
+            Listings = new ImplicitModKeyCollection(Fallout4.Listings.And("Fallout4_VR.esm")),
+        };
+        #endregion
+
+        #region Starfield
+        var starfieldBaseMasters = new HashSet<ModKey>()
+        {
+            "Starfield.esm",
+        };
+        Starfield = new ImplicitRegistration(
+            GameRelease.Starfield,
+            BaseMasters: new ImplicitModKeyCollection(starfieldBaseMasters),
+            Listings: new ImplicitModKeyCollection(starfieldBaseMasters),
+            RecordFormKeys: new HashSet<FormKey>()
+            {
+                // ToDo
+            });
         #endregion
     }
 
@@ -144,6 +167,8 @@ public static class Implicits
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.SkyrimVR => SkyrimVR,
             GameRelease.Fallout4 => Fallout4,
+            GameRelease.Fallout4VR => Fallout4,
+            GameRelease.Starfield => Starfield,
             _ => throw new NotImplementedException(),
         };
     }

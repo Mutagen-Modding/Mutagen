@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Min
-        public P3Float Min { get; set; } = default;
+        public P3Float Min { get; set; } = default(P3Float);
         #endregion
         #region Max
-        public P3Float Max { get; set; } = default;
+        public P3Float Max { get; set; } = default(P3Float);
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -872,13 +873,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 448,
-            version: 0);
-
-        public const string GUID = "893c17cd-783f-4570-808b-f1185071cd49";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -910,8 +904,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(IslandDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -949,8 +941,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IIslandData item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(P3Float);
+            item.Max = default(P3Float);
             item.Triangles.Clear();
             item.Vertices.Clear();
         }
@@ -1449,6 +1441,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void IslandDataParseEndingPositions(
+            IslandDataBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 6 + 4;
+            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 12 + 4;
+        }
+
         public static IIslandDataGetter IslandDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1464,8 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new IslandDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 6 + 4;
-            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 12 + 4;
+            IslandDataParseEndingPositions(ret, package);
             stream.Position += ret.VerticesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

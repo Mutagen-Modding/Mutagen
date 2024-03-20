@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -158,28 +159,28 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ISpellGetter.Description => this.Description;
         #endregion
         #region BaseCost
-        public UInt32 BaseCost { get; set; } = default;
+        public UInt32 BaseCost { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public SpellDataFlag Flags { get; set; } = default;
+        public SpellDataFlag Flags { get; set; } = default(SpellDataFlag);
         #endregion
         #region Type
-        public SpellType Type { get; set; } = default;
+        public SpellType Type { get; set; } = default(SpellType);
         #endregion
         #region ChargeTime
-        public Single ChargeTime { get; set; } = default;
+        public Single ChargeTime { get; set; } = default(Single);
         #endregion
         #region CastType
-        public CastType CastType { get; set; } = default;
+        public CastType CastType { get; set; } = default(CastType);
         #endregion
         #region TargetType
-        public TargetType TargetType { get; set; } = default;
+        public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
         #region CastDuration
-        public Single CastDuration { get; set; } = default;
+        public Single CastDuration { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region HalfCostPerk
         private readonly IFormLink<IPerkGetter> _HalfCostPerk = new FormLink<IPerkGetter>();
@@ -1085,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1094,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1517,13 +1518,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 115,
-            version: 0);
-
-        public const string GUID = "9bc07114-08cb-4a62-8819-b3edc36ab87e";
-
         public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 23;
@@ -1572,13 +1566,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1622,14 +1616,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.MenuDisplayObject.Clear();
             item.EquipmentType.Clear();
             item.Description.Clear();
-            item.BaseCost = default;
-            item.Flags = default;
-            item.Type = default;
-            item.ChargeTime = default;
-            item.CastType = default;
-            item.TargetType = default;
-            item.CastDuration = default;
-            item.Range = default;
+            item.BaseCost = default(UInt32);
+            item.Flags = default(SpellDataFlag);
+            item.Type = default(SpellType);
+            item.ChargeTime = default(Single);
+            item.CastType = default(CastType);
+            item.TargetType = default(TargetType);
+            item.CastDuration = default(Single);
+            item.Range = default(Single);
             item.HalfCostPerk.Clear();
             item.Effects.Clear();
             base.Clear(item);
@@ -2201,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2801,7 +2795,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
-        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default;
+        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
@@ -2816,7 +2810,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ChargeTime
         private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0xC;
         private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default(Single);
         #endregion
         #region CastType
         private int _CastTypeLocation => _SPITLocation!.Value.Min + 0x10;
@@ -2831,12 +2825,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region CastDuration
         private int _CastDurationLocation => _SPITLocation!.Value.Min + 0x18;
         private bool _CastDuration_IsSet => _SPITLocation.HasValue;
-        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default;
+        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default(Single);
         #endregion
         #region Range
         private int _RangeLocation => _SPITLocation!.Value.Min + 0x1C;
         private bool _Range_IsSet => _SPITLocation.HasValue;
-        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
         #endregion
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value.Min + 0x20;

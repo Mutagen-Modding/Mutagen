@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
 	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +17,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion.Generator\Mutagen.Bethesda.Oblivion.Generator.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Pex.Generator\Mutagen.Bethesda.Pex.Generator.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim.Generator\Mutagen.Bethesda.Skyrim.Generator.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Starfield.Generator\Mutagen.Bethesda.Starfield.Generator.csproj" />
   </ItemGroup>
 
 </Project>

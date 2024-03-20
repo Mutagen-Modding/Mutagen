@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public PlacedObjectSpline.VersioningBreaks Versioning { get; set; } = default;
+        public PlacedObjectSpline.VersioningBreaks Versioning { get; set; } = default(PlacedObjectSpline.VersioningBreaks);
         #endregion
         #region Slack
-        public Single Slack { get; set; } = default;
+        public Single Slack { get; set; } = default(Single);
         #endregion
         #region Thickness
-        public Single Thickness { get; set; } = default;
+        public Single Thickness { get; set; } = default(Single);
         #endregion
         #region HalfExtents
-        public P3Float HalfExtents { get; set; } = default;
+        public P3Float HalfExtents { get; set; } = default(P3Float);
         #endregion
         #region IsWindDetachedEnd
-        public Boolean IsWindDetachedEnd { get; set; } = default;
+        public Boolean IsWindDetachedEnd { get; set; } = default(Boolean);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -804,13 +805,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 499,
-            version: 0);
-
-        public const string GUID = "616bd223-60c8-40d9-8420-805af78219c4";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -849,8 +843,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectSplineBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -888,11 +880,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectSpline item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Slack = default;
-            item.Thickness = default;
-            item.HalfExtents = default;
-            item.IsWindDetachedEnd = default;
+            item.Versioning = default(PlacedObjectSpline.VersioningBreaks);
+            item.Slack = default(Single);
+            item.Thickness = default(Single);
+            item.HalfExtents = default(P3Float);
+            item.IsWindDetachedEnd = default(Boolean);
             item.Unknown = Array.Empty<byte>();
         }
         

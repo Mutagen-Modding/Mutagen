@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,13 +54,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EnumIntValue
-        public UInt32 EnumIntValue { get; set; } = default;
+        public UInt32 EnumIntValue { get; set; } = default(UInt32);
         #endregion
         #region Unused
-        public UInt32 Unused { get; set; } = default;
+        public UInt32 Unused { get; set; } = default(UInt32);
         #endregion
         #region FunctionType
-        public ObjectModProperty.EnumFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.EnumFunctionType FunctionType { get; set; } = default(ObjectModProperty.EnumFunctionType);
         #endregion
 
         #region To String
@@ -350,13 +351,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 660,
-            version: 0);
-
-        public const string GUID = "4f65602a-d047-45ad-8e7d-936462753128";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 5;
@@ -388,8 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ObjectModEnumPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -435,9 +427,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectModEnumProperty<T> item)
         {
             ClearPartial();
-            item.EnumIntValue = default;
-            item.Unused = default;
-            item.FunctionType = default;
+            item.EnumIntValue = default(UInt32);
+            item.Unused = default(UInt32);
+            item.FunctionType = default(ObjectModProperty.EnumFunctionType);
             base.Clear(item);
         }
         

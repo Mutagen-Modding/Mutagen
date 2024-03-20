@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -60,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region CloudTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IAssetLink<SkyrimTextureAssetType>[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>[29];
-        public IAssetLink<SkyrimTextureAssetType>[] CloudTextures
+        private IAssetLink<SkyrimTextureAssetType>?[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>?[29];
+        public IAssetLink<SkyrimTextureAssetType>?[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;
@@ -258,78 +259,78 @@ namespace Mutagen.Bethesda.Skyrim
         IWeatherColorGetter IWeatherGetter.MoonGlareColor => MoonGlareColor;
         #endregion
         #region FogDistanceDayNear
-        public Single FogDistanceDayNear { get; set; } = default;
+        public Single FogDistanceDayNear { get; set; } = default(Single);
         #endregion
         #region FogDistanceDayFar
-        public Single FogDistanceDayFar { get; set; } = default;
+        public Single FogDistanceDayFar { get; set; } = default(Single);
         #endregion
         #region FogDistanceNightNear
-        public Single FogDistanceNightNear { get; set; } = default;
+        public Single FogDistanceNightNear { get; set; } = default(Single);
         #endregion
         #region FogDistanceNightFar
-        public Single FogDistanceNightFar { get; set; } = default;
+        public Single FogDistanceNightFar { get; set; } = default(Single);
         #endregion
         #region FogDistanceDayPower
-        public Single FogDistanceDayPower { get; set; } = default;
+        public Single FogDistanceDayPower { get; set; } = default(Single);
         #endregion
         #region FogDistanceNightPower
-        public Single FogDistanceNightPower { get; set; } = default;
+        public Single FogDistanceNightPower { get; set; } = default(Single);
         #endregion
         #region FogDistanceDayMax
-        public Single FogDistanceDayMax { get; set; } = default;
+        public Single FogDistanceDayMax { get; set; } = default(Single);
         #endregion
         #region FogDistanceNightMax
-        public Single FogDistanceNightMax { get; set; } = default;
+        public Single FogDistanceNightMax { get; set; } = default(Single);
         #endregion
         #region WindSpeed
-        public Percent WindSpeed { get; set; } = default;
+        public Percent WindSpeed { get; set; } = default(Percent);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region TransDelta
-        public Single TransDelta { get; set; } = default;
+        public Single TransDelta { get; set; } = default(Single);
         public static RangeFloat TransDelta_Range = new RangeFloat(0, 1020f);
         #endregion
         #region SunGlare
-        public Percent SunGlare { get; set; } = default;
+        public Percent SunGlare { get; set; } = default(Percent);
         #endregion
         #region SunDamage
-        public Percent SunDamage { get; set; } = default;
+        public Percent SunDamage { get; set; } = default(Percent);
         #endregion
         #region PrecipitationBeginFadeIn
-        public Percent PrecipitationBeginFadeIn { get; set; } = default;
+        public Percent PrecipitationBeginFadeIn { get; set; } = default(Percent);
         #endregion
         #region PrecipitationEndFadeOut
-        public Percent PrecipitationEndFadeOut { get; set; } = default;
+        public Percent PrecipitationEndFadeOut { get; set; } = default(Percent);
         #endregion
         #region ThunderLightningBeginFadeIn
-        public Percent ThunderLightningBeginFadeIn { get; set; } = default;
+        public Percent ThunderLightningBeginFadeIn { get; set; } = default(Percent);
         #endregion
         #region ThunderLightningEndFadeOut
-        public Percent ThunderLightningEndFadeOut { get; set; } = default;
+        public Percent ThunderLightningEndFadeOut { get; set; } = default(Percent);
         #endregion
         #region ThunderLightningFrequency
-        public Percent ThunderLightningFrequency { get; set; } = default;
+        public Percent ThunderLightningFrequency { get; set; } = default(Percent);
         #endregion
         #region Flags
-        public Weather.Flag Flags { get; set; } = default;
+        public Weather.Flag Flags { get; set; } = default(Weather.Flag);
         #endregion
         #region LightningColor
-        public Color LightningColor { get; set; } = default;
+        public Color LightningColor { get; set; } = default(Color);
         #endregion
         #region VisualEffectBegin
-        public Percent VisualEffectBegin { get; set; } = default;
+        public Percent VisualEffectBegin { get; set; } = default(Percent);
         #endregion
         #region VisualEffectEnd
-        public Percent VisualEffectEnd { get; set; } = default;
+        public Percent VisualEffectEnd { get; set; } = default(Percent);
         #endregion
         #region WindDirection
-        public Single WindDirection { get; set; } = default;
+        public Single WindDirection { get; set; } = default(Single);
         public static RangeFloat WindDirection_Range = new RangeFloat(0, 255f);
         #endregion
         #region WindDirectionRange
-        public Single WindDirectionRange { get; set; } = default;
+        public Single WindDirectionRange { get; set; } = default(Single);
         public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 255f);
         #endregion
         #region Sounds
@@ -437,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
         #endregion
         #region NAM0DataTypeState
-        public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
+        public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default(Weather.NAM0DataType);
         #endregion
 
         #region To String
@@ -2901,7 +2902,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2910,7 +2911,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -3428,13 +3429,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 248,
-            version: 0);
-
-        public const string GUID = "2a067384-8f2a-4245-9c26-092e2a0351f0";
-
         public const ushort AdditionalFieldCount = 61;
 
         public const ushort FieldCount = 68;
@@ -3495,13 +3489,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.NAM3,
                 RecordTypes.MODL,
                 RecordTypes.GNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -3566,30 +3560,30 @@ namespace Mutagen.Bethesda.Skyrim
             item.WaterMultiplierColor.Clear();
             item.SunGlareColor.Clear();
             item.MoonGlareColor.Clear();
-            item.FogDistanceDayNear = default;
-            item.FogDistanceDayFar = default;
-            item.FogDistanceNightNear = default;
-            item.FogDistanceNightFar = default;
-            item.FogDistanceDayPower = default;
-            item.FogDistanceNightPower = default;
-            item.FogDistanceDayMax = default;
-            item.FogDistanceNightMax = default;
-            item.WindSpeed = default;
-            item.Unknown = default;
-            item.TransDelta = default;
-            item.SunGlare = default;
-            item.SunDamage = default;
-            item.PrecipitationBeginFadeIn = default;
-            item.PrecipitationEndFadeOut = default;
-            item.ThunderLightningBeginFadeIn = default;
-            item.ThunderLightningEndFadeOut = default;
-            item.ThunderLightningFrequency = default;
-            item.Flags = default;
-            item.LightningColor = default;
-            item.VisualEffectBegin = default;
-            item.VisualEffectEnd = default;
-            item.WindDirection = default;
-            item.WindDirectionRange = default;
+            item.FogDistanceDayNear = default(Single);
+            item.FogDistanceDayFar = default(Single);
+            item.FogDistanceNightNear = default(Single);
+            item.FogDistanceNightFar = default(Single);
+            item.FogDistanceDayPower = default(Single);
+            item.FogDistanceNightPower = default(Single);
+            item.FogDistanceDayMax = default(Single);
+            item.FogDistanceNightMax = default(Single);
+            item.WindSpeed = default(Percent);
+            item.Unknown = default(UInt16);
+            item.TransDelta = default(Single);
+            item.SunGlare = default(Percent);
+            item.SunDamage = default(Percent);
+            item.PrecipitationBeginFadeIn = default(Percent);
+            item.PrecipitationEndFadeOut = default(Percent);
+            item.ThunderLightningBeginFadeIn = default(Percent);
+            item.ThunderLightningEndFadeOut = default(Percent);
+            item.ThunderLightningFrequency = default(Percent);
+            item.Flags = default(Weather.Flag);
+            item.LightningColor = default(Color);
+            item.VisualEffectBegin = default(Percent);
+            item.VisualEffectEnd = default(Percent);
+            item.WindDirection = default(Single);
+            item.WindDirectionRange = default(Single);
             item.Sounds.Clear();
             item.SkyStatics.Clear();
             item.ImageSpaces = null;
@@ -3599,7 +3593,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.NAM3 = default;
             item.Aurora = null;
             item.SunGlareLensFlare.Clear();
-            item.NAM0DataTypeState = default;
+            item.NAM0DataTypeState = default(Weather.NAM0DataType);
             base.Clear(item);
         }
         
@@ -5416,7 +5410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.SkyStatics.SetTo(
                         rhs.SkyStatics
-                        .Select(r => (IFormLinkGetter<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IStaticGetter>)new FormLink<IStaticGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6269,26 +6263,30 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.Clouds;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PNAM:
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.JNAM:
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -6438,7 +6436,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -6476,7 +6475,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.NAM2:
@@ -6525,27 +6525,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryCloudsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudColorsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudAlphasCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryDisabledCloudLayersCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -6636,7 +6642,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Clouds
         partial void CloudsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -6644,17 +6650,20 @@ namespace Mutagen.Bethesda.Skyrim
         #region CloudXSpeeds
         public partial ParseResult CloudXSpeedsCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region CloudColors
         public partial ParseResult CloudColorsCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region CloudAlphas
         public partial ParseResult CloudAlphasCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _NAM0Location;
         public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
@@ -6764,93 +6773,93 @@ namespace Mutagen.Bethesda.Skyrim
         #region FogDistanceDayNear
         private int _FogDistanceDayNearLocation => _FNAMLocation!.Value.Min;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _recordData.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
+        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _recordData.Slice(_FogDistanceDayNearLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceDayFar
         private int _FogDistanceDayFarLocation => _FNAMLocation!.Value.Min + 0x4;
         private bool _FogDistanceDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _recordData.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
+        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _recordData.Slice(_FogDistanceDayFarLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceNightNear
         private int _FogDistanceNightNearLocation => _FNAMLocation!.Value.Min + 0x8;
         private bool _FogDistanceNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _recordData.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
+        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _recordData.Slice(_FogDistanceNightNearLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceNightFar
         private int _FogDistanceNightFarLocation => _FNAMLocation!.Value.Min + 0xC;
         private bool _FogDistanceNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _recordData.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
+        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _recordData.Slice(_FogDistanceNightFarLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceDayPower
         private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value.Min + 0x10;
         private bool _FogDistanceDayPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _recordData.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
+        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _recordData.Slice(_FogDistanceDayPowerLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceNightPower
         private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value.Min + 0x14;
         private bool _FogDistanceNightPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _recordData.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
+        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _recordData.Slice(_FogDistanceNightPowerLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceDayMax
         private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value.Min + 0x18;
         private bool _FogDistanceDayMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _recordData.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
+        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _recordData.Slice(_FogDistanceDayMaxLocation, 4).Float() : default(Single);
         #endregion
         #region FogDistanceNightMax
         private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value.Min + 0x1C;
         private bool _FogDistanceNightMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _recordData.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
+        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _recordData.Slice(_FogDistanceNightMaxLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _DATALocation;
         #region WindSpeed
         private int _WindSpeedLocation => _DATALocation!.Value.Min;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
-        public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
         #endregion
         #region TransDelta
         private int _TransDeltaLocation => _DATALocation!.Value.Min + 0x3;
         private bool _TransDelta_IsSet => _DATALocation.HasValue;
-        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, multiplier: 4f, divisor: null) : default;
+        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, multiplier: 4f, divisor: null) : default(Single);
         #endregion
         #region SunGlare
         private int _SunGlareLocation => _DATALocation!.Value.Min + 0x4;
         private bool _SunGlare_IsSet => _DATALocation.HasValue;
-        public Percent SunGlare => _SunGlare_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunGlareLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent SunGlare => _SunGlare_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunGlareLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region SunDamage
         private int _SunDamageLocation => _DATALocation!.Value.Min + 0x5;
         private bool _SunDamage_IsSet => _DATALocation.HasValue;
-        public Percent SunDamage => _SunDamage_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunDamageLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent SunDamage => _SunDamage_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunDamageLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region PrecipitationBeginFadeIn
         private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value.Min + 0x6;
         private bool _PrecipitationBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Percent PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationBeginFadeInLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region PrecipitationEndFadeOut
         private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value.Min + 0x7;
         private bool _PrecipitationEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Percent PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationEndFadeOutLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ThunderLightningBeginFadeIn
         private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value.Min + 0x8;
         private bool _ThunderLightningBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningBeginFadeInLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ThunderLightningEndFadeOut
         private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ThunderLightningEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningEndFadeOutLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ThunderLightningFrequency
         private int _ThunderLightningFrequencyLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ThunderLightningFrequency_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningFrequencyLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningFrequencyLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
@@ -6860,32 +6869,33 @@ namespace Mutagen.Bethesda.Skyrim
         #region LightningColor
         private int _LightningColorLocation => _DATALocation!.Value.Min + 0xC;
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
-        public Color LightningColor => _LightningColor_IsSet ? _recordData.Slice(_LightningColorLocation, 3).ReadColor(ColorBinaryType.NoAlpha) : default;
+        public Color LightningColor => _LightningColor_IsSet ? _recordData.Slice(_LightningColorLocation, 3).ReadColor(ColorBinaryType.NoAlpha) : default(Color);
         #endregion
         #region VisualEffectBegin
         private int _VisualEffectBeginLocation => _DATALocation!.Value.Min + 0xF;
         private bool _VisualEffectBegin_IsSet => _DATALocation.HasValue;
-        public Percent VisualEffectBegin => _VisualEffectBegin_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectBeginLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent VisualEffectBegin => _VisualEffectBegin_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectBeginLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region VisualEffectEnd
         private int _VisualEffectEndLocation => _DATALocation!.Value.Min + 0x10;
         private bool _VisualEffectEnd_IsSet => _DATALocation.HasValue;
-        public Percent VisualEffectEnd => _VisualEffectEnd_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectEndLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent VisualEffectEnd => _VisualEffectEnd_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectEndLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region WindDirection
         private int _WindDirectionLocation => _DATALocation!.Value.Min + 0x11;
         private bool _WindDirection_IsSet => _DATALocation.HasValue;
-        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 360f) : default;
+        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 360f) : default(Single);
         #endregion
         #region WindDirectionRange
         private int _WindDirectionRangeLocation => _DATALocation!.Value.Min + 0x12;
         private bool _WindDirectionRange_IsSet => _DATALocation.HasValue;
-        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 180f) : default;
+        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 180f) : default(Single);
         #endregion
         #region DisabledCloudLayers
         public partial ParseResult DisabledCloudLayersCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
@@ -6900,7 +6910,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom();
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
@@ -7041,19 +7051,22 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return CloudXSpeedsCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PNAM:
                 {
                     return CloudColorsCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.JNAM:
                 {
                     return CloudAlphasCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -7083,7 +7096,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DisabledCloudLayersCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -7109,7 +7123,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Weather_FieldIndex.SkyStatics;

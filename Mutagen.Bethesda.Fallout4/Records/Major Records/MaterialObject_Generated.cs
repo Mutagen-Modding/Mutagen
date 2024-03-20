@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -89,19 +90,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region FalloffScale
-        public Single FalloffScale { get; set; } = default;
+        public Single FalloffScale { get; set; } = default(Single);
         #endregion
         #region FalloffBias
-        public Single FalloffBias { get; set; } = default;
+        public Single FalloffBias { get; set; } = default(Single);
         #endregion
         #region NoiseUvScale
-        public Single NoiseUvScale { get; set; } = default;
+        public Single NoiseUvScale { get; set; } = default(Single);
         #endregion
         #region MaterialUvScale
-        public Single MaterialUvScale { get; set; } = default;
+        public Single MaterialUvScale { get; set; } = default(Single);
         #endregion
         #region ProjectionVector
-        public P3Float ProjectionVector { get; set; } = default;
+        public P3Float ProjectionVector { get; set; } = default(P3Float);
         #endregion
         #region NormalDampener
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,7 +146,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region DATADataTypeState
-        public MaterialObject.DATADataType DATADataTypeState { get; set; } = default;
+        public MaterialObject.DATADataType DATADataTypeState { get; set; } = default(MaterialObject.DATADataType);
         #endregion
 
         #region To String
@@ -807,9 +808,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = MaterialObject_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialObjectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialObjectSetterCommon.Instance.RemapLinks(this, mapping);
-        public MaterialObject(FormKey formKey)
+        public MaterialObject(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -818,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -832,12 +836,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public MaterialObject(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public MaterialObject(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1186,13 +1194,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 329,
-            version: 0);
-
-        public const string GUID = "7a69bcb8-1e05-49c3-a353-9b51c7eaed99";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
@@ -1234,13 +1235,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODS,
                 RecordTypes.DNAM,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1280,15 +1281,15 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Model = null;
             item.DNAMs.Clear();
-            item.FalloffScale = default;
-            item.FalloffBias = default;
-            item.NoiseUvScale = default;
-            item.MaterialUvScale = default;
-            item.ProjectionVector = default;
-            item.NormalDampener = default;
-            item.SinglePassColor = default;
-            item.IsSinglePass = default;
-            item.DATADataTypeState = default;
+            item.FalloffScale = default(Single);
+            item.FalloffBias = default(Single);
+            item.NoiseUvScale = default(Single);
+            item.MaterialUvScale = default(Single);
+            item.ProjectionVector = default(P3Float);
+            item.NormalDampener = default(Single);
+            item.SinglePassColor = default(Color);
+            item.IsSinglePass = default(Boolean);
+            item.DATADataTypeState = default(MaterialObject.DATADataType);
             base.Clear(item);
         }
         
@@ -1681,7 +1682,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MaterialObject(formKey);
+            var newRec = new MaterialObject(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2250,42 +2251,42 @@ namespace Mutagen.Bethesda.Fallout4
         #region FalloffScale
         private int _FalloffScaleLocation => _DATALocation!.Value.Min;
         private bool _FalloffScale_IsSet => _DATALocation.HasValue;
-        public Single FalloffScale => _FalloffScale_IsSet ? _recordData.Slice(_FalloffScaleLocation, 4).Float() : default;
+        public Single FalloffScale => _FalloffScale_IsSet ? _recordData.Slice(_FalloffScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FalloffBias
         private int _FalloffBiasLocation => _DATALocation!.Value.Min + 0x4;
         private bool _FalloffBias_IsSet => _DATALocation.HasValue;
-        public Single FalloffBias => _FalloffBias_IsSet ? _recordData.Slice(_FalloffBiasLocation, 4).Float() : default;
+        public Single FalloffBias => _FalloffBias_IsSet ? _recordData.Slice(_FalloffBiasLocation, 4).Float() : default(Single);
         #endregion
         #region NoiseUvScale
         private int _NoiseUvScaleLocation => _DATALocation!.Value.Min + 0x8;
         private bool _NoiseUvScale_IsSet => _DATALocation.HasValue;
-        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _recordData.Slice(_NoiseUvScaleLocation, 4).Float() : default;
+        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _recordData.Slice(_NoiseUvScaleLocation, 4).Float() : default(Single);
         #endregion
         #region MaterialUvScale
         private int _MaterialUvScaleLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MaterialUvScale_IsSet => _DATALocation.HasValue;
-        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _recordData.Slice(_MaterialUvScaleLocation, 4).Float() : default;
+        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _recordData.Slice(_MaterialUvScaleLocation, 4).Float() : default(Single);
         #endregion
         #region ProjectionVector
         private int _ProjectionVectorLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
-        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_ProjectionVectorLocation, 12)) : default;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_ProjectionVectorLocation, 12)) : default(P3Float);
         #endregion
         #region NormalDampener
         private int _NormalDampenerLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _NormalDampener_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0);
-        public Single NormalDampener => _NormalDampener_IsSet ? _recordData.Slice(_NormalDampenerLocation, 4).Float() : default;
+        public Single NormalDampener => _NormalDampener_IsSet ? _recordData.Slice(_NormalDampenerLocation, 4).Float() : default(Single);
         #endregion
         #region SinglePassColor
         private int _SinglePassColorLocation => _DATALocation!.Value.Min + 0x20;
         private bool _SinglePassColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public Color SinglePassColor => _SinglePassColor_IsSet ? _recordData.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color SinglePassColor => _SinglePassColor_IsSet ? _recordData.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region IsSinglePass
         private int _IsSinglePassLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _IsSinglePass_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public Boolean IsSinglePass => _IsSinglePass_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_IsSinglePassLocation, 4)) >= 1 : default;
+        public Boolean IsSinglePass => _IsSinglePass_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_IsSinglePassLocation, 4)) >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2376,7 +2377,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.DNAM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)MaterialObject_FieldIndex.DNAMs;

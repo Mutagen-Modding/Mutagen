@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
@@ -11,24 +12,7 @@ public sealed class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
 
-    public bool HasEnabledMarkers
-    {
-        get
-        {
-            return _gameReleaseContext.Release switch
-            {
-                GameRelease.Fallout4 => true,
-                GameRelease.SkyrimSE => true,
-                GameRelease.SkyrimSEGog => true,
-                GameRelease.EnderalSE => true,
-                GameRelease.SkyrimVR => true,
-                GameRelease.SkyrimLE => false,
-                GameRelease.EnderalLE => false,
-                GameRelease.Oblivion => false,
-                _ => throw new NotImplementedException(),
-            };
-        }
-    }
+    public bool HasEnabledMarkers => GameConstants.Get(_gameReleaseContext.Release).HasEnabledMarkers;
 
     public HasEnabledMarkersProvider(IGameReleaseContext gameReleaseContext)
     {

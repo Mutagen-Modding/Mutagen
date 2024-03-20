@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AmbientColors" objType="Subrecord" GUID="8c4df544-5141-4ea2-8dba-94c10e0d2bf6" ID="243">
+  <Object name="AmbientColors" objType="Subrecord">
     <Fields>
       <Color name="DirectionalXPlus" binaryType="Alpha" />
       <Color name="DirectionalXMinus" binaryType="Alpha" />

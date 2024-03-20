@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Flags
-        public QuestStage.Flag Flags { get; set; } = default;
+        public QuestStage.Flag Flags { get; set; } = default(QuestStage.Flag);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -801,13 +802,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 525,
-            version: 0);
-
-        public const string GUID = "3796e983-d6a9-4345-b72e-6f380b10bebc";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -850,13 +844,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NAM0,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -894,9 +888,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestStage item)
         {
             ClearPartial();
-            item.Index = default;
-            item.Flags = default;
-            item.Unknown = default;
+            item.Index = default(UInt16);
+            item.Flags = default(QuestStage.Flag);
+            item.Unknown = default(Byte);
             item.LogEntries.Clear();
         }
         
@@ -1393,7 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Index
         private int _IndexLocation => _INDXLocation!.Value.Min;
         private bool _Index_IsSet => _INDXLocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(UInt16);
         #endregion
         #region Flags
         private int _FlagsLocation => _INDXLocation!.Value.Min + 0x2;

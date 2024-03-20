@@ -11,6 +11,7 @@ string? OptionalField { get; set; }
 The `RequiredField` cannot be `null`, and always must have some value.  The `OptionalField` is allowed to be `null`.  Mutagen utilizes this distinction to communicate that `OptionalField` is considered "unset" if/when it is `null`.
 
 Going off the earlier `Potion` interface:
+
 - FormKey cannot be null, and must always have a value.
 - EditorID, Name, Model, Icon are all optional, and will be null if they are not set.
 

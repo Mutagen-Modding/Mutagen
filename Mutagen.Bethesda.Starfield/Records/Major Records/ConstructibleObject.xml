@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefList name="ConstructableComponents" recordType="FVPA" refName="ConstructibleObjectComponent" />
+      <RefList name="RequiredPerks" refName="ConstructibleRequiredPerk" recordType="RQPK" />
+      <FormLink name="CreatedObject" recordType="CNAM">
+        <Interface>IConstructibleObjectTarget</Interface>
+      </FormLink>
+      <UInt16 name="AmountProduced" nullable="false" recordType="NNAM" />
+      <Float name="MenuSortOrder" nullable="false" recordType="SNAM" />
+      <UInt8 name="TNAM" recordType="TNAM" nullable="false" />
+      <RefDirect name="CraftingSound" recordType="CUSH" refName="SoundReference" />
+      <RefDirect name="PickupSound" recordType="PUSH" refName="SoundReference" />
+      <RefDirect name="DropdownSound" recordType="PDSH" refName="SoundReference" />
+      <Enum name="LearnMethod" enumName="ConstructibleObject.LearnMethodEnum" recordType="LRNM" byteLength="1" />
+      <UInt32 name="Value" recordType="DATA" nullable="false" />
+      <FormLink name="MenuArtObject" recordType="ANAM" refName="ArtObject" />
+      <FormLink name="BuildLimit" recordType="JNAM" refName="Global" />
+      <List name="Categories" recordType="FNAM" >
+        <Fields>
+          <FormLink refName="Keyword" />
+        </Fields>
+      </List>
+      <UInt64 name="RECF" recordType="RECF" unknown="true" />
+    </Fields>
+    <LinkInterface>IResourceTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+  <Object name="ConstructibleObjectComponent" objType="Subrecord">
+    <Fields>
+      <FormLink name="Component">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <UInt32 name="Count" />
+      <UInt32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="ConstructibleRequiredPerk" objType="Subrecord">
+    <Fields>
+      <FormLink name="Perk" refName="Perk" />
+      <UInt32 name="Rank" />
+      <UInt32 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

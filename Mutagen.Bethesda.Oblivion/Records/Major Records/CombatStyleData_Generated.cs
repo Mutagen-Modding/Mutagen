@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,127 +51,127 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public CombatStyleData.VersioningBreaks Versioning { get; set; } = default;
+        public CombatStyleData.VersioningBreaks Versioning { get; set; } = default(CombatStyleData.VersioningBreaks);
         #endregion
         #region DodgePercentChance
-        public Byte DodgePercentChance { get; set; } = default;
+        public Byte DodgePercentChance { get; set; } = default(Byte);
         public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region LeftRightPercentChance
-        public Byte LeftRightPercentChance { get; set; } = default;
+        public Byte LeftRightPercentChance { get; set; } = default(Byte);
         public static RangeUInt8 LeftRightPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region DodgeLeftRightTimerMin
-        public Single DodgeLeftRightTimerMin { get; set; } = default;
+        public Single DodgeLeftRightTimerMin { get; set; } = default(Single);
         #endregion
         #region DodgeLeftRightTimerMax
-        public Single DodgeLeftRightTimerMax { get; set; } = default;
+        public Single DodgeLeftRightTimerMax { get; set; } = default(Single);
         #endregion
         #region DodgeForwardTimerMin
-        public Single DodgeForwardTimerMin { get; set; } = default;
+        public Single DodgeForwardTimerMin { get; set; } = default(Single);
         #endregion
         #region DodgeForwardTimerMax
-        public Single DodgeForwardTimerMax { get; set; } = default;
+        public Single DodgeForwardTimerMax { get; set; } = default(Single);
         #endregion
         #region DodgeBackTimerMin
-        public Single DodgeBackTimerMin { get; set; } = default;
+        public Single DodgeBackTimerMin { get; set; } = default(Single);
         #endregion
         #region DodgeBackTimerMax
-        public Single DodgeBackTimerMax { get; set; } = default;
+        public Single DodgeBackTimerMax { get; set; } = default(Single);
         #endregion
         #region IdleTimerMin
-        public Single IdleTimerMin { get; set; } = default;
+        public Single IdleTimerMin { get; set; } = default(Single);
         #endregion
         #region IdleTimerMax
-        public Single IdleTimerMax { get; set; } = default;
+        public Single IdleTimerMax { get; set; } = default(Single);
         #endregion
         #region BlockPercentChance
-        public Byte BlockPercentChance { get; set; } = default;
+        public Byte BlockPercentChance { get; set; } = default(Byte);
         public static RangeUInt8 BlockPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region AttackPercentChance
-        public Byte AttackPercentChance { get; set; } = default;
+        public Byte AttackPercentChance { get; set; } = default(Byte);
         public static RangeUInt8 AttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToAttack
-        public Single RecoilStaggerBonusToAttack { get; set; } = default;
+        public Single RecoilStaggerBonusToAttack { get; set; } = default(Single);
         #endregion
         #region UnconsciousBonusToAttack
-        public Single UnconsciousBonusToAttack { get; set; } = default;
+        public Single UnconsciousBonusToAttack { get; set; } = default(Single);
         #endregion
         #region HandToHandBonusToAttack
-        public Single HandToHandBonusToAttack { get; set; } = default;
+        public Single HandToHandBonusToAttack { get; set; } = default(Single);
         #endregion
         #region PowerAttackPercentChance
-        public Byte PowerAttackPercentChance { get; set; } = default;
+        public Byte PowerAttackPercentChance { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToPowerAttack
-        public Single RecoilStaggerBonusToPowerAttack { get; set; } = default;
+        public Single RecoilStaggerBonusToPowerAttack { get; set; } = default(Single);
         #endregion
         #region UnconsciousBonusToPowerAttack
-        public Single UnconsciousBonusToPowerAttack { get; set; } = default;
+        public Single UnconsciousBonusToPowerAttack { get; set; } = default(Single);
         #endregion
         #region PowerAttackNormal
-        public Byte PowerAttackNormal { get; set; } = default;
+        public Byte PowerAttackNormal { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackNormal_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackForward
-        public Byte PowerAttackForward { get; set; } = default;
+        public Byte PowerAttackForward { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackForward_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackBack
-        public Byte PowerAttackBack { get; set; } = default;
+        public Byte PowerAttackBack { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackBack_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackLeft
-        public Byte PowerAttackLeft { get; set; } = default;
+        public Byte PowerAttackLeft { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackLeft_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackRight
-        public Byte PowerAttackRight { get; set; } = default;
+        public Byte PowerAttackRight { get; set; } = default(Byte);
         public static RangeUInt8 PowerAttackRight_Range = new RangeUInt8(0, 100);
         #endregion
         #region HoldTimerMin
-        public Single HoldTimerMin { get; set; } = default;
+        public Single HoldTimerMin { get; set; } = default(Single);
         #endregion
         #region HoldTimerMax
-        public Single HoldTimerMax { get; set; } = default;
+        public Single HoldTimerMax { get; set; } = default(Single);
         #endregion
         #region Flags
-        public CombatStyle.Flag Flags { get; set; } = default;
+        public CombatStyle.Flag Flags { get; set; } = default(CombatStyle.Flag);
         #endregion
         #region AcrobaticDodgePercentChance
-        public Byte AcrobaticDodgePercentChance { get; set; } = default;
+        public Byte AcrobaticDodgePercentChance { get; set; } = default(Byte);
         public static RangeUInt8 AcrobaticDodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RangeMultOptimal
-        public Single RangeMultOptimal { get; set; } = default;
+        public Single RangeMultOptimal { get; set; } = default(Single);
         #endregion
         #region RangeMultMax
-        public Single RangeMultMax { get; set; } = default;
+        public Single RangeMultMax { get; set; } = default(Single);
         #endregion
         #region SwitchDistanceMelee
-        public Single SwitchDistanceMelee { get; set; } = default;
+        public Single SwitchDistanceMelee { get; set; } = default(Single);
         #endregion
         #region SwitchDistanceRanged
-        public Single SwitchDistanceRanged { get; set; } = default;
+        public Single SwitchDistanceRanged { get; set; } = default(Single);
         #endregion
         #region BuffStandoffDistance
-        public Single BuffStandoffDistance { get; set; } = default;
+        public Single BuffStandoffDistance { get; set; } = default(Single);
         #endregion
         #region RangedStandoffDistance
-        public Single RangedStandoffDistance { get; set; } = default;
+        public Single RangedStandoffDistance { get; set; } = default(Single);
         #endregion
         #region GroupStandoffDistance
-        public Single GroupStandoffDistance { get; set; } = default;
+        public Single GroupStandoffDistance { get; set; } = default(Single);
         #endregion
         #region RushingAttackPercentChance
-        public Byte RushingAttackPercentChance { get; set; } = default;
+        public Byte RushingAttackPercentChance { get; set; } = default(Byte);
         public static RangeUInt8 RushingAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RushingAttackDistanceMult
-        public Single RushingAttackDistanceMult { get; set; } = default;
+        public Single RushingAttackDistanceMult { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1928,13 +1929,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 181,
-            version: 0);
-
-        public const string GUID = "e011eee4-3551-4cd2-82ef-34a1038a1fc2";
-
         public const ushort AdditionalFieldCount = 37;
 
         public const ushort FieldCount = 37;
@@ -1973,8 +1967,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2012,43 +2004,43 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICombatStyleData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.DodgePercentChance = default;
-            item.LeftRightPercentChance = default;
-            item.DodgeLeftRightTimerMin = default;
-            item.DodgeLeftRightTimerMax = default;
-            item.DodgeForwardTimerMin = default;
-            item.DodgeForwardTimerMax = default;
-            item.DodgeBackTimerMin = default;
-            item.DodgeBackTimerMax = default;
-            item.IdleTimerMin = default;
-            item.IdleTimerMax = default;
-            item.BlockPercentChance = default;
-            item.AttackPercentChance = default;
-            item.RecoilStaggerBonusToAttack = default;
-            item.UnconsciousBonusToAttack = default;
-            item.HandToHandBonusToAttack = default;
-            item.PowerAttackPercentChance = default;
-            item.RecoilStaggerBonusToPowerAttack = default;
-            item.UnconsciousBonusToPowerAttack = default;
-            item.PowerAttackNormal = default;
-            item.PowerAttackForward = default;
-            item.PowerAttackBack = default;
-            item.PowerAttackLeft = default;
-            item.PowerAttackRight = default;
-            item.HoldTimerMin = default;
-            item.HoldTimerMax = default;
-            item.Flags = default;
-            item.AcrobaticDodgePercentChance = default;
-            item.RangeMultOptimal = default;
-            item.RangeMultMax = default;
-            item.SwitchDistanceMelee = default;
-            item.SwitchDistanceRanged = default;
-            item.BuffStandoffDistance = default;
-            item.RangedStandoffDistance = default;
-            item.GroupStandoffDistance = default;
-            item.RushingAttackPercentChance = default;
-            item.RushingAttackDistanceMult = default;
+            item.Versioning = default(CombatStyleData.VersioningBreaks);
+            item.DodgePercentChance = default(Byte);
+            item.LeftRightPercentChance = default(Byte);
+            item.DodgeLeftRightTimerMin = default(Single);
+            item.DodgeLeftRightTimerMax = default(Single);
+            item.DodgeForwardTimerMin = default(Single);
+            item.DodgeForwardTimerMax = default(Single);
+            item.DodgeBackTimerMin = default(Single);
+            item.DodgeBackTimerMax = default(Single);
+            item.IdleTimerMin = default(Single);
+            item.IdleTimerMax = default(Single);
+            item.BlockPercentChance = default(Byte);
+            item.AttackPercentChance = default(Byte);
+            item.RecoilStaggerBonusToAttack = default(Single);
+            item.UnconsciousBonusToAttack = default(Single);
+            item.HandToHandBonusToAttack = default(Single);
+            item.PowerAttackPercentChance = default(Byte);
+            item.RecoilStaggerBonusToPowerAttack = default(Single);
+            item.UnconsciousBonusToPowerAttack = default(Single);
+            item.PowerAttackNormal = default(Byte);
+            item.PowerAttackForward = default(Byte);
+            item.PowerAttackBack = default(Byte);
+            item.PowerAttackLeft = default(Byte);
+            item.PowerAttackRight = default(Byte);
+            item.HoldTimerMin = default(Single);
+            item.HoldTimerMax = default(Single);
+            item.Flags = default(CombatStyle.Flag);
+            item.AcrobaticDodgePercentChance = default(Byte);
+            item.RangeMultOptimal = default(Single);
+            item.RangeMultMax = default(Single);
+            item.SwitchDistanceMelee = default(Single);
+            item.SwitchDistanceRanged = default(Single);
+            item.BuffStandoffDistance = default(Single);
+            item.RangedStandoffDistance = default(Single);
+            item.GroupStandoffDistance = default(Single);
+            item.RushingAttackPercentChance = default(Byte);
+            item.RushingAttackDistanceMult = default(Single);
         }
         
         #region Mutagen

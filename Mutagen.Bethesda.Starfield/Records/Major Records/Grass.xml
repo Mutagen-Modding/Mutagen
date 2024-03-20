@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+    </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

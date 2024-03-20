@@ -25,7 +25,10 @@ public class AssetLinkType : StringType
 
     public override string GetDefault(bool getter)
     {
-        if (Nullable) return "null";
+        if (Nullable)
+        {
+            return $"default({TypeName(getter: getter)}{NullChar})";
+        }
         if (getter)
         {
             return $"AssetLinkGetter<{AssetTypeString}>.Null";
@@ -107,9 +110,9 @@ public class AssetLinkType : StringType
         }
     }
 
-    public override void GenerateCopySetToConverter(StructuredStringBuilder sb)
+    public override string ReturnForCopySetToConverter(Accessor itemAccessor)
     {
-        sb.AppendLine($".Select(r => r{NullChar}.AsSetter())");
+        return $"{itemAccessor}{NullChar}.AsSetter()";
     }
 
     public override string GetDuplicate(Accessor accessor)

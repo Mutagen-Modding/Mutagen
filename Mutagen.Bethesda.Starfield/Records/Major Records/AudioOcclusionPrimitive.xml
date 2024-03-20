@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AudioOcclusionPrimitive" recordType="AOPF" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="OBSV" recordType="OBSV" unknown="true" />
+      <Float name="OCCV" recordType="OCCV" unknown="true" />
+    </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

@@ -19,40 +19,75 @@ internal class OblivionInheritingInterfaceMapping : IInterfaceMapping
     public OblivionInheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
-        dict[typeof(IGameSettingFloat)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            GameSetting_Registration.Instance,
-        });
+        dict[typeof(IGameSettingFloat)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingFloat),
+                Getter: typeof(IGameSettingFloatGetter)));
         dict[typeof(IGameSettingFloatGetter)] = dict[typeof(IGameSettingFloat)] with { Setter = false };
-        dict[typeof(IGameSettingInt)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            GameSetting_Registration.Instance,
-        });
+        dict[typeof(IGameSettingInt)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingInt),
+                Getter: typeof(IGameSettingIntGetter)));
         dict[typeof(IGameSettingIntGetter)] = dict[typeof(IGameSettingInt)] with { Setter = false };
-        dict[typeof(IGameSettingString)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            GameSetting_Registration.Instance,
-        });
+        dict[typeof(IGameSettingString)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingString),
+                Getter: typeof(IGameSettingStringGetter)));
         dict[typeof(IGameSettingStringGetter)] = dict[typeof(IGameSettingString)] with { Setter = false };
-        dict[typeof(IGlobalFloat)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Global_Registration.Instance,
-        });
+        dict[typeof(IGlobalFloat)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Global_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGlobalFloat),
+                Getter: typeof(IGlobalFloatGetter)));
         dict[typeof(IGlobalFloatGetter)] = dict[typeof(IGlobalFloat)] with { Setter = false };
-        dict[typeof(IGlobalInt)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Global_Registration.Instance,
-        });
+        dict[typeof(IGlobalInt)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Global_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGlobalInt),
+                Getter: typeof(IGlobalIntGetter)));
         dict[typeof(IGlobalIntGetter)] = dict[typeof(IGlobalInt)] with { Setter = false };
-        dict[typeof(IGlobalShort)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Global_Registration.Instance,
-        });
+        dict[typeof(IGlobalShort)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Global_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGlobalShort),
+                Getter: typeof(IGlobalShortGetter)));
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
-        dict[typeof(IGlobalUnknown)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Global_Registration.Instance,
-        });
+        dict[typeof(IGlobalUnknown)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Global_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGlobalUnknown),
+                Getter: typeof(IGlobalUnknownGetter)));
         dict[typeof(IGlobalUnknownGetter)] = dict[typeof(IGlobalUnknown)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }

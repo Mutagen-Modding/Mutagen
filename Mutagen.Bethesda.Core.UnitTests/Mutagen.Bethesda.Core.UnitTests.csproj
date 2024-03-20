@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <WarningsAsErrors>nullable</WarningsAsErrors>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>Mutagen.Bethesda.UnitTests</RootNamespace>
     </PropertyGroup>
 
@@ -121,6 +120,12 @@
         <None Update="Plugins\Analysis\OrphanedDeepGroups.esp">
           <DefaultPackFolder>none</DefaultPackFolder>
           <BuildAction>None</BuildAction>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\SmallModFile">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\SmallOblivionMod.esp">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

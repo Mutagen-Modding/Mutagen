@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -68,40 +69,40 @@ namespace Mutagen.Bethesda.Fallout4
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
-        public Package.Flag Flags { get; set; } = default;
+        public Package.Flag Flags { get; set; } = default(Package.Flag);
         #endregion
         #region Type
-        public Package.Types Type { get; set; } = default;
+        public Package.Types Type { get; set; } = default(Package.Types);
         #endregion
         #region InterruptOverride
-        public Package.Interrupt InterruptOverride { get; set; } = default;
+        public Package.Interrupt InterruptOverride { get; set; } = default(Package.Interrupt);
         #endregion
         #region PreferredSpeed
-        public Package.Speed PreferredSpeed { get; set; } = default;
+        public Package.Speed PreferredSpeed { get; set; } = default(Package.Speed);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region InteruptFlags
-        public Package.InterruptFlag InteruptFlags { get; set; } = default;
+        public Package.InterruptFlag InteruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region ScheduleMonth
-        public SByte ScheduleMonth { get; set; } = default;
+        public SByte ScheduleMonth { get; set; } = default(SByte);
         #endregion
         #region ScheduleDayOfWeek
-        public Package.DayOfWeek ScheduleDayOfWeek { get; set; } = default;
+        public Package.DayOfWeek ScheduleDayOfWeek { get; set; } = default(Package.DayOfWeek);
         #endregion
         #region ScheduleDate
-        public Byte ScheduleDate { get; set; } = default;
+        public Byte ScheduleDate { get; set; } = default(Byte);
         #endregion
         #region ScheduleHour
-        public SByte ScheduleHour { get; set; } = default;
+        public SByte ScheduleHour { get; set; } = default(SByte);
         #endregion
         #region ScheduleMinute
-        public SByte ScheduleMinute { get; set; } = default;
+        public SByte ScheduleMinute { get; set; } = default(SByte);
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -115,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> IPackageGetter.Unknown3 => this.Unknown3;
         #endregion
         #region ScheduleDurationInMinutes
-        public Int32 ScheduleDurationInMinutes { get; set; } = default;
+        public Int32 ScheduleDurationInMinutes { get; set; } = default(Int32);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -173,7 +174,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
         #endregion
         #region DataInputVersion
-        public Int32 DataInputVersion { get; set; } = default;
+        public Int32 DataInputVersion { get; set; } = default(Int32);
         #endregion
         #region Data
         private readonly Dictionary<SByte, APackageData> _Data = new Dictionary<SByte, APackageData>();
@@ -1570,9 +1571,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
-        public Package(FormKey formKey)
+        public Package(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1581,7 +1585,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1595,12 +1599,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Package(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Package(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1988,13 +1996,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 347,
-            version: 0);
-
-        public const string GUID = "04e6122f-851d-4177-afc4-9f645560c389";
-
         public const ushort AdditionalFieldCount = 27;
 
         public const ushort FieldCount = 34;
@@ -2055,13 +2056,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.POBA,
                 RecordTypes.POEA,
                 RecordTypes.POCA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2100,26 +2101,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Flags = default;
-            item.Type = default;
-            item.InterruptOverride = default;
-            item.PreferredSpeed = default;
-            item.Unknown = default;
-            item.InteruptFlags = default;
-            item.Unknown2 = default;
-            item.ScheduleMonth = default;
-            item.ScheduleDayOfWeek = default;
-            item.ScheduleDate = default;
-            item.ScheduleHour = default;
-            item.ScheduleMinute = default;
+            item.Flags = default(Package.Flag);
+            item.Type = default(Package.Types);
+            item.InterruptOverride = default(Package.Interrupt);
+            item.PreferredSpeed = default(Package.Speed);
+            item.Unknown = default(Byte);
+            item.InteruptFlags = default(Package.InterruptFlag);
+            item.Unknown2 = default(UInt16);
+            item.ScheduleMonth = default(SByte);
+            item.ScheduleDayOfWeek = default(Package.DayOfWeek);
+            item.ScheduleDate = default(Byte);
+            item.ScheduleHour = default(SByte);
+            item.ScheduleMinute = default(SByte);
             item.Unknown3 = new byte[3];
-            item.ScheduleDurationInMinutes = default;
+            item.ScheduleDurationInMinutes = default(Int32);
             item.Conditions.Clear();
             item.IdleAnimations = null;
             item.CombatStyle.Clear();
             item.OwnerQuest.Clear();
             item.PackageTemplate.Clear();
-            item.DataInputVersion = default;
+            item.DataInputVersion = default(Int32);
             item.Data.Clear();
             item.XnamMarker = Array.Empty<byte>();
             item.ProcedureTree.Clear();
@@ -2816,7 +2817,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Package(formKey);
+            var newRec = new Package(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3627,14 +3628,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PackageBinaryCreateTranslation.FillBinaryPackageTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Package_FieldIndex.PackageTemplate;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     PackageBinaryCreateTranslation.FillBinaryXnamMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Package_FieldIndex.XnamMarker;
                 }
                 case RecordTypeInts.POBA:
@@ -3664,7 +3667,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3680,11 +3683,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryPackageTemplateCustom(
             MutagenFrame frame,
-            IPackageInternal item);
+            IPackageInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryXnamMarkerCustom(
             MutagenFrame frame,
-            IPackageInternal item);
+            IPackageInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -3773,13 +3778,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown2
         private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
         private bool _Unknown2_IsSet => _PKDTLocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default(UInt16);
         #endregion
         private RangeInt32? _PSDTLocation;
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default;
+        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default(SByte);
         #endregion
         #region ScheduleDayOfWeek
         private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
@@ -3794,12 +3799,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region ScheduleHour
         private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
         private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default;
+        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default(SByte);
         #endregion
         #region ScheduleMinute
         private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
         private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default;
+        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default(SByte);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _PSDTLocation!.Value.Min + 0x5;
@@ -3809,7 +3814,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ScheduleDurationInMinutes
         private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value.Min + 0x8;
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
-        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
+        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default(Int32);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
@@ -3824,7 +3829,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom();
         public IFormLinkGetter<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
@@ -3832,7 +3837,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region XnamMarker
         partial void XnamMarkerCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom();
         public ReadOnlyMemorySlice<Byte> XnamMarker => GetXnamMarkerCustom();
@@ -4008,7 +4013,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

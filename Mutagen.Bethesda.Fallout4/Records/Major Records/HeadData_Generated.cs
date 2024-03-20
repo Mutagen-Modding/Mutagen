@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1501,13 +1502,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 254,
-            version: 0);
-
-        public const string GUID = "4fb44f2a-d848-41f9-aa0a-4339022a3400";
-
         public const ushort AdditionalFieldCount = 10;
 
         public const ushort FieldCount = 10;
@@ -1593,13 +1587,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.TTEB,
                 RecordTypes.TTEC,
                 RecordTypes.TTED);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2087,7 +2081,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RacePresets.SetTo(
                         rhs.RacePresets
-                        .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2106,7 +2100,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.AvailableHairColors.SetTo(
                         rhs.AvailableHairColors
-                        .Select(r => (IFormLinkGetter<IColorRecordGetter>)new FormLink<IColorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IColorRecordGetter>)new FormLink<IColorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2125,7 +2119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.FaceDetails.SetTo(
                         rhs.FaceDetails
-                        .Select(r => (IFormLinkGetter<ITextureSetGetter>)new FormLink<ITextureSetGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ITextureSetGetter>)new FormLink<ITextureSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2737,7 +2731,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.RPRM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.RacePresets;
@@ -2752,7 +2746,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.AHCM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
@@ -2767,7 +2761,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.FTSM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.FaceDetails;

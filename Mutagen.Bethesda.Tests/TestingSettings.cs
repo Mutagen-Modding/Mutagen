@@ -22,6 +22,7 @@ public record DataFolderLocations
     public string SkyrimSpecialEdition { get; set; } = string.Empty;
     public string SkyrimVR { get; set; } = string.Empty;
     public string Fallout4 { get; set; } = string.Empty;
+    public string Starfield { get; set; } = string.Empty;
 
     public DataFolderLocations()
     {
@@ -44,6 +45,8 @@ public record DataFolderLocations
                 return SkyrimSpecialEdition;
             case GameRelease.Fallout4:
                 return Fallout4;
+            case GameRelease.Starfield:
+                return Starfield;
             default:
                 throw new NotImplementedException();
         }
@@ -64,6 +67,9 @@ public record DataFolderLocations
                 break;
             case GameRelease.Fallout4:
                 Fallout4 = path;
+                break;
+            case GameRelease.Starfield:
+                Starfield = path;
                 break;
             default:
                 throw new NotImplementedException();
@@ -114,6 +120,7 @@ public record TrimmingSettings
 {
     public bool Enabled { get; set; }= true;
     public List<string> TypesToTrim { get; set; } = new();
+    public List<string> TypesToInclude { get; set; } = new();
 }
 
 public record TargetGroup

@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
+        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default(QuestAdapter.VersioningBreaks);
         #endregion
         #region ExtraBindDataVersion
         public static readonly Byte ExtraBindDataVersionDefault = 2;
@@ -893,13 +894,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 360,
-            version: 0);
-
-        public const string GUID = "9b79d88c-6b07-459c-959e-f6c5d1318ea8";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 8;
@@ -938,8 +932,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(QuestAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -977,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IQuestAdapter item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(QuestAdapter.VersioningBreaks);
             item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.FileName = string.Empty;
             item.Fragments.Clear();
@@ -1726,6 +1718,18 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void QuestAdapterParseEndingPositions(
+            QuestAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
+            ret.CustomFileNameEndPos();
+            ret.CustomFragmentsEndPos();
+            ret.CustomAliasesEndPos();
+        }
+
         public static IQuestAdapterGetter QuestAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1741,9 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new QuestAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomFileNameEndPos();
-            ret.CustomFragmentsEndPos();
-            ret.CustomAliasesEndPos();
+            QuestAdapterParseEndingPositions(ret, package);
             if (ret._structData.Length <= ret.ScriptsEndingPos)
             {
                 ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;

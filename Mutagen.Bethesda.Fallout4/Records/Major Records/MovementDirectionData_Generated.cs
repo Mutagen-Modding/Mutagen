@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unused1
-        public Int32 Unused1 { get; set; } = default;
+        public Int32 Unused1 { get; set; } = default(Int32);
         #endregion
         #region Walk
-        public Single Walk { get; set; } = default;
+        public Single Walk { get; set; } = default(Single);
         #endregion
         #region Run
-        public Single Run { get; set; } = default;
+        public Single Run { get; set; } = default(Single);
         #endregion
         #region Unused2
-        public Int32 Unused2 { get; set; } = default;
+        public Int32 Unused2 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 250,
-            version: 0);
-
-        public const string GUID = "03bc6cd4-dadd-47ef-86fe-996407171f64";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -754,8 +748,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(MovementDirectionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -793,10 +785,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMovementDirectionData item)
         {
             ClearPartial();
-            item.Unused1 = default;
-            item.Walk = default;
-            item.Run = default;
-            item.Unused2 = default;
+            item.Unused1 = default(Int32);
+            item.Walk = default(Single);
+            item.Run = default(Single);
+            item.Unused2 = default(Int32);
         }
         
         #region Mutagen

@@ -168,7 +168,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
 
-        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,
@@ -215,12 +215,14 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                     new PluginListingsProvider(
                         Release,
                         new TimestampedPluginListingsProvider(
+                            fs,
                             new TimestampAligner(fs),
                             new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                             pluginRawListingsReader,
                             dataDirectory,
                             pluginPathProvider),
                         new EnabledPluginListingsProvider(
+                            fs,
                             pluginRawListingsReader,
                             pluginPathProvider)),
                     new CreationClubListingsProvider(
@@ -417,7 +419,7 @@ public sealed record GameEnvironmentBuilder
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
         
-        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,
@@ -464,12 +466,14 @@ public sealed record GameEnvironmentBuilder
                     new PluginListingsProvider(
                         Release,
                         new TimestampedPluginListingsProvider(
+                            fs,
                             new TimestampAligner(fs),
                             new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                             pluginRawListingsReader,
                             dataDirectory,
                             pluginPathProvider),
                         new EnabledPluginListingsProvider(
+                            fs,
                             pluginRawListingsReader,
                             pluginPathProvider)),
                     new CreationClubListingsProvider(

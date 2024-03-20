@@ -73,7 +73,7 @@ public sealed class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
 
     private void ReadFile(string filePath, string patcherName, InternalState state)
     {
-        using var fs = _fileSystem.FileStream.Create(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var fs = _fileSystem.FileStream.New(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var streamReader = new StreamReader(fs);
         while (true)
         {
@@ -167,7 +167,7 @@ public sealed class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
         var tempFile = thePath + ".tmp";
         var targetFile = thePath + ".txt";
         {
-            using var fs = fileSystem.FileStream.Create(tempFile, FileMode.Create);
+            using var fs = fileSystem.FileStream.New(tempFile, FileMode.Create);
             using var streamWriter = new StreamWriter(fs);
             foreach (var (Key, Value) in data)
             {

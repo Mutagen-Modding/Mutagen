@@ -42,7 +42,11 @@ public class MajorRecordModule : GenerationModule
             sb.AppendLine("this.FormKey = formKey;");
             if (obj.GetObjectData().HasMultipleReleases)
             {
-                sb.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
+                sb.AppendLine("this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;");
+            }
+            else if (obj.Name != "MajorRecord" && obj.GetObjectData().GameCategory != GameCategory.Oblivion)
+            {
+                sb.AppendLine($"this.FormVersion = GameConstants.{obj.GetObjectData().GameCategory}.DefaultFormVersion!.Value;");
             }
             sb.AppendLine("CustomCtor();");
         }
@@ -60,7 +64,7 @@ public class MajorRecordModule : GenerationModule
             sb.AppendLine("this.FormKey = formKey;");
             if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
             {
-                sb.AppendLine("this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;");
+                sb.AppendLine("this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;");
             }
             sb.AppendLine("CustomCtor();");
         }

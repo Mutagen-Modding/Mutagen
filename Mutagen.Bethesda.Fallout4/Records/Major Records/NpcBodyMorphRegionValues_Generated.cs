@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Head
-        public Single Head { get; set; } = default;
+        public Single Head { get; set; } = default(Single);
         #endregion
         #region UpperTorso
-        public Single UpperTorso { get; set; } = default;
+        public Single UpperTorso { get; set; } = default(Single);
         #endregion
         #region Arms
-        public Single Arms { get; set; } = default;
+        public Single Arms { get; set; } = default(Single);
         #endregion
         #region LowerTorso
-        public Single LowerTorso { get; set; } = default;
+        public Single LowerTorso { get; set; } = default(Single);
         #endregion
         #region Legs
-        public Single Legs { get; set; } = default;
+        public Single Legs { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 349,
-            version: 0);
-
-        public const string GUID = "9f990ef4-305a-4954-9483-987eb2c1fed3";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -790,8 +784,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(NpcBodyMorphRegionValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -829,11 +821,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcBodyMorphRegionValues item)
         {
             ClearPartial();
-            item.Head = default;
-            item.UpperTorso = default;
-            item.Arms = default;
-            item.LowerTorso = default;
-            item.Legs = default;
+            item.Head = default(Single);
+            item.UpperTorso = default(Single);
+            item.Arms = default(Single);
+            item.LowerTorso = default(Single);
+            item.Legs = default(Single);
         }
         
         #region Mutagen

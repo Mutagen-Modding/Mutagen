@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public Furniture.AnimationType Type { get; set; } = default;
+        public Furniture.AnimationType Type { get; set; } = default(Furniture.AnimationType);
         #endregion
         #region Points
-        public Furniture.Entry Points { get; set; } = default;
+        public Furniture.Entry Points { get; set; } = default(Furniture.Entry);
         #endregion
 
         #region To String
@@ -644,13 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 195,
-            version: 0);
-
-        public const string GUID = "c9ce2bba-98b9-40d0-8af9-3fdfc7003494";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -682,8 +676,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(EntryPointsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -721,8 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IEntryPoints item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Points = default;
+            item.Type = default(Furniture.AnimationType);
+            item.Points = default(Furniture.Entry);
         }
         
         #region Mutagen

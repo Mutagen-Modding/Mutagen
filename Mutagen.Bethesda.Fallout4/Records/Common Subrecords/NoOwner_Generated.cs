@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,10 +53,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region RawOwnerData
-        public UInt32 RawOwnerData { get; set; } = default;
+        public UInt32 RawOwnerData { get; set; } = default(UInt32);
         #endregion
         #region RawVariableData
-        public UInt32 RawVariableData { get; set; } = default;
+        public UInt32 RawVariableData { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -602,13 +603,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 163,
-            version: 0);
-
-        public const string GUID = "e4494e41-372e-4037-b686-1a2213b1a6f7";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -640,8 +634,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(NoOwnerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -679,8 +671,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INoOwner item)
         {
             ClearPartial();
-            item.RawOwnerData = default;
-            item.RawVariableData = default;
+            item.RawOwnerData = default(UInt32);
+            item.RawVariableData = default(UInt32);
             base.Clear(item);
         }
         

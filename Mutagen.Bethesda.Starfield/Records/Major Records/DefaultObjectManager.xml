@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Objects" recordType="DNAM" refName="DefaultObjectUse" />
+    </Fields>
+  </Object>
+  <Object name="DefaultObjectUse" objType="Subrecord">
+    <Fields>
+      <RecordType name="Use" />
+      <FormLink name="Object" refName="StarfieldMajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Magnitude
-        public Single Magnitude { get; set; } = default;
+        public Single Magnitude { get; set; } = default(Single);
         #endregion
         #region Area
-        public Int32 Area { get; set; } = default;
+        public Int32 Area { get; set; } = default(Int32);
         #endregion
         #region Duration
-        public Int32 Duration { get; set; } = default;
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 102,
-            version: 0);
-
-        public const string GUID = "d4b9227e-a026-4b30-8a1f-7aee9834456f";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(EffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.Magnitude = default;
-            item.Area = default;
-            item.Duration = default;
+            item.Magnitude = default(Single);
+            item.Area = default(Int32);
+            item.Duration = default(Int32);
         }
         
         #region Mutagen

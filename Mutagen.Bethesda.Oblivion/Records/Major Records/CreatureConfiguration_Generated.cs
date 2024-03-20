@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Creature.CreatureFlag Flags { get; set; } = default;
+        public Creature.CreatureFlag Flags { get; set; } = default(Creature.CreatureFlag);
         #endregion
         #region BaseSpellPoints
-        public UInt16 BaseSpellPoints { get; set; } = default;
+        public UInt16 BaseSpellPoints { get; set; } = default(UInt16);
         #endregion
         #region Fatigue
-        public UInt16 Fatigue { get; set; } = default;
+        public UInt16 Fatigue { get; set; } = default(UInt16);
         #endregion
         #region BarterGold
-        public UInt16 BarterGold { get; set; } = default;
+        public UInt16 BarterGold { get; set; } = default(UInt16);
         #endregion
         #region LevelOffset
-        public Int16 LevelOffset { get; set; } = default;
+        public Int16 LevelOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMin
-        public UInt16 CalcMin { get; set; } = default;
+        public UInt16 CalcMin { get; set; } = default(UInt16);
         #endregion
         #region CalcMax
-        public UInt16 CalcMax { get; set; } = default;
+        public UInt16 CalcMax { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -824,13 +825,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 183,
-            version: 0);
-
-        public const string GUID = "47d2aad4-4bca-4222-8f0c-6a7ed5899187";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -869,8 +863,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(CreatureConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -908,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICreatureConfiguration item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.BaseSpellPoints = default;
-            item.Fatigue = default;
-            item.BarterGold = default;
-            item.LevelOffset = default;
-            item.CalcMin = default;
-            item.CalcMax = default;
+            item.Flags = default(Creature.CreatureFlag);
+            item.BaseSpellPoints = default(UInt16);
+            item.Fatigue = default(UInt16);
+            item.BarterGold = default(UInt16);
+            item.LevelOffset = default(Int16);
+            item.CalcMin = default(UInt16);
+            item.CalcMax = default(UInt16);
         }
         
         #region Mutagen

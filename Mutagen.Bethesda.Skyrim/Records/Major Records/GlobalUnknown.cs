@@ -19,7 +19,7 @@ public partial class GlobalUnknown
 
 partial class GlobalUnknownBinaryCreateTranslation
 {
-    public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalUnknownInternal item)
+    public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalUnknownInternal item, PreviousParse lastParsed)
     {
         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
         item.TypeChar = frame.ReadChar();
@@ -41,7 +41,7 @@ partial class GlobalUnknownBinaryOverlay
 
     private int? _TypeCharLocation;
 
-    partial void TypeCharCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void TypeCharCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _TypeCharLocation = (stream.Position - offset);
     }

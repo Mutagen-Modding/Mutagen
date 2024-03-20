@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="OblivionMod" objType="Mod" ctorPermission="protected" usesStringFiles="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
+  <Object name="OblivionMod" objType="Mod" ctorPermission="protected" usesStringFiles="false">
     <Fields>
       <RefDirect name="ModHeader" refName="OblivionModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
@@ -47,8 +47,8 @@
       <Group name="Weathers" refName="Weather" />
       <Group name="Climates" refName="Climate" />
       <Group name="Regions" refName="Region" />
-      <Ref name="Cells" singleton="true" >
-        <Direct refName="OblivionListGroup" >
+      <Ref name="Cells" singleton="true">
+        <Direct refName="OblivionListGroup">
           <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>

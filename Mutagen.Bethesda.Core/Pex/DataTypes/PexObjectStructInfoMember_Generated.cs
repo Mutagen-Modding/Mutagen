@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Pex
         IPexObjectVariableDataGetter? IPexObjectStructInfoMemberGetter.Value => this.Value;
         #endregion
         #region IsConst
-        public Boolean IsConst { get; set; } = default;
+        public Boolean IsConst { get; set; } = default(Boolean);
         #endregion
         #region DocString
         public String? DocString { get; set; }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectStructInfoMemberGetter.DocString => this.DocString;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -733,13 +733,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 8,
-            version: 0);
-
-        public const string GUID = "e238f493-6319-4996-a331-0bc3d93cd6ab";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -770,8 +763,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -812,9 +803,9 @@ namespace Mutagen.Bethesda.Pex
             item.Name = default;
             item.TypeName = default;
             item.Value = null;
-            item.IsConst = default;
+            item.IsConst = default(Boolean);
             item.DocString = default;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
         }
         
     }

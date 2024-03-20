@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Global" recordType="GLOB" baseClass="StarfieldMajorRecord" majorFlag="true" objType="Record">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Float name="Data" recordType="FLTV" />
+    </Fields>
+  </Object>
+</Loqui>

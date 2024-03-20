@@ -30,7 +30,7 @@ partial class ArmorAddonBinaryCreateTranslation
         item.WeightSliderEnabled = new GenderedItem<bool>(frame.ReadUInt8() >= 2, frame.ReadUInt8() >= 2);
     }
 
-    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IArmorAddonInternal item)
+    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IArmorAddonInternal item, PreviousParse lastParsed)
     {
         var genderFrame = frame.ReadSubrecord(RecordTypes.BSMP);
 
@@ -99,7 +99,7 @@ internal partial class ArmorAddonBinaryOverlay
     private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
     public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
 
-    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);

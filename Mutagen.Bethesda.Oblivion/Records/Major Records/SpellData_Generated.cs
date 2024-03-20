@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Spell.SpellType Type { get; set; } = default;
+        public Spell.SpellType Type { get; set; } = default(Spell.SpellType);
         #endregion
         #region Cost
-        public UInt32 Cost { get; set; } = default;
+        public UInt32 Cost { get; set; } = default(UInt32);
         #endregion
         #region Level
-        public Spell.SpellLevel Level { get; set; } = default;
+        public Spell.SpellLevel Level { get; set; } = default(Spell.SpellLevel);
         #endregion
         #region Flag
-        public Spell.SpellFlag Flag { get; set; } = default;
+        public Spell.SpellFlag Flag { get; set; } = default(Spell.SpellFlag);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 211,
-            version: 0);
-
-        public const string GUID = "c86b5362-efcd-44e9-b6f4-85a6b0759f63";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(SpellDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISpellData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Cost = default;
-            item.Level = default;
-            item.Flag = default;
+            item.Type = default(Spell.SpellType);
+            item.Cost = default(UInt32);
+            item.Level = default(Spell.SpellLevel);
+            item.Flag = default(Spell.SpellFlag);
         }
         
         #region Mutagen

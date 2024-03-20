@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
         #region Index
-        public Int32 Index { get; set; } = default;
+        public Int32 Index { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -709,13 +710,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 43,
-            version: 0);
-
-        public const string GUID = "8001a465-c267-45ee-81b5-a51613668e74";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -747,8 +741,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(AlternateTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -788,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Name = string.Empty;
             item.NewTexture.Clear();
-            item.Index = default;
+            item.Index = default(Int32);
         }
         
         #region Mutagen
@@ -1203,6 +1195,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void AlternateTextureParseEndingPositions(
+            AlternateTextureBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
+        }
+
         public static IAlternateTextureGetter AlternateTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1218,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new AlternateTextureBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
+            AlternateTextureParseEndingPositions(ret, package);
             stream.Position += ret.NameEndingPos + 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

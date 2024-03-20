@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public SceneAction.TypeEnum Type { get; set; } = default;
+        public SceneAction.TypeEnum Type { get; set; } = default(SceneAction.TypeEnum);
         #endregion
         #region Name
         /// <summary>
@@ -1349,13 +1350,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 471,
-            version: 0);
-
-        public const string GUID = "3f2b0ff3-2e6d-4fce-958e-40dffd9c696d";
-
         public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 17;
@@ -1410,13 +1404,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SCTX,
                 RecordTypes.QNAM,
                 RecordTypes.SCRO);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SceneActionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1454,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISceneAction item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(SceneAction.TypeEnum);
             item.Name = default;
             item.ActorID = default;
             item.LNAM = default;
@@ -1918,7 +1912,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2582,12 +2576,16 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 _TypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -2636,11 +2634,15 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _StartPhaseLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                            }
                             case 1:
+                            {
                                 _TimerSecondsLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -2660,7 +2662,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)SceneAction_FieldIndex.Packages;

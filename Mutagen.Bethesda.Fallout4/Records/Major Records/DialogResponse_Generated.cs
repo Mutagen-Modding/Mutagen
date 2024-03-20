@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -62,7 +63,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IKeywordGetter> IDialogResponseGetter.Emotion => this.Emotion;
         #endregion
         #region ResponseNumber
-        public Byte ResponseNumber { get; set; } = default;
+        public Byte ResponseNumber { get; set; } = default(Byte);
         #endregion
         #region Sound
         private readonly IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
@@ -75,16 +76,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound;
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region InterruptPercentage
-        public UInt16 InterruptPercentage { get; set; } = default;
+        public UInt16 InterruptPercentage { get; set; } = default(UInt16);
         #endregion
         #region CameraTargetAlias
-        public Int32 CameraTargetAlias { get; set; } = default;
+        public Int32 CameraTargetAlias { get; set; } = default(Int32);
         #endregion
         #region CameraLocationAlias
-        public Int32 CameraLocationAlias { get; set; } = default;
+        public Int32 CameraLocationAlias { get; set; } = default(Int32);
         #endregion
         #region Text
         public TranslatedString Text { get; set; } = string.Empty;
@@ -141,7 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ICameraPathGetter> IDialogResponseGetter.CameraPath => this.CameraPath;
         #endregion
         #region StopOnSceneEnd
-        public Boolean StopOnSceneEnd { get; set; } = default;
+        public Boolean StopOnSceneEnd { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -1201,13 +1202,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 547,
-            version: 0);
-
-        public const string GUID = "2af08585-7d3a-49dd-98d2-500486f6c2e7";
-
         public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 16;
@@ -1253,13 +1247,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NAM9,
                 RecordTypes.SRAF,
                 RecordTypes.WZMD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1298,12 +1292,12 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Emotion.Clear();
-            item.ResponseNumber = default;
+            item.ResponseNumber = default(Byte);
             item.Sound.Clear();
-            item.Unknown = default;
-            item.InterruptPercentage = default;
-            item.CameraTargetAlias = default;
-            item.CameraLocationAlias = default;
+            item.Unknown = default(Byte);
+            item.InterruptPercentage = default(UInt16);
+            item.CameraTargetAlias = default(Int32);
+            item.CameraLocationAlias = default(Int32);
             item.Text.Clear();
             item.ScriptNotes = string.Empty;
             item.Edits = string.Empty;
@@ -1312,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.ListenerIdleAnimation.Clear();
             item.TextHash = default;
             item.CameraPath.Clear();
-            item.StopOnSceneEnd = default;
+            item.StopOnSceneEnd = default(Boolean);
         }
         
         #region Mutagen
@@ -2111,12 +2105,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region CameraTargetAlias
         private int _CameraTargetAliasLocation => InterruptPercentageEndingPos;
         private bool _CameraTargetAlias_IsSet => _TRDALocation.HasValue;
-        public Int32 CameraTargetAlias => _CameraTargetAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraTargetAliasLocation, 4)) : default;
+        public Int32 CameraTargetAlias => _CameraTargetAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraTargetAliasLocation, 4)) : default(Int32);
         #endregion
         #region CameraLocationAlias
         private int _CameraLocationAliasLocation => InterruptPercentageEndingPos + 0x4;
         private bool _CameraLocationAlias_IsSet => _TRDALocation.HasValue;
-        public Int32 CameraLocationAlias => _CameraLocationAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraLocationAliasLocation, 4)) : default;
+        public Int32 CameraLocationAlias => _CameraLocationAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraLocationAliasLocation, 4)) : default(Int32);
         #endregion
         #region Text
         private int? _TextLocation;
@@ -2158,7 +2152,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region StopOnSceneEnd
         private int? _StopOnSceneEndLocation;
-        public Boolean StopOnSceneEnd => _StopOnSceneEndLocation.HasValue ? true : default;
+        public Boolean StopOnSceneEnd => _StopOnSceneEndLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

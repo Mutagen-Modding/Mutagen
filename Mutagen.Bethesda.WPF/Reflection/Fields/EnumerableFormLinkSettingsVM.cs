@@ -103,17 +103,11 @@ public class EnumerableFormLinkSettingsVM : SettingsNodeVM
         _defaultVal = _defaultVal.Select(x => FormKeySettingsVM.StripOrigin(x)).ToArray();
         Values.SetTo(_defaultVal);
 
-        if (LoquiRegistration.TryGetRegisterByFullName(_typeName, out var regis))
+        if (!GetterTypeMapping.Instance.TryGetGetterType(_typeName, out var getterType))
         {
-            ScopedTypes = regis.GetterType.AsEnumerable();
+            throw new ArgumentException($"Can't create a formlink control for type: {_typeName}.  No getter type found.");
         }
-        else if (LinkInterfaceMapping.Instance.TryGetByFullName(_typeName, out var interfType))
-        {
-            ScopedTypes = interfType.AsEnumerable();
-        }
-        else
-        {
-            throw new ArgumentException($"Can't create a formlink control for type: {_typeName}");
-        }
+        
+        ScopedTypes = getterType.AsEnumerable();
     }
 }

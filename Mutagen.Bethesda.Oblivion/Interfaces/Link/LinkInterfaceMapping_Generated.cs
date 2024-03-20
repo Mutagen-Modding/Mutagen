@@ -19,62 +19,97 @@ internal class OblivionLinkInterfaceMapping : IInterfaceMapping
     public OblivionLinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
-        dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            AlchemicalApparatus_Registration.Instance,
-            Ammunition_Registration.Instance,
-            Armor_Registration.Instance,
-            Book_Registration.Instance,
-            Clothing_Registration.Instance,
-            Ingredient_Registration.Instance,
-            Key_Registration.Instance,
-            LeveledItem_Registration.Instance,
-            Light_Registration.Instance,
-            Miscellaneous_Registration.Instance,
-            Potion_Registration.Instance,
-            SigilStone_Registration.Instance,
-            SoulGem_Registration.Instance,
-            Weapon_Registration.Instance,
-        });
+        dict[typeof(IItem)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Clothing_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                Miscellaneous_Registration.Instance,
+                Potion_Registration.Instance,
+                SigilStone_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IItem),
+                Getter: typeof(IItemGetter)));
         dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
-        dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Creature_Registration.Instance,
-            LeveledCreature_Registration.Instance,
-            Npc_Registration.Instance,
-        });
+        dict[typeof(INpcSpawn)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Creature_Registration.Instance,
+                LeveledCreature_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(INpcSpawn),
+                Getter: typeof(INpcSpawnGetter)));
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
-        dict[typeof(INpcRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Creature_Registration.Instance,
-            Npc_Registration.Instance,
-        });
+        dict[typeof(INpcRecord)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Creature_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(INpcRecord),
+                Getter: typeof(INpcRecordGetter)));
         dict[typeof(INpcRecordGetter)] = dict[typeof(INpcRecord)] with { Setter = false };
-        dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Faction_Registration.Instance,
-            Npc_Registration.Instance,
-        });
+        dict[typeof(IOwner)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Faction_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IOwner),
+                Getter: typeof(IOwnerGetter)));
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
-        dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Landscape_Registration.Instance,
-            PlacedCreature_Registration.Instance,
-            PlacedNpc_Registration.Instance,
-            PlacedObject_Registration.Instance,
-        });
+        dict[typeof(IPlaced)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Landscape_Registration.Instance,
+                PlacedCreature_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlaced),
+                Getter: typeof(IPlacedGetter)));
         dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
-        dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            LeveledSpell_Registration.Instance,
-            Spell_Registration.Instance,
-            SpellLeveled_Registration.Instance,
-        });
+        dict[typeof(ISpellRecord)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                LeveledSpell_Registration.Instance,
+                Spell_Registration.Instance,
+                SpellLeveled_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(ISpellRecord),
+                Getter: typeof(ISpellRecordGetter)));
         dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
-        dict[typeof(IPlace)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Worldspace_Registration.Instance,
-        });
+        dict[typeof(IPlace)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Worldspace_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlace),
+                Getter: typeof(IPlaceGetter)));
         dict[typeof(IPlaceGetter)] = dict[typeof(IPlace)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }

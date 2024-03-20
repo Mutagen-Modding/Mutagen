@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimOpticalSightMarker" recordType="AOPS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Data recordType="ANAM">
+        <Fields>
+          <Bool name="HideBeamByDefault" byteLength="1" />
+          <String name="NodeName" binaryType="PrependLengthWithNullIfContent" />
+          <Float name="BeamReactivationDelayAfterEquipOrReloadSeconds" />
+          <Float name="BeamDeactivationDelayAfterReloadSeconds" />
+          <FormLink name="Light" refName="Light" />
+          <Float name="Unknown1" />
+          <Float name="Unknown2" />
+          <Float name="BeamReactivationDelayAfterFiringSeconds" />
+          <FormLink name="BeamArtObject" refName="ArtObject" />
+          <FormLink name="DotArtObject" refName="ArtObject" />
+          <Float name="Unknown3" />
+          <Bool name="Unknown4" byteLength="1" />
+          <Bool name="ShowBeamAtHip" byteLength="1" />
+          <Bool name="Unknown5" byteLength="1" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

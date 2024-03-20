@@ -31,16 +31,16 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region MajorVersion
-        public Byte MajorVersion { get; set; } = default;
+        public Byte MajorVersion { get; set; } = default(Byte);
         #endregion
         #region MinorVersion
-        public Byte MinorVersion { get; set; } = default;
+        public Byte MinorVersion { get; set; } = default(Byte);
         #endregion
         #region GameId
-        public UInt16 GameId { get; set; } = default;
+        public UInt16 GameId { get; set; } = default(UInt16);
         #endregion
         #region CompilationTime
-        public DateTime CompilationTime { get; set; } = default;
+        public DateTime CompilationTime { get; set; } = default(DateTime);
         #endregion
         #region SourceFileName
         public String SourceFileName { get; set; } = string.Empty;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Pex
         #endregion
         #region UserFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String[] _UserFlags = new String[32];
-        public String[] UserFlags
+        private String?[] _UserFlags = new String?[32];
+        public String?[] UserFlags
         {
             get => this._UserFlags;
             init => this._UserFlags = value;
@@ -1023,13 +1023,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 5,
-            version: 0);
-
-        public const string GUID = "6cbf970c-2533-422d-b90a-6b7b74817e63";
-
         public const ushort AdditionalFieldCount = 10;
 
         public const ushort FieldCount = 10;
@@ -1060,8 +1053,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1099,10 +1090,10 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexFile item)
         {
             ClearPartial();
-            item.MajorVersion = default;
-            item.MinorVersion = default;
-            item.GameId = default;
-            item.CompilationTime = default;
+            item.MajorVersion = default(Byte);
+            item.MinorVersion = default(Byte);
+            item.GameId = default(UInt16);
+            item.CompilationTime = default(DateTime);
             item.SourceFileName = string.Empty;
             item.Username = string.Empty;
             item.MachineName = string.Empty;

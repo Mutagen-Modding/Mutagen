@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public PlacedObjectLighting.VersioningBreaks Versioning { get; set; } = default;
+        public PlacedObjectLighting.VersioningBreaks Versioning { get; set; } = default(PlacedObjectLighting.VersioningBreaks);
         #endregion
         #region Fov90PlusMinus
-        public Single Fov90PlusMinus { get; set; } = default;
+        public Single Fov90PlusMinus { get; set; } = default(Single);
         #endregion
         #region Fade1PlusMinus
-        public Single Fade1PlusMinus { get; set; } = default;
+        public Single Fade1PlusMinus { get; set; } = default(Single);
         #endregion
         #region EndDistanceCap
-        public Single EndDistanceCap { get; set; } = default;
+        public Single EndDistanceCap { get; set; } = default(Single);
         #endregion
         #region ShadowDepthBias
-        public Single ShadowDepthBias { get; set; } = default;
+        public Single ShadowDepthBias { get; set; } = default(Single);
         #endregion
         #region NearClip
-        public Single NearClip { get; set; } = default;
+        public Single NearClip { get; set; } = default(Single);
         #endregion
         #region VolumetricIntensity
-        public Single VolumetricIntensity { get; set; } = default;
+        public Single VolumetricIntensity { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -833,13 +834,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 494,
-            version: 0);
-
-        public const string GUID = "d460114e-36e8-4227-94be-e669bad39a4a";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -878,8 +872,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -917,13 +909,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectLighting item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Fov90PlusMinus = default;
-            item.Fade1PlusMinus = default;
-            item.EndDistanceCap = default;
-            item.ShadowDepthBias = default;
-            item.NearClip = default;
-            item.VolumetricIntensity = default;
+            item.Versioning = default(PlacedObjectLighting.VersioningBreaks);
+            item.Fov90PlusMinus = default(Single);
+            item.Fade1PlusMinus = default(Single);
+            item.EndDistanceCap = default(Single);
+            item.ShadowDepthBias = default(Single);
+            item.NearClip = default(Single);
+            item.VolumetricIntensity = default(Single);
         }
         
         #region Mutagen

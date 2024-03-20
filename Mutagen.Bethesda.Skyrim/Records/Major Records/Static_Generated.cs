@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -146,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILodGetter? IStaticGetter.Lod => this.Lod;
         #endregion
         #region DNAMDataTypeState
-        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default(Static.DNAMDataType);
         #endregion
 
         #region To String
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -675,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1076,13 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 105,
-            version: 0);
-
-        public const string GUID = "89036057-4570-493d-a5f7-4c5718f67a06";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 15;
@@ -1122,13 +1116,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.MODL,
                 RecordTypes.DNAM,
                 RecordTypes.MNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1170,10 +1164,10 @@ namespace Mutagen.Bethesda.Skyrim
             item.Model = null;
             item.MaxAngle = Static.MaxAngleDefault;
             item.Material.Clear();
-            item.Flags = default;
+            item.Flags = default(Static.Flag);
             item.Unused = new byte[3];
             item.Lod = null;
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(Static.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2167,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;

@@ -1,7 +1,10 @@
-# FormKey Allocation and Persistence
+!!! danger "Experimental"
+    This feature has had some work put into it, but is still an experimental proof of concept
+
 It is common that tooling that is generating new records when creating plugins wants to keep their FormKeys consistent across several runs.  The same records should get the same FormKeys.
 
 There are some challenges with fulfilling this:
+
 - How is a record detected to be the "same" as one from a previous run?
 - Where/How do you persist the mapping information between runs?
 

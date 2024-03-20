@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,65 +56,65 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region HdrEyeAdaptSpeed
-        public Single HdrEyeAdaptSpeed { get; set; } = default;
+        public Single HdrEyeAdaptSpeed { get; set; } = default(Single);
         #endregion
         #region HdrTonemapE
-        public Single HdrTonemapE { get; set; } = default;
+        public Single HdrTonemapE { get; set; } = default(Single);
         #endregion
         #region HdrBloomThreshold
-        public Single HdrBloomThreshold { get; set; } = default;
+        public Single HdrBloomThreshold { get; set; } = default(Single);
         #endregion
         #region HdrBloomScale
-        public Single HdrBloomScale { get; set; } = default;
+        public Single HdrBloomScale { get; set; } = default(Single);
         #endregion
         #region HdrAutoExposureMax
-        public Single HdrAutoExposureMax { get; set; } = default;
+        public Single HdrAutoExposureMax { get; set; } = default(Single);
         #endregion
         #region HdrAutoExposureMin
-        public Single HdrAutoExposureMin { get; set; } = default;
+        public Single HdrAutoExposureMin { get; set; } = default(Single);
         #endregion
         #region HdrSunlightScale
-        public Single HdrSunlightScale { get; set; } = default;
+        public Single HdrSunlightScale { get; set; } = default(Single);
         #endregion
         #region HdrSkyScale
-        public Single HdrSkyScale { get; set; } = default;
+        public Single HdrSkyScale { get; set; } = default(Single);
         #endregion
         #region HdrMiddleGray
-        public Single HdrMiddleGray { get; set; } = default;
+        public Single HdrMiddleGray { get; set; } = default(Single);
         #endregion
         #region CinematicSaturation
-        public Single CinematicSaturation { get; set; } = default;
+        public Single CinematicSaturation { get; set; } = default(Single);
         #endregion
         #region CinematicBrightness
-        public Single CinematicBrightness { get; set; } = default;
+        public Single CinematicBrightness { get; set; } = default(Single);
         #endregion
         #region CinematicContrast
-        public Single CinematicContrast { get; set; } = default;
+        public Single CinematicContrast { get; set; } = default(Single);
         #endregion
         #region TintAmount
-        public Single TintAmount { get; set; } = default;
+        public Single TintAmount { get; set; } = default(Single);
         #endregion
         #region TintColor
-        public Color TintColor { get; set; } = default;
+        public Color TintColor { get; set; } = default(Color);
         #endregion
         #region DepthOfFieldStrength
-        public Single DepthOfFieldStrength { get; set; } = default;
+        public Single DepthOfFieldStrength { get; set; } = default(Single);
         #endregion
         #region DepthOfFieldDistance
-        public Single DepthOfFieldDistance { get; set; } = default;
+        public Single DepthOfFieldDistance { get; set; } = default(Single);
         #endregion
         #region DepthOfFieldRange
-        public Single DepthOfFieldRange { get; set; } = default;
+        public Single DepthOfFieldRange { get; set; } = default(Single);
         #endregion
         #region DepthOfFieldUnused
-        public Int16 DepthOfFieldUnused { get; set; } = default;
+        public Int16 DepthOfFieldUnused { get; set; } = default(Int16);
         #endregion
         #region DepthOfFieldBlurRadius
-        public Byte DepthOfFieldBlurRadius { get; set; } = default;
+        public Byte DepthOfFieldBlurRadius { get; set; } = default(Byte);
         public static RangeUInt8 DepthOfFieldBlurRadius_Range = new RangeUInt8(0, 7);
         #endregion
         #region DepthOfFieldSky
-        public Boolean DepthOfFieldSky { get; set; } = default;
+        public Boolean DepthOfFieldSky { get; set; } = default(Boolean);
         #endregion
         #region DepthOfFieldVignetteRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,7 +148,7 @@ namespace Mutagen.Bethesda.Fallout4
         String? IImageSpaceGetter.Lut => this.Lut;
         #endregion
         #region DNAMDataTypeState
-        public ImageSpace.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public ImageSpace.DNAMDataType DNAMDataTypeState { get; set; } = default(ImageSpace.DNAMDataType);
         #endregion
 
         #region To String
@@ -1125,9 +1126,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImageSpace_Registration.TriggeringRecordType;
-        public ImageSpace(FormKey formKey)
+        public ImageSpace(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1136,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1150,12 +1154,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public ImageSpace(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public ImageSpace(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1530,13 +1538,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 465,
-            version: 0);
-
-        public const string GUID = "3b3264aa-9b31-4ee5-939a-eb664fa1b35a";
-
         public const ushort AdditionalFieldCount = 24;
 
         public const ushort FieldCount = 31;
@@ -1578,13 +1579,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.TNAM,
                 RecordTypes.DNAM,
                 RecordTypes.TX00);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1622,30 +1623,30 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IImageSpaceInternal item)
         {
             ClearPartial();
-            item.HdrEyeAdaptSpeed = default;
-            item.HdrTonemapE = default;
-            item.HdrBloomThreshold = default;
-            item.HdrBloomScale = default;
-            item.HdrAutoExposureMax = default;
-            item.HdrAutoExposureMin = default;
-            item.HdrSunlightScale = default;
-            item.HdrSkyScale = default;
-            item.HdrMiddleGray = default;
-            item.CinematicSaturation = default;
-            item.CinematicBrightness = default;
-            item.CinematicContrast = default;
-            item.TintAmount = default;
-            item.TintColor = default;
-            item.DepthOfFieldStrength = default;
-            item.DepthOfFieldDistance = default;
-            item.DepthOfFieldRange = default;
-            item.DepthOfFieldUnused = default;
-            item.DepthOfFieldBlurRadius = default;
-            item.DepthOfFieldSky = default;
-            item.DepthOfFieldVignetteRadius = default;
-            item.DepthOfFieldVignetteStrength = default;
+            item.HdrEyeAdaptSpeed = default(Single);
+            item.HdrTonemapE = default(Single);
+            item.HdrBloomThreshold = default(Single);
+            item.HdrBloomScale = default(Single);
+            item.HdrAutoExposureMax = default(Single);
+            item.HdrAutoExposureMin = default(Single);
+            item.HdrSunlightScale = default(Single);
+            item.HdrSkyScale = default(Single);
+            item.HdrMiddleGray = default(Single);
+            item.CinematicSaturation = default(Single);
+            item.CinematicBrightness = default(Single);
+            item.CinematicContrast = default(Single);
+            item.TintAmount = default(Single);
+            item.TintColor = default(Color);
+            item.DepthOfFieldStrength = default(Single);
+            item.DepthOfFieldDistance = default(Single);
+            item.DepthOfFieldRange = default(Single);
+            item.DepthOfFieldUnused = default(Int16);
+            item.DepthOfFieldBlurRadius = default(Byte);
+            item.DepthOfFieldSky = default(Boolean);
+            item.DepthOfFieldVignetteRadius = default(Single);
+            item.DepthOfFieldVignetteStrength = default(Single);
             item.Lut = default;
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(ImageSpace.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2139,7 +2140,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ImageSpace(formKey);
+            var newRec = new ImageSpace(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2703,7 +2704,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return ImageSpaceBinaryCreateTranslation.FillBinaryENAMParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -2802,7 +2804,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryENAMParsingCustom(
             MutagenFrame frame,
-            IImageSpaceInternal item);
+            IImageSpaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryDepthOfFieldBlurRadiusCustom(
             MutagenFrame frame,
@@ -2861,102 +2864,103 @@ namespace Mutagen.Bethesda.Fallout4
         #region ENAMParsing
         public partial ParseResult ENAMParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _HNAMLocation;
         #region HdrEyeAdaptSpeed
         private int _HdrEyeAdaptSpeedLocation => _HNAMLocation!.Value.Min;
         private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
-        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? _recordData.Slice(_HdrEyeAdaptSpeedLocation, 4).Float() : default;
+        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? _recordData.Slice(_HdrEyeAdaptSpeedLocation, 4).Float() : default(Single);
         #endregion
         #region HdrTonemapE
         private int _HdrTonemapELocation => _HNAMLocation!.Value.Min + 0x4;
         private bool _HdrTonemapE_IsSet => _HNAMLocation.HasValue;
-        public Single HdrTonemapE => _HdrTonemapE_IsSet ? _recordData.Slice(_HdrTonemapELocation, 4).Float() : default;
+        public Single HdrTonemapE => _HdrTonemapE_IsSet ? _recordData.Slice(_HdrTonemapELocation, 4).Float() : default(Single);
         #endregion
         #region HdrBloomThreshold
         private int _HdrBloomThresholdLocation => _HNAMLocation!.Value.Min + 0x8;
         private bool _HdrBloomThreshold_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBloomThreshold => _HdrBloomThreshold_IsSet ? _recordData.Slice(_HdrBloomThresholdLocation, 4).Float() : default;
+        public Single HdrBloomThreshold => _HdrBloomThreshold_IsSet ? _recordData.Slice(_HdrBloomThresholdLocation, 4).Float() : default(Single);
         #endregion
         #region HdrBloomScale
         private int _HdrBloomScaleLocation => _HNAMLocation!.Value.Min + 0xC;
         private bool _HdrBloomScale_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBloomScale => _HdrBloomScale_IsSet ? _recordData.Slice(_HdrBloomScaleLocation, 4).Float() : default;
+        public Single HdrBloomScale => _HdrBloomScale_IsSet ? _recordData.Slice(_HdrBloomScaleLocation, 4).Float() : default(Single);
         #endregion
         #region HdrAutoExposureMax
         private int _HdrAutoExposureMaxLocation => _HNAMLocation!.Value.Min + 0x10;
         private bool _HdrAutoExposureMax_IsSet => _HNAMLocation.HasValue;
-        public Single HdrAutoExposureMax => _HdrAutoExposureMax_IsSet ? _recordData.Slice(_HdrAutoExposureMaxLocation, 4).Float() : default;
+        public Single HdrAutoExposureMax => _HdrAutoExposureMax_IsSet ? _recordData.Slice(_HdrAutoExposureMaxLocation, 4).Float() : default(Single);
         #endregion
         #region HdrAutoExposureMin
         private int _HdrAutoExposureMinLocation => _HNAMLocation!.Value.Min + 0x14;
         private bool _HdrAutoExposureMin_IsSet => _HNAMLocation.HasValue;
-        public Single HdrAutoExposureMin => _HdrAutoExposureMin_IsSet ? _recordData.Slice(_HdrAutoExposureMinLocation, 4).Float() : default;
+        public Single HdrAutoExposureMin => _HdrAutoExposureMin_IsSet ? _recordData.Slice(_HdrAutoExposureMinLocation, 4).Float() : default(Single);
         #endregion
         #region HdrSunlightScale
         private int _HdrSunlightScaleLocation => _HNAMLocation!.Value.Min + 0x18;
         private bool _HdrSunlightScale_IsSet => _HNAMLocation.HasValue;
-        public Single HdrSunlightScale => _HdrSunlightScale_IsSet ? _recordData.Slice(_HdrSunlightScaleLocation, 4).Float() : default;
+        public Single HdrSunlightScale => _HdrSunlightScale_IsSet ? _recordData.Slice(_HdrSunlightScaleLocation, 4).Float() : default(Single);
         #endregion
         #region HdrSkyScale
         private int _HdrSkyScaleLocation => _HNAMLocation!.Value.Min + 0x1C;
         private bool _HdrSkyScale_IsSet => _HNAMLocation.HasValue;
-        public Single HdrSkyScale => _HdrSkyScale_IsSet ? _recordData.Slice(_HdrSkyScaleLocation, 4).Float() : default;
+        public Single HdrSkyScale => _HdrSkyScale_IsSet ? _recordData.Slice(_HdrSkyScaleLocation, 4).Float() : default(Single);
         #endregion
         #region HdrMiddleGray
         private int _HdrMiddleGrayLocation => _HNAMLocation!.Value.Min + 0x20;
         private bool _HdrMiddleGray_IsSet => _HNAMLocation.HasValue;
-        public Single HdrMiddleGray => _HdrMiddleGray_IsSet ? _recordData.Slice(_HdrMiddleGrayLocation, 4).Float() : default;
+        public Single HdrMiddleGray => _HdrMiddleGray_IsSet ? _recordData.Slice(_HdrMiddleGrayLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _CNAMLocation;
         #region CinematicSaturation
         private int _CinematicSaturationLocation => _CNAMLocation!.Value.Min;
         private bool _CinematicSaturation_IsSet => _CNAMLocation.HasValue;
-        public Single CinematicSaturation => _CinematicSaturation_IsSet ? _recordData.Slice(_CinematicSaturationLocation, 4).Float() : default;
+        public Single CinematicSaturation => _CinematicSaturation_IsSet ? _recordData.Slice(_CinematicSaturationLocation, 4).Float() : default(Single);
         #endregion
         #region CinematicBrightness
         private int _CinematicBrightnessLocation => _CNAMLocation!.Value.Min + 0x4;
         private bool _CinematicBrightness_IsSet => _CNAMLocation.HasValue;
-        public Single CinematicBrightness => _CinematicBrightness_IsSet ? _recordData.Slice(_CinematicBrightnessLocation, 4).Float() : default;
+        public Single CinematicBrightness => _CinematicBrightness_IsSet ? _recordData.Slice(_CinematicBrightnessLocation, 4).Float() : default(Single);
         #endregion
         #region CinematicContrast
         private int _CinematicContrastLocation => _CNAMLocation!.Value.Min + 0x8;
         private bool _CinematicContrast_IsSet => _CNAMLocation.HasValue;
-        public Single CinematicContrast => _CinematicContrast_IsSet ? _recordData.Slice(_CinematicContrastLocation, 4).Float() : default;
+        public Single CinematicContrast => _CinematicContrast_IsSet ? _recordData.Slice(_CinematicContrastLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _TNAMLocation;
         #region TintAmount
         private int _TintAmountLocation => _TNAMLocation!.Value.Min;
         private bool _TintAmount_IsSet => _TNAMLocation.HasValue;
-        public Single TintAmount => _TintAmount_IsSet ? _recordData.Slice(_TintAmountLocation, 4).Float() : default;
+        public Single TintAmount => _TintAmount_IsSet ? _recordData.Slice(_TintAmountLocation, 4).Float() : default(Single);
         #endregion
         #region TintColor
         private int _TintColorLocation => _TNAMLocation!.Value.Min + 0x4;
         private bool _TintColor_IsSet => _TNAMLocation.HasValue;
-        public Color TintColor => _TintColor_IsSet ? _recordData.Slice(_TintColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color TintColor => _TintColor_IsSet ? _recordData.Slice(_TintColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         private RangeInt32? _DNAMLocation;
         public ImageSpace.DNAMDataType DNAMDataTypeState { get; private set; }
         #region DepthOfFieldStrength
         private int _DepthOfFieldStrengthLocation => _DNAMLocation!.Value.Min;
         private bool _DepthOfFieldStrength_IsSet => _DNAMLocation.HasValue;
-        public Single DepthOfFieldStrength => _DepthOfFieldStrength_IsSet ? _recordData.Slice(_DepthOfFieldStrengthLocation, 4).Float() : default;
+        public Single DepthOfFieldStrength => _DepthOfFieldStrength_IsSet ? _recordData.Slice(_DepthOfFieldStrengthLocation, 4).Float() : default(Single);
         #endregion
         #region DepthOfFieldDistance
         private int _DepthOfFieldDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DepthOfFieldDistance_IsSet => _DNAMLocation.HasValue;
-        public Single DepthOfFieldDistance => _DepthOfFieldDistance_IsSet ? _recordData.Slice(_DepthOfFieldDistanceLocation, 4).Float() : default;
+        public Single DepthOfFieldDistance => _DepthOfFieldDistance_IsSet ? _recordData.Slice(_DepthOfFieldDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region DepthOfFieldRange
         private int _DepthOfFieldRangeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _DepthOfFieldRange_IsSet => _DNAMLocation.HasValue;
-        public Single DepthOfFieldRange => _DepthOfFieldRange_IsSet ? _recordData.Slice(_DepthOfFieldRangeLocation, 4).Float() : default;
+        public Single DepthOfFieldRange => _DepthOfFieldRange_IsSet ? _recordData.Slice(_DepthOfFieldRangeLocation, 4).Float() : default(Single);
         #endregion
         #region DepthOfFieldUnused
         private int _DepthOfFieldUnusedLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _DepthOfFieldUnused_IsSet => _DNAMLocation.HasValue;
-        public Int16 DepthOfFieldUnused => _DepthOfFieldUnused_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DepthOfFieldUnusedLocation, 2)) : default;
+        public Int16 DepthOfFieldUnused => _DepthOfFieldUnused_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DepthOfFieldUnusedLocation, 2)) : default(Int16);
         #endregion
         #region DepthOfFieldBlurRadius
         private int _DepthOfFieldBlurRadiusLocation => _DNAMLocation!.Value.Min + 0xE;
@@ -2971,12 +2975,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region DepthOfFieldVignetteRadius
         private int _DepthOfFieldVignetteRadiusLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _DepthOfFieldVignetteRadius_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break0);
-        public Single DepthOfFieldVignetteRadius => _DepthOfFieldVignetteRadius_IsSet ? _recordData.Slice(_DepthOfFieldVignetteRadiusLocation, 4).Float() : default;
+        public Single DepthOfFieldVignetteRadius => _DepthOfFieldVignetteRadius_IsSet ? _recordData.Slice(_DepthOfFieldVignetteRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region DepthOfFieldVignetteStrength
         private int _DepthOfFieldVignetteStrengthLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _DepthOfFieldVignetteStrength_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break0);
-        public Single DepthOfFieldVignetteStrength => _DepthOfFieldVignetteStrength_IsSet ? _recordData.Slice(_DepthOfFieldVignetteStrengthLocation, 4).Float() : default;
+        public Single DepthOfFieldVignetteStrength => _DepthOfFieldVignetteStrength_IsSet ? _recordData.Slice(_DepthOfFieldVignetteStrengthLocation, 4).Float() : default(Single);
         #endregion
         #region Lut
         private int? _LutLocation;
@@ -3025,7 +3029,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return ENAMParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.HNAM:
                 {

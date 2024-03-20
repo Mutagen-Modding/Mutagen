@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,9 +56,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly UInt32 NavmeshVersionDefault = 12;
         public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
-        #region Magic
-        public static readonly UInt32 MagicDefault = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = MagicDefault;
+        #region CrcHash
+        public static readonly UInt32 CrcHashDefault = 0xA5E9A03C;
+        public UInt32 CrcHash { get; set; } = CrcHashDefault;
         #endregion
         #region Parent
         public ANavmeshParent Parent { get; set; } = default!;
@@ -121,19 +122,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region NavmeshGridDivisor
-        public UInt32 NavmeshGridDivisor { get; set; } = default;
+        public UInt32 NavmeshGridDivisor { get; set; } = default(UInt32);
         #endregion
         #region MaxDistanceX
-        public Single MaxDistanceX { get; set; } = default;
+        public Single MaxDistanceX { get; set; } = default(Single);
         #endregion
         #region MaxDistanceY
-        public Single MaxDistanceY { get; set; } = default;
+        public Single MaxDistanceY { get; set; } = default(Single);
         #endregion
         #region Min
-        public P3Float Min { get; set; } = default;
+        public P3Float Min { get; set; } = default(P3Float);
         #endregion
         #region Max
-        public P3Float Max { get; set; } = default;
+        public P3Float Max { get; set; } = default(P3Float);
         #endregion
         #region NavmeshGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -186,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.NavmeshVersion = initialValue;
-                this.Magic = initialValue;
+                this.CrcHash = initialValue;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(initialValue, new ANavmeshParent.Mask<TItem>(initialValue));
                 this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
@@ -202,7 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public Mask(
                 TItem NavmeshVersion,
-                TItem Magic,
+                TItem CrcHash,
                 TItem Parent,
                 TItem Vertices,
                 TItem Triangles,
@@ -216,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NavmeshGrid)
             {
                 this.NavmeshVersion = NavmeshVersion;
-                this.Magic = Magic;
+                this.CrcHash = CrcHash;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(Parent, new ANavmeshParent.Mask<TItem>(Parent));
                 this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
@@ -240,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem NavmeshVersion;
-            public TItem Magic;
+            public TItem CrcHash;
             public MaskItem<TItem, ANavmeshParent.Mask<TItem>?>? Parent { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Vertices;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>? Triangles;
@@ -265,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.NavmeshVersion, rhs.NavmeshVersion)) return false;
-                if (!object.Equals(this.Magic, rhs.Magic)) return false;
+                if (!object.Equals(this.CrcHash, rhs.CrcHash)) return false;
                 if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 if (!object.Equals(this.Vertices, rhs.Vertices)) return false;
                 if (!object.Equals(this.Triangles, rhs.Triangles)) return false;
@@ -283,7 +284,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.NavmeshVersion);
-                hash.Add(this.Magic);
+                hash.Add(this.CrcHash);
                 hash.Add(this.Parent);
                 hash.Add(this.Vertices);
                 hash.Add(this.Triangles);
@@ -304,7 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.NavmeshVersion)) return false;
-                if (!eval(this.Magic)) return false;
+                if (!eval(this.CrcHash)) return false;
                 if (Parent != null)
                 {
                     if (!eval(this.Parent.Overall)) return false;
@@ -371,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.NavmeshVersion)) return true;
-                if (eval(this.Magic)) return true;
+                if (eval(this.CrcHash)) return true;
                 if (Parent != null)
                 {
                     if (eval(this.Parent.Overall)) return true;
@@ -445,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.NavmeshVersion = eval(this.NavmeshVersion);
-                obj.Magic = eval(this.Magic);
+                obj.CrcHash = eval(this.CrcHash);
                 obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavmeshParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
                 if (Vertices != null)
                 {
@@ -534,9 +535,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                     }
-                    if (printMask?.Magic ?? true)
+                    if (printMask?.CrcHash ?? true)
                     {
-                        sb.AppendItem(Magic, "Magic");
+                        sb.AppendItem(CrcHash, "CrcHash");
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
@@ -669,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? NavmeshVersion;
-            public Exception? Magic;
+            public Exception? CrcHash;
             public MaskItem<Exception?, ANavmeshParent.ErrorMask?>? Parent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Vertices;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>? Triangles;
@@ -691,8 +692,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NavigationMeshData_FieldIndex.NavmeshVersion:
                         return NavmeshVersion;
-                    case NavigationMeshData_FieldIndex.Magic:
-                        return Magic;
+                    case NavigationMeshData_FieldIndex.CrcHash:
+                        return CrcHash;
                     case NavigationMeshData_FieldIndex.Parent:
                         return Parent;
                     case NavigationMeshData_FieldIndex.Vertices:
@@ -728,8 +729,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMeshData_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = ex;
                         break;
-                    case NavigationMeshData_FieldIndex.Magic:
-                        this.Magic = ex;
+                    case NavigationMeshData_FieldIndex.CrcHash:
+                        this.CrcHash = ex;
                         break;
                     case NavigationMeshData_FieldIndex.Parent:
                         this.Parent = new MaskItem<Exception?, ANavmeshParent.ErrorMask?>(ex, null);
@@ -777,8 +778,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMeshData_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = (Exception?)obj;
                         break;
-                    case NavigationMeshData_FieldIndex.Magic:
-                        this.Magic = (Exception?)obj;
+                    case NavigationMeshData_FieldIndex.CrcHash:
+                        this.CrcHash = (Exception?)obj;
                         break;
                     case NavigationMeshData_FieldIndex.Parent:
                         this.Parent = (MaskItem<Exception?, ANavmeshParent.ErrorMask?>?)obj;
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (NavmeshVersion != null) return true;
-                if (Magic != null) return true;
+                if (CrcHash != null) return true;
                 if (Parent != null) return true;
                 if (Vertices != null) return true;
                 if (Triangles != null) return true;
@@ -863,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                 }
                 {
-                    sb.AppendItem(Magic, "Magic");
+                    sb.AppendItem(CrcHash, "CrcHash");
                 }
                 Parent?.Print(sb);
                 if (Vertices is {} VerticesItem)
@@ -967,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NavmeshVersion = this.NavmeshVersion.Combine(rhs.NavmeshVersion);
-                ret.Magic = this.Magic.Combine(rhs.Magic);
+                ret.CrcHash = this.CrcHash.Combine(rhs.CrcHash);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
                 ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
                 ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
@@ -1003,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool NavmeshVersion;
-            public bool Magic;
+            public bool CrcHash;
             public ANavmeshParent.TranslationMask? Parent;
             public bool Vertices;
             public NavmeshTriangle.TranslationMask? Triangles;
@@ -1025,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.NavmeshVersion = defaultOn;
-                this.Magic = defaultOn;
+                this.CrcHash = defaultOn;
                 this.Vertices = defaultOn;
                 this.NavmeshGridDivisor = defaultOn;
                 this.MaxDistanceX = defaultOn;
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((NavmeshVersion, null));
-                ret.Add((Magic, null));
+                ret.Add((CrcHash, null));
                 ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
                 ret.Add((Vertices, null));
                 ret.Add((Triangles == null ? DefaultOn : !Triangles.GetCrystal().CopyNothing, Triangles?.GetCrystal()));
@@ -1140,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim
         INavigationMeshDataGetter
     {
         new UInt32 NavmeshVersion { get; set; }
-        new UInt32 Magic { get; set; }
+        new UInt32 CrcHash { get; set; }
         new ANavmeshParent Parent { get; set; }
         new ExtendedList<P3Float> Vertices { get; }
         new ExtendedList<NavmeshTriangle> Triangles { get; }
@@ -1168,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationMeshData_Registration.Instance;
         UInt32 NavmeshVersion { get; }
-        UInt32 Magic { get; }
+        UInt32 CrcHash { get; }
         IANavmeshParentGetter Parent { get; }
         IReadOnlyList<P3Float> Vertices { get; }
         IReadOnlyList<INavmeshTriangleGetter> Triangles { get; }
@@ -1350,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim
     internal enum NavigationMeshData_FieldIndex
     {
         NavmeshVersion = 0,
-        Magic = 1,
+        CrcHash = 1,
         Parent = 2,
         Vertices = 3,
         Triangles = 4,
@@ -1371,13 +1372,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly NavigationMeshData_Registration Instance = new NavigationMeshData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
-
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 324,
-            version: 0);
-
-        public const string GUID = "0f14b502-0797-43b9-810a-e958643a5d68";
 
         public const ushort AdditionalFieldCount = 13;
 
@@ -1417,8 +1411,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1457,17 +1449,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.NavmeshVersion = NavigationMeshData.NavmeshVersionDefault;
-            item.Magic = NavigationMeshData.MagicDefault;
+            item.CrcHash = NavigationMeshData.CrcHashDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
             item.Triangles.Clear();
             item.EdgeLinks.Clear();
             item.DoorTriangles.Clear();
-            item.NavmeshGridDivisor = default;
-            item.MaxDistanceX = default;
-            item.MaxDistanceY = default;
-            item.Min = default;
-            item.Max = default;
+            item.NavmeshGridDivisor = default(UInt32);
+            item.MaxDistanceX = default(Single);
+            item.MaxDistanceY = default(Single);
+            item.Min = default(P3Float);
+            item.Max = default(P3Float);
             item.NavmeshGrid = Array.Empty<byte>();
         }
         
@@ -1526,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.NavmeshVersion = item.NavmeshVersion == rhs.NavmeshVersion;
-            ret.Magic = item.Magic == rhs.Magic;
+            ret.CrcHash = item.CrcHash == rhs.CrcHash;
             ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
             ret.Vertices = item.Vertices.CollectionEqualsHelper(
                 rhs.Vertices,
@@ -1598,9 +1590,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.NavmeshVersion, "NavmeshVersion");
             }
-            if (printMask?.Magic ?? true)
+            if (printMask?.CrcHash ?? true)
             {
-                sb.AppendItem(item.Magic, "Magic");
+                sb.AppendItem(item.CrcHash, "CrcHash");
             }
             if (printMask?.Parent?.Overall ?? true)
             {
@@ -1699,9 +1691,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.Magic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.CrcHash) ?? true))
             {
-                if (lhs.Magic != rhs.Magic) return false;
+                if (lhs.CrcHash != rhs.CrcHash) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.Parent) ?? true))
             {
@@ -1758,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.NavmeshVersion);
-            hash.Add(item.Magic);
+            hash.Add(item.CrcHash);
             hash.Add(item.Parent);
             hash.Add(item.Vertices);
             hash.Add(item.Triangles);
@@ -1821,9 +1813,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NavmeshVersion = rhs.NavmeshVersion;
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.Magic) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.CrcHash) ?? true))
             {
-                item.Magic = rhs.Magic;
+                item.CrcHash = rhs.CrcHash;
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMeshData_FieldIndex.Parent) ?? true))
             {
@@ -2057,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenWriter writer)
         {
             writer.Write(item.NavmeshVersion);
-            writer.Write(item.Magic);
+            writer.Write(item.CrcHash);
             NavigationMeshDataBinaryWriteTranslation.WriteBinaryParent(
                 writer: writer,
                 item: item);
@@ -2201,7 +2193,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame)
         {
             item.NavmeshVersion = frame.ReadUInt32();
-            item.Magic = frame.ReadUInt32();
+            item.CrcHash = frame.ReadUInt32();
             NavigationMeshDataBinaryCreateTranslation.FillBinaryParentCustom(
                 frame: frame,
                 item: item);
@@ -2315,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public UInt32 CrcHash => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region Parent
         public partial IANavmeshParentGetter GetParentCustom(int location);
         public IANavmeshParentGetter Parent => GetParentCustom(location: 0x8);
@@ -2358,6 +2350,16 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void NavigationMeshDataParseEndingPositions(
+            NavigationMeshDataBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
+            ret.CustomTrianglesEndPos();
+            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 10 + 4;
+            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+        }
+
         public static INavigationMeshDataGetter NavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -2373,10 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new NavigationMeshDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
-            ret.CustomTrianglesEndPos();
-            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 10 + 4;
-            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+            NavigationMeshDataParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

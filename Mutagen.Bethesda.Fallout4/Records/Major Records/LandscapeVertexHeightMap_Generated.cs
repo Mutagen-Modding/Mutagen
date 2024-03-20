@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,12 +51,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Offset
-        public Single Offset { get; set; } = default;
+        public Single Offset { get; set; } = default(Single);
         #endregion
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33);
+        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33, default(Byte));
         public IArray2d<Byte> HeightMap
         {
             get => this._HeightMap;
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Unknown
-        public P3UInt8 Unknown { get; set; } = default;
+        public P3UInt8 Unknown { get; set; } = default(P3UInt8);
         #endregion
 
         #region To String
@@ -759,13 +760,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 520,
-            version: 0);
-
-        public const string GUID = "27f8e45b-9b03-4c5f-a54c-1f6067bdf897";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -804,8 +798,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeVertexHeightMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -843,9 +835,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILandscapeVertexHeightMap item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.HeightMap.SetAllTo(default);
-            item.Unknown = default;
+            item.Offset = default(Single);
+            item.HeightMap.SetAllTo(default(Byte));
+            item.Unknown = default(P3UInt8);
         }
         
         #region Mutagen
@@ -962,7 +954,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
                     }
                 }

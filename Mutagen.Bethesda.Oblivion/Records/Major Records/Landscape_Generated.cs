@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1030,13 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 143,
-            version: 0);
-
-        public const string GUID = "f03a09c7-ce1f-4764-ac9a-bccccfa481d4";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 11;
@@ -1079,13 +1073,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.BTXT,
                 RecordTypes.ATXT,
                 RecordTypes.VTEX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1632,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLinkGetter<ILandTextureGetter>)new FormLink<ILandTextureGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILandTextureGetter>)new FormLink<ILandTextureGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILandTextureGetter>>();
                     }
                     else

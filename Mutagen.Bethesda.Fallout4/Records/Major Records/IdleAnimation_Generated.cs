@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -93,19 +94,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region LoopingSecondsMin
-        public Byte LoopingSecondsMin { get; set; } = default;
+        public Byte LoopingSecondsMin { get; set; } = default(Byte);
         #endregion
         #region LoopingSecondsMax
-        public Byte LoopingSecondsMax { get; set; } = default;
+        public Byte LoopingSecondsMax { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public IdleAnimation.Flag Flags { get; set; } = default;
+        public IdleAnimation.Flag Flags { get; set; } = default(IdleAnimation.Flag);
         #endregion
         #region AnimationGroupSection
-        public Byte AnimationGroupSection { get; set; } = default;
+        public Byte AnimationGroupSection { get; set; } = default(Byte);
         #endregion
         #region ReplayDelay
-        public UInt16 ReplayDelay { get; set; } = default;
+        public UInt16 ReplayDelay { get; set; } = default(UInt16);
         #endregion
         #region AnimationFile
         public String? AnimationFile { get; set; }
@@ -802,9 +803,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IdleAnimationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationSetterCommon.Instance.RemapLinks(this, mapping);
-        public IdleAnimation(FormKey formKey)
+        public IdleAnimation(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -813,7 +817,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -827,12 +831,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public IdleAnimation(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public IdleAnimation(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1164,13 +1172,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 232,
-            version: 0);
-
-        public const string GUID = "62b9bc11-4e8a-46aa-ad46-be6516201220";
-
         public const ushort AdditionalFieldCount = 10;
 
         public const ushort FieldCount = 17;
@@ -1214,13 +1215,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ANAM,
                 RecordTypes.DATA,
                 RecordTypes.GNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1262,11 +1263,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.BehaviorGraph = default;
             item.AnimationEvent = default;
             item.RelatedIdles.Clear();
-            item.LoopingSecondsMin = default;
-            item.LoopingSecondsMax = default;
-            item.Flags = default;
-            item.AnimationGroupSection = default;
-            item.ReplayDelay = default;
+            item.LoopingSecondsMin = default(Byte);
+            item.LoopingSecondsMax = default(Byte);
+            item.Flags = default(IdleAnimation.Flag);
+            item.AnimationGroupSection = default(Byte);
+            item.ReplayDelay = default(UInt16);
             item.AnimationFile = default;
             base.Clear(item);
         }
@@ -1666,7 +1667,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new IdleAnimation(formKey);
+            var newRec = new IdleAnimation(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1770,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2249,7 +2250,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ReplayDelay
         private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
-        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default;
+        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default(UInt16);
         #endregion
         #region AnimationFile
         private int? _AnimationFileLocation;

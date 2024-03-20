@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -63,10 +64,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IActorValueInformationGetter> IPerkEntryPointModifyActorValueGetter.ActorValue => this.ActorValue;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Modification
-        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyActorValue.ModificationType);
         #endregion
 
         #region To String
@@ -671,13 +672,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 604,
-            version: 0);
-
-        public const string GUID = "85de3802-9e0b-4cbc-a5d0-6a614da28282";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 9;
@@ -716,8 +710,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointModifyActorValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -756,8 +748,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ActorValue.Clear();
-            item.Value = default;
-            item.Modification = default;
+            item.Value = default(Single);
+            item.Modification = default(PerkEntryPointModifyActorValue.ModificationType);
             base.Clear(item);
         }
         
@@ -1213,6 +1205,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

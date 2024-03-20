@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
-using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 
@@ -339,7 +338,7 @@ public static class HeaderExt
             pin = default;
             return false;
         }
-        pin = find.Value.Frame.Pin(find.Value.Location + majorFrame.HeaderLength);
+        pin = find.Value.Shift(majorFrame.HeaderLength);
         return true;
     }
 
@@ -373,6 +372,24 @@ public static class HeaderExt
             return default;
         }
         return find.Value.Frame.Pin(find.Value.Location + majorFrame.HeaderLength);
+    }
+
+    /// <summary>
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="afterSubrecord">Subrecord to start searching after</param>
+    /// <param name="type">Type to search for</param>
+    /// <returns>SubrecordHeader if found, otherwise null</returns>
+    public static SubrecordPinFrame? TryFindSubrecordAfter(this MajorRecordFrame majorFrame, SubrecordPinFrame afterSubrecord, params RecordType[] type)
+    {
+        var spanToSearch = majorFrame.HeaderAndContentData.Slice(afterSubrecord.EndLocation);
+        var find = RecordSpanExtensions.TryFindSubrecord(spanToSearch, majorFrame.Meta, type);
+        if (find == null)
+        {
+            return default;
+        }
+        return find.Value.Frame.Pin(find.Value.Location + afterSubrecord.EndLocation);
     }
 
     /// <summary>
@@ -511,6 +528,35 @@ public static class HeaderExt
     /// Finds and iterates subrecords of a given type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="type">Type to search for</param>
+    /// <param name="afterSubrecord">Subrecord to start searching after</param>
+    /// <param name="onlyFirstSet">
+    /// If true, iteration will stop after finding the first non-applicable record after some applicable ones.<br/>
+    /// If false, records will continue to be searched in their entirety for all matching subrecords.
+    /// </param>
+    /// <returns>Encountered SubrecordFrames with the given type</returns>
+    public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecordsAfter(this MajorRecordFrame majorFrame, RecordType type, SubrecordPinFrame afterSubrecord, bool onlyFirstSet = false)
+    {
+        bool encountered = false;
+        foreach (var subrecord in majorFrame)
+        {
+            if (subrecord.Location <= afterSubrecord.Location) continue;
+            if (subrecord.RecordType == type)
+            {
+                encountered = true;
+                yield return subrecord;
+            }
+            else if (onlyFirstSet && encountered)
+            {
+                yield break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds and iterates subrecords of a given type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
     /// <param name="recordTypes">Types to search for</param>
     /// <returns>Encountered SubrecordFrames with the given types</returns>
     public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, IReadOnlyCollection<RecordType> recordTypes)
@@ -577,7 +623,7 @@ public static class HeaderExt
         foreach (var varRec in group)
         {
             if (varRec.IsGroup) continue;
-            yield return new MajorRecordPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+            yield return new MajorRecordPinFrame(group.Meta, group.HeaderAndContentData.Slice(varRec.Location), varRec.Location);
         }
     }
 
@@ -586,7 +632,7 @@ public static class HeaderExt
         foreach (var varRec in group)
         {
             if (!varRec.IsGroup) continue;
-            yield return new GroupPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+            yield return new GroupPinFrame(group.Meta, group.HeaderAndContentData.Slice(varRec.Location), varRec.Location);
         }
     }
 

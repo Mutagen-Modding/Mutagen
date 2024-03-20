@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundKeywordMapping" recordType="KSSM" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <List name="Keywords" >
+        <FormLink refName="Keyword" recordType="KNAM" />
+      </List>
+      <RefList name="Items" refName="SoundKeywordMappingItem" />
+    </Fields>
+  </Object>
+  <Object name="SoundKeywordMappingItem" objType="Subrecord" >
+    <Fields>
+      <UInt32 name="RSMC" recordType="RSMC" unknown="true" />
+      <RefDirect name="RSMH" recordType="RSMH" unknown="true" refName="SoundReference" />
+    </Fields>
+  </Object>
+</Loqui>

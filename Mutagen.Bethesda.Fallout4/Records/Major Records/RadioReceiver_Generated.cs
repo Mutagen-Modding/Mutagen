@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public RadioReceiver.VersioningBreaks Versioning { get; set; } = default;
+        public RadioReceiver.VersioningBreaks Versioning { get; set; } = default(RadioReceiver.VersioningBreaks);
         #endregion
         #region SoundModel
         private readonly IFormLink<ISoundOutputModelGetter> _SoundModel = new FormLink<ISoundOutputModelGetter>();
@@ -64,16 +65,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundOutputModelGetter> IRadioReceiverGetter.SoundModel => this.SoundModel;
         #endregion
         #region Frequency
-        public Single Frequency { get; set; } = default;
+        public Single Frequency { get; set; } = default(Single);
         #endregion
         #region Volume
-        public Single Volume { get; set; } = default;
+        public Single Volume { get; set; } = default(Single);
         #endregion
         #region StartsActive
-        public Boolean StartsActive { get; set; } = default;
+        public Boolean StartsActive { get; set; } = default(Boolean);
         #endregion
         #region NoSignalStatic
-        public Boolean NoSignalStatic { get; set; } = default;
+        public Boolean NoSignalStatic { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -808,13 +809,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 223,
-            version: 0);
-
-        public const string GUID = "8be06abd-cae8-4862-a510-a942533bda27";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -853,8 +847,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(RadioReceiverBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -892,12 +884,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IRadioReceiver item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(RadioReceiver.VersioningBreaks);
             item.SoundModel.Clear();
-            item.Frequency = default;
-            item.Volume = default;
-            item.StartsActive = default;
-            item.NoSignalStatic = default;
+            item.Frequency = default(Single);
+            item.Volume = default(Single);
+            item.StartsActive = default(Boolean);
+            item.NoSignalStatic = default(Boolean);
         }
         
         #region Mutagen

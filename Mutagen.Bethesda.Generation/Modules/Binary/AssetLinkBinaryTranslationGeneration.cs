@@ -71,20 +71,6 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
             extraArgs.Add($"source: {nameof(StringsSource)}.{asset.Translated.Value}");
         }
 
-        extraArgs.Add($"stringBinaryType: {nameof(StringBinaryType)}.{asset.BinaryType}");
-        switch (asset.BinaryType)
-        {
-            case StringBinaryType.NullTerminate:
-                if (!data.HasTrigger)
-                {
-                    extraArgs.Add("parseWhole: false");
-                }
-
-                break;
-            default:
-                break;
-        }
-
         TranslationGeneration.WrapParseCall(
             new TranslationWrapParseArgs()
             {
@@ -129,7 +115,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         } 
     } 
  
-    public override void GenerateCopyInRet( 
+    public override async Task GenerateCopyInRet( 
         StructuredStringBuilder fg, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 
@@ -160,12 +146,10 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
                 args.Add($"errorMask: {errorMaskAccessor}"); 
             } 
             args.Add($"item: out {outItemAccessor}"); 
-            args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}"); 
             if (data.Length.HasValue) 
             { 
                 args.Add($"length: {data.Length.Value}"); 
             } 
-            args.Add($"binaryType: {nameof(StringBinaryType)}.{assetType.BinaryType}"); 
             if (assetType.Translated.HasValue) 
             { 
                 args.Add($"source: {nameof(StringsSource)}.{assetType.Translated.Value}"); 
@@ -179,7 +163,8 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         TypeGeneration typeGen,
         Accessor dataAccessor,
         int? passedLength, 
-        string? passedLengthAccessor)
+        string? passedLengthAccessor,
+        DataType? data = null)
     {
         AssetLinkType asset = typeGen as AssetLinkType;
         switch (asset.BinaryType)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" recordType="LSCR" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
+    <Fields>
+      <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
+      <RefList name="Conditions" refName="Condition" />
+      <String name="Loadscreen" recordType="ICON" />
+    </Fields>
+  </Object>
+</Loqui>

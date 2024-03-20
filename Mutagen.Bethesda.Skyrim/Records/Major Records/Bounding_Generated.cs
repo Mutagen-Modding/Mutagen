@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Width
-        public Single Width { get; set; } = default;
+        public Single Width { get; set; } = default(Single);
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region RotationQ1
-        public Single RotationQ1 { get; set; } = default;
+        public Single RotationQ1 { get; set; } = default(Single);
         #endregion
         #region RotationQ2
-        public Single RotationQ2 { get; set; } = default;
+        public Single RotationQ2 { get; set; } = default(Single);
         #endregion
         #region RotationQ3
-        public Single RotationQ3 { get; set; } = default;
+        public Single RotationQ3 { get; set; } = default(Single);
         #endregion
         #region RotationQ4
-        public Single RotationQ4 { get; set; } = default;
+        public Single RotationQ4 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -824,13 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 301,
-            version: 0);
-
-        public const string GUID = "2de6bd62-66a1-461b-b6a3-4130cc82c908";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -862,8 +856,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(BoundingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -901,13 +893,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IBounding item)
         {
             ClearPartial();
-            item.Width = default;
-            item.Height = default;
-            item.Position = default;
-            item.RotationQ1 = default;
-            item.RotationQ2 = default;
-            item.RotationQ3 = default;
-            item.RotationQ4 = default;
+            item.Width = default(Single);
+            item.Height = default(Single);
+            item.Position = default(P3Float);
+            item.RotationQ1 = default(Single);
+            item.RotationQ2 = default(Single);
+            item.RotationQ3 = default(Single);
+            item.RotationQ4 = default(Single);
         }
         
         #region Mutagen

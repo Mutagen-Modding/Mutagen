@@ -15,21 +15,35 @@ public sealed class AlignmentStraightRecord : AlignmentRule
 
     public override IEnumerable<RecordType> RecordTypes => _recordType.AsEnumerable(); 
  
-    public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream) 
+    public override ReadOnlyMemorySlice<byte> ReadBytes(IMutagenReadStream inputStream, int? lengthOverride) 
     { 
         var subType = HeaderTranslation.ReadNextSubrecordType( 
             inputStream, 
-            out var subLen); 
+            out var subLen);
+        if (lengthOverride != null)
+        {
+            subLen = lengthOverride.Value;
+        }
         if (!subType.Equals(_recordType)) 
         { 
             throw new ArgumentException(); 
         } 
         var ret = new byte[subLen + 6]; 
-        MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants); 
-        using (HeaderExport.Subrecord(stream, _recordType)) 
-        { 
+        MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
+        if (lengthOverride == null)
+        {
+            using (HeaderExport.Subrecord(stream, _recordType)) 
+            { 
+                inputStream.WriteTo(stream.BaseStream, subLen); 
+            } 
+        }
+        else
+        {
+            using (HeaderExport.Subrecord(stream, _recordType)) 
+            { 
+            } 
             inputStream.WriteTo(stream.BaseStream, subLen); 
-        } 
+        }
         return ret; 
     } 
 } 

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Biome" recordType="BIOM" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="BiomeType" recordType="SNAM" />
+      <List name="Plants" recordType="PNAM">
+        <FormLink refName="Flora" />
+      </List>
+      <FormLink name="ResourceGenerationData" recordType="RNAM" refName="ResourceGenerationData" />
+      <RefList name="FNAMs" refName="BiomeFNAMItem" unknown="true" />
+      <FormLink name="BiomeSwap" recordType="ONAM" refName="BiomeSwap" />
+      <List name="MaterialSwaps" >
+        <FormLink refName="LayeredMaterialSwap" recordType="NAM1" />
+      </List>
+      <FormLink name="Climate" recordType="ENAM" refName="Climate" />
+      <RefList name="WaterDatas" refName="BiomeWaterData" />
+      <Float name="WNAM" recordType="WNAM" unknown="true" />
+      <Float name="YNAM" recordType="YNAM" unknown="true" />
+      <Float name="UNAM" recordType="UNAM" unknown="true" />
+      <FormLink name="AmbientSet" recordType="BIAS" refName="AmbienceSet" />
+      <FormLink name="Music" recordType="BIMT" refName="MusicType" />
+      <FormLink name="NAM0" recordType="NAM0" refName="TimeOfDayRecord" />
+      <FormLink name="PatternStyle" recordType="NNAM" refName="SurfacePatternStyle" />
+      <Color name="CNAM" recordType="CNAM" binaryType="Alpha" />
+      <Color name="BiomeColor1" recordType="BMC1" binaryType="Alpha" />
+      <Color name="BiomeColor2" recordType="BMC2" binaryType="Alpha" />
+      <Color name="BiomeColor3" recordType="BMC3" binaryType="Alpha" />
+      <UInt32 name="TNAM" recordType="TNAM" />
+      <RefList name="MarkerTypes" refName="BiomeMarkerType" />
+      <RefList name="LNAMs" refName="BiomeLNAMItem" unknown="true" />
+      <String name="GroundLayerNormal" recordType="TX16" />
+      <ByteArray name="BTPS" recordType="BTPS" />
+      <ByteArray name="BDFS" recordType="BDFS" />
+      <String name="GroundLayerMaterial" recordType="EFSD" />
+      <FormLink name="NAM2" recordType="NAM2" refName="Global" />
+      <FormLink name="NAM3" recordType="NAM3" refName="Global" />
+      <FormLink name="NAM4" recordType="NAM4" refName="Global" />
+    </Fields>
+  </Object>
+  <Object name="BiomeFNAMItem" objType="Subrecord" >
+    <Fields>
+      <String name="FNAM" recordType="FNAM" unknown="true" />
+      <Int32 name="BNAM" recordType="BNAM" unknown="true" />
+      <RefList name="PackIns" refName="BiomeFNAMPackIn" unknown="true" />
+      <List name="DNAM" recordType="DNAM" >
+        <Float />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="BiomeFNAMPackIn" objType="Subrecord" recordType="GNAM" >
+    <Fields>
+      <FormLink name="PackIn" >
+        <Interface>ILeveledPackInTarget</Interface>
+      </FormLink>
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="BiomeWaterData" objType="Subrecord" >
+    <Fields>
+      <Bool name="HasWater" byteLength="1" recordType="MNAM" />
+      <FormLink name="Water" recordType="INAM" refName="Water" />
+      <String name="WaterMaterial" recordType="JNAM" />
+    </Fields>
+  </Object>
+  <Object name="BiomeMarkerType" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Keyword" recordType="KNAM" refName="Keyword" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="BiomeLNAMItem" objType="Subrecord" >
+    <Fields>
+      <RefDirect name="LNAM" recordType="LNAM" refName="BiomeLandItem" />
+      <RefDirect name="ANAM" recordType="ANAM" refName="BiomeLandItem" />
+      <String name="MaskType0" recordType="TX00" />
+      <String name="MaskType1" recordType="UX00" />
+      <String name="MaskType2" recordType="VX00" />
+      <String name="MaskType3" recordType="WX00" />
+      <String name="MaskType4" recordType="XX00" />
+      <String name="MaskType5" recordType="YX00" />
+    </Fields>
+  </Object>
+  <Object name="BiomeLandItem" objType="Subrecord" >
+    <Fields>
+      <UInt32 name="Index" />
+      <FormLink name="LandTexture" refName="LandscapeTexture" />
+      <FormLink name="GroundCover" refName="GroundCover" />
+    </Fields>
+  </Object>
+</Loqui>

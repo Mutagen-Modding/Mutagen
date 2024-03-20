@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,28 +51,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region LeafCurvature
-        public Single LeafCurvature { get; set; } = default;
+        public Single LeafCurvature { get; set; } = default(Single);
         #endregion
         #region MinimumLeafAngle
-        public Single MinimumLeafAngle { get; set; } = default;
+        public Single MinimumLeafAngle { get; set; } = default(Single);
         #endregion
         #region MaximumLeafAngle
-        public Single MaximumLeafAngle { get; set; } = default;
+        public Single MaximumLeafAngle { get; set; } = default(Single);
         #endregion
         #region BranchDimmingValue
-        public Single BranchDimmingValue { get; set; } = default;
+        public Single BranchDimmingValue { get; set; } = default(Single);
         #endregion
         #region LeafDimmingValue
-        public Single LeafDimmingValue { get; set; } = default;
+        public Single LeafDimmingValue { get; set; } = default(Single);
         #endregion
         #region ShadowRadius
-        public Int32 ShadowRadius { get; set; } = default;
+        public Int32 ShadowRadius { get; set; } = default(Int32);
         #endregion
         #region RockingSpeed
-        public Single RockingSpeed { get; set; } = default;
+        public Single RockingSpeed { get; set; } = default(Single);
         #endregion
         #region RustleSpeed
-        public Single RustleSpeed { get; set; } = default;
+        public Single RustleSpeed { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -860,13 +861,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 212,
-            version: 0);
-
-        public const string GUID = "690e9f8f-ddb5-4a0a-8d70-59c08a37997d";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -905,8 +899,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(TreeDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -944,14 +936,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ITreeData item)
         {
             ClearPartial();
-            item.LeafCurvature = default;
-            item.MinimumLeafAngle = default;
-            item.MaximumLeafAngle = default;
-            item.BranchDimmingValue = default;
-            item.LeafDimmingValue = default;
-            item.ShadowRadius = default;
-            item.RockingSpeed = default;
-            item.RustleSpeed = default;
+            item.LeafCurvature = default(Single);
+            item.MinimumLeafAngle = default(Single);
+            item.MaximumLeafAngle = default(Single);
+            item.BranchDimmingValue = default(Single);
+            item.LeafDimmingValue = default(Single);
+            item.ShadowRadius = default(Int32);
+            item.RockingSpeed = default(Single);
+            item.RustleSpeed = default(Single);
         }
         
         #region Mutagen

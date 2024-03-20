@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogResponses" recordType="INFO" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="5068f739-6d69-4494-af56-ca46c299b41b" ID="544">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
@@ -25,18 +25,18 @@
       <Enum name="SubtitlePriority" enumName="DialogResponses.SubtitlePriorityLevel" recordType="INAM" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="0f9fb747-a165-4bc2-aef2-6aa7bda50b4e" ID="545">
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
     <Fields>
       <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
       <Float name="ResetHours" integerType="UShort" divisor="65535" multiplier="24" />
     </Fields>
   </Object>
-  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="ddc80272-af67-4695-9028-265471621db9" ID="546">
+  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
     <Fields>
       <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
-  <Object name="DialogResponse" objType="Subrecord" GUID="2af08585-7d3a-49dd-98d2-500486f6c2e7" ID="547">
+  <Object name="DialogResponse" objType="Subrecord">
     <Fields>
       <Data recordType="TRDA">
         <Fields>
@@ -61,7 +61,7 @@
       <Bool name="StopOnSceneEnd" boolAsMarker="WZMD" />
     </Fields>
   </Object>
-  <Object name="DialogSetParentQuestStage" objType="Subrecord" recordType="TIQS" GUID="2f8c7304-6fe8-416e-955e-b1da73dee687" ID="548">
+  <Object name="DialogSetParentQuestStage" objType="Subrecord" recordType="TIQS">
     <Fields>
       <Int16 name="OnBegin" />
       <Int16 name="OnEnd" />

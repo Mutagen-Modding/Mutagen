@@ -13,6 +13,8 @@ public enum GameCategory
     Skyrim, 
     [Description("Fallout4")]
     Fallout4,
+    [Description("Starfield")]
+    Starfield,
 }
 
 public static class GameReleaseKernelExt
@@ -29,23 +31,32 @@ public static class GameReleaseKernelExt
             GameRelease.EnderalLE => GameCategory.Skyrim,
             GameRelease.EnderalSE => GameCategory.Skyrim,
             GameRelease.Fallout4 => GameCategory.Fallout4,
+            GameRelease.Fallout4VR => GameCategory.Fallout4,
+            GameRelease.Starfield => GameCategory.Starfield,
             _ => throw new NotImplementedException(),
         };
     }
     
-    public static ushort? GetDefaultFormVersion(this GameRelease release)
+    public static int GetMasterFlagIndex(this GameCategory release)
     {
-        return release switch
+        return 0x0000_0001;
+    }
+    
+    public static int? GetLocalizedFlagIndex(this GameCategory release)
+    {
+        return 0x0000_0080;
+    }
+    
+    public static int? GetLightFlagIndex(this GameCategory release)
+    {
+        switch (release)
         {
-            GameRelease.Oblivion => default,
-            GameRelease.SkyrimLE => 43,
-            GameRelease.EnderalLE => 43,
-            GameRelease.SkyrimSE => 44,
-            GameRelease.SkyrimSEGog => 44,
-            GameRelease.EnderalSE => 44,
-            GameRelease.SkyrimVR => 44,
-            GameRelease.Fallout4 => 131,
-            _ => throw new NotImplementedException(),
-        };
+            case GameCategory.Starfield:
+                return 0x0000_0100;
+            case GameCategory.Oblivion:
+                return null;
+            default:
+                return 0x0000_0200;
+        }
     }
 }

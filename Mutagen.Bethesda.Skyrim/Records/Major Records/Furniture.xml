@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Furniture" recordType="FURN" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="d259f939-c92a-48d0-aad5-2d58e712b4f6" ID="192">
+  <Object name="Furniture" recordType="FURN" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <ByteArray name="PNAM" recordType="PNAM" />
@@ -26,13 +26,13 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <AdditionalContainedRecordType>FNMK</AdditionalContainedRecordType>
   </Object>
-  <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT" GUID="751a4c09-9920-42eb-b754-b9a7a15a73d0" ID="193">
+  <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT">
     <Fields>
       <Enum name="BenchType" enumName="WorkbenchData.Type" byteLength="1" />
       <Enum name="UsesSkill" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
     </Fields>
   </Object>
-  <Object name="FurnitureMarker" objType="Subrecord" GUID="947fcdab-6949-4138-a678-cae2ce9086a6" ID="194">
+  <Object name="FurnitureMarker" objType="Subrecord">
     <Fields>
       <Bool name="Enabled" />
       <RefDirect name="DisabledEntryPoints" refName="EntryPoints" nullable="True" />
@@ -40,7 +40,7 @@
       <RefDirect name="EntryPoints" refName="EntryPoints" nullable="True" />
     </Fields>
   </Object>
-  <Object name="EntryPoints" objType="Subrecord" GUID="c9ce2bba-98b9-40d0-8af9-3fdfc7003494" ID="195">
+  <Object name="EntryPoints" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="Furniture.AnimationType" byteLength="2" />
       <Enum name="Points" enumName="Furniture.Entry" byteLength="2" />

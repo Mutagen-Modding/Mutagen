@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,22 +51,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public LightData.VersioningBreaks Versioning { get; set; } = default;
+        public LightData.VersioningBreaks Versioning { get; set; } = default(LightData.VersioningBreaks);
         #endregion
         #region FovOffset
-        public Single FovOffset { get; set; } = default;
+        public Single FovOffset { get; set; } = default(Single);
         #endregion
         #region FadeOffset
-        public Single FadeOffset { get; set; } = default;
+        public Single FadeOffset { get; set; } = default(Single);
         #endregion
         #region EndDistanceCap
-        public Single EndDistanceCap { get; set; } = default;
+        public Single EndDistanceCap { get; set; } = default(Single);
         #endregion
         #region ShadowDepthBias
-        public Single ShadowDepthBias { get; set; } = default;
+        public Single ShadowDepthBias { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -796,13 +797,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 303,
-            version: 0);
-
-        public const string GUID = "1694c8d4-4733-4b08-bf3a-c0196b0cac4a";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -841,8 +835,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -880,12 +872,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILightData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.FovOffset = default;
-            item.FadeOffset = default;
-            item.EndDistanceCap = default;
-            item.ShadowDepthBias = default;
-            item.Unknown = default;
+            item.Versioning = default(LightData.VersioningBreaks);
+            item.FovOffset = default(Single);
+            item.FadeOffset = default(Single);
+            item.EndDistanceCap = default(Single);
+            item.ShadowDepthBias = default(Single);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

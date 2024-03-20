@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" majorFlag="true" partialForm="true" baseClass="StarfieldMajorRecord" customBinaryEnd="Normal" >
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Float name="Priority" recordType="PNAM" nullable="False" default="50" />
+      <FormLink name="Branch" recordType="BNAM" refName="DialogBranch" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" nullable="false" />
+      <FormLink name="Keyword" recordType="KNAM" refName="Keyword" />
+      <FormLink name="AffinityEvent" recordType="ANAM" refName="AffinityEvent" />
+      <Data>
+        <Fields>
+          <Enum name="TopicFlags" enumName="DialogTopic.TopicFlag" byteLength="1" />
+          <Enum name="Category" enumName="DialogTopic.CategoryEnum" byteLength="1" />
+          <Enum name="Subtype" enumName="DialogTopic.SubtypeEnum" byteLength="2" />
+        </Fields>
+      </Data>
+      <RecordType name="SubtypeName" recordType="SNAM" nullable="False" />
+      <CustomLogic name="TopicInfoList" recordType="TIFL" />
+      <CustomLogic name="InfoCount" recordType="TIFC" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="Unknown" binary="NoGeneration" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+    </Fields>
+  </Object>
+</Loqui>

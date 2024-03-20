@@ -95,6 +95,7 @@ public static class StringsUtility
             Language.French => "fr",
             Language.Polish => "pl",
             Language.Chinese => "cn",
+            Language.ChineseSimplified => "zhhans",
             Language.Japanese => "ja",
             Language.Portuguese_Brazil => "ptbr",
             Language.Russian => "ru",
@@ -132,6 +133,9 @@ public static class StringsUtility
                 return true;
             case "ja":
                 lang = Language.Japanese;
+                return true;
+            case "zhhans":
+                lang = Language.ChineseSimplified;
                 return true;
             case "ptbr":
                 lang = Language.Portuguese_Brazil;

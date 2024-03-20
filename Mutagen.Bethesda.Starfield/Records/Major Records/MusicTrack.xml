@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" nullable="False" />
+      <Float name="Duration" recordType="FLTV" />
+      <Float name="FadeOut" recordType="DNAM" />
+      <RefDirect name="MTSH" recordType="MTSH" unknown="true" refName="SoundReference" />
+      <List name="CuePoints" recordType="FNAM">
+        <Float />
+      </List>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <List name="Tracks" recordType="SNAM">
+        <FormLink refName="MusicTrack" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

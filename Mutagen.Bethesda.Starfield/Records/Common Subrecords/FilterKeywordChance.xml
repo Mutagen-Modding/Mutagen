@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FilterKeywordChance" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Keyword" refName="Keyword" />
+      <Percent name="Chance" integerType="UInt" />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

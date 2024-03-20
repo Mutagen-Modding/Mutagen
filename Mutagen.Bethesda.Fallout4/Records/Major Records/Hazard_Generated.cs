@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -141,22 +142,22 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region Limit
-        public UInt32 Limit { get; set; } = default;
+        public UInt32 Limit { get; set; } = default(UInt32);
         #endregion
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region Lifetime
-        public Single Lifetime { get; set; } = default;
+        public Single Lifetime { get; set; } = default(Single);
         #endregion
         #region ImageSpaceRadius
-        public Single ImageSpaceRadius { get; set; } = default;
+        public Single ImageSpaceRadius { get; set; } = default(Single);
         #endregion
         #region TargetInterval
-        public Single TargetInterval { get; set; } = default;
+        public Single TargetInterval { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Hazard.Flag Flags { get; set; } = default;
+        public Hazard.Flag Flags { get; set; } = default(Hazard.Flag);
         #endregion
         #region Effect
         private readonly IFormLink<IEffectRecordGetter> _Effect = new FormLink<IEffectRecordGetter>();
@@ -199,13 +200,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound;
         #endregion
         #region TaperFullEffectRadius
-        public Single TaperFullEffectRadius { get; set; } = default;
+        public Single TaperFullEffectRadius { get; set; } = default(Single);
         #endregion
         #region TaperWeight
-        public Single TaperWeight { get; set; } = default;
+        public Single TaperWeight { get; set; } = default(Single);
         #endregion
         #region TaperCurse
-        public Single TaperCurse { get; set; } = default;
+        public Single TaperCurse { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -985,9 +986,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardSetterCommon.Instance.RemapLinks(this, mapping);
-        public Hazard(FormKey formKey)
+        public Hazard(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -996,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1010,12 +1014,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Hazard(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Hazard(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1410,13 +1418,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 241,
-            version: 0);
-
-        public const string GUID = "d61b1bde-1cf4-40d1-9eec-63626d1f147a";
-
         public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 24;
@@ -1460,13 +1461,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODS,
                 RecordTypes.MNAM,
                 RecordTypes.DNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1508,19 +1509,19 @@ namespace Mutagen.Bethesda.Fallout4
             item.Name = default;
             item.Model = null;
             item.ImageSpaceModifier.Clear();
-            item.Limit = default;
-            item.Radius = default;
-            item.Lifetime = default;
-            item.ImageSpaceRadius = default;
-            item.TargetInterval = default;
-            item.Flags = default;
+            item.Limit = default(UInt32);
+            item.Radius = default(Single);
+            item.Lifetime = default(Single);
+            item.ImageSpaceRadius = default(Single);
+            item.TargetInterval = default(Single);
+            item.Flags = default(Hazard.Flag);
             item.Effect.Clear();
             item.Light.Clear();
             item.ImpactDataSet.Clear();
             item.Sound.Clear();
-            item.TaperFullEffectRadius = default;
-            item.TaperWeight = default;
-            item.TaperCurse = default;
+            item.TaperFullEffectRadius = default(Single);
+            item.TaperWeight = default(Single);
+            item.TaperCurse = default(Single);
             base.Clear(item);
         }
         
@@ -1981,7 +1982,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Hazard(formKey);
+            var newRec = new Hazard(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2608,27 +2609,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region Limit
         private int _LimitLocation => _DNAMLocation!.Value.Min;
         private bool _Limit_IsSet => _DNAMLocation.HasValue;
-        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_LimitLocation, 4)) : default;
+        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_LimitLocation, 4)) : default(UInt32);
         #endregion
         #region Radius
         private int _RadiusLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DNAMLocation.HasValue;
-        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Lifetime_IsSet => _DNAMLocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default(Single);
         #endregion
         #region ImageSpaceRadius
         private int _ImageSpaceRadiusLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _ImageSpaceRadius_IsSet => _DNAMLocation.HasValue;
-        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _recordData.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
+        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _recordData.Slice(_ImageSpaceRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region TargetInterval
         private int _TargetIntervalLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _TargetInterval_IsSet => _DNAMLocation.HasValue;
-        public Single TargetInterval => _TargetInterval_IsSet ? _recordData.Slice(_TargetIntervalLocation, 4).Float() : default;
+        public Single TargetInterval => _TargetInterval_IsSet ? _recordData.Slice(_TargetIntervalLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x14;
@@ -2658,17 +2659,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region TaperFullEffectRadius
         private int _TaperFullEffectRadiusLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _TaperFullEffectRadius_IsSet => _DNAMLocation.HasValue;
-        public Single TaperFullEffectRadius => _TaperFullEffectRadius_IsSet ? _recordData.Slice(_TaperFullEffectRadiusLocation, 4).Float() : default;
+        public Single TaperFullEffectRadius => _TaperFullEffectRadius_IsSet ? _recordData.Slice(_TaperFullEffectRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region TaperWeight
         private int _TaperWeightLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _TaperWeight_IsSet => _DNAMLocation.HasValue;
-        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default;
+        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default(Single);
         #endregion
         #region TaperCurse
         private int _TaperCurseLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _TaperCurse_IsSet => _DNAMLocation.HasValue;
-        public Single TaperCurse => _TaperCurse_IsSet ? _recordData.Slice(_TaperCurseLocation, 4).Float() : default;
+        public Single TaperCurse => _TaperCurse_IsSet ? _recordData.Slice(_TaperCurseLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -30,7 +30,7 @@ public partial class GlobalShort
 
 partial class GlobalShortBinaryCreateTranslation
 {
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalShortInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalShortInternal item, PreviousParse lastParsed)
     {
     }
 }
@@ -60,7 +60,7 @@ partial class GlobalShortBinaryOverlay
         return (short)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float();
     }
 
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _DataLocation = (ushort)(stream.Position - offset);
     }

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -101,10 +102,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        public Single ConstantEffectEnchantmentFactor { get; set; } = default;
+        public Single ConstantEffectEnchantmentFactor { get; set; } = default(Single);
         #endregion
         #region ConstantEffectBarterFactor
-        public Single ConstantEffectBarterFactor { get; set; } = default;
+        public Single ConstantEffectBarterFactor { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -867,13 +868,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 56,
-            version: 0);
-
-        public const string GUID = "ebfe4657-51cf-4f56-95c9-8e3eee98fa5a";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -905,8 +899,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectSubDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -949,8 +941,8 @@ namespace Mutagen.Bethesda.Oblivion
             item.BoltSound.Clear();
             item.HitSound.Clear();
             item.AreaSound.Clear();
-            item.ConstantEffectEnchantmentFactor = default;
-            item.ConstantEffectBarterFactor = default;
+            item.ConstantEffectEnchantmentFactor = default(Single);
+            item.ConstantEffectBarterFactor = default(Single);
         }
         
         #region Mutagen

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Impact" recordType="IPCT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Model" refName="Model" />
+      <Data>
+        <Fields>
+          <Float name="Duration" />
+          <Enum name="Orientation" enumName="Impact.OrientationType" byteLength="4" />
+          <Float name="AngleThreshold" />
+          <Float name="PlacementRadius" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Bool name="NoDecalData" byteLength="1" />
+          <Enum name="Result" enumName="Impact.ResultType" byteLength="1" />
+          <Int16 name="Unknown" />
+        </Fields>
+      </Data>
+      <List name="ProjectedDecals" recordType="GNAM" >
+        <FormLink refName="ProjectedDecal" />
+      </List>
+      <RefDirect name="HNAM" refName="ImpactHNAM" unknown="true" />
+      <RefDirect name="Decal" refName="Decal" />
+      <RefDirect name="IDSH" recordType="IDSH" refName="SoundReference" unknown="true" />
+      <RefDirect name="IDP1" recordType="IDP1" refName="SoundReference" unknown="true" />
+      <RefDirect name="IDP3" recordType="IDP3" refName="SoundReference" unknown="true" />
+      <Float name="FootstepParticleMaxDist" recordType="FNAM" />
+    </Fields>
+  </Object>
+  <Object name="ImpactHNAM" objType="Subrecord" recordType="HNAM" >
+    <Fields>
+      <FormLink name="Link1" refName="ProjectedDecal" unknown="true" />
+      <FormLink name="Link2" refName="ProjectedDecal" unknown="true" />
+      <FormLink name="Link3" refName="ProjectedDecal" unknown="true" />
+      <FormLink name="Link4" refName="ProjectedDecal" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

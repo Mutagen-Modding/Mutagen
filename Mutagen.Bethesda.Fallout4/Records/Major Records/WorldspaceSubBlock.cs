@@ -8,7 +8,7 @@ partial class WorldspaceSubBlockBinaryOverlay
 {
     public IReadOnlyList<ICellGetter> Items { get; private set; } = Array.Empty<ICellGetter>();
 
-    partial void ItemsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void ItemsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         this.Items = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
             mem: stream.RemainingMemory,

@@ -37,7 +37,7 @@ public partial class OblivionModHeader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => OblivionMod.DefaultInitialNextFormID;
+    uint IModHeaderCommon.MinimumCustomFormID => OblivionMod.GetDefaultInitialNextFormID(this.Stats.Version);
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
@@ -48,7 +48,7 @@ public partial interface IOblivionModHeader : IModHeaderCommon
 
 partial class OblivionModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

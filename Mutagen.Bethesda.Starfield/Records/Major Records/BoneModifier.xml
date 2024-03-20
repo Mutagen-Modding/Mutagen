@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BoneModifier" recordType="BMOD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Data" refName="ABoneModifierData" recordType="DATA" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="ABoneModifierData" abstract="true" objType="Subrecord" >
+    <Fields>
+      <String name="UnknownString1" binaryType="PrependLengthWithNullIfContent" unknown="true" />
+      <String name="UnknownString2" binaryType="PrependLengthWithNullIfContent" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="BoneModifierLookAtChainData" objType="Subrecord" baseClass="ABoneModifierData" >
+    <Fields>
+      <Float name="Unknown1" />
+      <String name="UnknownString3" binaryType="PrependLengthWithNullIfContent" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="BoneModifierMorphDriverData" objType="Subrecord" baseClass="ABoneModifierData" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <UInt8 name="Unknown7" />
+    </Fields>
+  </Object>
+  <Object name="BoneModifierPoseDeformerData" objType="Subrecord" baseClass="ABoneModifierData" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <Float name="Unknown7" />
+      <Float name="Unknown8" />
+      <Float name="Unknown9" />
+      <Float name="Unknown10" />
+      <Float name="Unknown11" />
+      <Float name="Unknown12" />
+      <Float name="Unknown13" />
+      <Float name="Unknown14" />
+      <Float name="Unknown15" />
+      <UInt8 name="Unknown16" />
+    </Fields>
+  </Object>
+  <Object name="BoneModifierSpringBoneData" objType="Subrecord" baseClass="ABoneModifierData" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <Float name="Unknown7" />
+      <Float name="Unknown8" />
+      <Float name="Unknown9" />
+      <Float name="Unknown10" />
+      <Float name="Unknown11" />
+      <Float name="Unknown12" />
+      <Float name="Unknown13" />
+      <Float name="Unknown14" />
+      <Float name="Unknown15" />
+      <Float name="Unknown16" />
+      <Float name="Unknown17" />
+      <UInt8 name="Unknown18" />
+    </Fields>
+  </Object>
+</Loqui>

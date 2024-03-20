@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Enabled
-        public Boolean Enabled { get; set; } = default;
+        public Boolean Enabled { get; set; } = default(Boolean);
         #endregion
         #region DisabledEntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -758,13 +759,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 194,
-            version: 0);
-
-        public const string GUID = "947fcdab-6949-4138-a678-cae2ce9086a6";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -796,8 +790,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -835,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IFurnitureMarker item)
         {
             ClearPartial();
-            item.Enabled = default;
+            item.Enabled = default(Boolean);
             item.DisabledEntryPoints = null;
             item.MarkerKeyword.Clear();
             item.EntryPoints = null;

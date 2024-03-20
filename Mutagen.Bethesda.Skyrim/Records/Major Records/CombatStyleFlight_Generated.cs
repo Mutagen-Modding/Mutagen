@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,31 +51,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CombatStyleFlight.VersioningBreaks Versioning { get; set; } = default;
+        public CombatStyleFlight.VersioningBreaks Versioning { get; set; } = default(CombatStyleFlight.VersioningBreaks);
         #endregion
         #region HoverChance
-        public Single HoverChance { get; set; } = default;
+        public Single HoverChance { get; set; } = default(Single);
         #endregion
         #region DiveBombChance
-        public Single DiveBombChance { get; set; } = default;
+        public Single DiveBombChance { get; set; } = default(Single);
         #endregion
         #region GroundAttackChance
-        public Single GroundAttackChance { get; set; } = default;
+        public Single GroundAttackChance { get; set; } = default(Single);
         #endregion
         #region HoverTime
-        public Single HoverTime { get; set; } = default;
+        public Single HoverTime { get; set; } = default(Single);
         #endregion
         #region GroundAttackTime
-        public Single GroundAttackTime { get; set; } = default;
+        public Single GroundAttackTime { get; set; } = default(Single);
         #endregion
         #region PerchAttackChance
-        public Single PerchAttackChance { get; set; } = default;
+        public Single PerchAttackChance { get; set; } = default(Single);
         #endregion
         #region PerchAttackTime
-        public Single PerchAttackTime { get; set; } = default;
+        public Single PerchAttackTime { get; set; } = default(Single);
         #endregion
         #region FlyingAttackChance
-        public Single FlyingAttackChance { get; set; } = default;
+        public Single FlyingAttackChance { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -907,13 +908,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 398,
-            version: 0);
-
-        public const string GUID = "ae37ae46-1989-470b-879e-9ea5fb1b6bf7";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -952,8 +946,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleFlightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -991,15 +983,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICombatStyleFlight item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.HoverChance = default;
-            item.DiveBombChance = default;
-            item.GroundAttackChance = default;
-            item.HoverTime = default;
-            item.GroundAttackTime = default;
-            item.PerchAttackChance = default;
-            item.PerchAttackTime = default;
-            item.FlyingAttackChance = default;
+            item.Versioning = default(CombatStyleFlight.VersioningBreaks);
+            item.HoverChance = default(Single);
+            item.DiveBombChance = default(Single);
+            item.GroundAttackChance = default(Single);
+            item.HoverTime = default(Single);
+            item.GroundAttackTime = default(Single);
+            item.PerchAttackChance = default(Single);
+            item.PerchAttackTime = default(Single);
+            item.FlyingAttackChance = default(Single);
         }
         
         #region Mutagen

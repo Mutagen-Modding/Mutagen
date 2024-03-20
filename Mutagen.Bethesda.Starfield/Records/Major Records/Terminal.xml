@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Terminal" recordType="TERM" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" endMarkerType="STOP">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <RefList name="Components" refName="AComponent" />
+      <FormLink name="Menu" refName="TerminalMenu" recordType="DNAM" />
+      <Enum name="Background" recordType="NAM1" enumName="Terminal.BackgroundType" byteLength="1" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
+      <Enum name="MarkerFlags" enumName="FurnitureMarkerFlags" recordType="MNAM" />
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+      <ByteArray name="WorkbenchData" recordType="WBDT" />
+      <FormLink name="FurnitureTemplate" refName="Furniture" recordType="FTMP" />
+      <ByteArray name="FNPR" recordType="FNPR" unknown="true" />
+      <String name="MarkerModel" recordType="XMRK" />
+      <RefList name="MarkerParameters" refName="FurnitureMarkerParameters" recordType="SNAM" />
+    </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+</Loqui>

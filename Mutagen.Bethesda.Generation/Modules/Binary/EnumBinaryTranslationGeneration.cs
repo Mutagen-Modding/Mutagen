@@ -103,7 +103,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             });
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
@@ -276,6 +276,9 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
                 break;
             case 4:
                 retrieval = $"BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
+                break;
+            case 8:
+                retrieval = $"BinaryPrimitives.ReadInt64LittleEndian({dataAccessor})";
                 break;
             default:
                 throw new NotImplementedException();

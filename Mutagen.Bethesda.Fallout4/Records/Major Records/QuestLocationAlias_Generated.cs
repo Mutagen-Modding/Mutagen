@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Name
         /// <summary>
@@ -1054,13 +1055,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 531,
-            version: 0);
-
-        public const string GUID = "07fa667b-b166-45c5-8023-68aee9456549";
-
         public const ushort AdditionalFieldCount = 10;
 
         public const ushort FieldCount = 10;
@@ -1092,6 +1086,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.ALED);
             var triggers = RecordCollection.Factory();
             var all = RecordCollection.Factory(
                 RecordTypes.ALED,
@@ -1109,13 +1104,14 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.ALCC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestLocationAliasBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1153,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestLocationAlias item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Name = default;
             item.Flags = default;
             item.AliasIDToForceIntoWhenFilled = default;
@@ -1851,7 +1847,6 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ClosestToAlias,
                 header: translationParams.ConvertToCustom(RecordTypes.ALCC));
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public void Write(
@@ -1866,6 +1861,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public override void Write(

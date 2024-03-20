@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -62,10 +63,10 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? ITerminalMenuItemGetter.ResponseText => this.ResponseText;
         #endregion
         #region Type
-        public TerminalMenuItem.Types Type { get; set; } = default;
+        public TerminalMenuItem.Types Type { get; set; } = default(TerminalMenuItem.Types);
         #endregion
         #region ItemId
-        public UInt16 ItemId { get; set; } = default;
+        public UInt16 ItemId { get; set; } = default(UInt16);
         #endregion
         #region DisplayText
         public TranslatedString? DisplayText { get; set; }
@@ -960,13 +961,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 433,
-            version: 0);
-
-        public const string GUID = "5c3241c0-0af2-47d2-9277-b4b3d314e700";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -1011,13 +1005,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TerminalMenuItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1057,8 +1051,8 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.ItemText.Clear();
             item.ResponseText = default;
-            item.Type = default;
-            item.ItemId = default;
+            item.Type = default(TerminalMenuItem.Types);
+            item.ItemId = default(UInt16);
             item.DisplayText = default;
             item.ImageFile = default;
             item.Submenu.Clear();
@@ -1706,7 +1700,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ItemId
         private int? _ItemIdLocation;
-        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;

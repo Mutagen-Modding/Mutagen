@@ -18,7 +18,7 @@ public class BinaryExtensionsTests
         var bytes = Encoding.UTF8.GetBytes(expected);
         DoTest(bytes.Length + sizeof(uint), expected,
             bw => bw.WriteWStringBE(expected),
-            br => br.ReadPrependedString(2, MutagenEncodingProvider._1252));
+            br => br.ReadPrependedString(2, MutagenEncoding._1252));
     }
 
     [Theory]

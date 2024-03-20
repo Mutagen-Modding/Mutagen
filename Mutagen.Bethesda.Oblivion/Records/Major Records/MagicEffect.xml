@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MagicEffect" objType="Record" baseClass="OblivionMajorRecord" recordType="MGEF" GUID="57a9087c-140b-4152-8b1e-0508d36a2df4" ID="44">
+  <Object name="MagicEffect" objType="Record" baseClass="OblivionMajorRecord" recordType="MGEF">
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" nullable="True" />
@@ -12,7 +12,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="MagicEffectData" objType="Subrecord" recordType="DATA" GUID="5b30822f-ca7b-436d-b0f1-f2cb07b5aee6" ID="196">
+  <Object name="MagicEffectData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
       <Float name="BaseCost" />
@@ -27,7 +27,7 @@
       <RefDirect name="SubData" nullable="True" refName="MagicEffectSubData" />
     </Fields>
   </Object>
-  <Object name="MagicEffectSubData" objType="Subrecord" GUID="ebfe4657-51cf-4f56-95c9-8e3eee98fa5a" ID="56">
+  <Object name="MagicEffectSubData" objType="Subrecord">
     <Fields>
       <FormLink name="EnchantEffect" refName="EffectShader" />
       <FormLink name="CastingSound" refName="Sound" />

@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1103,13 +1104,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 107,
-            version: 0);
-
-        public const string GUID = "638d02e0-687a-49ad-a934-6f2ed1e05c3a";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 14;
@@ -1151,13 +1145,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.RPLI,
                 RecordTypes.RPLD,
                 RecordTypes.RDAT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2205,7 +2199,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2221,7 +2216,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial ParseResult FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
-            IRegionInternal item);
+            IRegionInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2273,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Icon
         partial void IconCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial String? GetIconCustom();
         public String? Icon => GetIconCustom();
@@ -2290,7 +2286,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2393,7 +2390,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return RegionAreaLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

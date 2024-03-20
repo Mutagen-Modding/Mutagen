@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <UInt32 name="NavMeshVersion" recordType="NVER" />
+      <RefList name="MapInfos" refName="NavigationMapInfo" />
+      <RefDirect name="PreferredPathing" refName="PreferredPathing" />
+    </Fields>
+  </Object>
+  <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI">
+    <Fields>
+      <FormLink name="NavigationMesh" refName="NavigationMesh" />
+      <ByteArray name="Data" byteLength="20" nullable="False" />
+      <List name="MergedTo" counterLength="4">
+        <FormLink refName="NavigationMesh" />
+      </List>
+      <List name="PreferredMerges" counterLength="4">
+        <FormLink refName="NavigationMesh" />
+      </List>
+      <RefList name="LinkedDoors" refName="LinkedDoor" counterLength="4" />
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="LinkedDoor" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Type" />
+      <FormLink name="Door" refName="PlacedObject" />
+    </Fields>
+  </Object>
+  <Object name="PreferredPathing" objType="Subrecord" recordType="NVPP">
+    <Fields>
+      <RefList name="NavmeshSets" refName="NavmeshSet" counterLength="4" binaryOverlay="Custom" />
+      <RefList name="NavmeshTree" refName="NavmeshNode" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshSet" objType="Subrecord">
+    <Fields>
+      <List name="Navmeshes" counterLength="4">
+        <FormLink refName="NavigationMesh" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="NavmeshNode" objType="Subrecord">
+    <Fields>
+      <FormLink name="NavMesh" refName="NavigationMesh" />
+      <UInt32 name="NodeIndex" />
+    </Fields>
+  </Object>
+</Loqui>

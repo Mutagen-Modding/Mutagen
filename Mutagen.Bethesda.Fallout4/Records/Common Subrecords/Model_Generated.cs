@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,16 +52,10 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
+        #region Flags
+        public Model.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
-        {
-            get => this._Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelGetter.Unknown => this.Unknown;
+        Model.Flag? IModelGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -103,7 +98,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -111,14 +106,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ColorRemappingIndex,
                 TItem Data,
                 TItem MaterialSwap,
-                TItem Unknown)
+                TItem Flags)
             : base(
                 File: File,
                 ColorRemappingIndex: ColorRemappingIndex,
                 Data: Data,
                 MaterialSwap: MaterialSwap)
             {
-                this.Unknown = Unknown;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -130,7 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Unknown;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -144,13 +139,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -161,7 +156,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -170,7 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -186,7 +181,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown = eval(this.Unknown);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -205,9 +200,9 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Model.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
             }
@@ -220,7 +215,7 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -229,8 +224,8 @@ namespace Mutagen.Bethesda.Fallout4
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.Unknown:
-                        return Unknown;
+                    case Model_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -241,8 +236,8 @@ namespace Mutagen.Bethesda.Fallout4
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -255,8 +250,8 @@ namespace Mutagen.Bethesda.Fallout4
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -267,7 +262,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -295,7 +290,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Flags, "Flags");
                 }
             }
             #endregion
@@ -305,7 +300,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -328,7 +323,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool Unknown;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -337,7 +332,7 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Unknown = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -345,7 +340,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -417,7 +412,7 @@ namespace Mutagen.Bethesda.Fallout4
         IModelGetter,
         ISimpleModel
     {
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new Model.Flag? Flags { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -426,7 +421,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => Model_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        Model.Flag? Flags { get; }
 
     }
 
@@ -575,7 +570,7 @@ namespace Mutagen.Bethesda.Fallout4
         ColorRemappingIndex = 1,
         Data = 2,
         MaterialSwap = 3,
-        Unknown = 4,
+        Flags = 4,
     }
     #endregion
 
@@ -585,13 +580,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Model_Registration Instance = new Model_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
-
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 84,
-            version: 0);
-
-        public const string GUID = "c791d9f6-adea-4c99-b582-43b365850cf8";
 
         public const ushort AdditionalFieldCount = 1;
 
@@ -635,13 +623,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.MODF);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -679,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IModel item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -747,7 +735,7 @@ namespace Mutagen.Bethesda.Fallout4
             Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown = MemorySliceExt.SequenceEqual(item.Unknown, rhs.Unknown);
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -797,10 +785,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown is {} UnknownItem)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                sb.AppendItem(FlagsItem, "Flags");
             }
         }
         
@@ -829,9 +817,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -850,9 +838,9 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IModelGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown is {} UnknownItem)
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(UnknownItem);
+                hash.Add(Flagsitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -902,16 +890,9 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
             {
-                if(rhs.Unknown is {} Unknownrhs)
-                {
-                    item.Unknown = Unknownrhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown = default;
-                }
+                item.Flags = rhs.Flags;
             }
         }
         
@@ -1026,9 +1007,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown,
+            EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.MODF));
         }
 
@@ -1086,8 +1068,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MODF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Model_FieldIndex.Unknown;
+                    item.Flags = EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 default:
                     return SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1145,9 +1129,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Flags
+        private int? _FlagsLocation;
+        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1214,8 +1198,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MODF:
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.Unknown;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

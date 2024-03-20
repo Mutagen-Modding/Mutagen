@@ -1,10 +1,15 @@
+using System.IO.Abstractions;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog.IO;
 using Xunit;
+using Constants = Mutagen.Bethesda.Skyrim.Constants;
+using Weapon = Mutagen.Bethesda.Skyrim.Weapon;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
@@ -204,5 +209,27 @@ public class WriteTests
         {
             mod.WriteToBinaryParallel(tmp.File.Path, param);
         });
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void WriteWithDifferentModKeyWithStrings(
+        IFileSystem fileSystem,
+        SkyrimMod mod,
+        Npc npc,
+        string npcName, 
+        ModPath modPath)
+    {
+        npc.Name = npcName;
+        mod.UsingLocalization = true;
+        mod.ModKey.Should().NotBe(modPath.ModKey);
+        mod.WriteToBinary(modPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.CorrectToPath
+        }, fileSystem: fileSystem);
+        var stringsPath = Path.Combine(modPath.Path.Directory, "Strings");
+        fileSystem.Directory.Exists(stringsPath).Should().BeTrue();
+        fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.STRINGS"));
+        fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.DLSTRINGS"));
+        fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.ILSTRINGS"));
     }
 }

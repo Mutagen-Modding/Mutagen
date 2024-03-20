@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ArmorAddon" recordType="ARMA" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <Data recordType="DNAM">
+        <Fields>
+          <ByteArray name="DNAMData" byteLength="13" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
+      <Gendered name="WorldModel" parseNonConvertedItems="true">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MOLM" To="MLM1" />
+          <Mapping From="MODC" To="MO2C" />
+          <Mapping From="MODF" To="MO2F" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODT" To="MO3T" />
+          <Mapping From="MOLM" To="MLM2" />
+          <Mapping From="MODC" To="MO3C" />
+          <Mapping From="MODF" To="MO3F" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <Gendered name="FirstPersonModel" parseNonConvertedItems="true">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MOLM" To="MLM3" />
+          <Mapping From="MODC" To="MO4C" />
+          <Mapping From="MODF" To="MO4F" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD5" />
+          <Mapping From="MODT" To="MO5T" />
+          <Mapping From="MOLM" To="MLM4" />
+          <Mapping From="MODC" To="MO5C" />
+          <Mapping From="MODF" To="MO5F" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <RefDirect name="Skeleton" refName="Model" shortCircuit="true" parseNonConvertedItems="true">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD6" />
+          <Mapping From="MODT" To="MO6T" />
+          <Mapping From="MOLM" To="MLM6" />
+          <Mapping From="MODC" To="MO6C" />
+          <Mapping From="MODF" To="MO6F" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <RefDirect name="UnknownModel" refName="Model" shortCircuit="true" parseNonConvertedItems="true">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD7" />
+          <Mapping From="MODT" To="MO7T" />
+          <Mapping From="MOLM" To="MLM7" />
+          <Mapping From="MODC" To="MO7C" />
+          <Mapping From="MODF" To="MO7F" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <Gendered name="Morphs" shortCircuit="false" parseNonConvertedItems="false">
+        <FemaleTypeOverrides>
+          <Mapping From="NAM4" To="NAM6" />
+          <Mapping From="NAM5" To="NAM7" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="ArmorAddonMorph" />
+        </Fields>
+      </Gendered>
+      <List name="AdditionalRaces">
+        <FormLink recordType="MODL" refName="Race" />
+      </List>
+      <FormLink name="FootstepSound" refName="FootstepSet" recordType="SNDD" />
+      <FormLink name="ArtObject" refName="ArtObject" recordType="ONAM" />
+      <FormLink name="BodyPartData" refName="BodyPartData" recordType="PNAM" />
+      <Enum name="TintType" enumName="TintType" recordType="MNAM" nullable="false" />
+      <String name="TintColorMapping" recordType="TNAM" />
+      <String name="TintEntryName" recordType="SNAM" />
+      <String name="TintEntryValue" recordType="VNAM" />
+      <Gendered name="BoneDataModifiers" genderEnumRecord="BSMP" nullable="false">
+        <Fields>
+          <List>
+            <FormLink recordType="BNAM" refName="BoneModifier" />
+          </List>
+        </Fields>
+      </Gendered>
+    </Fields>
+  </Object>
+  <Object name="ArmorAddonMorph" objType="Subrecord">
+    <Fields>
+      <FormLink name="WorldMorph" refName="MorphableObject" recordType="NAM4" />
+      <FormLink name="FirstPersonMorph" refName="MorphableObject" recordType="NAM5" />
+    </Fields>
+  </Object>
+</Loqui>

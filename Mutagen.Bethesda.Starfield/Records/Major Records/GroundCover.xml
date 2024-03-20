@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GroundCover" recordType="GCVR" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <RefList name="Grasses" refName="GroundCoverGrass" />
+      <List name="LandscapeTextures" >
+        <FormLink recordType="LNAM" refName="LandscapeTexture" />
+      </List>
+      <Float name="YNAM" recordType="YNAM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="GroundCoverGrass" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Grass" refName="Grass" recordType="GNAM" />
+      <Int16 name="DNAM" recordType="DNAM" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

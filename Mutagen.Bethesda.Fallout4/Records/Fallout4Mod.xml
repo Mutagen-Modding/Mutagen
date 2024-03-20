@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Fallout4Mod" objType="Mod" ctorPermission="protected" GUID="9cae6baa-1084-4862-ae0a-07c79b9f2a3a" ID="19">
+  <Object name="Fallout4Mod" objType="Mod" ctorPermission="protected">
     <Fields>
       <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
@@ -57,8 +57,8 @@
       <Group name="VisualEffects" refName="VisualEffect" />
       <Group name="Regions" refName="Region" />
       <Group name="NavigationMeshInfoMaps" refName="NavigationMeshInfoMap" />
-      <Ref name="Cells" singleton="true" >
-        <Direct refName="Fallout4ListGroup" >
+      <Ref name="Cells" singleton="true">
+        <Direct refName="Fallout4ListGroup">
           <GenericSpecification Definition="Fallout4.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
@@ -114,10 +114,10 @@
       <Group name="CollisionLayers" refName="CollisionLayer" />
       <Group name="Colors" refName="ColorRecord" />
       <Group name="ReverbParameters" refName="ReverbParameters" />
-      <Group name="PackIns" refName="PackIn"/>
-      <Group name="ReferenceGroups" refName="ReferenceGroup"/>
-      <Group name="AimModels" refName="AimModel"/>
-      <Group name="Layers" refName="Layer"/>
+      <Group name="PackIns" refName="PackIn" />
+      <Group name="ReferenceGroups" refName="ReferenceGroup" />
+      <Group name="AimModels" refName="AimModel" />
+      <Group name="Layers" refName="Layer" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="ObjectModifications" refName="AObjectModification" />
       <Group name="MaterialSwaps" refName="MaterialSwap" />
@@ -134,5 +134,7 @@
       <Group name="GodRays" refName="GodRays" />
       <Group name="ObjectVisibilityManagers" refName="ObjectVisibilityManager" />
     </Fields>
+    <GameReleaseOptions>Fallout4</GameReleaseOptions>
+    <GameReleaseOptions>Fallout4VR</GameReleaseOptions>
   </Object>
 </Loqui>

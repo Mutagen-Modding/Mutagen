@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Context" recordType="NLDT" />
+      <UInt32 name="Index" recordType="BNAM" nullable="False" />
+      <Color name="DebugColor" binaryType="Alpha" recordType="FNAM" />
+      <Enum name="Flags" enumName="CollisionLayer.Flag" recordType="GNAM" nullable="False" />
+      <String name="Name" recordType="MNAM" nullable="False" />
+      <List name="CollidesWith" recordType="CNAM" >
+        <FormLink refName="CollisionLayer" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

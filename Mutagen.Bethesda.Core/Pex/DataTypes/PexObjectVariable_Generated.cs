@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectVariableGetter.TypeName => this.TypeName;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
         #region VariableData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -659,13 +659,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 9,
-            version: 0);
-
-        public const string GUID = "dcbe94f2-dda2-47b9-9057-e30c6c8fac8c";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -696,8 +689,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -737,7 +728,7 @@ namespace Mutagen.Bethesda.Pex
             ClearPartial();
             item.Name = default;
             item.TypeName = default;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
             item.VariableData = null;
         }
         

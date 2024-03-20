@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Magnitude
-        public Single Magnitude { get; set; } = default;
+        public Single Magnitude { get; set; } = default(Single);
         #endregion
         #region Area
-        public Int32 Area { get; set; } = default;
+        public Int32 Area { get; set; } = default(Int32);
         #endregion
         #region Duration
-        public Int32 Duration { get; set; } = default;
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 135,
-            version: 0);
-
-        public const string GUID = "09ebdd2c-420c-40fa-bd21-a1977c94208d";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(EffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.Magnitude = default;
-            item.Area = default;
-            item.Duration = default;
+            item.Magnitude = default(Single);
+            item.Area = default(Int32);
+            item.Duration = default(Int32);
         }
         
         #region Mutagen

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,19 +55,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Animatable
-        public Boolean Animatable { get; set; } = default;
+        public Boolean Animatable { get; set; } = default(Boolean);
         #endregion
         #region Duration
-        public Single Duration { get; set; } = default;
+        public Single Duration { get; set; } = default(Single);
         #endregion
         #region RadialBlurUseTarget
-        public Boolean RadialBlurUseTarget { get; set; } = default;
+        public Boolean RadialBlurUseTarget { get; set; } = default(Boolean);
         #endregion
         #region RadialBlurCenter
-        public P2Float RadialBlurCenter { get; set; } = default;
+        public P2Float RadialBlurCenter { get; set; } = default(P2Float);
         #endregion
         #region DepthOfFieldFlags
-        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; } = default;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; } = default(ImageSpaceAdapter.DepthOfFieldFlag);
         #endregion
         #region BlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -6474,7 +6475,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -6483,7 +6484,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -6984,13 +6985,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 113,
-            version: 0);
-
-        public const string GUID = "b65ec92e-e1e5-4524-91a3-9dc25d0cafed";
-
         public const ushort AdditionalFieldCount = 60;
 
         public const ushort FieldCount = 67;
@@ -7082,13 +7076,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SIAD,
                 RecordTypes._14_IAD,
                 RecordTypes.TIAD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -7126,11 +7120,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceAdapterInternal item)
         {
             ClearPartial();
-            item.Animatable = default;
-            item.Duration = default;
-            item.RadialBlurUseTarget = default;
-            item.RadialBlurCenter = default;
-            item.DepthOfFieldFlags = default;
+            item.Animatable = default(Boolean);
+            item.Duration = default(Single);
+            item.RadialBlurUseTarget = default(Boolean);
+            item.RadialBlurCenter = default(P2Float);
+            item.DepthOfFieldFlags = default(ImageSpaceAdapter.DepthOfFieldFlag);
             item.BlurRadius = null;
             item.DoubleVisionStrength = null;
             item.TintColor = null;
@@ -12273,12 +12267,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Animatable
         private int _AnimatableLocation => _DNAMLocation!.Value.Min;
         private bool _Animatable_IsSet => _DNAMLocation.HasValue;
-        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AnimatableLocation, 4)) >= 1 : default;
+        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AnimatableLocation, 4)) >= 1 : default(Boolean);
         #endregion
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default(Single);
         #endregion
         #region Counts1
         private int _Counts1Location => _DNAMLocation!.Value.Min + 0x8;
@@ -12290,12 +12284,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region RadialBlurUseTarget
         private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
         private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
-        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
+        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default(Boolean);
         #endregion
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
         private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
-        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RadialBlurCenterLocation, 8)) : default;
+        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RadialBlurCenterLocation, 8)) : default(P2Float);
         #endregion
         #region Counts2
         private int _Counts2Location => _DNAMLocation!.Value.Min + 0xD4;

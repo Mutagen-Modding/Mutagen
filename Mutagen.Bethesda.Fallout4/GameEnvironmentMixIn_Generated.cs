@@ -8,9 +8,10 @@ namespace Mutagen.Bethesda
     {
         public static IGameEnvironment<IFallout4Mod, IFallout4ModGetter> Fallout4(
             this GameEnvironment env,
+            Fallout4Release gameRelease,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            return env.Construct<IFallout4Mod, IFallout4ModGetter>(GameRelease.Fallout4, linkCachePrefs);
+            return env.Construct<IFallout4Mod, IFallout4ModGetter>(gameRelease.ToGameRelease(), linkCachePrefs);
         }
 
     }

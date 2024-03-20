@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,10 +54,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region FrequencyAdjustment
-        public SByte FrequencyAdjustment { get; set; } = default;
+        public SByte FrequencyAdjustment { get; set; } = default(SByte);
         #endregion
         #region Flags
-        public SoundData.Flag Flags { get; set; } = default;
+        public SoundData.Flag Flags { get; set; } = default(SoundData.Flag);
         #endregion
 
         #region To String
@@ -730,13 +731,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 40,
-            version: 0);
-
-        public const string GUID = "4849cf00-7d46-4b82-bec2-e7eb7f54e563";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -776,8 +770,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -815,10 +807,10 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Clear(ISoundDataInternal item)
         {
             ClearPartial();
-            item.MinimumAttenuationDistance = default;
-            item.MaximumAttenuationDistance = default;
-            item.FrequencyAdjustment = default;
-            item.Flags = default;
+            item.MinimumAttenuationDistance = default(UInt16);
+            item.MaximumAttenuationDistance = default(UInt16);
+            item.FrequencyAdjustment = default(SByte);
+            item.Flags = default(SoundData.Flag);
         }
         
         #region Mutagen

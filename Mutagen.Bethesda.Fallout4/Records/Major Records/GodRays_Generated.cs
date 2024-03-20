@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,31 +56,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region BackColor
-        public Color BackColor { get; set; } = default;
+        public Color BackColor { get; set; } = default(Color);
         #endregion
         #region ForwardColor
-        public Color ForwardColor { get; set; } = default;
+        public Color ForwardColor { get; set; } = default(Color);
         #endregion
         #region Intensity
-        public Single Intensity { get; set; } = default;
+        public Single Intensity { get; set; } = default(Single);
         #endregion
         #region AirColorScale
-        public Single AirColorScale { get; set; } = default;
+        public Single AirColorScale { get; set; } = default(Single);
         #endregion
         #region BackColorScale
-        public Single BackColorScale { get; set; } = default;
+        public Single BackColorScale { get; set; } = default(Single);
         #endregion
         #region ForwardColorScale
-        public Single ForwardColorScale { get; set; } = default;
+        public Single ForwardColorScale { get; set; } = default(Single);
         #endregion
         #region BackPhase
-        public Single BackPhase { get; set; } = default;
+        public Single BackPhase { get; set; } = default(Single);
         #endregion
         #region AirColor
-        public Color AirColor { get; set; } = default;
+        public Color AirColor { get; set; } = default(Color);
         #endregion
         #region ForwardPhase
-        public Single ForwardPhase { get; set; } = default;
+        public Single ForwardPhase { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -607,9 +608,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GodRays_Registration.TriggeringRecordType;
-        public GodRays(FormKey formKey)
+        public GodRays(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -618,7 +622,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -632,12 +636,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public GodRays(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public GodRays(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -962,13 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 194,
-            version: 0);
-
-        public const string GUID = "92693d71-3760-4363-a089-ad858e092a57";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 16;
@@ -1005,13 +1006,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.GDRY,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GodRaysBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1049,15 +1050,15 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IGodRaysInternal item)
         {
             ClearPartial();
-            item.BackColor = default;
-            item.ForwardColor = default;
-            item.Intensity = default;
-            item.AirColorScale = default;
-            item.BackColorScale = default;
-            item.ForwardColorScale = default;
-            item.BackPhase = default;
-            item.AirColor = default;
-            item.ForwardPhase = default;
+            item.BackColor = default(Color);
+            item.ForwardColor = default(Color);
+            item.Intensity = default(Single);
+            item.AirColorScale = default(Single);
+            item.BackColorScale = default(Single);
+            item.ForwardColorScale = default(Single);
+            item.BackPhase = default(Single);
+            item.AirColor = default(Color);
+            item.ForwardPhase = default(Single);
             base.Clear(item);
         }
         
@@ -1397,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new GodRays(formKey);
+            var newRec = new GodRays(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1859,47 +1860,47 @@ namespace Mutagen.Bethesda.Fallout4
         #region BackColor
         private int _BackColorLocation => _DATALocation!.Value.Min;
         private bool _BackColor_IsSet => _DATALocation.HasValue;
-        public Color BackColor => _BackColor_IsSet ? _recordData.Slice(_BackColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color BackColor => _BackColor_IsSet ? _recordData.Slice(_BackColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region ForwardColor
         private int _ForwardColorLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ForwardColor_IsSet => _DATALocation.HasValue;
-        public Color ForwardColor => _ForwardColor_IsSet ? _recordData.Slice(_ForwardColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color ForwardColor => _ForwardColor_IsSet ? _recordData.Slice(_ForwardColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region Intensity
         private int _IntensityLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Intensity_IsSet => _DATALocation.HasValue;
-        public Single Intensity => _Intensity_IsSet ? _recordData.Slice(_IntensityLocation, 4).Float() : default;
+        public Single Intensity => _Intensity_IsSet ? _recordData.Slice(_IntensityLocation, 4).Float() : default(Single);
         #endregion
         #region AirColorScale
         private int _AirColorScaleLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _AirColorScale_IsSet => _DATALocation.HasValue;
-        public Single AirColorScale => _AirColorScale_IsSet ? _recordData.Slice(_AirColorScaleLocation, 4).Float() : default;
+        public Single AirColorScale => _AirColorScale_IsSet ? _recordData.Slice(_AirColorScaleLocation, 4).Float() : default(Single);
         #endregion
         #region BackColorScale
         private int _BackColorScaleLocation => _DATALocation!.Value.Min + 0x20;
         private bool _BackColorScale_IsSet => _DATALocation.HasValue;
-        public Single BackColorScale => _BackColorScale_IsSet ? _recordData.Slice(_BackColorScaleLocation, 4).Float() : default;
+        public Single BackColorScale => _BackColorScale_IsSet ? _recordData.Slice(_BackColorScaleLocation, 4).Float() : default(Single);
         #endregion
         #region ForwardColorScale
         private int _ForwardColorScaleLocation => _DATALocation!.Value.Min + 0x24;
         private bool _ForwardColorScale_IsSet => _DATALocation.HasValue;
-        public Single ForwardColorScale => _ForwardColorScale_IsSet ? _recordData.Slice(_ForwardColorScaleLocation, 4).Float() : default;
+        public Single ForwardColorScale => _ForwardColorScale_IsSet ? _recordData.Slice(_ForwardColorScaleLocation, 4).Float() : default(Single);
         #endregion
         #region BackPhase
         private int _BackPhaseLocation => _DATALocation!.Value.Min + 0x28;
         private bool _BackPhase_IsSet => _DATALocation.HasValue;
-        public Single BackPhase => _BackPhase_IsSet ? _recordData.Slice(_BackPhaseLocation, 4).Float() : default;
+        public Single BackPhase => _BackPhase_IsSet ? _recordData.Slice(_BackPhaseLocation, 4).Float() : default(Single);
         #endregion
         #region AirColor
         private int _AirColorLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _AirColor_IsSet => _DATALocation.HasValue;
-        public Color AirColor => _AirColor_IsSet ? _recordData.Slice(_AirColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color AirColor => _AirColor_IsSet ? _recordData.Slice(_AirColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region ForwardPhase
         private int _ForwardPhaseLocation => _DATALocation!.Value.Min + 0x38;
         private bool _ForwardPhase_IsSet => _DATALocation.HasValue;
-        public Single ForwardPhase => _ForwardPhase_IsSet ? _recordData.Slice(_ForwardPhaseLocation, 4).Float() : default;
+        public Single ForwardPhase => _ForwardPhase_IsSet ? _recordData.Slice(_ForwardPhaseLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

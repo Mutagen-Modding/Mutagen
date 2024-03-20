@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AnimationSoundTagSet" recordType="STAG" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Tags" refName="AnimationSoundTag" counterRecType="STMS" />
+    </Fields>
+  </Object>
+  <Object name="AnimationSoundTag" objType="Subrecord">
+    <Fields>
+      <String name="Name" nullable="false" recordType="STAE" />
+      <RefDirect name="STAD" recordType="STAD" unknown="true" refName="SoundReference" nullable="false" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public PackageIdles.Types Type { get; set; } = default;
+        public PackageIdles.Types Type { get; set; } = default(PackageIdles.Types);
         #endregion
         #region TimerSetting
         public Single? TimerSetting { get; set; }
@@ -806,13 +807,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 564,
-            version: 0);
-
-        public const string GUID = "6efabf35-60d8-4d80-9e50-c28d643198a5";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -852,13 +846,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.IDLA,
                 RecordTypes.IDLC,
                 RecordTypes.IDLB);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -896,7 +890,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPackageIdles item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(PackageIdles.Types);
             item.TimerSetting = default;
             item.Animations = null;
             item.IDLB = default;
@@ -1127,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else
@@ -1342,7 +1336,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryTimerSettingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLC:
@@ -1350,7 +1345,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageIdles_FieldIndex.Animations;
                 }
                 case RecordTypeInts.IDLB:
@@ -1366,11 +1362,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryTimerSettingCustom(
             MutagenFrame frame,
-            IPackageIdles item);
+            IPackageIdles item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
-            IPackageIdles item);
+            IPackageIdles item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1443,7 +1441,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region TimerSetting
         partial void TimerSettingCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Single? GetTimerSettingCustom();
         public Single? TimerSetting => GetTimerSettingCustom();
@@ -1451,7 +1449,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Animations
         partial void AnimationsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

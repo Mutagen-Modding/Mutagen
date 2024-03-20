@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level
-        public LockLevel Level { get; set; } = default;
+        public LockLevel Level { get; set; } = default(LockLevel);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -75,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;
         #endregion
         #region Flags
-        public LockData.Flag Flags { get; set; } = default;
+        public LockData.Flag Flags { get; set; } = default(LockData.Flag);
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -783,13 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 309,
-            version: 0);
-
-        public const string GUID = "ea95a628-10ee-4a0d-911d-af0719cd5ee2";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -828,8 +822,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LockDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -867,10 +859,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILockData item)
         {
             ClearPartial();
-            item.Level = default;
+            item.Level = default(LockLevel);
             item.Unused = new byte[3];
             item.Key.Clear();
-            item.Flags = default;
+            item.Flags = default(LockData.Flag);
             item.Unused2 = new byte[11];
         }
         

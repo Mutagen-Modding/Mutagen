@@ -14,7 +14,7 @@ public partial class SkyrimModHeader
     {
         Master = 0x0000_0001,
         Localized = 0x0000_0080,
-        LightMaster = 0x0000_0200,
+        Light = 0x0000_0200,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,7 +39,7 @@ public partial class SkyrimModHeader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.DefaultInitialNextFormID;
+    uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.GetDefaultInitialNextFormID(this.Version);
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
@@ -50,7 +50,7 @@ public partial interface ISkyrimModHeader : IModHeaderCommon
 
 partial class SkyrimModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region WindDirection
-        public Single WindDirection { get; set; } = default;
+        public Single WindDirection { get; set; } = default(Single);
         #endregion
         #region WindSpeed
-        public Single WindSpeed { get; set; } = default;
+        public Single WindSpeed { get; set; } = default(Single);
         #endregion
         #region AmplitudeScale
-        public Single AmplitudeScale { get; set; } = default;
+        public Single AmplitudeScale { get; set; } = default(Single);
         #endregion
         #region UvScale
-        public Single UvScale { get; set; } = default;
+        public Single UvScale { get; set; } = default(Single);
         #endregion
         #region NoiseFalloff
-        public Single NoiseFalloff { get; set; } = default;
+        public Single NoiseFalloff { get; set; } = default(Single);
         #endregion
         #region Texture
         public String? Texture { get; set; }
@@ -790,13 +791,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 592,
-            version: 0);
-
-        public const string GUID = "94f64240-9ef5-4c59-a0d6-ee19ebbcff0d";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -828,8 +822,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(WaterNoisePropertiesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -867,11 +859,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterNoiseProperties item)
         {
             ClearPartial();
-            item.WindDirection = default;
-            item.WindSpeed = default;
-            item.AmplitudeScale = default;
-            item.UvScale = default;
-            item.NoiseFalloff = default;
+            item.WindDirection = default(Single);
+            item.WindSpeed = default(Single);
+            item.AmplitudeScale = default(Single);
+            item.UvScale = default(Single);
+            item.NoiseFalloff = default(Single);
             item.Texture = default;
         }
         

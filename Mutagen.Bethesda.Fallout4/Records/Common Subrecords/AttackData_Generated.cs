@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,10 +52,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region Chance
-        public Single Chance { get; set; } = default;
+        public Single Chance { get; set; } = default(Single);
         #endregion
         #region Spell
         private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
@@ -67,28 +68,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
-        public AttackData.Flag Flags { get; set; } = default;
+        public AttackData.Flag Flags { get; set; } = default(AttackData.Flag);
         #endregion
         #region AttackAngle
-        public Single AttackAngle { get; set; } = default;
+        public Single AttackAngle { get; set; } = default(Single);
         #endregion
         #region StrikeAngle
-        public Single StrikeAngle { get; set; } = default;
+        public Single StrikeAngle { get; set; } = default(Single);
         #endregion
         #region Stagger
-        public Single Stagger { get; set; } = default;
+        public Single Stagger { get; set; } = default(Single);
         #endregion
         #region Knockdown
-        public Single Knockdown { get; set; } = default;
+        public Single Knockdown { get; set; } = default(Single);
         #endregion
         #region RecoveryTime
-        public Single RecoveryTime { get; set; } = default;
+        public Single RecoveryTime { get; set; } = default(Single);
         #endregion
         #region ActionPointsMult
-        public Single ActionPointsMult { get; set; } = default;
+        public Single ActionPointsMult { get; set; } = default(Single);
         #endregion
         #region StaggerOffset
-        public Int32 StaggerOffset { get; set; } = default;
+        public Int32 StaggerOffset { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -983,13 +984,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 266,
-            version: 0);
-
-        public const string GUID = "4f5d011a-a0bf-45d4-919b-120d2f1e085a";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1028,8 +1022,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(AttackDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1067,17 +1059,17 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAttackData item)
         {
             ClearPartial();
-            item.DamageMult = default;
-            item.Chance = default;
+            item.DamageMult = default(Single);
+            item.Chance = default(Single);
             item.Spell.Clear();
-            item.Flags = default;
-            item.AttackAngle = default;
-            item.StrikeAngle = default;
-            item.Stagger = default;
-            item.Knockdown = default;
-            item.RecoveryTime = default;
-            item.ActionPointsMult = default;
-            item.StaggerOffset = default;
+            item.Flags = default(AttackData.Flag);
+            item.AttackAngle = default(Single);
+            item.StrikeAngle = default(Single);
+            item.Stagger = default(Single);
+            item.Knockdown = default(Single);
+            item.RecoveryTime = default(Single);
+            item.ActionPointsMult = default(Single);
+            item.StaggerOffset = default(Int32);
         }
         
         #region Mutagen

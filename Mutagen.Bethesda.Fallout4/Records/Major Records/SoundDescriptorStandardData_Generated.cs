@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,19 +53,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region PercentFrequencyShift
-        public Percent PercentFrequencyShift { get; set; } = default;
+        public Percent PercentFrequencyShift { get; set; } = default(Percent);
         #endregion
         #region PercentFrequencyVariance
-        public Percent PercentFrequencyVariance { get; set; } = default;
+        public Percent PercentFrequencyVariance { get; set; } = default(Percent);
         #endregion
         #region Priority
-        public SByte Priority { get; set; } = default;
+        public SByte Priority { get; set; } = default(SByte);
         #endregion
         #region Variance
-        public SByte Variance { get; set; } = default;
+        public SByte Variance { get; set; } = default(SByte);
         #endregion
         #region StaticAttenuation
-        public Single StaticAttenuation { get; set; } = default;
+        public Single StaticAttenuation { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -710,13 +711,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 639,
-            version: 0);
-
-        public const string GUID = "19c5e5d4-937e-46c1-8fe9-768b655eed19";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -748,8 +742,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorStandardDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -787,11 +779,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundDescriptorStandardData item)
         {
             ClearPartial();
-            item.PercentFrequencyShift = default;
-            item.PercentFrequencyVariance = default;
-            item.Priority = default;
-            item.Variance = default;
-            item.StaticAttenuation = default;
+            item.PercentFrequencyShift = default(Percent);
+            item.PercentFrequencyVariance = default(Percent);
+            item.Priority = default(SByte);
+            item.Variance = default(SByte);
+            item.StaticAttenuation = default(Single);
             base.Clear(item);
         }
         

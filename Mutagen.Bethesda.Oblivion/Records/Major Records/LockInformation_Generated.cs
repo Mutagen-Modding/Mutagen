@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region LockLevel
-        public Byte LockLevel { get; set; } = default;
+        public Byte LockLevel { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -75,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
-        public LockInformation.Flag Flags { get; set; } = default;
+        public LockInformation.Flag Flags { get; set; } = default(LockInformation.Flag);
         #endregion
 
         #region To String
@@ -739,13 +740,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 123,
-            version: 0);
-
-        public const string GUID = "46a1b7ce-4f49-4017-8beb-bef9481e5fd2";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -784,8 +778,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(LockInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -823,10 +815,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILockInformation item)
         {
             ClearPartial();
-            item.LockLevel = default;
+            item.LockLevel = default(Byte);
             item.Unused = new byte[3];
             item.Key.Clear();
-            item.Flags = default;
+            item.Flags = default(LockInformation.Flag);
         }
         
         #region Mutagen

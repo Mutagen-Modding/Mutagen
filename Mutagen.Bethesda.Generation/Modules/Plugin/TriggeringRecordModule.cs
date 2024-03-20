@@ -37,10 +37,17 @@ public class TriggeringRecordModule : GenerationModule
         {
             data.MarkerType = new RecordType(markerAttr);
         }
+        var endMarkerAttr = node.GetAttribute("endMarkerType");
+        if (endMarkerAttr != null)
+        {
+            data.EndMarkerType = new RecordType(endMarkerAttr);
+        }
         if (obj.IsTopLevelGroup() && (field.Name?.Equals("Items") ?? false))
         {
             data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
         }
+
+        data.NotDuplicate = node.GetAttribute<bool>("notDuplicate");
         return base.PostFieldLoad(obj, field, node);
     }
 
@@ -90,6 +97,10 @@ public class TriggeringRecordModule : GenerationModule
         {
             var markerTypeRec = new RecordType(endMarker.Value);
             data.EndMarkerType = markerTypeRec;
+        }
+        if (obj.Node.TryGetAttribute<bool>("abstractSplitter", out var abstractSplitter))
+        {
+            data.AbstractSplitter = abstractSplitter;
         }
         return base.PreLoad(obj);
     }
@@ -162,6 +173,10 @@ public class TriggeringRecordModule : GenerationModule
             if (fieldData.MarkerType.HasValue)
             {
                 recordTypes.Add(fieldData.MarkerType.Value);
+            }
+            if (fieldData.EndMarkerType.HasValue)
+            {
+                recordTypes.Add(fieldData.EndMarkerType.Value);
             }
             if (fieldData.OverflowRecordType.HasValue)
             {
@@ -298,8 +313,16 @@ public class TriggeringRecordModule : GenerationModule
             }
             else
             {
+                if (data.EndMarkerType.HasValue)
+                {
+                    using (var args = sb.Call(
+                               "var endTriggers = RecordCollection.Factory"))
+                    {
+                        args.Add($"{obj.RecordTypeHeaderName(data.EndMarkerType.Value)}");
+                    }
+                }
                 using (var args = sb.Call(
-                    "var triggers = RecordCollection.Factory"))
+                           "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
                     {
@@ -314,7 +337,16 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                sb.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);");
+
+                using (var c = sb.Call("return new RecordTriggerSpecs"))
+                {
+                    c.Add("allRecordTypes: all");
+                    c.Add("triggeringRecordTypes: triggers");
+                    if (data.EndMarkerType.HasValue)
+                    {
+                        c.Add("endRecordTypes: endTriggers");
+                    }
+                }
             }
         }
 
@@ -365,12 +397,12 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (field is GenderedType gendered)
         {
-            if (gendered.SubTypeGeneration is LoquiType loqui)
+            if (gendered.SubTypeGeneration is LoquiType or ListType)
             {
                 await SetRecordTrigger(
                     obj,
-                    loqui,
-                    loqui.GetFieldData());
+                    gendered.SubTypeGeneration,
+                    gendered.SubTypeGeneration.GetFieldData());
             }
         }
     }
@@ -381,10 +413,19 @@ public class TriggeringRecordModule : GenerationModule
         MutagenFieldData data)
     {
         if (field is LoquiType loqui
-            && !(field is FormLinkType))
+            && field is not FormLinkType)
         {
-            if (field.GetFieldData().Circular) return;
-            IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+            var fieldData = field.GetFieldData();
+            if (fieldData.Circular) return;
+            IEnumerable<RecordType>? trigRecTypes;
+            if (fieldData.RecordType.HasValue)
+            {
+                trigRecTypes = null;
+            }
+            else
+            {
+                trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+            }
             if (loqui.TargetObjectGeneration != null
                 && loqui.RefType == LoquiType.LoquiRefType.Direct
                 && (loqui.TargetObjectGeneration.TryGetRecordType(out var recType)
@@ -430,7 +471,7 @@ public class TriggeringRecordModule : GenerationModule
             }
             else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
             {
-                var implementingObjs = obj.ProtoGen.ObjectGenerationsByID.Values
+                var implementingObjs = obj.ProtoGen.ObjectGenerationsByName.Values
                     .Where(o => o.Interfaces.ContainsAtLeast(loqui.GetterInterface, LoquiInterfaceDefinitionType.Direct)
                         || o.Interfaces.ContainsAtLeast(loqui.SetterInterface, LoquiInterfaceDefinitionType.Direct))
                     .ToArray();
@@ -441,7 +482,17 @@ public class TriggeringRecordModule : GenerationModule
             && !data.RecordType.HasValue)
         {
             bool previouslyTurnedOff = false;
-            if (listType.SubTypeGeneration is LoquiType subListLoqui)
+            if (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.ItemStartMarker, out var itemStartMarkerObj)
+                && itemStartMarkerObj is string itemStartMarker)
+            {
+                data.TriggeringRecordTypes.Add(itemStartMarker);
+            }
+            if (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.ItemEndMarker, out var itemEndMarkerObj)
+                && itemEndMarkerObj is string itemEndMarker)
+            {
+                data.TriggeringRecordTypes.Add(itemEndMarker);
+            }
+            else if (listType.SubTypeGeneration is LoquiType subListLoqui)
             {
                 if (subListLoqui.GenericDef != null)
                 {
@@ -521,6 +572,11 @@ public class TriggeringRecordModule : GenerationModule
                 data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
                 data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
             }
+            else if (gendered.GenderEnumRecord.HasValue)
+            {
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.GenderEnumRecord.Value));
+                data.TriggeringRecordTypes.Add(gendered.GenderEnumRecord.Value);
+            }
             else if (gendered.SubTypeGeneration is LoquiType genderedLoqui)
             {
                 foreach (var gen in genderedLoqui.GetFieldData().GenerationTypes)
@@ -570,7 +626,7 @@ public class TriggeringRecordModule : GenerationModule
     
     private async Task AddLoquiSubTypes(LoquiType loqui)
     {
-        if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null) return;
+        if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null || loqui.TargetObjectGeneration.GetObjectData().AbstractSplitter) return;
         var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
         await loqui.AddAsSubLoquiType(inheritingObjs);
     }
@@ -658,17 +714,20 @@ public class TriggeringRecordModule : GenerationModule
     private async Task SetObjectTrigger(ObjectGeneration obj)
     {
         var data = obj.GetObjectData();
-        await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
+        if (obj.TryGetMarkerType(out var markerType))
+        {
+            data.TriggeringRecordTypes.Add(markerType);
+        }
+        else
+        {
+            await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
+        }
 
         if (data.ObjectType == ObjectType.Group)
         {
             data.TriggeringRecordTypes.Add(Plugins.Internals.Constants.Group);
         }
 
-        if (obj.TryGetMarkerType(out var markerType))
-        {
-            data.TriggeringRecordTypes.Add(markerType);
-        }
 
         if (obj.TryGetCustomRecordTypeTriggers(out var customTypeTriggers))
         {
@@ -813,7 +872,7 @@ public class TriggeringRecordModule : GenerationModule
     {
         await base.FinalizeGeneration(proto);
         HashSet<RecordType> recordTypes = new HashSet<RecordType>();
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
         }

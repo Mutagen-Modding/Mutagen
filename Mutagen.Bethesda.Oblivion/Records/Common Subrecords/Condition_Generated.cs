@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default;
+        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; } = default;
+        public Condition.Flag Flags { get; set; } = default(Condition.Flag);
         #endregion
         #region Fluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,19 +68,19 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> IConditionGetter.Fluff => this.Fluff;
         #endregion
         #region ComparisonValue
-        public Single ComparisonValue { get; set; } = default;
+        public Single ComparisonValue { get; set; } = default(Single);
         #endregion
         #region Function
-        public Function Function { get; set; } = default;
+        public Function Function { get; set; } = default(Function);
         #endregion
         #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
+        public Int32 FirstParameter { get; set; } = default(Int32);
         #endregion
         #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        public Int32 SecondParameter { get; set; } = default(Int32);
         #endregion
         #region ThirdParameter
-        public Int32 ThirdParameter { get; set; } = default;
+        public Int32 ThirdParameter { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -882,13 +883,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 151,
-            version: 0);
-
-        public const string GUID = "b992280d-2cc5-46ce-b935-e1cfd5bdd34f";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -928,8 +922,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(ConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -967,14 +959,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default;
-            item.Flags = default;
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
             item.Fluff = new byte[3];
-            item.ComparisonValue = default;
-            item.Function = default;
-            item.FirstParameter = default;
-            item.SecondParameter = default;
-            item.ThirdParameter = default;
+            item.ComparisonValue = default(Single);
+            item.Function = default(Function);
+            item.FirstParameter = default(Int32);
+            item.SecondParameter = default(Int32);
+            item.ThirdParameter = default(Int32);
         }
         
         #region Mutagen

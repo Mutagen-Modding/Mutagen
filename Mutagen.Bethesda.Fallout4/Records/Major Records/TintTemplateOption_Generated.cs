@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Slot
-        public TintTemplateOption.TintSlot Slot { get; set; } = default;
+        public TintTemplateOption.TintSlot Slot { get; set; } = default(TintTemplateOption.TintSlot);
         #endregion
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Name
         /// <summary>
@@ -1192,13 +1193,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 258,
-            version: 0);
-
-        public const string GUID = "f16b47d8-d290-4bd8-9678-673778a46050";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -1243,13 +1237,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.TTEB,
                 RecordTypes.TTEC,
                 RecordTypes.TTED);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TintTemplateOptionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1287,8 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ITintTemplateOption item)
         {
             ClearPartial();
-            item.Slot = default;
-            item.Index = default;
+            item.Slot = default(TintTemplateOption.TintSlot);
+            item.Index = default(UInt16);
             item.Name = default;
             item.Flags = default;
             item.Conditions.Clear();
@@ -2039,7 +2033,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(UInt16);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2171,7 +2165,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TTET,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)TintTemplateOption_FieldIndex.Textures;

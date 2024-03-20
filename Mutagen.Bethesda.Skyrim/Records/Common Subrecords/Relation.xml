@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Relation" objType="Subrecord" recordType="XNAM" GUID="f0ff3ef2-8eb7-4ed0-b2b7-95d96e4e7994" ID="26">
+  <Object name="Relation" objType="Subrecord" recordType="XNAM">
     <Fields>
-      <FormLink name="Target" >
+      <FormLink name="Target">
         <Interface>IRelatable</Interface>
       </FormLink>
       <Int32 name="Modifier" />

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Start
-        public Color Start { get; set; } = default;
+        public Color Start { get; set; } = default(Color);
         #endregion
         #region End
-        public Color End { get; set; } = default;
+        public Color End { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -645,13 +646,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 317,
-            version: 0);
-
-        public const string GUID = "abfaf9c3-cb9d-4a16-acd7-d31482f5934d";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -690,8 +684,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LinkedReferenceColorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -729,8 +721,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILinkedReferenceColor item)
         {
             ClearPartial();
-            item.Start = default;
-            item.End = default;
+            item.Start = default(Color);
+            item.End = default(Color);
         }
         
         #region Mutagen

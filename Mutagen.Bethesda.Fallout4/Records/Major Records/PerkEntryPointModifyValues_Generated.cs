@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Modification
-        public PerkEntryPointModifyValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyValue.ModificationType);
         #endregion
         #region Value
         public Single? Value { get; set; }
@@ -660,13 +661,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 682,
-            version: 0);
-
-        public const string GUID = "e3c154a2-c61b-4f02-944d-3eb33b4da577";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 9;
@@ -705,8 +699,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointModifyValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -744,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPerkEntryPointModifyValues item)
         {
             ClearPartial();
-            item.Modification = default;
+            item.Modification = default(PerkEntryPointModifyValue.ModificationType);
             item.Value = default;
             item.Value2 = default;
             base.Clear(item);
@@ -1208,6 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

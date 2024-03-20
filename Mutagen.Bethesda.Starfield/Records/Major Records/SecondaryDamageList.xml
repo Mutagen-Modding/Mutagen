@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SecondaryDamageList" recordType="SDLT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Damages" refName="SecondaryDamageItem" counterRecType="ITMC" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="SecondaryDamageItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="DamageType" refName="DamageType" recordType="DAMA" nullable="false" />
+      <FormLink name="ActorValue" refName="ActorValueInformation" recordType="ACTV" nullable="false" />
+    </Fields>
+  </Object>
+</Loqui>

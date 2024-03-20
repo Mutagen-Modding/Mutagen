@@ -19,12 +19,12 @@ partial class ScenePhase
 
 partial class ScenePhaseBinaryCreateTranslation
 {
-    public static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item)
+    public static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item, PreviousParse lastParsed)
     {
         ConditionBinaryCreateTranslation.FillConditionsList(item.StartConditions, frame);
     }
 
-    public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item)
+    public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item, PreviousParse lastParsed)
     {
         frame.ReadSubrecord(RecordTypes.NEXT);
         ConditionBinaryCreateTranslation.FillConditionsList(item.CompletionConditions, frame);
@@ -53,12 +53,12 @@ partial class ScenePhaseBinaryOverlay
 
     public IReadOnlyList<IConditionGetter> CompletionConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    partial void StartConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void StartConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         StartConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 
-    partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void CompletionConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         stream.ReadSubrecord(RecordTypes.NEXT);
         CompletionConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);

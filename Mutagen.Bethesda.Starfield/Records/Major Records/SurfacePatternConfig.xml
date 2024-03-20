@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SurfacePatternConfig" recordType="SFPC" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <FormLink name="SurfacePatternStyle" refName="SurfacePatternStyle" recordType="ENAM" nullable="false" />
+      <RefList name="Items" refName="SurfacePatternConfigItem" />
+      <ByteArray name="DNAM" recordType="DNAM" byteLength="12" nullable="False" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SurfacePatternConfigItem" objType="Subrecord" >
+    <Fields>
+      <String name="BNAM" recordType="BNAM" unknown="true" />
+      <Float name="CNAM" recordType="CNAM" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

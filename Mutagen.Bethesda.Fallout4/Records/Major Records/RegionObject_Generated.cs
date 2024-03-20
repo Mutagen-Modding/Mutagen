@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,49 +62,49 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
-        public UInt16 ParentIndex { get; set; } = default;
+        public UInt16 ParentIndex { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region Density
-        public Single Density { get; set; } = default;
+        public Single Density { get; set; } = default(Single);
         #endregion
         #region Clustering
-        public Byte Clustering { get; set; } = default;
+        public Byte Clustering { get; set; } = default(Byte);
         #endregion
         #region MinSlope
-        public Byte MinSlope { get; set; } = default;
+        public Byte MinSlope { get; set; } = default(Byte);
         #endregion
         #region MaxSlope
-        public Byte MaxSlope { get; set; } = default;
+        public Byte MaxSlope { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public RegionObject.Flag Flags { get; set; } = default;
+        public RegionObject.Flag Flags { get; set; } = default(RegionObject.Flag);
         #endregion
         #region RadiusWrtPercent
-        public UInt16 RadiusWrtPercent { get; set; } = default;
+        public UInt16 RadiusWrtPercent { get; set; } = default(UInt16);
         #endregion
         #region Radius
-        public UInt16 Radius { get; set; } = default;
+        public UInt16 Radius { get; set; } = default(UInt16);
         #endregion
         #region MinHeight
-        public Single MinHeight { get; set; } = default;
+        public Single MinHeight { get; set; } = default(Single);
         #endregion
         #region MaxHeight
-        public Single MaxHeight { get; set; } = default;
+        public Single MaxHeight { get; set; } = default(Single);
         #endregion
         #region Sink
-        public Single Sink { get; set; } = default;
+        public Single Sink { get; set; } = default(Single);
         #endregion
         #region SinkVariance
-        public Single SinkVariance { get; set; } = default;
+        public Single SinkVariance { get; set; } = default(Single);
         #endregion
         #region SizeVariance
-        public Single SizeVariance { get; set; } = default;
+        public Single SizeVariance { get; set; } = default(Single);
         #endregion
         #region AngleVariance
-        public P3UInt16 AngleVariance { get; set; } = default;
+        public P3UInt16 AngleVariance { get; set; } = default(P3UInt16);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1207,13 +1208,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 185,
-            version: 0);
-
-        public const string GUID = "0705756c-14f9-490a-beae-aa0391eed410";
-
         public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 17;
@@ -1245,8 +1239,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(RegionObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1285,21 +1277,21 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Object.Clear();
-            item.ParentIndex = default;
-            item.Unknown = default;
-            item.Density = default;
-            item.Clustering = default;
-            item.MinSlope = default;
-            item.MaxSlope = default;
-            item.Flags = default;
-            item.RadiusWrtPercent = default;
-            item.Radius = default;
-            item.MinHeight = default;
-            item.MaxHeight = default;
-            item.Sink = default;
-            item.SinkVariance = default;
-            item.SizeVariance = default;
-            item.AngleVariance = default;
+            item.ParentIndex = default(UInt16);
+            item.Unknown = default(UInt16);
+            item.Density = default(Single);
+            item.Clustering = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Flags = default(RegionObject.Flag);
+            item.RadiusWrtPercent = default(UInt16);
+            item.Radius = default(UInt16);
+            item.MinHeight = default(Single);
+            item.MaxHeight = default(Single);
+            item.Sink = default(Single);
+            item.SinkVariance = default(Single);
+            item.SizeVariance = default(Single);
+            item.AngleVariance = default(P3UInt16);
             item.Unknown2 = new byte[6];
         }
         

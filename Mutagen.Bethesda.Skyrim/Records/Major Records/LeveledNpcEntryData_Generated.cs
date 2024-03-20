@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Reference
         private readonly IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
@@ -67,10 +68,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
         #endregion
         #region Count
-        public Int16 Count { get; set; } = default;
+        public Int16 Count { get; set; } = default(Int16);
         #endregion
         #region Unknown2
-        public Int16 Unknown2 { get; set; } = default;
+        public Int16 Unknown2 { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -767,13 +768,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 242,
-            version: 0);
-
-        public const string GUID = "dbf8d23f-61cd-4b59-a54e-4f37451e7cc5";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -812,8 +806,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcEntryDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -851,11 +843,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILeveledNpcEntryData item)
         {
             ClearPartial();
-            item.Level = default;
-            item.Unknown = default;
+            item.Level = default(Int16);
+            item.Unknown = default(Int16);
             item.Reference.Clear();
-            item.Count = default;
-            item.Unknown2 = default;
+            item.Count = default(Int16);
+            item.Unknown2 = default(Int16);
         }
         
         #region Mutagen

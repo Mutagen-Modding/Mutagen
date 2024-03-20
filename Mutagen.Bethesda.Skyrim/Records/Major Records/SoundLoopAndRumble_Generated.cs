@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Loop
-        public SoundDescriptor.LoopType Loop { get; set; } = default;
+        public SoundDescriptor.LoopType Loop { get; set; } = default(SoundDescriptor.LoopType);
         #endregion
         #region Unknown2
-        public Byte Unknown2 { get; set; } = default;
+        public Byte Unknown2 { get; set; } = default(Byte);
         #endregion
         #region RumbleValues
-        public Byte RumbleValues { get; set; } = default;
+        public Byte RumbleValues { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -716,13 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 474,
-            version: 0);
-
-        public const string GUID = "97e1c779-cd41-49df-bf1c-a6d6644860dc";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -761,8 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(SoundLoopAndRumbleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -800,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundLoopAndRumble item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Loop = default;
-            item.Unknown2 = default;
-            item.RumbleValues = default;
+            item.Unknown = default(Byte);
+            item.Loop = default(SoundDescriptor.LoopType);
+            item.Unknown2 = default(Byte);
+            item.RumbleValues = default(Byte);
         }
         
         #region Mutagen

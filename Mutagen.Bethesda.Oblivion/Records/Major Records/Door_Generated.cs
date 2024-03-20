@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1080,13 +1081,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 74,
-            version: 0);
-
-        public const string GUID = "2430f9e3-8270-4b86-b1e2-03757c4a0f93";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 13;
@@ -1130,13 +1124,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.BNAM,
                 RecordTypes.FNAM,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1687,7 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.RandomTeleportDestinations.SetTo(
                         rhs.RandomTeleportDestinations
-                        .Select(r => (IFormLinkGetter<IPlaceGetter>)new FormLink<IPlaceGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlaceGetter>)new FormLink<IPlaceGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2245,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Door_FieldIndex.RandomTeleportDestinations;

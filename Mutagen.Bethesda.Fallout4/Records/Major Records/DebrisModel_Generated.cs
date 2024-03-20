@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Percentage
-        public Byte Percentage { get; set; } = default;
+        public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
         public String ModelFilename { get; set; } = string.Empty;
@@ -80,7 +81,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
         #endregion
         #region DATADataTypeState
-        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
+        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default(DebrisModel.DATADataType);
         #endregion
 
         #region To String
@@ -778,13 +779,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 594,
-            version: 0);
-
-        public const string GUID = "f629536a-c5dd-4cdf-8abc-ca18d8b15dc4";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -821,13 +815,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.DATA,
                 RecordTypes.MODT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -865,11 +859,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Percentage = default;
+            item.Percentage = default(Byte);
             item.ModelFilename = string.Empty;
-            item.Flags = default;
+            item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(DebrisModel.DATADataType);
         }
         
         #region Mutagen

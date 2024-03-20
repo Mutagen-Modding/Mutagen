@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="8074d783-8164-453f-bdd2-f39627cf7a6b" ID="166">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -89,8 +89,8 @@
       <Marker name="Marker" recordType="DATA" />
       <Data recordType="DNAM">
         <Fields>
-          <UInt16 name="BaseHealth" />
-          <UInt16 name="BaseActionPoints" />
+          <UInt16 name="CalculatedHealth" />
+          <UInt16 name="CalculatedActionPoints" />
           <UInt16 name="FarAwayModelDistance" />
           <UInt8 name="GearedUpWeapons" />
           <UInt8 name="Unused" />
@@ -139,49 +139,49 @@
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
   </Object>
-  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="e65aa7ba-d430-4857-97e8-59d0930b622a" ID="205">
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <Int8 name="Rank" />
     </Fields>
   </Object>
-  <Object name="ANpcLevel" abstract="true" objType="Subrecord" GUID="45f0ebc2-ec5c-4469-b475-68f3fe1a5cff" ID="339" />
-  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord" GUID="eda640f6-a4d6-49c5-b53d-7fd33e8d8a6d" ID="340">
+  <Object name="ANpcLevel" abstract="true" objType="Subrecord" />
+  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord">
     <Fields>
       <Int16 name="Level" />
     </Fields>
   </Object>
-  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord" GUID="fa0eed1a-db50-4ede-bf8e-5fde7ff44f59" ID="341">
+  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord">
     <Fields>
       <Float name="LevelMult" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR" GUID="9907a1f4-86a0-44cb-97a5-f85a7488eb86" ID="342">
+  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
       <UInt8 name="Rank" />
     </Fields>
   </Object>
-  <Object name="NpcWeight" objType="Subrecord" recordType="MWGT" GUID="9915557a-7679-45b7-a3fe-b519bda7c376" ID="344">
+  <Object name="NpcWeight" objType="Subrecord" recordType="MWGT">
     <Fields>
       <Float name="Thin" />
       <Float name="Muscular" />
       <Float name="Fat" />
     </Fields>
   </Object>
-  <Object name="NpcSound" objType="Subrecord" GUID="05905ca6-21d3-4763-96f8-edffe2de8b24" ID="345">
+  <Object name="NpcSound" objType="Subrecord">
     <Fields>
       <FormLink name="Keyword" refName="Keyword" recordType="CS2K" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="CS2D" />
     </Fields>
   </Object>
-  <Object name="NpcMorph" objType="Subrecord" GUID="75eda107-e397-4e6f-b5e3-053fec1b45bf" ID="346">
+  <Object name="NpcMorph" objType="Subrecord">
     <Fields>
       <UInt32 name="Key" />
       <Float name="Value" />
     </Fields>
   </Object>
-  <Object name="NpcFaceTintingLayer" objType="Subrecord" GUID="e0af3cb4-0181-4e98-b6e0-f18875696958" ID="348">
+  <Object name="NpcFaceTintingLayer" objType="Subrecord">
     <Fields>
       <Data recordType="TETI">
         <Fields>
@@ -199,7 +199,7 @@
       </Data>
     </Fields>
   </Object>
-  <Object name="NpcBodyMorphRegionValues" objType="Subrecord" GUID="9f990ef4-305a-4954-9483-987eb2c1fed3" ID="349">
+  <Object name="NpcBodyMorphRegionValues" objType="Subrecord">
     <Fields>
       <Float name="Head" />
       <Float name="UpperTorso" />
@@ -208,7 +208,7 @@
       <Float name="Legs" />
     </Fields>
   </Object>
-  <Object name="NpcFaceMorph" objType="Subrecord" GUID="0b6b61e7-5220-4cd0-8c94-3aa0a874e44e" ID="350">
+  <Object name="NpcFaceMorph" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="FMRI" />
       <Data recordType="FMRS">
@@ -222,7 +222,7 @@
       </Data>
     </Fields>
   </Object>
-  <Object name="TemplateActors" objType="Subrecord" recordType="TPTA" GUID="d9bc7f2b-5e89-4c88-a204-c1a59e39c219" ID="351">
+  <Object name="TemplateActors" objType="Subrecord" recordType="TPTA">
     <Fields>
       <FormLink name="TraitTemplate">
         <Interface>INpcSpawn</Interface>

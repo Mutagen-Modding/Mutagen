@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,14 +53,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        public Single StaticAttenuation { get; set; } = default;
+        public Single StaticAttenuation { get; set; } = default(Single);
         #endregion
         #region StopTime
-        public Single StopTime { get; set; } = default;
+        public Single StopTime { get; set; } = default(Single);
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        public Single StartTime { get; set; } = default;
+        public Single StartTime { get; set; } = default(Single);
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
@@ -666,13 +667,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 41,
-            version: 0);
-
-        public const string GUID = "3af22aab-9cdf-4fac-a210-9c06331d2180";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 7;
@@ -711,8 +705,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataExtendedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -750,9 +742,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISoundDataExtendedInternal item)
         {
             ClearPartial();
-            item.StaticAttenuation = default;
-            item.StopTime = default;
-            item.StartTime = default;
+            item.StaticAttenuation = default(Single);
+            item.StopTime = default(Single);
+            item.StartTime = default(Single);
             base.Clear(item);
         }
         

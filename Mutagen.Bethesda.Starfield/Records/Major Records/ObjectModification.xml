@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AObjectModification" recordType="OMOD" abstract="true" majorFlag="true" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <RefDirect name="Model" refName="Model" />
+      <CustomLogic name="DataParse" recordType="DATA" />
+      <UInt16 name="Unknown" binary="NoGeneration" />
+      <UInt16 name="Unknown2" binary="NoGeneration" />
+      <FormLink name="AttachPoint" refName="Keyword" binary="NoGeneration" />
+      <List name="AttachParentSlots" binary="NoGeneration">
+        <FormLink refName="Keyword" />
+      </List>
+      <UInt32 name="Unknown3" binary="NoGeneration" />
+      <RefList name="Includes" refName="ObjectModInclude" binary="NoGeneration" />
+      <List name="TargetOmodKeywords" recordType="MNAM">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="FilterKeywords" recordType="FNAM">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="LooseMod" refName="MiscItem" recordType="LNAM" />
+      <UInt8 name="Priority" recordType="NAM1" />
+      <String name="Filter" recordType="FLTR" />
+    </Fields>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+    <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA00</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA01</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA02</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA03</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA04</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA05</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA06</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA07</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA08</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA09</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA10</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA11</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA12</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA13</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA14</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA15</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA16</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA17</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA18</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA19</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA20</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA21</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AA22</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AACT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ABBI</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ABBM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ABOD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ACOL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ACPT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ADMG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AENC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AHLT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AIND</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ALIS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AMLS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AMMO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ARAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ATMC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AUSE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AVAL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AWGT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DRES</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DSKL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FBDS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FBOL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FBUR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FHDT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FHST</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FLMS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FORF</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FREP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FTYP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>GTYP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>GVAL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>GWEI</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NACV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NAID</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NARO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NCOL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NCST</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NENC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NFAC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NGFA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NINV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NMMX</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NMSL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NNAM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NPAC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NPRK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NRCE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NRCO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NREA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NSKN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NSPL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NVTP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NXPO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PAVI</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PBAV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PFCT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PRCD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PUSE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SCRI</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SDMG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SENC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SINV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SMLS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SPAV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VAAC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VADC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VAIN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VAIX</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VAVN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VAVX</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDAC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDDC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDIN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDIX</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDVM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VDVN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>VUSE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WABS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WACB</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WACV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WADL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WAIM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WAOC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WAOS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WATS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WBMT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WBOL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WBSH</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCCB</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCDM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCHR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCIM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO1</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO2</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO3</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO4</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO5</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCO6</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCOL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WCRT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WDMG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WDSH</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WDTV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WEDT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WEMT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WENC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WEQS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WFPS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WFSC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WHBV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WHIP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WIMP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WKEY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WMCR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WMNR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WMPS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WMXR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WNDP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WNHO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WNPL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WNPR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WOOR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WOPR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WOSC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WPLY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC1</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC2</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC3</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC4</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC5</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC6</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRC8</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WREA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRET</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRNK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRSG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WRSP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSCP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSDM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSLM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSLV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSPD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSPS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSTG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSTS</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WSWL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>WTMC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZDTA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZFOV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZIMG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZOFX</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZOFY</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZOFZ</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ZOVL</AdditionalContainedRecordType>
+  </Object>
+  <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ArmorModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="FloraModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Flora.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="NpcModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Npc.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ContainerModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Container.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <String name="ObjectModificationTargetName" binary="NoGeneration" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModInclude" objType="Subrecord">
+    <Fields>
+      <FormLink name="Mod" refName="AObjectModification" />
+      <UInt8 name="MinimumLevel" />
+      <Bool name="Optional" byteLength="1" />
+      <Bool name="DoNotUseAll" byteLength="1" />
+    </Fields>
+  </Object>
+</Loqui>

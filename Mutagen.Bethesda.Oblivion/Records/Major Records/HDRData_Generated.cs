@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,46 +51,46 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EyeAdaptSpeed
-        public Single EyeAdaptSpeed { get; set; } = default;
+        public Single EyeAdaptSpeed { get; set; } = default(Single);
         #endregion
         #region BlurRadius
-        public Single BlurRadius { get; set; } = default;
+        public Single BlurRadius { get; set; } = default(Single);
         #endregion
         #region BlurPasses
-        public Single BlurPasses { get; set; } = default;
+        public Single BlurPasses { get; set; } = default(Single);
         #endregion
         #region EmissiveMult
-        public Single EmissiveMult { get; set; } = default;
+        public Single EmissiveMult { get; set; } = default(Single);
         #endregion
         #region TargetLum
-        public Single TargetLum { get; set; } = default;
+        public Single TargetLum { get; set; } = default(Single);
         #endregion
         #region UpperLumClamp
-        public Single UpperLumClamp { get; set; } = default;
+        public Single UpperLumClamp { get; set; } = default(Single);
         #endregion
         #region BrightScale
-        public Single BrightScale { get; set; } = default;
+        public Single BrightScale { get; set; } = default(Single);
         #endregion
         #region BrightClamp
-        public Single BrightClamp { get; set; } = default;
+        public Single BrightClamp { get; set; } = default(Single);
         #endregion
         #region LumRampNoTex
-        public Single LumRampNoTex { get; set; } = default;
+        public Single LumRampNoTex { get; set; } = default(Single);
         #endregion
         #region LumRampMin
-        public Single LumRampMin { get; set; } = default;
+        public Single LumRampMin { get; set; } = default(Single);
         #endregion
         #region LumRampMax
-        public Single LumRampMax { get; set; } = default;
+        public Single LumRampMax { get; set; } = default(Single);
         #endregion
         #region SunlightDimmer
-        public Single SunlightDimmer { get; set; } = default;
+        public Single SunlightDimmer { get; set; } = default(Single);
         #endregion
         #region GrassDimmer
-        public Single GrassDimmer { get; set; } = default;
+        public Single GrassDimmer { get; set; } = default(Single);
         #endregion
         #region TreeDimmer
-        public Single TreeDimmer { get; set; } = default;
+        public Single TreeDimmer { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1076,13 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 217,
-            version: 0);
-
-        public const string GUID = "4c7c0391-9e6d-4059-9077-52a182a9c366";
-
         public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 14;
@@ -1121,8 +1115,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(HDRDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1160,20 +1152,20 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IHDRData item)
         {
             ClearPartial();
-            item.EyeAdaptSpeed = default;
-            item.BlurRadius = default;
-            item.BlurPasses = default;
-            item.EmissiveMult = default;
-            item.TargetLum = default;
-            item.UpperLumClamp = default;
-            item.BrightScale = default;
-            item.BrightClamp = default;
-            item.LumRampNoTex = default;
-            item.LumRampMin = default;
-            item.LumRampMax = default;
-            item.SunlightDimmer = default;
-            item.GrassDimmer = default;
-            item.TreeDimmer = default;
+            item.EyeAdaptSpeed = default(Single);
+            item.BlurRadius = default(Single);
+            item.BlurPasses = default(Single);
+            item.EmissiveMult = default(Single);
+            item.TargetLum = default(Single);
+            item.UpperLumClamp = default(Single);
+            item.BrightScale = default(Single);
+            item.BrightClamp = default(Single);
+            item.LumRampNoTex = default(Single);
+            item.LumRampMin = default(Single);
+            item.LumRampMax = default(Single);
+            item.SunlightDimmer = default(Single);
+            item.GrassDimmer = default(Single);
+            item.TreeDimmer = default(Single);
         }
         
         #region Mutagen

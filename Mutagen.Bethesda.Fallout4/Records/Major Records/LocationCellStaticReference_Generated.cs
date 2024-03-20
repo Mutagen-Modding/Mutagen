@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
-        public P2Int16 Grid { get; set; } = default;
+        public P2Int16 Grid { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -745,13 +746,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 619,
-            version: 0);
-
-        public const string GUID = "3a488f9a-9fdb-45d1-8ffc-cfc06558ceb9";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -783,8 +777,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LocationCellStaticReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -825,7 +817,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.LocationRefType.Clear();
             item.Marker.Clear();
             item.Location.Clear();
-            item.Grid = default;
+            item.Grid = default(P2Int16);
         }
         
         #region Mutagen

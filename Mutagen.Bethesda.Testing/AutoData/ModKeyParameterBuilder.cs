@@ -23,7 +23,7 @@ public class ModKeyParameterBuilder : ISpecimenBuilder
         ModType type;
         if (p.Name.ContainsInsensitive("light"))
         {
-            type = ModType.LightMaster;
+            type = ModType.Light;
         }
         else if (p.Name.ContainsInsensitive("master"))
         {

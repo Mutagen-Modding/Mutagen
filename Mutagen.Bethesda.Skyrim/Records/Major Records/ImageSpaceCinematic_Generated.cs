@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Saturation
-        public Single Saturation { get; set; } = default;
+        public Single Saturation { get; set; } = default(Single);
         #endregion
         #region Brightness
-        public Single Brightness { get; set; } = default;
+        public Single Brightness { get; set; } = default(Single);
         #endregion
         #region Contrast
-        public Single Contrast { get; set; } = default;
+        public Single Contrast { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 407,
-            version: 0);
-
-        public const string GUID = "41c902bf-7849-422b-b283-92ee24348f0b";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceCinematicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceCinematic item)
         {
             ClearPartial();
-            item.Saturation = default;
-            item.Brightness = default;
-            item.Contrast = default;
+            item.Saturation = default(Single);
+            item.Brightness = default(Single);
+            item.Contrast = default(Single);
         }
         
         #region Mutagen

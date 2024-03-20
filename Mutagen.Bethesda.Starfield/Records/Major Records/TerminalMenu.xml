@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TerminalMenu" recordType="TMLM" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <ByteArray name="TMVT" recordType="TMVT" unknown="true" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="SNAM" recordType="SNAM" unknown="true" />
+      <String name="INAM" recordType="INAM" unknown="true" translated="Normal"/>
+      <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalMenuBodyText" allowNoCounter="false"/>
+      <RefList name="MenuItems" counterRecType="ISIZ" refName="TerminalMenuItem" allowNoCounter="false"/>
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuBodyText" objType="Subrecord">
+    <Fields>
+      <String name="Text" translated="Normal" recordType="BTXT" nullable="False" />
+      <RefList name="Conditions" refName="Condition" />
+      <Bool name="UseTemplatedText" recordType="TPLT" />
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItem" objType="Subrecord">
+    <Fields>
+      <String name="ItemText" translated="Normal" recordType="ITXT" nullable="False" />
+      <String name="ItemShortText" translated="Normal" recordType="ISTX" />
+      <ByteArray name="ISET" recordType="ISET" unknown="true" />
+      <UInt16 name="ItemId" recordType="ITID" nullable="False" />
+      <RefDirect name="Lock" refName="LockData" />
+      <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
+      <String name="DisplayText" translated="Normal" recordType="UNAM" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+</Loqui>

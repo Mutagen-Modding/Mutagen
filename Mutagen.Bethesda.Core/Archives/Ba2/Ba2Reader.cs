@@ -43,16 +43,21 @@ class Ba2Reader : IArchiveReader
         var numFiles = reader.ReadUInt32();
         _nameTableOffset = reader.ReadUInt64();
 
+        if (version > 1)
+        {
+            var unknown = reader.ReadUInt32();
+        }
+
         var files = new List<IArchiveFile>();
         for (var idx = 0; idx < numFiles; idx += 1)
         {
             switch (entryType)
             {
                 case Ba2EntryType.GNRL:
-                    files.Add(new BA2FileEntry(this, idx, reader));
+                    files.Add(new BA2FileEntry(this, version, idx, reader));
                     break;
                 case Ba2EntryType.DX10:
-                    files.Add(new BA2DX10Entry(this, idx, reader));
+                    files.Add(new BA2DX10Entry(this, version, idx, reader));
                     break;
                 case Ba2EntryType.GNMF:
                     break;
@@ -110,11 +115,15 @@ class BA2DX10Entry : IArchiveFile
     private Ba2Reader _bsa;
     internal int _index;
 
-    public BA2DX10Entry(Ba2Reader ba2Reader, int idx, BinaryReader reader)
+    public BA2DX10Entry(Ba2Reader ba2Reader, uint version, int idx, BinaryReader reader)
     {
         _bsa = ba2Reader;
         _nameHash = reader.ReadUInt32();
         Path = _nameHash.ToString("X");
+        if (version > 1)
+        {
+            var unknown = reader.ReadUInt32();
+        }
         _extension = Encoding.UTF8.GetString(reader.ReadBytes(4));
         _dirHash = reader.ReadUInt32();
         _unk8 = reader.ReadByte();
@@ -126,9 +135,13 @@ class BA2DX10Entry : IArchiveFile
         _format = reader.ReadByte();
         _unk16 = reader.ReadUInt16();
         _index = idx;
+        if (version > 1)
+        {
+            var unknown = reader.ReadUInt32();
+        }
 
         _chunks = Enumerable.Range(0, _numChunks)
-            .Select(_ => new BA2TextureChunk(reader))
+            .Select(_ => new BA2TextureChunk(reader, version))
             .ToList();
     }
 
@@ -310,52 +323,63 @@ class BA2DX10Entry : IArchiveFile
 
 class BA2TextureChunk
 {
-    internal ulong _offset;
-    internal uint _packSz;
-    internal uint _fullSz;
-    internal ushort _startMip;
-    internal ushort _endMip;
-    internal uint _align;
+    internal readonly ulong _offset;
+    internal readonly uint _packSz;
+    internal readonly uint _fullSz;
+    internal readonly ushort _startMip;
+    internal readonly ushort _endMip;
+    internal readonly uint _align;
 
-    public BA2TextureChunk(BinaryReader rdr)
+    public BA2TextureChunk(BinaryReader rdr, uint version)
     {
         _offset = rdr.ReadUInt64();
         _packSz = rdr.ReadUInt32();
         _fullSz = rdr.ReadUInt32();
-        _startMip = rdr.ReadUInt16();
-        _endMip = rdr.ReadUInt16();
-        _align = rdr.ReadUInt32();
+        if (version <= 1)
+        {
+            // Unsure if these are actually the fields that are missing in v2, just a guess
+            _startMip = rdr.ReadUInt16();
+            _endMip = rdr.ReadUInt16();
+            _align = rdr.ReadUInt32();
+        }
     }
 }
 
 class BA2FileEntry : IArchiveFile
 {
-    internal uint _nameHash;
-    internal string _extension;
-    internal uint _dirHash;
-    internal uint _flags;
-    internal ulong _offset;
-    internal uint _size;
-    internal uint _realSize;
-    internal uint _align;
-    internal Ba2Reader _bsa;
-    internal int _index;
+    internal readonly uint _nameHash;
+    internal readonly string _extension;
+    internal readonly uint _dirHash;
+    internal readonly uint _flags;
+    internal readonly ulong _offset;
+    internal readonly uint _size;
+    internal readonly uint _realSize;
+    internal readonly uint _align;
+    internal readonly Ba2Reader _bsa;
+    internal readonly int _index;
 
     public bool Compressed => _size != 0;
 
-    public BA2FileEntry(Ba2Reader ba2Reader, int index, BinaryReader reader)
+    public BA2FileEntry(Ba2Reader ba2Reader, uint version, int index, BinaryReader reader)
     {
         _index = index;
         _bsa = ba2Reader;
         _nameHash = reader.ReadUInt32();
         Path = _nameHash.ToString("X");
+        if (version > 1)
+        {
+            var unknown = reader.ReadUInt32();
+        }
         _extension = Encoding.UTF8.GetString(reader.ReadBytes(4));
         _dirHash = reader.ReadUInt32();
         _flags = reader.ReadUInt32();
         _offset = reader.ReadUInt64();
         _size = reader.ReadUInt32();
         _realSize = reader.ReadUInt32();
-        _align = reader.ReadUInt32();
+        if (version <= 1)
+        {
+            _align = reader.ReadUInt32();
+        }
     }
         
     public string Path { get; internal set; }
@@ -370,7 +394,7 @@ class BA2FileEntry : IArchiveFile
 
         if (!Compressed)
         {
-            return new FramedStream(fs, fs.Position + len);
+            return new FramedStream(fs, len);
         }
         else
         {
@@ -379,7 +403,8 @@ class BA2FileEntry : IArchiveFile
                 {
                     IsStreamOwner = true
                 }, 
-                _realSize);
+                _realSize,
+                doubleCheckLength: false);
         }
     }
 

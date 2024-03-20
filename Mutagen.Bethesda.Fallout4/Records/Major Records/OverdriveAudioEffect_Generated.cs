@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,16 +53,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region InputGain
-        public Single InputGain { get; set; } = default;
+        public Single InputGain { get; set; } = default(Single);
         #endregion
         #region OutputGain
-        public Single OutputGain { get; set; } = default;
+        public Single OutputGain { get; set; } = default(Single);
         #endregion
         #region UpperThreshold
-        public Single UpperThreshold { get; set; } = default;
+        public Single UpperThreshold { get; set; } = default(Single);
         #endregion
         #region LowerThreshold
-        public Single LowerThreshold { get; set; } = default;
+        public Single LowerThreshold { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -676,13 +677,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 665,
-            version: 0);
-
-        public const string GUID = "e5598e7d-a6f6-40bc-b85a-79191f77e196";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 5;
@@ -714,8 +708,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(OverdriveAudioEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -753,10 +745,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IOverdriveAudioEffect item)
         {
             ClearPartial();
-            item.InputGain = default;
-            item.OutputGain = default;
-            item.UpperThreshold = default;
-            item.LowerThreshold = default;
+            item.InputGain = default(Single);
+            item.OutputGain = default(Single);
+            item.UpperThreshold = default(Single);
+            item.LowerThreshold = default(Single);
             base.Clear(item);
         }
         

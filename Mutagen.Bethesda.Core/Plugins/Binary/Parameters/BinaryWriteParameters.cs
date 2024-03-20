@@ -54,7 +54,7 @@ public sealed class BinaryWriteParameters
     /// <summary>
     /// Logic to use to ensure a light master mod does not go over its FormID count
     /// </summary>
-    public LightMasterLimitOption LightMasterLimit { get; set; } = LightMasterLimitOption.ExceptionOnOverflow;
+    public LightLimitOption LightLimit { get; set; } = LightLimitOption.ExceptionOnOverflow;
 
     /// <summary>
     /// Optional StringsWriter override, for mods that are able to localize.

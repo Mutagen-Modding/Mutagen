@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 partial class PackageEventBinaryCreateTranslation
 {
-    public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPackageEvent item)
+    public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPackageEvent item, PreviousParse lastParsed)
     {
         item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
     }
@@ -28,7 +28,7 @@ partial class PackageEventBinaryOverlay
 
     partial void TopicsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

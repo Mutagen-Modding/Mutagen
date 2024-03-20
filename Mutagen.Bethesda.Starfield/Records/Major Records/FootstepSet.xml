@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <CustomLogic name="Count" recordType="XCNT" />
+      <List name="WalkFootsteps" binary="NoGeneration">
+        <FormLink refName="Footstep" />
+      </List>
+      <List name="RunFootsteps" binary="NoGeneration">
+        <FormLink refName="Footstep" />
+      </List>
+      <List name="SprintFootsteps" binary="NoGeneration">
+        <FormLink refName="Footstep" />
+      </List>
+      <List name="SneakFootsteps" binary="NoGeneration">
+        <FormLink refName="Footstep" />
+      </List>
+      <List name="SwimFootsteps" binary="NoGeneration">
+        <FormLink refName="Footstep" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

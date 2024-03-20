@@ -13,7 +13,7 @@ partial class PathGridBinaryCreateTranslation
 {
     public const int POINT_LEN = 16;
 
-    public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
+    public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item, PreviousParse lastParsed)
     {
         FillBinaryPointToPointConnections(frame, item);
     }
@@ -157,7 +157,7 @@ internal partial class PathGridBinaryOverlay
     public bool PGAG_IsSet => _PGAGLocation.HasValue;
     public ReadOnlyMemorySlice<byte>? PGAG => _PGAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PGAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
 
-    partial void PointToPointConnectionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void PointToPointConnectionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         var dataFrame = stream.ReadSubrecord();
         uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);

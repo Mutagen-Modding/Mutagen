@@ -52,7 +52,7 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
 
 partial class GlobalBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+    public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item, PreviousParse lastParsed)
     {
         return null;
     }
@@ -105,7 +105,7 @@ abstract partial class GlobalBinaryOverlay
         }
     }
 
-    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
     }

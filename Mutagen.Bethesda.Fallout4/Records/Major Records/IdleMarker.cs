@@ -27,7 +27,7 @@ public partial class IdleMarker
 
 partial class IdleMarkerBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
+    public static partial ParseResult FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item, PreviousParse lastParsed)
     {
         // Skip. Don't care
         frame.ReadSubrecord();
@@ -49,7 +49,7 @@ partial class IdleMarkerBinaryCreateTranslation
         return ret;
     }
 
-    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item)
+    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item, PreviousParse lastParsed)
     {
         item.Animations = ParseAnimations(frame);
     }
@@ -81,7 +81,7 @@ partial class IdleMarkerBinaryWriteTranslation
 
 partial class IdleMarkerBinaryOverlay
 {
-    public partial ParseResult AnimationCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult AnimationCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         // Skip. Don't care
         stream.ReadSubrecord();
@@ -90,7 +90,7 @@ partial class IdleMarkerBinaryOverlay
 
     public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
-    partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void AnimationsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         var subHeader = stream.ReadSubrecordHeader();
         Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(

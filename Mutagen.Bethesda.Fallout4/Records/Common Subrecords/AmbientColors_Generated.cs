@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,25 +52,25 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region DirectionalXPlus
-        public Color DirectionalXPlus { get; set; } = default;
+        public Color DirectionalXPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalXMinus
-        public Color DirectionalXMinus { get; set; } = default;
+        public Color DirectionalXMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalYPlus
-        public Color DirectionalYPlus { get; set; } = default;
+        public Color DirectionalYPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalYMinus
-        public Color DirectionalYMinus { get; set; } = default;
+        public Color DirectionalYMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalZPlus
-        public Color DirectionalZPlus { get; set; } = default;
+        public Color DirectionalZPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalZMinus
-        public Color DirectionalZMinus { get; set; } = default;
+        public Color DirectionalZMinus { get; set; } = default(Color);
         #endregion
         #region Specular
-        public Color Specular { get; set; } = default;
+        public Color Specular { get; set; } = default(Color);
         #endregion
         #region Scale
         public static readonly Single ScaleDefault = 1f;
@@ -862,13 +863,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 434,
-            version: 0);
-
-        public const string GUID = "05293efd-fb04-43b6-ad97-150f53050540";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -900,8 +894,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(AmbientColorsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -939,13 +931,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAmbientColors item)
         {
             ClearPartial();
-            item.DirectionalXPlus = default;
-            item.DirectionalXMinus = default;
-            item.DirectionalYPlus = default;
-            item.DirectionalYMinus = default;
-            item.DirectionalZPlus = default;
-            item.DirectionalZMinus = default;
-            item.Specular = default;
+            item.DirectionalXPlus = default(Color);
+            item.DirectionalXMinus = default(Color);
+            item.DirectionalYPlus = default(Color);
+            item.DirectionalYMinus = default(Color);
+            item.DirectionalZPlus = default(Color);
+            item.DirectionalZMinus = default(Color);
+            item.Specular = default(Color);
             item.Scale = AmbientColors.ScaleDefault;
         }
         

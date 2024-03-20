@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        public Int32 Index { get; set; } = default;
+        public Int32 Index { get; set; } = default(Int32);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -64,10 +65,10 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> ILocalVariableDataGetter.Unknown => this.Unknown;
         #endregion
         #region Flags
-        public Script.LocalVariableFlag Flags { get; set; } = default;
+        public Script.LocalVariableFlag Flags { get; set; } = default(Script.LocalVariableFlag);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -724,13 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 207,
-            version: 0);
-
-        public const string GUID = "02fb12f0-9bb2-4675-9624-502859e58bd6";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -769,8 +763,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(LocalVariableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -808,10 +800,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILocalVariableData item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(Int32);
             item.Unknown = new byte[12];
-            item.Flags = default;
-            item.Unknown2 = default;
+            item.Flags = default(Script.LocalVariableFlag);
+            item.Unknown2 = default(Int32);
         }
         
         #region Mutagen

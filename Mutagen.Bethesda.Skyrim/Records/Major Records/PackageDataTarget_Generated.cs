@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public PackageDataTarget.Types Type { get; set; } = default;
+        public PackageDataTarget.Types Type { get; set; } = default(PackageDataTarget.Types);
         #endregion
 
         #region To String
@@ -623,13 +624,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 392,
-            version: 0);
-
-        public const string GUID = "3fca774e-9f38-4d5c-aa94-e19393aeeeb0";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 4;
@@ -668,13 +662,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.BNAM,
                 RecordTypes.PNAM,
                 RecordTypes.PTDA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageDataTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -712,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageDataTarget item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(PackageDataTarget.Types);
             item.Target.Clear();
             base.Clear(item);
         }

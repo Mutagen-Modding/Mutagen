@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1180,13 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 383,
-            version: 0);
-
-        public const string GUID = "571810b7-1ca9-4979-8322-cd0124cbca44";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -1232,13 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PKC2,
                 RecordTypes.PFO2,
                 RecordTypes.PFOR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2013,7 +2007,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryFlagsOverrideCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
@@ -2032,7 +2027,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryFlagsOverrideCustom(
             MutagenFrame frame,
-            IPackageBranch item);
+            IPackageBranch item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2116,7 +2112,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom();
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();
@@ -2233,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKC2,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)PackageBranch_FieldIndex.DataInputIndices;
@@ -2255,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PFOR,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)PackageBranch_FieldIndex.Unknown;

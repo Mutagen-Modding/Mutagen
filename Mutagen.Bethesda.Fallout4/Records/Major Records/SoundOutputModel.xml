@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="Fallout4MajorRecord" GUID="c4291e81-0689-4557-ab6c-d26328f2419a" ID="167">
+  <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="Data" refName="SoundOutputData" />
       <Enum name="Type" enumName="SoundOutputModel.TypeEnum" byteLength="4" recordType="MNAM" />
@@ -10,21 +10,21 @@
       <FormLink name="EffectChain" recordType="ENAM" refName="AudioEffectChain" />
     </Fields>
   </Object>
-  <Object name="SoundOutputData" objType="Subrecord" recordType="NAM1" GUID="135bf4c0-9353-4c8d-a950-bf9b276d3950" ID="644">
+  <Object name="SoundOutputData" objType="Subrecord" recordType="NAM1">
     <Fields>
       <Enum name="Flags" enumName="SoundOutputModel.Flag" byteLength="1" />
       <UInt16 name="Unknown" />
       <Percent name="ReverbSendPercent" integerType="Byte" />
     </Fields>
   </Object>
-  <Object name="SoundOutputChannels" objType="Subrecord" recordType="ONAM" GUID="d7120d8e-14fe-4d45-9d8a-ee8e6943c003" ID="645">
+  <Object name="SoundOutputChannels" objType="Subrecord" recordType="ONAM">
     <Fields>
       <RefDirect name="Channel0" refName="SoundOutputChannel" />
       <RefDirect name="Channel1" refName="SoundOutputChannel" />
       <RefDirect name="Channel2" refName="SoundOutputChannel" />
     </Fields>
   </Object>
-  <Object name="SoundOutputChannel" objType="Subrecord" GUID="c5a9f479-e8b6-421a-bbd5-acd52aea2dd4" ID="646">
+  <Object name="SoundOutputChannel" objType="Subrecord">
     <Fields>
       <UInt8 name="L" />
       <UInt8 name="R" />
@@ -36,7 +36,7 @@
       <UInt8 name="BR" />
     </Fields>
   </Object>
-  <Object name="DynamicAttentuationValues" objType="Subrecord" recordType="ATTN" GUID="5a7dbefa-e573-47db-9f10-199c256cae8b" ID="647">
+  <Object name="DynamicAttentuationValues" objType="Subrecord" recordType="ATTN">
     <Fields>
       <Float name="FadeInDistanceStart" />
       <Float name="FadeInDistanceEnd" />

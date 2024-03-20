@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public LocationTargetRadius.VersioningBreaks Versioning { get; set; } = default;
+        public LocationTargetRadius.VersioningBreaks Versioning { get; set; } = default(LocationTargetRadius.VersioningBreaks);
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
         #region CollectionIndex
-        public UInt32 CollectionIndex { get; set; } = default;
+        public UInt32 CollectionIndex { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -732,13 +733,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 60,
-            version: 0);
-
-        public const string GUID = "80c7f692-a7fd-4829-abc3-8c8e06c031da";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -770,8 +764,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LocationTargetRadiusBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -809,10 +801,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILocationTargetRadius item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(LocationTargetRadius.VersioningBreaks);
             item.Target.Clear();
-            item.Radius = default;
-            item.CollectionIndex = default;
+            item.Radius = default(UInt32);
+            item.CollectionIndex = default(UInt32);
         }
         
         #region Mutagen

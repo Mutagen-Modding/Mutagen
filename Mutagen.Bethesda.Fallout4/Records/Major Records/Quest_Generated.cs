@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -250,10 +251,10 @@ namespace Mutagen.Bethesda.Fallout4
         String? IQuestGetter.SwfFile => this.SwfFile;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region DialogBranches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1782,9 +1783,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestSetterCommon.Instance.RemapLinks(this, mapping);
-        public Quest(FormKey formKey)
+        public Quest(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1793,7 +1797,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1807,12 +1811,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Quest(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Quest(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -2458,13 +2466,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 154,
-            version: 0);
-
-        public const string GUID = "3299b1c9-621b-4a10-961a-698116d54617";
-
         public const ushort AdditionalFieldCount = 21;
 
         public const ushort FieldCount = 28;
@@ -2600,15 +2601,15 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ACTV,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static IReadOnlyCollection<int> SubgroupTypes { get; } = new HashSet<int>(){ 10 };
         public static bool IsPartialFormable => true;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2662,8 +2663,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description = default;
             item.QuestGroup.Clear();
             item.SwfFile = default;
-            item.Timestamp = default;
-            item.Unknown = default;
+            item.Timestamp = default(Int32);
+            item.Unknown = default(Int32);
             item.DialogBranches.Clear();
             item.DialogTopics.Clear();
             item.Scenes.Clear();
@@ -2784,9 +2785,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case "QuestCollectionAlias":
                 case "IQuestCollectionAliasGetter":
                 case "IQuestCollectionAlias":
-                case "CollectionAlias":
-                case "ICollectionAliasGetter":
-                case "ICollectionAlias":
                     break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
@@ -3662,7 +3660,7 @@ namespace Mutagen.Bethesda.Fallout4
             ModKey modKey,
             IModContext? parent,
             Func<IFallout4Mod, IQuestGetter, IQuest> getOrAddAsOverride,
-            Func<IFallout4Mod, IQuestGetter, string?, IQuest> duplicateInto)
+            Func<IFallout4Mod, IQuestGetter, string?, FormKey?, IQuest> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IQuest, IQuestGetter>(
                 modKey,
@@ -3685,9 +3683,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogBranches.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                         return dup;
                     });
@@ -3707,9 +3705,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogTopics.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                         return dup;
                     });
@@ -3727,9 +3725,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogTopics.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                         return dup;
                     }))
@@ -3752,9 +3750,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.Scenes.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (Scene)((ISceneGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                         return dup;
                     });
@@ -3769,7 +3767,7 @@ namespace Mutagen.Bethesda.Fallout4
             IModContext? parent,
             bool throwIfUnknown,
             Func<IFallout4Mod, IQuestGetter, IQuest> getOrAddAsOverride,
-            Func<IFallout4Mod, IQuestGetter, string?, IQuest> duplicateInto)
+            Func<IFallout4Mod, IQuestGetter, string?, FormKey?, IQuest> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IQuest, IQuestGetter>(
                 modKey,
@@ -3845,9 +3843,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogBranches.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                                     return dup;
                                 });
@@ -3875,9 +3873,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogTopics.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                     return dup;
                                 });
@@ -3898,9 +3896,9 @@ namespace Mutagen.Bethesda.Fallout4
                                 parent.DialogTopics.Add(ret);
                                 return ret;
                             },
-                            duplicateInto: (m, r, e) =>
+                            duplicateInto: (m, r, e, f) =>
                             {
-                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                 getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                 return dup;
                             }))
@@ -3930,9 +3928,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Scenes.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (Scene)((ISceneGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                                     return dup;
                                 });
@@ -3960,9 +3958,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogTopics.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                     return dup;
                                 });
@@ -3983,9 +3981,9 @@ namespace Mutagen.Bethesda.Fallout4
                                 parent.DialogTopics.Add(ret);
                                 return ret;
                             },
-                            duplicateInto: (m, r, e) =>
+                            duplicateInto: (m, r, e, f) =>
                             {
-                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                 getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                 return dup;
                             }))
@@ -4026,7 +4024,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Quest(formKey);
+            var newRec = new Quest(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -4166,7 +4164,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4869,14 +4867,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Quest_FieldIndex.DialogConditions;
                 }
                 case RecordTypeInts.NEXT:
                 {
                     return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -4906,7 +4906,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return QuestBinaryCreateTranslation.FillBinaryAliasParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -4934,7 +4935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4954,15 +4955,18 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDialogConditionsCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryAliasParseCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -5060,7 +5064,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DialogConditions
         partial void DialogConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -5068,14 +5072,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region UnusedConditionsLogic
         public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -5207,7 +5213,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QTGL,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
@@ -5231,7 +5237,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return UnusedConditionsLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -5259,7 +5266,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AliasParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -5279,7 +5287,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

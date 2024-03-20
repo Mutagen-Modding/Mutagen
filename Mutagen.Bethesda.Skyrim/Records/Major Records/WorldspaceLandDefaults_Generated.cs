@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region DefaultLandHeight
-        public Single DefaultLandHeight { get; set; } = default;
+        public Single DefaultLandHeight { get; set; } = default(Single);
         #endregion
         #region DefaultWaterHeight
-        public Single DefaultWaterHeight { get; set; } = default;
+        public Single DefaultWaterHeight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -644,13 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 342,
-            version: 0);
-
-        public const string GUID = "bd2d5da4-8f2e-43df-a0da-bca4371c1cc7";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -689,8 +683,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceLandDefaultsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -728,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceLandDefaults item)
         {
             ClearPartial();
-            item.DefaultLandHeight = default;
-            item.DefaultWaterHeight = default;
+            item.DefaultLandHeight = default(Single);
+            item.DefaultWaterHeight = default(Single);
         }
         
         #region Mutagen

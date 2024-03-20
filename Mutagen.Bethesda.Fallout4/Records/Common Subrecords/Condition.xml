@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="1b57168a-8fd1-45b8-95ec-c949be34cc65" ID="288">
+  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA">
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
@@ -9,26 +9,26 @@
     <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
   </Object>
-  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="780500bb-6522-43c9-a8f6-784eb76c7ad7" ID="289">
+  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal">
     <Fields>
       <FormLink name="ComparisonValue" refName="Global" />
       <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
     </Fields>
   </Object>
-  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="cf1fcd5b-c409-46de-9632-e01722c0779b" ID="290">
+  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal">
     <Fields>
       <Float name="ComparisonValue" />
       <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
     </Fields>
   </Object>
-  <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="96f892c6-41b2-4c30-bc24-e1db7e58e80f" ID="291">
+  <Object name="ConditionData" objType="Subrecord" abstract="true">
     <Fields>
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
       <FormLink name="Reference" refName="Fallout4MajorRecord" binary="NoGeneration" />
       <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData" GUID="48451500-fe33-46bd-b637-8988397ec6f8" ID="292">
+  <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData">
     <Fields>
       <Enum name="Function" enumName="Condition.Function" byteLength="2" />
       <UInt16 name="Unknown2" />
@@ -41,7 +41,7 @@
       <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
-  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="45f6cd9d-f7f5-433e-b816-05a3853d2892" ID="293">
+  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData">
     <Fields>
       <!-- ToDo change to enum -->
       <UInt16 name="EventFunction" />

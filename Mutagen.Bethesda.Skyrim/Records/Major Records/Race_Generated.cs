@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -190,18 +191,18 @@ namespace Mutagen.Bethesda.Skyrim
         ISkillBoostGetter IRaceGetter.SkillBoost6 => SkillBoost6;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Height
-        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
         #endregion
         #region Weight
-        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceGetter.Weight => this.Weight;
         #endregion
         #region Flags
-        public Race.Flag Flags { get; set; } = default;
+        public Race.Flag Flags { get; set; } = default(Race.Flag);
         #endregion
         #region Starting
         private readonly Dictionary<BasicStat, Single> _Starting = new Dictionary<BasicStat, Single>();
@@ -213,19 +214,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BaseCarryWeight
-        public Single BaseCarryWeight { get; set; } = default;
+        public Single BaseCarryWeight { get; set; } = default(Single);
         #endregion
         #region BaseMass
-        public Single BaseMass { get; set; } = default;
+        public Single BaseMass { get; set; } = default(Single);
         #endregion
         #region AccelerationRate
-        public Single AccelerationRate { get; set; } = default;
+        public Single AccelerationRate { get; set; } = default(Single);
         #endregion
         #region DecelerationRate
-        public Single DecelerationRate { get; set; } = default;
+        public Single DecelerationRate { get; set; } = default(Single);
         #endregion
         #region Size
-        public Size Size { get; set; } = default;
+        public Size Size { get; set; } = default(Size);
         #endregion
         #region HeadBipedObject
         public static readonly BipedObject HeadBipedObjectDefault = BipedObject.None;
@@ -236,7 +237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public BipedObject HairBipedObject { get; set; } = HairBipedObjectDefault;
         #endregion
         #region InjuredHealthPercent
-        public Single InjuredHealthPercent { get; set; } = default;
+        public Single InjuredHealthPercent { get; set; } = default(Single);
         #endregion
         #region ShieldBipedObject
         public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
@@ -252,26 +253,26 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region UnarmedDamage
-        public Single UnarmedDamage { get; set; } = default;
+        public Single UnarmedDamage { get; set; } = default(Single);
         #endregion
         #region UnarmedReach
-        public Single UnarmedReach { get; set; } = default;
+        public Single UnarmedReach { get; set; } = default(Single);
         #endregion
         #region BodyBipedObject
         public static readonly BipedObject BodyBipedObjectDefault = BipedObject.None;
         public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
-        public Single AimAngleTolerance { get; set; } = default;
+        public Single AimAngleTolerance { get; set; } = default(Single);
         #endregion
         #region FlightRadius
-        public Single FlightRadius { get; set; } = default;
+        public Single FlightRadius { get; set; } = default(Single);
         #endregion
         #region AngularAccelerationRate
-        public Single AngularAccelerationRate { get; set; } = default;
+        public Single AngularAccelerationRate { get; set; } = default(Single);
         #endregion
         #region AngularTolerance
-        public Single AngularTolerance { get; set; } = default;
+        public Single AngularTolerance { get; set; } = default(Single);
         #endregion
         #region MountData
         public MountData MountData { get; set; } = new MountData();
@@ -297,7 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Voices
-        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
+        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region DecapitateArmors
@@ -314,10 +315,10 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? IRaceGetter.NumberOfTintsInList => this.NumberOfTintsInList;
         #endregion
         #region FacegenMainClamp
-        public Single FacegenMainClamp { get; set; } = default;
+        public Single FacegenMainClamp { get; set; } = default(Single);
         #endregion
         #region FacegenFaceClamp
-        public Single FacegenFaceClamp { get; set; } = default;
+        public Single FacegenFaceClamp { get; set; } = default(Single);
         #endregion
         #region AttackRace
         private readonly IFormLinkNullable<IRaceGetter> _AttackRace = new FormLinkNullable<IRaceGetter>();
@@ -581,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace;
         #endregion
         #region DATADataTypeState
-        public Race.DATADataType DATADataTypeState { get; set; } = default;
+        public Race.DATADataType DATADataTypeState { get; set; } = default(Race.DATADataType);
         #endregion
 
         #region To String
@@ -3939,7 +3940,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -3948,7 +3949,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -4551,13 +4552,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 49,
-            version: 0);
-
-        public const string GUID = "54b1dfac-1494-41b6-b6d3-653bc47987eb";
-
         public const ushort AdditionalFieldCount = 72;
 
         public const ushort FieldCount = 79;
@@ -4647,7 +4641,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DFTF,
                 RecordTypes.NAM8,
                 RecordTypes.RNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -4669,8 +4665,6 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DFTF));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -4721,30 +4715,30 @@ namespace Mutagen.Bethesda.Skyrim
             item.SkillBoost4.Clear();
             item.SkillBoost5.Clear();
             item.SkillBoost6.Clear();
-            item.Unknown = default;
-            item.Height.Male = default;
-            item.Height.Female = default;
-            item.Weight.Male = default;
-            item.Weight.Female = default;
-            item.Flags = default;
+            item.Unknown = default(Int16);
+            item.Height.Male = default(Single);
+            item.Height.Female = default(Single);
+            item.Weight.Male = default(Single);
+            item.Weight.Female = default(Single);
+            item.Flags = default(Race.Flag);
             item.Starting.Clear();
-            item.BaseCarryWeight = default;
-            item.BaseMass = default;
-            item.AccelerationRate = default;
-            item.DecelerationRate = default;
-            item.Size = default;
+            item.BaseCarryWeight = default(Single);
+            item.BaseMass = default(Single);
+            item.AccelerationRate = default(Single);
+            item.DecelerationRate = default(Single);
+            item.Size = default(Size);
             item.HeadBipedObject = Race.HeadBipedObjectDefault;
             item.HairBipedObject = Race.HairBipedObjectDefault;
-            item.InjuredHealthPercent = default;
+            item.InjuredHealthPercent = default(Single);
             item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
             item.Regen.Clear();
-            item.UnarmedDamage = default;
-            item.UnarmedReach = default;
+            item.UnarmedDamage = default(Single);
+            item.UnarmedReach = default(Single);
             item.BodyBipedObject = Race.BodyBipedObjectDefault;
-            item.AimAngleTolerance = default;
-            item.FlightRadius = default;
-            item.AngularAccelerationRate = default;
-            item.AngularTolerance = default;
+            item.AimAngleTolerance = default(Single);
+            item.FlightRadius = default(Single);
+            item.AngularAccelerationRate = default(Single);
+            item.AngularTolerance = default(Single);
             item.MountData.Clear();
             item.SkeletalModel = null;
             item.MovementTypeNames.Clear();
@@ -4753,8 +4747,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.DecapitateArmors = null;
             item.DefaultHairColors = null;
             item.NumberOfTintsInList = default;
-            item.FacegenMainClamp = default;
-            item.FacegenFaceClamp = default;
+            item.FacegenMainClamp = default(Single);
+            item.FacegenFaceClamp = default(Single);
             item.AttackRace.Clear();
             item.Attacks.Clear();
             item.BodyData.Male = null;
@@ -4784,7 +4778,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.HeadData = null;
             item.MorphRace.Clear();
             item.ArmorRace.Clear();
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(Race.DATADataType);
             base.Clear(item);
         }
         
@@ -6351,7 +6345,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -6408,7 +6402,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -6798,7 +6792,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IHairGetter>>();
                     }
                     else
@@ -6825,7 +6819,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLinkGetter<IEyesGetter>)new FormLink<IEyesGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IEyesGetter>)new FormLink<IEyesGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IEyesGetter>>();
                     }
                     else
@@ -6913,7 +6907,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.EquipmentSlots.SetTo(
                         rhs.EquipmentSlots
-                        .Select(r => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7562,7 +7556,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.BaseMovementDefaultSprint,
                 header: translationParams.ConvertToCustom(RecordTypes.SPMV));
-            GenderedItemBinaryTranslation.WriteMarkerPerItem(
+            GenderedItemBinaryTranslation.WriteMarkerAheadOfItem(
                 writer: writer,
                 item: item.HeadData,
                 markerType: RecordTypes.NAM0,
@@ -7805,7 +7799,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     RaceBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KSIZ:
@@ -8084,7 +8079,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     RaceBinaryCreateTranslation.FillBinaryBipedObjectNamesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.BipedObjectNames;
                 }
                 case RecordTypeInts.MTYP:
@@ -8125,13 +8121,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -8171,7 +8169,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
+                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
@@ -8206,7 +8204,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
@@ -8218,15 +8217,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBipedObjectNamesCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -8301,7 +8303,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
@@ -8357,7 +8359,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xE;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         #region Height
         private int _HeightLocation => _DATALocation!.Value.Min + 0x10;
@@ -8366,7 +8368,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get
             {
-                if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
+                if (!_Height_IsSet) return new GenderedItem<Single>(default(Single), default(Single));
                 var data = _recordData.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
@@ -8381,7 +8383,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get
             {
-                if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
+                if (!_Weight_IsSet) return new GenderedItem<Single>(default(Single), default(Single));
                 var data = _recordData.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
@@ -8405,22 +8407,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseCarryWeight
         private int _BaseCarryWeightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
-        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _recordData.Slice(_BaseCarryWeightLocation, 4).Float() : default;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _recordData.Slice(_BaseCarryWeightLocation, 4).Float() : default(Single);
         #endregion
         #region BaseMass
         private int _BaseMassLocation => _DATALocation!.Value.Min + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
-        public Single BaseMass => _BaseMass_IsSet ? _recordData.Slice(_BaseMassLocation, 4).Float() : default;
+        public Single BaseMass => _BaseMass_IsSet ? _recordData.Slice(_BaseMassLocation, 4).Float() : default(Single);
         #endregion
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value.Min + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + 0x40;
@@ -8440,7 +8442,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default(Single);
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + 0x50;
@@ -8458,12 +8460,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnarmedDamage
         private int _UnarmedDamageLocation => _DATALocation!.Value.Min + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
-        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _recordData.Slice(_UnarmedDamageLocation, 4).Float() : default;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _recordData.Slice(_UnarmedDamageLocation, 4).Float() : default(Single);
         #endregion
         #region UnarmedReach
         private int _UnarmedReachLocation => _DATALocation!.Value.Min + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
-        public Single UnarmedReach => _UnarmedReach_IsSet ? _recordData.Slice(_UnarmedReachLocation, 4).Float() : default;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? _recordData.Slice(_UnarmedReachLocation, 4).Float() : default(Single);
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + 0x68;
@@ -8473,22 +8475,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default(Single);
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value.Min + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value.Min + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default(Single);
         #endregion
         #region Flags2
         private int _Flags2Location => _DATALocation!.Value.Min + 0x7C;
@@ -8556,11 +8558,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
@@ -8620,12 +8622,14 @@ namespace Mutagen.Bethesda.Skyrim
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region FaceFxPhonemesRawParsing
         public partial ParseResult FaceFxPhonemesRawParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
@@ -8800,7 +8804,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
+                        creator: static (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
                         translationParams: Race_Registration.SkeletalModelConverter);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
@@ -8809,11 +8813,11 @@ namespace Mutagen.Bethesda.Skyrim
                     this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => BinaryStringUtility.ToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MTNM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;
@@ -8871,7 +8875,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
@@ -8912,7 +8916,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
@@ -8973,7 +8977,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.EquipmentSlots;
@@ -8987,13 +8991,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FaceFxPhonemesListingParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return FaceFxPhonemesRawParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -9033,7 +9039,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         marker: RecordTypes.NAM0,
                         stream: stream,
-                        creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
+                        creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
                     return (int)Race_FieldIndex.HeadData;
                 }

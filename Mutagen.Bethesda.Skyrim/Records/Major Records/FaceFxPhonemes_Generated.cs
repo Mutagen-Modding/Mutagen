@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ForceNames
-        public Boolean ForceNames { get; set; } = default;
+        public Boolean ForceNames { get; set; } = default(Boolean);
         #endregion
         #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1393,13 +1394,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 70,
-            version: 0);
-
-        public const string GUID = "b965bdb9-1d8c-4efe-8cfa-2f35cd13370a";
-
         public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 17;
@@ -1431,8 +1425,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(FaceFxPhonemesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1470,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.ForceNames = default;
+            item.ForceNames = default(Boolean);
             item.Aah_LipBigAah = null;
             item.BigAah_LipDST = null;
             item.BMP_LipEee = null;

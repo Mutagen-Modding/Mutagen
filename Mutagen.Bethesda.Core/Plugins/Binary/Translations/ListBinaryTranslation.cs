@@ -7,7 +7,6 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Translations.Binary; 
 using Mutagen.Bethesda.Plugins.Exceptions; 
 using Mutagen.Bethesda.Plugins.Internals; 
-using Mutagen.Bethesda.Plugins.Meta; 
  
 namespace Mutagen.Bethesda.Plugins.Binary.Translations; 
  
@@ -56,7 +55,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         MutagenFrame reader, 
         RecordType triggeringRecord, 
         BinarySubParseDelegate<IBinaryReadStream, T> transl) 
-    { 
+    {
         var ret = new ExtendedList<T>(); 
         while (!reader.Complete && !reader.Reader.Complete) 
         { 
@@ -309,6 +308,38 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         return ret; 
     } 
+    
+    public ExtendedList<T> Parse( 
+        MutagenFrame reader, 
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        BinaryMasterParseDelegate<T> transl, 
+        TypedParseParams translationParams = default) 
+    { 
+        translationParams = translationParams.ShortCircuit(); 
+        var ret = new ExtendedList<T>(); 
+        while (!reader.Complete) 
+        { 
+            var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
+            nextRecord = translationParams.ConvertToStandard(nextRecord); 
+            if (nextRecord != itemStartMarker) break; 
+            reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
+            var startingPos = reader.Position; 
+            if (transl(reader, out var subIitem, translationParams)) 
+            { 
+                ret.Add(subIitem); 
+            }
+
+            reader.TryReadSubrecord(itemEndMarker, out _);
+            if (reader.Position == startingPos) 
+            { 
+                throw SubrecordException.Enrich( 
+                    new MalformedDataException("Parsed item on the list consumed no data."), 
+                    nextRecord); 
+            } 
+        } 
+        return ret; 
+    } 
     #endregion 
  
     public ExtendedList<T> Parse( 
@@ -348,6 +379,38 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             } 
         } 
         return ret; 
+    } 
+ 
+    public ExtendedList<T> Parse( 
+        MutagenFrame reader, 
+        int amount, 
+        byte expectedLengthLength, 
+        uint expectedLength, 
+        BinaryMasterParseDelegate<T> transl, 
+        TypedParseParams translationParams = default)
+    {
+        uint readLength;
+        switch (expectedLengthLength)
+        {
+            case 1:
+                readLength = reader.ReadUInt8();
+                break;
+            case 2:
+                readLength = reader.ReadUInt16();
+                break;
+            case 4:
+                readLength = reader.ReadUInt32();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
+        if (readLength != expectedLength)
+        {
+            throw new ArgumentException(
+                $"Expected length did not match listed length: {expectedLength} != {readLength}");
+        }
+        return Parse(reader, amount: amount, transl, translationParams);
     } 
  
     public ExtendedList<T> Parse( 
@@ -496,9 +559,9 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         else 
         { 
+            reader.Position += subHeader.HeaderLength; 
             return Parse( 
-                reader, 
-                triggeringRecord, 
+                reader.SpawnWithLength(subHeader.ContentLength), 
                 transl); 
         } 
     } 
@@ -599,12 +662,19 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             } 
             if (!IsLoqui) 
             { 
-                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
-            } 
-            if (transl(reader, out var subIitem)) 
-            { 
-                ret.Add(subIitem); 
-            } 
+                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
+                if (transl(reader.SpawnWithLength(subHeader.ContentLength), out var subIitem)) 
+                { 
+                    ret.Add(subIitem); 
+                } 
+            }
+            else
+            {
+                if (transl(reader, out var subIitem)) 
+                { 
+                    ret.Add(subIitem); 
+                } 
+            }
         } 
         if (reader.Position == startingPos) 
         { 
@@ -683,9 +753,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             return Parse( 
                 reader, 
-                transl, 
-                triggeringRecord, 
-                translationParams); 
+                transl); 
         } 
     } 
  
@@ -735,8 +803,29 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
     { 
         if (items == null) return; 
         foreach (var item in items) 
-        { 
+        {
             transl(writer, item, translationParams); 
+        } 
+    } 
+ 
+    public void Write( 
+        MutagenWriter writer, 
+        IEnumerable<T>? items, 
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        BinaryMasterWriteDelegate<T> transl, 
+        TypedWriteParams translationParams = default) 
+    { 
+        if (items == null) return; 
+        foreach (var item in items) 
+        {
+            using (HeaderExport.Subrecord(writer, itemStartMarker))
+            {
+            }
+            transl(writer, item, translationParams); 
+            using (HeaderExport.Subrecord(writer, itemEndMarker))
+            {
+            }
         } 
     } 
  
@@ -817,7 +906,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             try 
             { 
-                using (var header = HeaderExport.Subrecord( 
+                using (HeaderExport.Subrecord( 
                            writer, 
                            recordType,  
                            overflowRecord: overflowRecord, 
@@ -833,6 +922,44 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             { 
                 throw new OverflowException( 
                     $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.", 
+                    overflow); 
+            } 
+        } 
+        catch (Exception ex) 
+        { 
+            throw SubrecordException.Enrich(ex, recordType); 
+        } 
+    } 
+ 
+    public void Write( 
+        MutagenWriter writer, 
+        ReadOnlyMemorySlice<T>? items, 
+        RecordType recordType, 
+        RecordType overflowRecord, 
+        BinaryMasterWriteDelegate<T> transl, 
+        TypedWriteParams translationParams = default) 
+    { 
+        if (items == null) return; 
+        try 
+        { 
+            try 
+            { 
+                using (HeaderExport.Subrecord( 
+                           writer, 
+                           recordType,  
+                           overflowRecord: overflowRecord, 
+                           out var writerToUse)) 
+                { 
+                    foreach (var item in items) 
+                    { 
+                        transl(writerToUse, item, translationParams); 
+                    } 
+                } 
+            } 
+            catch (OverflowException overflow) 
+            { 
+                throw new OverflowException( 
+                    $"{recordType} List<{typeof(T)}> had an overflow with {items?.Length} items.", 
                     overflow); 
             } 
         } 
@@ -935,11 +1062,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             switch (countLengthLength) 
             { 
- 
                 case 1: 
- 
                     writer.Write(checked((byte)items.Count)); 
- 
                     break; 
                 case 2: 
                     writer.Write(checked((ushort)items.Count)); 
@@ -957,6 +1081,60 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                 $"List<{typeof(T)}> had an overflow with {items?.Count} items.", 
                 overflow); 
         } 
+        foreach (var item in items) 
+        { 
+            transl(writer, item, translationParams); 
+        } 
+    } 
+ 
+    public void Write( 
+        MutagenWriter writer, 
+        IReadOnlyList<T>? items, 
+        int countLengthLength, 
+        byte expectedLengthLength, 
+        uint expectedLength, 
+        BinaryMasterWriteDelegate<T> transl, 
+        TypedWriteParams translationParams = default) 
+    { 
+        if (items == null) return;
+        try 
+        { 
+            switch (countLengthLength) 
+            { 
+                case 1: 
+                    writer.Write(checked((byte)items.Count)); 
+                    break; 
+                case 2: 
+                    writer.Write(checked((ushort)items.Count)); 
+                    break; 
+                case 4: 
+                    writer.Write(items.Count); 
+                    break; 
+                default: 
+                    throw new NotImplementedException(); 
+            } 
+        } 
+        catch (OverflowException overflow) 
+        { 
+            throw new OverflowException( 
+                $"List<{typeof(T)}> had an overflow with {items?.Count} items.", 
+                overflow); 
+        }
+
+        switch (expectedLengthLength)
+        {
+            case 0:
+                break;
+            case 1:
+                writer.Write(checked((byte)expectedLength)); 
+                break;
+            case 2:
+                writer.Write(checked((ushort)expectedLength)); 
+                break;
+            case 4:
+                writer.Write(expectedLength); 
+                break;
+        }
         foreach (var item in items) 
         { 
             transl(writer, item, translationParams); 
@@ -996,6 +1174,37 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             overflow);  
     }
 
+    private void WriteCounter(
+        MutagenWriter writer,
+        int count, 
+        byte counterLength,
+        RecordType counterType)
+    {
+        using (HeaderExport.Subrecord(writer, counterType))
+        {
+            int maxCount;
+            // Fall back to 0 if overflow
+            switch (counterLength)
+            {
+                case 1:
+                    maxCount = byte.MaxValue;
+                    break;
+                case 2:
+                    maxCount = ushort.MaxValue;
+                    break;
+                default:
+                    maxCount = int.MaxValue;
+                    break;
+            }
+
+            if (count > maxCount)
+            {
+                count = 0;
+            }
+            writer.Write(count, counterLength); 
+        } 
+    }
+
     public void WriteWithCounter( 
         MutagenWriter writer, 
         IReadOnlyList<T>? items, 
@@ -1003,26 +1212,21 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         RecordType recordType, 
         BinarySubWriteDelegate<MutagenWriter, T> transl, 
         byte counterLength, 
+        bool subRecordPerItem = false, 
         bool writeCounterIfNull = false) 
     { 
         try 
         { 
             if (items == null) 
             { 
-                if (writeCounterIfNull) 
-                { 
-                    using (HeaderExport.Subrecord(writer, counterType)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
+                if (writeCounterIfNull)
+                {
+                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
                 } 
                 return; 
             } 
 
-            using (HeaderExport.Subrecord(writer, counterType)) 
-            { 
-                writer.Write(items.Count, counterLength); 
-            } 
+            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
@@ -1037,11 +1241,24 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         
         try 
         { 
-            using (HeaderExport.Subrecord(writer, recordType)) 
+            if (subRecordPerItem) 
             { 
                 foreach (var item in items) 
                 { 
-                    transl(writer, item); 
+                    using (HeaderExport.Subrecord(writer, recordType)) 
+                    { 
+                        transl(writer, item); 
+                    } 
+                } 
+            } 
+            else 
+            { 
+                using (HeaderExport.Subrecord(writer, recordType)) 
+                { 
+                    foreach (var item in items) 
+                    { 
+                        transl(writer, item); 
+                    } 
                 } 
             } 
         } 
@@ -1074,18 +1291,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             { 
                 if (writeCounterIfNull) 
                 { 
-                    using (HeaderExport.Subrecord(writer, counterType)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
+                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
                 } 
                 return; 
             } 
             
-            using (HeaderExport.Subrecord(writer, counterType)) 
-            { 
-                writer.Write(items.Count, counterLength); 
-            } 
+            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
@@ -1140,25 +1351,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterWriteDelegate<T> transl, 
         byte counterLength, 
         bool writeCounterIfNull = false, 
+        bool alwaysWriteEndMarker = false,
         RecordType? endMarker = null, 
         RecordTypeConverter? recordTypeConverter = null) 
     { 
         try 
         { 
-            if (items == null) 
+            if (items != null || writeCounterIfNull) 
             { 
-                if (writeCounterIfNull) 
-                { 
-                    using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
-                } 
-                return; 
-            } 
-            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
-            { 
-                writer.Write(items.Count, counterLength); 
+                WriteCounter(writer, items?.Count ?? 0, counterLength: counterLength, counterType);
             } 
         } 
         catch (OverflowException overflow)
@@ -1170,14 +1371,17 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         catch (Exception ex) 
         { 
             throw SubrecordException.Enrich(ex, counterType); 
-        } 
+        }
+
+        if (items != null)
+        {
+            foreach (var item in items) 
+            { 
+                transl(writer, item, recordTypeConverter); 
+            } 
+        }
         
-        foreach (var item in items) 
-        { 
-            transl(writer, item, recordTypeConverter); 
-        } 
-        
-        if (endMarker != null && items.Count > 0) 
+        if (endMarker != null && (alwaysWriteEndMarker || items?.Count > 0)) 
         { 
             using (HeaderExport.Subrecord(writer, endMarker.Value)) { } 
         } 

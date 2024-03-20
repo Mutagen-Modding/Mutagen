@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ReferenceGroup" recordType="RFGP" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="NNAM" />
+      <FormLink name="Reference" recordType="RNAM">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <FormLink name="PackIn" refName="PackIn" recordType="PNAM" />
+      <FormLink name="LNAM" recordType="LNAM" unknown="true" >
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <List name="MNAM" recordType="MNAM" unknown="true" >
+        <UInt32 />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

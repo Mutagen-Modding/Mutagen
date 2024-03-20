@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="SkyrimMajorRecord" GUID="22bdfd44-d32a-4b71-9d6f-f15a9c3dd84e" ID="403">
+  <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <String name="UnloadEvent" recordType="BNAM" />

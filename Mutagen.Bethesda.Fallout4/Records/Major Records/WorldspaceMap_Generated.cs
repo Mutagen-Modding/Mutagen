@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region UsableDimensions
-        public P2Int UsableDimensions { get; set; } = default;
+        public P2Int UsableDimensions { get; set; } = default(P2Int);
         #endregion
         #region NorthwestCellCoords
-        public P2Int16 NorthwestCellCoords { get; set; } = default;
+        public P2Int16 NorthwestCellCoords { get; set; } = default(P2Int16);
         #endregion
         #region SoutheastCellCoords
-        public P2Int16 SoutheastCellCoords { get; set; } = default;
+        public P2Int16 SoutheastCellCoords { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 510,
-            version: 0);
-
-        public const string GUID = "e82a5b1e-b728-4c6b-a476-4a25dc774fb7";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -725,8 +719,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -764,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWorldspaceMap item)
         {
             ClearPartial();
-            item.UsableDimensions = default;
-            item.NorthwestCellCoords = default;
-            item.SoutheastCellCoords = default;
+            item.UsableDimensions = default(P2Int);
+            item.NorthwestCellCoords = default(P2Int16);
+            item.SoutheastCellCoords = default(P2Int16);
         }
         
         #region Mutagen

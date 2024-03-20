@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -57,133 +58,133 @@ namespace Mutagen.Bethesda.Fallout4
         public String Name { get; set; } = string.Empty;
         #endregion
         #region IY
-        public Single IY { get; set; } = default;
+        public Single IY { get; set; } = default(Single);
         #endregion
         #region IH
-        public Single IH { get; set; } = default;
+        public Single IH { get; set; } = default(Single);
         #endregion
         #region EH
-        public Single EH { get; set; } = default;
+        public Single EH { get; set; } = default(Single);
         #endregion
         #region EY
-        public Single EY { get; set; } = default;
+        public Single EY { get; set; } = default(Single);
         #endregion
         #region AE
-        public Single AE { get; set; } = default;
+        public Single AE { get; set; } = default(Single);
         #endregion
         #region AA
-        public Single AA { get; set; } = default;
+        public Single AA { get; set; } = default(Single);
         #endregion
         #region AW
-        public Single AW { get; set; } = default;
+        public Single AW { get; set; } = default(Single);
         #endregion
         #region AY
-        public Single AY { get; set; } = default;
+        public Single AY { get; set; } = default(Single);
         #endregion
         #region AH
-        public Single AH { get; set; } = default;
+        public Single AH { get; set; } = default(Single);
         #endregion
         #region AO
-        public Single AO { get; set; } = default;
+        public Single AO { get; set; } = default(Single);
         #endregion
         #region OY
-        public Single OY { get; set; } = default;
+        public Single OY { get; set; } = default(Single);
         #endregion
         #region OW
-        public Single OW { get; set; } = default;
+        public Single OW { get; set; } = default(Single);
         #endregion
         #region UH
-        public Single UH { get; set; } = default;
+        public Single UH { get; set; } = default(Single);
         #endregion
         #region UW
-        public Single UW { get; set; } = default;
+        public Single UW { get; set; } = default(Single);
         #endregion
         #region ER
-        public Single ER { get; set; } = default;
+        public Single ER { get; set; } = default(Single);
         #endregion
         #region AX
-        public Single AX { get; set; } = default;
+        public Single AX { get; set; } = default(Single);
         #endregion
         #region S
-        public Single S { get; set; } = default;
+        public Single S { get; set; } = default(Single);
         #endregion
         #region SH
-        public Single SH { get; set; } = default;
+        public Single SH { get; set; } = default(Single);
         #endregion
         #region Z
-        public Single Z { get; set; } = default;
+        public Single Z { get; set; } = default(Single);
         #endregion
         #region ZH
-        public Single ZH { get; set; } = default;
+        public Single ZH { get; set; } = default(Single);
         #endregion
         #region F
-        public Single F { get; set; } = default;
+        public Single F { get; set; } = default(Single);
         #endregion
         #region TH
-        public Single TH { get; set; } = default;
+        public Single TH { get; set; } = default(Single);
         #endregion
         #region V
-        public Single V { get; set; } = default;
+        public Single V { get; set; } = default(Single);
         #endregion
         #region DH
-        public Single DH { get; set; } = default;
+        public Single DH { get; set; } = default(Single);
         #endregion
         #region M
-        public Single M { get; set; } = default;
+        public Single M { get; set; } = default(Single);
         #endregion
         #region N
-        public Single N { get; set; } = default;
+        public Single N { get; set; } = default(Single);
         #endregion
         #region NG
-        public Single NG { get; set; } = default;
+        public Single NG { get; set; } = default(Single);
         #endregion
         #region L
-        public Single L { get; set; } = default;
+        public Single L { get; set; } = default(Single);
         #endregion
         #region R
-        public Single R { get; set; } = default;
+        public Single R { get; set; } = default(Single);
         #endregion
         #region W
-        public Single W { get; set; } = default;
+        public Single W { get; set; } = default(Single);
         #endregion
         #region Y
-        public Single Y { get; set; } = default;
+        public Single Y { get; set; } = default(Single);
         #endregion
         #region HH
-        public Single HH { get; set; } = default;
+        public Single HH { get; set; } = default(Single);
         #endregion
         #region B
-        public Single B { get; set; } = default;
+        public Single B { get; set; } = default(Single);
         #endregion
         #region D
-        public Single D { get; set; } = default;
+        public Single D { get; set; } = default(Single);
         #endregion
         #region JH
-        public Single JH { get; set; } = default;
+        public Single JH { get; set; } = default(Single);
         #endregion
         #region G
-        public Single G { get; set; } = default;
+        public Single G { get; set; } = default(Single);
         #endregion
         #region P
-        public Single P { get; set; } = default;
+        public Single P { get; set; } = default(Single);
         #endregion
         #region T
-        public Single T { get; set; } = default;
+        public Single T { get; set; } = default(Single);
         #endregion
         #region K
-        public Single K { get; set; } = default;
+        public Single K { get; set; } = default(Single);
         #endregion
         #region CH
-        public Single CH { get; set; } = default;
+        public Single CH { get; set; } = default(Single);
         #endregion
         #region SIL
-        public Single SIL { get; set; } = default;
+        public Single SIL { get; set; } = default(Single);
         #endregion
         #region SHOTSIL
-        public Single SHOTSIL { get; set; } = default;
+        public Single SHOTSIL { get; set; } = default(Single);
         #endregion
         #region FLAP
-        public Single FLAP { get; set; } = default;
+        public Single FLAP { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -2170,13 +2171,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 253,
-            version: 0);
-
-        public const string GUID = "3d986dc9-0861-4e9d-9f73-339253f68cbb";
-
         public const ushort AdditionalFieldCount = 44;
 
         public const ushort FieldCount = 44;
@@ -2208,8 +2202,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(PhonemeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2248,49 +2240,49 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.IY = default;
-            item.IH = default;
-            item.EH = default;
-            item.EY = default;
-            item.AE = default;
-            item.AA = default;
-            item.AW = default;
-            item.AY = default;
-            item.AH = default;
-            item.AO = default;
-            item.OY = default;
-            item.OW = default;
-            item.UH = default;
-            item.UW = default;
-            item.ER = default;
-            item.AX = default;
-            item.S = default;
-            item.SH = default;
-            item.Z = default;
-            item.ZH = default;
-            item.F = default;
-            item.TH = default;
-            item.V = default;
-            item.DH = default;
-            item.M = default;
-            item.N = default;
-            item.NG = default;
-            item.L = default;
-            item.R = default;
-            item.W = default;
-            item.Y = default;
-            item.HH = default;
-            item.B = default;
-            item.D = default;
-            item.JH = default;
-            item.G = default;
-            item.P = default;
-            item.T = default;
-            item.K = default;
-            item.CH = default;
-            item.SIL = default;
-            item.SHOTSIL = default;
-            item.FLAP = default;
+            item.IY = default(Single);
+            item.IH = default(Single);
+            item.EH = default(Single);
+            item.EY = default(Single);
+            item.AE = default(Single);
+            item.AA = default(Single);
+            item.AW = default(Single);
+            item.AY = default(Single);
+            item.AH = default(Single);
+            item.AO = default(Single);
+            item.OY = default(Single);
+            item.OW = default(Single);
+            item.UH = default(Single);
+            item.UW = default(Single);
+            item.ER = default(Single);
+            item.AX = default(Single);
+            item.S = default(Single);
+            item.SH = default(Single);
+            item.Z = default(Single);
+            item.ZH = default(Single);
+            item.F = default(Single);
+            item.TH = default(Single);
+            item.V = default(Single);
+            item.DH = default(Single);
+            item.M = default(Single);
+            item.N = default(Single);
+            item.NG = default(Single);
+            item.L = default(Single);
+            item.R = default(Single);
+            item.W = default(Single);
+            item.Y = default(Single);
+            item.HH = default(Single);
+            item.B = default(Single);
+            item.D = default(Single);
+            item.JH = default(Single);
+            item.G = default(Single);
+            item.P = default(Single);
+            item.T = default(Single);
+            item.K = default(Single);
+            item.CH = default(Single);
+            item.SIL = default(Single);
+            item.SHOTSIL = default(Single);
+            item.FLAP = default(Single);
         }
         
         #region Mutagen

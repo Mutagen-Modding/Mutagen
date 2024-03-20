@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -680,13 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 328,
-            version: 0);
-
-        public const string GUID = "9bea625e-c592-44aa-87e7-806bc63aa372";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
@@ -718,8 +712,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshGridArrayBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1160,6 +1152,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void NavmeshGridArrayParseEndingPositions(
+            NavmeshGridArrayBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.GridCellEndingPos = ret._structData.Length;
+        }
+
         public static INavmeshGridArrayGetter NavmeshGridArrayFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1175,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new NavmeshGridArrayBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.GridCellEndingPos = ret._structData.Length;
+            NavmeshGridArrayParseEndingPositions(ret, package);
             stream.Position += ret.GridCellEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

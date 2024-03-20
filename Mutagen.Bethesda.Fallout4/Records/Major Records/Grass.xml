@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="Fallout4MajorRecord" GUID="1c394d4c-178d-4ee4-be0e-06aa0f5d85f6" ID="98">
+  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />

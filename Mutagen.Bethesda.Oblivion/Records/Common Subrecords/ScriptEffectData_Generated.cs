@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
+        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default(ScriptEffectData.VersioningBreaks);
         #endregion
         #region Script
         private readonly IFormLink<IScriptGetter> _Script = new FormLink<IScriptGetter>();
@@ -64,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IScriptGetter> IScriptEffectDataGetter.Script => this.Script;
         #endregion
         #region MagicSchool
-        public MagicSchool MagicSchool { get; set; } = default;
+        public MagicSchool MagicSchool { get; set; } = default(MagicSchool);
         #endregion
         #region VisualEffect
         private readonly IEDIDLink<IMagicEffectGetter> _VisualEffect = new EDIDLink<IMagicEffectGetter>();
@@ -77,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectDataGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region Flags
-        public ScriptEffect.Flag Flags { get; set; } = default;
+        public ScriptEffect.Flag Flags { get; set; } = default(ScriptEffect.Flag);
         #endregion
 
         #region To String
@@ -780,13 +781,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 220,
-            version: 0);
-
-        public const string GUID = "dd76cd47-15a0-437f-8c99-011168a7e431";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -825,8 +819,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -864,11 +856,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IScriptEffectData item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(ScriptEffectData.VersioningBreaks);
             item.Script.Clear();
-            item.MagicSchool = default;
+            item.MagicSchool = default(MagicSchool);
             item.VisualEffect.Clear();
-            item.Flags = default;
+            item.Flags = default(ScriptEffect.Flag);
         }
         
         #region Mutagen

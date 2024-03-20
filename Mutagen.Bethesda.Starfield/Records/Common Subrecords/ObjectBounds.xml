@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectBounds" objType="Subrecord" recordType="OBND">
+    <Fields>
+      <P3Float name="First" />
+      <P3Float name="Second" />
+    </Fields>
+  </Object>
+  <Object name="ObjectBoundsFloat" objType="Subrecord">
+    <Fields>
+      <P3Float name="First" />
+      <P3Float name="Second" />
+    </Fields>
+  </Object>
+</Loqui>

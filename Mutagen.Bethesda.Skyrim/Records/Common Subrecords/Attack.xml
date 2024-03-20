@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Attack" objType="Subrecord" GUID="c6031cd8-bc21-4fbe-b9e5-395a8ca68c9f" ID="57">
+  <Object name="Attack" objType="Subrecord">
     <Fields>
       <RefDirect name="AttackData" refName="AttackData" />
       <String name="AttackEvent" recordType="ATKE" />
     </Fields>
   </Object>
-  <Object name="AttackData" objType="Subrecord" recordType="ATKD" GUID="160c5128-07dc-42fc-9507-6ca11301e07a" ID="58">
+  <Object name="AttackData" objType="Subrecord" recordType="ATKD">
     <Fields>
       <Float name="DamageMult" />
       <Float name="Chance" />
-      <FormLink name="Spell" >
+      <FormLink name="Spell">
         <Interface>ISpellRecord</Interface>
       </FormLink>
       <Enum name="Flags" enumName="AttackData.Flag" byteLength="4" />

@@ -2,7 +2,6 @@ namespace Mutagen.Bethesda.Fallout4;
 
 partial class AQuestAlias
 {
-
     [Flags]
     public enum Flag
     {

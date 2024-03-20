@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="MNAM" />
+      <ByteArray name="SPED" recordType="SPED" unknown="true" />
+      <Float name="FlightAngleGain" recordType="LNAM" />
+      <Float name="KNAM" recordType="KNAM" unknown="true" />
+      <UInt32 name="INTV" recordType="INTV" unknown="true" />
+      <Bool name="BOLV" boolAsMarker="BOLV" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

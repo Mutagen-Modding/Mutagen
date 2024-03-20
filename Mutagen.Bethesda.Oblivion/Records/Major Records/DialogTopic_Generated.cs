@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -93,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         DialogType? IDialogTopicGetter.DialogType => this.DialogType;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1238,13 +1239,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 147,
-            version: 0);
-
-        public const string GUID = "64f03683-28fd-43e3-8141-da8e95a52f89";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 10;
@@ -1296,13 +1290,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.TCLF,
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1343,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.Quests.Clear();
             item.Name = default;
             item.DialogType = default;
-            item.Timestamp = default;
+            item.Timestamp = default(Int32);
             item.Items.Clear();
             base.Clear(item);
         }
@@ -1838,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             IModContext? parent,
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<IOblivionMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -1861,9 +1855,9 @@ namespace Mutagen.Bethesda.Oblivion
                         parent.Items.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(dup);
                         return dup;
                     });
@@ -1878,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
             IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<IOblivionMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -1938,9 +1932,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Items.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(dup);
                                     return dup;
                                 });
@@ -2051,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Quests.SetTo(
                         rhs.Quests
-                        .Select(r => (IFormLinkGetter<IQuestGetter>)new FormLink<IQuestGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IQuestGetter>)new FormLink<IQuestGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2594,7 +2588,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QSTI,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogTopic_FieldIndex.Quests;

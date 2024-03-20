@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region RunOnType
-        public Condition.RunOnType RunOnType { get; set; } = default;
+        public Condition.RunOnType RunOnType { get; set; } = default(Condition.RunOnType);
         #endregion
         #region Reference
         private readonly IFormLink<IFallout4MajorRecordGetter> _Reference = new FormLink<IFallout4MajorRecordGetter>();
@@ -679,13 +680,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 291,
-            version: 0);
-
-        public const string GUID = "96f892c6-41b2-4c30-bc24-e1db7e58e80f";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -717,8 +711,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -756,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IConditionData item)
         {
             ClearPartial();
-            item.RunOnType = default;
+            item.RunOnType = default(Condition.RunOnType);
             item.Reference.Clear();
             item.Unknown3 = ConditionData.Unknown3Default;
         }

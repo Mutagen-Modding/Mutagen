@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Keyword, APlacedTrap]
+    /// Implemented by: [Keyword, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface IKeywordLinkedReference :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Keyword, APlacedTrap]
+    /// Implemented by: [Keyword, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface IKeywordLinkedReferenceGetter : IFallout4MajorRecordGetter
     {

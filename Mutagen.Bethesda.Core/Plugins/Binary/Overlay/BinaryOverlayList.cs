@@ -14,9 +14,22 @@ internal abstract class BinaryOverlayList
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
         PluginBinaryOverlay.SpanFactory<T> getter,
-        int[] locs)
+        IReadOnlyList<int> locs)
     {
         return new BinaryOverlayListByLocationArray<T>(
+            mem,
+            package,
+            getter,
+            locs);
+    }
+    
+    public static IReadOnlyList<T> FactoryBySubrecordArray<T>(
+        ReadOnlyMemorySlice<byte> mem,
+        BinaryOverlayFactoryPackage package,
+        PluginBinaryOverlay.SpanFactory<T> getter,
+        IReadOnlyList<int> locs)
+    {
+        return new BinaryOverlayListBySubrecordLocationArray<T>(
             mem,
             package,
             getter,
@@ -28,7 +41,7 @@ internal abstract class BinaryOverlayList
         BinaryOverlayFactoryPackage package,
         TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
-        int[] locs)
+        IReadOnlyList<int> locs)
     {
         return new BinaryOverlayRecordListByLocationArray<T>(
             mem,
@@ -82,8 +95,7 @@ internal abstract class BinaryOverlayList
         RecordType countType,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
-        var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.Subrecord(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(stream.RemainingMemory);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -109,11 +121,33 @@ internal abstract class BinaryOverlayList
         else
         {
             return FactoryByStartIndex(
-                mem: stream.RemainingMemory,
+                mem: initialHeader.Content,
                 package: package,
                 getter: getter,
                 itemLength: itemLength);
         }
+    }
+
+    public static IReadOnlyList<T> EagerFactoryByPrependedCount<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int countLength,
+        PluginBinaryOverlay.StreamFactory<T> getter)
+    {
+        var count = countLength switch
+        {
+            1 => (int)stream.ReadUInt8(),
+            2 => (int)stream.ReadUInt16(),
+            4 => checked((int)stream.ReadUInt32()),
+            _ => throw new NotImplementedException(),
+        };
+        List<T> ret = new();
+        for (int i = 0; i < count; i++)
+        {
+            ret.Add(getter(stream, package));
+        }
+
+        return ret;
     }
 
     public static IReadOnlyList<T>? FactoryByCountNullIfZero<T>(
@@ -261,6 +295,64 @@ internal abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByCountPerItem<T>(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
+        int countLength,
+        RecordType trigger,
+        RecordType countType,
+        PluginBinaryOverlay.SpanFactory<T> getter,
+        bool skipHeader = true)
+    {
+        var initialHeader = package.MetaData.Constants.Subrecord(stream.RemainingMemory);
+        var recType = initialHeader.RecordType;
+        IReadOnlyList<int> locs;
+        ReadOnlyMemorySlice<byte> mem;
+        if (recType == countType)
+        {
+            var count = countLength switch
+            {
+                1 => initialHeader.Content[0],
+                2 => BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
+                _ => throw new NotImplementedException(),
+            };
+            stream.Position += initialHeader.TotalLength;
+            mem = stream.RemainingMemory;
+            locs = PluginBinaryOverlay.ParseRecordLocationsByCount(
+                stream: stream,
+                count: count,
+                trigger: trigger,
+                constants: package.MetaData.Constants.SubConstants,
+                skipHeader: false);
+        }
+        else
+        {
+            mem = stream.RemainingMemory;
+            locs = PluginBinaryOverlay.ParseRecordLocations(
+                stream: stream,
+                constants: package.MetaData.Constants.SubConstants,
+                trigger: trigger,
+                skipHeader: false);
+        }
+        if (skipHeader)
+        {
+            return FactoryBySubrecordArray(
+                mem: mem,
+                package: package,
+                getter: getter,
+                locs: locs);
+        }
+        else
+        {
+            return FactoryByArray(
+                mem: mem,
+                package: package,
+                getter: getter,
+                locs: locs);
+        }
+    }
+
+    public static IReadOnlyList<T> FactoryByCountPerItem<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
         int itemLength,
         int countLength,
         RecordType trigger,
@@ -351,6 +443,23 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
+        return FactoryByCountLength<T>(
+            mem,
+            package,
+            itemLength: itemLength,
+            countLength: countLength,
+            expectedLengthLength: 0,
+            getter: getter);
+    }
+
+    public static IReadOnlyList<T> FactoryByCountLength<T>(
+        ReadOnlyMemorySlice<byte> mem,
+        BinaryOverlayFactoryPackage package,
+        int itemLength,
+        byte countLength,
+        byte expectedLengthLength,
+        PluginBinaryOverlay.SpanFactory<T> getter)
+    {
         var count = countLength switch
         {
             1 => mem[0],
@@ -363,21 +472,31 @@ internal abstract class BinaryOverlayList
             throw new ArgumentException("Item count and expected size did not match.");
         }
         return new BinaryOverlayListByStartIndex<T>(
-            mem.Slice(countLength, checked((int)(count * itemLength))),
+            mem.Slice(countLength + expectedLengthLength, checked((int)(count * itemLength))),
             package,
             getter,
             itemLength);
     }
 
-    public static IReadOnlyList<string> FactoryByCountLength<T>(
+    public static IReadOnlyList<string> FactoryByCountLengthWithItemLength<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
         byte countLength,
+        byte itemLengthLength,
         PluginBinaryOverlay.SpanFactory<string> getter)
     {
         var count = countLength switch
         {
             4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
+            2 => BinaryPrimitives.ReadUInt16LittleEndian(mem),
+            1 => mem[0],
+            _ => throw new NotImplementedException(),
+        };
+        Func<ReadOnlyMemorySlice<byte>, int> itemLenGetter = itemLengthLength switch
+        {
+            4 => (mem) => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(mem)),
+            2 => (mem) => BinaryPrimitives.ReadUInt16LittleEndian(mem),
+            1 => (mem) => mem[0],
             _ => throw new NotImplementedException(),
         };
         int[] locs = new int[count];
@@ -385,7 +504,7 @@ internal abstract class BinaryOverlayList
         for (int i = 0; i < count - 1; i++)
         {
             locs[i] = loc;
-            var len = BinaryPrimitives.ReadUInt16LittleEndian(mem.Slice(loc));
+            var len = itemLenGetter(mem.Slice(loc));
             loc += len + 2;
         }
         return FactoryByArray(
@@ -405,6 +524,21 @@ internal abstract class BinaryOverlayList
         for (uint i = 0; i < count; i++)
         {
             ret.Add(getter(stream, package));
+        }
+        return ret;
+    }
+
+    public static IReadOnlyList<T> FactoryByCountLength<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int itemLength,
+        uint count,
+        PluginBinaryOverlay.SpanFactory<T> getter)
+    {
+        var ret = new List<T>(checked((int)count));
+        for (uint i = 0; i < count; i++)
+        {
+            ret.Add(getter(stream.ReadMemory(itemLength), package));
         }
         return ret;
     }
@@ -448,12 +582,14 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.Factory<T> getter)
     {
-        return FactoryByLazyParse(mem.Slice(countLength), package, getter);
+        // Don't care about count, at the moment
+        var contentMem = mem.Slice(countLength);
+        return FactoryByLazyParse(contentMem, package, getter);
     }
 
     private class BinaryOverlayListByLocationArray<T> : IReadOnlyList<T>
     {
-        private int[] _locations;
+        private IReadOnlyList<int> _locations;
         BinaryOverlayFactoryPackage _package;
         private ReadOnlyMemorySlice<byte> _mem;
         private PluginBinaryOverlay.SpanFactory<T> _getter;
@@ -462,7 +598,7 @@ internal abstract class BinaryOverlayList
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             PluginBinaryOverlay.SpanFactory<T> getter,
-            int[] locs)
+            IReadOnlyList<int> locs)
         {
             _mem = mem;
             _getter = getter;
@@ -472,11 +608,52 @@ internal abstract class BinaryOverlayList
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package);
 
-        public int Count => _locations.Length;
+        public int Count => _locations.Count;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < _locations.Length; i++)
+            for (int i = 0; i < _locations.Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    private class BinaryOverlayListBySubrecordLocationArray<T> : IReadOnlyList<T>
+    {
+        private IReadOnlyList<int> _locations;
+        BinaryOverlayFactoryPackage _package;
+        private ReadOnlyMemorySlice<byte> _mem;
+        private PluginBinaryOverlay.SpanFactory<T> _getter;
+
+        public BinaryOverlayListBySubrecordLocationArray(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
+            PluginBinaryOverlay.SpanFactory<T> getter,
+            IReadOnlyList<int> locs)
+        {
+            _mem = mem;
+            _getter = getter;
+            _package = package;
+            _locations = locs;
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                var subRec = new SubrecordFrame(_package.MetaData, _mem.Slice(_locations[index]));
+                return _getter(subRec.Content, _package);
+            }
+        }
+
+        public int Count => _locations.Count;
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < _locations.Count; i++)
             {
                 yield return this[i];
             }
@@ -487,7 +664,7 @@ internal abstract class BinaryOverlayList
 
     private class BinaryOverlayRecordListByLocationArray<T> : IReadOnlyList<T>
     {
-        private int[] _locations;
+        private IReadOnlyList<int> _locations;
         private BinaryOverlayFactoryPackage _package;
         private ReadOnlyMemorySlice<byte> _mem;
         private PluginBinaryOverlay.SpanRecordFactory<T> _getter;
@@ -498,7 +675,7 @@ internal abstract class BinaryOverlayList
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
-            int[] locs)
+            IReadOnlyList<int> locs)
         {
             _mem = mem;
             _getter = getter;
@@ -509,11 +686,11 @@ internal abstract class BinaryOverlayList
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package, _recordTypeConverter);
 
-        public int Count => _locations.Length;
+        public int Count => _locations.Count;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < _locations.Length; i++)
+            for (int i = 0; i < _locations.Count; i++)
             {
                 yield return this[i];
             }

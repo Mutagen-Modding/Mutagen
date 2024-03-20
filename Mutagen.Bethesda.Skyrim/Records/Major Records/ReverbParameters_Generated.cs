@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,40 +55,40 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region DecayMilliseconds
-        public UInt16 DecayMilliseconds { get; set; } = default;
+        public UInt16 DecayMilliseconds { get; set; } = default(UInt16);
         #endregion
         #region HfReferenceHertz
-        public UInt16 HfReferenceHertz { get; set; } = default;
+        public UInt16 HfReferenceHertz { get; set; } = default(UInt16);
         #endregion
         #region RoomFilter
-        public SByte RoomFilter { get; set; } = default;
+        public SByte RoomFilter { get; set; } = default(SByte);
         #endregion
         #region RoomHfFilter
-        public SByte RoomHfFilter { get; set; } = default;
+        public SByte RoomHfFilter { get; set; } = default(SByte);
         #endregion
         #region Reflections
-        public SByte Reflections { get; set; } = default;
+        public SByte Reflections { get; set; } = default(SByte);
         #endregion
         #region ReverbAmp
-        public SByte ReverbAmp { get; set; } = default;
+        public SByte ReverbAmp { get; set; } = default(SByte);
         #endregion
         #region DecayHfRatio
-        public Single DecayHfRatio { get; set; } = default;
+        public Single DecayHfRatio { get; set; } = default(Single);
         #endregion
         #region ReflectDelayMS
-        public Byte ReflectDelayMS { get; set; } = default;
+        public Byte ReflectDelayMS { get; set; } = default(Byte);
         #endregion
         #region ReverbDelayMS
-        public Byte ReverbDelayMS { get; set; } = default;
+        public Byte ReverbDelayMS { get; set; } = default(Byte);
         #endregion
         #region DiffusionPercent
-        public Percent DiffusionPercent { get; set; } = default;
+        public Percent DiffusionPercent { get; set; } = default(Percent);
         #endregion
         #region DensityPercent
-        public Percent DensityPercent { get; set; } = default;
+        public Percent DensityPercent { get; set; } = default(Percent);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -710,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -719,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1076,13 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 86,
-            version: 0);
-
-        public const string GUID = "17f23f33-dc99-49b9-a085-54538d98e9f4";
-
         public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 19;
@@ -1119,13 +1113,13 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.REVB,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ReverbParametersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1163,18 +1157,18 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IReverbParametersInternal item)
         {
             ClearPartial();
-            item.DecayMilliseconds = default;
-            item.HfReferenceHertz = default;
-            item.RoomFilter = default;
-            item.RoomHfFilter = default;
-            item.Reflections = default;
-            item.ReverbAmp = default;
-            item.DecayHfRatio = default;
-            item.ReflectDelayMS = default;
-            item.ReverbDelayMS = default;
-            item.DiffusionPercent = default;
-            item.DensityPercent = default;
-            item.Unknown = default;
+            item.DecayMilliseconds = default(UInt16);
+            item.HfReferenceHertz = default(UInt16);
+            item.RoomFilter = default(SByte);
+            item.RoomHfFilter = default(SByte);
+            item.Reflections = default(SByte);
+            item.ReverbAmp = default(SByte);
+            item.DecayHfRatio = default(Single);
+            item.ReflectDelayMS = default(Byte);
+            item.ReverbDelayMS = default(Byte);
+            item.DiffusionPercent = default(Percent);
+            item.DensityPercent = default(Percent);
+            item.Unknown = default(Byte);
             base.Clear(item);
         }
         
@@ -2025,37 +2019,37 @@ namespace Mutagen.Bethesda.Skyrim
         #region DecayMilliseconds
         private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;
-        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DecayMillisecondsLocation, 2)) : default;
+        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DecayMillisecondsLocation, 2)) : default(UInt16);
         #endregion
         #region HfReferenceHertz
         private int _HfReferenceHertzLocation => _DATALocation!.Value.Min + 0x2;
         private bool _HfReferenceHertz_IsSet => _DATALocation.HasValue;
-        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_HfReferenceHertzLocation, 2)) : default;
+        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_HfReferenceHertzLocation, 2)) : default(UInt16);
         #endregion
         #region RoomFilter
         private int _RoomFilterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RoomFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_recordData.Slice(_RoomFilterLocation, 1)[0] : default;
+        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_recordData.Slice(_RoomFilterLocation, 1)[0] : default(SByte);
         #endregion
         #region RoomHfFilter
         private int _RoomHfFilterLocation => _DATALocation!.Value.Min + 0x5;
         private bool _RoomHfFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_recordData.Slice(_RoomHfFilterLocation, 1)[0] : default;
+        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_recordData.Slice(_RoomHfFilterLocation, 1)[0] : default(SByte);
         #endregion
         #region Reflections
         private int _ReflectionsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Reflections_IsSet => _DATALocation.HasValue;
-        public SByte Reflections => _Reflections_IsSet ? (sbyte)_recordData.Slice(_ReflectionsLocation, 1)[0] : default;
+        public SByte Reflections => _Reflections_IsSet ? (sbyte)_recordData.Slice(_ReflectionsLocation, 1)[0] : default(SByte);
         #endregion
         #region ReverbAmp
         private int _ReverbAmpLocation => _DATALocation!.Value.Min + 0x7;
         private bool _ReverbAmp_IsSet => _DATALocation.HasValue;
-        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_recordData.Slice(_ReverbAmpLocation, 1)[0] : default;
+        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_recordData.Slice(_ReverbAmpLocation, 1)[0] : default(SByte);
         #endregion
         #region DecayHfRatio
         private int _DecayHfRatioLocation => _DATALocation!.Value.Min + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
-        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default(Single);
         #endregion
         #region ReflectDelayMS
         private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;
@@ -2070,12 +2064,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region DiffusionPercent
         private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
         private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
-        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region DensityPercent
         private int _DensityPercentLocation => _DATALocation!.Value.Min + 0xC;
         private bool _DensityPercent_IsSet => _DATALocation.HasValue;
-        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;

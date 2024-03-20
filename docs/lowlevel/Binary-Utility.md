@@ -110,6 +110,7 @@ if (finds.TryGetValue(full, out loc))
 
 
 It takes a few optional arguments:
+
 - RecordInterest, to limit the search to specific `RecordType`s
 - Additional Criteria lambda, to add custom filter logic
 
@@ -163,7 +164,7 @@ foreach (var groupLoc in locs.GetContainingGroupLocations(someFormID))
 
 This class just provides a common use case of locating records.  If more fine tuned logic is needed, just fall back to using [Header Struct](Header-Structs.md) parsing yourself with the extra logic you need.
 
-Note that this class uses FormID, and does not make use of the abstraction concepts found in [ModKey, FormKey, FormLink](../plugins/ModKey,-FormKey,-FormLink.md)
+Note that this class uses FormID, and does not make use of the abstraction concepts found in [ModKey, FormKey, FormLink](../plugins/ModKey,%20FormKey,%20FormLink.md)
 
 ## Decompression
 MajorRecords with their compression flag enabled come in a compressed format.  The byte content needs to be unzipped before it can be read.

@@ -29,7 +29,7 @@ public class LinkInterfaceModule : GenerationModule
         // Compile interfaces implementing interfaces mapping data
         var interfaceInheritenceMappings = new Dictionary<string, HashSet<string>>();
 
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
             {
@@ -143,13 +143,29 @@ public class LinkInterfaceModule : GenerationModule
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var interf in mappings)
                     {
-                        mappingGen.AppendLine($"dict[typeof({interf.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                        using (mappingGen.CurlyBrace(appendParenthesis: true, appendSemiColon: true))
+                        using (var args = mappingGen.Call(
+                                   $"dict[typeof({interf.Key})] = new {nameof(InterfaceMappingResult)}"))
                         {
-                            foreach (var obj in interf.Value)
+                            args.Add("true");
+                            args.Add(regisSb =>
                             {
-                                mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
-                            }
+                                regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
+                                using (regisSb.CurlyBrace())
+                                {
+                                    foreach (var obj in interf.Value)
+                                    {
+                                        regisSb.AppendLine($"{obj.RegistrationName}.Instance,");
+                                    }
+                                }
+                            });
+                            args.Add(regisSb =>
+                            {
+                                using (var c = regisSb.Call("new InterfaceMappingTypes"))
+                                {
+                                    c.Add($"Setter: typeof({interf.Key})");
+                                    c.Add($"Getter: typeof({interf.Key}Getter)");
+                                }
+                            });
                         }
 
                         mappingGen.AppendLine($"dict[typeof({interf.Key}Getter)] = dict[typeof({interf.Key})] with {{ Setter = false }};");

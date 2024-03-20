@@ -11,6 +11,7 @@ public class MutagenFieldData
     public readonly TypeGeneration SourceTypeGeneration;
     public TypeGeneration Parent;
     public RecordType? MarkerType { get; set; }
+    public RecordType? EndMarkerType { get; set; }
     public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType { get; set; }
     public RecordCollection TriggeringRecordTypes { get; } = new();
@@ -33,6 +34,8 @@ public class MutagenFieldData
     public bool HasVersioning => Versioning.Count > 0;
     public bool IsAfterBreak;
     public bool Circular;
+    public bool NotDuplicate;
+    public bool ShortCircuit;
 
     public MutagenFieldData(TypeGeneration source)
     {
@@ -47,7 +50,7 @@ public class MutagenFieldData
                 this.TriggeringRecordTypes,
                 this.SourceTypeGeneration);
         }
-        if (!(this.SourceTypeGeneration is LoquiType loqui)) yield break;
+        if (this.SourceTypeGeneration is not LoquiType loqui) yield break;
         foreach (var subType in this.SubLoquiTypes
                      .SelectMany(x => x.Value.Select(l => new KeyValuePair<RecordType, ObjectGeneration>(x.Key, l)))
                      .GroupBy((g) => g.Value))

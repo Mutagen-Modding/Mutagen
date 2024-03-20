@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -28,29 +29,11 @@ public class EnumCompletenessTests
     }
 
     [Fact]
-    public void HasEnabledMarkers()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            PluginListings.HasEnabledMarkers(release);
-        }
-    }
-
-    [Fact]
     public void GameConstants()
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
             Mutagen.Bethesda.Plugins.Meta.GameConstants.Get(release);
-        }
-    }
-
-    [Fact]
-    public void DefaultFormVersion()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            release.GetDefaultFormVersion();
         }
     }
 
@@ -101,17 +84,15 @@ public class EnumCompletenessTests
         }
     }
 
-    [Theory]
-    [MutagenAutoData]
-    public void MutagenEncodingProvider(
-        MutagenEncodingProvider sut)
+    [Fact]
+    public void MutagenEncodingProvider()
     {
         foreach (var release in Enums<GameRelease>.Values
                      .Where(x => x != GameRelease.Oblivion))
         {
             foreach (var lang in Enums<Language>.Values)
             {
-                sut.GetEncoding(release, lang).Should().NotBeNull();
+                MutagenEncoding.GetEncoding(release, lang).Should().NotBeNull();
             }
         }
     }
@@ -126,27 +107,33 @@ public class EnumCompletenessTests
             cat.HasFormVersion();
         }
     }
-    #endregion
-
-    #region MyDocumentsString
-    [Fact]
-    public void MyDocumentsString()
+    
+    public void IncludesMasterReferenceDataSubrecords()
     {
-        foreach (var release in Enums<GameRelease>.Values)
+        foreach (var cat in Enums<GameCategory>.Values)
         {
-            IniPathLookup.ToMyDocumentsString(release);
+            cat.IncludesMasterReferenceDataSubrecords();
         }
     }
     #endregion
 
-    #region ToIniName
-    [Fact]
-    public void ToIniName()
+    #region PluginListingsPathProvider
+
+    [Theory, DefaultAutoData]
+    public void PluginListingsPathProviderTest(PluginListingsPathProvider prov)
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
-            IniPathLookup.ToIniName(release);
+            try
+            {
+                prov.GetGameFolder(release).Should().NotBeEmpty();
+            }
+            catch (ArgumentException)
+            {
+                // Acceptable
+            }
         }
     }
+
     #endregion
 }

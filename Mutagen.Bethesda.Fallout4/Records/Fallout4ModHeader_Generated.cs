@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,19 +53,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public Fallout4ModHeader.HeaderFlag Flags { get; set; } = default;
+        public Fallout4ModHeader.HeaderFlag Flags { get; set; } = default(Fallout4ModHeader.HeaderFlag);
         #endregion
         #region FormID
-        public UInt32 FormID { get; set; } = default;
+        public UInt32 FormID { get; set; } = default(UInt32);
         #endregion
         #region Version
-        public Int32 Version { get; set; } = default;
+        public Int32 Version { get; set; } = default(Int32);
         #endregion
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
@@ -1433,13 +1434,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 20,
-            version: 0);
-
-        public const string GUID = "84816323-6afc-412f-a0ef-8dff92fbb30b";
-
         public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 16;
@@ -1488,13 +1482,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.TNAM,
                 RecordTypes.INTV,
                 RecordTypes.INCC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1532,11 +1526,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFallout4ModHeader item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FormID = default;
-            item.Version = default;
-            item.FormVersion = default;
-            item.Version2 = default;
+            item.Flags = default(Fallout4ModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
@@ -2042,7 +2036,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     }
                     else
@@ -2394,7 +2388,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     Fallout4ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -2438,7 +2433,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2448,7 +2443,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IFallout4ModHeader item);
+            IFallout4ModHeader item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2700,7 +2696,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return default(int?);

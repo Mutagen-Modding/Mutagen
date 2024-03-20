@@ -44,7 +44,7 @@ public partial class Cell
 
 partial class CellBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryCombinedMeshLogicCustom(MutagenFrame frame, ICellInternal item)
+    public static partial ParseResult FillBinaryCombinedMeshLogicCustom(MutagenFrame frame, ICellInternal item, PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.XCRI);
         var meshCount = frame.ReadUInt32();
@@ -292,11 +292,6 @@ partial class CellBinaryWriteTranslation
     {
         try
         {
-            if (obj.FormKey.ID == 0xDB41)
-            {
-                int wer = 23;
-                wer++;
-            }
             var navMeshes = obj.NavigationMeshes;
             var landscape = obj.Landscape;
             if ((obj.Persistent?.Count ?? 0) == 0
@@ -408,7 +403,7 @@ partial class CellBinaryOverlay
 
     public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; private set; } = Array.Empty<ICellCombinedMeshReferenceGetter>();
 
-    public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecordHeader(RecordTypes.XCRI);
         var meshCount = stream.ReadUInt32();
@@ -496,7 +491,10 @@ partial class CellBinaryOverlay
         return ret;
     }
 
-    partial void CustomEnd(OverlayStream stream, int finalPos, int _)
+    partial void CustomEnd(
+        OverlayStream stream,
+        int finalPos,
+        int offset)
     {
         if (stream.Complete) return;
         var startPos = stream.Position;

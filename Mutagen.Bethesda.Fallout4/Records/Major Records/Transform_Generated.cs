@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,13 +56,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Scale
-        public Single Scale { get; set; } = default;
+        public Single Scale { get; set; } = default(Single);
         #endregion
         #region ZoomMin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -90,7 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region DATADataTypeState
-        public Transform.DATADataType DATADataTypeState { get; set; } = default;
+        public Transform.DATADataType DATADataTypeState { get; set; } = default(Transform.DATADataType);
         #endregion
 
         #region To String
@@ -528,9 +529,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Transform_Registration.TriggeringRecordType;
-        public Transform(FormKey formKey)
+        public Transform(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -539,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -553,12 +557,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Transform(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Transform(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -894,13 +902,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 35,
-            version: 0);
-
-        public const string GUID = "2957e8d6-f4f9-4ed0-8244-a771d9d30460";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -937,13 +938,13 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.TRNS,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TransformBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -981,12 +982,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ITransformInternal item)
         {
             ClearPartial();
-            item.Position = default;
-            item.Rotation = default;
-            item.Scale = default;
-            item.ZoomMin = default;
-            item.ZoomMax = default;
-            item.DATADataTypeState = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.Scale = default(Single);
+            item.ZoomMin = default(Single);
+            item.ZoomMax = default(Single);
+            item.DATADataTypeState = default(Transform.DATADataType);
             base.Clear(item);
         }
         
@@ -1296,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Transform(formKey);
+            var newRec = new Transform(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1751,27 +1752,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         #endregion
         #region Scale
         private int _ScaleLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _DATALocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default;
+        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default(Single);
         #endregion
         #region ZoomMin
         private int _ZoomMinLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ZoomMin_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMin => _ZoomMin_IsSet ? _recordData.Slice(_ZoomMinLocation, 4).Float() : default;
+        public Single ZoomMin => _ZoomMin_IsSet ? _recordData.Slice(_ZoomMinLocation, 4).Float() : default(Single);
         #endregion
         #region ZoomMax
         private int _ZoomMaxLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ZoomMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMax => _ZoomMax_IsSet ? _recordData.Slice(_ZoomMaxLocation, 4).Float() : default;
+        public Single ZoomMax => _ZoomMax_IsSet ? _recordData.Slice(_ZoomMaxLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

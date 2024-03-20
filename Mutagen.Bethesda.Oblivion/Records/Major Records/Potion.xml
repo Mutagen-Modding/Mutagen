@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Potion" objType="Record" recordType="ALCH" baseClass="OblivionMajorRecord" GUID="f28ef4d6-1e08-4aab-a73e-af679ad7a30f" ID="98">
+  <Object name="Potion" objType="Record" recordType="ALCH" baseClass="OblivionMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -12,7 +12,7 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
   </Object>
-  <Object name="PotionData" objType="Subrecord" recordType="ENIT" GUID="bbd59739-d2a2-4702-93dc-71ffd5a4310e" ID="202">
+  <Object name="PotionData" objType="Subrecord" recordType="ENIT">
     <Fields>
       <UInt32 name="Value" />
       <Enum name="Flags" enumName="IngredientFlag" byteLength="4" />

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ReverbClass
-        public ReverbClass ReverbClass { get; set; } = default;
+        public ReverbClass ReverbClass { get; set; } = default(ReverbClass);
         #endregion
         #region Descriptor
         private readonly IFormLink<ISoundDescriptorGetter> _Descriptor = new FormLink<ISoundDescriptorGetter>();
@@ -659,13 +660,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 664,
-            version: 0);
-
-        public const string GUID = "907193d5-2f3b-46f9-ae1d-88aea8fb21b4";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -704,8 +698,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(MappingSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -743,7 +735,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMappingSound item)
         {
             ClearPartial();
-            item.ReverbClass = default;
+            item.ReverbClass = default(ReverbClass);
             item.Descriptor.Clear();
         }
         

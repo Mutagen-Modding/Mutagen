@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SnapTemplate" recordType="STMP" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <FormLink name="Parent" refName="SnapTemplate" recordType="PNAM" />
+      <RefList name="Nodes" refName="SnapNodeEntry" />
+      <RefList name="ParentNodes" refName="SnapParentNodeEntry" />
+      <Array name="BNAM" fixedSize="6" unknown="true" recordType="BNAM" >
+        <Float />
+      </Array>
+      <UInt32 name="NextNodeID" recordType="INAM" />
+      <UInt32 name="STPT" recordType="STPT" unknown="true" />
+      <String name="CNAM" recordType="CNAM" unknown="true" />
+      <RefList name="SnapTemplateRnamTraversal" refName="SnapTemplateRnamTraversal" />
+    </Fields>
+  </Object>
+  <Object name="SnapNodeEntry" objType="Subrecord" recordType="ENAM">
+    <Fields>
+      <UInt32 name="NodeID" />
+      <FormLink name="Node" refName="SnapTemplateNode" />
+      <P3Float name="Offset" />
+      <P3Float name="Rotation" />
+      <UInt64 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="SnapParentNodeEntry" objType="Subrecord">
+    <Fields>
+      <UInt32 name="NodeID" recordType="ONAM" />
+      <RefDirect name="OffsetRotation" refName="OffsetRotation" recordType="TNAM" />
+    </Fields>
+  </Object>
+  <Object name="SnapTemplateRnamTraversal" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Traversal" refName="Traversal" recordType="RNAM" />
+      <List name="NodeIDs" >
+        <UInt32 recordType="SNAM" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

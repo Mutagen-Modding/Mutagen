@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -1726,13 +1727,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 25,
-            version: 0);
-
-        public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
-
         public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 22;
@@ -1792,13 +1786,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FGGA,
                 RecordTypes.FGTS,
                 RecordTypes.SNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2537,7 +2531,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2692,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IHairGetter>>();
                     }
                     else
@@ -2719,7 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IEyeGetter>>();
                     }
                     else
@@ -3519,7 +3513,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SPLO,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.Spells;
@@ -3592,7 +3586,7 @@ namespace Mutagen.Bethesda.Oblivion
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }

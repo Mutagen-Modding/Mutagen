@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,40 +51,40 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Density
-        public Byte Density { get; set; } = default;
+        public Byte Density { get; set; } = default(Byte);
         #endregion
         #region MinSlope
-        public Byte MinSlope { get; set; } = default;
+        public Byte MinSlope { get; set; } = default(Byte);
         #endregion
         #region MaxSlope
-        public Byte MaxSlope { get; set; } = default;
+        public Byte MaxSlope { get; set; } = default(Byte);
         #endregion
         #region Fluff1
-        public Byte Fluff1 { get; set; } = default;
+        public Byte Fluff1 { get; set; } = default(Byte);
         #endregion
         #region UnitFromWaterAmount
-        public UInt16 UnitFromWaterAmount { get; set; } = default;
+        public UInt16 UnitFromWaterAmount { get; set; } = default(UInt16);
         #endregion
         #region Fluff2
-        public UInt16 Fluff2 { get; set; } = default;
+        public UInt16 Fluff2 { get; set; } = default(UInt16);
         #endregion
         #region UnitFromWaterMode
-        public Grass.UnitFromWaterType UnitFromWaterMode { get; set; } = default;
+        public Grass.UnitFromWaterType UnitFromWaterMode { get; set; } = default(Grass.UnitFromWaterType);
         #endregion
         #region PositionRange
-        public Single PositionRange { get; set; } = default;
+        public Single PositionRange { get; set; } = default(Single);
         #endregion
         #region HeightRange
-        public Single HeightRange { get; set; } = default;
+        public Single HeightRange { get; set; } = default(Single);
         #endregion
         #region ColorRange
-        public Single ColorRange { get; set; } = default;
+        public Single ColorRange { get; set; } = default(Single);
         #endregion
         #region WavePeriod
-        public Single WavePeriod { get; set; } = default;
+        public Single WavePeriod { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Grass.GrassFlag Flags { get; set; } = default;
+        public Grass.GrassFlag Flags { get; set; } = default(Grass.GrassFlag);
         #endregion
 
         #region To String
@@ -1004,13 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 191,
-            version: 0);
-
-        public const string GUID = "a9d48b61-993d-4ffd-903d-0df457ae9dff";
-
         public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 12;
@@ -1049,8 +1043,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(GrassDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1088,18 +1080,18 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IGrassData item)
         {
             ClearPartial();
-            item.Density = default;
-            item.MinSlope = default;
-            item.MaxSlope = default;
-            item.Fluff1 = default;
-            item.UnitFromWaterAmount = default;
-            item.Fluff2 = default;
-            item.UnitFromWaterMode = default;
-            item.PositionRange = default;
-            item.HeightRange = default;
-            item.ColorRange = default;
-            item.WavePeriod = default;
-            item.Flags = default;
+            item.Density = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Fluff1 = default(Byte);
+            item.UnitFromWaterAmount = default(UInt16);
+            item.Fluff2 = default(UInt16);
+            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
+            item.PositionRange = default(Single);
+            item.HeightRange = default(Single);
+            item.ColorRange = default(Single);
+            item.WavePeriod = default(Single);
+            item.Flags = default(Grass.GrassFlag);
         }
         
         #region Mutagen

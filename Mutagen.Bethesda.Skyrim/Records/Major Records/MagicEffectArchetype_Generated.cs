@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -45,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetype
     {
         #region Type
-        public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
+        public MagicEffectArchetype.TypeEnum Type { get; set; } = default(MagicEffectArchetype.TypeEnum);
         #endregion
         #region Association
         private readonly IFormLink<ISkyrimMajorRecordGetter> _Association = new FormLink<ISkyrimMajorRecordGetter>();
@@ -611,13 +612,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 108,
-            version: 0);
-
-        public const string GUID = "4a9ea74b-5a0a-4630-96f8-cb34dc5b1207";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 3;
@@ -649,8 +643,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -688,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMagicEffectArchetype item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MagicEffectArchetype.TypeEnum);
             item.Association.Clear();
             base.Clear(item);
         }

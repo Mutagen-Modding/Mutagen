@@ -70,12 +70,12 @@ partial class QuestCommon
 
 partial class QuestBinaryCreateTranslation
 {
-    public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
     }
 
-    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         var nextHeader = frame.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
@@ -87,7 +87,7 @@ partial class QuestBinaryCreateTranslation
         return null;
     }
 
-    public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         // Skip
         frame.ReadSubrecord();
@@ -130,12 +130,12 @@ partial class QuestBinaryOverlay
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
     public IReadOnlyList<IConditionGetter> EventConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void DialogConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         DialogConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
-    public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var nextHeader = stream.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
@@ -148,7 +148,7 @@ partial class QuestBinaryOverlay
         return null;
     }
 
-    public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecord();
         return null;

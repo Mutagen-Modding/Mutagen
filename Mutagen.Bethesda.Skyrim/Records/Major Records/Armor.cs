@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -18,7 +19,7 @@ public partial class Armor
 
 partial class ArmorBinaryCreateTranslation
 {
-    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorInternal item)
+    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorInternal item, PreviousParse lastParsed)
     {
         item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
     }
@@ -41,7 +42,7 @@ partial class ArmorBinaryOverlay
     public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_recordData.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
     public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
-    partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void BodyTemplateCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _BodyTemplateLocation = (stream.Position - offset);
     }

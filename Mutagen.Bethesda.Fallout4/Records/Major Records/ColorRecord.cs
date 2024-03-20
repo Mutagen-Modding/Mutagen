@@ -14,6 +14,12 @@ namespace Mutagen.Bethesda.Fallout4;
 partial class ColorRecord
 {
     [Flags]
+    public enum MajorFlag
+    {
+        NonPlayable = 0x02,
+    }
+    
+    [Flags]
     public enum Flag
     {
         Playable = 0x01,
@@ -29,7 +35,8 @@ partial class ColorRecordBinaryCreateTranslation
 
     public static partial void FillBinaryDataCustom(
         MutagenFrame frame,
-        IColorRecordInternal item)
+        IColorRecordInternal item,
+        PreviousParse lastParsed)
     {
         var cnam = frame.ReadSubrecord(RecordTypes.CNAM, readSafe: true);
         var pos = frame.Position;
@@ -54,7 +61,7 @@ partial class ColorRecordBinaryCreateTranslation
         frame.Position = pos;
     }
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IColorRecordInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IColorRecordInternal item, PreviousParse lastParsed)
     {
         var fnam = frame.ReadSubrecord(RecordTypes.FNAM);
         var val = fnam.AsInt32();
@@ -131,7 +138,7 @@ partial class ColorRecordBinaryOverlay
 
     partial void DataCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _cnamLocation = (stream.Position - offset);
@@ -139,7 +146,7 @@ partial class ColorRecordBinaryOverlay
 
     partial void FlagsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _fnamLocation = (stream.Position - offset);

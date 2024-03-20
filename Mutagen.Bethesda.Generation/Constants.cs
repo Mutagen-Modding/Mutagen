@@ -10,4 +10,5 @@ public class Constants
     public readonly static string ByteLength = "byteLength";
     public readonly static string ImportantByteLength = "importantByteLength"; 
     public readonly static string CustomFallback = "customRecordFallback";
+    public readonly static string ShortCircuit = "shortCircuit";
 }

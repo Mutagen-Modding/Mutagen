@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AComponent" objType="Subrecord" endMarkerType="BFCE" abstract="true" abstractSplitter="true">
+    <Fields>
+      <CustomLogic name="BFCBString" recordType="BFCB" />
+    </Fields>
+  </Object>
+  <Object name="AnimationGraphComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <String name="ANAM" recordType="ANAM" nullable="true" />
+      <String name="BNAM" recordType="BNAM" nullable="true" />
+      <String name="CNAM" recordType="CNAM" nullable="true" />
+      <String name="DNAM" recordType="DNAM" nullable="true" />
+      <String name="ENAM" recordType="ENAM" nullable="true" binaryType="NullTerminateIfNotEmpty" />
+    </Fields>
+  </Object>
+  <Object name="AttachParentArrayComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <List name="Slots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ActivityTrackerComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Activities" refName="Activity" counterRecType="ATCP" />
+    </Fields>
+  </Object>
+  <Object name="ScannableComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="KeywordFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ObjectWindowFilterComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="INTV" recordType="INTV" unknown="true" />
+      <String name="FLTR" recordType="FLTR" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ContactShadowComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" refName="ContactShadowComponentItem" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ContactShadowComponentItem" objType="Subrecord" recordType="FLCS">
+    <Fields>
+      <Float name="Unknown1" unknown="true" />
+      <Float name="Unknown2" unknown="true" />
+      <Float name="Unknown3" unknown="true" />
+      <Float name="Unknown4" unknown="true" />
+      <Float name="Unknown5" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="FullNameComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="ModelComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="XMPM" refName="PlanetModelComponentXMPM" />
+      <String name="RingModel" recordType="MCQP" />
+      <String name="RingMaterial" recordType="XMSP" />
+      <String name="RingId" recordType="XLMS" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponentXMPM" objType="Subrecord" recordType="XMPM">
+    <Fields>
+      <List name="UnknownStrings" counterLength="2">
+        <String binaryType="PrependLengthUShort" />
+      </List>
+      <RefList name="UnknownSubItems" counterLength="2" refName="PlanetModelComponentXMPMSubItem" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponentXMPMSubItem" objType="Subrecord">
+    <Fields>
+      <String name="Unknown1" binaryType="PrependLengthUShort" />
+      <Int32 name="Unknown2" />
+      <String name="Unknown3" binaryType="NullTerminate" />
+      <Int32 name="Unknown4" />
+    </Fields>
+  </Object>
+  <Object name="HoudiniDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="PCCC" recordType="PCCC" unknown="true" overflowRecordType="XXXX" />
+    </Fields>
+  </Object>
+  <Object name="SkinFormComponent" objType="Subrecord" baseClass="AComponent" />
+  <Object name="BodyPartInfoComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="EffectSequenceComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="LightAttachmentFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="LightAnimFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="PTCL" recordType="PTCL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ParticleSystemComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="PTCL" recordType="PTCL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="LodOwnerComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SoundTagComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+    </Fields>
+  </Object>
+  <Object name="DisplayCaseComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" recordType="DCSD" refName="DisplayCaseComponentItem" />
+      <List name="DCED" recordType="DCED" >
+        <UInt32 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="DisplayCaseComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="DisplayFilter" refName="FormList" />
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Index" />
+      <UInt32 name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="ObjectPaletteDefaultsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+    </Fields>
+  </Object>
+  <Object name="VolumesComponent" objType="Subrecord" baseClass="AComponent" >
+    <Fields>
+      <RefList name="Items" refName="VolumesComponentItem" counterLength="4" recordType="VLMS" />
+    </Fields>
+  </Object>
+  <Object name="VolumesComponentItem" objType="Subrecord" >
+    <Fields>
+      <CustomLogic name="TypeParse" byteLength="4" />
+      <RefDirect name="Matrix1" refName="VolumesMatrix" />
+      <RefDirect name="Matrix2" refName="VolumesMatrix" />
+      <RefDirect name="Matrix3" refName="VolumesMatrix" />
+      <RefDirect name="Matrix4" refName="VolumesMatrix" />
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <RefDirect name="Ender" refName="AVolumesUnknownEnder" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="VolumesMatrix" objType="Subrecord" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+    </Fields>
+  </Object>
+  <Object name="AVolumesUnknownEnder" abstract="true" objType="Subrecord" >
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderSingle" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderDouble" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderTrio" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+    </Fields>
+  </Object>
+  <Object name="PlanetContentManagerContentPropertiesComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <UInt32 name="ZNAM" recordType="ZNAM" unknown="true" />
+      <UInt8 name="YNAM" recordType="YNAM" unknown="true" />
+      <UInt32 name="XNAM" recordType="XNAM" unknown="true" />
+      <UInt32 name="WNAM" recordType="WNAM" unknown="true" />
+      <UInt8 name="VNAM" recordType="VNAM" unknown="true" />
+      <UInt32 name="UNAM" recordType="UNAM" unknown="true" />
+      <Float name="NAM1" recordType="NAM1" unknown="true" />
+      <FormLink name="Global" recordType="NAM2" refName="Global" />
+      <UInt32 name="NAM3" recordType="NAM3" unknown="true" />
+      <ByteArray name="NAM4" recordType="NAM4" unknown="true" />
+      <UInt32 name="NAM5" recordType="NAM5" unknown="true" />
+      <UInt32 name="NAM6" recordType="NAM6" unknown="true" />
+      <UInt32 name="NAM7" recordType="NAM7" unknown="true" />
+      <UInt8 name="NAM8" recordType="NAM8" unknown="true" />
+      <UInt32 name="NAM9" recordType="NAM9" unknown="true" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+  <Object name="ShipManagementComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="ExternalDataSourceComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="ExternalBaseTemplate" recordType="EXDC" >
+        <Interface>IExternalBaseTemplate</Interface>
+      </FormLink>
+      <RefList name="Sources" refName="ExternalDataSource" counterRecType="EXDZ" allowNoCounter="false" nullable="false" />
+      <List name="EXASs" counterRecType="EXAC" allowNoCounter="false" nullable="false" >
+        <String recordType="EXAS" />
+      </List>
+      <String name="EXBS" recordType="EXBS" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ExternalDataSource" objType="Subrecord" >
+    <Fields>
+      <String name="Name" recordType="EXCN" nullable="false" />
+      <FormLink name="Source" recordType="EXCI" nullable="false" >
+        <Interface>IExternalBaseTemplate</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="ForcedLocRefTypeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="LinkedVoiceTypeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="VoiceType" recordType="FCTF" refName="VoiceType" />
+    </Fields>
+  </Object>
+  <Object name="PapyrusScriptsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="PathingDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="PropertySheetComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipAIActorComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="SpaceshipAIActor" recordType="SAIA" refName="Npc" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipEquipmentComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="ESSF" recordType="ESSF" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipWeaponBindingsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data recordType="SHWB" >
+        <Fields>
+          <Int32 name="Slot1" />
+          <Int32 name="Slot2" />
+          <Int32 name="Slot3" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="FormLinkDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Links" refName="FormLinkComponentLink" counterRecType="ITMC" />
+    </Fields>
+  </Object>
+  <Object name="FormLinkComponentLink" objType="Subrecord">
+    <Fields>
+      <FormLink name="Keyword" refName="Keyword" recordType="FLKW" />
+      <FormLink name="LinkedForm" refName="StarfieldMajorRecord" recordType="FLFM" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" refName="BlueprintComponentItem" recordType="BUO4" />
+      <RefList name="BODSRows" refName="BlueprintComponentBODSRow" counterRecType="BODM" allowNoCounter="false" nullable="false" />
+      <UInt8 name="BLUF" recordType="BLUF" unknown="true" />
+      <UInt32 name="NextPartID" recordType="BOID" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="BaseItem" refName="GenericBaseForm" />
+      <FormLink name="ConstructionObject" refName="ConstructibleObject" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+      <UInt32 name="PartID" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentBODSRow" objType="Subrecord" >
+    <Fields>
+      <RefList name="BODSItems" refName="BlueprintComponentBODSItem" counterRecType="BODC" allowNoCounter="false" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentBODSItem" objType="Subrecord" >
+    <Fields>
+      <String name="Name" recordType="BODS" nullable="false" />
+      <Data recordType="BODV" >
+        <Fields>
+          <Color name="Color1" binaryType="NoAlphaFloat" unknown="true" />
+          <Color name="Color2" binaryType="NoAlphaFloat" unknown="true" />
+          <Color name="Color3" binaryType="NoAlphaFloat" unknown="true" />
+          <Int32 name="Unknown" unknown="true" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="DestructibleObjectComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="Destructible" refName="Destructible" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ContainerComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+    </Fields>
+  </Object>
+  <Object name="MagicTargetFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="StoredTraversalsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data recordType="STRD" overflowRecordType="XXXX">
+        <Fields>
+          <RefList name="Traversals" counterLength="4" refName="TraversalReference" />
+          <RefList name="ActivatorTraversals" counterLength="4" refName="StoredTraversalsComponentItem" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="StoredTraversalsComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Activator" refName="Activator" />
+      <P3Float name="Vector" />
+      <RefList name="Traversals" counterLength="4" refName="TraversalReference" />
+    </Fields>
+  </Object>
+  <Object name="AddToInventoryOnDestroyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="Item" refName="LeveledItem" recordType="INAM" />
+    </Fields>
+  </Object>
+  <Object name="CrowdComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Float name="CDND" recordType="CDND" unknown="true" />
+      <ByteArray name="CDNS" recordType="CDNS" unknown="true" />
+      <RefList name="Items" refName="CrowdComponentItem" />
+    </Fields>
+  </Object>
+  <Object name="CrowdComponentItem" objType="Subrecord" >
+    <Fields>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <String name="STRV" recordType="STRV" unknown="true" />
+      <Float name="FLTV" recordType="FLTV" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipHullCodeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <String name="HullCode" recordType="HULL" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="PrimitiveComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="SpawnOnDestroyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="SpawnOnDestroy" recordType="SODA" >
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="WorldSpaceOverlayComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="SNAM" recordType="SNAM" unknown="true" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <FormLink name="SurfaceBlock" recordType="BNAM" refName="SurfaceBlock" />
+    </Fields>
+  </Object>
+  <Object name="ReflectionProbesComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ImageSpaceModifiableFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="ImageSpaceAdapter" recordType="MNAM" refName="ImageSpaceAdapter" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareAttachmentFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="MaterialPropertyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="WorkshopItemColorComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="SpacePhysicsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="BlockEditorMetaDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <String name="UnknownString1" binaryType="PrependLength" />
+          <UInt8 name="UnknownByte" />
+          <String name="UnknownString2" binaryType="PrependLength" />
+          <String name="UnknownString3" binaryType="PrependLength" />
+          <List name="UnknownInts" counterLength="4" >
+            <Int32 />
+          </List>
+          <Int32 name="UnknownInt1" />
+          <Int32 name="UnknownInt2" />
+          <Int32 name="UnknownInt3" />
+          <Int32 name="UnknownInt4" />
+          <ByteArray name="UnknownEnding" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="BlockCellHeightGridComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="DATA" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="BlockHeightAdjustmentComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="DAT2" nullable="False">
+        <RefDirect refName="BlockHeightAdjustmentComponentItem" />
+      </Array2D>
+    </Fields>
+  </Object>
+  <Object name="BlockHeightAdjustmentComponentItem" objType="Subrecord">
+    <Fields>
+      <Float name="Float1" />
+      <Float name="Float2" />
+    </Fields>
+  </Object>
+  <Object name="UniqueOverlayListComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Worldspaces" refName="UniqueOverlayListComponentItem" recordType="DATA" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="UniqueOverlayListComponentItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" />
+      <P2Float name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="UniquePatternPlacementInfoComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <FormLink name="Planet" refName="Planet" />
+          <Double name="Longitude" />
+          <Double name="Latitude" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Patterns" refName="SurfaceTreePatternSwapInfoComponentItem" recordType="DATA" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatternSwapInfoComponentItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="SurfacePattern" refName="SurfacePattern" />
+      <Int32 name="Unknown" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt64 name="Unknown1" />
+          <Float name="MassInSm" divisor="1.98847E30" multiplier="1" />
+          <Float name="RadiusInKm" />
+          <Float name="Unknown2" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="StarDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <String name="CatalogueId" binaryType="PrependLength" />
+          <String name="SpectralClass" binaryType="PrependLength" />
+          <Float name="Magnitude" />
+          <Float name="MassInSm" divisor="1.98847E30" multiplier="1" />
+          <Float name="InnerHabitableZone" />
+          <Float name="OuterHabitableZone" />
+          <UInt32 name="HIP" />
+          <UInt32 name="Radius" />
+          <UInt32 name="TemperatureInK" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="OrbitalDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

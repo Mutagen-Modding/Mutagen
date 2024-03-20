@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -76,28 +77,28 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Duration
-        public Single Duration { get; set; } = default;
+        public Single Duration { get; set; } = default(Single);
         #endregion
         #region Orientation
-        public Impact.OrientationType Orientation { get; set; } = default;
+        public Impact.OrientationType Orientation { get; set; } = default(Impact.OrientationType);
         #endregion
         #region AngleThreshold
-        public Single AngleThreshold { get; set; } = default;
+        public Single AngleThreshold { get; set; } = default(Single);
         #endregion
         #region PlacementRadius
-        public Single PlacementRadius { get; set; } = default;
+        public Single PlacementRadius { get; set; } = default(Single);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region NoDecalData
-        public Boolean NoDecalData { get; set; } = default;
+        public Boolean NoDecalData { get; set; } = default(Boolean);
         #endregion
         #region Result
-        public Impact.ResultType Result { get; set; } = default;
+        public Impact.ResultType Result { get; set; } = default(Impact.ResultType);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Decal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -883,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -892,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1276,13 +1277,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 439,
-            version: 0);
-
-        public const string GUID = "d508129e-9303-4d72-bbb5-dc4abc363372";
-
         public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
@@ -1326,13 +1320,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SNAM,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImpactBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1371,14 +1365,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Model = null;
-            item.Duration = default;
-            item.Orientation = default;
-            item.AngleThreshold = default;
-            item.PlacementRadius = default;
-            item.SoundLevel = default;
-            item.NoDecalData = default;
-            item.Result = default;
-            item.Unknown = default;
+            item.Duration = default(Single);
+            item.Orientation = default(Impact.OrientationType);
+            item.AngleThreshold = default(Single);
+            item.PlacementRadius = default(Single);
+            item.SoundLevel = default(SoundLevel);
+            item.NoDecalData = default(Boolean);
+            item.Result = default(Impact.ResultType);
+            item.Unknown = default(Int16);
             item.Decal = null;
             item.TextureSet.Clear();
             item.SecondaryTextureSet.Clear();
@@ -2492,7 +2486,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default(Single);
         #endregion
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
@@ -2502,12 +2496,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default(Single);
         #endregion
         #region PlacementRadius
         private int _PlacementRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
@@ -2517,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NoDecalData
         private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
         private bool _NoDecalData_IsSet => _DATALocation.HasValue;
-        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Result
         private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
@@ -2527,7 +2521,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;

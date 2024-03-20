@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,25 +51,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Aggression
-        public Byte Aggression { get; set; } = default;
+        public Byte Aggression { get; set; } = default(Byte);
         #endregion
         #region Confidence
-        public Byte Confidence { get; set; } = default;
+        public Byte Confidence { get; set; } = default(Byte);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Byte Responsibility { get; set; } = default;
+        public Byte Responsibility { get; set; } = default(Byte);
         #endregion
         #region BuySellServices
-        public Npc.BuySellServiceFlag BuySellServices { get; set; } = default;
+        public Npc.BuySellServiceFlag BuySellServices { get; set; } = default(Npc.BuySellServiceFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default;
+        public Skill Teaches { get; set; } = default(Skill);
         #endregion
         #region MaximumTrainingLevel
-        public Byte MaximumTrainingLevel { get; set; } = default;
+        public Byte MaximumTrainingLevel { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -824,13 +825,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 184,
-            version: 0);
-
-        public const string GUID = "0776da7a-c4ea-4359-86dc-ef07a4bc558e";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -869,8 +863,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(CreatureAIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -908,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICreatureAIData item)
         {
             ClearPartial();
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.BuySellServices = default;
-            item.Teaches = default;
-            item.MaximumTrainingLevel = default;
+            item.Aggression = default(Byte);
+            item.Confidence = default(Byte);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Byte);
+            item.BuySellServices = default(Npc.BuySellServiceFlag);
+            item.Teaches = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
         }
         
         #region Mutagen

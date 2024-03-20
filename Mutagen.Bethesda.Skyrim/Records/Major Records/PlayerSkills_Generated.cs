@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -68,22 +69,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Health
-        public UInt16 Health { get; set; } = default;
+        public UInt16 Health { get; set; } = default(UInt16);
         #endregion
         #region Magicka
-        public UInt16 Magicka { get; set; } = default;
+        public UInt16 Magicka { get; set; } = default(UInt16);
         #endregion
         #region Stamina
-        public UInt16 Stamina { get; set; } = default;
+        public UInt16 Stamina { get; set; } = default(UInt16);
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region FarAwayModelDistance
-        public Single FarAwayModelDistance { get; set; } = default;
+        public Single FarAwayModelDistance { get; set; } = default(Single);
         #endregion
         #region GearedUpWeapons
-        public Byte GearedUpWeapons { get; set; } = default;
+        public Byte GearedUpWeapons { get; set; } = default(Byte);
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1120,13 +1121,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 209,
-            version: 0);
-
-        public const string GUID = "c03007ea-a1f3-4964-aa68-166d211a5176";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -1165,8 +1159,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PlayerSkillsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1206,12 +1198,12 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.SkillValues.Clear();
             item.SkillOffsets.Clear();
-            item.Health = default;
-            item.Magicka = default;
-            item.Stamina = default;
-            item.Unused = default;
-            item.FarAwayModelDistance = default;
-            item.GearedUpWeapons = default;
+            item.Health = default(UInt16);
+            item.Magicka = default(UInt16);
+            item.Stamina = default(UInt16);
+            item.Unused = default(UInt16);
+            item.FarAwayModelDistance = default(Single);
+            item.GearedUpWeapons = default(Byte);
             item.Unused2 = new byte[3];
         }
         

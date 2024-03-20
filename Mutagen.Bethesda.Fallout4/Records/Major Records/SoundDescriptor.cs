@@ -25,7 +25,7 @@ partial class SoundDescriptorBinaryCreateTranslation
         AutoWeapon = 0xED157AE3 
     }
     
-    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, ISoundDescriptorInternal item)
+    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, ISoundDescriptorInternal item, PreviousParse lastParsed)
     {
         if (item.Data == null)
         {
@@ -38,7 +38,7 @@ partial class SoundDescriptorBinaryCreateTranslation
         return null;
     }
 
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, ISoundDescriptorInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, ISoundDescriptorInternal item, PreviousParse lastParsed)
     {
         var cnam = frame.ReadSubrecord(RecordTypes.CNAM);
         var type = (DescriptorType)cnam.AsUInt32();
@@ -87,7 +87,7 @@ partial class SoundDescriptorBinaryOverlay
 {
     private ASoundDescriptor? _descriptor;
 
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var cnam = stream.ReadSubrecord(RecordTypes.CNAM).AsUInt32();
         var type = (SoundDescriptorBinaryCreateTranslation.DescriptorType)cnam;
@@ -102,7 +102,7 @@ partial class SoundDescriptorBinaryOverlay
 
     public partial IASoundDescriptorGetter? GetDataCustom() => _descriptor;
 
-    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_descriptor == null)
         {

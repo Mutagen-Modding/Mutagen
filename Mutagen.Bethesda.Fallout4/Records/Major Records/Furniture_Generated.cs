@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -285,7 +286,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region BenchType
-        public Furniture.BenchTypes BenchType { get; set; } = default;
+        public Furniture.BenchTypes BenchType { get; set; } = default(Furniture.BenchTypes);
         #endregion
         #region UsesSkill
         public Skill? UsesSkill { get; set; }
@@ -380,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
         INavmeshGeometryGetter? IFurnitureGetter.NavmeshGeometry => this.NavmeshGeometry;
         #endregion
         #region WBDTDataTypeState
-        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default;
+        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default(Furniture.WBDTDataType);
         #endregion
 
         #region To String
@@ -1999,9 +2000,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Furniture_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureSetterCommon.Instance.RemapLinks(this, mapping);
-        public Furniture(FormKey formKey)
+        public Furniture(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2010,7 +2014,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -2024,12 +2028,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Furniture(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Furniture(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -2499,13 +2507,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 204,
-            version: 0);
-
-        public const string GUID = "37ea297d-9233-4548-b692-fe2d298b35c4";
-
         public const ushort AdditionalFieldCount = 27;
 
         public const ushort FieldCount = 34;
@@ -2553,11 +2554,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PRPS,
@@ -2587,13 +2583,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.OBTS,
                 RecordTypes.STOP,
                 RecordTypes.NVNM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2647,7 +2643,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Flags = default;
             item.Conditions = null;
             item.Items = null;
-            item.BenchType = default;
+            item.BenchType = default(Furniture.BenchTypes);
             item.UsesSkill = default;
             item.AssociatedForm.Clear();
             item.EnabledEntryPoints = default;
@@ -2657,7 +2653,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
             item.NavmeshGeometry = null;
-            item.WBDTDataTypeState = default;
+            item.WBDTDataTypeState = default(Furniture.WBDTDataType);
             base.Clear(item);
         }
         
@@ -3483,7 +3479,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Furniture(formKey);
+            var newRec = new Furniture(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3665,7 +3661,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3895,7 +3891,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4512,11 +4508,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -4583,7 +4574,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Furniture_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
@@ -4618,7 +4610,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -4649,7 +4642,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryEnabledEntryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Furniture_FieldIndex.EnabledEntryPoints;
                 }
                 case RecordTypeInts.FNPR:
@@ -4674,7 +4668,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryMarkerParametersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Furniture_FieldIndex.MarkerParameters;
                 }
                 case RecordTypeInts.APPR:
@@ -4710,7 +4705,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4726,19 +4721,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFlags2Custom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryEnabledEntryPointsCustom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryMarkerParametersCustom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -4845,7 +4844,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Furniture.Flag? GetFlagsCustom();
         public Furniture.Flag? Flags => GetFlagsCustom();
@@ -4855,7 +4854,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags2
         public partial ParseResult Flags2CustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _WBDTLocation;
         public Furniture.WBDTDataType WBDTDataTypeState { get; private set; }
@@ -4884,7 +4884,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region EnabledEntryPoints
         partial void EnabledEntryPointsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom();
         public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
@@ -4897,7 +4897,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MarkerParameters
         partial void MarkerParametersCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -5017,11 +5017,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -5119,7 +5114,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return Flags2CustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -5212,7 +5208,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

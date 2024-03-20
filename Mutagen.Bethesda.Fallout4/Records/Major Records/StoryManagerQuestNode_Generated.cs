@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,10 +56,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public AStoryManagerNode.Flag Flags { get; set; } = default;
+        public AStoryManagerNode.Flag Flags { get; set; } = default(AStoryManagerNode.Flag);
         #endregion
         #region QuestFlags
-        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default;
+        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default(StoryManagerQuestNode.QuestFlag);
         #endregion
         #region MaxConcurrentQuests
         public UInt32? MaxConcurrentQuests { get; set; }
@@ -598,9 +599,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StoryManagerQuestNodeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeSetterCommon.Instance.RemapLinks(this, mapping);
-        public StoryManagerQuestNode(FormKey formKey)
+        public StoryManagerQuestNode(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -609,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -623,12 +627,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public StoryManagerQuestNode(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public StoryManagerQuestNode(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -949,13 +957,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 627,
-            version: 0);
-
-        public const string GUID = "486db3f7-2958-47a7-9344-ac18d213f276";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 16;
@@ -999,13 +1000,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FNAM,
                 RecordTypes.RNAM,
                 RecordTypes.QNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StoryManagerQuestNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1043,8 +1044,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IStoryManagerQuestNodeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.QuestFlags = default;
+            item.Flags = default(AStoryManagerNode.Flag);
+            item.QuestFlags = default(StoryManagerQuestNode.QuestFlag);
             item.MaxConcurrentQuests = default;
             item.MaxNumQuestsToRun = default;
             item.HoursUntilReset = default;
@@ -1449,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new StoryManagerQuestNode(formKey);
+            var newRec = new StoryManagerQuestNode(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

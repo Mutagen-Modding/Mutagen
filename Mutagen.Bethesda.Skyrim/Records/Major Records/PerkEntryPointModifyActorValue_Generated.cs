@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,13 +53,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ActorValue
-        public ActorValue ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default(ActorValue);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Modification
-        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyActorValue.ModificationType);
         #endregion
 
         #region To String
@@ -653,13 +654,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 419,
-            version: 0);
-
-        public const string GUID = "31a6011e-e36a-4837-954e-60ee728f750e";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 8;
@@ -698,8 +692,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointModifyActorValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -737,9 +729,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkEntryPointModifyActorValue item)
         {
             ClearPartial();
-            item.ActorValue = default;
-            item.Value = default;
-            item.Modification = default;
+            item.ActorValue = default(ActorValue);
+            item.Value = default(Single);
+            item.Modification = default(PerkEntryPointModifyActorValue.ModificationType);
             base.Clear(item);
         }
         
@@ -1192,6 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(

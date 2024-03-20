@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,19 +53,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public SkyrimModHeader.HeaderFlag Flags { get; set; } = default;
+        public SkyrimModHeader.HeaderFlag Flags { get; set; } = default(SkyrimModHeader.HeaderFlag);
         #endregion
         #region FormID
-        public UInt32 FormID { get; set; } = default;
+        public UInt32 FormID { get; set; } = default(UInt32);
         #endregion
         #region Version
-        public Int32 Version { get; set; } = default;
+        public Int32 Version { get; set; } = default(Int32);
         #endregion
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
@@ -1271,13 +1272,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 63,
-            version: 0);
-
-        public const string GUID = "5c10abbb-9600-4bd1-ba4c-8a244a69f0be";
-
         public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 14;
@@ -1324,13 +1318,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.XXXX,
                 RecordTypes.INTV,
                 RecordTypes.INCC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1368,11 +1362,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISkyrimModHeader item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FormID = default;
-            item.Version = default;
-            item.FormVersion = default;
-            item.Version2 = default;
+            item.Flags = default(SkyrimModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
@@ -1834,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     }
                     else
@@ -2129,7 +2123,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     SkyrimModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -2157,7 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2167,7 +2162,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            ISkyrimModHeader item);
+            ISkyrimModHeader item,
+            PreviousParse lastParsed);
 
     }
 
@@ -2394,7 +2390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return default(int?);

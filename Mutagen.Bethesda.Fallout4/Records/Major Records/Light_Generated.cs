@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -225,40 +226,40 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Time
-        public Int32 Time { get; set; } = default;
+        public Int32 Time { get; set; } = default(Int32);
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Flags
-        public Light.Flag Flags { get; set; } = default;
+        public Light.Flag Flags { get; set; } = default(Light.Flag);
         #endregion
         #region FalloffExponent
-        public Single FalloffExponent { get; set; } = default;
+        public Single FalloffExponent { get; set; } = default(Single);
         #endregion
         #region FOV
-        public Single FOV { get; set; } = default;
+        public Single FOV { get; set; } = default(Single);
         #endregion
         #region NearClip
-        public Single NearClip { get; set; } = default;
+        public Single NearClip { get; set; } = default(Single);
         #endregion
         #region FlickerPeriod
-        public Single FlickerPeriod { get; set; } = default;
+        public Single FlickerPeriod { get; set; } = default(Single);
         #endregion
         #region FlickerIntensityAmplitude
-        public Single FlickerIntensityAmplitude { get; set; } = default;
+        public Single FlickerIntensityAmplitude { get; set; } = default(Single);
         #endregion
         #region FlickerMovementAmplitude
-        public Single FlickerMovementAmplitude { get; set; } = default;
+        public Single FlickerMovementAmplitude { get; set; } = default(Single);
         #endregion
         #region Constant
-        public Single Constant { get; set; } = default;
+        public Single Constant { get; set; } = default(Single);
         #endregion
         #region Scalar
-        public Single Scalar { get; set; } = default;
+        public Single Scalar { get; set; } = default(Single);
         #endregion
         #region Exponent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -314,7 +315,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FadeValue
-        public Single FadeValue { get; set; } = default;
+        public Single FadeValue { get; set; } = default(Single);
         #endregion
         #region Gobo
         public String? Gobo { get; set; }
@@ -352,7 +353,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound;
         #endregion
         #region DATADataTypeState
-        public Light.DATADataType DATADataTypeState { get; set; } = default;
+        public Light.DATADataType DATADataTypeState { get; set; } = default(Light.DATADataType);
         #endregion
 
         #region To String
@@ -1699,9 +1700,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Light_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LightCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LightSetterCommon.Instance.RemapLinks(this, mapping);
-        public Light(FormKey formKey)
+        public Light(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1710,7 +1714,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1724,12 +1728,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Light(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Light(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -2228,13 +2236,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 196,
-            version: 0);
-
-        public const string GUID = "e0a72b05-9730-493d-96df-7fc91bae436b";
-
         public const ushort AdditionalFieldCount = 31;
 
         public const ushort FieldCount = 38;
@@ -2283,11 +2284,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.PRPS,
                 RecordTypes.FULL,
                 RecordTypes.ICON,
@@ -2298,13 +2294,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.LNAM,
                 RecordTypes.WGDR,
                 RecordTypes.SNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2351,28 +2347,28 @@ namespace Mutagen.Bethesda.Fallout4
             item.Properties = null;
             item.Name = default;
             item.Icons = null;
-            item.Time = default;
-            item.Radius = default;
-            item.Color = default;
-            item.Flags = default;
-            item.FalloffExponent = default;
-            item.FOV = default;
-            item.NearClip = default;
-            item.FlickerPeriod = default;
-            item.FlickerIntensityAmplitude = default;
-            item.FlickerMovementAmplitude = default;
-            item.Constant = default;
-            item.Scalar = default;
-            item.Exponent = default;
-            item.GodRaysNearClip = default;
-            item.Value = default;
-            item.Weight = default;
-            item.FadeValue = default;
+            item.Time = default(Int32);
+            item.Radius = default(UInt32);
+            item.Color = default(Color);
+            item.Flags = default(Light.Flag);
+            item.FalloffExponent = default(Single);
+            item.FOV = default(Single);
+            item.NearClip = default(Single);
+            item.FlickerPeriod = default(Single);
+            item.FlickerIntensityAmplitude = default(Single);
+            item.FlickerMovementAmplitude = default(Single);
+            item.Constant = default(Single);
+            item.Scalar = default(Single);
+            item.Exponent = default(Single);
+            item.GodRaysNearClip = default(Single);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.FadeValue = default(Single);
             item.Gobo = default;
             item.Lens.Clear();
             item.GodRays.Clear();
             item.Sound.Clear();
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(Light.DATADataType);
             base.Clear(item);
         }
         
@@ -3080,7 +3076,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Light(formKey);
+            var newRec = new Light(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3232,7 +3228,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3870,11 +3866,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -3993,7 +3984,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4095,17 +4086,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region Time
         private int _TimeLocation => _DATALocation!.Value.Min;
         private bool _Time_IsSet => _DATALocation.HasValue;
-        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TimeLocation, 4)) : default;
+        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TimeLocation, 4)) : default(Int32);
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadiusLocation, 4)) : default;
+        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadiusLocation, 4)) : default(UInt32);
         #endregion
         #region Color
         private int _ColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Color_IsSet => _DATALocation.HasValue;
-        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
@@ -4115,66 +4106,66 @@ namespace Mutagen.Bethesda.Fallout4
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default(Single);
         #endregion
         #region FOV
         private int _FOVLocation => _DATALocation!.Value.Min + 0x14;
         private bool _FOV_IsSet => _DATALocation.HasValue;
-        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default;
+        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default(Single);
         #endregion
         #region NearClip
         private int _NearClipLocation => _DATALocation!.Value.Min + 0x18;
         private bool _NearClip_IsSet => _DATALocation.HasValue;
-        public Single NearClip => _NearClip_IsSet ? _recordData.Slice(_NearClipLocation, 4).Float() : default;
+        public Single NearClip => _NearClip_IsSet ? _recordData.Slice(_NearClipLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerPeriod
         private int _FlickerPeriodLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _FlickerPeriod_IsSet => _DATALocation.HasValue;
-        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _recordData.Slice(_FlickerPeriodLocation, 4).Float() : default;
+        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _recordData.Slice(_FlickerPeriodLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerIntensityAmplitude
         private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FlickerIntensityAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _recordData.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default;
+        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _recordData.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerMovementAmplitude
         private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FlickerMovementAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _recordData.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default;
+        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _recordData.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region Constant
         private int _ConstantLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Constant_IsSet => _DATALocation.HasValue;
-        public Single Constant => _Constant_IsSet ? _recordData.Slice(_ConstantLocation, 4).Float() : default;
+        public Single Constant => _Constant_IsSet ? _recordData.Slice(_ConstantLocation, 4).Float() : default(Single);
         #endregion
         #region Scalar
         private int _ScalarLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Scalar_IsSet => _DATALocation.HasValue;
-        public Single Scalar => _Scalar_IsSet ? _recordData.Slice(_ScalarLocation, 4).Float() : default;
+        public Single Scalar => _Scalar_IsSet ? _recordData.Slice(_ScalarLocation, 4).Float() : default(Single);
         #endregion
         #region Exponent
         private int _ExponentLocation => _DATALocation!.Value.Min + 0x30;
         private bool _Exponent_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public Single Exponent => _Exponent_IsSet ? _recordData.Slice(_ExponentLocation, 4).Float() : default;
+        public Single Exponent => _Exponent_IsSet ? _recordData.Slice(_ExponentLocation, 4).Float() : default(Single);
         #endregion
         #region GodRaysNearClip
         private int _GodRaysNearClipLocation => _DATALocation!.Value.Min + 0x34;
         private bool _GodRaysNearClip_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public Single GodRaysNearClip => _GodRaysNearClip_IsSet ? _recordData.Slice(_GodRaysNearClipLocation, 4).Float() : default;
+        public Single GodRaysNearClip => _GodRaysNearClip_IsSet ? _recordData.Slice(_GodRaysNearClipLocation, 4).Float() : default(Single);
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min + 0x38;
         private bool _Value_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break1);
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region FadeValue
         private int? _FadeValueLocation;
-        public Single FadeValue => _FadeValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeValueLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FadeValue => _FadeValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeValueLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Gobo
         private int? _GoboLocation;
@@ -4308,11 +4299,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -4388,7 +4374,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

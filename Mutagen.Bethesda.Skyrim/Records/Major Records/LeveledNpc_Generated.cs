@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -78,10 +79,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default;
+        public Byte ChanceNone { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public LeveledNpc.Flag Flags { get; set; } = default;
+        public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
         #endregion
         #region Global
         private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
@@ -643,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1023,13 +1024,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 200,
-            version: 0);
-
-        public const string GUID = "4197e9ea-0f51-44d8-867e-f33c9b48f4c4";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -1073,13 +1067,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.COED,
                 RecordTypes.LLCT,
                 RecordTypes.MODL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1118,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default;
-            item.Flags = default;
+            item.ChanceNone = default(Byte);
+            item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
             item.Entries = null;
             item.Model = null;

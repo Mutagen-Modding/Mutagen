@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,25 +53,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public MagicEffectData.VersioningBreaks Versioning { get; set; } = default;
+        public MagicEffectData.VersioningBreaks Versioning { get; set; } = default(MagicEffectData.VersioningBreaks);
         #endregion
         #region Flags
-        public MagicEffect.MagicFlag Flags { get; set; } = default;
+        public MagicEffect.MagicFlag Flags { get; set; } = default(MagicEffect.MagicFlag);
         #endregion
         #region BaseCost
-        public Single BaseCost { get; set; } = default;
+        public Single BaseCost { get; set; } = default(Single);
         #endregion
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
         #region MagicSchool
-        public MagicSchool MagicSchool { get; set; } = default;
+        public MagicSchool MagicSchool { get; set; } = default(MagicSchool);
         #endregion
         #region Resistance
-        public Resistance Resistance { get; set; } = default;
+        public Resistance Resistance { get; set; } = default(Resistance);
         #endregion
         #region CounterEffectCount
-        public UInt32 CounterEffectCount { get; set; } = default;
+        public UInt32 CounterEffectCount { get; set; } = default(UInt32);
         #endregion
         #region Light
         private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
         #endregion
         #region ProjectileSpeed
-        public Single ProjectileSpeed { get; set; } = default;
+        public Single ProjectileSpeed { get; set; } = default(Single);
         #endregion
         #region EffectShader
         private readonly IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
@@ -1009,13 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 196,
-            version: 0);
-
-        public const string GUID = "5b30822f-ca7b-436d-b0f1-f2cb07b5aee6";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1054,8 +1048,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1093,15 +1085,15 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IMagicEffectData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Flags = default;
-            item.BaseCost = default;
-            item.Unused = default;
-            item.MagicSchool = default;
-            item.Resistance = default;
-            item.CounterEffectCount = default;
+            item.Versioning = default(MagicEffectData.VersioningBreaks);
+            item.Flags = default(MagicEffect.MagicFlag);
+            item.BaseCost = default(Single);
+            item.Unused = default(Int32);
+            item.MagicSchool = default(MagicSchool);
+            item.Resistance = default(Resistance);
+            item.CounterEffectCount = default(UInt32);
             item.Light.Clear();
-            item.ProjectileSpeed = default;
+            item.ProjectileSpeed = default(Single);
             item.EffectShader.Clear();
             item.SubData = null;
         }
@@ -1720,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
         public Single ProjectileSpeed => _structData.Slice(0x1C, 0x4).Float();
         public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
-        public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams));
+        public IMagicEffectSubDataGetter SubData => _structData.Length > 0x24 ? MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams)) : new MagicEffectSubData();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

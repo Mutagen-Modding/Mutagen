@@ -207,7 +207,7 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
+    public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         // Skip counter
         frame.ReadSubrecord();
@@ -310,7 +310,7 @@ partial class DialogTopicBinaryOverlay
         }
     }
 
-    public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
     }

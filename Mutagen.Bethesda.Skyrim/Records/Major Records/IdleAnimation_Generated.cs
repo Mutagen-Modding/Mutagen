@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -96,19 +97,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LoopingSecondsMin
-        public Byte LoopingSecondsMin { get; set; } = default;
+        public Byte LoopingSecondsMin { get; set; } = default(Byte);
         #endregion
         #region LoopingSecondsMax
-        public Byte LoopingSecondsMax { get; set; } = default;
+        public Byte LoopingSecondsMax { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public IdleAnimation.Flag Flags { get; set; } = default;
+        public IdleAnimation.Flag Flags { get; set; } = default(IdleAnimation.Flag);
         #endregion
         #region AnimationGroupSection
-        public Byte AnimationGroupSection { get; set; } = default;
+        public Byte AnimationGroupSection { get; set; } = default(Byte);
         #endregion
         #region ReplayDelay
-        public UInt16 ReplayDelay { get; set; } = default;
+        public UInt16 ReplayDelay { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -775,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -784,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1142,13 +1143,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 236,
-            version: 0);
-
-        public const string GUID = "bf69327e-265b-487b-8e17-3a2a13dd3f74";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 16;
@@ -1191,13 +1185,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ENAM,
                 RecordTypes.ANAM,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1239,11 +1233,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.Filename = default;
             item.AnimationEvent = default;
             item.RelatedIdles.Clear();
-            item.LoopingSecondsMin = default;
-            item.LoopingSecondsMax = default;
-            item.Flags = default;
-            item.AnimationGroupSection = default;
-            item.ReplayDelay = default;
+            item.LoopingSecondsMin = default(Byte);
+            item.LoopingSecondsMax = default(Byte);
+            item.Flags = default(IdleAnimation.Flag);
+            item.AnimationGroupSection = default(Byte);
+            item.ReplayDelay = default(UInt16);
             base.Clear(item);
         }
         
@@ -1770,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2099,9 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimBehaviorAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimBehaviorAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
@@ -2202,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
-        public AssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimBehaviorAssetType>?);
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;
@@ -2233,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ReplayDelay
         private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
-        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default;
+        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default(UInt16);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

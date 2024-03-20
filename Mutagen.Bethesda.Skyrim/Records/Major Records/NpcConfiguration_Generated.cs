@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,34 +52,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public NpcConfiguration.Flag Flags { get; set; } = default;
+        public NpcConfiguration.Flag Flags { get; set; } = default(NpcConfiguration.Flag);
         #endregion
         #region MagickaOffset
-        public Int16 MagickaOffset { get; set; } = default;
+        public Int16 MagickaOffset { get; set; } = default(Int16);
         #endregion
         #region StaminaOffset
-        public Int16 StaminaOffset { get; set; } = default;
+        public Int16 StaminaOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMinLevel
-        public Int16 CalcMinLevel { get; set; } = default;
+        public Int16 CalcMinLevel { get; set; } = default(Int16);
         #endregion
         #region CalcMaxLevel
-        public Int16 CalcMaxLevel { get; set; } = default;
+        public Int16 CalcMaxLevel { get; set; } = default(Int16);
         #endregion
         #region SpeedMultiplier
-        public Int16 SpeedMultiplier { get; set; } = default;
+        public Int16 SpeedMultiplier { get; set; } = default(Int16);
         #endregion
         #region DispositionBase
-        public Int16 DispositionBase { get; set; } = default;
+        public Int16 DispositionBase { get; set; } = default(Int16);
         #endregion
         #region TemplateFlags
-        public NpcConfiguration.TemplateFlag TemplateFlags { get; set; } = default;
+        public NpcConfiguration.TemplateFlag TemplateFlags { get; set; } = default(NpcConfiguration.TemplateFlag);
         #endregion
         #region HealthOffset
-        public Int16 HealthOffset { get; set; } = default;
+        public Int16 HealthOffset { get; set; } = default(Int16);
         #endregion
         #region BleedoutOverride
-        public Int16 BleedoutOverride { get; set; } = default;
+        public Int16 BleedoutOverride { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -971,13 +972,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 201,
-            version: 0);
-
-        public const string GUID = "32c58c3d-5a6e-4382-8bf1-7e6633863702";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 11;
@@ -1016,8 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(NpcConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1055,17 +1047,17 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INpcConfiguration item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.MagickaOffset = default;
-            item.StaminaOffset = default;
+            item.Flags = default(NpcConfiguration.Flag);
+            item.MagickaOffset = default(Int16);
+            item.StaminaOffset = default(Int16);
             item.Level.Clear();
-            item.CalcMinLevel = default;
-            item.CalcMaxLevel = default;
-            item.SpeedMultiplier = default;
-            item.DispositionBase = default;
-            item.TemplateFlags = default;
-            item.HealthOffset = default;
-            item.BleedoutOverride = default;
+            item.CalcMinLevel = default(Int16);
+            item.CalcMaxLevel = default(Int16);
+            item.SpeedMultiplier = default(Int16);
+            item.DispositionBase = default(Int16);
+            item.TemplateFlags = default(NpcConfiguration.TemplateFlag);
+            item.HealthOffset = default(Int16);
+            item.BleedoutOverride = default(Int16);
         }
         
         #region Mutagen

@@ -12,8 +12,13 @@ namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
-    public const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
+    private const uint DefaultInitialNextFormID = 0xD62;
+    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+
+    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    {
+        return DefaultInitialNextFormID;
+    }
 
     partial void GetCustomRecordCount(Action<uint> setter)
     {

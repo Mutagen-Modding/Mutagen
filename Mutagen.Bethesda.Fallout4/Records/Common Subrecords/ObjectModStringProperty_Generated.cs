@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -56,10 +57,10 @@ namespace Mutagen.Bethesda.Fallout4
         public String Value { get; set; } = string.Empty;
         #endregion
         #region Unused
-        public UInt32 Unused { get; set; } = default;
+        public UInt32 Unused { get; set; } = default(UInt32);
         #endregion
         #region FunctionType
-        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default(ObjectModProperty.FloatFunctionType);
         #endregion
 
         #region To String
@@ -350,13 +351,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 299,
-            version: 0);
-
-        public const string GUID = "0233723f-81ae-49b3-b549-ce3f68668c19";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 5;
@@ -388,8 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(ObjectModStringPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -436,8 +428,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Value = string.Empty;
-            item.Unused = default;
-            item.FunctionType = default;
+            item.Unused = default(UInt32);
+            item.FunctionType = default(ObjectModProperty.FloatFunctionType);
             base.Clear(item);
         }
         
@@ -933,6 +925,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ObjectModStringPropertyParseEndingPositions(
+            ObjectModStringPropertyBinaryOverlay<T> ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x5), package.MetaData.Encodings.NonTranslated);
+            ret.ValueEndingPos = 0x5 + ret.Value.Length + 1;
+        }
+
         public static IObjectModStringPropertyGetter<T> ObjectModStringPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -948,8 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ObjectModStringPropertyBinaryOverlay<T>(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x5), package.MetaData.Encodings.NonTranslated);
-            ret.ValueEndingPos = 0x5 + ret.Value.Length + 1;
+            ObjectModStringPropertyParseEndingPositions(ret, package);
             stream.Position += ret.ValueEndingPos + 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

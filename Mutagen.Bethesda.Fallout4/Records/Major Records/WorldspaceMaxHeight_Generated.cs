@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Min
-        public P2Int16 Min { get; set; } = default;
+        public P2Int16 Min { get; set; } = default(P2Int16);
         #endregion
         #region Max
-        public P2Int16 Max { get; set; } = default;
+        public P2Int16 Max { get; set; } = default(P2Int16);
         #endregion
         #region CellData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -688,13 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 507,
-            version: 0);
-
-        public const string GUID = "60860285-d33d-4e5c-95fb-97a019f412dd";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -733,8 +727,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMaxHeightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -772,8 +764,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWorldspaceMaxHeight item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(P2Int16);
+            item.Max = default(P2Int16);
             item.CellData = Array.Empty<byte>();
         }
         

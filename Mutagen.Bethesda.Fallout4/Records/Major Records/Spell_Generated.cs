@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -148,28 +149,28 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ISpellGetter.Description => this.Description;
         #endregion
         #region BaseCost
-        public UInt32 BaseCost { get; set; } = default;
+        public UInt32 BaseCost { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public SpellDataFlag Flags { get; set; } = default;
+        public SpellDataFlag Flags { get; set; } = default(SpellDataFlag);
         #endregion
         #region Type
-        public SpellType Type { get; set; } = default;
+        public SpellType Type { get; set; } = default(SpellType);
         #endregion
         #region ChargeTime
-        public Single ChargeTime { get; set; } = default;
+        public Single ChargeTime { get; set; } = default(Single);
         #endregion
         #region CastType
-        public CastType CastType { get; set; } = default;
+        public CastType CastType { get; set; } = default(CastType);
         #endregion
         #region TargetType
-        public TargetType TargetType { get; set; } = default;
+        public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
         #region CastDuration
-        public Single CastDuration { get; set; } = default;
+        public Single CastDuration { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region CastingPerk
         private readonly IFormLink<IPerkGetter> _CastingPerk = new FormLink<IPerkGetter>();
@@ -1040,9 +1041,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellSetterCommon.Instance.RemapLinks(this, mapping);
-        public Spell(FormKey formKey)
+        public Spell(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1051,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1065,12 +1069,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Spell(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Spell(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1465,13 +1473,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 130,
-            version: 0);
-
-        public const string GUID = "9e79e9ae-bd86-4521-ac80-5872e989d6ed";
-
         public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
@@ -1519,13 +1520,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1568,14 +1569,14 @@ namespace Mutagen.Bethesda.Fallout4
             item.Keywords = null;
             item.EquipmentType.Clear();
             item.Description.Clear();
-            item.BaseCost = default;
-            item.Flags = default;
-            item.Type = default;
-            item.ChargeTime = default;
-            item.CastType = default;
-            item.TargetType = default;
-            item.CastDuration = default;
-            item.Range = default;
+            item.BaseCost = default(UInt32);
+            item.Flags = default(SpellDataFlag);
+            item.Type = default(SpellType);
+            item.ChargeTime = default(Single);
+            item.CastType = default(CastType);
+            item.TargetType = default(TargetType);
+            item.CastDuration = default(Single);
+            item.Range = default(Single);
             item.CastingPerk.Clear();
             item.Effects.Clear();
             base.Clear(item);
@@ -2032,7 +2033,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Spell(formKey);
+            var newRec = new Spell(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2132,7 +2133,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2714,7 +2715,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
-        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default;
+        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
@@ -2729,7 +2730,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ChargeTime
         private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0xC;
         private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default(Single);
         #endregion
         #region CastType
         private int _CastTypeLocation => _SPITLocation!.Value.Min + 0x10;
@@ -2744,12 +2745,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region CastDuration
         private int _CastDurationLocation => _SPITLocation!.Value.Min + 0x18;
         private bool _CastDuration_IsSet => _SPITLocation.HasValue;
-        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default;
+        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default(Single);
         #endregion
         #region Range
         private int _RangeLocation => _SPITLocation!.Value.Min + 0x1C;
         private bool _Range_IsSet => _SPITLocation.HasValue;
-        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
         #endregion
         #region CastingPerk
         private int _CastingPerkLocation => _SPITLocation!.Value.Min + 0x20;

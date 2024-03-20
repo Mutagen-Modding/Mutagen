@@ -265,7 +265,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             if (obj.GetObjectType() == ObjectType.Record)
             {
                 args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
-                args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
+                args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, FormKey?, {obj.Interface(getter: false)}> duplicateInto");
             }
         }
         using (sb.CurlyBrace())
@@ -379,7 +379,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             if (obj.GetObjectType() == ObjectType.Record)
             {
                 args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
-                args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
+                args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, FormKey?, {obj.Interface(getter: false)}> duplicateInto");
             }
         }
         using (sb.CurlyBrace())
@@ -721,7 +721,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
                         args.Add($"getOrAddAsOverride: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{groupTargetGetter}>(r.FormKey))");
-                        args.Add($"duplicateInto: (m, r, e) => m.{field.Name}.DuplicateInAsNewRecord(linkCache.Resolve<{groupTargetGetter}>(r.FormKey), e)");
+                        args.Add($"duplicateInto: (m, r, e, f) => m.{field.Name}.DuplicateInAsNewRecord(linkCache.Resolve<{groupTargetGetter}>(r.FormKey), e, f)");
                     }
                     using (fieldGen.CurlyBrace())
                     {
@@ -785,11 +785,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 {
                     args.Add(subFg =>
                     {
-                        subFg.AppendLine($"duplicateInto: (m, r, e) =>");
+                        subFg.AppendLine($"duplicateInto: (m, r, e, f) =>");
                         using (subFg.CurlyBrace())
                         {
                             subFg.AppendLine($"var baseRec = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
-                            subFg.AppendLine($"var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
+                            subFg.AppendLine($"var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
                             subFg.AppendLine($"baseRec.{loqui.Name} = dupRec;");
                             subFg.AppendLine($"return dupRec;");
                         }
@@ -906,10 +906,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                                     {
                                         args.Add(subFg =>
                                         {
-                                            subFg.AppendLine($"duplicateInto: (m, r, e) =>");
+                                            subFg.AppendLine($"duplicateInto: (m, r, e, f) =>");
                                             using (subFg.CurlyBrace())
                                             {
-                                                subFg.AppendLine($"var dup = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).Duplicate(m.GetNextFormKey(e));");
+                                                subFg.AppendLine($"var dup = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).Duplicate(f ?? m.GetNextFormKey(e));");
                                                 subFg.AppendLine($"getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(dup);");
                                                 subFg.AppendLine($"return dup;");
                                             }

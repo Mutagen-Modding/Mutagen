@@ -20,7 +20,7 @@ public partial class Subgraph
     
 partial class SubgraphBinaryCreateTranslation
 {
-    public static partial void FillBinaryRoleCustom(MutagenFrame frame, ISubgraph item)
+    public static partial void FillBinaryRoleCustom(MutagenFrame frame, ISubgraph item, PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.SRAF);
         item.Role = (SubgraphRole)frame.ReadUInt16();
@@ -30,7 +30,7 @@ partial class SubgraphBinaryCreateTranslation
 
 partial class SubgraphBinaryOverlay
 {
-    partial void RoleCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void RoleCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         stream.ReadSubrecordHeader(RecordTypes.SRAF);
         _role = (SubgraphRole)stream.ReadUInt16();

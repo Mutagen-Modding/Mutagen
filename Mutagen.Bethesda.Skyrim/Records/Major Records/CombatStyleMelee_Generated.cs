@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,31 +51,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CombatStyleMelee.VersioningBreaks Versioning { get; set; } = default;
+        public CombatStyleMelee.VersioningBreaks Versioning { get; set; } = default(CombatStyleMelee.VersioningBreaks);
         #endregion
         #region AttackStaggeredMult
-        public Single AttackStaggeredMult { get; set; } = default;
+        public Single AttackStaggeredMult { get; set; } = default(Single);
         #endregion
         #region PowerAttackStaggeredMult
-        public Single PowerAttackStaggeredMult { get; set; } = default;
+        public Single PowerAttackStaggeredMult { get; set; } = default(Single);
         #endregion
         #region PowerAttackBlockingMult
-        public Single PowerAttackBlockingMult { get; set; } = default;
+        public Single PowerAttackBlockingMult { get; set; } = default(Single);
         #endregion
         #region BashMult
-        public Single BashMult { get; set; } = default;
+        public Single BashMult { get; set; } = default(Single);
         #endregion
         #region BashRecoilMult
-        public Single BashRecoilMult { get; set; } = default;
+        public Single BashRecoilMult { get; set; } = default(Single);
         #endregion
         #region BashAttackMult
-        public Single BashAttackMult { get; set; } = default;
+        public Single BashAttackMult { get; set; } = default(Single);
         #endregion
         #region BashPowerAttackMult
-        public Single BashPowerAttackMult { get; set; } = default;
+        public Single BashPowerAttackMult { get; set; } = default(Single);
         #endregion
         #region SpecialAttackMult
-        public Single SpecialAttackMult { get; set; } = default;
+        public Single SpecialAttackMult { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -904,13 +905,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 396,
-            version: 0);
-
-        public const string GUID = "b0968dab-5dff-40f8-8969-dfeb8cb53ef7";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -949,8 +943,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleMeleeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -988,15 +980,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICombatStyleMelee item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.AttackStaggeredMult = default;
-            item.PowerAttackStaggeredMult = default;
-            item.PowerAttackBlockingMult = default;
-            item.BashMult = default;
-            item.BashRecoilMult = default;
-            item.BashAttackMult = default;
-            item.BashPowerAttackMult = default;
-            item.SpecialAttackMult = default;
+            item.Versioning = default(CombatStyleMelee.VersioningBreaks);
+            item.AttackStaggeredMult = default(Single);
+            item.PowerAttackStaggeredMult = default(Single);
+            item.PowerAttackBlockingMult = default(Single);
+            item.BashMult = default(Single);
+            item.BashRecoilMult = default(Single);
+            item.BashAttackMult = default(Single);
+            item.BashPowerAttackMult = default(Single);
+            item.SpecialAttackMult = default(Single);
         }
         
         #region Mutagen

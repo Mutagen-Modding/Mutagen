@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <Enum name="Type" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
+      <List name="ExtraParts">
+        <FormLink refName="HeadPart" recordType="HNAM" />
+      </List>
+      <String name="NAM2" recordType="NAM2" unknown="true" />
+      <String name="NAM3" recordType="NAM3" unknown="true" />
+      <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
+      <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
+      <FormLink name="MNAM" recordType="MNAM" refName="MorphableObject" />
+    </Fields>
+  </Object>
+</Loqui>

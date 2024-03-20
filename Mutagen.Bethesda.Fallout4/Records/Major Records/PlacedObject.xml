@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" recordType="REFR" baseClass="Fallout4MajorRecord" objType="Record" GUID="9f17225a-a9f1-4e82-a287-6e1b20a495ed" ID="76">
+  <Object name="PlacedObject" recordType="REFR" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" recordType="NAME">
@@ -20,8 +20,8 @@
         <FormLink recordType="XLRM" refName="PlacedObject" />
       </List>
       <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
-      <ByteArray name="RagdollData" recordType="XRGD" />
-      <ByteArray name="RagdollBipedData" recordType="XRGB" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Float name="Radius" recordType="XRDS" />
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
@@ -106,9 +106,10 @@
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPreCutMapEntryReference</LinkInterface>
   </Object>
-  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="09069228-afa1-4393-8b84-4c71d5b70c4e" ID="491">
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
     <Fields>
       <P3Float name="Bounds" binary="Custom" byteLength="12" />
       <Color name="Color" binaryType="NoAlphaFloat" />
@@ -116,13 +117,13 @@
       <Enum name="Type" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="Portal" objType="Subrecord" GUID="e328d7ce-87a6-46cb-9389-ddcf22a44683" ID="492">
+  <Object name="Portal" objType="Subrecord">
     <Fields>
       <FormLink name="Origin" refName="PlacedObject" />
       <FormLink name="Destination" refName="PlacedObject" />
     </Fields>
   </Object>
-  <Object name="Bounding" objType="Subrecord" GUID="03cc885e-351f-4bc0-a917-fbfc57447603" ID="493">
+  <Object name="Bounding" objType="Subrecord">
     <Fields>
       <Float name="Width" />
       <Float name="Height" />
@@ -133,7 +134,7 @@
       <Float name="RotationQ4" />
     </Fields>
   </Object>
-  <Object name="PlacedObjectLighting" objType="Subrecord" recordType="XLIG" GUID="d460114e-36e8-4227-94be-e669bad39a4a" ID="494">
+  <Object name="PlacedObjectLighting" objType="Subrecord" recordType="XLIG">
     <Fields>
       <Float name="Fov90PlusMinus" />
       <Float name="Fade1PlusMinus" />
@@ -145,13 +146,13 @@
       <Float name="VolumetricIntensity" />
     </Fields>
   </Object>
-  <Object name="Alpha" objType="Subrecord" recordType="XALP" GUID="ff481746-c406-4ee5-8d89-cdc761cdc180" ID="495">
+  <Object name="Alpha" objType="Subrecord" recordType="XALP">
     <Fields>
       <UInt8 name="Cutoff" />
       <UInt8 name="Base" />
     </Fields>
   </Object>
-  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL" GUID="68a9c725-3177-42ef-989c-8b2bb257bc39" ID="496">
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
     <Fields>
       <FormLink name="Door" refName="PlacedObject" />
       <P3Float name="Position" />
@@ -160,7 +161,7 @@
       <FormLink name="TransitionInterior" refName="Cell" />
     </Fields>
   </Object>
-  <Object name="WaterVelocity" objType="Subrecord" recordType="XWCU" GUID="32088d8e-5e65-4053-8ea1-7aa62027a23d" ID="497">
+  <Object name="WaterVelocity" objType="Subrecord" recordType="XWCU">
     <Fields>
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
@@ -170,7 +171,7 @@
       <ByteArray name="Unknown3" byteLength="16" nullable="False" />
     </Fields>
   </Object>
-  <Object name="PlacedObjectRadio" objType="Subrecord" recordType="XRDO" GUID="2b9ff158-2747-4d81-b71e-053c508e5244" ID="498">
+  <Object name="PlacedObjectRadio" objType="Subrecord" recordType="XRDO">
     <Fields>
       <Float name="Frequency" />
       <Float name="MinWeakDistance" />
@@ -178,7 +179,7 @@
       <Enum name="Flags" enumName="PlacedObjectRadio.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="PlacedObjectSpline" objType="Subrecord" recordType="XBSD" GUID="616bd223-60c8-40d9-8420-805af78219c4" ID="499">
+  <Object name="PlacedObjectSpline" objType="Subrecord" recordType="XBSD">
     <Fields>
       <Float name="Slack" />
       <Float name="Thickness" />
@@ -188,13 +189,13 @@
       <ByteArray name="Unknown" />
     </Fields>
   </Object>
-  <Object name="ProjectedDecal" objType="Subrecord" recordType="XPDD" GUID="6e7bd45a-c360-415f-90fd-c53651eded41" ID="500">
+  <Object name="ProjectedDecal" objType="Subrecord" recordType="XPDD">
     <Fields>
       <Float name="WidthScale" />
       <Float name="HeightScale" />
     </Fields>
   </Object>
-  <Object name="LockData" objType="Subrecord" recordType="XLOC" GUID="161943a4-d2bc-4c57-a644-59f3f3696d00" ID="501">
+  <Object name="LockData" objType="Subrecord" recordType="XLOC">
     <Fields>
       <Enum name="Level" enumName="LockLevel" byteLength="4" />
       <FormLink name="Key" refName="Key" />
@@ -202,14 +203,14 @@
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="8162e9a0-b94e-4d37-8af4-596cfc71fddc" ID="502">
+  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP">
     <Fields>
       <FormLink name="NavMesh" refName="NavigationMesh" />
       <Int16 name="TeleportMarkerTriangle" />
       <Int16 name="Unused" />
     </Fields>
   </Object>
-  <Object name="PlacedObjectMapMarker" objType="Subrecord" GUID="a2bde384-d1b4-4065-883f-6f4181960d02" ID="503">
+  <Object name="PlacedObjectMapMarker" objType="Subrecord">
     <Fields>
       <Enum name="Flags" enumName="PlacedObjectMapMarker.Flag" recordType="FNAM" byteLength="1" nullable="False" />
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
@@ -221,7 +222,7 @@
       </Data>
     </Fields>
   </Object>
-  <Object name="SplineLink" objType="Subrecord" recordType="XPLK" GUID="6a8c4bcf-82e6-45ff-bac5-e2e2fa78c540" ID="504">
+  <Object name="SplineLink" objType="Subrecord" recordType="XPLK">
     <Fields>
       <FormLink name="Ref">
         <Interface>IPlacedSimple</Interface>
@@ -230,7 +231,7 @@
       <Int32 name="Unknown" />
     </Fields>
   </Object>
-  <Object name="PowerGridConnection" objType="Subrecord" recordType="XWPN" GUID="990b88e5-1232-4c43-803e-5fb09588a50b" ID="505">
+  <Object name="PowerGridConnection" objType="Subrecord" recordType="XWPN">
     <Fields>
       <FormLink name="NodeOne">
         <Interface>IPlacedSimple</Interface>

@@ -22,7 +22,7 @@ public partial class APlacedTrap
 
 partial class APlacedTrapBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
+    public static partial ParseResult FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item, PreviousParse lastParsed)
     {
         var subRec = frame.ReadSubrecord();
         if (subRec.Content.Length != 4)
@@ -103,7 +103,7 @@ partial class APlacedTrapBinaryWriteTranslation
 
 partial class APlacedTrapBinaryOverlay
 {
-    public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subRec = stream.ReadSubrecord();
         if (subRec.Content.Length != 4)

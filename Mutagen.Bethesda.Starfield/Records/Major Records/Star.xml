@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Star" recordType="STDT" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Name" recordType="ANAM" />
+      <P3Float name="BNAM" recordType="BNAM" unknown="true" />
+      <ByteArray name="ONAM" recordType="ONAM" unknown="true" />
+      <UInt32 name="ID" recordType="DNAM" />
+      <Color name="Color" recordType="ENAM" />
+      <FormLink name="SunPreset" recordType="PNAM" refName="SunPreset" />
+    </Fields>
+  </Object>
+</Loqui>

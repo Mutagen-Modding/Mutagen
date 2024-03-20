@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,28 +51,28 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region StartHour
-        public UInt16 StartHour { get; set; } = default;
+        public UInt16 StartHour { get; set; } = default(UInt16);
         #endregion
         #region EndHour
-        public UInt16 EndHour { get; set; } = default;
+        public UInt16 EndHour { get; set; } = default(UInt16);
         #endregion
         #region Radius
-        public UInt16 Radius { get; set; } = default;
+        public UInt16 Radius { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region BuysStolenItems
-        public Boolean BuysStolenItems { get; set; } = default;
+        public Boolean BuysStolenItems { get; set; } = default(Boolean);
         #endregion
         #region BuySellEverythingNotInList
-        public Boolean BuySellEverythingNotInList { get; set; } = default;
+        public Boolean BuySellEverythingNotInList { get; set; } = default(Boolean);
         #endregion
         #region BuysNonStolenItems
-        public Boolean BuysNonStolenItems { get; set; } = default;
+        public Boolean BuysNonStolenItems { get; set; } = default(Boolean);
         #endregion
         #region Unknown2
-        public Byte Unknown2 { get; set; } = default;
+        public Byte Unknown2 { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -860,13 +861,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 72,
-            version: 0);
-
-        public const string GUID = "50bc2008-dfc0-4d20-b61c-de2f1849a173";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -905,8 +899,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -944,14 +936,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IVendorValues item)
         {
             ClearPartial();
-            item.StartHour = default;
-            item.EndHour = default;
-            item.Radius = default;
-            item.Unknown = default;
-            item.BuysStolenItems = default;
-            item.BuySellEverythingNotInList = default;
-            item.BuysNonStolenItems = default;
-            item.Unknown2 = default;
+            item.StartHour = default(UInt16);
+            item.EndHour = default(UInt16);
+            item.Radius = default(UInt16);
+            item.Unknown = default(UInt16);
+            item.BuysStolenItems = default(Boolean);
+            item.BuySellEverythingNotInList = default(Boolean);
+            item.BuysNonStolenItems = default(Boolean);
+            item.Unknown2 = default(Byte);
         }
         
         #region Mutagen

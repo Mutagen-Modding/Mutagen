@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
         #endregion
         #region AliasID
-        public Int16 AliasID { get; set; } = default;
+        public Int16 AliasID { get; set; } = default(Int16);
         #endregion
         #region Create
-        public CreateReferenceToObject.CreateEnum Create { get; set; } = default;
+        public CreateReferenceToObject.CreateEnum Create { get; set; } = default(CreateReferenceToObject.CreateEnum);
         #endregion
         #region Level
-        public Level Level { get; set; } = default;
+        public Level Level { get; set; } = default(Level);
         #endregion
 
         #region To String
@@ -731,13 +732,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 537,
-            version: 0);
-
-        public const string GUID = "68905922-ee74-431d-a019-73a843c77800";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -775,13 +769,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ALCO,
                 RecordTypes.ALCA,
                 RecordTypes.ALCL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreateReferenceToObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -820,9 +814,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Object.Clear();
-            item.AliasID = default;
-            item.Create = default;
-            item.Level = default;
+            item.AliasID = default(Int16);
+            item.Create = default(CreateReferenceToObject.CreateEnum);
+            item.Level = default(Level);
         }
         
         #region Mutagen
@@ -1281,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AliasID
         private int _AliasIDLocation => _ALCALocation!.Value.Min;
         private bool _AliasID_IsSet => _ALCALocation.HasValue;
-        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default;
+        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default(Int16);
         #endregion
         #region Create
         private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public ClassData.VersioningBreaks Versioning { get; set; } = default;
+        public ClassData.VersioningBreaks Versioning { get; set; } = default(ClassData.VersioningBreaks);
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Specialization
-        public Class.SpecializationFlag Specialization { get; set; } = default;
+        public Class.SpecializationFlag Specialization { get; set; } = default(Class.SpecializationFlag);
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        public ClassFlag Flags { get; set; } = default;
+        public ClassFlag Flags { get; set; } = default(ClassFlag);
         #endregion
         #region ClassServices
-        public ClassService ClassServices { get; set; } = default;
+        public ClassService ClassServices { get; set; } = default(ClassService);
         #endregion
         #region Training
         public ClassTraining Training { get; set; } = new ClassTraining();
@@ -996,13 +997,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 178,
-            version: 0);
-
-        public const string GUID = "3c5fc61b-fde2-42c8-adf4-66340f5e4d61";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -1041,8 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(ClassDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1080,12 +1072,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClassData item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(ClassData.VersioningBreaks);
             item.PrimaryAttributes.Reset();
-            item.Specialization = default;
+            item.Specialization = default(Class.SpecializationFlag);
             item.SecondaryAttributes.Reset();
-            item.Flags = default;
-            item.ClassServices = default;
+            item.Flags = default(ClassFlag);
+            item.ClassServices = default(ClassService);
             item.Training.Clear();
         }
         
@@ -1661,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_structData.Slice(0xC), amount: 7, enumLength: 4);
         public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x28, 0x4));
         public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2C, 0x4));
-        public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(_structData.Slice(0x30), _package, default(TypedParseParams));
+        public IClassTrainingGetter Training => _structData.Length > 0x30 ? ClassTrainingBinaryOverlay.ClassTrainingFactory(_structData.Slice(0x30), _package, default(TypedParseParams)) : new ClassTraining();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

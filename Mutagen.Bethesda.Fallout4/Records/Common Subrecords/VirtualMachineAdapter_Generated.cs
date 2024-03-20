@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -525,13 +526,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 111,
-            version: 0);
-
-        public const string GUID = "80726bd6-7d34-412c-b7f2-a381c271066d";
-
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 3;
@@ -570,8 +564,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(VirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1028,6 +1020,15 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void VirtualMachineAdapterParseEndingPositions(
+            VirtualMachineAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
+        }
+
         public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new VirtualMachineAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
+            VirtualMachineAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

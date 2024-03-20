@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -61,10 +62,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
-        public Int32 Modifier { get; set; } = default;
+        public Int32 Modifier { get; set; } = default(Int32);
         #endregion
         #region Reaction
-        public CombatReaction Reaction { get; set; } = default;
+        public CombatReaction Reaction { get; set; } = default(CombatReaction);
         #endregion
 
         #region To String
@@ -695,13 +696,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 26,
-            version: 0);
-
-        public const string GUID = "f0ff3ef2-8eb7-4ed0-b2b7-95d96e4e7994";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -740,8 +734,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(RelationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -780,8 +772,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Target.Clear();
-            item.Modifier = default;
-            item.Reaction = default;
+            item.Modifier = default(Int32);
+            item.Reaction = default(CombatReaction);
         }
         
         #region Mutagen

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FormType
-        public UInt32 FormType { get; set; } = default;
+        public UInt32 FormType { get; set; } = default(UInt32);
         #endregion
         #region Links
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -730,13 +731,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 30,
-            version: 0);
-
-        public const string GUID = "8585f14c-55ea-4087-8212-937bdd6064a0";
-
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
@@ -775,8 +769,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(TransientTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -814,7 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ITransientType item)
         {
             ClearPartial();
-            item.FormType = default;
+            item.FormType = default(UInt32);
             item.Links.Clear();
         }
         
@@ -1009,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Links.SetTo(
                         rhs.Links
-                        .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1259,6 +1251,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void TransientTypeParseEndingPositions(
+            TransientTypeBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.LinksEndingPos = ret._structData.Length;
+        }
+
         public static ITransientTypeGetter TransientTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new TransientTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.LinksEndingPos = ret._structData.Length;
+            TransientTypeParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

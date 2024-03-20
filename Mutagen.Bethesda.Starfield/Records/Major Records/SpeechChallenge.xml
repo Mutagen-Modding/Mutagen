@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SpeechChallenge" recordType="SPCH" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Int16 name="QuestStageOnWin" recordType="SPWI" />
+      <Int16 name="QuestStageOnLoss" recordType="SPLO" />
+      <Bool name="SRAN" recordType="SRAN" boolAsMarker="True" />
+      <Bool name="SGEN" recordType="SGEN" boolAsMarker="True" />
+      <FormLink name="Quest" refName="Quest" recordType="SPQU" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="Scenes" recordType="SPMA" >
+        <FormLink refName="Scene" />
+      </List>
+      <ByteArray name="DIFF" recordType="DIFF" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public PlacedObjectMapMarker.Flag Flags { get; set; } = default;
+        public PlacedObjectMapMarker.Flag Flags { get; set; } = default(PlacedObjectMapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -80,10 +81,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Type
-        public PlacedObjectMapMarker.Types Type { get; set; } = default;
+        public PlacedObjectMapMarker.Types Type { get; set; } = default(PlacedObjectMapMarker.Types);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -752,13 +753,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 503,
-            version: 0);
-
-        public const string GUID = "a2bde384-d1b4-4065-883f-6f4181960d02";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -796,13 +790,13 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FNAM,
                 RecordTypes.FULL,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectMapMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -840,10 +834,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectMapMarker item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(PlacedObjectMapMarker.Flag);
             item.Name.Clear();
-            item.Type = default;
-            item.Unknown = default;
+            item.Type = default(PlacedObjectMapMarker.Types);
+            item.Unknown = default(Byte);
         }
         
         #region Mutagen

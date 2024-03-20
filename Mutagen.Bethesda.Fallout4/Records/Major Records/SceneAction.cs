@@ -45,7 +45,8 @@ partial class SceneActionBinaryCreateTranslation
 {
     public static partial void FillBinaryTypeCustom(
         MutagenFrame frame,
-        ISceneAction item)
+        ISceneAction item, 
+        PreviousParse lastParsed)
     {
         var rec = frame.ReadSubrecord(RecordTypes.ANAM);
         var type = rec.AsUInt16();
@@ -138,7 +139,7 @@ partial class SceneActionBinaryOverlay
 
     partial void TypeCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         var loc = (stream.Position - offset);

@@ -46,8 +46,12 @@ public sealed class AlignmentRepeatedRule : AlignmentRule
  
     public override IEnumerable<RecordType> RecordTypes => SubTypes.Keys; 
  
-    public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream)
+    public override ReadOnlyMemorySlice<byte> ReadBytes(IMutagenReadStream inputStream, int? lengthOverride)
     {
+        if (lengthOverride != null)
+        {
+            throw new NotImplementedException();
+        }
         if (inputStream.Complete) return Array.Empty<byte>();
         var dataList = new List<List<ReadOnlyMemorySlice<byte>>>();
         var latestList = new List<ReadOnlyMemorySlice<byte>>();

@@ -8,6 +8,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
 using System.Text.Json;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 
@@ -114,12 +115,13 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     {
         return types.Select(type =>
         {
-            if (!LoquiRegistration.TryGetRegisterByFullName(type.FullName!, out var regis))
+            // Done by name, as types may not align if from different mutagen versions
+            if (!GetterTypeMapping.Instance.TryGetGetterType(type.FullName!, out var getterType))
             {
                 throw new ArgumentException($"Can't create a formlink control for type: {type}");
             }
 
-            return regis.GetterType;
+            return getterType;
         }).ToArray();
     }
 }

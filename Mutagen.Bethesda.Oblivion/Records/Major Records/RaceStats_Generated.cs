@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,28 +51,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Strength
-        public Byte Strength { get; set; } = default;
+        public Byte Strength { get; set; } = default(Byte);
         #endregion
         #region Intelligence
-        public Byte Intelligence { get; set; } = default;
+        public Byte Intelligence { get; set; } = default(Byte);
         #endregion
         #region Willpower
-        public Byte Willpower { get; set; } = default;
+        public Byte Willpower { get; set; } = default(Byte);
         #endregion
         #region Agility
-        public Byte Agility { get; set; } = default;
+        public Byte Agility { get; set; } = default(Byte);
         #endregion
         #region Speed
-        public Byte Speed { get; set; } = default;
+        public Byte Speed { get; set; } = default(Byte);
         #endregion
         #region Endurance
-        public Byte Endurance { get; set; } = default;
+        public Byte Endurance { get; set; } = default(Byte);
         #endregion
         #region Personality
-        public Byte Personality { get; set; } = default;
+        public Byte Personality { get; set; } = default(Byte);
         #endregion
         #region Luck
-        public Byte Luck { get; set; } = default;
+        public Byte Luck { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -860,13 +861,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 31,
-            version: 0);
-
-        public const string GUID = "3cbe1b09-d220-47e3-a57d-3d9a4feada8b";
-
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
@@ -898,8 +892,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(RaceStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -937,14 +929,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IRaceStats item)
         {
             ClearPartial();
-            item.Strength = default;
-            item.Intelligence = default;
-            item.Willpower = default;
-            item.Agility = default;
-            item.Speed = default;
-            item.Endurance = default;
-            item.Personality = default;
-            item.Luck = default;
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
         }
         
         #region Mutagen

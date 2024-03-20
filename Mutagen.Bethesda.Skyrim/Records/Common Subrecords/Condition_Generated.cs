@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -55,10 +56,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default;
+        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; } = default;
+        public Condition.Flag Flags { get; set; } = default(Condition.Flag);
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -72,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IConditionGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -754,13 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 36,
-            version: 0);
-
-        public const string GUID = "9c510483-e3ef-4271-b240-0bd227beab19";
-
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 5;
@@ -798,13 +792,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -842,10 +836,10 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default;
-            item.Flags = default;
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
             item.Unknown1 = new byte[3];
-            item.Unknown2 = default;
+            item.Unknown2 = default(UInt16);
             item.Data.Clear();
         }
         

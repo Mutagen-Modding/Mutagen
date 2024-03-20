@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <FormLink name="ActorValue1" refName="ActorValueInformation" unknown="true" />
+          <FormLink name="CastingArt" refName="ArtObject" />
+          <FormLink name="MovementType" refName="MovementType" />
+          <FormLink name="HitShader" refName="EffectShader" />
+          <FormLink name="EnchantShader" refName="EffectShader" />
+          <FormLink name="EnchantArt" refName="ArtObject" />
+          <FormLink name="EquipAbility" refName="Spell" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
+          <FormLink name="ImpactData" refName="ImpactDataSet" />
+          <FormLink name="CastingLight" refName="Light" />
+          <FormLink name="PerkToApply" refName="Perk" />
+          <FormLink name="ActorValue2" refName="ActorValueInformation" unknown="true" />
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="ResistValue" refName="ActorValueInformation" />
+          <FormLink name="ActorValue3" refName="ActorValueInformation" unknown="true" />
+          <Float name="UnkownFloat1" unknown="true" />
+          <Float name="UnkownFloat2" unknown="true" />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="4" defaultType="MagicEffectArchetype" />
+          <Float name="UnkownFloat3" unknown="true" />
+          <UInt32 name="UnkownInt1" unknown="true" />
+          <Float name="UnkownFloat4" unknown="true" />
+          <UInt32 name="UnkownInt2" unknown="true" />
+          <Enum name="CastType" enumName="CastType" byteLength="1" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="1" />
+          <UInt32 name="UnkownInt3" unknown="true" />
+          <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="8" />
+          <ByteArray name="Unknown" byteLength="22" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
+      <RefList name="Sounds" refName="MagicEffectSound" />
+      <String name="Description" recordType="DNAM" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSound" objType="Subrecord" recordType="ESSH" >
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectSound.SoundType" byteLength="1" />
+      <RefDirect name="Sound" refName="SoundReference" />
+    </Fields>
+  </Object>
+  <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord" ctorPermission="noGeneration">
+  </Object>
+  <Object name="MagicEffectArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" />
+      <FormLink name="Association" binary="NoGeneration" refName="StarfieldMajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Light" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectBoundArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration">
+        <Interface>IBindableEquipment</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Npc" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectGuideArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration">
+        <Interface>IHazard</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectPeakValueModArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Keyword" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectCloakArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectImmunityModArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="DamageType" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectEnhanceWeaponArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="ObjectEffect" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSpawnHazardArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration">
+        <Interface>IHazard</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectDamageTypeModArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="DamageType" />
+    </Fields>
+  </Object>
+</Loqui>

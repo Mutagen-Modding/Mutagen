@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -51,19 +52,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CriticalData.VersioningBreaks Versioning { get; set; } = default;
+        public CriticalData.VersioningBreaks Versioning { get; set; } = default(CriticalData.VersioningBreaks);
         #endregion
         #region Damage
-        public UInt16 Damage { get; set; } = default;
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
         #region Unused
-        public Int16 Unused { get; set; } = default;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
         #region PercentMult
-        public Single PercentMult { get; set; } = default;
+        public Single PercentMult { get; set; } = default(Single);
         #endregion
         #region Flags
-        public CriticalData.Flag Flags { get; set; } = default;
+        public CriticalData.Flag Flags { get; set; } = default(CriticalData.Flag);
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -77,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> ICriticalDataGetter.Unused2 => this.Unused2;
         #endregion
         #region Unused3
-        public Int32 Unused3 { get; set; } = default;
+        public Int32 Unused3 { get; set; } = default(Int32);
         #endregion
         #region Effect
         private readonly IFormLink<ISpellGetter> _Effect = new FormLink<ISpellGetter>();
@@ -90,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
         #endregion
         #region Unused4
-        public Int32 Unused4 { get; set; } = default;
+        public Int32 Unused4 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -924,13 +925,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 198,
-            version: 0);
-
-        public const string GUID = "cceb2d63-f5de-413e-9150-086047c758a8";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
@@ -969,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(CriticalDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1008,15 +1000,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICriticalData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Damage = default;
-            item.Unused = default;
-            item.PercentMult = default;
-            item.Flags = default;
+            item.Versioning = default(CriticalData.VersioningBreaks);
+            item.Damage = default(UInt16);
+            item.Unused = default(Int16);
+            item.PercentMult = default(Single);
+            item.Flags = default(CriticalData.Flag);
             item.Unused2 = new byte[3];
-            item.Unused3 = default;
+            item.Unused3 = default(Int32);
             item.Effect.Clear();
-            item.Unused4 = default;
+            item.Unused4 = default(Int32);
         }
         
         #region Mutagen

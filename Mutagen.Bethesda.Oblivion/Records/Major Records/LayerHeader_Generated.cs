@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LayerHeader :
         IEquatable<ILayerHeaderGetter>,
-        ILayerHeaderInternal,
+        ILayerHeader,
         ILoquiObjectSetter<LayerHeader>
     {
         #region Ctor
@@ -61,16 +62,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
-        public Quadrant Quadrant { get; set; } = default;
+        public Quadrant Quadrant { get; set; } = default(Quadrant);
         #endregion
         #region LayerNumber
-        public UInt16 LayerNumber { get; protected set; } = default;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16 ILayerHeaderInternal.LayerNumber
-        {
-            get => this.LayerNumber;
-            set => this.LayerNumber = value;
-        }
+        public UInt16 LayerNumber { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -496,16 +491,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILayerHeader :
         IFormLinkContainer,
         ILayerHeaderGetter,
-        ILoquiObjectSetter<ILayerHeaderInternal>
+        ILoquiObjectSetter<ILayerHeader>
     {
         new IFormLink<ILandTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
-    }
-
-    public partial interface ILayerHeaderInternal :
-        ILayerHeader,
-        ILayerHeaderGetter
-    {
         new UInt16 LayerNumber { get; set; }
     }
 
@@ -533,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static partial class LayerHeaderMixIn
     {
-        public static void Clear(this ILayerHeaderInternal item)
+        public static void Clear(this ILayerHeader item)
         {
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -585,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILayerHeaderInternal lhs,
+            this ILayerHeader lhs,
             ILayerHeaderGetter rhs)
         {
             ((LayerHeaderSetterTranslationCommon)((ILayerHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -597,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILayerHeaderInternal lhs,
+            this ILayerHeader lhs,
             ILayerHeaderGetter rhs,
             LayerHeader.TranslationMask? copyMask = null)
         {
@@ -610,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILayerHeaderInternal lhs,
+            this ILayerHeader lhs,
             ILayerHeaderGetter rhs,
             out LayerHeader.ErrorMask errorMask,
             LayerHeader.TranslationMask? copyMask = null)
@@ -626,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILayerHeaderInternal lhs,
+            this ILayerHeader lhs,
             ILayerHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -672,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILayerHeaderInternal item,
+            this ILayerHeader item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -707,13 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 194,
-            version: 0);
-
-        public const string GUID = "562cc9d4-0ac1-4120-b18b-f84c57b252da";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -730,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static readonly Type SetterType = typeof(ILayerHeader);
 
-        public static readonly Type? InternalSetterType = typeof(ILayerHeaderInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LayerHeader";
 
@@ -752,8 +734,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(LayerHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -788,11 +768,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void ClearPartial();
         
-        public void Clear(ILayerHeaderInternal item)
+        public void Clear(ILayerHeader item)
         {
             ClearPartial();
             item.Texture.Clear();
-            item.Quadrant = default;
+            item.Quadrant = default(Quadrant);
+            item.LayerNumber = default(UInt16);
         }
         
         #region Mutagen
@@ -805,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILayerHeaderInternal item,
+            ILayerHeader item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -963,25 +944,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILayerHeaderInternal item,
-            ILayerHeaderGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
-            {
-                item.LayerNumber = rhs.LayerNumber;
-            }
-            DeepCopyIn(
-                (ILayerHeader)item,
-                (ILayerHeaderGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public void DeepCopyIn(
             ILayerHeader item,
             ILayerHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -995,6 +957,10 @@ namespace Mutagen.Bethesda.Oblivion
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
                 item.Quadrant = rhs.Quadrant;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
+            {
+                item.LayerNumber = rhs.LayerNumber;
             }
         }
         
@@ -1137,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILayerHeaderInternal item,
+            ILayerHeader item,
             MutagenFrame frame)
         {
             item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

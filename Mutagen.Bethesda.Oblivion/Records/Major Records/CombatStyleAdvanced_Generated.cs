@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -50,67 +51,67 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DodgeFatigueModMult
-        public Single DodgeFatigueModMult { get; set; } = default;
+        public Single DodgeFatigueModMult { get; set; } = default(Single);
         #endregion
         #region DodgeFatigueModBase
-        public Single DodgeFatigueModBase { get; set; } = default;
+        public Single DodgeFatigueModBase { get; set; } = default(Single);
         #endregion
         #region EncumbSpeedModBase
-        public Single EncumbSpeedModBase { get; set; } = default;
+        public Single EncumbSpeedModBase { get; set; } = default(Single);
         #endregion
         #region EncumbSpeedModMult
-        public Single EncumbSpeedModMult { get; set; } = default;
+        public Single EncumbSpeedModMult { get; set; } = default(Single);
         #endregion
         #region DodgeWhileUnderAttackMult
-        public Single DodgeWhileUnderAttackMult { get; set; } = default;
+        public Single DodgeWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region DodgeNotUnderAttackMult
-        public Single DodgeNotUnderAttackMult { get; set; } = default;
+        public Single DodgeNotUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region DodgeBackWhileUnderAttackMult
-        public Single DodgeBackWhileUnderAttackMult { get; set; } = default;
+        public Single DodgeBackWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region DodgeBackNotUnderAttackMult
-        public Single DodgeBackNotUnderAttackMult { get; set; } = default;
+        public Single DodgeBackNotUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region DodgeForwardWhileUnderAttackMult
-        public Single DodgeForwardWhileUnderAttackMult { get; set; } = default;
+        public Single DodgeForwardWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region DodgeForwardNotUnderAttackMult
-        public Single DodgeForwardNotUnderAttackMult { get; set; } = default;
+        public Single DodgeForwardNotUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region BlockSkillModifierMult
-        public Single BlockSkillModifierMult { get; set; } = default;
+        public Single BlockSkillModifierMult { get; set; } = default(Single);
         #endregion
         #region BlockSkillModifierBase
-        public Single BlockSkillModifierBase { get; set; } = default;
+        public Single BlockSkillModifierBase { get; set; } = default(Single);
         #endregion
         #region BlockWhileUnderAttackMult
-        public Single BlockWhileUnderAttackMult { get; set; } = default;
+        public Single BlockWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region BlockNotUnderAttackMult
-        public Single BlockNotUnderAttackMult { get; set; } = default;
+        public Single BlockNotUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region AttackSkillModifierMult
-        public Single AttackSkillModifierMult { get; set; } = default;
+        public Single AttackSkillModifierMult { get; set; } = default(Single);
         #endregion
         #region AttackSkillModifierBase
-        public Single AttackSkillModifierBase { get; set; } = default;
+        public Single AttackSkillModifierBase { get; set; } = default(Single);
         #endregion
         #region AttackWhileUnderAttackMult
-        public Single AttackWhileUnderAttackMult { get; set; } = default;
+        public Single AttackWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region AttackNotUnderAttackMult
-        public Single AttackNotUnderAttackMult { get; set; } = default;
+        public Single AttackNotUnderAttackMult { get; set; } = default(Single);
         #endregion
         #region AttackDuringBlockMult
-        public Single AttackDuringBlockMult { get; set; } = default;
+        public Single AttackDuringBlockMult { get; set; } = default(Single);
         #endregion
         #region PowerAttackFatigueModBase
-        public Single PowerAttackFatigueModBase { get; set; } = default;
+        public Single PowerAttackFatigueModBase { get; set; } = default(Single);
         #endregion
         #region PowerAttackFatigueModMult
-        public Single PowerAttackFatigueModMult { get; set; } = default;
+        public Single PowerAttackFatigueModMult { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1328,13 +1329,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 160,
-            version: 0);
-
-        public const string GUID = "ae4707ff-2084-4b55-96bb-8de3d58cd76f";
-
         public const ushort AdditionalFieldCount = 21;
 
         public const ushort FieldCount = 21;
@@ -1373,8 +1367,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleAdvancedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1412,27 +1404,27 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICombatStyleAdvanced item)
         {
             ClearPartial();
-            item.DodgeFatigueModMult = default;
-            item.DodgeFatigueModBase = default;
-            item.EncumbSpeedModBase = default;
-            item.EncumbSpeedModMult = default;
-            item.DodgeWhileUnderAttackMult = default;
-            item.DodgeNotUnderAttackMult = default;
-            item.DodgeBackWhileUnderAttackMult = default;
-            item.DodgeBackNotUnderAttackMult = default;
-            item.DodgeForwardWhileUnderAttackMult = default;
-            item.DodgeForwardNotUnderAttackMult = default;
-            item.BlockSkillModifierMult = default;
-            item.BlockSkillModifierBase = default;
-            item.BlockWhileUnderAttackMult = default;
-            item.BlockNotUnderAttackMult = default;
-            item.AttackSkillModifierMult = default;
-            item.AttackSkillModifierBase = default;
-            item.AttackWhileUnderAttackMult = default;
-            item.AttackNotUnderAttackMult = default;
-            item.AttackDuringBlockMult = default;
-            item.PowerAttackFatigueModBase = default;
-            item.PowerAttackFatigueModMult = default;
+            item.DodgeFatigueModMult = default(Single);
+            item.DodgeFatigueModBase = default(Single);
+            item.EncumbSpeedModBase = default(Single);
+            item.EncumbSpeedModMult = default(Single);
+            item.DodgeWhileUnderAttackMult = default(Single);
+            item.DodgeNotUnderAttackMult = default(Single);
+            item.DodgeBackWhileUnderAttackMult = default(Single);
+            item.DodgeBackNotUnderAttackMult = default(Single);
+            item.DodgeForwardWhileUnderAttackMult = default(Single);
+            item.DodgeForwardNotUnderAttackMult = default(Single);
+            item.BlockSkillModifierMult = default(Single);
+            item.BlockSkillModifierBase = default(Single);
+            item.BlockWhileUnderAttackMult = default(Single);
+            item.BlockNotUnderAttackMult = default(Single);
+            item.AttackSkillModifierMult = default(Single);
+            item.AttackSkillModifierBase = default(Single);
+            item.AttackWhileUnderAttackMult = default(Single);
+            item.AttackNotUnderAttackMult = default(Single);
+            item.AttackDuringBlockMult = default(Single);
+            item.PowerAttackFatigueModBase = default(Single);
+            item.PowerAttackFatigueModMult = default(Single);
         }
         
         #region Mutagen

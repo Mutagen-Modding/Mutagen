@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FormList" recordType="FLST" baseClass="StarfieldMajorRecord" objType="Record">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Items">
+        <FormLink refName="StarfieldMajorRecord" recordType="LNAM" />
+      </List>
+      <RefList name="ConditionalEntries" refName="FormListConditionalEntry" />
+    </Fields>
+    <LinkInterface>IVoiceTypeOrList</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
+  </Object>
+  <Object name="FormListConditionalEntry" objType="Subrecord" >
+    <Fields>
+      <UInt32 name="Index" recordType="INAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+</Loqui>

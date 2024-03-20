@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -62,13 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ICollisionLayerGetter.Description => this.Description;
         #endregion
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region DebugColor
-        public Color DebugColor { get; set; } = default;
+        public Color DebugColor { get; set; } = default(Color);
         #endregion
         #region Flags
-        public CollisionLayer.Flag Flags { get; set; } = default;
+        public CollisionLayer.Flag Flags { get; set; } = default(CollisionLayer.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -600,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -609,7 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -960,13 +961,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 238,
-            version: 0);
-
-        public const string GUID = "20096909-ee8d-4c38-9022-999ed7e75418";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
@@ -1009,13 +1003,13 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.MNAM,
                 RecordTypes.CNAM,
                 RecordTypes.INTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollisionLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1054,9 +1048,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Description.Clear();
-            item.Index = default;
-            item.DebugColor = default;
-            item.Flags = default;
+            item.Index = default(UInt32);
+            item.DebugColor = default(Color);
+            item.Flags = default(CollisionLayer.Flag);
             item.Name = string.Empty;
             item.CollidesWith = null;
             base.Clear(item);
@@ -1484,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.CollidesWith = 
                             rhs.CollidesWith
-                            .Select(r => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
                     }
                     else
@@ -1897,11 +1891,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Index
         private int? _IndexLocation;
-        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region DebugColor
         private int? _DebugColorLocation;
-        public Color DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Flags
         private int? _FlagsLocation;

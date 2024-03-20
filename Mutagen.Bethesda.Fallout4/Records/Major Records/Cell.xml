@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CellBlock" objType="Group" GUID="32bcf683-8f12-4d6d-a638-21ae314f27be" ID="453">
+  <Object name="CellBlock" objType="Group">
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
@@ -9,7 +9,7 @@
       <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
     </Fields>
   </Object>
-  <Object name="CellSubBlock" objType="Group" GUID="8132428c-2328-4f95-8861-0238c3fb04a7" ID="454">
+  <Object name="CellSubBlock" objType="Group">
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
@@ -18,7 +18,7 @@
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="Cell" objType="Record" baseClass="Fallout4MajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal" GUID="90df0b0f-867c-4255-9a63-282384024c7c" ID="455">
+  <Object name="Cell" objType="Record" baseClass="Fallout4MajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Flags" enumName="Cell.Flag" byteLength="2" nullable="False" recordType="DATA" />
@@ -80,13 +80,13 @@
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
-  <Object name="CellGrid" objType="Subrecord" recordType="XCLC" GUID="ee91638d-08b7-4a2c-af21-048de576e461" ID="456">
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
     <Fields>
       <P2Int32 name="Point" />
       <Enum name="Flags" enumName="CellGrid.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="edebd51b-a10e-4441-b1dd-730eef1d9b1b" ID="457">
+  <Object name="CellLighting" objType="Subrecord" recordType="XCLL">
     <Fields>
       <Color name="AmbientColor" binaryType="Alpha" />
       <Color name="DirectionalColor" binaryType="Alpha" />
@@ -120,7 +120,7 @@
       <Float name="FarHeightRange" />
     </Fields>
   </Object>
-  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU" GUID="604cb500-4868-4cbc-a80e-126cc55fe784" ID="460">
+  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU">
     <Fields>
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
@@ -128,7 +128,7 @@
       <ByteArray name="Unknown2" nullable="False" />
     </Fields>
   </Object>
-  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord" GUID="68d7657a-0ca2-4bc8-ba58-49bb270c1da8" ID="461">
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord">
     <Fields>
       <Float name="Offset" />
       <Array2d name="HeightMap" fixedWidth="32" fixedHeight="32">
@@ -136,13 +136,13 @@
       </Array2d>
     </Fields>
   </Object>
-  <Object name="CellExteriorLod" recordType="XILW" objType="Subrecord" GUID="0524d1fd-71c9-48af-9fd4-caf9a64d48eb" ID="462">
+  <Object name="CellExteriorLod" recordType="XILW" objType="Subrecord">
     <Fields>
       <FormLink name="Worldspace" refName="Worldspace" />
       <P3Float name="Offset" />
     </Fields>
   </Object>
-  <Object name="CellCombinedMeshReference" objType="Subrecord" GUID="3667d0c6-100b-4fbc-b327-a2c58c563c48" ID="463">
+  <Object name="CellCombinedMeshReference" objType="Subrecord">
     <Fields>
       <FormLink name="Reference">
         <Interface>IPlacedThing</Interface>

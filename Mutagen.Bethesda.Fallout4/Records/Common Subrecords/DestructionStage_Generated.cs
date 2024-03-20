@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -52,16 +53,43 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DestructionStageData? _Data;
-        public DestructionStageData? Data
+        #region HealthPercent
+        public Byte HealthPercent { get; set; } = default(Byte);
+        #endregion
+        #region Index
+        public Byte Index { get; set; } = default(Byte);
+        #endregion
+        #region ModelDamageStage
+        public Byte ModelDamageStage { get; set; } = default(Byte);
+        #endregion
+        #region Flags
+        public Destructible.DestructionStageDataFlag Flags { get; set; } = default(Destructible.DestructionStageDataFlag);
+        #endregion
+        #region SelfDamagePerSecond
+        public Int32 SelfDamagePerSecond { get; set; } = default(Int32);
+        #endregion
+        #region Explosion
+        private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
         {
-            get => _Data;
-            set => _Data = value;
+            get => _Explosion;
+            set => _Explosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDestructionStageDataGetter? IDestructionStageGetter.Data => this.Data;
+        IFormLinkGetter<IExplosionGetter> IDestructionStageGetter.Explosion => this.Explosion;
+        #endregion
+        #region Debris
+        private readonly IFormLink<IDebrisGetter> _Debris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> Debris
+        {
+            get => _Debris;
+            set => _Debris.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IDestructionStageGetter.Debris => this.Debris;
+        #endregion
+        #region DebrisCount
+        public Int32 DebrisCount { get; set; } = default(Int32);
         #endregion
         #region SequenceName
         public String? SequenceName { get; set; }
@@ -125,17 +153,38 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Data = new MaskItem<TItem, DestructionStageData.Mask<TItem>?>(initialValue, new DestructionStageData.Mask<TItem>(initialValue));
+                this.HealthPercent = initialValue;
+                this.Index = initialValue;
+                this.ModelDamageStage = initialValue;
+                this.Flags = initialValue;
+                this.SelfDamagePerSecond = initialValue;
+                this.Explosion = initialValue;
+                this.Debris = initialValue;
+                this.DebrisCount = initialValue;
                 this.SequenceName = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem Data,
+                TItem HealthPercent,
+                TItem Index,
+                TItem ModelDamageStage,
+                TItem Flags,
+                TItem SelfDamagePerSecond,
+                TItem Explosion,
+                TItem Debris,
+                TItem DebrisCount,
                 TItem SequenceName,
                 TItem Model)
             {
-                this.Data = new MaskItem<TItem, DestructionStageData.Mask<TItem>?>(Data, new DestructionStageData.Mask<TItem>(Data));
+                this.HealthPercent = HealthPercent;
+                this.Index = Index;
+                this.ModelDamageStage = ModelDamageStage;
+                this.Flags = Flags;
+                this.SelfDamagePerSecond = SelfDamagePerSecond;
+                this.Explosion = Explosion;
+                this.Debris = Debris;
+                this.DebrisCount = DebrisCount;
                 this.SequenceName = SequenceName;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
@@ -149,7 +198,14 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, DestructionStageData.Mask<TItem>?>? Data { get; set; }
+            public TItem HealthPercent;
+            public TItem Index;
+            public TItem ModelDamageStage;
+            public TItem Flags;
+            public TItem SelfDamagePerSecond;
+            public TItem Explosion;
+            public TItem Debris;
+            public TItem DebrisCount;
             public TItem SequenceName;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
@@ -164,7 +220,14 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.HealthPercent, rhs.HealthPercent)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.ModelDamageStage, rhs.ModelDamageStage)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.SelfDamagePerSecond, rhs.SelfDamagePerSecond)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
+                if (!object.Equals(this.DebrisCount, rhs.DebrisCount)) return false;
                 if (!object.Equals(this.SequenceName, rhs.SequenceName)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
@@ -172,7 +235,14 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
+                hash.Add(this.HealthPercent);
+                hash.Add(this.Index);
+                hash.Add(this.ModelDamageStage);
+                hash.Add(this.Flags);
+                hash.Add(this.SelfDamagePerSecond);
+                hash.Add(this.Explosion);
+                hash.Add(this.Debris);
+                hash.Add(this.DebrisCount);
                 hash.Add(this.SequenceName);
                 hash.Add(this.Model);
                 return hash.ToHashCode();
@@ -183,11 +253,14 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.HealthPercent)) return false;
+                if (!eval(this.Index)) return false;
+                if (!eval(this.ModelDamageStage)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.SelfDamagePerSecond)) return false;
+                if (!eval(this.Explosion)) return false;
+                if (!eval(this.Debris)) return false;
+                if (!eval(this.DebrisCount)) return false;
                 if (!eval(this.SequenceName)) return false;
                 if (Model != null)
                 {
@@ -201,11 +274,14 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.HealthPercent)) return true;
+                if (eval(this.Index)) return true;
+                if (eval(this.ModelDamageStage)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.SelfDamagePerSecond)) return true;
+                if (eval(this.Explosion)) return true;
+                if (eval(this.Debris)) return true;
+                if (eval(this.DebrisCount)) return true;
                 if (eval(this.SequenceName)) return true;
                 if (Model != null)
                 {
@@ -226,7 +302,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = this.Data == null ? null : new MaskItem<R, DestructionStageData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.HealthPercent = eval(this.HealthPercent);
+                obj.Index = eval(this.Index);
+                obj.ModelDamageStage = eval(this.ModelDamageStage);
+                obj.Flags = eval(this.Flags);
+                obj.SelfDamagePerSecond = eval(this.SelfDamagePerSecond);
+                obj.Explosion = eval(this.Explosion);
+                obj.Debris = eval(this.Debris);
+                obj.DebrisCount = eval(this.DebrisCount);
                 obj.SequenceName = eval(this.SequenceName);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
@@ -247,9 +330,37 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(DestructionStage.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.HealthPercent ?? true)
                     {
-                        Data?.Print(sb);
+                        sb.AppendItem(HealthPercent, "HealthPercent");
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
+                    if (printMask?.ModelDamageStage ?? true)
+                    {
+                        sb.AppendItem(ModelDamageStage, "ModelDamageStage");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.SelfDamagePerSecond ?? true)
+                    {
+                        sb.AppendItem(SelfDamagePerSecond, "SelfDamagePerSecond");
+                    }
+                    if (printMask?.Explosion ?? true)
+                    {
+                        sb.AppendItem(Explosion, "Explosion");
+                    }
+                    if (printMask?.Debris ?? true)
+                    {
+                        sb.AppendItem(Debris, "Debris");
+                    }
+                    if (printMask?.DebrisCount ?? true)
+                    {
+                        sb.AppendItem(DebrisCount, "DebrisCount");
                     }
                     if (printMask?.SequenceName ?? true)
                     {
@@ -283,7 +394,14 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, DestructionStageData.ErrorMask?>? Data;
+            public Exception? HealthPercent;
+            public Exception? Index;
+            public Exception? ModelDamageStage;
+            public Exception? Flags;
+            public Exception? SelfDamagePerSecond;
+            public Exception? Explosion;
+            public Exception? Debris;
+            public Exception? DebrisCount;
             public Exception? SequenceName;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
@@ -294,8 +412,22 @@ namespace Mutagen.Bethesda.Fallout4
                 DestructionStage_FieldIndex enu = (DestructionStage_FieldIndex)index;
                 switch (enu)
                 {
-                    case DestructionStage_FieldIndex.Data:
-                        return Data;
+                    case DestructionStage_FieldIndex.HealthPercent:
+                        return HealthPercent;
+                    case DestructionStage_FieldIndex.Index:
+                        return Index;
+                    case DestructionStage_FieldIndex.ModelDamageStage:
+                        return ModelDamageStage;
+                    case DestructionStage_FieldIndex.Flags:
+                        return Flags;
+                    case DestructionStage_FieldIndex.SelfDamagePerSecond:
+                        return SelfDamagePerSecond;
+                    case DestructionStage_FieldIndex.Explosion:
+                        return Explosion;
+                    case DestructionStage_FieldIndex.Debris:
+                        return Debris;
+                    case DestructionStage_FieldIndex.DebrisCount:
+                        return DebrisCount;
                     case DestructionStage_FieldIndex.SequenceName:
                         return SequenceName;
                     case DestructionStage_FieldIndex.Model:
@@ -310,8 +442,29 @@ namespace Mutagen.Bethesda.Fallout4
                 DestructionStage_FieldIndex enu = (DestructionStage_FieldIndex)index;
                 switch (enu)
                 {
-                    case DestructionStage_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, DestructionStageData.ErrorMask?>(ex, null);
+                    case DestructionStage_FieldIndex.HealthPercent:
+                        this.HealthPercent = ex;
+                        break;
+                    case DestructionStage_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case DestructionStage_FieldIndex.ModelDamageStage:
+                        this.ModelDamageStage = ex;
+                        break;
+                    case DestructionStage_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case DestructionStage_FieldIndex.SelfDamagePerSecond:
+                        this.SelfDamagePerSecond = ex;
+                        break;
+                    case DestructionStage_FieldIndex.Explosion:
+                        this.Explosion = ex;
+                        break;
+                    case DestructionStage_FieldIndex.Debris:
+                        this.Debris = ex;
+                        break;
+                    case DestructionStage_FieldIndex.DebrisCount:
+                        this.DebrisCount = ex;
                         break;
                     case DestructionStage_FieldIndex.SequenceName:
                         this.SequenceName = ex;
@@ -329,8 +482,29 @@ namespace Mutagen.Bethesda.Fallout4
                 DestructionStage_FieldIndex enu = (DestructionStage_FieldIndex)index;
                 switch (enu)
                 {
-                    case DestructionStage_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, DestructionStageData.ErrorMask?>?)obj;
+                    case DestructionStage_FieldIndex.HealthPercent:
+                        this.HealthPercent = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.ModelDamageStage:
+                        this.ModelDamageStage = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.SelfDamagePerSecond:
+                        this.SelfDamagePerSecond = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.Debris:
+                        this.Debris = (Exception?)obj;
+                        break;
+                    case DestructionStage_FieldIndex.DebrisCount:
+                        this.DebrisCount = (Exception?)obj;
                         break;
                     case DestructionStage_FieldIndex.SequenceName:
                         this.SequenceName = (Exception?)obj;
@@ -346,7 +520,14 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
+                if (HealthPercent != null) return true;
+                if (Index != null) return true;
+                if (ModelDamageStage != null) return true;
+                if (Flags != null) return true;
+                if (SelfDamagePerSecond != null) return true;
+                if (Explosion != null) return true;
+                if (Debris != null) return true;
+                if (DebrisCount != null) return true;
                 if (SequenceName != null) return true;
                 if (Model != null) return true;
                 return false;
@@ -374,7 +555,30 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Data?.Print(sb);
+                {
+                    sb.AppendItem(HealthPercent, "HealthPercent");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(ModelDamageStage, "ModelDamageStage");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(SelfDamagePerSecond, "SelfDamagePerSecond");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(Debris, "Debris");
+                }
+                {
+                    sb.AppendItem(DebrisCount, "DebrisCount");
+                }
                 {
                     sb.AppendItem(SequenceName, "SequenceName");
                 }
@@ -387,7 +591,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.HealthPercent = this.HealthPercent.Combine(rhs.HealthPercent);
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.ModelDamageStage = this.ModelDamageStage.Combine(rhs.ModelDamageStage);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.SelfDamagePerSecond = this.SelfDamagePerSecond.Combine(rhs.SelfDamagePerSecond);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
+                ret.Debris = this.Debris.Combine(rhs.Debris);
+                ret.DebrisCount = this.DebrisCount.Combine(rhs.DebrisCount);
                 ret.SequenceName = this.SequenceName.Combine(rhs.SequenceName);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
@@ -413,7 +624,14 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public DestructionStageData.TranslationMask? Data;
+            public bool HealthPercent;
+            public bool Index;
+            public bool ModelDamageStage;
+            public bool Flags;
+            public bool SelfDamagePerSecond;
+            public bool Explosion;
+            public bool Debris;
+            public bool DebrisCount;
             public bool SequenceName;
             public Model.TranslationMask? Model;
             #endregion
@@ -425,6 +643,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.HealthPercent = defaultOn;
+                this.Index = defaultOn;
+                this.ModelDamageStage = defaultOn;
+                this.Flags = defaultOn;
+                this.SelfDamagePerSecond = defaultOn;
+                this.Explosion = defaultOn;
+                this.Debris = defaultOn;
+                this.DebrisCount = defaultOn;
                 this.SequenceName = defaultOn;
             }
 
@@ -441,7 +667,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((HealthPercent, null));
+                ret.Add((Index, null));
+                ret.Add((ModelDamageStage, null));
+                ret.Add((Flags, null));
+                ret.Add((SelfDamagePerSecond, null));
+                ret.Add((Explosion, null));
+                ret.Add((Debris, null));
+                ret.Add((DebrisCount, null));
                 ret.Add((SequenceName, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
@@ -523,7 +756,14 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IDestructionStage>,
         IModeled
     {
-        new DestructionStageData? Data { get; set; }
+        new Byte HealthPercent { get; set; }
+        new Byte Index { get; set; }
+        new Byte ModelDamageStage { get; set; }
+        new Destructible.DestructionStageDataFlag Flags { get; set; }
+        new Int32 SelfDamagePerSecond { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<IDebrisGetter> Debris { get; set; }
+        new Int32 DebrisCount { get; set; }
         new String? SequenceName { get; set; }
         /// <summary>
         /// Aspects: IModeled
@@ -545,7 +785,14 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
-        IDestructionStageDataGetter? Data { get; }
+        Byte HealthPercent { get; }
+        Byte Index { get; }
+        Byte ModelDamageStage { get; }
+        Destructible.DestructionStageDataFlag Flags { get; }
+        Int32 SelfDamagePerSecond { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
+        IFormLinkGetter<IDebrisGetter> Debris { get; }
+        Int32 DebrisCount { get; }
         String? SequenceName { get; }
         #region Model
         /// <summary>
@@ -722,9 +969,16 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum DestructionStage_FieldIndex
     {
-        Data = 0,
-        SequenceName = 1,
-        Model = 2,
+        HealthPercent = 0,
+        Index = 1,
+        ModelDamageStage = 2,
+        Flags = 3,
+        SelfDamagePerSecond = 4,
+        Explosion = 5,
+        Debris = 6,
+        DebrisCount = 7,
+        SequenceName = 8,
+        Model = 9,
     }
     #endregion
 
@@ -735,16 +989,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 108,
-            version: 0);
+        public const ushort AdditionalFieldCount = 10;
 
-        public const string GUID = "54a3e642-e581-4a85-8837-267614ca6e48";
-
-        public const ushort AdditionalFieldCount = 3;
-
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(DestructionStage.Mask<>);
 
@@ -770,25 +1017,24 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DSTD;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS);
+            var endTriggers = RecordCollection.Factory(RecordTypes.DSTF);
+            var triggers = RecordCollection.Factory(RecordTypes.DSTD);
             var all = RecordCollection.Factory(
                 RecordTypes.DSTD,
+                RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.DMDC,
                 RecordTypes.DMDT,
-                RecordTypes.DMDS,
-                RecordTypes.DSTF);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+                RecordTypes.DMDC,
+                RecordTypes.DMDS);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -806,8 +1052,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -845,7 +1089,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDestructionStage item)
         {
             ClearPartial();
-            item.Data = null;
+            item.HealthPercent = default(Byte);
+            item.Index = default(Byte);
+            item.ModelDamageStage = default(Byte);
+            item.Flags = default(Destructible.DestructionStageDataFlag);
+            item.SelfDamagePerSecond = default(Int32);
+            item.Explosion.Clear();
+            item.Debris.Clear();
+            item.DebrisCount = default(Int32);
             item.SequenceName = default;
             item.Model = null;
         }
@@ -853,7 +1104,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public void RemapLinks(IDestructionStage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Data?.RemapLinks(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.Debris.Relink(mapping);
             obj.Model?.RemapLinks(mapping);
         }
         
@@ -899,11 +1151,14 @@ namespace Mutagen.Bethesda.Fallout4
             DestructionStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.HealthPercent = item.HealthPercent == rhs.HealthPercent;
+            ret.Index = item.Index == rhs.Index;
+            ret.ModelDamageStage = item.ModelDamageStage == rhs.ModelDamageStage;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.SelfDamagePerSecond = item.SelfDamagePerSecond == rhs.SelfDamagePerSecond;
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.Debris = item.Debris.Equals(rhs.Debris);
+            ret.DebrisCount = item.DebrisCount == rhs.DebrisCount;
             ret.SequenceName = string.Equals(item.SequenceName, rhs.SequenceName);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
@@ -954,10 +1209,37 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data is {} DataItem)
+            if (printMask?.HealthPercent ?? true)
             {
-                DataItem?.Print(sb, "Data");
+                sb.AppendItem(item.HealthPercent, "HealthPercent");
+            }
+            if (printMask?.Index ?? true)
+            {
+                sb.AppendItem(item.Index, "Index");
+            }
+            if (printMask?.ModelDamageStage ?? true)
+            {
+                sb.AppendItem(item.ModelDamageStage, "ModelDamageStage");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.SelfDamagePerSecond ?? true)
+            {
+                sb.AppendItem(item.SelfDamagePerSecond, "SelfDamagePerSecond");
+            }
+            if (printMask?.Explosion ?? true)
+            {
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
+            }
+            if (printMask?.Debris ?? true)
+            {
+                sb.AppendItem(item.Debris.FormKey, "Debris");
+            }
+            if (printMask?.DebrisCount ?? true)
+            {
+                sb.AppendItem(item.DebrisCount, "DebrisCount");
             }
             if ((printMask?.SequenceName ?? true)
                 && item.SequenceName is {} SequenceNameItem)
@@ -978,13 +1260,37 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.HealthPercent) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
-                {
-                    if (!((DestructionStageDataCommon)((IDestructionStageDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)DestructionStage_FieldIndex.Data))) return false;
-                }
-                else if (!isDataEqual) return false;
+                if (lhs.HealthPercent != rhs.HealthPercent) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.ModelDamageStage) ?? true))
+            {
+                if (lhs.ModelDamageStage != rhs.ModelDamageStage) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.SelfDamagePerSecond) ?? true))
+            {
+                if (lhs.SelfDamagePerSecond != rhs.SelfDamagePerSecond) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Debris) ?? true))
+            {
+                if (!lhs.Debris.Equals(rhs.Debris)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.DebrisCount) ?? true))
+            {
+                if (lhs.DebrisCount != rhs.DebrisCount) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.SequenceName) ?? true))
             {
@@ -1004,10 +1310,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IDestructionStageGetter item)
         {
             var hash = new HashCode();
-            if (item.Data is {} Dataitem)
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.HealthPercent);
+            hash.Add(item.Index);
+            hash.Add(item.ModelDamageStage);
+            hash.Add(item.Flags);
+            hash.Add(item.SelfDamagePerSecond);
+            hash.Add(item.Explosion);
+            hash.Add(item.Debris);
+            hash.Add(item.DebrisCount);
             if (item.SequenceName is {} SequenceNameitem)
             {
                 hash.Add(SequenceNameitem);
@@ -1030,13 +1340,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDestructionStageGetter obj)
         {
-            if (obj.Data is {} DataItems)
-            {
-                foreach (var item in DataItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.Debris);
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateFormLinks())
@@ -1062,31 +1367,37 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.HealthPercent) ?? true))
             {
-                errorMask?.PushIndex((int)DestructionStage_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data is {} rhsData)
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)DestructionStage_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HealthPercent = rhs.HealthPercent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.ModelDamageStage) ?? true))
+            {
+                item.ModelDamageStage = rhs.ModelDamageStage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.SelfDamagePerSecond) ?? true))
+            {
+                item.SelfDamagePerSecond = rhs.SelfDamagePerSecond;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Explosion) ?? true))
+            {
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.Debris) ?? true))
+            {
+                item.Debris.SetTo(rhs.Debris.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.DebrisCount) ?? true))
+            {
+                item.DebrisCount = rhs.DebrisCount;
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStage_FieldIndex.SequenceName) ?? true))
             {
@@ -1215,12 +1526,23 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            if (item.Data is {} DataItem)
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DSTD)))
             {
-                ((DestructionStageDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
+                writer.Write(item.HealthPercent);
+                writer.Write(item.Index);
+                writer.Write(item.ModelDamageStage);
+                EnumBinaryTranslation<Destructible.DestructionStageDataFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+                writer.Write(item.SelfDamagePerSecond);
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    translationParams: translationParams);
+                    item: item.Explosion);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Debris);
+                writer.Write(item.DebrisCount);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1234,7 +1556,6 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
             }
-            using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }
 
         public void Write(
@@ -1246,6 +1567,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }
 
         public void Write(
@@ -1279,13 +1601,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
-                    item.Data = Mutagen.Bethesda.Fallout4.DestructionStageData.CreateFromBinary(frame: frame);
-                    return (int)DestructionStage_FieldIndex.Data;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.DebrisCount, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.HealthPercent = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Index = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ModelDamageStage = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Flags = EnumBinaryTranslation<Destructible.DestructionStageDataFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SelfDamagePerSecond = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Debris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DebrisCount = dataFrame.ReadInt32();
+                    return (int)DestructionStage_FieldIndex.DebrisCount;
                 }
                 case RecordTypeInts.DSTA:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.SequenceName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SequenceName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1297,7 +1637,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.DMDS:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.With(DestructionStage_Registration.ModelConverter).DoNotShortCircuit());
@@ -1377,9 +1716,46 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        #region Data
-        private RangeInt32? _DataLocation;
-        public IDestructionStageDataGetter? Data => _DataLocation.HasValue ? DestructionStageDataBinaryOverlay.DestructionStageDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        private RangeInt32? _DSTDLocation;
+        #region HealthPercent
+        private int _HealthPercentLocation => _DSTDLocation!.Value.Min;
+        private bool _HealthPercent_IsSet => _DSTDLocation.HasValue;
+        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default;
+        #endregion
+        #region Index
+        private int _IndexLocation => _DSTDLocation!.Value.Min + 0x1;
+        private bool _Index_IsSet => _DSTDLocation.HasValue;
+        public Byte Index => _Index_IsSet ? _recordData.Span[_IndexLocation] : default;
+        #endregion
+        #region ModelDamageStage
+        private int _ModelDamageStageLocation => _DSTDLocation!.Value.Min + 0x2;
+        private bool _ModelDamageStage_IsSet => _DSTDLocation.HasValue;
+        public Byte ModelDamageStage => _ModelDamageStage_IsSet ? _recordData.Span[_ModelDamageStageLocation] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DSTDLocation!.Value.Min + 0x3;
+        private bool _Flags_IsSet => _DSTDLocation.HasValue;
+        public Destructible.DestructionStageDataFlag Flags => _Flags_IsSet ? (Destructible.DestructionStageDataFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region SelfDamagePerSecond
+        private int _SelfDamagePerSecondLocation => _DSTDLocation!.Value.Min + 0x4;
+        private bool _SelfDamagePerSecond_IsSet => _DSTDLocation.HasValue;
+        public Int32 SelfDamagePerSecond => _SelfDamagePerSecond_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SelfDamagePerSecondLocation, 4)) : default(Int32);
+        #endregion
+        #region Explosion
+        private int _ExplosionLocation => _DSTDLocation!.Value.Min + 0x8;
+        private bool _Explosion_IsSet => _DSTDLocation.HasValue;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        #endregion
+        #region Debris
+        private int _DebrisLocation => _DSTDLocation!.Value.Min + 0xC;
+        private bool _Debris_IsSet => _DSTDLocation.HasValue;
+        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        #endregion
+        #region DebrisCount
+        private int _DebrisCountLocation => _DSTDLocation!.Value.Min + 0x10;
+        private bool _DebrisCount_IsSet => _DSTDLocation.HasValue;
+        public Int32 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DebrisCountLocation, 4)) : default(Int32);
         #endregion
         #region SequenceName
         private int? _SequenceNameLocation;
@@ -1451,13 +1827,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)DestructionStage_FieldIndex.Data;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.DebrisCount, translationParams)) return ParseResult.Stop;
+                    _DSTDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)DestructionStage_FieldIndex.DebrisCount;
                 }
                 case RecordTypeInts.DSTA:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.SequenceName, translationParams)) return ParseResult.Stop;
                     _SequenceNameLocation = (stream.Position - offset);
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
@@ -1466,7 +1841,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.DMDS:
                 {
-                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,

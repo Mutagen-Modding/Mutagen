@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion;

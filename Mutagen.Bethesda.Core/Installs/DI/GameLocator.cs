@@ -9,6 +9,8 @@ namespace Mutagen.Bethesda.Installs.DI;
 
 public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
+    internal static readonly GameLocator Instance = new();
+    
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
         
@@ -261,6 +263,28 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     })
             },
             {
+                GameRelease.Fallout4VR, new GameMetaData(
+                    GameRelease.Fallout4VR,
+                    NexusName: "fallout4",
+                    NexusGameId: 1151,
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout 4 VR",
+                            RegistryKey = @"installed path",
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 611660
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "Fallout4VR.exe"
+                    })
+            },
+            {
                 GameRelease.SkyrimVR, new GameMetaData(
                     GameRelease.SkyrimVR,
                     NexusName: "skyrimspecialedition",
@@ -281,7 +305,24 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     {
                         "SkyrimVR.exe"
                     })
-            }
+            },
+            {
+            GameRelease.Starfield, new GameMetaData(
+                GameRelease.Starfield,
+                NexusName: "starfield",
+                NexusGameId: 4187,
+                GameSources: new IGameSource[]
+                {
+                    new SteamGameSource() 
+                    {
+                        Id = 1716740
+                    },
+                },
+                RequiredFiles: new string[]
+                {
+                    "Starfield.exe"
+                })
+        },
         };
         games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE] with
         {

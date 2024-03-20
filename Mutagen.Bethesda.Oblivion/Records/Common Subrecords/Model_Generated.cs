@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public String File { get; set; } = string.Empty;
         #endregion
         #region BoundRadius
-        public Single BoundRadius { get; set; } = default;
+        public Single BoundRadius { get; set; } = default(Single);
         #endregion
         #region Hashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -688,13 +689,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 20,
-            version: 0);
-
-        public const string GUID = "b989dfe1-feb4-4492-9a94-897f6be0c20a";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -732,13 +726,13 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.MODL,
                 RecordTypes.MODB,
                 RecordTypes.MODT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -777,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.File = string.Empty;
-            item.BoundRadius = default;
+            item.BoundRadius = default(Single);
             item.Hashes = default;
         }
         
@@ -1219,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
-        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Hashes
         private int? _HashesLocation;

@@ -24,7 +24,7 @@ public class TypeOptionSolidifier : GenerationModule
         bool generate = false;
         StructuredStringBuilder sb = new StructuredStringBuilder();
 
-        var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
+        var modObj = proto.ObjectGenerationsByName.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
@@ -73,7 +73,7 @@ public class TypeOptionSolidifier : GenerationModule
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
-                                args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
+                                args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                             }
                         }
                         sb.AppendLine();
@@ -95,7 +95,7 @@ public class TypeOptionSolidifier : GenerationModule
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
-                                args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
+                                args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                             }
                         }
                         sb.AppendLine();
@@ -127,7 +127,7 @@ public class TypeOptionSolidifier : GenerationModule
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
-                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
                             sb.AppendLine();
@@ -149,7 +149,7 @@ public class TypeOptionSolidifier : GenerationModule
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
-                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
                             sb.AppendLine();

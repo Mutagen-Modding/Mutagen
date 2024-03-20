@@ -288,6 +288,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedNpc
 - PlacedObject
 - PlacedTrap
+- RagdollData
 - StaticPlacement
 - TeleportDestination
 - Transform
@@ -666,6 +667,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### RagdollData
+- IPositionRotation
 ### ReferenceGroup
 - INamed
 ### RegionData

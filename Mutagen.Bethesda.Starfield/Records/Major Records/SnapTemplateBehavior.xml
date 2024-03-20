@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SnapTemplateBehavior" recordType="STBH" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <RefList name="Items" refName="SnapTemplateBehaviorItem" />
+    </Fields>
+  </Object>
+  <Object name="SnapTemplateBehaviorItem" objType="Subrecord">
+    <Fields>
+      <Int32 name="ENAM" recordType="ENAM" unknown="true" nullable="False" />
+      <FormLink name="BaseObject"  recordType="PNAM" nullable="false" >
+        <Interface>IBaseObject</Interface>
+      </FormLink>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <FormLink name="SnapTemplateNode" refName="SnapTemplateNode" recordType="UNAM" nullable="false" />
+      <FormLink name="Keyword" refName="Keyword" recordType="VNAM" nullable="false" />
+    </Fields>
+  </Object>
+</Loqui>
