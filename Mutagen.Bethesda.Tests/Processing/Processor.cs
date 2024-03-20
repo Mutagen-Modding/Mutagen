@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -937,7 +938,7 @@ public abstract class Processor
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))
             .ToDictionary(x => x.x,
-                x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary())));
+                x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary(x => x.Key, x => x.Value))));
 
         var deadKeys = KnownDeadStringKeys();
 
