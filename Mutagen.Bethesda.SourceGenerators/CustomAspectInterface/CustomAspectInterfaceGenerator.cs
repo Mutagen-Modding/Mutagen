@@ -57,8 +57,9 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
             var targets = new Dictionary<string, GenerationTarget>();
 
             foreach (var namespaceGroup in interfaceSymbols.Values
-                         .GroupBy(x => x.Symbol.ContainingNamespace))
+                         .GroupBy(x => x.Symbol.ContainingNamespace, SymbolEqualityComparer.Default))
             {
+                if (namespaceGroup.Key == null) continue;
                 targets[namespaceGroup.Key.Name] = new GenerationTarget(
                     namespaceGroup.Key.Name,
                     namespaceGroup,

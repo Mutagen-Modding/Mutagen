@@ -6,6 +6,7 @@
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains source generators to provide extra build-time functionality</Description>
         <IsPackable>true</IsPackable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>
 
     <ItemGroup>
