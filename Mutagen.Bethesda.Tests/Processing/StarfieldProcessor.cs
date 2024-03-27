@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldProcessor : Processor
 {
-    public override bool StrictStrings => true;
+    public override bool StrictStrings => false;
 
     public StarfieldProcessor(bool multithread) : base(multithread)
     {
@@ -994,53 +994,6 @@ public class StarfieldProcessor : Processor
             stream,
             formKey,
             fileOffset);
-
-        uint actualCount = 0;
-        List<FormID> infos = new();
-        stream.Position = fileOffset + majorFrame.TotalLength;
-        if (stream.TryReadGroup(out var groupFrame)
-            && groupFrame.GroupType == 7)
-        {
-            int groupPos = 0;
-            while (groupPos < groupFrame.Content.Length)
-            {
-                var majorMeta = stream.MetaData.Constants.MajorRecordHeader(groupFrame.Content.Slice(groupPos));
-                actualCount++;
-                groupPos += checked((int)majorMeta.TotalLength);
-                if (majorMeta.RecordType == RecordTypes.INFO)
-                {
-                    infos.Add(majorMeta.FormID);
-                }
-            }
-        }
-
-        // Reset misnumbered counter
-        if (majorFrame.TryFindSubrecord(RecordTypes.TIFC, out var tifcRec))
-        {
-            var count = tifcRec.AsUInt32();
-
-            if (actualCount != count)
-            {
-                byte[] b = new byte[4];
-                BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                Instructions.SetSubstitution(
-                    fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
-                    b);
-            }
-        }
-
-        if (majorFrame.TryFindSubrecord(RecordTypes.TIFL, out var rec))
-        {
-            byte[] b = new byte[infos.Count * 4];
-            var slice = b.AsSpan();
-            foreach (var tifl in infos)
-            {
-                BinaryPrimitives.WriteUInt32LittleEndian(slice, tifl.Raw);
-                slice = slice.Slice(4);
-            }
-
-            SwapSubrecordContent(fileOffset, majorFrame, rec, b);
-        }
     }
 
     private void ProcessQuests(

@@ -165,6 +165,20 @@ namespace Mutagen.Bethesda.Starfield
         #region SubtypeName
         public RecordType SubtypeName { get; set; } = RecordType.Null;
         #endregion
+        #region TopicInfoList
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IDialogResponsesGetter>>? _TopicInfoList;
+        public ExtendedList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList
+        {
+            get => this._TopicInfoList;
+            set => this._TopicInfoList = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? IDialogTopicGetter.TopicInfoList => _TopicInfoList;
+        #endregion
+
+        #endregion
         #region Timestamp
         public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
@@ -221,6 +235,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Category = initialValue;
                 this.Subtype = initialValue;
                 this.SubtypeName = initialValue;
+                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
@@ -245,6 +260,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Category,
                 TItem Subtype,
                 TItem SubtypeName,
+                TItem TopicInfoList,
                 TItem Timestamp,
                 TItem Unknown,
                 TItem Responses)
@@ -268,6 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Category = Category;
                 this.Subtype = Subtype;
                 this.SubtypeName = SubtypeName;
+                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TopicInfoList, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
@@ -293,6 +310,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Category;
             public TItem Subtype;
             public TItem SubtypeName;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TopicInfoList;
             public TItem Timestamp;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
@@ -320,6 +338,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Category, rhs.Category)) return false;
                 if (!object.Equals(this.Subtype, rhs.Subtype)) return false;
                 if (!object.Equals(this.SubtypeName, rhs.SubtypeName)) return false;
+                if (!object.Equals(this.TopicInfoList, rhs.TopicInfoList)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
@@ -339,6 +358,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Category);
                 hash.Add(this.Subtype);
                 hash.Add(this.SubtypeName);
+                hash.Add(this.TopicInfoList);
                 hash.Add(this.Timestamp);
                 hash.Add(this.Unknown);
                 hash.Add(this.Responses);
@@ -374,6 +394,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Category)) return false;
                 if (!eval(this.Subtype)) return false;
                 if (!eval(this.SubtypeName)) return false;
+                if (this.TopicInfoList != null)
+                {
+                    if (!eval(this.TopicInfoList.Overall)) return false;
+                    if (this.TopicInfoList.Specific != null)
+                    {
+                        foreach (var item in this.TopicInfoList.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.Timestamp)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (this.Responses != null)
@@ -418,6 +449,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Category)) return true;
                 if (eval(this.Subtype)) return true;
                 if (eval(this.SubtypeName)) return true;
+                if (this.TopicInfoList != null)
+                {
+                    if (eval(this.TopicInfoList.Overall)) return true;
+                    if (this.TopicInfoList.Specific != null)
+                    {
+                        foreach (var item in this.TopicInfoList.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (eval(this.Timestamp)) return true;
                 if (eval(this.Unknown)) return true;
                 if (this.Responses != null)
@@ -472,6 +514,20 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Category = eval(this.Category);
                 obj.Subtype = eval(this.Subtype);
                 obj.SubtypeName = eval(this.SubtypeName);
+                if (TopicInfoList != null)
+                {
+                    obj.TopicInfoList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TopicInfoList.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (TopicInfoList.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.TopicInfoList.Specific = l;
+                        foreach (var item in TopicInfoList.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.Timestamp = eval(this.Timestamp);
                 obj.Unknown = eval(this.Unknown);
                 if (Responses != null)
@@ -566,6 +622,27 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SubtypeName, "SubtypeName");
                     }
+                    if ((printMask?.TopicInfoList?.Overall ?? true)
+                        && TopicInfoList is {} TopicInfoListItem)
+                    {
+                        sb.AppendLine("TopicInfoList =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TopicInfoListItem.Overall);
+                            if (TopicInfoListItem.Specific != null)
+                            {
+                                foreach (var subItem in TopicInfoListItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.Timestamp ?? true)
                     {
                         sb.AppendItem(Timestamp, "Timestamp");
@@ -615,6 +692,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Category;
             public Exception? Subtype;
             public Exception? SubtypeName;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TopicInfoList;
             public Exception? Timestamp;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
@@ -648,6 +726,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Subtype;
                     case DialogTopic_FieldIndex.SubtypeName:
                         return SubtypeName;
+                    case DialogTopic_FieldIndex.TopicInfoList:
+                        return TopicInfoList;
                     case DialogTopic_FieldIndex.Timestamp:
                         return Timestamp;
                     case DialogTopic_FieldIndex.Unknown:
@@ -696,6 +776,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case DialogTopic_FieldIndex.SubtypeName:
                         this.SubtypeName = ex;
+                        break;
+                    case DialogTopic_FieldIndex.TopicInfoList:
+                        this.TopicInfoList = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case DialogTopic_FieldIndex.Timestamp:
                         this.Timestamp = ex;
@@ -750,6 +833,9 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogTopic_FieldIndex.SubtypeName:
                         this.SubtypeName = (Exception?)obj;
                         break;
+                    case DialogTopic_FieldIndex.TopicInfoList:
+                        this.TopicInfoList = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     case DialogTopic_FieldIndex.Timestamp:
                         this.Timestamp = (Exception?)obj;
                         break;
@@ -779,6 +865,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Category != null) return true;
                 if (Subtype != null) return true;
                 if (SubtypeName != null) return true;
+                if (TopicInfoList != null) return true;
                 if (Timestamp != null) return true;
                 if (Unknown != null) return true;
                 if (Responses != null) return true;
@@ -856,6 +943,26 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(SubtypeName, "SubtypeName");
                 }
+                if (TopicInfoList is {} TopicInfoListItem)
+                {
+                    sb.AppendLine("TopicInfoList =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TopicInfoListItem.Overall);
+                        if (TopicInfoListItem.Specific != null)
+                        {
+                            foreach (var subItem in TopicInfoListItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(Timestamp, "Timestamp");
                 }
@@ -899,6 +1006,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Category = this.Category.Combine(rhs.Category);
                 ret.Subtype = this.Subtype.Combine(rhs.Subtype);
                 ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
+                ret.TopicInfoList = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TopicInfoList?.Overall, rhs.TopicInfoList?.Overall), Noggog.ExceptionExt.Combine(this.TopicInfoList?.Specific, rhs.TopicInfoList?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
@@ -935,6 +1043,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Category;
             public bool Subtype;
             public bool SubtypeName;
+            public bool TopicInfoList;
             public bool Timestamp;
             public bool Unknown;
             public DialogResponses.TranslationMask? Responses;
@@ -956,6 +1065,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Category = defaultOn;
                 this.Subtype = defaultOn;
                 this.SubtypeName = defaultOn;
+                this.TopicInfoList = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
             }
@@ -976,6 +1086,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Category, null));
                 ret.Add((Subtype, null));
                 ret.Add((SubtypeName, null));
+                ret.Add((TopicInfoList, null));
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
@@ -1189,6 +1300,7 @@ namespace Mutagen.Bethesda.Starfield
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
         new RecordType SubtypeName { get; set; }
+        new ExtendedList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogResponses> Responses { get; }
@@ -1236,6 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
         DialogTopic.CategoryEnum Category { get; }
         DialogTopic.SubtypeEnum Subtype { get; }
         RecordType SubtypeName { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; }
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogResponsesGetter> Responses { get; }
@@ -1642,9 +1755,10 @@ namespace Mutagen.Bethesda.Starfield
         Category = 15,
         Subtype = 16,
         SubtypeName = 17,
-        Timestamp = 18,
-        Unknown = 19,
-        Responses = 20,
+        TopicInfoList = 18,
+        Timestamp = 19,
+        Unknown = 20,
+        Responses = 21,
     }
     #endregion
 
@@ -1655,9 +1769,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -1801,6 +1915,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Category = default(DialogTopic.CategoryEnum);
             item.Subtype = default(DialogTopic.SubtypeEnum);
             item.SubtypeName = RecordType.Null;
+            item.TopicInfoList = null;
             item.Timestamp = default(Int32);
             item.Unknown = default(Int32);
             item.Responses.Clear();
@@ -1826,6 +1941,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Quest.Relink(mapping);
             obj.Keyword.Relink(mapping);
             obj.AffinityEvent.Relink(mapping);
+            obj.TopicInfoList?.RemapLinks(mapping);
             obj.Responses.RemapLinks(mapping);
         }
         
@@ -2195,6 +2311,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.Category = item.Category == rhs.Category;
             ret.Subtype = item.Subtype == rhs.Subtype;
             ret.SubtypeName = item.SubtypeName == rhs.SubtypeName;
+            ret.TopicInfoList = item.TopicInfoList.CollectionEqualsHelper(
+                rhs.TopicInfoList,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Responses = item.Responses.CollectionEqualsHelper(
@@ -2304,6 +2424,21 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SubtypeName ?? true)
             {
                 sb.AppendItem(item.SubtypeName, "SubtypeName");
+            }
+            if ((printMask?.TopicInfoList?.Overall ?? true)
+                && item.TopicInfoList is {} TopicInfoListItem)
+            {
+                sb.AppendLine("TopicInfoList =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in TopicInfoListItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if (printMask?.Timestamp ?? true)
             {
@@ -2421,6 +2556,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.SubtypeName != rhs.SubtypeName) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicInfoList) ?? true))
+            {
+                if (!lhs.TopicInfoList.SequenceEqualNullable(rhs.TopicInfoList)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
@@ -2475,6 +2614,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Category);
             hash.Add(item.Subtype);
             hash.Add(item.SubtypeName);
+            hash.Add(item.TopicInfoList);
             hash.Add(item.Timestamp);
             hash.Add(item.Unknown);
             hash.Add(item.Responses);
@@ -2524,6 +2664,13 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.AffinityEvent, out var AffinityEventInfo))
             {
                 yield return AffinityEventInfo;
+            }
+            if (obj.TopicInfoList is {} TopicInfoListItem)
+            {
+                foreach (var item in TopicInfoListItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             foreach (var item in obj.Responses.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -2919,6 +3066,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SubtypeName = rhs.SubtypeName;
             }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicInfoList) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.TopicInfoList);
+                try
+                {
+                    if ((rhs.TopicInfoList != null))
+                    {
+                        item.TopicInfoList = 
+                            rhs.TopicInfoList
+                                .Select(b => (IFormLinkGetter<IDialogResponsesGetter>)new FormLink<IDialogResponsesGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IDialogResponsesGetter>>();
+                    }
+                    else
+                    {
+                        item.TopicInfoList = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
                 item.Timestamp = rhs.Timestamp;
@@ -3173,36 +3347,30 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.SubtypeName,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
-            DialogTopicBinaryWriteTranslation.WriteBinaryTopicInfoList(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Write(
                 writer: writer,
-                item: item);
-            DialogTopicBinaryWriteTranslation.WriteBinaryInfoCount(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryTopicInfoListCustom(
-            MutagenWriter writer,
-            IDialogTopicGetter item);
-
-        public static void WriteBinaryTopicInfoList(
-            MutagenWriter writer,
-            IDialogTopicGetter item)
-        {
-            WriteBinaryTopicInfoListCustom(
+                items: item.TopicInfoList,
+                recordType: translationParams.ConvertToCustom(RecordTypes.TIFL),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogResponsesGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            DialogTopicBinaryWriteTranslation.WriteBinaryInfoListCount(
                 writer: writer,
                 item: item);
         }
 
-        public static partial void WriteBinaryInfoCountCustom(
+        public static partial void WriteBinaryInfoListCountCustom(
             MutagenWriter writer,
             IDialogTopicGetter item);
 
-        public static void WriteBinaryInfoCount(
+        public static void WriteBinaryInfoListCount(
             MutagenWriter writer,
             IDialogTopicGetter item)
         {
-            WriteBinaryInfoCountCustom(
+            WriteBinaryInfoListCountCustom(
                 writer: writer,
                 item: item);
         }
@@ -3388,14 +3556,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TIFL:
                 {
-                    return DialogTopicBinaryCreateTranslation.FillBinaryTopicInfoListCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TopicInfoList = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IDialogResponsesGetter>>();
+                    return (int)DialogTopic_FieldIndex.TopicInfoList;
                 }
                 case RecordTypeInts.TIFC:
                 {
-                    return DialogTopicBinaryCreateTranslation.FillBinaryInfoCountCustom(
+                    return DialogTopicBinaryCreateTranslation.FillBinaryInfoListCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
                         lastParsed: lastParsed);
@@ -3412,12 +3583,7 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
 
-        public static partial ParseResult FillBinaryTopicInfoListCustom(
-            MutagenFrame frame,
-            IDialogTopicInternal item,
-            PreviousParse lastParsed);
-
-        public static partial ParseResult FillBinaryInfoCountCustom(
+        public static partial ParseResult FillBinaryInfoListCountCustom(
             MutagenFrame frame,
             IDialogTopicInternal item,
             PreviousParse lastParsed);
@@ -3541,14 +3707,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SubtypeNameLocation;
         public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
         #endregion
-        #region TopicInfoList
-        public partial ParseResult TopicInfoListCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
-        #region InfoCount
-        public partial ParseResult InfoCountCustomParse(
+        public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; private set; }
+        #region InfoListCount
+        public partial ParseResult InfoListCountCustomParse(
             OverlayStream stream,
             int offset,
             PreviousParse lastParsed);
@@ -3682,14 +3843,19 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TIFL:
                 {
-                    return TopicInfoListCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.TopicInfoList = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IDialogResponsesGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IDialogResponsesGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)DialogTopic_FieldIndex.TopicInfoList;
                 }
                 case RecordTypeInts.TIFC:
                 {
-                    return InfoCountCustomParse(
+                    return InfoListCountCustomParse(
                         stream,
                         offset,
                         lastParsed: lastParsed);

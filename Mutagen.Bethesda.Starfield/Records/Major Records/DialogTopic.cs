@@ -1,4 +1,4 @@
-﻿using System.Buffers.Binary;
+using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -224,58 +224,15 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryTopicInfoListCustom(
-        MutagenFrame frame,
-        IDialogTopicInternal item,
-        PreviousParse lastParsed)
-    {
-        frame.ReadSubrecord(RecordTypes.TIFL);
-        return (int)DialogTopic_FieldIndex.SubtypeName;
-    }
-
-    public static partial ParseResult FillBinaryInfoCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
+    public static partial ParseResult FillBinaryInfoListCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         frame.ReadSubrecord(RecordTypes.TIFC);
-        return (int)DialogTopic_FieldIndex.SubtypeName;
+        return null;
     }
 }
 
 partial class DialogTopicBinaryWriteTranslation
 {
-    public static partial void WriteBinaryInfoCountCustom(MutagenWriter writer, IDialogTopicGetter item)
-    {
-        if (item.Responses is not { } resp
-            || resp.Count == 0)
-        {
-            using (HeaderExport.Subrecord(writer, RecordTypes.TIFL))
-            {
-            }
-            using (HeaderExport.Subrecord(writer, RecordTypes.TIFC))
-            {
-                writer.WriteZeros(4);
-            }
-        }
-        else
-        {
-            using (HeaderExport.Subrecord(writer, RecordTypes.TIFL))
-            {
-                foreach (var dialog in resp)
-                {
-                    FormKeyBinaryTranslation.Instance.Write(writer, dialog.FormKey);
-                }
-            }
-            using (HeaderExport.Subrecord(writer, RecordTypes.TIFC))
-            {
-                writer.Write(resp.Count);
-            }
-        }
-    }
-    
-    public static partial void WriteBinaryTopicInfoListCustom(MutagenWriter writer, IDialogTopicGetter item)
-    {
-        // Handled in above snippet
-    }
-
     public static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
     {
         try
@@ -305,6 +262,16 @@ partial class DialogTopicBinaryWriteTranslation
         catch (Exception ex)
         {
             throw RecordException.Enrich(ex, obj);
+        }
+    }
+
+    public static partial void WriteBinaryInfoListCountCustom(MutagenWriter writer, IDialogTopicGetter item)
+    {
+        var list = item.TopicInfoList;
+        if (list == null) return;
+        using (HeaderExport.Subrecord(writer, RecordTypes.TIFC))
+        {
+            writer.Write(list.Count);
         }
     }
 }
@@ -350,15 +317,9 @@ partial class DialogTopicBinaryOverlay
         }
     }
 
-    public partial ParseResult TopicInfoListCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-    {
-        stream.ReadSubrecord(RecordTypes.TIFL);
-        return (int)DialogTopic_FieldIndex.SubtypeName;
-    }
-
-    public partial ParseResult InfoCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+    public partial ParseResult InfoListCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecord(RecordTypes.TIFC);
-        return (int)DialogTopic_FieldIndex.SubtypeName;
+        return null;
     }
 }
