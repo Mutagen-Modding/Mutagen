@@ -570,6 +570,7 @@ public partial class RecordTypeInts
     public const int MSSA = 0x4153534D;
     public const int MSSI = 0x4953534D;
     public const int MSSS = 0x5353534D;
+    public const int MSTF = 0x4654534D;
     public const int MSTT = 0x5454534D;
     public const int MTNM = 0x4D4E544D;
     public const int MTPT = 0x5450544D;

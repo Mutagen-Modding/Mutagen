@@ -9,6 +9,7 @@
       <List name="CuePoints" recordType="FNAM">
         <Float />
       </List>
+      <ByteArray name="MSTF" recordType="MSTF" unknown="true" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <List name="Tracks" recordType="SNAM">
         <FormLink refName="MusicTrack" />
