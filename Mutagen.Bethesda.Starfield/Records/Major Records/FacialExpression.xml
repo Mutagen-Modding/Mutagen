@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FacialExpression" recordType="FXPD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefList name="Items" refName="FacialExpressionItem" />
+    </Fields>
+  </Object>
+  <Object name="FacialExpressionItem" objType="Subrecord" >
+    <Fields>
+      <String name="MNAM" recordType="MNAM" unknown="true" />
+      <Float name="MWGT" recordType="MWGT" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

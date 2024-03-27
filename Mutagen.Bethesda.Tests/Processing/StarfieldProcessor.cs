@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldProcessor : Processor
 {
-    public override bool StrictStrings => false;
+    public override bool StrictStrings => true;
 
     public StarfieldProcessor(bool multithread) : base(multithread)
     {
@@ -188,6 +188,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "PMFT", "FULL" },
                     new RecordType[] { "CHAL", "FULL" },
                     new RecordType[] { "DOOR", "FULL", "ONAM", "CNAM" },
+                    new RecordType[] { "FXPD", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

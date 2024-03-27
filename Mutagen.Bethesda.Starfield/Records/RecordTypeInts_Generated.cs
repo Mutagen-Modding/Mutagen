@@ -395,6 +395,7 @@ public partial class RecordTypeInts
     public const int FURN = 0x4E525546;
     public const int FVLD = 0x444C5646;
     public const int FVPA = 0x41505646;
+    public const int FXPD = 0x44505846;
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
     public const int GCVR = 0x52564347;

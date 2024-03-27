@@ -6596,5 +6596,11 @@
     <Compile Include="Records\Major Records\Chargen_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\FacialExpression_Generated.cs">
+      <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
+      <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

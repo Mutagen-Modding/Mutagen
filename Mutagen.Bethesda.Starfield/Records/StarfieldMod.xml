@@ -177,6 +177,7 @@
       <Group name="TimeOfDays" refName="TimeOfDayRecord" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="Challenges" refName="Challenge" />
+      <Group name="FacialExpressions" refName="FacialExpression" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>
