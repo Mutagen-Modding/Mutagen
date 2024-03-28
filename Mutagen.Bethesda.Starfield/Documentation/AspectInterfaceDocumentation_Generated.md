@@ -171,6 +171,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ExternalDataSource
 - FaceMorph
 - FaceMorphItem
+- FacialExpression
 - Faction
 - Flora
 - FloraModification
@@ -495,6 +496,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FaceMorph
 - INamed
 ### FaceMorphItem
+- INamed
+### FacialExpression
 - INamed
 ### Faction
 - INamed

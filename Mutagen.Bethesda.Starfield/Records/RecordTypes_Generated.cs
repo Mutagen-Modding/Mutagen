@@ -397,6 +397,7 @@ public partial class RecordTypes
     public static readonly RecordType FURN = new(0x4E525546);
     public static readonly RecordType FVLD = new(0x444C5646);
     public static readonly RecordType FVPA = new(0x41505646);
+    public static readonly RecordType FXPD = new(0x44505846);
     public static readonly RecordType GBFM = new(0x4D464247);
     public static readonly RecordType GBFT = new(0x54464247);
     public static readonly RecordType GCVR = new(0x52564347);
@@ -572,6 +573,7 @@ public partial class RecordTypes
     public static readonly RecordType MSSA = new(0x4153534D);
     public static readonly RecordType MSSI = new(0x4953534D);
     public static readonly RecordType MSSS = new(0x5353534D);
+    public static readonly RecordType MSTF = new(0x4654534D);
     public static readonly RecordType MSTT = new(0x5454534D);
     public static readonly RecordType MTNM = new(0x4D4E544D);
     public static readonly RecordType MTPT = new(0x5450544D);

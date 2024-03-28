@@ -395,6 +395,7 @@ public partial class RecordTypeInts
     public const int FURN = 0x4E525546;
     public const int FVLD = 0x444C5646;
     public const int FVPA = 0x41505646;
+    public const int FXPD = 0x44505846;
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
     public const int GCVR = 0x52564347;
@@ -570,6 +571,7 @@ public partial class RecordTypeInts
     public const int MSSA = 0x4153534D;
     public const int MSSI = 0x4953534D;
     public const int MSSS = 0x5353534D;
+    public const int MSTF = 0x4654534D;
     public const int MSTT = 0x5454534D;
     public const int MTNM = 0x4D4E544D;
     public const int MTPT = 0x5450544D;

@@ -10,16 +10,16 @@ namespace Mutagen.Bethesda.Installs.DI;
 public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
     internal static readonly GameLocator Instance = new();
-    
+
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
-        
+
     public GameLocator()
     {
         _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
         _gogHandler = new(() => new GOGHandler());
     }
-    
+
     private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
     {
         foreach (var source in Games[release].GameSources)
@@ -30,7 +30,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
             }
         }
     }
-    
+
     public bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         foreach (var source in GetAllGameDirectories(release))
@@ -38,11 +38,11 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
             path = source;
             return true;
         }
-        
+
         path = default;
         return false;
     }
-    
+
     private bool TryGetGameDirectory(IGameSource gameSource, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         switch (gameSource)
@@ -118,13 +118,13 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         directoryPath = default;
         return false;
     }
-    
+
     [Obsolete("Will be made private at some point")]
     public bool TryGetGameDirectoryFromRegistry(GameRelease release,
         [MaybeNullWhen(false)] out DirectoryPath path)
     {
         var gameRegistration = Games[release].GameSources.OfType<RegistryGameSource>().FirstOrDefault();
-                
+
         if (gameRegistration == null)
         {
             path = default;
@@ -133,7 +133,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
         return TryGetGameDirectoryFromRegistry(gameRegistration, out path);
     }
-    
+
     private bool TryGetGameDirectoryFromRegistry(
         RegistryGameSource registryGameSource,
         [MaybeNullWhen(false)] out DirectoryPath path)
@@ -153,7 +153,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                 path = default;
                 return false;
             }
-            
+
             path = regRes.Value;
             return true;
         }
@@ -182,11 +182,11 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
                             RegistryKey = @"installed path"
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 22330
                         },
-                        new GogGameSource() 
+                        new GogGameSource()
                         {
                             Id = 1458058109
                         },
@@ -208,7 +208,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
                             RegistryKey = @"installed path"
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 72850
                         },
@@ -230,7 +230,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
                             RegistryKey = @"installed path"
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 489830
                         },
@@ -252,7 +252,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
                             RegistryKey = @"installed path",
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 377160
                         },
@@ -274,7 +274,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout 4 VR",
                             RegistryKey = @"installed path",
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 611660
                         },
@@ -296,7 +296,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                             RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
                             RegistryKey = @"installed path",
                         },
-                        new SteamGameSource() 
+                        new SteamGameSource()
                         {
                             Id = 611670
                         },
@@ -313,7 +313,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                 NexusGameId: 4187,
                 GameSources: new IGameSource[]
                 {
-                    new SteamGameSource() 
+                    new SteamGameSource()
                     {
                         Id = 1716740
                     },
@@ -328,7 +328,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         {
             GameSources = new IGameSource[]
             {
-                new SteamGameSource() 
+                new SteamGameSource()
                 {
                     Id = 72850
                 },
@@ -343,7 +343,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     RegistryPath = @"SOFTWARE\WOW6432Node\SureAI\Enderal SE",
                     RegistryKey = @"installed path",
                 },
-                new SteamGameSource() 
+                new SteamGameSource()
                 {
                     Id = 489830
                 },
@@ -353,7 +353,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         {
             GameSources = new IGameSource[]
             {
-                new GogGameSource() 
+                new GogGameSource()
                 {
                     Id = 1711230643
                 },
@@ -361,7 +361,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         };
         Games = games;
     }
-        
+
     #region Interface Implementations
 
     IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)
