@@ -10,11 +10,12 @@ public static class MajorRecordTypeEnumerator
 
 	private static List<ILoquiRegistration> GetRegistrations(GameCategory cat)
 	{
-		var gameNamespace = "Mutagen.Bethesda." + cat;
+		var categoryString = Enums<GameCategory>.ToStringFast((int) cat);
 
 		return LoquiRegistration.StaticRegister.Registrations
 			.Where(x =>
-				string.Equals(x.ClassType.Namespace, gameNamespace, StringComparison.Ordinal)
+				x.ClassType.Namespace != null
+			 && x.ClassType.Namespace.Contains(categoryString, StringComparison.Ordinal)
 			 && x.GetterType.IsAssignableTo(typeof(IMajorRecordGetter)))
 			.ToList();
 	}
