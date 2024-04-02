@@ -15,6 +15,10 @@ public static class MajorRecordTypeEnumerator {
 			.ToList();
 	}
 
+	IEnumerable<ILoquiRegistration> GetMajorRecordRegistrationsFor(GameCategory cat) {
+		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat));
+	}
+
 	IEnumerable<Type> GetMajorRecordClassTypesFor(GameCategory cat) {
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
 			.Select(x => x.ClassType);
