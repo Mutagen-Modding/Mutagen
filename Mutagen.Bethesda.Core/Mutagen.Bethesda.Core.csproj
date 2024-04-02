@@ -504,6 +504,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\MajorRecordTypeEnumerator.cs" />
         <Compile Include="Plugins\Records\Mapping\MetaInterfaceMapping.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
