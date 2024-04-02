@@ -2,6 +2,8 @@
 using Noggog;
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
+public record RecordTypes(Type ClassType, Type GetterType, Type SetterType);
+
 public static class MajorRecordTypeEnumerator
 {
 	private static readonly Dictionary<GameCategory, List<ILoquiRegistration>> Registrations = new();
@@ -17,26 +19,9 @@ public static class MajorRecordTypeEnumerator
 			.ToList();
 	}
 
-	public static IEnumerable<ILoquiRegistration> GetMajorRecordRegistrationsFor(GameCategory cat)
-	{
-		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat));
-	}
-
-	public static IEnumerable<Type> GetMajorRecordClassTypesFor(GameCategory cat)
+	public static IEnumerable<RecordTypes> GetMajorRecordTypesFor(GameCategory cat)
 	{
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
-			.Select(x => x.ClassType);
-	}
-
-	public static IEnumerable<Type> GetMajorRecordGetterTypesFor(GameCategory cat)
-	{
-		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
-			.Select(x => x.GetterType);
-	}
-
-	public static IEnumerable<Type> GetMajorRecordSetterTypesFor(GameCategory cat)
-	{
-		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
-			.Select(x => x.SetterType);
+			.Select(x => new RecordTypes(x.ClassType, x.GetterType, x.SetterType));
 	}
 }
