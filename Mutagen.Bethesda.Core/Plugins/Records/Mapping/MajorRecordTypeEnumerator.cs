@@ -6,7 +6,7 @@ public static class MajorRecordTypeEnumerator
 {
 	private static readonly Dictionary<GameCategory, List<ILoquiRegistration>> Registrations = new();
 
-	public static List<ILoquiRegistration> GetRegistrations(GameCategory cat)
+	private static List<ILoquiRegistration> GetRegistrations(GameCategory cat)
 	{
 		var gameNamespace = "Mutagen.Bethesda." + cat;
 
@@ -17,24 +17,24 @@ public static class MajorRecordTypeEnumerator
 			.ToList();
 	}
 
-	IEnumerable<ILoquiRegistration> GetMajorRecordRegistrationsFor(GameCategory cat)
+	public static IEnumerable<ILoquiRegistration> GetMajorRecordRegistrationsFor(GameCategory cat)
 	{
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat));
 	}
 
-	IEnumerable<Type> GetMajorRecordClassTypesFor(GameCategory cat)
+	public static IEnumerable<Type> GetMajorRecordClassTypesFor(GameCategory cat)
 	{
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
 			.Select(x => x.ClassType);
 	}
 
-	IEnumerable<Type> GetMajorRecordGetterTypesFor(GameCategory cat)
+	public static IEnumerable<Type> GetMajorRecordGetterTypesFor(GameCategory cat)
 	{
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
 			.Select(x => x.GetterType);
 	}
 
-	IEnumerable<Type> GetMajorRecordSetterTypesFor(GameCategory cat)
+	public static IEnumerable<Type> GetMajorRecordSetterTypesFor(GameCategory cat)
 	{
 		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
 			.Select(x => x.SetterType);
