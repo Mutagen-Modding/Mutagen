@@ -48,7 +48,7 @@
   </Object>
   <Object name="BookTeachesNothing" objType="Subrecord" baseClass="BookTeachTarget">
     <Fields>
-      <UInt32 name="RawContent" />
+      <UInt32 name="RawContent" default="uint.MaxValue" />
     </Fields>
   </Object>
 </Loqui>
