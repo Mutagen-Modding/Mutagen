@@ -1,4 +1,5 @@
-﻿using Loqui;
+﻿using System.Collections.Concurrent;
+using Loqui;
 using Noggog;
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
@@ -6,7 +7,7 @@ public record RecordTypes(Type ClassType, Type GetterType, Type SetterType);
 
 public static class MajorRecordTypeEnumerator
 {
-	private static readonly Dictionary<GameCategory, List<ILoquiRegistration>> Registrations = new();
+	private static readonly ConcurrentDictionary<GameCategory, List<ILoquiRegistration>> Registrations = new();
 
 	private static List<ILoquiRegistration> GetRegistrations(GameCategory cat)
 	{
