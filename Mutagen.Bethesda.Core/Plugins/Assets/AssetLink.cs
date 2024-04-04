@@ -271,7 +271,7 @@ public class AssetLink<TAssetType> :
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        if (other is not AssetLink<TAssetType> rhs) return false;
+        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
 
         return AssetLink.PathComparer.Equals(RawPath, rhs.RawPath);
     }
