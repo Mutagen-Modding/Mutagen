@@ -149,6 +149,15 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         return DataRelativePath;
     }
 
+    public override bool Equals(object? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
+
+        return AssetLink.PathComparer.Equals(DataRelativePath, rhs.DataRelativePath);
+    }
+
     public virtual bool Equals(AssetLinkGetter<TAssetType>? other)
     {
         if (ReferenceEquals(null, other)) return false;
