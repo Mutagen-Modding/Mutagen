@@ -163,7 +163,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return DataRelativePath == other.DataRelativePath;
+        return AssetLink.PathComparer.Equals(DataRelativePath, other.DataRelativePath);
     }
 
     public override int GetHashCode()
