@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Loqui;
 using Noggog;
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -7,9 +7,9 @@ public record RecordTypes(Type ClassType, Type GetterType, Type SetterType);
 
 public static class MajorRecordTypeEnumerator
 {
-	private static readonly ConcurrentDictionary<GameCategory, List<ILoquiRegistration>> Registrations = new();
+	private static readonly ConcurrentDictionary<GameCategory, List<RecordTypes>> Registrations = new();
 
-	private static List<ILoquiRegistration> GetRegistrations(GameCategory cat)
+	private static List<RecordTypes> GetRegistrations(GameCategory cat)
 	{
 		var categoryString = Enums<GameCategory>.ToStringFast((int) cat);
 
@@ -18,12 +18,12 @@ public static class MajorRecordTypeEnumerator
 				x.ClassType.Namespace != null
 			 && x.ClassType.Namespace.Contains(categoryString, StringComparison.Ordinal)
 			 && x.GetterType.IsAssignableTo(typeof(IMajorRecordGetter)))
-			.ToList();
+            .Select(x => new RecordTypes(x.ClassType, x.GetterType, x.SetterType))
+            .ToList();
 	}
 
 	public static IEnumerable<RecordTypes> GetMajorRecordTypesFor(GameCategory cat)
 	{
-		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat))
-			.Select(x => new RecordTypes(x.ClassType, x.GetterType, x.SetterType));
+		return Registrations.GetOrAdd(cat, () => GetRegistrations(cat));
 	}
 }
