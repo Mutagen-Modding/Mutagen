@@ -9,5 +9,4 @@ public interface IModHeaderCommon : IBinaryItem
     int RawFlags { get; set; }
     uint NumRecords { get; set; }
     uint NextFormID { get; set; }
-    uint MinimumCustomFormID { get; }
 }

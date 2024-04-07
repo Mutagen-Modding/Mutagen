@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins;
@@ -28,6 +29,10 @@ public class TestMod : ITestMod, IDisposable
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public uint MinimumCustomFormID => throw new NotImplementedException();
+
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }

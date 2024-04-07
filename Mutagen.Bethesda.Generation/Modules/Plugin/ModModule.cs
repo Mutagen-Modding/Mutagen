@@ -125,7 +125,13 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();");
+            using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
+            {
+                if (objData.GameReleaseOptions != null)
+                {
+                    a.AddPassArg("release");
+                }
+            }
             if (objData.GameReleaseOptions != null)
             {
                 sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");

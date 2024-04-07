@@ -5828,7 +5828,7 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4Release release)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(release: release);
             this.Fallout4Release = release;
             _GameSettings_Object = new Fallout4Group<GameSetting>(this);
             _Keywords_Object = new Fallout4Group<Keyword>(this);

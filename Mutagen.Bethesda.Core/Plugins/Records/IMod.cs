@@ -107,6 +107,8 @@ public interface IModGetter :
     /// The next FormID to be allocated
     /// </summary>
     uint NextFormID { get; }
+
+    uint MinimumCustomFormID { get; }
 }
 
 /// <summary>

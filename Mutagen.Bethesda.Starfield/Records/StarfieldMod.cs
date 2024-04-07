@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -13,7 +14,10 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(StarfieldRelease release) => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 
     partial void CustomCtor()
     {
@@ -24,6 +28,12 @@ public partial class StarfieldMod : AMod
     {
         return 1;
     }
+}
+
+internal partial class StarfieldModBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public uint MinimumCustomFormID => StarfieldMod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 }
 
 partial class StarfieldModSetterCommon

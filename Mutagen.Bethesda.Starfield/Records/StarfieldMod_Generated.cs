@@ -7763,7 +7763,7 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldRelease release)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(release: release);
             this.StarfieldRelease = release;
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);

@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Diagnostics;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -12,12 +13,16 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(Fallout4Release release) => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+
 
     public static uint GetDefaultInitialNextFormID(float headerVersion)
     {
@@ -28,6 +33,12 @@ public partial class Fallout4Mod : AMod
 
         return 800;
     }
+}
+
+internal partial class Fallout4ModBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public uint MinimumCustomFormID => Fallout4Mod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 }
 
 partial class Fallout4ModCommon

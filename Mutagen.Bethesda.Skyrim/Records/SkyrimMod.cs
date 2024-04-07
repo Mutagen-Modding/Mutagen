@@ -9,27 +9,46 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Assets;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(SkyrimRelease release) => GetDefaultInitialNextFormID(this.SkyrimRelease, this.ModHeader.Stats.Version);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.SkyrimRelease, this.ModHeader.Stats.Version);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    public static uint GetDefaultInitialNextFormID(SkyrimRelease release, float headerVersion)
     {
-        if (headerVersion >= 1.71f)
+        switch (release)
         {
-            return 1;
+            case SkyrimRelease.SkyrimSE:
+            case SkyrimRelease.SkyrimSEGog:
+            case SkyrimRelease.EnderalSE:
+                if (headerVersion >= 1.71f)
+                {
+                    return 1;
+                }
+                break;
+            default:
+                break;
         }
 
         return 800;
     }
+}
+
+internal partial class SkyrimModBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public uint MinimumCustomFormID => SkyrimMod.GetDefaultInitialNextFormID(this.SkyrimRelease, this.ModHeader.Stats.Version);
 }
 
 partial class SkyrimModSetterCommon

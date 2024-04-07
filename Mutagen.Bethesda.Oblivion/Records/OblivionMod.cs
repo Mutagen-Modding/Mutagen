@@ -7,6 +7,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion;
 
@@ -14,6 +15,9 @@ public partial class OblivionMod : AMod
 {
     private const uint DefaultInitialNextFormID = 0xD62;
     private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 
     public static uint GetDefaultInitialNextFormID(float headerVersion)
     {
@@ -70,6 +74,12 @@ public partial class OblivionMod : AMod
         count += (uint)this.DialogTopics.RecordCache.Count;
         setter(count);
     }
+}
+
+internal partial class OblivionModBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public uint MinimumCustomFormID => OblivionMod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
 }
 
 partial class OblivionModCommon

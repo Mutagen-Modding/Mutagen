@@ -5312,7 +5312,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease release)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(release: release);
             this.SkyrimRelease = release;
             _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
             _Keywords_Object = new SkyrimGroup<Keyword>(this);
