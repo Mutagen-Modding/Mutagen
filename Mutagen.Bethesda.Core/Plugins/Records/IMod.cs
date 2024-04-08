@@ -108,7 +108,7 @@ public interface IModGetter :
     /// </summary>
     uint NextFormID { get; }
 
-    uint MinimumCustomFormID { get; }
+    uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null);
 }
 
 /// <summary>

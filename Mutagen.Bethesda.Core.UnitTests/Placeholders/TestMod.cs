@@ -30,9 +30,7 @@ public class TestMod : ITestMod, IDisposable
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public uint MinimumCustomFormID => throw new NotImplementedException();
-
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) => throw new NotImplementedException();
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }

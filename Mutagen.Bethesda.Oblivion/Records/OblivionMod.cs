@@ -8,20 +8,32 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
     private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(
+        bool? forceUseLowerFormIDRanges) =>
+        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        GetDefaultInitialNextFormID(
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    public static uint GetDefaultInitialNextFormID(float headerVersion,
+        bool? forceUseLowerFormIDRanges)
     {
-        return DefaultInitialNextFormID;
+        return HeaderVersionHelper.GetNextFormId(
+            release: GameRelease.Oblivion,
+            allowedReleases: null,
+            headerVersion: headerVersion,
+            useLowerRangesVersion: null,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            higherFormIdRange: DefaultInitialNextFormID);
     }
 
     partial void GetCustomRecordCount(Action<uint> setter)
@@ -78,8 +90,10 @@ public partial class OblivionMod : AMod
 
 internal partial class OblivionModBinaryOverlay
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public uint MinimumCustomFormID => OblivionMod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        OblivionMod.GetDefaultInitialNextFormID(
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 }
 
 partial class OblivionModCommon

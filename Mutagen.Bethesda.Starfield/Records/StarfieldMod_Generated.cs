@@ -7760,11 +7760,19 @@ namespace Mutagen.Bethesda.Starfield
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
         public StarfieldMod(
             ModKey modKey,
-            StarfieldRelease release)
+            StarfieldRelease release,
+            float? headerVersion = null,
+            bool? forceUseLowerFormIDRanges = null)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(release: release);
+            if (headerVersion != null)
+            {
+                this.ModHeader.Stats.Version = headerVersion.Value;
+            }
             this.StarfieldRelease = release;
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
+                release: release,
+                forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
             _FFKW_Object = new StarfieldGroup<FFKWRecord>(this);

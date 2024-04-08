@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -36,9 +35,14 @@ public sealed class BinaryWriteParameters
     public AMastersListOrderingOption MastersListOrdering { get; set; } = new MastersListOrderingEnumOption();
 
     /// <summary>
-    /// Logic to use to keep a mod header's next formID field in sync
+    /// Logic to use to locate a mod header's next formID to use based on the record content
     /// </summary>
     public NextFormIDOption NextFormID { get; set; } = NextFormIDOption.Iterate;
+
+    /// <summary>
+    /// Logic to use to determine minimum allowed FormID.  Null is default behavior, which checks header version
+    /// </summary>
+    public AMinimumFormIdOption? MinimumFormID { get; set; }
 
     /// <summary>
     /// Logic to use to ensure a mod's formIDs are unique.<br/>

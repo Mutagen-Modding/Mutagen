@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -14,26 +15,44 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(StarfieldRelease release) => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(
+        StarfieldRelease release,
+        bool? forceUseLowerFormIDRanges) =>
+        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        GetDefaultInitialNextFormID(
+            this.StarfieldRelease,
+            this.ModHeader.Stats.Version, 
+            forceUseLowerFormIDRanges);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    public static uint GetDefaultInitialNextFormID(
+        StarfieldRelease release, 
+        float headerVersion, 
+        bool? forceUseLowerFormIDRanges)
     {
-        return 1;
+        return HeaderVersionHelper.GetNextFormId(
+            release: release.ToGameRelease(),
+            allowedReleases: null,
+            headerVersion: headerVersion,
+            useLowerRangesVersion: 0f,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            higherFormIdRange: 800);
     }
 }
 
 internal partial class StarfieldModBinaryOverlay
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public uint MinimumCustomFormID => StarfieldMod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) => 
+        StarfieldMod.GetDefaultInitialNextFormID(
+            this.StarfieldRelease,
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 }
 
 partial class StarfieldModSetterCommon

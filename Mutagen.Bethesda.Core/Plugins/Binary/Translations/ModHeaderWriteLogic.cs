@@ -118,7 +118,12 @@ public sealed class ModHeaderWriteLogic
         }
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
-            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID;
+            bool? forceLowerBound = null;
+            if (_params.MinimumFormID is ForceLowerFormIdRangeOption)
+            {
+                forceLowerBound = true;
+            }
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID(forceLowerBound);
         }
 
         var lightIndex = _category.GetLightFlagIndex();

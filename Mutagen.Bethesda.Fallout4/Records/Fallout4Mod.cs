@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
@@ -13,32 +14,38 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    private uint GetDefaultInitialNextFormID(Fallout4Release release) => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(
+        Fallout4Release release,
+        bool? forceUseLowerFormIDRanges) =>
+        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public override uint MinimumCustomFormID => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
-
-
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    
+    public static uint GetDefaultInitialNextFormID(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
     {
-        if (headerVersion >= 1f)
-        {
-            return 1;
-        }
-
-        return 800;
+        return HeaderVersionHelper.GetNextFormId(
+            release: release.ToGameRelease(),
+            allowedReleases: null,
+            headerVersion: headerVersion,
+            useLowerRangesVersion: 1f,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            higherFormIdRange: 800);
     }
 }
 
 internal partial class Fallout4ModBinaryOverlay
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public uint MinimumCustomFormID => Fallout4Mod.GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        Fallout4Mod.GetDefaultInitialNextFormID(
+            this.Fallout4Release,
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 }
 
 partial class Fallout4ModCommon

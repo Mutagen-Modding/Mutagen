@@ -2812,10 +2812,17 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
-        public OblivionMod(ModKey modKey)
+        public OblivionMod(
+            ModKey modKey,
+            float? headerVersion = null,
+            bool? forceUseLowerFormIDRanges = null)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            if (headerVersion != null)
+            {
+                this.ModHeader.Stats.Version = headerVersion.Value;
+            }
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new OblivionGroup<GameSetting>(this);
             _Globals_Object = new OblivionGroup<Global>(this);
             _Classes_Object = new OblivionGroup<Class>(this);
