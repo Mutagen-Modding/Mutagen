@@ -82,6 +82,13 @@ public sealed class BinaryWriteParameters
     public EncodingBundle? Encodings { get; set; }
 
     /// <summary>
+    /// A class representing how to handle when lower formID ranges are used in a non-allowed way. <br />
+    /// Typically this occurs when the lower ranges are used without any masters present.
+    /// By default
+    /// </summary>
+    public ALowerRangeDisallowedHandlerOption LowerRangeDisallowedHandler { get; set; } = new AddPlaceholderMasterIfLowerRangeDisallowed();
+
+    /// <summary>
     /// Aligns a mod's ModKey to a path's implied ModKey.
     /// Will adjust its logic based on the MasterFlagSync option:
     ///  - ThrowIfMisaligned:  If the path and mod do not match, throw.

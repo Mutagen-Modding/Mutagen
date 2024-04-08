@@ -27,6 +27,7 @@ using IPlacedGetter = Mutagen.Bethesda.Skyrim.IPlacedGetter;
 using Npc = Mutagen.Bethesda.Skyrim.Npc;
 using PlacedNpc = Mutagen.Bethesda.Skyrim.PlacedNpc;
 using Worldspace = Mutagen.Bethesda.Skyrim.Worldspace;
+using Mutagen.Bethesda.Testing.AutoData;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
@@ -42,10 +43,9 @@ public abstract class AMajorRecordEnumerationTests
         where TSetter : class, IMajorRecordQueryable, TTarget
         where TTarget : class, IMajorRecordQueryableGetter;
 
-    [Fact]
-    public void Empty()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void Empty(SkyrimMod mod)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var conv = ConvertMod(mod);
         Assert.Empty(RunTest(conv));
         Assert.Empty(RunTest<IMajorRecord, IMajorRecord>(conv));
@@ -55,65 +55,51 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Empty(RunTest<Npc, Npc>(conv));
     }
 
-    [Fact]
-    public void EnumerateAll()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateAll(SkyrimMod mod, Npc npc, Ammunition ammo)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        mod.Npcs.AddNew();
-        mod.Ammunitions.AddNew();
         var conv = ConvertMod(mod);
         Assert.Equal(2, RunTest(conv).Count());
     }
 
-    [Fact]
-    public void EnumerateAllViaGeneric()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateAllViaGeneric(SkyrimMod mod, Npc npc, Ammunition ammo)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        mod.Npcs.AddNew();
-        mod.Ammunitions.AddNew();
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 2, RunTest<IMajorRecord, IMajorRecord>(conv).Count());
         Assert.Equal(2, RunTest<IMajorRecord, IMajorRecordGetter>(conv).Count());
     }
 
-    [Fact]
-    public void EnumerateSpecificType_Matched()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateSpecificType_Matched(SkyrimMod mod, Npc npc, Ammunition ammo)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        mod.Npcs.AddNew();
-        mod.Ammunitions.AddNew();
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<INpc, INpc>(conv).Count());
         Assert.Equal(Getter ? 0 : 1, RunTest<Npc, Npc>(conv).Count());
         Assert.Single(RunTest<INpc, INpcGetter>(conv));
     }
 
-    [Fact]
-    public void EnumerateSpecificType_Unmatched()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateSpecificType_Unmatched(SkyrimMod mod, Npc npc)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        mod.Npcs.AddNew();
         var conv = ConvertMod(mod);
         Assert.Empty(RunTest<IAmmunition, IAmmunition>(conv));
         Assert.Empty(RunTest<Ammunition, Ammunition>(conv));
         Assert.Empty(RunTest<IAmmunition, IAmmunitionGetter>(conv));
     }
 
-    [Fact]
-    public void EnumerateLinkInterface()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateLinkInterface(SkyrimMod mod, Faction fact)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        mod.Factions.AddNew();
         var conv = ConvertMod(mod);
         Assert.NotEmpty(RunTest<IFaction, IFactionGetter>(conv));
         Assert.NotEmpty(RunTest<IOwner, IOwnerGetter>(conv));
         Assert.Equal(Getter ? 0 : 1, RunTest<IOwner, IOwner>(conv).Count());
     }
 
-    [Fact]
-    public void EnumerateDeepLinkInterface()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateDeepLinkInterface(SkyrimMod mod)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var placed = new PlacedNpc(mod);
         mod.Cells.Records.Add(new CellBlock()
         {
@@ -146,10 +132,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Equal(Getter ? 0 : 1, RunTest<IPlaced, IPlaced>(conv).Count());
     }
 
-    [Fact]
-    public void EnumerateDeepLinkInterface2()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateDeepLinkInterface2(SkyrimMod mod)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var placed = new PlacedNpc(mod);
         mod.Worldspaces.Add(new Worldspace(mod)
         {
@@ -168,10 +153,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Equal(Getter ? 0 : 1, RunTest<IPlaced, IPlaced>(conv).Count());
     }
 
-    [Fact]
-    public void EnumerateDeepMajorRecordType()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateDeepMajorRecordType(SkyrimMod mod)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var placed = new PlacedNpc(mod);
         mod.Cells.Records.Add(new CellBlock()
         {
@@ -202,11 +186,9 @@ public abstract class AMajorRecordEnumerationTests
         RunTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(conv).Any(p => p.FormKey == placed.FormKey).Should().BeTrue();
     }
 
-    [Fact]
-    public void EnumerateAspectInterface()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateAspectInterface(SkyrimMod mod, Light light)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var light = mod.Lights.AddNew();
         light.Icons = new Icons();
         light.Icons.LargeIconFilename.RawPath = "Hello";
         light.Icons.SmallIconFilename = new AssetLink<SkyrimTextureAssetType>("World");
@@ -219,11 +201,9 @@ public abstract class AMajorRecordEnumerationTests
         item.Icons!.SmallIconFilename!.RawPath.Should().Be("World");
     }
 
-    [Fact]
-    public void EnumerateNullableAspectInterfaceWithNpc()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateNullableAspectInterfaceWithNpc(SkyrimMod mod, Npc npc)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Npcs.AddNew();
         npc.Name = "Hello";
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<ITranslatedNamed, ITranslatedNamed>(conv).Count());
@@ -237,11 +217,9 @@ public abstract class AMajorRecordEnumerationTests
         RunTest<INamed, INamedGetter>(conv).First().Name.Should().Be("Hello");
     }
 
-    [Fact]
-    public void EnumerateNonNullableAspectInterfaceWithClass()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateNonNullableAspectInterfaceWithClass(SkyrimMod mod, Class classObj)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var classObj = mod.Classes.AddNew();
         classObj.Name = "Hello";
         var conv = ConvertMod(mod);
         Assert.Empty(RunTest<INamed, INamed>(conv));
@@ -255,12 +233,9 @@ public abstract class AMajorRecordEnumerationTests
         RunTest<INamedRequired, INamedRequiredGetter>(conv).First().Name.Should().Be("Hello");
     }
 
-    [Fact]
-    public void EnumerateNonMajorAspectInterfaceWithPackage()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateNonMajorAspectInterfaceWithPackage(SkyrimMod mod, Package package)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var package = mod.Packages.AddNew();
-
         package.Data[4] = new PackageDataFloat()
         {
             Name = "Hello"
@@ -276,11 +251,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Empty(RunTest<ITranslatedNamedRequired, ITranslatedNamedRequiredGetter>(conv));
     }
 
-    [Fact]
-    public void EnumerateAbstractBaseClass()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateAbstractBaseClass(SkyrimMod mod, StoryManagerEventNode rec)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var rec = mod.StoryManagerEventNodes.AddNew();
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<IStoryManagerEventNode, IStoryManagerEventNode>(conv).Count());
         Assert.Single(RunTest<IStoryManagerEventNode, IStoryManagerEventNodeGetter>(conv));
@@ -288,10 +261,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Single(RunTest<IAStoryManagerNode, IAStoryManagerNodeGetter>(conv));
     }
 
-    [Fact]
-    public void EnumerateInheritingClasses()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateInheritingClasses(SkyrimMod mod)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var rec = mod.Globals.AddNewInt();
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<IGlobal, IGlobal>(conv).Count());
@@ -300,11 +272,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Single(RunTest<IGlobalInt, IGlobalIntGetter>(conv));
     }
 
-    [Fact]
-    public void EnumerateLooseInterfaceClasses()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void EnumerateLooseInterfaceClasses(SkyrimMod mod, Tree tree)
     {
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var rec = mod.Trees.AddNew();
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<ITree, ITree>(conv).Count());
         Assert.Single(RunTest<ITree, ITreeGetter>(conv));

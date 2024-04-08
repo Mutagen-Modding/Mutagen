@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -17,7 +17,7 @@ public partial class ALinkingTests
     [MemberData(nameof(ContextTestSources))]
     public void PlacedInCellQuerySucceedsIfMajorRecordType(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
     {
-        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: false);
         var placed = new PlacedObject(prototype);
         prototype.Cells.Records.Add(new CellBlock()
         {
@@ -58,7 +58,7 @@ public partial class ALinkingTests
     [MemberData(nameof(ContextTestSources))]
     public void PlacedInWorldspaceQuerySucceedsIfMajorRecordType(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
     {
-        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: false);
         var placed = new PlacedObject(prototype);
         prototype.Worldspaces.Add(new Worldspace(prototype)
         {
@@ -105,7 +105,7 @@ public partial class ALinkingTests
     [MemberData(nameof(ContextTestSources))]
     public void LocationTargetableInWorldspaceQuerySucceeds(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
     {
-        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: false);
         var placed = new PlacedNpc(prototype);
         prototype.Worldspaces.Add(new Worldspace(prototype)
         {
@@ -139,9 +139,9 @@ public partial class ALinkingTests
     [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
     public void PlacedInWorldspaceOnlyOverridesPlaced(LinkCachePreferences.RetentionType cacheType)
     {
-        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: false);
         var placed = new PlacedObject(prototype);
-        var outgoing = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
+        var outgoing = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: false);
         prototype.Worldspaces.Add(new Worldspace(prototype)
         {
             SubCells = new ExtendedList<WorldspaceBlock>()

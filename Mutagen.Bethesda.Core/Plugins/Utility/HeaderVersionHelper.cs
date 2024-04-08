@@ -32,4 +32,15 @@ internal static class HeaderVersionHelper
         }
         return higherFormIdRange;
     }
+
+    public static uint GetDefaultHigherFormID(GameRelease release)
+    {
+        return release.ToCategory() switch
+        {
+            GameCategory.Oblivion => 0xD62,
+            GameCategory.Fallout4 => 800,
+            GameCategory.Skyrim => 800,
+            GameCategory.Starfield => 800,
+        };
+    }
 }

@@ -193,6 +193,7 @@
         </Compile>
         <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
         <Compile Include="Plugins\Binary\Overlay\ImmutableManyListWrapper.cs" />
+        <Compile Include="Plugins\Binary\Parameters\ALowerRangeDisallowedHandlerOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
@@ -254,6 +255,7 @@
         <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
         <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
         <Compile Include="Plugins\Exceptions\FloatStoredAsIntegerOverflowException.cs" />
+        <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
         <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
         <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />

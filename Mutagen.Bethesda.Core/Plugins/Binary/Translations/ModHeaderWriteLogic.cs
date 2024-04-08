@@ -6,6 +6,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -16,12 +18,15 @@ public sealed class ModHeaderWriteLogic
     private readonly BinaryWriteParameters _params;
 
     private readonly ModKey _modKey;
-    private readonly Dictionary<ModKey, FormKey> _modKeys = new();
+    private readonly Dictionary<ModKey, FormKey?> _modKeys = new();
     private uint _numRecords;
     private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
+    private readonly GameRelease _release;
     private readonly GameCategory _category;
+    private FormKey? _disallowedFormKey;
+    private uint _higherFormIDRange;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
@@ -30,7 +35,9 @@ public sealed class ModHeaderWriteLogic
     {
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
+        _release = mod.GameRelease;
         _category = mod.GameRelease.ToCategory();
+        _higherFormIDRange = HeaderVersionHelper.GetDefaultHigherFormID(this._release);
     }
 
     public static void WriteHeader(
@@ -61,6 +68,7 @@ public sealed class ModHeaderWriteLogic
         AddFormIDUniqueness();
         AddLightFormLimit(modHeader);
         AddCompressionCheck();
+        AddDisallowedLowerFormIDs();
     }
 
     private void RunProcessors(IModGetter mod)
@@ -110,6 +118,7 @@ public sealed class ModHeaderWriteLogic
         IModGetter mod,
         IModHeaderCommon modHeader)
     {
+        HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
@@ -141,7 +150,7 @@ public sealed class ModHeaderWriteLogic
         switch (_params.MastersListContent)
         {
             case MastersListContentOption.NoCheck:
-                _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey>(m.Master, FormKey.Null)));
+                _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey?>(m.Master, FormKey.Null)));
                 break;
             case MastersListContentOption.Iterate:
                 _recordIterationActions.Add(maj =>
@@ -323,6 +332,50 @@ public sealed class ModHeaderWriteLogic
                     "Writing with compression enabled is not currently supported.  https://github.com/Mutagen-Modding/Mutagen/issues/235");
             }
         });
+    }
+
+    #endregion
+
+    #region DisallowedLowerFormIDs
+
+    private void AddDisallowedLowerFormIDs()
+    {
+        switch (_params.LowerRangeDisallowedHandler)
+        {
+            case NoCheckIfLowerRangeDisallowed:
+                break;
+            default:
+                _recordIterationActions.Add(maj =>
+                {
+                    if (maj.FormKey.ModKey != _modKey) return;
+                    if (_higherFormIDRange > maj.FormKey.ID)
+                    {
+                        _disallowedFormKey = maj.FormKey;
+                    }
+                });
+                break;
+        }
+    }
+
+    private void HandleDisallowedLowerFormIDs()
+    {
+        if (_numRecords == 0) return;
+        if (_disallowedFormKey == null) return;
+
+        switch (_params.LowerRangeDisallowedHandler)
+        {
+            case NoCheckIfLowerRangeDisallowed:
+                return;
+            case ThrowIfLowerRangeDisallowed:
+                throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+            case AddPlaceholderMasterIfLowerRangeDisallowed placeholder:
+                if (placeholder.ModKey == null)
+                {
+                    throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+                }
+                _modKeys[placeholder.ModKey.Value] = null;
+                break;
+        }
     }
 
     #endregion
