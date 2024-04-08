@@ -119,9 +119,9 @@ public sealed class ModHeaderWriteLogic
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
             bool? forceLowerBound = null;
-            if (_params.MinimumFormID is ForceLowerFormIdRangeOption)
+            if (_params.MinimumFormID is ForceLowerFormIdRangeOption force)
             {
-                forceLowerBound = true;
+                forceLowerBound = force.ForceLowerRangeSetting;
             }
             modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID(forceLowerBound);
         }

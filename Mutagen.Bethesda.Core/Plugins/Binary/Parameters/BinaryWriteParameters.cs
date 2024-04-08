@@ -42,7 +42,7 @@ public sealed class BinaryWriteParameters
     /// <summary>
     /// Logic to use to determine minimum allowed FormID.  Null is default behavior, which checks header version
     /// </summary>
-    public AMinimumFormIdOption? MinimumFormID { get; set; }
+    public AMinimumFormIdOption MinimumFormID { get; set; } = new AutomaticLowerFormIdRangeOption();
 
     /// <summary>
     /// Logic to use to ensure a mod's formIDs are unique.<br/>
