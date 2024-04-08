@@ -113,7 +113,7 @@ nav:
     # - Lists vs HashSet:
     - Enumerable Laziness: best-practices/Enumerable-Laziness.md
     - TryGet Concepts: best-practices/TryGet-Concepts.md
-    # - Access Overlays Once:
+    - Access Overlays Once: best-practices/Overlays-Single-Access.md
     - ITPO Avoidance: best-practices/ITPO-Avoidance.md
     - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
