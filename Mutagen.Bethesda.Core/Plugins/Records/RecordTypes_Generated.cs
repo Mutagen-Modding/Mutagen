@@ -84,6 +84,7 @@ public partial class RecordTypes
     public static readonly RecordType FSTP = new(0x50545346);
     public static readonly RecordType FSTS = new(0x53545346);
     public static readonly RecordType FURN = new(0x4E525546);
+    public static readonly RecordType FXPD = new(0x44505846);
     public static readonly RecordType GBFM = new(0x4D464247);
     public static readonly RecordType GBFT = new(0x54464247);
     public static readonly RecordType GCVR = new(0x52564347);

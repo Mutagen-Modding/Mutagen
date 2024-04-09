@@ -118,6 +118,8 @@ public class ModModule : GenerationModule
             {
                 args.Add($"{ReleaseEnumName(obj)} release");
             }
+            args.Add("float? headerVersion = null");
+            args.Add($"bool? forceUseLowerFormIDRanges = null");
         }
         using (sb.IncreaseDepth())
         {
@@ -125,11 +127,25 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();");
+            sb.AppendLine("if (headerVersion != null)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine($"this.ModHeader.Stats.Version = headerVersion.Value;");
+            }
             if (objData.GameReleaseOptions != null)
             {
                 sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
             }
+
+            using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
+            {
+                if (objData.GameReleaseOptions != null)
+                {
+                    a.AddPassArg("release");
+                }
+                a.AddPassArg("forceUseLowerFormIDRanges");
+            }
+
             await obj.GenerateInitializer(sb);
             sb.AppendLine($"CustomCtor();");
         }

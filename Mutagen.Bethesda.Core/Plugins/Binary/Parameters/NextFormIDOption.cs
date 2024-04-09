@@ -1,4 +1,4 @@
-﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 /// <summary>
 /// Flag to specify what logic to use to keep a mod header's next formID field in sync
@@ -11,7 +11,7 @@ public enum NextFormIDOption
     NoCheck,
 
     /// <summary>
-    /// Iterate source mod
+    /// Iterate source mod and locate the maximum formID present
     /// </summary>
     Iterate,
 }

@@ -5309,11 +5309,19 @@ namespace Mutagen.Bethesda.Skyrim
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
         public SkyrimMod(
             ModKey modKey,
-            SkyrimRelease release)
+            SkyrimRelease release,
+            float? headerVersion = null,
+            bool? forceUseLowerFormIDRanges = null)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            if (headerVersion != null)
+            {
+                this.ModHeader.Stats.Version = headerVersion.Value;
+            }
             this.SkyrimRelease = release;
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
+                release: release,
+                forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
             _Keywords_Object = new SkyrimGroup<Keyword>(this);
             _LocationReferenceTypes_Object = new SkyrimGroup<LocationReferenceType>(this);

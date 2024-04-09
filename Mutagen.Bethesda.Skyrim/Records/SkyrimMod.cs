@@ -9,27 +9,56 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Assets;
+using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(
+        SkyrimRelease release,
+        bool? forceUseLowerFormIDRanges) =>
+        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) => 
+        GetDefaultInitialNextFormID(this.SkyrimRelease, 
+            this.ModHeader.Stats.Version, 
+            forceUseLowerFormIDRanges);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    private static readonly HashSet<GameRelease> _allowedLowerRangeReleases = new HashSet<GameRelease>()
     {
-        if (headerVersion >= 1.71f)
-        {
-            return 1;
-        }
+        GameRelease.SkyrimSE,
+        GameRelease.SkyrimSEGog,
+        GameRelease.EnderalSE,
+    };
 
-        return 800;
+    public static uint GetDefaultInitialNextFormID(
+        SkyrimRelease release,
+        float headerVersion,
+        bool? forceUseLowerFormIDRanges)
+    {
+        return HeaderVersionHelper.GetNextFormId(
+            release: release.ToGameRelease(),
+            allowedReleases: _allowedLowerRangeReleases,
+            headerVersion: headerVersion,
+            useLowerRangesVersion: 1.71f,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            higherFormIdRange: 800);
     }
+}
+
+internal partial class SkyrimModBinaryOverlay
+{
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+        SkyrimMod.GetDefaultInitialNextFormID(
+            this.SkyrimRelease,
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 }
 
 partial class SkyrimModSetterCommon

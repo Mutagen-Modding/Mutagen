@@ -3,7 +3,6 @@ using Loqui;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
