@@ -117,4 +117,21 @@ public class HeaderVersionHelperTests
             higherFormIdRange: 800)
             .Should().Be(800);
     }
+
+    [Theory, DefaultAutoData]
+    public void ForceUseLowerRangesWithNoListedLowerVersion(
+        GameRelease release,
+        float headerVersion)
+    {
+        HeaderVersionHelper.GetNextFormId(
+            release,
+            allowedReleases: new HashSet<GameRelease>()
+            {
+            },
+            headerVersion: headerVersion,
+            useLowerRangesVersion: null,
+            forceUseLowerFormIDRanges: true,
+            higherFormIdRange: 800)
+            .Should().Be(1);
+    }
 }
