@@ -20,7 +20,7 @@ public partial class SkyrimMod : AMod
         bool? forceUseLowerFormIDRanges) =>
         GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) => 
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
         GetDefaultInitialNextFormID(this.SkyrimRelease, 
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
@@ -54,7 +54,7 @@ public partial class SkyrimMod : AMod
 
 internal partial class SkyrimModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         SkyrimMod.GetDefaultInitialNextFormID(
             this.SkyrimRelease,
             this.ModHeader.Stats.Version,

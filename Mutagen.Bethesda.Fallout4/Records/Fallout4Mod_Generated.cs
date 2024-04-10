@@ -5823,11 +5823,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
+        /// <param name="modKey">ModKey to assign to the mod</param>
+        /// <param name="release">Release to assign to the mod</param>
+        /// <param name="headerVersion">Header version to assign to the mod.  Default value is latest header version the game supports</param>
+        /// <param name="forceUseLowerFormIDRanges">Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X</param>
         public Fallout4Mod(
             ModKey modKey,
             Fallout4Release release,
             float? headerVersion = null,
-            bool? forceUseLowerFormIDRanges = null)
+            bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
         {
             if (headerVersion != null)

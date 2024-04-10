@@ -19,7 +19,7 @@ public partial class OblivionMod : AMod
         bool? forceUseLowerFormIDRanges) =>
         GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormID(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
@@ -90,7 +90,7 @@ public partial class OblivionMod : AMod
 
 internal partial class OblivionModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         OblivionMod.GetDefaultInitialNextFormID(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);

@@ -2812,10 +2812,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
+        /// <param name="modKey">ModKey to assign to the mod</param>
+        /// <param name="headerVersion">Header version to assign to the mod.  Default value is latest header version the game supports</param>
+        /// <param name="forceUseLowerFormIDRanges">Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X</param>
         public OblivionMod(
             ModKey modKey,
             float? headerVersion = null,
-            bool? forceUseLowerFormIDRanges = null)
+            bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
         {
             if (headerVersion != null)

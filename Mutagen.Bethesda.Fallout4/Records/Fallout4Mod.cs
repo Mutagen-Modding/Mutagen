@@ -19,7 +19,7 @@ public partial class Fallout4Mod : AMod
         bool? forceUseLowerFormIDRanges) =>
         GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
     partial void CustomCtor()
@@ -41,7 +41,7 @@ public partial class Fallout4Mod : AMod
 
 internal partial class Fallout4ModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         Fallout4Mod.GetDefaultInitialNextFormID(
             this.Fallout4Release,
             this.ModHeader.Stats.Version,

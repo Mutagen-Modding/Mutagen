@@ -20,7 +20,7 @@ public partial class StarfieldMod : AMod
         bool? forceUseLowerFormIDRanges) =>
         GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) =>
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormID(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version, 
@@ -48,7 +48,7 @@ public partial class StarfieldMod : AMod
 
 internal partial class StarfieldModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = null) => 
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
         StarfieldMod.GetDefaultInitialNextFormID(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version,
