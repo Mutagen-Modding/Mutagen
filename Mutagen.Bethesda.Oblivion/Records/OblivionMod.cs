@@ -7,17 +7,33 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
     private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Stats.Version);
+    private uint GetDefaultInitialNextFormID(
+        bool? forceUseLowerFormIDRanges) =>
+        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion)
+    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormID(
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
+
+    public static uint GetDefaultInitialNextFormID(float headerVersion,
+        bool? forceUseLowerFormIDRanges)
     {
-        return DefaultInitialNextFormID;
+        return HeaderVersionHelper.GetNextFormId(
+            release: GameRelease.Oblivion,
+            allowedReleases: null,
+            headerVersion: headerVersion,
+            useLowerRangesVersion: null,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            higherFormIdRange: DefaultInitialNextFormID);
     }
 
     partial void GetCustomRecordCount(Action<uint> setter)
@@ -70,6 +86,14 @@ public partial class OblivionMod : AMod
         count += (uint)this.DialogTopics.RecordCache.Count;
         setter(count);
     }
+}
+
+internal partial class OblivionModBinaryOverlay
+{
+    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
+        OblivionMod.GetDefaultInitialNextFormID(
+            this.ModHeader.Stats.Version,
+            forceUseLowerFormIDRanges);
 }
 
 partial class OblivionModCommon

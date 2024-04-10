@@ -53,7 +53,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region RawContent
-        public UInt32 RawContent { get; set; } = default(UInt32);
+        public static readonly UInt32 RawContentDefault = uint.MaxValue;
+        public UInt32 RawContent { get; set; } = RawContentDefault;
         #endregion
 
         #region To String
@@ -628,7 +629,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBookTeachesNothing item)
         {
             ClearPartial();
-            item.RawContent = default(UInt32);
+            item.RawContent = BookTeachesNothing.RawContentDefault;
             base.Clear(item);
         }
         

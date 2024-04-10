@@ -17,8 +17,10 @@
         </Fields>
       </Data>
       <RecordType name="SubtypeName" recordType="SNAM" nullable="False" />
-      <CustomLogic name="TopicInfoList" recordType="TIFL" />
-      <CustomLogic name="InfoCount" recordType="TIFC" />
+      <List name="TopicInfoList" recordType="TIFL" >
+        <FormLink refName="DialogResponses" />
+      </List>
+      <CustomLogic name="InfoListCount" recordType="TIFC" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="Unknown" binary="NoGeneration" />
       <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />

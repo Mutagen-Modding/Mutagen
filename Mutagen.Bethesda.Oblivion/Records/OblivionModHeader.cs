@@ -36,9 +36,6 @@ public partial class OblivionModHeader
         set => this.Stats.NextFormID = value;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => OblivionMod.GetDefaultInitialNextFormID(this.Stats.Version);
-
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
 

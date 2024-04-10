@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -109,7 +109,7 @@ public partial class ALinkingTests
     [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
     public void DirectTypical(LinkCachePreferences.RetentionType cacheType)
     {
-        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
+        var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE, forceUseLowerFormIDRanges: false);
         var objEffect1 = prototype.ObjectEffects.AddNew("EDID1");
         var objEffect2 = prototype.ObjectEffects.AddNew("EDID2");
         using var disp = ConvertMod(prototype, out var mod);

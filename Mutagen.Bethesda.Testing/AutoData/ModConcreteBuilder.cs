@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
@@ -26,7 +26,7 @@ public class ModConcreteBuilder : ISpecimenBuilder
         if (request is not Type t) return new NoSpecimen();
         if (!t.IsInterface && !t.IsAbstract && t.InheritsFrom(typeof(IMod)))
         {
-            var ret = ModInstantiator.Activator(context.Create<ModKey>(), _release);
+            var ret = ModInstantiator.Activator(context.Create<ModKey>(), _release, forceUseLowerFormIDRanges: false);
             LastCreatedConcreteMod = ret;
             return ret;
         }

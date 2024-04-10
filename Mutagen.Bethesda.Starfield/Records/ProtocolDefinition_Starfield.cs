@@ -239,6 +239,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             FaceDial_Registration.Instance,
             FaceMorph_Registration.Instance,
             FaceMorphItem_Registration.Instance,
+            FacialExpression_Registration.Instance,
+            FacialExpressionItem_Registration.Instance,
             Faction_Registration.Instance,
             FactionOwner_Registration.Instance,
             FFKWRecord_Registration.Instance,

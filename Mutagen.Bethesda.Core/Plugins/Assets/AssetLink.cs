@@ -149,12 +149,21 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         return DataRelativePath;
     }
 
+    public override bool Equals(object? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
+
+        return AssetLink.PathComparer.Equals(DataRelativePath, rhs.DataRelativePath);
+    }
+
     public virtual bool Equals(AssetLinkGetter<TAssetType>? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return DataRelativePath == other.DataRelativePath;
+        return AssetLink.PathComparer.Equals(DataRelativePath, other.DataRelativePath);
     }
 
     public override int GetHashCode()
@@ -255,16 +264,16 @@ public class AssetLink<TAssetType> :
     {
         return HashCode.Combine(
                 typeof(TAssetType).GetHashCode(),
-                AssetLink.PathComparer.GetHashCode(RawPath));
+                AssetLink.PathComparer.GetHashCode(DataRelativePath));
     }
 
     public override bool Equals(object? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        if (other is not AssetLink<TAssetType> rhs) return false;
+        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
 
-        return AssetLink.PathComparer.Equals(RawPath, rhs.RawPath);
+        return AssetLink.PathComparer.Equals(DataRelativePath, rhs.DataRelativePath);
     }
 
     public virtual bool Equals(AssetLink<TAssetType>? other)
@@ -280,7 +289,7 @@ public class AssetLink<TAssetType> :
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
 
-        return AssetLink.PathComparer.Compare(RawPath, other.RawPath);
+        return AssetLink.PathComparer.Compare(DataRelativePath, other.DataRelativePath);
     }
 
     [return: NotNullIfNotNull("asset")]

@@ -110,6 +110,16 @@ public class ModModule : GenerationModule
         sb.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
         sb.AppendLine($"uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;");
 
+        using (var c = sb.Comment())
+        {
+            c.AddParameter("modKey", "ModKey to assign to the mod");
+            if (objData.GameReleaseOptions != null)
+            {
+                c.AddParameter("release", "Release to assign to the mod");
+            }
+            c.AddParameter("headerVersion", "Header version to assign to the mod.  Default value is latest header version the game supports");
+            c.AddParameter("forceUseLowerFormIDRanges", "Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X");
+        }
         using (var args = sb.Function(
                    $"public {obj.Name}"))
         {
@@ -118,6 +128,8 @@ public class ModModule : GenerationModule
             {
                 args.Add($"{ReleaseEnumName(obj)} release");
             }
+            args.Add("float? headerVersion = null");
+            args.Add($"bool? forceUseLowerFormIDRanges = false");
         }
         using (sb.IncreaseDepth())
         {
@@ -125,11 +137,25 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();");
+            sb.AppendLine("if (headerVersion != null)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine($"this.ModHeader.Stats.Version = headerVersion.Value;");
+            }
             if (objData.GameReleaseOptions != null)
             {
                 sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
             }
+
+            using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
+            {
+                if (objData.GameReleaseOptions != null)
+                {
+                    a.AddPassArg("release");
+                }
+                a.AddPassArg("forceUseLowerFormIDRanges");
+            }
+
             await obj.GenerateInitializer(sb);
             sb.AppendLine($"CustomCtor();");
         }
