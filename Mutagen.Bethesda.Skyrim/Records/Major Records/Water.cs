@@ -10,11 +10,11 @@ public partial class Water
         /// <summary>
         /// SSE only
         /// </summary>
-        EnableFlowmap = 0x02,
+        EnableFlowmap = 0x08,
 
         /// <summary>
         /// SSE only
         /// </summary>
-        BlendNormals = 0x04,
+        BlendNormals = 0x10,
     }
 }

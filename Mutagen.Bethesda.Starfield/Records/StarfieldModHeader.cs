@@ -39,9 +39,6 @@ public partial class StarfieldModHeader
         set => this.Stats.NextFormID = value;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => StarfieldMod.GetDefaultInitialNextFormID(this.Version);
-
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
 

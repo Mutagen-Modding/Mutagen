@@ -82,6 +82,7 @@ public partial class RecordTypeInts
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
     public const int FURN = 0x4E525546;
+    public const int FXPD = 0x44505846;
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
     public const int GCVR = 0x52564347;

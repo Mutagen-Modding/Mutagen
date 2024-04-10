@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Implementations;
+using Mutagen.Bethesda.Testing.AutoData;
 
 namespace Mutagen.Bethesda.UnitTests.Api;
 
@@ -30,11 +31,9 @@ public class Api
     /// This API test is related to #106 on github
     /// Want to confirm that typical given FormLinks can resolve even if backing mod isn't a setter mod.
     /// </summary>
-    [Fact]
-    public static void TypicalLinksLocate()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public static void TypicalLinksLocate(SkyrimMod sourceMod, Race race)
     {
-        SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var race = sourceMod.Races.AddNew();
         using var cleanup = ImmutableOverlayTests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
         var cache = sourceModGetter.ToImmutableLinkCache();
         var otherMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -43,12 +42,9 @@ public class Api
         Assert.True(npc.Race.TryResolve(cache, out var _));
     }
 
-    [Fact]
-    public static void FormLinkListCovariance()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public static void FormLinkListCovariance(SkyrimMod sourceMod, Armor armor)
     {
-        SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        Armor armor = sourceMod.Armors.AddNew();
-
         void Tester(IReadOnlyList<IFormLinkGetter<IKeywordGetter>> tester)
         {
         }
@@ -61,10 +57,9 @@ public class Api
     /// This API test is related to #108 on github
     /// Want to ensure we can interact with FormLink lists without requiring users to create FormLinks themselves
     /// </summary>
-    [Fact]
-    public static void CleanFormLinkListAPI()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public static void CleanFormLinkListAPI(SkyrimMod sourceMod)
     {
-        SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         FormKey key = sourceMod.GetNextFormKey();
         Keyword keyword = sourceMod.Keywords.AddNew();
         Armor armor = sourceMod.Armors.AddNew();
@@ -74,16 +69,15 @@ public class Api
         test.Add(keyword);
     }
 
-    [Fact]
-    public static void FormLinkSetToNull()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public static void FormLinkSetToNull(CameraShot cameraShot)
     {
-        var cameraShot = new CameraShot(TestConstants.Form1, SkyrimRelease.SkyrimSE);
         cameraShot.ImageSpaceModifier.Clear();
         cameraShot.ImageSpaceModifier.SetTo(FormKey.Null);
     }
 
-    [Fact]
-    public static void IKeyworded()
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public static void IKeyworded(SkyrimMod mod, Armor armor)
     {
         void TestFunction<T>()
             where T : IKeywordedGetter<IKeywordGetter>
@@ -96,8 +90,7 @@ public class Api
         TestFunction<IWeaponGetter>();
         TestFunction2<IWeaponGetter>();
 
-        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        IKeyworded<IKeywordGetter> keyworded = mod.Armors.AddNew();
+        IKeyworded<IKeywordGetter> keyworded = armor;
         keyworded.TryResolveKeyword(TestConstants.Form2, mod.ToImmutableLinkCache(), out var keyword);
     }
 

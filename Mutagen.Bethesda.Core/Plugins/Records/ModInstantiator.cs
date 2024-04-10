@@ -39,9 +39,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             return _dict[release.ToCategory()].Importer(path, release, fileSystem, stringsParam);
         }
 
-        public static IMod Activator(ModKey modKey, GameRelease release)
+        public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
         {
-            return _dict[release.ToCategory()].Activator(modKey, release);
+            return _dict[release.ToCategory()].Activator(modKey, release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
         }
     }
     
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     public static class ModInstantiator<TMod>
         where TMod : IModGetter
     {
-        public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release);
+        public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
         public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null);
 
         /// <summary>
@@ -89,28 +89,33 @@ namespace Mutagen.Bethesda.Plugins.Records
             where TMod : IModGetter
         {
             var ctorInfo = regis.ClassType.GetConstructors()
-                .Where(c => c.GetParameters().Length >= 1)
+                .Where(c => c.GetParameters().Length >= 3)
                 .Where(c => c.GetParameters()[0].ParameterType == typeof(ModKey))
                 .First();
             var paramInfo = ctorInfo.GetParameters();
             ParameterExpression modKeyParam = Expression.Parameter(typeof(ModKey), "modKey");
-            if (paramInfo.Length == 1)
+            ParameterExpression headerVersionParam = Expression.Parameter(typeof(float?), "headerVersion");
+            ParameterExpression forceUseLowerFormIDRangesParam = Expression.Parameter(typeof(bool?), "forceUseLowerFormIDRanges");
+            if (paramInfo.Length == 3)
             {
-                NewExpression newExp = Expression.New(ctorInfo, modKeyParam);
-                LambdaExpression lambda = Expression.Lambda(typeof(Func<ModKey, TMod>), newExp, modKeyParam);
+                NewExpression newExp = Expression.New(ctorInfo, modKeyParam, headerVersionParam, forceUseLowerFormIDRangesParam);
+                LambdaExpression lambda = Expression.Lambda(typeof(Func<ModKey, float?, bool?, TMod>), newExp, modKeyParam, headerVersionParam, forceUseLowerFormIDRangesParam);
                 var deleg = lambda.Compile();
-                return (ModKey modKey, GameRelease release) => { return (TMod)deleg.DynamicInvoke(modKey)!; };
+                return (ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false) =>
+                {
+                    return (TMod)deleg.DynamicInvoke(modKey, headerVersion, forceUseLowerFormIDRanges)!;
+                };
             }
             else
             {
                 ParameterExpression releaseParam = Expression.Parameter(paramInfo[1].ParameterType, "release");
-                NewExpression newExp = Expression.New(ctorInfo, modKeyParam, releaseParam);
-                var funcType = Expression.GetFuncType(typeof(ModKey), paramInfo[1].ParameterType, typeof(TMod));
-                LambdaExpression lambda = Expression.Lambda(funcType, newExp, modKeyParam, releaseParam);
+                NewExpression newExp = Expression.New(ctorInfo, modKeyParam, releaseParam, headerVersionParam, forceUseLowerFormIDRangesParam);
+                var funcType = Expression.GetFuncType(typeof(ModKey), paramInfo[1].ParameterType, typeof(float?), typeof(bool?), typeof(TMod));
+                LambdaExpression lambda = Expression.Lambda(funcType, newExp, modKeyParam, releaseParam, headerVersionParam, forceUseLowerFormIDRangesParam);
                 var deleg = lambda.Compile();
-                return (ModKey modKey, GameRelease release) =>
+                return (ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false) =>
                 {
-                    return (TMod)deleg.DynamicInvoke(modKey, (int)release)!;
+                    return (TMod)deleg.DynamicInvoke(modKey, (int)release, headerVersion, forceUseLowerFormIDRanges)!;
                 };
             }
         }

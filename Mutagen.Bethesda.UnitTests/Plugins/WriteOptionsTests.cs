@@ -1,10 +1,14 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using FluentAssertions;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
@@ -31,9 +35,9 @@ public class WriteOptionsTests
     
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
     public void DifferentModKeyExport(
-        OblivionMod mod,  
-        Npc npc,
-        Race race,
+        OblivionMod mod,
+        Mutagen.Bethesda.Oblivion.Npc npc,
+        Mutagen.Bethesda.Oblivion.Race race,
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -88,5 +92,89 @@ public class WriteOptionsTests
                 throw new NotImplementedException();
             }
         }
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void DisallowedLowerRangeFormIDThrows(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        var npc = mod.Npcs.AddNew();
+        npc.FormKey.ID.Should().Be(1);
+        Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
+        {
+            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+            {
+                ModKey = ModKeyOption.NoCheck,
+                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.Throw
+            }, fileSystem: fileSystem);
+        });
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void DisallowedLowerRangeFormIDPlaceholderModKey(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        ModKey modKey)
+    {
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        var npc = mod.Npcs.AddNew();
+        npc.FormKey.ID.Should().Be(1);
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(modKey)
+        }, fileSystem: fileSystem);
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, fileSystem: fileSystem);
+        reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void DisallowedLowerRangeFormIDPlaceholderLoadOrderEmptyThrows(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        var npc = mod.Npcs.AddNew();
+        npc.FormKey.ID.Should().Be(1);
+
+        var lo = new LoadOrder<ModListing>();
+
+        Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
+        {
+            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+            {
+                ModKey = ModKeyOption.NoCheck,
+                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+            }, fileSystem: fileSystem);
+        });
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void DisallowedLowerRangeFormIDPlaceholderLoadOrder(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        ModKey modKey)
+    {
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        var npc = mod.Npcs.AddNew();
+        npc.FormKey.ID.Should().Be(1);
+
+        var lo = new LoadOrder<ModListing>()
+        {
+            new ModListing()
+            {
+                ModKey = modKey
+            }
+        };
+
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+        }, fileSystem: fileSystem);
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, fileSystem: fileSystem);
+        reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
     }
 }

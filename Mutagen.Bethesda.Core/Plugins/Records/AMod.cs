@@ -22,6 +22,9 @@ public abstract class AMod : IMod
 
     private IFormKeyAllocator _allocator;
 
+    /// <inheritdoc />
+    public abstract uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
+
     protected AMod()
     {
         ModKey = ModKey.Null;
