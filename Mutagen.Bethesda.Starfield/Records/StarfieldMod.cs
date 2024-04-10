@@ -42,7 +42,7 @@ public partial class StarfieldMod : AMod
             headerVersion: headerVersion,
             useLowerRangesVersion: 0f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 800);
+            higherFormIdRange: 0x800);
     }
 }
 

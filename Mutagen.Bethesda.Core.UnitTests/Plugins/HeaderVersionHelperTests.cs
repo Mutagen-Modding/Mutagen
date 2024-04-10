@@ -18,15 +18,15 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion + 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
-            .Should().Be(800);
+            higherFormIdRange: 0x800)
+            .Should().Be(0x800);
         HeaderVersionHelper.GetNextFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion + 1,
             forceUseLowerFormIDRanges: true,
-            higherFormIdRange: 800)
+            higherFormIdRange: 0x800)
             .Should().Be(1);
     }
 
@@ -41,7 +41,7 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
+            higherFormIdRange: 0x800)
             .Should().Be(1);
         HeaderVersionHelper.GetNextFormId(
             release,
@@ -49,8 +49,8 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: false,
-            higherFormIdRange: 800)
-            .Should().Be(800);
+            higherFormIdRange: 0x800)
+            .Should().Be(0x800);
     }
 
     [Theory, DefaultAutoData]
@@ -64,7 +64,7 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
+            higherFormIdRange: 0x800)
             .Should().Be(1);
     }
 
@@ -79,8 +79,8 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion + 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
-            .Should().Be(800);
+            higherFormIdRange: 0x800)
+            .Should().Be(0x800);
     }
 
     [Theory, DefaultAutoData]
@@ -97,7 +97,7 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
+            higherFormIdRange: 0x800)
             .Should().Be(1);
     }
 
@@ -114,8 +114,8 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
-            higherFormIdRange: 800)
-            .Should().Be(800);
+            higherFormIdRange: 0x800)
+            .Should().Be(0x800);
     }
 
     [Theory, DefaultAutoData]
@@ -131,7 +131,7 @@ public class HeaderVersionHelperTests
             headerVersion: headerVersion,
             useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: true,
-            higherFormIdRange: 800)
+            higherFormIdRange: 0x800)
             .Should().Be(1);
     }
 }

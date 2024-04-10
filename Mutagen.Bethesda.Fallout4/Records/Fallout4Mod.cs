@@ -35,7 +35,7 @@ public partial class Fallout4Mod : AMod
             headerVersion: headerVersion,
             useLowerRangesVersion: 1f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 800);
+            higherFormIdRange: 0x800);
     }
 }
 

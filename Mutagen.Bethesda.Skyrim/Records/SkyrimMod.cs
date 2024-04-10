@@ -48,7 +48,7 @@ public partial class SkyrimMod : AMod
             headerVersion: headerVersion,
             useLowerRangesVersion: 1.71f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 800);
+            higherFormIdRange: 0x800);
     }
 }
 

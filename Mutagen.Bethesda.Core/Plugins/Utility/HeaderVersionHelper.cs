@@ -38,9 +38,9 @@ internal static class HeaderVersionHelper
         return release.ToCategory() switch
         {
             GameCategory.Oblivion => 0xD62,
-            GameCategory.Fallout4 => 800,
-            GameCategory.Skyrim => 800,
-            GameCategory.Starfield => 800,
+            GameCategory.Fallout4 => 0x800,
+            GameCategory.Skyrim => 0x800,
+            GameCategory.Starfield => 0x800,
         };
     }
 }
