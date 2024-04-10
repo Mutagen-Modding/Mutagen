@@ -99,7 +99,7 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
         Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
@@ -118,7 +118,7 @@ public class WriteOptionsTests
         ModPath existingModPath,
         ModKey modKey)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -135,7 +135,7 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
 
@@ -157,7 +157,7 @@ public class WriteOptionsTests
         ModPath existingModPath,
         ModKey modKey)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
 
