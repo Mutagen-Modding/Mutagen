@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 public abstract class AMinimumFormIdOption
 {
     public static AutomaticLowerFormIdRangeOption Automatic { get; } = new AutomaticLowerFormIdRangeOption();
-    public static ForceLowerFormIdRangeOption Force(bool on)
+    public static ForceLowerFormIdRangeOption Force(bool? on)
     {
         return new ForceLowerFormIdRangeOption()
         {
@@ -34,5 +34,5 @@ public class ForceLowerFormIdRangeOption : AMinimumFormIdOption
     /// <summary>
     /// Whether to force using lower FormID ranges on or off
     /// </summary>
-    public bool ForceLowerRangeSetting { get; init; }
+    public bool? ForceLowerRangeSetting { get; init; }
 }
