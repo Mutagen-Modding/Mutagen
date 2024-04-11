@@ -21,11 +21,20 @@ public abstract class ALowerRangeDisallowedHandlerOption
             ModKey = key
         };
     }
+
     public static AddPlaceholderMasterIfLowerRangeDisallowed AddPlaceholder(ILoadOrderGetter loadOrder)
     {
         return new AddPlaceholderMasterIfLowerRangeDisallowed()
         {
             ModKey = loadOrder.ListedOrder.Select<ModKey, ModKey?>(x => x).FirstOrDefault()
+        };
+    }
+
+    public static AddPlaceholderMasterIfLowerRangeDisallowed AddPlaceholder(IEnumerable<ModKey> loadOrder)
+    {
+        return new AddPlaceholderMasterIfLowerRangeDisallowed()
+        {
+            ModKey = loadOrder.Select<ModKey, ModKey?>(x => x).FirstOrDefault()
         };
     }
 }
