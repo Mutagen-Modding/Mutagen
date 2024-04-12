@@ -90,7 +90,7 @@ If you're just copy pasting code, often it will not compile because some require
 ILinkCache linkCache = ...;
 var formLink = new FormLink<IFormListGetter>(FormKey.Factory("123456:Skyrim.esm"));
 
-if (linkCache.TryResolve(formLink, out var foundRecord))
+if (formLink.TryResolve(linkCache, out var foundRecord))
 {
     // Use the specific record we were looking for
 }

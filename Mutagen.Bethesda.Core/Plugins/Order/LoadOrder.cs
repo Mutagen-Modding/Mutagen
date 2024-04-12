@@ -887,6 +887,11 @@ public static class LoadOrder
                 listingsPathContext));
         return provider;
     }
+
+    public static ILoadOrderGetter CreateReadonly(IEnumerable<ModKey> modKeys)
+    {
+        return new LoadOrderGetter(modKeys);
+    }
 }
 
 public interface ILoadOrderGetter : IDisposable
@@ -1287,5 +1292,32 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
             Item = item;
             Index = index;
         }
+    }
+}
+
+internal class LoadOrderGetter : ILoadOrderGetter
+{
+    private readonly IReadOnlyList<ModKey> _byLoadOrder;
+    private readonly HashSet<ModKey> _byModKey;
+
+    public int Count => _byLoadOrder.Count;
+
+    public IEnumerable<ModKey> ListedOrder => _byLoadOrder;
+
+    public IEnumerable<ModKey> PriorityOrder => _byLoadOrder.Reverse();
+
+    public LoadOrderGetter(IEnumerable<ModKey> listedOrder)
+    {
+        _byLoadOrder = listedOrder.ToArray();
+        _byModKey = listedOrder.ToHashSet();
+    }
+
+    public bool ContainsKey(ModKey key)
+    {
+        return _byModKey.Contains(key);
+    }
+
+    public void Dispose()
+    {
     }
 }
