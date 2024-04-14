@@ -8,16 +8,16 @@ public class MutagenDefaultCustomization : ICustomization
 {
     private readonly bool _configureMembers;
     private readonly GameRelease _release;
-    private readonly bool _useMockFileSystem;
+    private readonly TargetFileSystem _targetFileSystem;
 
     public MutagenDefaultCustomization(
         bool configureMembers, 
         GameRelease release,
-        bool useMockFileSystem)
+        TargetFileSystem targetFileSystem)
     {
         _configureMembers = configureMembers;
         _release = release;
-        _useMockFileSystem = useMockFileSystem;
+        _targetFileSystem = targetFileSystem;
     }
         
     public void Customize(IFixture fixture)
@@ -30,6 +30,6 @@ public class MutagenDefaultCustomization : ICustomization
         fixture.Customize(autoMock);
         fixture.Customize(new MutagenBaseCustomization());
         fixture.Customize(new MutagenReleaseCustomization(_release));
-        fixture.Customize(new DefaultCustomization(_useMockFileSystem));
+        fixture.Customize(new DefaultCustomization(_targetFileSystem));
     }
 }
