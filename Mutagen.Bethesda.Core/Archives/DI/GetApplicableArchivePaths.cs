@@ -10,14 +10,16 @@ public interface IGetApplicableArchivePaths
     /// <summary>
     /// Enumerates all Archives
     /// </summary>
-    IEnumerable<FilePath> Get();
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
+    IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true);
 
     /// <summary>
     /// Enumerates all Archives
     /// </summary>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
-    IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering);
+    IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true);
 
     /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
@@ -25,8 +27,9 @@ public interface IGetApplicableArchivePaths
     /// NOTE:  It is currently a bit experimental
     /// </summary>
     /// <param name="modKey">ModKey to query about</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
-    IEnumerable<FilePath> Get(ModKey modKey);
+    IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true);
 
     /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
@@ -35,8 +38,9 @@ public interface IGetApplicableArchivePaths
     /// </summary>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
-    IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering);
+    IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true);
 
     /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
@@ -45,8 +49,9 @@ public interface IGetApplicableArchivePaths
     /// </summary>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-    IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering);
+    IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering, bool returnEmptyIfMissing = true);
 }
 
 public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
@@ -72,38 +77,43 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     }
         
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get()
+    public IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null));
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering)
+    public IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering));
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(ModKey modKey)
+    public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(null));
+        return Get(modKey, GetPriorityOrderComparer(null), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering)
+    public IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(archiveOrdering));
+        return Get(modKey, GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering)
+    public IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return GetInternal(modKey, archiveOrdering);
+        return GetInternal(modKey, archiveOrdering, returnEmptyIfMissing);
     }
         
-    private IEnumerable<FilePath> GetInternal(ModKey? modKey, IComparer<FileName>? archiveOrdering)
+    private IEnumerable<FilePath> GetInternal(ModKey? modKey, IComparer<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
         if (modKey.HasValue && modKey.Value.IsNull)
+        {
+            return Enumerable.Empty<FilePath>();
+        }
+
+        if (returnEmptyIfMissing && !_fileSystem.Directory.Exists(_dataDirectoryProvider.Path))
         {
             return Enumerable.Empty<FilePath>();
         }
