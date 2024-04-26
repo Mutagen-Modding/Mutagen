@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout3Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false">
+    <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
+      <Where>Fallout3MajorRecord</Where>
+    </Generic>
+    <Fields>
+      <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Dict name="RecordCache" nullable="False" binaryOverlay="NoGeneration">
+        <KeyedValue keyAccessor="FormKey" keyType="FormKey">
+          <Ref>
+            <Generic>T</Generic>
+          </Ref>
+        </KeyedValue>
+      </Dict>
+    </Fields>
+  </Object>
+  <Object name="Fallout3ListGroup" objType="Group" recordType="GRUP">
+    <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
+      <Where>CellBlock</Where>
+    </Generic>
+    <Fields>
+      <CustomLogic byteLength="4" name="ContainedRecordType" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true">
+        <Ref>
+          <Generic>T</Generic>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

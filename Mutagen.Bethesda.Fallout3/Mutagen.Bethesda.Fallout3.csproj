@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <Description>A C# library for manipulating, creating, and analyzing Fallout3 mods</Description>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    <IsPackable>true</IsPackable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enum\GroupTypeEnum.cs" />
+    <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Records\Fallout3MajorRecord.cs">
+      <DependentUpon>Fallout3MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3MajorRecord_Generated.cs">
+      <DependentUpon>Fallout3MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3Mod_Generated.cs">
+      <DependentUpon>Fallout3Mod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3Mod.cs">
+      <DependentUpon>Fallout3Mod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3Group.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3GroupWrapper.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3ListGroup.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellSubBlock.cs" />
+    <Compile Include="Records\MajorRecords\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalUnknown.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3ModHeader.cs">
+      <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Records\ProtocolDefinition_Fallout3.cs" />
+    <Compile Include="Records\Fallout3Group_Generated.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3ListGroup_Generated.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout3ModHeader_Generated.cs">
+      <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModStats_Generated.cs">
+      <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellSubBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Cell_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Global_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalInt_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalShort_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalFloat_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GlobalUnknown_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Npc_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

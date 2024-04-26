@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout3MajorRecord" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord">
+    <Fields>
+      <Enum name="Fallout3MajorRecordFlags" enumName="Fallout3MajorRecord.Fallout3MajorRecordFlag" binary="NoGeneration" generateClassMembers="false" />
+    </Fields>
+  </Object>
+</Loqui>

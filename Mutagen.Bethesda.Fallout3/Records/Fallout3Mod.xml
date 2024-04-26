@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout3Mod" objType="Mod" ctorPermission="Protected">
+    <Fields>
+      <RefDirect name="ModHeader" refName="Fallout3ModHeader" singleton="true" />
+      <Group name="Globals" refName="Global" />
+      <Group name="Npcs" refName="Npc" />
+    </Fields>
+  </Object>
+</Loqui>
