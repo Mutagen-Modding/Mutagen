@@ -15,6 +15,8 @@ public enum GameCategory
     Fallout4,
     [Description("Starfield")]
     Starfield,
+    [Description("Fallout3")]
+    Fallout3,
 }
 
 public static class GameReleaseKernelExt
@@ -33,6 +35,8 @@ public static class GameReleaseKernelExt
             GameRelease.Fallout4 => GameCategory.Fallout4,
             GameRelease.Fallout4VR => GameCategory.Fallout4,
             GameRelease.Starfield => GameCategory.Starfield,
+            GameRelease.Fallout3 => GameCategory.Fallout3,
+            GameRelease.FalloutNV => GameCategory.Fallout3,
             _ => throw new NotImplementedException(),
         };
     }
@@ -54,6 +58,7 @@ public static class GameReleaseKernelExt
             case GameCategory.Starfield:
                 return 0x0000_0100;
             case GameCategory.Oblivion:
+            case GameCategory.Fallout3:
                 return null;
             default:
                 return 0x0000_0200;

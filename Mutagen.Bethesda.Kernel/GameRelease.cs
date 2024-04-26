@@ -27,4 +27,8 @@ public enum GameRelease
     Starfield = 8,
     [Description("Fallout 4 VR")]
     Fallout4VR = 9,
+    [Description("Fallout 3")]
+    Fallout3 = 10,
+    [Description("Fallout New Vegas")]
+    FalloutNV = 11,
 }
