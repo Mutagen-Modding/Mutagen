@@ -99,6 +99,22 @@ public static class Archive
     }
 
     /// <summary>
+    /// Enumerates all Archives for a given release that are within a given dataFolderPath.
+    /// </summary>
+    /// <param name="release">GameRelease to query for</param>
+    /// <param name="dataFolderPath">Folder to query within</param>
+    /// <param name="modOrdering">Archive ordering overload based on a mod order.  Empty enumerable means no ordering.</param>
+    /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
+    /// <returns></returns>
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
+        IEnumerable<ModKey>? modOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
+    {
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
+            .Get(modOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
+    }
+
+    /// <summary>
     /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
     /// This call is intended to return Archives related to one specific mod.<br/>
     /// NOTE:  It is currently a bit experimental

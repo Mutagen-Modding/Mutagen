@@ -127,6 +127,10 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Fonts\DI\FontProvider.cs" />
+        <Compile Include="Fonts\DI\GetFontConfig.cs" />
+        <Compile Include="Fonts\DI\GetFontConfigListing.cs" />
+        <Compile Include="Fonts\FontMapping.cs" />
         <Compile Include="Inis\DI\IIniPathLookup.cs" />
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
         <Compile Include="Installs\DI\GameLocator.cs" />
