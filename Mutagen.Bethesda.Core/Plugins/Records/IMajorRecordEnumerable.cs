@@ -52,6 +52,12 @@ public interface IMajorRecordEnumerable : IMajorRecordGetterEnumerable
     void Remove(HashSet<FormKey> formKeys);
 
     /// <summary>
+    /// Removes any records within matching the given FormLinks.
+    /// </summary>
+    /// <param name="formLinks">FormLinks to remove</param>
+    void Remove(IEnumerable<IFormLinkIdentifier> formLinks);
+
+    /// <summary>
     /// Removes any records within matching the given FormKey.
     /// </summary>
     /// <param name="formKey">FormKey to remove</param>

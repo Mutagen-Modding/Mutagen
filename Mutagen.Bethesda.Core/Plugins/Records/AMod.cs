@@ -68,6 +68,7 @@ public abstract class AMod : IMod
     IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? t, bool throwIfUnknown) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(FormKey formKey) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => throw new NotImplementedException();
+    void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formKeys) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => throw new NotImplementedException();

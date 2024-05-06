@@ -7762,7 +7762,6 @@ namespace Mutagen.Bethesda.Starfield
         /// <param name="release">Release to assign to the mod</param>
         /// <param name="headerVersion">Header version to assign to the mod.  Default value is latest header version the game supports</param>
         /// <param name="forceUseLowerFormIDRanges">Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X</param>
-
         public StarfieldMod(
             ModKey modKey,
             StarfieldRelease release,
@@ -8849,6 +8848,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -9772,6 +9773,20 @@ namespace Mutagen.Bethesda.Starfield
             ((StarfieldModSetterCommon)((IStarfieldModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IStarfieldMod obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
