@@ -299,7 +299,14 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                 {
                     // Orphaned subgroup
                     var formKey = FormKey.Factory(package.MetaData.MasterReferences!, formId.Raw);
-                    locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                    try
+                    {
+                        locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new RecordCollisionException(formKey, typeof(T));
+                    }
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
                 lastParsed = null;
