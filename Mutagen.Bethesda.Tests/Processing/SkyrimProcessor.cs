@@ -268,37 +268,6 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(RecordTypes.ANAM, out var anamRec))
-        {
-            var next = anamRec.AsUInt32();
-            var targets = new RecordType[]
-            {
-                RecordTypes.ALST,
-                RecordTypes.ALLS
-            };
-            var locs = RecordSpanExtensions.FindAllOfSubrecords(
-                majorFrame.Content,
-                majorFrame.Meta,
-                targets);
-            uint actualNext = 0;
-            if (locs.Count > 0)
-            {
-                actualNext = locs
-                    .Select(l => l.AsUInt32())
-                    .Max();
-                actualNext++;
-            }
-
-            if (actualNext != next)
-            {
-                byte[] sub = new byte[4];
-                BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                Instructions.SetSubstitution(
-                    fileOffset + anamRec.Location + anamRec.HeaderLength,
-                    sub);
-            }
-        }
-
         var sizeChange = FixMissingCounters(
             majorFrame,
             fileOffset,
