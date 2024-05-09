@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using DynamicData;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -60,6 +61,8 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.SFPT, ProcessSurfacePatterns);
         AddDynamicProcessing(RecordTypes.SFTR, ProcessSurfaceTree);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
+        AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
+        AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -272,6 +275,26 @@ public class StarfieldProcessor : Processor
     {
         ProcessComponents(majorFrame, fileOffset);
         ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+        ProcessFEIndices(majorFrame, fileOffset);
+    }
+
+    private void ProcessFEIndices(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessMajorRecordFormIDOverflow(majorFrame, fileOffset);
+
+        foreach (var subRec in majorFrame.EnumerateSubrecords())
+        {
+            var loc = 0;
+            if (subRec.ContentLength != 4
+                || subRec.Content[2] != 0
+                || subRec.Content[3] != 0xFE)
+            {
+                continue;
+            }
+            ProcessFormIDOverflow(subRec, fileOffset);
+        }
     }
 
     private void ProcessComponents(
@@ -1310,6 +1333,43 @@ public class StarfieldProcessor : Processor
                 majorFrame,
                 -range.Width,
                 fileOffset);
+        }
+    }
+
+    private void ProcessLeveledItems(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.LLKC, out var llkc))
+        {
+            ProcessFormIDOverflow(llkc, fileOffset);
+        }
+    }
+
+    private readonly string[] OMODRecords = new[]
+    {
+        "WKEY",
+        "AKEY"
+    };
+
+    private void ProcessOMOD(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
+        {
+            var str = BinaryStringUtility.ToZString(data.Content, MutagenEncoding._1252);
+            foreach (var target in OMODRecords)
+            {
+                var strLoc = 0;
+                while (true)
+                {
+                    var index = str.Substring(strLoc).IndexOf(target);
+                    if (index == -1) break;
+                    strLoc += index + 4;
+                    ProcessFormIDOverflow(data, fileOffset, ref strLoc);
+                }
+            }
         }
     }
 }

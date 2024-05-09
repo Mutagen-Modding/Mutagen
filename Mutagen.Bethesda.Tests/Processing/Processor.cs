@@ -257,7 +257,7 @@ public abstract class Processor
         // Need to zero out master
         Instructions.SetSubstitution(
             fileOffset + Meta.MajorConstants.FormIDLocationOffset + 3,
-            0);
+            _numMasters);
     }
 
     public void ProcessFormIDOverflow(ReadOnlySpan<byte> span, ref long offsetLoc)
