@@ -55,10 +55,10 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
         : base(fileSystem.GetOrDefault().File.OpenRead(path), bufferSize)
     {
         _path = path;
-        MetaData = new ParsingBundle(release, MasterReferenceCollection.FromPath(path, release, fileSystem: fileSystem))
-        {
-            ModKey = path.ModKey
-        };
+        MetaData = new ParsingBundle(
+            release, 
+            path.ModKey,
+            MasterReferenceCollection.FromPath(path, release, fileSystem: fileSystem));
         OffsetReference = offsetReference;
     }
 
@@ -101,10 +101,10 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
         : base(stream, bufferSize, dispose)
     {
         var startPos = stream.Position;
-        MetaData = new ParsingBundle(release, MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false))
-        {
-            ModKey = modKey
-        };
+        MetaData = new ParsingBundle(
+            release,
+            modKey, 
+            MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false));
         stream.Position = startPos;
         OffsetReference = offsetReference;
     }

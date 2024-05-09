@@ -64,6 +64,7 @@ public sealed class RecordLocator
             filePath,
             new ParsingBundle(
                 constants, 
+                filePath.ModKey,
                 MasterReferenceCollection.FromPath(filePath, constants.Release)));
         return GetLocations(stream, interest);
     }

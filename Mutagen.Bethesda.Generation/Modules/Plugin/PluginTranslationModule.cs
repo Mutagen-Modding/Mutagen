@@ -369,7 +369,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = modKey;");
                 internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -471,7 +470,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem));");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
@@ -2626,7 +2624,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
+                        sb.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, path.ModKey, new {nameof(MasterReferenceCollection)}(path.ModKey))");
                         using (sb.CurlyBrace(appendSemiColon: true))
                         {
                             sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");

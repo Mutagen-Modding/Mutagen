@@ -59,6 +59,7 @@ public class TestDataPathing
                 File.OpenRead(path),
                 new ParsingBundle(
                     release,
+                    path.ModKey,
                     new MasterReferenceCollection(modKey ?? path.ModKey))));
     }
 
@@ -68,6 +69,7 @@ public class TestDataPathing
             File.ReadAllBytes(path),
             new ParsingBundle(
                 GameConstants.Get(release),
+                path.ModKey,
                 new MasterReferenceCollection(
                     modKey ?? path.ModKey)));
     }

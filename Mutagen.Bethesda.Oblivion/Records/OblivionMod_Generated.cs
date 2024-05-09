@@ -3255,7 +3255,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3281,7 +3280,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3307,7 +3305,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3334,7 +3331,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -4061,7 +4057,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -4089,7 +4084,6 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -12382,7 +12376,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModPath path,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceCollection(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Oblivion, path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
             };

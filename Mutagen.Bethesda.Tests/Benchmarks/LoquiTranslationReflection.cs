@@ -21,7 +21,7 @@ public class LoquiTranslationReflection
         _data[1] = (byte)'M';
         _data[2] = (byte)'M';
         _data[3] = (byte)'O';
-        _parsingBundle = new ParsingBundle(GameRelease.Oblivion, _masterRefs);
+        _parsingBundle = new ParsingBundle(GameRelease.Oblivion, Constants.Oblivion, _masterRefs);
         _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _parsingBundle));
     }
 

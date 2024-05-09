@@ -6106,7 +6106,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -6146,7 +6145,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -6184,7 +6182,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -6213,7 +6210,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -7082,7 +7078,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -7122,7 +7117,6 @@ namespace Mutagen.Bethesda.Skyrim
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -23571,7 +23565,7 @@ namespace Mutagen.Bethesda.Skyrim
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceCollection(path.ModKey))
+            var meta = new ParsingBundle(release.ToGameRelease(), path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
             };

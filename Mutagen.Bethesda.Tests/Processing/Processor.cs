@@ -64,7 +64,7 @@ public abstract class Processor
     {
         SourcePath = sourcePath;
         Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease); 
-        Bundle = new ParsingBundle(GameRelease, Masters);
+        Bundle = new ParsingBundle(GameRelease, ModKey, Masters);
         _numMasters = checked((byte)Masters.Masters.Count);
         _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, previousPath), GameRelease);
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))

@@ -49,15 +49,21 @@ public sealed class ParsingBundle
     /// <summary>
     /// ModKey of the mod being parsed
     /// </summary>
-    public ModKey ModKey { get; set; }
+    public ModKey ModKey { get; }
 
     public EncodingBundle Encodings { get; set; } = new(MutagenEncoding._1252, MutagenEncoding._1252);
 
     public Language TranslatedTargetLanguage { get; set; } = Language.English;
 
-    public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
+    public bool ThrowOnUnknown { get; init; } = true;
+
+    public ParsingBundle(
+        GameConstants constants,
+        ModKey modKey,
+        IMasterReferenceCollection masterReferences)
     {
         Constants = constants;
+        ModKey = modKey;
         MasterReferences = masterReferences;
     }
 

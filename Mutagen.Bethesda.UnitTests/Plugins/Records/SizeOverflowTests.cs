@@ -83,6 +83,7 @@ public class SizeOverflowTestsDirect : SizeOverflowTests
     {
         using var reader = new MutagenBinaryReadStream(fileSystem.File.OpenRead(path),
             new ParsingBundle(GameConstants.SkyrimSE, 
+                Constants.Skyrim,
                 new MasterReferenceCollection("Skyrim.esm")));
         return Worldspace.CreateFromBinary(new MutagenFrame(reader));
     }
@@ -98,6 +99,7 @@ public class SizeOverflowTestsOverlay : SizeOverflowTests
             new BinaryOverlayFactoryPackage(
                 new ParsingBundle(
                     GameConstants.SkyrimSE,
+                    path.ModKey,
                     null!)));
     }
 }

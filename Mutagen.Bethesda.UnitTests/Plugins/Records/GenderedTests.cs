@@ -22,6 +22,7 @@ public class GenderedTests
                 File.OpenRead(TestDataPathing.RaceHeadPartDanglingMaster), 
                 new ParsingBundle(
                     GameRelease.SkyrimSE, 
+                    Constants.Skyrim,
                     new MasterReferenceCollection(Constants.Skyrim))));
         var headData = GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
             frame: frame,

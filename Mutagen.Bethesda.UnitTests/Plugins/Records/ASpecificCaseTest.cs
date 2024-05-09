@@ -39,6 +39,7 @@ public abstract class ASpecificCaseTest<TSetter, TGetter>
             new BinaryOverlayFactoryPackage(
                 new ParsingBundle(
                     GameConstants.Get(Release),
+                    Path.ModKey,
                     new MasterReferenceCollection(
                         Path.ModKey))),
             default);
