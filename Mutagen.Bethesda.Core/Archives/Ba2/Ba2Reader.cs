@@ -15,6 +15,8 @@ class Ba2Reader : IArchiveReader
     public bool UseATIFourCC { get; set; } = false;
 
     public bool HasNameTable => _nameTableOffset > 0;
+    
+    public uint Version { get; }
 
     public Ba2Reader(FilePath filename, IFileSystem? fileSystem = null)
         : this(() => fileSystem.GetOrDefault().File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -31,7 +33,7 @@ class Ba2Reader : IArchiveReader
         if (headerMagic != "BTDX")
             throw new InvalidDataException($"Unknown header type: {headerMagic}");
 
-        var version = reader.ReadUInt32();
+        Version = reader.ReadUInt32();
 
         string fourcc = Encoding.ASCII.GetString(reader.ReadBytes(4));
 
@@ -43,7 +45,7 @@ class Ba2Reader : IArchiveReader
         var numFiles = reader.ReadUInt32();
         _nameTableOffset = reader.ReadUInt64();
 
-        if (version > 1)
+        if (Version > 1)
         {
             var unknown = reader.ReadUInt32();
         }
@@ -54,10 +56,10 @@ class Ba2Reader : IArchiveReader
             switch (entryType)
             {
                 case Ba2EntryType.GNRL:
-                    files.Add(new BA2FileEntry(this, version, idx, reader));
+                    files.Add(new BA2FileEntry(this, Version, idx, reader));
                     break;
                 case Ba2EntryType.DX10:
-                    files.Add(new BA2DX10Entry(this, version, idx, reader));
+                    files.Add(new BA2DX10Entry(this, Version, idx, reader));
                     break;
                 case Ba2EntryType.GNMF:
                     break;
@@ -357,6 +359,7 @@ class BA2FileEntry : IArchiveFile
     internal readonly uint _align;
     internal readonly Ba2Reader _bsa;
     internal readonly int _index;
+    internal readonly uint _version;
 
     public bool Compressed => _size != 0;
 
@@ -364,6 +367,7 @@ class BA2FileEntry : IArchiveFile
     {
         _index = index;
         _bsa = ba2Reader;
+        _version = version;
         _nameHash = reader.ReadUInt32();
         Path = _nameHash.ToString("X");
         if (version > 1)
