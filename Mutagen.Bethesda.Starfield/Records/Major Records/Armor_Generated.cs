@@ -4305,8 +4305,6 @@ namespace Mutagen.Bethesda.Starfield
                 items: item.ObjectTemplates,
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
-                endMarker: RecordTypes.STOP,
-                alwaysWriteEndMarker: true,
                 transl: (MutagenWriter subWriter, IObjectTemplateGetter<Armor.Property> subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4315,6 +4313,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { }
             if (item.Voice is {} VoiceItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.AVSG))
@@ -4616,6 +4615,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: ObjectTemplate<Armor.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Armor.Property>>();
                     return (int)Armor_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.AVSG:
                 {
@@ -5051,6 +5055,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Armor.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Armor_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.AVSG:
                 {

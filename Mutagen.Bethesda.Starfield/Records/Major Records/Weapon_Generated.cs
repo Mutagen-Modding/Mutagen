@@ -11290,8 +11290,6 @@ namespace Mutagen.Bethesda.Starfield
                 items: item.ObjectTemplates,
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
-                endMarker: RecordTypes.STOP,
-                alwaysWriteEndMarker: true,
                 transl: (MutagenWriter subWriter, IObjectTemplateGetter<Weapon.Property> subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -11300,6 +11298,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EmbeddedWeaponMod,
@@ -11962,6 +11961,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: ObjectTemplate<Weapon.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Weapon.Property>>();
                     return (int)Weapon_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -13462,6 +13466,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Weapon.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Weapon_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.NNAM:
                 {

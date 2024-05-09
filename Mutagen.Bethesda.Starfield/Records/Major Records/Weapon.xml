@@ -27,13 +27,14 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true">
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
         <Ref>
           <Direct refName="ObjectTemplate">
             <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
           </Direct>
         </Ref>
       </List>
+      <Marker name="STOP" recordType="STOP" />
       <FormLink name="EmbeddedWeaponMod" refName="AObjectModification" recordType="NNAM" />
       <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
       <Data recordType="WAIM" >

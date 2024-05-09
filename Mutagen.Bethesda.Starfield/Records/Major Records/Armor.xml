@@ -60,13 +60,14 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true" >
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
         <Ref>
           <Direct refName="ObjectTemplate">
             <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
           </Direct>
         </Ref>
       </List>
+      <Marker name="STOP" recordType="STOP" />
       <RefDirect name="Voice" refName="ArmorCategoryValue" recordType="AVSG" />
       <RefDirect name="Footstep" refName="ArmorCategoryValue" recordType="AFSG" />
     </Fields>

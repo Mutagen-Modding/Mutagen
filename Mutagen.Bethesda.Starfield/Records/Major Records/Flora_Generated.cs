@@ -4127,8 +4127,6 @@ namespace Mutagen.Bethesda.Starfield
                 items: item.ObjectTemplates,
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
-                endMarker: RecordTypes.STOP,
-                alwaysWriteEndMarker: true,
                 transl: (MutagenWriter subWriter, IObjectTemplateGetter<AObjectModification.NoneProperty> subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4137,6 +4135,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActionKeyword,
@@ -4414,6 +4413,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: ObjectTemplate<AObjectModification.NoneProperty>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>();
                     return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -4844,6 +4848,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<AObjectModification.NoneProperty>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {
