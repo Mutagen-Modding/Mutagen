@@ -458,7 +458,8 @@ public class Fallout4PassthroughTest : PassthroughTest
         return Fallout4ModBinaryOverlay.Fallout4ModFactory(
             new ModPath(ModKey, path),
             Fallout4Release.Fallout4,
-            stringsParams);
+            stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
@@ -467,7 +468,8 @@ public class Fallout4PassthroughTest : PassthroughTest
             new ModPath(ModKey, path.Path),
             Fallout4Release.Fallout4,
             parallel: Settings.ParallelProcessingSteps, 
-            stringsParam: stringsParams);
+            stringsParam: stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

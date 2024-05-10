@@ -222,7 +222,8 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimModBinaryOverlay.SkyrimModFactory(
             new ModPath(ModKey, FilePath.Path),
             GameRelease.ToSkyrimRelease(),
-            stringsParam: stringsParams);
+            stringsParam: stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
@@ -231,7 +232,8 @@ public class SkyrimPassthroughTest : PassthroughTest
             new ModPath(ModKey, path.Path),
             GameRelease.ToSkyrimRelease(),
             parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams);
+            stringsParam: stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

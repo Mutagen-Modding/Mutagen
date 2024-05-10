@@ -3246,6 +3246,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModPath path,
             GroupMask? importMask = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -3255,6 +3256,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3271,6 +3273,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -3280,6 +3283,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3296,7 +3300,8 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -3305,6 +3310,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3322,7 +3328,8 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -3331,6 +3338,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -4048,6 +4056,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModPath path,
             GroupMask? importMask = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -4057,6 +4066,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -4075,7 +4085,8 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -4084,6 +4095,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -12374,12 +12386,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionModBinaryOverlay OblivionModFactory(
             ModPath path,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             var meta = new ParsingBundle(GameRelease.Oblivion, path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
             };
+            meta.ThrowOnUnknown = throwOnUnknownSubrecord;
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,

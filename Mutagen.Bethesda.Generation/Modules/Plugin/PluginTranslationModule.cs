@@ -172,6 +172,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                 if (dir == TranslationDirection.Writer) return false;
                 return obj.GetObjectType() == ObjectType.Mod;
             });
+        var throwOnUnknown = new APILine(
+            nicknameKey: "UnknownSubrecord",
+            resolutionString: "bool throwOnUnknownSubrecord = false",
+            when: (obj, dir) =>
+            {
+                if (dir == TranslationDirection.Writer) return false;
+                return obj.GetObjectType() == ObjectType.Mod;
+            });
         var fileSystem = new APILine(
             nicknameKey: "FileSystem",
             resolutionString: "IFileSystem? fileSystem = null",
@@ -265,6 +273,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         .And(modAPILines)
                         .And(stringsReadParamOptional)
                         .And(parallel)
+                        .And(throwOnUnknown)
                         .And(fileSystem)
                         .ToArray()))
             {
@@ -287,6 +296,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         .And(modAPILines)
                         .And(stringsReadParamOptional)
                         .And(parallel)
+                        .And(throwOnUnknown)
                         .And(fileSystem)
                         .ToArray()))
             {
@@ -309,6 +319,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     },
                     optionalAPI: modAPILines
                         .And(parallel)
+                        .And(throwOnUnknown)
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
@@ -369,6 +380,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
                 internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -470,6 +482,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem));");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
@@ -1246,17 +1259,29 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else
                         {
-                            var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                             if (mutaObjType == ObjectType.Subrecord)
                             {
                                 sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                             }
-                            else if (failOnUnknown)
-                            {
-                                sb.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{{ReaderMemberName}.Position}}\");");
-                            }
                             else
                             {
+                                if (await obj.IsMajorRecord())
+                                {
+                                    sb.AppendLine($"if ({ReaderMemberName}.MetaData.ThrowOnUnknown)");
+                                    using (sb.CurlyBrace())
+                                    {
+                                        using (var c = sb.Call("throw new SubrecordException"))
+                                        {
+                                            c.Add("subRecord: nextRecordType");
+                                            c.Add("formKey: item.FormKey");
+                                            c.Add("majorRecordType: item.Registration.ClassType");
+                                            c.Add("modKey: frame.MetaData.ModKey");
+                                            c.Add("edid: item.EditorID");
+                                            c.Add("message: \"Unexpected subrecord\"");
+                                        }
+                                    }
+                                }
+
                                 string addString;
                                 switch (obj.GetObjectType())
                                 {
@@ -1984,14 +2009,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else
                         {
-                            var failOnUnknown = obj.GetObjectData().FailOnUnknown;
+                            if (await obj.IsMajorRecord())
+                            {
+                                sb.AppendLine($"if (_package.MetaData.ThrowOnUnknown)");
+                                using (sb.CurlyBrace())
+                                {
+                                    using (var c = sb.Call("throw new SubrecordException"))
+                                    {
+                                        c.Add("subRecord: type");
+                                        c.Add("formKey: FormKey");
+                                        c.Add("majorRecordType: ((ILoquiObject)this).Registration.ClassType");
+                                        c.Add("modKey: _package.MetaData.ModKey");
+                                        c.Add("edid: EditorID");
+                                        c.Add("message: \"Unexpected subrecord\"");
+                                    }
+                                }
+                            }
                             if (obj.GetObjectType() == ObjectType.Subrecord)
                             {
                                 sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
-                            }
-                            else if (failOnUnknown)
-                            {
-                                sb.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
                             }
                             else
                             {
@@ -2621,6 +2657,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
                         }
                         args.Add("IFileSystem? fileSystem = null");
+                        args.Add("bool throwOnUnknownSubrecord = false");
                     }
                     using (sb.CurlyBrace())
                     {
@@ -2629,6 +2666,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
                         }
+                        sb.AppendLine($"meta.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {

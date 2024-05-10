@@ -23,7 +23,8 @@ public class StarfieldPassthroughTest : PassthroughTest
         return StarfieldModBinaryOverlay.StarfieldModFactory(
             new ModPath(ModKey, path),
             StarfieldRelease.Starfield,
-            stringsParams);
+            stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
@@ -32,7 +33,8 @@ public class StarfieldPassthroughTest : PassthroughTest
             new ModPath(ModKey, path.Path),
             StarfieldRelease.Starfield,
             parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams);
+            stringsParam: stringsParams,
+            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

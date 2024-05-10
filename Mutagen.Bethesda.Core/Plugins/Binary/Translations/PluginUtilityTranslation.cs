@@ -116,6 +116,7 @@ internal static class PluginUtilityTranslation
                         translationParams: translationParams);
                 }
                 catch (Exception ex)
+                when (ex is not SubrecordException)
                 {
                     throw new SubrecordException(
                         subMeta.RecordType,

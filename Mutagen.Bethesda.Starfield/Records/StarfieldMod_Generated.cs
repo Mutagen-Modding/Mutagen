@@ -8889,6 +8889,7 @@ namespace Mutagen.Bethesda.Starfield
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -8899,6 +8900,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -8928,6 +8930,7 @@ namespace Mutagen.Bethesda.Starfield
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -8938,6 +8941,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -8966,7 +8970,8 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldRelease release,
             RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -8975,6 +8980,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -8994,7 +9000,8 @@ namespace Mutagen.Bethesda.Starfield
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -9003,6 +9010,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -9975,6 +9983,7 @@ namespace Mutagen.Bethesda.Starfield
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
+            bool throwOnUnknownSubrecord = false,
             IFileSystem? fileSystem = null)
         {
             try
@@ -9985,6 +9994,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -10015,7 +10025,8 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldRelease release,
             RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
-            bool parallel = true)
+            bool parallel = true,
+            bool throwOnUnknownSubrecord = false)
         {
             try
             {
@@ -10024,6 +10035,7 @@ namespace Mutagen.Bethesda.Starfield
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -33917,12 +33929,14 @@ namespace Mutagen.Bethesda.Starfield
             ModPath path,
             StarfieldRelease release,
             StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             var meta = new ParsingBundle(release.ToGameRelease(), path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
             };
+            meta.ThrowOnUnknown = throwOnUnknownSubrecord;
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,

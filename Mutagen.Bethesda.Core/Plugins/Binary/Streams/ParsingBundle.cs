@@ -55,7 +55,7 @@ public sealed class ParsingBundle
 
     public Language TranslatedTargetLanguage { get; set; } = Language.English;
 
-    public bool ThrowOnUnknown { get; init; } = true;
+    public bool ThrowOnUnknown { get; set; }
 
     public ParsingBundle(
         GameConstants constants,

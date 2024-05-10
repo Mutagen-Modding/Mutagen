@@ -1659,6 +1659,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
+                    if (frame.MetaData.ThrowOnUnknown)
+                    {
+                        throw new SubrecordException(
+                            subRecord: nextRecordType,
+                            formKey: item.FormKey,
+                            majorRecordType: item.Registration.ClassType,
+                            modKey: frame.MetaData.ModKey,
+                            edid: item.EditorID,
+                            message: "Unexpected subrecord");
+                    }
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
                     return default(int?);
             }
@@ -1777,6 +1787,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
+                    if (_package.MetaData.ThrowOnUnknown)
+                    {
+                        throw new SubrecordException(
+                            subRecord: type,
+                            formKey: FormKey,
+                            majorRecordType: ((ILoquiObject)this).Registration.ClassType,
+                            modKey: _package.MetaData.ModKey,
+                            edid: EditorID,
+                            message: "Unexpected subrecord");
+                    }
                     return default(int?);
             }
         }
