@@ -177,6 +177,7 @@
       <Float name="IdleChatterTimeMin" recordType="PTOP" />
       <Float name="IdleChatterTimeMax" recordType="NTOP" />
       <RefList name="MorphValues" refName="MorphValue" binary="Custom" />
+      <Int32 name="MorphValuesLastIndex" recordType="MLSI" />
       <String name="HairColorLookupTexture" recordType="HNAM" />
       <String name="HairColorExtendedLookupTexture" recordType="HLTX" />
       <FormLink name="DialogueQuest" refName="Quest" recordType="QSTI" />

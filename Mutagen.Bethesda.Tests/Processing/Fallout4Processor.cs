@@ -28,7 +28,6 @@ public class Fallout4Processor : Processor
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
-        AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
@@ -141,37 +140,6 @@ public class Fallout4Processor : Processor
         if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
-    }
-
-    private void ProcessRaces(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        if (!majorFrame.TryFindSubrecord(RecordTypes.MLSI, out var mlsi)) return;
-
-        if (majorFrame.TryFindSubrecordHeader(RecordTypes.MSID, out _))
-        {
-            var max = majorFrame.FindEnumerateSubrecords(RecordTypes.MSID)
-                .Select(x => x.AsInt32())
-                .Max(0);
-
-            var existing = mlsi.AsInt32();
-            if (existing == max) return;
-
-            byte[] sub = new byte[4];
-            BinaryPrimitives.WriteInt32LittleEndian(sub, max);
-            Instructions.SetSubstitution(
-                fileOffset + mlsi.Location + mlsi.HeaderLength,
-                sub);
-        }
-        else
-        {
-            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
-            ProcessLengths(
-                majorFrame,
-                -mlsi.TotalLength,
-                fileOffset);
-        }
     }
 
     private void ProcessStaticCollections(

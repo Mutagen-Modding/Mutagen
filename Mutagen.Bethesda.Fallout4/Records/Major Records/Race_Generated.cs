@@ -728,6 +728,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
+        #region MorphValuesLastIndex
+        public Int32? MorphValuesLastIndex { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IRaceGetter.MorphValuesLastIndex => this.MorphValuesLastIndex;
+        #endregion
         #region HairColorLookupTexture
         public String? HairColorLookupTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -863,6 +868,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IdleChatterTimeMin = initialValue;
                 this.IdleChatterTimeMax = initialValue;
                 this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValuesLastIndex = initialValue;
                 this.HairColorLookupTexture = initialValue;
                 this.HairColorExtendedLookupTexture = initialValue;
                 this.DialogueQuest = initialValue;
@@ -963,6 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem IdleChatterTimeMin,
                 TItem IdleChatterTimeMax,
                 TItem MorphValues,
+                TItem MorphValuesLastIndex,
                 TItem HairColorLookupTexture,
                 TItem HairColorExtendedLookupTexture,
                 TItem DialogueQuest,
@@ -1062,6 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IdleChatterTimeMin = IdleChatterTimeMin;
                 this.IdleChatterTimeMax = IdleChatterTimeMax;
                 this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(MorphValues, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValuesLastIndex = MorphValuesLastIndex;
                 this.HairColorLookupTexture = HairColorLookupTexture;
                 this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
                 this.DialogueQuest = DialogueQuest;
@@ -1163,6 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem IdleChatterTimeMin;
             public TItem IdleChatterTimeMax;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>? MorphValues;
+            public TItem MorphValuesLastIndex;
             public TItem HairColorLookupTexture;
             public TItem HairColorExtendedLookupTexture;
             public TItem DialogueQuest;
@@ -1266,6 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.IdleChatterTimeMin, rhs.IdleChatterTimeMin)) return false;
                 if (!object.Equals(this.IdleChatterTimeMax, rhs.IdleChatterTimeMax)) return false;
                 if (!object.Equals(this.MorphValues, rhs.MorphValues)) return false;
+                if (!object.Equals(this.MorphValuesLastIndex, rhs.MorphValuesLastIndex)) return false;
                 if (!object.Equals(this.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
                 if (!object.Equals(this.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
                 if (!object.Equals(this.DialogueQuest, rhs.DialogueQuest)) return false;
@@ -1361,6 +1371,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.IdleChatterTimeMin);
                 hash.Add(this.IdleChatterTimeMax);
                 hash.Add(this.MorphValues);
+                hash.Add(this.MorphValuesLastIndex);
                 hash.Add(this.HairColorLookupTexture);
                 hash.Add(this.HairColorExtendedLookupTexture);
                 hash.Add(this.DialogueQuest);
@@ -1601,6 +1612,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (!eval(this.MorphValuesLastIndex)) return false;
                 if (!eval(this.HairColorLookupTexture)) return false;
                 if (!eval(this.HairColorExtendedLookupTexture)) return false;
                 if (!eval(this.DialogueQuest)) return false;
@@ -1839,6 +1851,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (eval(this.MorphValuesLastIndex)) return true;
                 if (eval(this.HairColorLookupTexture)) return true;
                 if (eval(this.HairColorExtendedLookupTexture)) return true;
                 if (eval(this.DialogueQuest)) return true;
@@ -2113,6 +2126,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                obj.MorphValuesLastIndex = eval(this.MorphValuesLastIndex);
                 obj.HairColorLookupTexture = eval(this.HairColorLookupTexture);
                 obj.HairColorExtendedLookupTexture = eval(this.HairColorExtendedLookupTexture);
                 obj.DialogueQuest = eval(this.DialogueQuest);
@@ -2675,6 +2689,10 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
+                    if (printMask?.MorphValuesLastIndex ?? true)
+                    {
+                        sb.AppendItem(MorphValuesLastIndex, "MorphValuesLastIndex");
+                    }
                     if (printMask?.HairColorLookupTexture ?? true)
                     {
                         sb.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
@@ -2788,6 +2806,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? IdleChatterTimeMin;
             public Exception? IdleChatterTimeMax;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>? MorphValues;
+            public Exception? MorphValuesLastIndex;
             public Exception? HairColorLookupTexture;
             public Exception? HairColorExtendedLookupTexture;
             public Exception? DialogueQuest;
@@ -2972,6 +2991,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return IdleChatterTimeMax;
                     case Race_FieldIndex.MorphValues:
                         return MorphValues;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        return MorphValuesLastIndex;
                     case Race_FieldIndex.HairColorLookupTexture:
                         return HairColorLookupTexture;
                     case Race_FieldIndex.HairColorExtendedLookupTexture:
@@ -3247,6 +3268,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.MorphValues:
                         this.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        this.MorphValuesLastIndex = ex;
                         break;
                     case Race_FieldIndex.HairColorLookupTexture:
                         this.HairColorLookupTexture = ex;
@@ -3529,6 +3553,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.MorphValues:
                         this.MorphValues = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>)obj;
                         break;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        this.MorphValuesLastIndex = (Exception?)obj;
+                        break;
                     case Race_FieldIndex.HairColorLookupTexture:
                         this.HairColorLookupTexture = (Exception?)obj;
                         break;
@@ -3636,6 +3663,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (IdleChatterTimeMin != null) return true;
                 if (IdleChatterTimeMax != null) return true;
                 if (MorphValues != null) return true;
+                if (MorphValuesLastIndex != null) return true;
                 if (HairColorLookupTexture != null) return true;
                 if (HairColorExtendedLookupTexture != null) return true;
                 if (DialogueQuest != null) return true;
@@ -4115,6 +4143,9 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 {
+                    sb.AppendItem(MorphValuesLastIndex, "MorphValuesLastIndex");
+                }
+                {
                     sb.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
                 }
                 {
@@ -4220,6 +4251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.IdleChatterTimeMin = this.IdleChatterTimeMin.Combine(rhs.IdleChatterTimeMin);
                 ret.IdleChatterTimeMax = this.IdleChatterTimeMax.Combine(rhs.IdleChatterTimeMax);
                 ret.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphValues?.Overall, rhs.MorphValues?.Overall), Noggog.ExceptionExt.Combine(this.MorphValues?.Specific, rhs.MorphValues?.Specific));
+                ret.MorphValuesLastIndex = this.MorphValuesLastIndex.Combine(rhs.MorphValuesLastIndex);
                 ret.HairColorLookupTexture = this.HairColorLookupTexture.Combine(rhs.HairColorLookupTexture);
                 ret.HairColorExtendedLookupTexture = this.HairColorExtendedLookupTexture.Combine(rhs.HairColorExtendedLookupTexture);
                 ret.DialogueQuest = this.DialogueQuest.Combine(rhs.DialogueQuest);
@@ -4332,6 +4364,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IdleChatterTimeMin;
             public bool IdleChatterTimeMax;
             public MorphValue.TranslationMask? MorphValues;
+            public bool MorphValuesLastIndex;
             public bool HairColorLookupTexture;
             public bool HairColorExtendedLookupTexture;
             public bool DialogueQuest;
@@ -4413,6 +4446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SubgraphAdditiveRace = defaultOn;
                 this.IdleChatterTimeMin = defaultOn;
                 this.IdleChatterTimeMax = defaultOn;
+                this.MorphValuesLastIndex = defaultOn;
                 this.HairColorLookupTexture = defaultOn;
                 this.HairColorExtendedLookupTexture = defaultOn;
                 this.DialogueQuest = defaultOn;
@@ -4509,6 +4543,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((IdleChatterTimeMin, null));
                 ret.Add((IdleChatterTimeMax, null));
                 ret.Add((MorphValues == null ? DefaultOn : !MorphValues.GetCrystal().CopyNothing, MorphValues?.GetCrystal()));
+                ret.Add((MorphValuesLastIndex, null));
                 ret.Add((HairColorLookupTexture, null));
                 ret.Add((HairColorExtendedLookupTexture, null));
                 ret.Add((DialogueQuest, null));
@@ -4758,6 +4793,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? IdleChatterTimeMin { get; set; }
         new Single? IdleChatterTimeMax { get; set; }
         new ExtendedList<MorphValue> MorphValues { get; }
+        new Int32? MorphValuesLastIndex { get; set; }
         new String? HairColorLookupTexture { get; set; }
         new String? HairColorExtendedLookupTexture { get; set; }
         new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
@@ -4892,6 +4928,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IdleChatterTimeMin { get; }
         Single? IdleChatterTimeMax { get; }
         IReadOnlyList<IMorphValueGetter> MorphValues { get; }
+        Int32? MorphValuesLastIndex { get; }
         String? HairColorLookupTexture { get; }
         String? HairColorExtendedLookupTexture { get; }
         IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
@@ -5158,10 +5195,11 @@ namespace Mutagen.Bethesda.Fallout4
         IdleChatterTimeMin = 90,
         IdleChatterTimeMax = 91,
         MorphValues = 92,
-        HairColorLookupTexture = 93,
-        HairColorExtendedLookupTexture = 94,
-        DialogueQuest = 95,
-        BoneData = 96,
+        MorphValuesLastIndex = 93,
+        HairColorLookupTexture = 94,
+        HairColorExtendedLookupTexture = 95,
+        DialogueQuest = 96,
+        BoneData = 97,
     }
     #endregion
 
@@ -5172,9 +5210,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 90;
+        public const ushort AdditionalFieldCount = 91;
 
-        public const ushort FieldCount = 97;
+        public const ushort FieldCount = 98;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -5276,6 +5314,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MSID,
                 RecordTypes.MSM0,
                 RecordTypes.MSM1,
+                RecordTypes.MLSI,
                 RecordTypes.HNAM,
                 RecordTypes.HLTX,
                 RecordTypes.QSTI,
@@ -5432,6 +5471,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.IdleChatterTimeMin = default;
             item.IdleChatterTimeMax = default;
             item.MorphValues.Clear();
+            item.MorphValuesLastIndex = default;
             item.HairColorLookupTexture = default;
             item.HairColorExtendedLookupTexture = default;
             item.DialogueQuest.Clear();
@@ -5719,6 +5759,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.MorphValues,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.MorphValuesLastIndex = item.MorphValuesLastIndex == rhs.MorphValuesLastIndex;
             ret.HairColorLookupTexture = string.Equals(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
             ret.HairColorExtendedLookupTexture = string.Equals(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
             ret.DialogueQuest = item.DialogueQuest.Equals(rhs.DialogueQuest);
@@ -6243,6 +6284,11 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
+            if ((printMask?.MorphValuesLastIndex ?? true)
+                && item.MorphValuesLastIndex is {} MorphValuesLastIndexItem)
+            {
+                sb.AppendItem(MorphValuesLastIndexItem, "MorphValuesLastIndex");
+            }
             if ((printMask?.HairColorLookupTexture ?? true)
                 && item.HairColorLookupTexture is {} HairColorLookupTextureItem)
             {
@@ -6663,6 +6709,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.MorphValues.SequenceEqual(rhs.MorphValues, (l, r) => ((MorphValueCommon)((IMorphValueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MorphValues)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValuesLastIndex) ?? true))
+            {
+                if (lhs.MorphValuesLastIndex != rhs.MorphValuesLastIndex) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
                 if (!string.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
@@ -6820,6 +6870,10 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(IdleChatterTimeMaxitem);
             }
             hash.Add(item.MorphValues);
+            if (item.MorphValuesLastIndex is {} MorphValuesLastIndexitem)
+            {
+                hash.Add(MorphValuesLastIndexitem);
+            }
             if (item.HairColorLookupTexture is {} HairColorLookupTextureitem)
             {
                 hash.Add(HairColorLookupTextureitem);
@@ -7743,6 +7797,10 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValuesLastIndex) ?? true))
+            {
+                item.MorphValuesLastIndex = rhs.MorphValuesLastIndex;
+            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
                 item.HairColorLookupTexture = rhs.HairColorLookupTexture;
@@ -8408,6 +8466,10 @@ namespace Mutagen.Bethesda.Fallout4
             RaceBinaryWriteTranslation.WriteBinaryMorphValues(
                 writer: writer,
                 item: item);
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MorphValuesLastIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.MLSI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColorLookupTexture,
@@ -9143,6 +9205,12 @@ namespace Mutagen.Bethesda.Fallout4
                         lastParsed: lastParsed);
                     return (int)Race_FieldIndex.MorphValues;
                 }
+                case RecordTypeInts.MLSI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MorphValuesLastIndex = frame.ReadInt32();
+                    return (int)Race_FieldIndex.MorphValuesLastIndex;
+                }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -9708,6 +9776,10 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed);
         #endregion
+        #region MorphValuesLastIndex
+        private int? _MorphValuesLastIndexLocation;
+        public Int32? MorphValuesLastIndex => _MorphValuesLastIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphValuesLastIndexLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region HairColorLookupTexture
         private int? _HairColorLookupTextureLocation;
         public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -10146,6 +10218,11 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         lastParsed: lastParsed);
                     return (int)Race_FieldIndex.MorphValues;
+                }
+                case RecordTypeInts.MLSI:
+                {
+                    _MorphValuesLastIndexLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MorphValuesLastIndex;
                 }
                 case RecordTypeInts.HNAM:
                 {

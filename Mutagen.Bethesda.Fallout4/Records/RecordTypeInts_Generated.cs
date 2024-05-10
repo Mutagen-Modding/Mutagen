@@ -373,6 +373,7 @@ public partial class RecordTypeInts
     public const int MIC2 = 0x3243494D;
     public const int MICO = 0x4F43494D;
     public const int MISC = 0x4353494D;
+    public const int MLSI = 0x49534C4D;
     public const int MNAM = 0x4D414E4D;
     public const int MO2C = 0x43324F4D;
     public const int MO2F = 0x46324F4D;
