@@ -394,11 +394,10 @@ class BA2FileEntry : IArchiveFile
     {
         var fs = _bsa._streamFactory();
         fs.Seek((long)_offset, SeekOrigin.Begin);
-        uint len = Compressed ? _size : _realSize;
 
         if (!Compressed)
         {
-            return new FramedStream(fs, len);
+            return new FramedStream(fs, _realSize);
         }
         else
         {
