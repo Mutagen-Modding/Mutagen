@@ -45,7 +45,7 @@ class Ba2Reader : IArchiveReader
         var numFiles = reader.ReadUInt32();
         _nameTableOffset = reader.ReadUInt64();
 
-        if (Version > 1)
+        if (Version > 1 && Version <= 7)
         {
             var unknown = reader.ReadUInt32();
         }
@@ -361,7 +361,7 @@ class BA2FileEntry : IArchiveFile
     internal readonly int _index;
     internal readonly uint _version;
 
-    public bool Compressed => _size != 0;
+    public bool Compressed { get; }
 
     public BA2FileEntry(Ba2Reader ba2Reader, uint version, int index, BinaryReader reader)
     {
@@ -370,19 +370,34 @@ class BA2FileEntry : IArchiveFile
         _version = version;
         _nameHash = reader.ReadUInt32();
         Path = _nameHash.ToString("X");
-        if (version > 1)
+        if (version > 1 && version <= 7)
         {
             var unknown = reader.ReadUInt32();
         }
+
         _extension = Encoding.UTF8.GetString(reader.ReadBytes(4));
         _dirHash = reader.ReadUInt32();
         _flags = reader.ReadUInt32();
         _offset = reader.ReadUInt64();
+        if (version > 7)
+        {
+            reader.ReadUInt32();
+        }
         _size = reader.ReadUInt32();
         _realSize = reader.ReadUInt32();
         if (version <= 1)
         {
             _align = reader.ReadUInt32();
+        }
+
+        if (version < 7)
+        {
+            Compressed = _size != 0;
+        }
+        else
+        {
+            Compressed = _realSize != 0xBAADF00D;
+            _realSize = _size;
         }
     }
         
