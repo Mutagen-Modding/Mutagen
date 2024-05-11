@@ -168,6 +168,7 @@ partial class RegionBinaryOverlay : IRegionGetter
     partial void IconCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _iconLocation = (ushort)(stream.Position - offset);
+        stream.ReadSubrecord();
     }
 
     private void ParseRegionData(OverlayStream stream, int offset)
@@ -201,7 +202,9 @@ partial class RegionBinaryOverlay : IRegionGetter
                 if (nextRec.RecordType.Equals(RecordTypes.RDSD) || nextRec.RecordType.Equals(RecordTypes.RDMD))
                 {
                     len += nextRec.TotalLength;
+                    stream.Position += nextRec.TotalLength;
                 }
+
                 _soundsSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Weather:
