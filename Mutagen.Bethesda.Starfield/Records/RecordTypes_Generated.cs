@@ -39,11 +39,16 @@ public partial class RecordTypes
     public static readonly RecordType ACBS = new(0x53424341);
     public static readonly RecordType ACEP = new(0x50454341);
     public static readonly RecordType ACHR = new(0x52484341);
+    public static readonly RecordType ACID = new(0x44494341);
     public static readonly RecordType ACOL = new(0x4C4F4341);
+    public static readonly RecordType ACPR = new(0x52504341);
     public static readonly RecordType ACPT = new(0x54504341);
     public static readonly RecordType ACSH = new(0x48534341);
+    public static readonly RecordType ACSR = new(0x52534341);
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ACTV = new(0x56544341);
+    public static readonly RecordType ACUN = new(0x4E554341);
+    public static readonly RecordType ACUR = new(0x52554341);
     public static readonly RecordType ADBO = new(0x4F424441);
     public static readonly RecordType ADCR = new(0x52434441);
     public static readonly RecordType ADDN = new(0x4E444441);
@@ -751,6 +756,9 @@ public partial class RecordTypes
     public static readonly RecordType RADR = new(0x52444152);
     public static readonly RecordType RBPC = new(0x43504252);
     public static readonly RecordType RCLR = new(0x524C4352);
+    public static readonly RecordType RCPR = new(0x52504352);
+    public static readonly RecordType RCSR = new(0x52534352);
+    public static readonly RecordType RCUR = new(0x52554352);
     public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType RDIF = new(0x46494452);
     public static readonly RecordType RDSA = new(0x41534452);

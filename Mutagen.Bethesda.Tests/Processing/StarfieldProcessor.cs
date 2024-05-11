@@ -638,12 +638,21 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(RecordTypes.LCEP, out var rec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.LCEP, out var lcep))
         {
             int loc = 0;
-            while (loc < rec.ContentLength)
+            while (loc < lcep.ContentLength)
             {
-                ProcessBool(rec, offsetLoc: fileOffset, loc + 8, 4, 1);
+                ProcessBool(lcep, offsetLoc: fileOffset, loc + 8, 4, 1);
+                loc += 12;
+            }
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.ACEP, out var acep))
+        {
+            int loc = 0;
+            while (loc < acep.ContentLength)
+            {
+                ProcessBool(acep, offsetLoc: fileOffset, loc + 8, 4, 1);
                 loc += 12;
             }
         }

@@ -37,11 +37,16 @@ public partial class RecordTypeInts
     public const int ACBS = 0x53424341;
     public const int ACEP = 0x50454341;
     public const int ACHR = 0x52484341;
+    public const int ACID = 0x44494341;
     public const int ACOL = 0x4C4F4341;
+    public const int ACPR = 0x52504341;
     public const int ACPT = 0x54504341;
     public const int ACSH = 0x48534341;
+    public const int ACSR = 0x52534341;
     public const int ACTI = 0x49544341;
     public const int ACTV = 0x56544341;
+    public const int ACUN = 0x4E554341;
+    public const int ACUR = 0x52554341;
     public const int ADBO = 0x4F424441;
     public const int ADCR = 0x52434441;
     public const int ADDN = 0x4E444441;
@@ -749,6 +754,9 @@ public partial class RecordTypeInts
     public const int RADR = 0x52444152;
     public const int RBPC = 0x43504252;
     public const int RCLR = 0x524C4352;
+    public const int RCPR = 0x52504352;
+    public const int RCSR = 0x52534352;
+    public const int RCUR = 0x52554352;
     public const int RDAT = 0x54414452;
     public const int RDIF = 0x46494452;
     public const int RDSA = 0x41534452;
