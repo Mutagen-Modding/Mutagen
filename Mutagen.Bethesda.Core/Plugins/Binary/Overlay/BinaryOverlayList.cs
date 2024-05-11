@@ -198,7 +198,8 @@ internal abstract class BinaryOverlayList
         RecordType countType,
         TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
-        bool skipHeader = true)
+        bool skipHeader = true,
+        RecordType? endMarker = null)
     {
         var mem = stream.RemainingMemory;
         var initialHeader = package.MetaData.Constants.Subrecord(mem);
@@ -223,7 +224,8 @@ internal abstract class BinaryOverlayList
                     count: count,
                     trigger: trigger,
                     constants: package.MetaData.Constants.SubConstants,
-                    skipHeader: false));
+                    skipHeader: false,
+                    endMarker: endMarker));
         }
         else
         {
@@ -237,7 +239,8 @@ internal abstract class BinaryOverlayList
                     constants: package.MetaData.Constants.SubConstants,
                     trigger: trigger,
                     skipHeader: skipHeader,
-                    translationParams: translationParams.RecordTypeConverter));
+                    translationParams: translationParams.RecordTypeConverter,
+                    endMarker: endMarker));
         }
     }
 

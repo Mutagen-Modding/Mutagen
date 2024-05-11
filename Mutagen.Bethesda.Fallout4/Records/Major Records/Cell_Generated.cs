@@ -3306,10 +3306,10 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.XGDR,
                 RecordTypes.XPRI,
                 RecordTypes.XCRI,
+                RecordTypes.XXXX,
                 RecordTypes.LAND,
                 RecordTypes.NAVM,
                 RecordTypes.NVNM,
-                RecordTypes.XXXX,
                 RecordTypes.ONAM,
                 RecordTypes.NNAM,
                 RecordTypes.MNAM,
@@ -6457,6 +6457,11 @@ namespace Mutagen.Bethesda.Fallout4
                         item: item,
                         lastParsed: lastParsed);
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -6916,6 +6921,11 @@ namespace Mutagen.Bethesda.Fallout4
                         stream,
                         offset,
                         lastParsed: lastParsed);
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

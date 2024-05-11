@@ -9762,6 +9762,7 @@ namespace Mutagen.Bethesda.Starfield
                             countLengthLength: 4,
                             countRecord: RecordTypes.CS3H,
                             triggeringRecord: NpcSound_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.CS3E,
                             translationParams: translationParams,
                             transl: NpcSound.TryCreateFromBinary)
                         .CastExtendedList<NpcSound>();
@@ -10755,7 +10756,8 @@ namespace Mutagen.Bethesda.Starfield
                         countType: RecordTypes.CS3H,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.CS3E);
                     return (int)Npc_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.CSCR:

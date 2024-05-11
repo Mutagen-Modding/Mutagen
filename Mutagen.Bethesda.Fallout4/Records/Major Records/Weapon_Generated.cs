@@ -6768,6 +6768,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
                             triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.STOP,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Weapon.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Weapon.Property>>();
@@ -7545,7 +7546,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.OBTE,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Weapon.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.STOP);
                     return (int)Weapon_FieldIndex.ObjectTemplates;
                 }
                 case RecordTypeInts.NNAM:

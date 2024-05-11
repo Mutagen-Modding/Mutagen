@@ -9361,6 +9361,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
                             triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.STOP,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Npc.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Npc.Property>>();
@@ -9491,6 +9492,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.CS2H,
                             triggeringRecord: NpcSound_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.CS2E,
                             translationParams: translationParams,
                             transl: NpcSound.TryCreateFromBinary)
                         .CastExtendedList<NpcSound>();
@@ -10355,7 +10357,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.OBTE,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Npc.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.STOP);
                     return (int)Npc_FieldIndex.ObjectTemplates;
                 }
                 case RecordTypeInts.CNAM:
@@ -10459,7 +10462,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.CS2H,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.CS2E);
                     return (int)Npc_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.CS2F:

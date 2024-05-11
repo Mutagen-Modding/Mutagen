@@ -273,6 +273,10 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             sb.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
         await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+        if (data.MarkerType.HasValue)
+        {
+            sb.AppendLine("stream.ReadSubrecord();");
+        }
         OverflowGenerationHelper.GenerateWrapperOverflowParse(sb, typeGen, data);
     }
 

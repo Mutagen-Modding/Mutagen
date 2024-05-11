@@ -481,6 +481,10 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             throw new NotImplementedException();
                     }
                 }
+                if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+                {
+                    args.Add($"endMarker: RecordTypes.{endMarker}");
+                }
                 if (threading)
                 {
                     args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
@@ -1119,6 +1123,10 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         {
                             args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
                             args.Add("skipHeader: true");
+                        }
+                        if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+                        {
+                            args.Add($"endMarker: RecordTypes.{endMarker}");
                         }
                     }
                 }

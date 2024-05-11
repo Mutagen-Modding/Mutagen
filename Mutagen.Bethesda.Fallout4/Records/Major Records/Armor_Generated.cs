@@ -4320,6 +4320,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
                             triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.STOP,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Armor.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Armor.Property>>();
@@ -4757,7 +4758,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.OBTE,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Armor.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.STOP);
                     return (int)Armor_FieldIndex.ObjectTemplates;
                 }
                 case RecordTypeInts.XXXX:

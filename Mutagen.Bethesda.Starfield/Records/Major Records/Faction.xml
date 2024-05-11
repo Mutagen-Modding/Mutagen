@@ -37,7 +37,7 @@
       <Float name="StealMult" />
       <UInt16 name="Escape" />
       <UInt16 name="WerewolfUnused" />
-      <Break />
+      <Break />F
       <UInt32 name="Unknown2" />
     </Fields>
   </Object>
