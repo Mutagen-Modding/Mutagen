@@ -13,7 +13,10 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// </summary>
     public static class ModInstantiator
     {
-        record Delegates(ModInstantiator<IModDisposeGetter>.ImporterDelegate Importer, ModInstantiator<IMod>.ActivatorDelegate Activator);
+        record Delegates(
+            ModInstantiator<IModDisposeGetter>.ImporterDelegate ImportGetter, 
+            ModInstantiator<IMod>.ImporterDelegate ImportSetter, 
+            ModInstantiator<IMod>.ActivatorDelegate Activator);
         
         private static Dictionary<GameCategory, Delegates> _dict = new();
 
@@ -29,14 +32,26 @@ namespace Mutagen.Bethesda.Plugins.Records
                 if (modRegistration == null) continue;
                 _dict[modRegistration.GameCategory] = new Delegates(
                     ModInstantiatorReflection.GetOverlay<IModDisposeGetter>(modRegistration),
+                    ModInstantiatorReflection.GetImporter<IMod>(modRegistration),
                     ModInstantiatorReflection.GetActivator<IMod>(modRegistration));
 
             }
         }
 
+        [Obsolete("Use ImportGetter")]
         public static IModDisposeGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
         {
-            return _dict[release.ToCategory()].Importer(path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].ImportGetter(path, release, fileSystem, stringsParam);
+        }
+
+        public static IModDisposeGetter ImportGetter(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        {
+            return _dict[release.ToCategory()].ImportGetter(path, release, fileSystem, stringsParam);
+        }
+
+        public static IMod ImportSetter(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        {
+            return _dict[release.ToCategory()].ImportSetter(path, release, fileSystem, stringsParam);
         }
 
         public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
