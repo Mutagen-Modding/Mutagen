@@ -8774,13 +8774,13 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 8) return null;
-                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 24) return null;
                     if (frame.MetaData.FormVersion!.Value >= 109)
                     {
-                        item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<RaceWeight>(
+                        item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<RaceWeight>(
                             frame: frame,
                             transl: RaceWeight.TryCreateFromBinary);
                     }
@@ -8933,7 +8933,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -8941,7 +8941,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.HCLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IColorRecordGetter>>(
+                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IColorRecordGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHairColors;

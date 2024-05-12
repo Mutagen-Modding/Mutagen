@@ -7837,11 +7837,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 2) return null;
                     item.Unknown = dataFrame.ReadInt16();
                     if (dataFrame.Remaining < 8) return null;
-                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 8) return null;
-                    item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 4) return null;
@@ -7943,7 +7943,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -7951,7 +7951,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DecapitateArmors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IArmorGetter>>(
+                    item.DecapitateArmors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IArmorGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DecapitateArmors;
@@ -7959,7 +7959,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.HCLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IColorRecordGetter>>(
+                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IColorRecordGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHairColors;
