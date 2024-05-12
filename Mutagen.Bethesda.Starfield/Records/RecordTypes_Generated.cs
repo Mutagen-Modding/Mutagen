@@ -283,6 +283,7 @@ public partial class RecordTypes
     public static readonly RecordType DLBR = new(0x52424C44);
     public static readonly RecordType DLSH = new(0x48534C44);
     public static readonly RecordType DMAX = new(0x58414D44);
+    public static readonly RecordType DMDC = new(0x43444D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDS = new(0x53444D44);
     public static readonly RecordType DMGT = new(0x54474D44);
