@@ -4,10 +4,12 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <ByteArray name="ODTY" recordType="ODTY" />
+      <Float name="ODRT" recordType="ODRT" />
       <String name="TX00" recordType="TX00" />
       <String name="TX01" recordType="TX01" />
       <String name="TX08" recordType="TX08" />
       <String name="TX09" recordType="TX09" />
+      <String name="TX15" recordType="TX15" />
       <String name="TX17" recordType="TX17" />
       <String name="TX19" recordType="TX19" />
       <ByteArray name="DODT" recordType="DODT" />

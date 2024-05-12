@@ -645,6 +645,7 @@ public partial class RecordTypes
     public static readonly RecordType OBTS = new(0x5354424F);
     public static readonly RecordType OCCV = new(0x5643434F);
     public static readonly RecordType OCOR = new(0x524F434F);
+    public static readonly RecordType ODRT = new(0x5452444F);
     public static readonly RecordType ODTY = new(0x5954444F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType OMOD = new(0x444F4D4F);
@@ -900,6 +901,7 @@ public partial class RecordTypes
     public static readonly RecordType TX01 = new(0x31305854);
     public static readonly RecordType TX08 = new(0x38305854);
     public static readonly RecordType TX09 = new(0x39305854);
+    public static readonly RecordType TX15 = new(0x35315854);
     public static readonly RecordType TX16 = new(0x36315854);
     public static readonly RecordType TX17 = new(0x37315854);
     public static readonly RecordType TX19 = new(0x39315854);
