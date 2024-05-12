@@ -81,6 +81,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IAcousticSpaceGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IAcousticSpaceGetter.ODRT => this.ODRT;
+        #endregion
         #region ASLS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundReference? _ASLS;
@@ -211,6 +216,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.ASLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -235,6 +241,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem ASLS,
                 TItem WED0,
                 TItem WED1,
@@ -258,6 +265,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.ASLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ASLS, new SoundReference.Mask<TItem>(ASLS));
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
                 this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED1, new SoundReference.Mask<TItem>(WED1));
@@ -283,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? ASLS { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED1 { get; set; }
@@ -310,6 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.ASLS, rhs.ASLS)) return false;
                 if (!object.Equals(this.WED0, rhs.WED0)) return false;
                 if (!object.Equals(this.WED1, rhs.WED1)) return false;
@@ -329,6 +339,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.ASLS);
                 hash.Add(this.WED0);
                 hash.Add(this.WED1);
@@ -357,6 +368,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (ASLS != null)
                 {
                     if (!eval(this.ASLS.Overall)) return false;
@@ -395,6 +407,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (ASLS != null)
                 {
                     if (eval(this.ASLS.Overall)) return true;
@@ -436,6 +449,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.ASLS = this.ASLS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ASLS.Overall), this.ASLS.Specific?.Translate(eval));
                 obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
                 obj.WED1 = this.WED1 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED1.Overall), this.WED1.Specific?.Translate(eval));
@@ -473,6 +487,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.ASLS?.Overall ?? true)
                     {
@@ -535,6 +553,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? ASLS;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? WED1;
@@ -559,6 +578,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case AcousticSpace_FieldIndex.ODTY:
                         return ODTY;
+                    case AcousticSpace_FieldIndex.ODRT:
+                        return ODRT;
                     case AcousticSpace_FieldIndex.ASLS:
                         return ASLS;
                     case AcousticSpace_FieldIndex.WED0:
@@ -598,6 +619,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AcousticSpace_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case AcousticSpace_FieldIndex.ASLS:
                         this.ASLS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -652,6 +676,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AcousticSpace_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case AcousticSpace_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case AcousticSpace_FieldIndex.ASLS:
                         this.ASLS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
@@ -699,6 +726,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (ASLS != null) return true;
                 if (WED0 != null) return true;
                 if (WED1 != null) return true;
@@ -741,6 +769,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
+                }
                 ASLS?.Print(sb);
                 WED0?.Print(sb);
                 WED1?.Print(sb);
@@ -781,6 +812,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.ASLS = this.ASLS.Combine(rhs.ASLS, (l, r) => l.Combine(r));
                 ret.WED0 = this.WED0.Combine(rhs.WED0, (l, r) => l.Combine(r));
                 ret.WED1 = this.WED1.Combine(rhs.WED1, (l, r) => l.Combine(r));
@@ -817,6 +849,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public SoundReference.TranslationMask? ASLS;
             public SoundReference.TranslationMask? WED0;
             public SoundReference.TranslationMask? WED1;
@@ -838,6 +871,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.AmbientSet = defaultOn;
                 this.Music = defaultOn;
                 this.EnvironmentType = defaultOn;
@@ -856,6 +890,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((ASLS != null ? ASLS.OnOverall : DefaultOn, ASLS?.GetCrystal()));
                 ret.Add((WED0 != null ? WED0.OnOverall : DefaultOn, WED0?.GetCrystal()));
                 ret.Add((WED1 != null ? WED1.OnOverall : DefaultOn, WED1?.GetCrystal()));
@@ -1022,6 +1057,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new SoundReference? ASLS { get; set; }
         new SoundReference? WED0 { get; set; }
         new SoundReference? WED1 { get; set; }
@@ -1061,6 +1097,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         ISoundReferenceGetter? ASLS { get; }
         ISoundReferenceGetter? WED0 { get; }
         ISoundReferenceGetter? WED1 { get; }
@@ -1251,18 +1288,19 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        ASLS = 9,
-        WED0 = 10,
-        WED1 = 11,
-        AmbientSet = 12,
-        Music = 13,
-        EnvironmentType = 14,
-        AEAR = 15,
-        FLTV = 16,
-        IsInterior = 17,
-        BOLV = 18,
-        DEVT = 19,
-        ASDF = 20,
+        ODRT = 9,
+        ASLS = 10,
+        WED0 = 11,
+        WED1 = 12,
+        AmbientSet = 13,
+        Music = 14,
+        EnvironmentType = 15,
+        AEAR = 16,
+        FLTV = 17,
+        IsInterior = 18,
+        BOLV = 19,
+        DEVT = 20,
+        ASDF = 21,
     }
     #endregion
 
@@ -1273,9 +1311,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(AcousticSpace.Mask<>);
 
@@ -1310,6 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ASPC,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.ASLS,
                 RecordTypes.WED0,
                 RecordTypes.WED1,
@@ -1368,6 +1407,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.ASLS = null;
             item.WED0 = null;
             item.WED1 = null;
@@ -1472,6 +1512,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.ASLS = EqualsMaskHelper.EqualsHelper(
                 item.ASLS,
                 rhs.ASLS,
@@ -1553,6 +1594,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.ASLS?.Overall ?? true)
                 && item.ASLS is {} ASLSItem)
@@ -1672,6 +1718,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASLS) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ASLS, rhs.ASLS, out var lhsASLS, out var rhsASLS, out var isASLSEqual))
@@ -1764,6 +1814,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.ASLS is {} ASLSitem)
             {
@@ -1962,6 +2016,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASLS) ?? true))
             {
@@ -2257,6 +2315,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.ASLS is {} ASLSItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ASLS))
@@ -2419,6 +2481,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)AcousticSpace_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AcousticSpace_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.ASLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
@@ -2559,6 +2627,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         public ISoundReferenceGetter? ASLS { get; private set; }
         public ISoundReferenceGetter? WED0 { get; private set; }
         public ISoundReferenceGetter? WED1 { get; private set; }
@@ -2676,6 +2748,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)AcousticSpace_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.ASLS:
                 {

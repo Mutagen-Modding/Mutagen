@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <Float name="OBSV" recordType="OBSV" unknown="true" />
       <Float name="OCCV" recordType="OCCV" unknown="true" />
     </Fields>

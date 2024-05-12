@@ -3,8 +3,8 @@
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <ByteArray name="ODTY" recordType="ODTY" />
-      <Float name="ODRT" recordType="ODRT" />
+      <ByteArray name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <String name="TX00" recordType="TX00" />
       <String name="TX01" recordType="TX01" />
       <String name="TX08" recordType="TX08" />
