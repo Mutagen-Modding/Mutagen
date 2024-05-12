@@ -1098,6 +1098,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ProjectedDecal_Registration.Instance,
             Projectile_Registration.Instance,
             PropertySheetComponent_Registration.Instance,
+            PTTA_Registration.Instance,
             Quest_Registration.Instance,
             QuestAdapter_Registration.Instance,
             QuestCollectionAlias_Registration.Instance,

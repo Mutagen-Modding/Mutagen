@@ -727,6 +727,7 @@ public partial class RecordTypeInts
     public const int PTOP = 0x504F5450;
     public const int PTST = 0x54535450;
     public const int PTT2 = 0x32545450;
+    public const int PTTA = 0x41545450;
     public const int PUSE = 0x45535550;
     public const int PUSH = 0x48535550;
     public const int QMDP = 0x50444D51;

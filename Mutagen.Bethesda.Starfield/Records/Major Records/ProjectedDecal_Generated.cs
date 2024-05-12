@@ -124,6 +124,17 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITransformsGetter? IProjectedDecalGetter.Transforms => this.Transforms;
         #endregion
+        #region PTTA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PTTA? _PTTA;
+        public PTTA? PTTA
+        {
+            get => _PTTA;
+            set => _PTTA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPTTAGetter? IProjectedDecalGetter.PTTA => this.PTTA;
+        #endregion
         #region SnapBehavior
         private readonly IFormLinkNullable<ISnapTemplateBehaviorGetter> _SnapBehavior = new FormLinkNullable<ISnapTemplateBehaviorGetter>();
         public IFormLinkNullable<ISnapTemplateBehaviorGetter> SnapBehavior
@@ -193,6 +204,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
                 this.SnapBehavior = initialValue;
                 this.Material = initialValue;
                 this.UnknownData1 = initialValue;
@@ -217,6 +229,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectPlacementDefaults,
                 TItem Components,
                 TItem Transforms,
+                TItem PTTA,
                 TItem SnapBehavior,
                 TItem Material,
                 TItem UnknownData1,
@@ -240,6 +253,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
                 this.SnapBehavior = SnapBehavior;
                 this.Material = Material;
                 this.UnknownData1 = UnknownData1;
@@ -265,6 +279,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
             public TItem SnapBehavior;
             public TItem Material;
             public TItem UnknownData1;
@@ -292,6 +307,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.PTTA, rhs.PTTA)) return false;
                 if (!object.Equals(this.SnapBehavior, rhs.SnapBehavior)) return false;
                 if (!object.Equals(this.Material, rhs.Material)) return false;
                 if (!object.Equals(this.UnknownData1, rhs.UnknownData1)) return false;
@@ -311,6 +327,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.Components);
                 hash.Add(this.Transforms);
+                hash.Add(this.PTTA);
                 hash.Add(this.SnapBehavior);
                 hash.Add(this.Material);
                 hash.Add(this.UnknownData1);
@@ -358,6 +375,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Transforms.Overall)) return false;
                     if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
+                if (PTTA != null)
+                {
+                    if (!eval(this.PTTA.Overall)) return false;
+                    if (this.PTTA.Specific != null && !this.PTTA.Specific.All(eval)) return false;
+                }
                 if (!eval(this.SnapBehavior)) return false;
                 if (!eval(this.Material)) return false;
                 if (!eval(this.UnknownData1)) return false;
@@ -403,6 +425,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Transforms.Overall)) return true;
                     if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
                 }
+                if (PTTA != null)
+                {
+                    if (eval(this.PTTA.Overall)) return true;
+                    if (this.PTTA.Specific != null && this.PTTA.Specific.Any(eval)) return true;
+                }
                 if (eval(this.SnapBehavior)) return true;
                 if (eval(this.Material)) return true;
                 if (eval(this.UnknownData1)) return true;
@@ -446,6 +473,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
                 obj.SnapBehavior = eval(this.SnapBehavior);
                 obj.Material = eval(this.Material);
                 obj.UnknownData1 = eval(this.UnknownData1);
@@ -511,6 +539,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Transforms?.Print(sb);
                     }
+                    if (printMask?.PTTA?.Overall ?? true)
+                    {
+                        PTTA?.Print(sb);
+                    }
                     if (printMask?.SnapBehavior ?? true)
                     {
                         sb.AppendItem(SnapBehavior, "SnapBehavior");
@@ -560,6 +592,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
             public Exception? SnapBehavior;
             public Exception? Material;
             public Exception? UnknownData1;
@@ -588,6 +621,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case ProjectedDecal_FieldIndex.Transforms:
                         return Transforms;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        return PTTA;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         return SnapBehavior;
                     case ProjectedDecal_FieldIndex.Material:
@@ -631,6 +666,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ProjectedDecal_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         this.SnapBehavior = ex;
@@ -685,6 +723,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ProjectedDecal_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
                         break;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
+                        break;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         this.SnapBehavior = (Exception?)obj;
                         break;
@@ -724,6 +765,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectPlacementDefaults != null) return true;
                 if (Components != null) return true;
                 if (Transforms != null) return true;
+                if (PTTA != null) return true;
                 if (SnapBehavior != null) return true;
                 if (Material != null) return true;
                 if (UnknownData1 != null) return true;
@@ -785,6 +827,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 Transforms?.Print(sb);
+                PTTA?.Print(sb);
                 {
                     sb.AppendItem(SnapBehavior, "SnapBehavior");
                 }
@@ -823,6 +866,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.PTTA = this.PTTA.Combine(rhs.PTTA, (l, r) => l.Combine(r));
                 ret.SnapBehavior = this.SnapBehavior.Combine(rhs.SnapBehavior);
                 ret.Material = this.Material.Combine(rhs.Material);
                 ret.UnknownData1 = this.UnknownData1.Combine(rhs.UnknownData1);
@@ -859,6 +903,7 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public AComponent.TranslationMask? Components;
             public Transforms.TranslationMask? Transforms;
+            public PTTA.TranslationMask? PTTA;
             public bool SnapBehavior;
             public bool Material;
             public bool UnknownData1;
@@ -898,6 +943,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((PTTA != null ? PTTA.OnOverall : DefaultOn, PTTA?.GetCrystal()));
                 ret.Add((SnapBehavior, null));
                 ret.Add((Material, null));
                 ret.Add((UnknownData1, null));
@@ -1070,6 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new Transforms? Transforms { get; set; }
+        new PTTA? PTTA { get; set; }
         new IFormLinkNullable<ISnapTemplateBehaviorGetter> SnapBehavior { get; set; }
         new IFormLinkNullable<IMaterialPathGetter> Material { get; set; }
         new Single UnknownData1 { get; set; }
@@ -1111,6 +1158,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         ITransformsGetter? Transforms { get; }
+        IPTTAGetter? PTTA { get; }
         IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior { get; }
         IFormLinkNullableGetter<IMaterialPathGetter> Material { get; }
         Single UnknownData1 { get; }
@@ -1301,14 +1349,15 @@ namespace Mutagen.Bethesda.Starfield
         ObjectPlacementDefaults = 10,
         Components = 11,
         Transforms = 12,
-        SnapBehavior = 13,
-        Material = 14,
-        UnknownData1 = 15,
-        UnknownData2 = 16,
-        UnknownData3 = 17,
-        UnknownData4 = 18,
-        UnknownData5 = 19,
-        UnknownData6 = 20,
+        PTTA = 13,
+        SnapBehavior = 14,
+        Material = 15,
+        UnknownData1 = 16,
+        UnknownData2 = 17,
+        UnknownData3 = 18,
+        UnknownData4 = 19,
+        UnknownData5 = 20,
+        UnknownData6 = 21,
     }
     #endregion
 
@@ -1319,9 +1368,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(ProjectedDecal.Mask<>);
 
@@ -1361,6 +1410,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.PTT2,
+                RecordTypes.PTTA,
                 RecordTypes.SNBH,
                 RecordTypes.DODT,
                 RecordTypes.DATA);
@@ -1414,6 +1464,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectPlacementDefaults = null;
             item.Components.Clear();
             item.Transforms = null;
+            item.PTTA = null;
             item.SnapBehavior.Clear();
             item.Material.Clear();
             item.UnknownData1 = default(Single);
@@ -1441,6 +1492,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
+            obj.PTTA?.RemapLinks(mapping);
             obj.SnapBehavior.Relink(mapping);
             obj.Material.Relink(mapping);
         }
@@ -1551,6 +1603,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Transforms,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.PTTA = EqualsMaskHelper.EqualsHelper(
+                item.PTTA,
+                rhs.PTTA,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.SnapBehavior = item.SnapBehavior.Equals(rhs.SnapBehavior);
             ret.Material = item.Material.Equals(rhs.Material);
             ret.UnknownData1 = item.UnknownData1.EqualsWithin(rhs.UnknownData1);
@@ -1645,6 +1702,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Transforms is {} TransformsItem)
             {
                 TransformsItem?.Print(sb, "Transforms");
+            }
+            if ((printMask?.PTTA?.Overall ?? true)
+                && item.PTTA is {} PTTAItem)
+            {
+                PTTAItem?.Print(sb, "PTTA");
             }
             if (printMask?.SnapBehavior ?? true)
             {
@@ -1764,6 +1826,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isTransformsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.PTTA) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PTTA, rhs.PTTA, out var lhsPTTA, out var rhsPTTA, out var isPTTAEqual))
+                {
+                    if (!((PTTACommon)((IPTTAGetter)lhsPTTA).CommonInstance()!).Equals(lhsPTTA, rhsPTTA, equalsMask?.GetSubCrystal((int)ProjectedDecal_FieldIndex.PTTA))) return false;
+                }
+                else if (!isPTTAEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.SnapBehavior) ?? true))
             {
                 if (!lhs.SnapBehavior.Equals(rhs.SnapBehavior)) return false;
@@ -1842,6 +1912,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Transformsitem);
             }
+            if (item.PTTA is {} PTTAitem)
+            {
+                hash.Add(PTTAitem);
+            }
             hash.Add(item.SnapBehavior);
             hash.Add(item.Material);
             hash.Add(item.UnknownData1);
@@ -1887,6 +1961,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Transforms is {} TransformsItems)
             {
                 foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PTTA is {} PTTAItems)
+            {
+                foreach (var item in PTTAItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2084,6 +2165,32 @@ namespace Mutagen.Bethesda.Starfield
                     else
                     {
                         item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.PTTA) ?? true))
+            {
+                errorMask?.PushIndex((int)ProjectedDecal_FieldIndex.PTTA);
+                try
+                {
+                    if(rhs.PTTA is {} rhsPTTA)
+                    {
+                        item.PTTA = rhsPTTA.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ProjectedDecal_FieldIndex.PTTA));
+                    }
+                    else
+                    {
+                        item.PTTA = default;
                     }
                 }
                 catch (Exception ex)
@@ -2323,6 +2430,13 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.PTTA is {} PTTAItem)
+            {
+                ((PTTABinaryWriteTranslation)((IBinaryItem)PTTAItem).BinaryWriteTranslator).Write(
+                    item: PTTAItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SnapBehavior,
@@ -2474,6 +2588,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
                     return (int)ProjectedDecal_FieldIndex.Transforms;
                 }
+                case RecordTypeInts.PTTA:
+                {
+                    item.PTTA = Mutagen.Bethesda.Starfield.PTTA.CreateFromBinary(frame: frame);
+                    return (int)ProjectedDecal_FieldIndex.PTTA;
+                }
                 case RecordTypeInts.SNBH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2585,6 +2704,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region PTTA
+        private RangeInt32? _PTTALocation;
+        public IPTTAGetter? PTTA => _PTTALocation.HasValue ? PTTABinaryOverlay.PTTAFactory(_recordData.Slice(_PTTALocation!.Value.Min), _package) : default;
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
@@ -2727,6 +2850,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ProjectedDecal_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.PTTA:
+                {
+                    _PTTALocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)ProjectedDecal_FieldIndex.PTTA;
                 }
                 case RecordTypeInts.SNBH:
                 {
