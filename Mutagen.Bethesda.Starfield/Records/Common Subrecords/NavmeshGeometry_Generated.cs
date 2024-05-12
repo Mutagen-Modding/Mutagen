@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         public NavmeshGeometry.VersioningBreaks Versioning { get; set; } = default(NavmeshGeometry.VersioningBreaks);
         #endregion
         #region NavmeshVersion
-        public static readonly UInt32 NavmeshVersionDefault = 15;
+        public static readonly UInt32 NavmeshVersionDefault = 17;
         public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region CrcHash

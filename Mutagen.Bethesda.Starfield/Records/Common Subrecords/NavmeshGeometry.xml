@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="NavmeshGeometry" objType="Subrecord" recordType="NVNM">
     <Fields>
-      <UInt32 name="NavmeshVersion" default="15" />
+      <UInt32 name="NavmeshVersion" default="17" />
       <UInt32 name="CrcHash" default="0xA5E9A03C" />
       <RefDirect name="Parent" refName="ANavmeshParent" binary="Custom" byteLength="8" />
       <RefList name="Vertices" counterLength="4" refName="NavmeshVertex" />
