@@ -3378,7 +3378,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BSMP:
                 {
-                    item.BoneDataModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>>(
+                    item.BoneDataModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>>(
                         frame: frame,
                         genderEnumRecord: RecordTypes.BSMP,
                         contentMarker: RecordTypes.BNAM,

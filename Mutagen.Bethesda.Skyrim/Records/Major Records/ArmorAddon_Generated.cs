@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 2) return null;
-                    item.Priority = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Byte>(
+                    item.Priority = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Byte>(
                         frame: frame,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     ArmorAddonBinaryCreateTranslation.FillBinaryWeightSliderEnabledCustom(
@@ -2709,7 +2709,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    item.SkinTexture = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<ITextureSetGetter>>(
+                    item.SkinTexture = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkNullableGetter<ITextureSetGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM0,
                         femaleMarker: RecordTypes.NAM1,
@@ -2721,7 +2721,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
                 {
-                    item.TextureSwapList = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<IFormListGetter>>(
+                    item.TextureSwapList = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkNullableGetter<IFormListGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM2,
                         femaleMarker: RecordTypes.NAM3,

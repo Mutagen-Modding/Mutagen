@@ -64,6 +64,10 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             parseSuffix = "MarkerWithinItem";
         }
+        else if (!gender.SubTypeGeneration.IsNullable)
+        {
+            parseSuffix = "Required";
+        }
 
         using (var args = sb.Call(
                    $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{parseSuffix}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
