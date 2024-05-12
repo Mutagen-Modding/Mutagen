@@ -13,6 +13,7 @@
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="PTTA" refName="PTTA" unknown="true" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
