@@ -1558,8 +1558,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.VTCK,
                 RecordTypes.HERD,
                 RecordTypes.CRHR,
-                RecordTypes.GRPH,
-                RecordTypes.CRGP);
+                RecordTypes.CRGP,
+                RecordTypes.GRPH);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -2676,11 +2676,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.HERD,
                 header: translationParams.ConvertToCustom(RecordTypes.HERD),
                 markerType: RecordTypes.CRHR);
+            using (HeaderExport.Subrecord(writer, RecordTypes.CRGP)) { }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GRPH,
-                header: translationParams.ConvertToCustom(RecordTypes.GRPH),
-                markerType: RecordTypes.CRGP);
+                header: translationParams.ConvertToCustom(RecordTypes.GRPH));
         }
 
         public void Write(
@@ -2867,10 +2867,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength;
-                    var nextRec = frame.GetSubrecord();
-                    if (nextRec.RecordType != RecordTypes.GRPH) throw new ArgumentException("Marker was read but not followed by expected subrecord.");
-                    contentLength = nextRec.ContentLength;
+                    frame.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.GRPH:
+                {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GRPH = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Faction_FieldIndex.GRPH;
@@ -3156,9 +3157,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    _GRPHLocation = (stream.Position - offset);
                     stream.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.GRPH:
+                {
+                    _GRPHLocation = (stream.Position - offset);
                     return (int)Faction_FieldIndex.GRPH;
                 }
                 default:
