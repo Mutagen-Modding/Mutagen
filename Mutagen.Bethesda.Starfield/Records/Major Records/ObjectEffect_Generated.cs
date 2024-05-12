@@ -118,6 +118,16 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
+        #region MAGF
+        public Int32? MAGF { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IObjectEffectGetter.MAGF => this.MAGF;
+        #endregion
+        #region MUID
+        public Int32? MUID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IObjectEffectGetter.MUID => this.MUID;
+        #endregion
         #region UnknownENIT
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private MemorySlice<Byte> _UnknownENIT = new byte[27];
@@ -171,6 +181,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
                 this.Name = initialValue;
+                this.MAGF = initialValue;
+                this.MUID = initialValue;
                 this.UnknownENIT = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
@@ -186,6 +198,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectBounds,
                 TItem ODTY,
                 TItem Name,
+                TItem MAGF,
+                TItem MUID,
                 TItem UnknownENIT,
                 TItem Effects)
             : base(
@@ -200,6 +214,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
                 this.Name = Name;
+                this.MAGF = MAGF;
+                this.MUID = MUID;
                 this.UnknownENIT = UnknownENIT;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
@@ -216,6 +232,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
             public TItem Name;
+            public TItem MAGF;
+            public TItem MUID;
             public TItem UnknownENIT;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
@@ -234,6 +252,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.MAGF, rhs.MAGF)) return false;
+                if (!object.Equals(this.MUID, rhs.MUID)) return false;
                 if (!object.Equals(this.UnknownENIT, rhs.UnknownENIT)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
@@ -244,6 +264,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
                 hash.Add(this.Name);
+                hash.Add(this.MAGF);
+                hash.Add(this.MUID);
                 hash.Add(this.UnknownENIT);
                 hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
@@ -263,6 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.ODTY)) return false;
                 if (!eval(this.Name)) return false;
+                if (!eval(this.MAGF)) return false;
+                if (!eval(this.MUID)) return false;
                 if (!eval(this.UnknownENIT)) return false;
                 if (this.Effects != null)
                 {
@@ -291,6 +315,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.ODTY)) return true;
                 if (eval(this.Name)) return true;
+                if (eval(this.MAGF)) return true;
+                if (eval(this.MUID)) return true;
                 if (eval(this.UnknownENIT)) return true;
                 if (this.Effects != null)
                 {
@@ -322,6 +348,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
                 obj.Name = eval(this.Name);
+                obj.MAGF = eval(this.MAGF);
+                obj.MUID = eval(this.MUID);
                 obj.UnknownENIT = eval(this.UnknownENIT);
                 if (Effects != null)
                 {
@@ -368,6 +396,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
+                    if (printMask?.MAGF ?? true)
+                    {
+                        sb.AppendItem(MAGF, "MAGF");
+                    }
+                    if (printMask?.MUID ?? true)
+                    {
+                        sb.AppendItem(MUID, "MUID");
+                    }
                     if (printMask?.UnknownENIT ?? true)
                     {
                         sb.AppendItem(UnknownENIT, "UnknownENIT");
@@ -405,6 +441,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
             public Exception? Name;
+            public Exception? MAGF;
+            public Exception? MUID;
             public Exception? UnknownENIT;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
             #endregion
@@ -421,6 +459,10 @@ namespace Mutagen.Bethesda.Starfield
                         return ODTY;
                     case ObjectEffect_FieldIndex.Name:
                         return Name;
+                    case ObjectEffect_FieldIndex.MAGF:
+                        return MAGF;
+                    case ObjectEffect_FieldIndex.MUID:
+                        return MUID;
                     case ObjectEffect_FieldIndex.UnknownENIT:
                         return UnknownENIT;
                     case ObjectEffect_FieldIndex.Effects:
@@ -443,6 +485,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ObjectEffect_FieldIndex.Name:
                         this.Name = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.MAGF:
+                        this.MAGF = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.MUID:
+                        this.MUID = ex;
                         break;
                     case ObjectEffect_FieldIndex.UnknownENIT:
                         this.UnknownENIT = ex;
@@ -470,6 +518,12 @@ namespace Mutagen.Bethesda.Starfield
                     case ObjectEffect_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
+                    case ObjectEffect_FieldIndex.MAGF:
+                        this.MAGF = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.MUID:
+                        this.MUID = (Exception?)obj;
+                        break;
                     case ObjectEffect_FieldIndex.UnknownENIT:
                         this.UnknownENIT = (Exception?)obj;
                         break;
@@ -488,6 +542,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
                 if (Name != null) return true;
+                if (MAGF != null) return true;
+                if (MUID != null) return true;
                 if (UnknownENIT != null) return true;
                 if (Effects != null) return true;
                 return false;
@@ -524,6 +580,12 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Name, "Name");
                 }
                 {
+                    sb.AppendItem(MAGF, "MAGF");
+                }
+                {
+                    sb.AppendItem(MUID, "MUID");
+                }
+                {
                     sb.AppendItem(UnknownENIT, "UnknownENIT");
                 }
                 if (Effects is {} EffectsItem)
@@ -555,6 +617,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
                 ret.Name = this.Name.Combine(rhs.Name);
+                ret.MAGF = this.MAGF.Combine(rhs.MAGF);
+                ret.MUID = this.MUID.Combine(rhs.MUID);
                 ret.UnknownENIT = this.UnknownENIT.Combine(rhs.UnknownENIT);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
@@ -582,6 +646,8 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
             public bool Name;
+            public bool MAGF;
+            public bool MUID;
             public bool UnknownENIT;
             public Effect.TranslationMask? Effects;
             #endregion
@@ -594,6 +660,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ODTY = defaultOn;
                 this.Name = defaultOn;
+                this.MAGF = defaultOn;
+                this.MUID = defaultOn;
                 this.UnknownENIT = defaultOn;
             }
 
@@ -605,6 +673,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
                 ret.Add((Name, null));
+                ret.Add((MAGF, null));
+                ret.Add((MUID, null));
                 ret.Add((UnknownENIT, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
             }
@@ -770,6 +840,8 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
+        new Int32? MAGF { get; set; }
+        new Int32? MUID { get; set; }
         new MemorySlice<Byte> UnknownENIT { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
@@ -810,6 +882,8 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
+        Int32? MAGF { get; }
+        Int32? MUID { get; }
         ReadOnlyMemorySlice<Byte> UnknownENIT { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
@@ -991,8 +1065,10 @@ namespace Mutagen.Bethesda.Starfield
         ObjectBounds = 7,
         ODTY = 8,
         Name = 9,
-        UnknownENIT = 10,
-        Effects = 11,
+        MAGF = 10,
+        MUID = 11,
+        UnknownENIT = 12,
+        Effects = 13,
     }
     #endregion
 
@@ -1003,9 +1079,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(ObjectEffect.Mask<>);
 
@@ -1041,6 +1117,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.FULL,
+                RecordTypes.MAGF,
+                RecordTypes.MUID,
                 RecordTypes.ENIT,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
@@ -1049,7 +1127,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
                 RecordTypes.EFIF,
-                RecordTypes.MUID,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
@@ -1100,6 +1177,8 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectBounds.Clear();
             item.ODTY = default;
             item.Name = default;
+            item.MAGF = default;
+            item.MUID = default;
             item.UnknownENIT = new byte[27];
             item.Effects.Clear();
             base.Clear(item);
@@ -1190,6 +1269,8 @@ namespace Mutagen.Bethesda.Starfield
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
             ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.MAGF = item.MAGF == rhs.MAGF;
+            ret.MUID = item.MUID == rhs.MUID;
             ret.UnknownENIT = MemoryExtensions.SequenceEqual(item.UnknownENIT.Span, rhs.UnknownENIT.Span);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
@@ -1257,6 +1338,16 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Name is {} NameItem)
             {
                 sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.MAGF ?? true)
+                && item.MAGF is {} MAGFItem)
+            {
+                sb.AppendItem(MAGFItem, "MAGF");
+            }
+            if ((printMask?.MUID ?? true)
+                && item.MUID is {} MUIDItem)
+            {
+                sb.AppendItem(MUIDItem, "MUID");
             }
             if (printMask?.UnknownENIT ?? true)
             {
@@ -1342,6 +1433,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.MAGF) ?? true))
+            {
+                if (lhs.MAGF != rhs.MAGF) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.MUID) ?? true))
+            {
+                if (lhs.MUID != rhs.MUID) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.UnknownENIT) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.UnknownENIT.Span, rhs.UnknownENIT.Span)) return false;
@@ -1386,6 +1485,14 @@ namespace Mutagen.Bethesda.Starfield
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
+            }
+            if (item.MAGF is {} MAGFitem)
+            {
+                hash.Add(MAGFitem);
+            }
+            if (item.MUID is {} MUIDitem)
+            {
+                hash.Add(MUIDitem);
             }
             hash.Add(item.UnknownENIT);
             hash.Add(item.Effects);
@@ -1525,6 +1632,14 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.MAGF) ?? true))
+            {
+                item.MAGF = rhs.MAGF;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.MUID) ?? true))
+            {
+                item.MUID = rhs.MUID;
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.UnknownENIT) ?? true))
             {
@@ -1726,6 +1841,14 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MAGF,
+                header: translationParams.ConvertToCustom(RecordTypes.MAGF));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MUID,
+                header: translationParams.ConvertToCustom(RecordTypes.MUID));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ENIT)))
             {
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1848,6 +1971,52 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ObjectEffect_FieldIndex.Name;
                 }
+                case RecordTypeInts.MAGF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MAGF = frame.ReadInt32();
+                    return (int)ObjectEffect_FieldIndex.MAGF;
+                }
+                case RecordTypeInts.MUID:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ObjectEffect_FieldIndex.MAGF)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.MUID = frame.ReadInt32();
+                        return new ParseResult((int)ObjectEffect_FieldIndex.MUID, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ObjectEffect_FieldIndex.UnknownENIT)
+                    {
+                        item.Effects.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Effect_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Effect.TryCreateFromBinary));
+                        return new ParseResult((int)ObjectEffect_FieldIndex.Effects, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.MUID = frame.ReadInt32();
+                                return new ParseResult((int)ObjectEffect_FieldIndex.MUID, nextRecordType);
+                            case 1:
+                                item.Effects.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Effect_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Effect.TryCreateFromBinary));
+                                return new ParseResult((int)ObjectEffect_FieldIndex.Effects, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
                 case RecordTypeInts.ENIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1862,7 +2031,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
                 case RecordTypeInts.EFIF:
-                case RecordTypeInts.MUID:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -1951,6 +2119,14 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
+        #endregion
+        #region MAGF
+        private int? _MAGFLocation;
+        public Int32? MAGF => _MAGFLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MAGFLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region MUID
+        private int? _MUIDLocation;
+        public Int32? MUID => _MUIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MUIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         private RangeInt32? _ENITLocation;
         #region UnknownENIT
@@ -2043,6 +2219,51 @@ namespace Mutagen.Bethesda.Starfield
                     _NameLocation = (stream.Position - offset);
                     return (int)ObjectEffect_FieldIndex.Name;
                 }
+                case RecordTypeInts.MAGF:
+                {
+                    _MAGFLocation = (stream.Position - offset);
+                    return (int)ObjectEffect_FieldIndex.MAGF;
+                }
+                case RecordTypeInts.MUID:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ObjectEffect_FieldIndex.MAGF)
+                    {
+                        _MUIDLocation = (stream.Position - offset);
+                        return new ParseResult((int)ObjectEffect_FieldIndex.MUID, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ObjectEffect_FieldIndex.UnknownENIT)
+                    {
+                        this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                            stream: stream,
+                            translationParams: translationParams,
+                            trigger: Effect_Registration.TriggerSpecs,
+                            factory: EffectBinaryOverlay.EffectFactory);
+                        return new ParseResult((int)ObjectEffect_FieldIndex.Effects, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _MUIDLocation = (stream.Position - offset);
+                                return new ParseResult((int)ObjectEffect_FieldIndex.MUID, type);
+                            }
+                            case 1:
+                            {
+                                this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: Effect_Registration.TriggerSpecs,
+                                    factory: EffectBinaryOverlay.EffectFactory);
+                                return new ParseResult((int)ObjectEffect_FieldIndex.Effects, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
                 case RecordTypeInts.ENIT:
                 {
                     _ENITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
@@ -2055,7 +2276,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
                 case RecordTypeInts.EFIF:
-                case RecordTypeInts.MUID:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,

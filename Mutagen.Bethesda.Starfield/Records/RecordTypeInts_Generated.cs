@@ -520,6 +520,7 @@ public partial class RecordTypeInts
     public const int LVLP = 0x504C564C;
     public const int LVSC = 0x4353564C;
     public const int MAAM = 0x4D41414D;
+    public const int MAGF = 0x4647414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
     public const int MCQP = 0x5051434D;

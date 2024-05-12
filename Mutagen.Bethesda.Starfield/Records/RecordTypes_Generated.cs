@@ -522,6 +522,7 @@ public partial class RecordTypes
     public static readonly RecordType LVLP = new(0x504C564C);
     public static readonly RecordType LVSC = new(0x4353564C);
     public static readonly RecordType MAAM = new(0x4D41414D);
+    public static readonly RecordType MAGF = new(0x4647414D);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MATT = new(0x5454414D);
     public static readonly RecordType MCQP = new(0x5051434D);
