@@ -286,6 +286,7 @@ public partial class RecordTypes
     public static readonly RecordType DMDC = new(0x43444D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDS = new(0x53444D44);
+    public static readonly RecordType DMDT = new(0x54444D44);
     public static readonly RecordType DMGT = new(0x54474D44);
     public static readonly RecordType DMIN = new(0x4E494D44);
     public static readonly RecordType DNAM = new(0x4D414E44);

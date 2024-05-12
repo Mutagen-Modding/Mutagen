@@ -284,6 +284,7 @@ public partial class RecordTypeInts
     public const int DMDC = 0x43444D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
+    public const int DMDT = 0x54444D44;
     public const int DMGT = 0x54474D44;
     public const int DMIN = 0x4E494D44;
     public const int DNAM = 0x4D414E44;
