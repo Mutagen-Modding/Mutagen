@@ -156,6 +156,7 @@ public partial class RecordTypeInts
     public const int AVSG = 0x47535641;
     public const int AWGT = 0x54475741;
     public const int BAMT = 0x544D4142;
+    public const int BCLR = 0x524C4342;
     public const int BCOL = 0x4C4F4342;
     public const int BDED = 0x44454442;
     public const int BDFS = 0x53464442;
@@ -342,6 +343,7 @@ public partial class RecordTypeInts
     public const int EXDC = 0x43445845;
     public const int EXDZ = 0x5A445845;
     public const int EXPL = 0x4C505845;
+    public const int EYEC = 0x43455945;
     public const int FACT = 0x54434146;
     public const int FBDS = 0x53444246;
     public const int FBOL = 0x4C4F4246;
@@ -419,6 +421,7 @@ public partial class RecordTypeInts
     public const int GWOR = 0x524F5747;
     public const int HACK = 0x4B434148;
     public const int HAZD = 0x445A4148;
+    public const int HCLR = 0x524C4348;
     public const int HCOL = 0x4C4F4348;
     public const int HDPT = 0x54504448;
     public const int HEAD = 0x44414548;

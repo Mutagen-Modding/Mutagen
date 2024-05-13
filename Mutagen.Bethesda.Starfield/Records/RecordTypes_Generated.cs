@@ -158,6 +158,7 @@ public partial class RecordTypes
     public static readonly RecordType AVSG = new(0x47535641);
     public static readonly RecordType AWGT = new(0x54475741);
     public static readonly RecordType BAMT = new(0x544D4142);
+    public static readonly RecordType BCLR = new(0x524C4342);
     public static readonly RecordType BCOL = new(0x4C4F4342);
     public static readonly RecordType BDED = new(0x44454442);
     public static readonly RecordType BDFS = new(0x53464442);
@@ -344,6 +345,7 @@ public partial class RecordTypes
     public static readonly RecordType EXDC = new(0x43445845);
     public static readonly RecordType EXDZ = new(0x5A445845);
     public static readonly RecordType EXPL = new(0x4C505845);
+    public static readonly RecordType EYEC = new(0x43455945);
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FBDS = new(0x53444246);
     public static readonly RecordType FBOL = new(0x4C4F4246);
@@ -421,6 +423,7 @@ public partial class RecordTypes
     public static readonly RecordType GWOR = new(0x524F5747);
     public static readonly RecordType HACK = new(0x4B434148);
     public static readonly RecordType HAZD = new(0x445A4148);
+    public static readonly RecordType HCLR = new(0x524C4348);
     public static readonly RecordType HCOL = new(0x4C4F4348);
     public static readonly RecordType HDPT = new(0x54504448);
     public static readonly RecordType HEAD = new(0x44414548);

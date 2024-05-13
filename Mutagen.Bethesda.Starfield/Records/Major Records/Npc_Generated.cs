@@ -103,6 +103,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? INpcGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? INpcGetter.ODRT => this.ODRT;
+        #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ObjectPlacementDefaults? _ObjectPlacementDefaults;
@@ -563,6 +568,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Unused
         public Byte Unused { get; set; } = default(Byte);
         #endregion
+        #region HCLR
+        public Int32? HCLR { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? INpcGetter.HCLR => this.HCLR;
+        #endregion
+        #region BCLR
+        public Int32? BCLR { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? INpcGetter.BCLR => this.BCLR;
+        #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLinkGetter<IHeadPartGetter>>();
@@ -786,6 +801,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? INpcGetter.SkinToneIndex => this.SkinToneIndex;
         #endregion
+        #region EYEC
+        public UInt32? EYEC { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? INpcGetter.EYEC => this.EYEC;
+        #endregion
         #region HairColor
         public String? HairColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -860,6 +880,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
@@ -912,6 +933,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.FarAwayModelDistance = initialValue;
                 this.GearedUpWeapons = initialValue;
                 this.Unused = initialValue;
+                this.HCLR = initialValue;
+                this.BCLR = initialValue;
                 this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombatStyle = initialValue;
                 this.NAM5 = initialValue;
@@ -934,6 +957,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MorphBlends = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphBlend.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorphBlend.Mask<TItem>?>>());
                 this.ActivateTextOverride = initialValue;
                 this.SkinToneIndex = initialValue;
+                this.EYEC = initialValue;
                 this.HairColor = initialValue;
                 this.FacialHairColor = initialValue;
                 this.EyebrowColor = initialValue;
@@ -955,6 +979,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem ObjectPlacementDefaults,
                 TItem XALG,
                 TItem Transforms,
@@ -1007,6 +1032,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FarAwayModelDistance,
                 TItem GearedUpWeapons,
                 TItem Unused,
+                TItem HCLR,
+                TItem BCLR,
                 TItem HeadParts,
                 TItem CombatStyle,
                 TItem NAM5,
@@ -1029,6 +1056,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MorphBlends,
                 TItem ActivateTextOverride,
                 TItem SkinToneIndex,
+                TItem EYEC,
                 TItem HairColor,
                 TItem FacialHairColor,
                 TItem EyebrowColor,
@@ -1049,6 +1077,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.XALG = XALG;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
@@ -1101,6 +1130,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.FarAwayModelDistance = FarAwayModelDistance;
                 this.GearedUpWeapons = GearedUpWeapons;
                 this.Unused = Unused;
+                this.HCLR = HCLR;
+                this.BCLR = BCLR;
                 this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(HeadParts, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombatStyle = CombatStyle;
                 this.NAM5 = NAM5;
@@ -1123,6 +1154,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MorphBlends = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphBlend.Mask<TItem>?>>?>(MorphBlends, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorphBlend.Mask<TItem>?>>());
                 this.ActivateTextOverride = ActivateTextOverride;
                 this.SkinToneIndex = SkinToneIndex;
+                this.EYEC = EYEC;
                 this.HairColor = HairColor;
                 this.FacialHairColor = FacialHairColor;
                 this.EyebrowColor = EyebrowColor;
@@ -1145,6 +1177,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public TItem XALG;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
@@ -1197,6 +1230,8 @@ namespace Mutagen.Bethesda.Starfield
             public TItem FarAwayModelDistance;
             public TItem GearedUpWeapons;
             public TItem Unused;
+            public TItem HCLR;
+            public TItem BCLR;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? HeadParts;
             public TItem CombatStyle;
             public TItem NAM5;
@@ -1219,6 +1254,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphBlend.Mask<TItem>?>>?>? MorphBlends;
             public TItem ActivateTextOverride;
             public TItem SkinToneIndex;
+            public TItem EYEC;
             public TItem HairColor;
             public TItem FacialHairColor;
             public TItem EyebrowColor;
@@ -1243,6 +1279,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
@@ -1295,6 +1332,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FarAwayModelDistance, rhs.FarAwayModelDistance)) return false;
                 if (!object.Equals(this.GearedUpWeapons, rhs.GearedUpWeapons)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.HCLR, rhs.HCLR)) return false;
+                if (!object.Equals(this.BCLR, rhs.BCLR)) return false;
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
                 if (!object.Equals(this.NAM5, rhs.NAM5)) return false;
@@ -1317,6 +1356,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MorphBlends, rhs.MorphBlends)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.SkinToneIndex, rhs.SkinToneIndex)) return false;
+                if (!object.Equals(this.EYEC, rhs.EYEC)) return false;
                 if (!object.Equals(this.HairColor, rhs.HairColor)) return false;
                 if (!object.Equals(this.FacialHairColor, rhs.FacialHairColor)) return false;
                 if (!object.Equals(this.EyebrowColor, rhs.EyebrowColor)) return false;
@@ -1333,6 +1373,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.XALG);
                 hash.Add(this.Transforms);
@@ -1385,6 +1426,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FarAwayModelDistance);
                 hash.Add(this.GearedUpWeapons);
                 hash.Add(this.Unused);
+                hash.Add(this.HCLR);
+                hash.Add(this.BCLR);
                 hash.Add(this.HeadParts);
                 hash.Add(this.CombatStyle);
                 hash.Add(this.NAM5);
@@ -1407,6 +1450,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MorphBlends);
                 hash.Add(this.ActivateTextOverride);
                 hash.Add(this.SkinToneIndex);
+                hash.Add(this.EYEC);
                 hash.Add(this.HairColor);
                 hash.Add(this.FacialHairColor);
                 hash.Add(this.EyebrowColor);
@@ -1436,6 +1480,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
@@ -1635,6 +1680,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.FarAwayModelDistance)) return false;
                 if (!eval(this.GearedUpWeapons)) return false;
                 if (!eval(this.Unused)) return false;
+                if (!eval(this.HCLR)) return false;
+                if (!eval(this.BCLR)) return false;
                 if (this.HeadParts != null)
                 {
                     if (!eval(this.HeadParts.Overall)) return false;
@@ -1730,6 +1777,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.SkinToneIndex)) return false;
+                if (!eval(this.EYEC)) return false;
                 if (!eval(this.HairColor)) return false;
                 if (!eval(this.FacialHairColor)) return false;
                 if (!eval(this.EyebrowColor)) return false;
@@ -1757,6 +1805,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (eval(this.ObjectPlacementDefaults.Overall)) return true;
@@ -1956,6 +2005,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.FarAwayModelDistance)) return true;
                 if (eval(this.GearedUpWeapons)) return true;
                 if (eval(this.Unused)) return true;
+                if (eval(this.HCLR)) return true;
+                if (eval(this.BCLR)) return true;
                 if (this.HeadParts != null)
                 {
                     if (eval(this.HeadParts.Overall)) return true;
@@ -2051,6 +2102,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.SkinToneIndex)) return true;
+                if (eval(this.EYEC)) return true;
                 if (eval(this.HairColor)) return true;
                 if (eval(this.FacialHairColor)) return true;
                 if (eval(this.EyebrowColor)) return true;
@@ -2077,6 +2129,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
@@ -2292,6 +2345,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FarAwayModelDistance = eval(this.FarAwayModelDistance);
                 obj.GearedUpWeapons = eval(this.GearedUpWeapons);
                 obj.Unused = eval(this.Unused);
+                obj.HCLR = eval(this.HCLR);
+                obj.BCLR = eval(this.BCLR);
                 if (HeadParts != null)
                 {
                     obj.HeadParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.HeadParts.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -2397,6 +2452,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.SkinToneIndex = eval(this.SkinToneIndex);
+                obj.EYEC = eval(this.EYEC);
                 obj.HairColor = eval(this.HairColor);
                 obj.FacialHairColor = eval(this.FacialHairColor);
                 obj.EyebrowColor = eval(this.EyebrowColor);
@@ -2434,6 +2490,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
@@ -2833,6 +2893,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Unused, "Unused");
                     }
+                    if (printMask?.HCLR ?? true)
+                    {
+                        sb.AppendItem(HCLR, "HCLR");
+                    }
+                    if (printMask?.BCLR ?? true)
+                    {
+                        sb.AppendItem(BCLR, "BCLR");
+                    }
                     if ((printMask?.HeadParts?.Overall ?? true)
                         && HeadParts is {} HeadPartsItem)
                     {
@@ -3013,6 +3081,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SkinToneIndex, "SkinToneIndex");
                     }
+                    if (printMask?.EYEC ?? true)
+                    {
+                        sb.AppendItem(EYEC, "EYEC");
+                    }
                     if (printMask?.HairColor ?? true)
                     {
                         sb.AppendItem(HairColor, "HairColor");
@@ -3059,6 +3131,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public Exception? XALG;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
@@ -3111,6 +3184,8 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? FarAwayModelDistance;
             public Exception? GearedUpWeapons;
             public Exception? Unused;
+            public Exception? HCLR;
+            public Exception? BCLR;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? HeadParts;
             public Exception? CombatStyle;
             public Exception? NAM5;
@@ -3133,6 +3208,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorphBlend.ErrorMask?>>?>? MorphBlends;
             public Exception? ActivateTextOverride;
             public Exception? SkinToneIndex;
+            public Exception? EYEC;
             public Exception? HairColor;
             public Exception? FacialHairColor;
             public Exception? EyebrowColor;
@@ -3155,6 +3231,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Npc_FieldIndex.ODTY:
                         return ODTY;
+                    case Npc_FieldIndex.ODRT:
+                        return ODRT;
                     case Npc_FieldIndex.ObjectPlacementDefaults:
                         return ObjectPlacementDefaults;
                     case Npc_FieldIndex.XALG:
@@ -3259,6 +3337,10 @@ namespace Mutagen.Bethesda.Starfield
                         return GearedUpWeapons;
                     case Npc_FieldIndex.Unused:
                         return Unused;
+                    case Npc_FieldIndex.HCLR:
+                        return HCLR;
+                    case Npc_FieldIndex.BCLR:
+                        return BCLR;
                     case Npc_FieldIndex.HeadParts:
                         return HeadParts;
                     case Npc_FieldIndex.CombatStyle:
@@ -3303,6 +3385,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ActivateTextOverride;
                     case Npc_FieldIndex.SkinToneIndex:
                         return SkinToneIndex;
+                    case Npc_FieldIndex.EYEC:
+                        return EYEC;
                     case Npc_FieldIndex.HairColor:
                         return HairColor;
                     case Npc_FieldIndex.FacialHairColor:
@@ -3337,6 +3421,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Npc_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case Npc_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case Npc_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
@@ -3494,6 +3581,12 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.Unused:
                         this.Unused = ex;
                         break;
+                    case Npc_FieldIndex.HCLR:
+                        this.HCLR = ex;
+                        break;
+                    case Npc_FieldIndex.BCLR:
+                        this.BCLR = ex;
+                        break;
                     case Npc_FieldIndex.HeadParts:
                         this.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
@@ -3560,6 +3653,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.SkinToneIndex:
                         this.SkinToneIndex = ex;
                         break;
+                    case Npc_FieldIndex.EYEC:
+                        this.EYEC = ex;
+                        break;
                     case Npc_FieldIndex.HairColor:
                         this.HairColor = ex;
                         break;
@@ -3603,6 +3699,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Npc_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
                         break;
                     case Npc_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
@@ -3760,6 +3859,12 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
                         break;
+                    case Npc_FieldIndex.HCLR:
+                        this.HCLR = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.BCLR:
+                        this.BCLR = (Exception?)obj;
+                        break;
                     case Npc_FieldIndex.HeadParts:
                         this.HeadParts = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -3826,6 +3931,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.SkinToneIndex:
                         this.SkinToneIndex = (Exception?)obj;
                         break;
+                    case Npc_FieldIndex.EYEC:
+                        this.EYEC = (Exception?)obj;
+                        break;
                     case Npc_FieldIndex.HairColor:
                         this.HairColor = (Exception?)obj;
                         break;
@@ -3862,6 +3970,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (ObjectPlacementDefaults != null) return true;
                 if (XALG != null) return true;
                 if (Transforms != null) return true;
@@ -3914,6 +4023,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (FarAwayModelDistance != null) return true;
                 if (GearedUpWeapons != null) return true;
                 if (Unused != null) return true;
+                if (HCLR != null) return true;
+                if (BCLR != null) return true;
                 if (HeadParts != null) return true;
                 if (CombatStyle != null) return true;
                 if (NAM5 != null) return true;
@@ -3936,6 +4047,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (MorphBlends != null) return true;
                 if (ActivateTextOverride != null) return true;
                 if (SkinToneIndex != null) return true;
+                if (EYEC != null) return true;
                 if (HairColor != null) return true;
                 if (FacialHairColor != null) return true;
                 if (EyebrowColor != null) return true;
@@ -3974,6 +4086,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 ObjectPlacementDefaults?.Print(sb);
                 {
@@ -4311,6 +4426,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Unused, "Unused");
                 }
+                {
+                    sb.AppendItem(HCLR, "HCLR");
+                }
+                {
+                    sb.AppendItem(BCLR, "BCLR");
+                }
                 if (HeadParts is {} HeadPartsItem)
                 {
                     sb.AppendLine("HeadParts =>");
@@ -4466,6 +4587,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(SkinToneIndex, "SkinToneIndex");
                 }
                 {
+                    sb.AppendItem(EYEC, "EYEC");
+                }
+                {
                     sb.AppendItem(HairColor, "HairColor");
                 }
                 {
@@ -4500,6 +4624,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
@@ -4552,6 +4677,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FarAwayModelDistance = this.FarAwayModelDistance.Combine(rhs.FarAwayModelDistance);
                 ret.GearedUpWeapons = this.GearedUpWeapons.Combine(rhs.GearedUpWeapons);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.HCLR = this.HCLR.Combine(rhs.HCLR);
+                ret.BCLR = this.BCLR.Combine(rhs.BCLR);
                 ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.NAM5 = this.NAM5.Combine(rhs.NAM5);
@@ -4574,6 +4701,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MorphBlends = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorphBlend.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphBlends?.Overall, rhs.MorphBlends?.Overall), Noggog.ExceptionExt.Combine(this.MorphBlends?.Specific, rhs.MorphBlends?.Specific));
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.SkinToneIndex = this.SkinToneIndex.Combine(rhs.SkinToneIndex);
+                ret.EYEC = this.EYEC.Combine(rhs.EYEC);
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.FacialHairColor = this.FacialHairColor.Combine(rhs.FacialHairColor);
                 ret.EyebrowColor = this.EyebrowColor.Combine(rhs.EyebrowColor);
@@ -4607,6 +4735,7 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public bool XALG;
             public Transforms.TranslationMask? Transforms;
@@ -4659,6 +4788,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool FarAwayModelDistance;
             public bool GearedUpWeapons;
             public bool Unused;
+            public bool HCLR;
+            public bool BCLR;
             public bool HeadParts;
             public bool CombatStyle;
             public bool NAM5;
@@ -4681,6 +4812,7 @@ namespace Mutagen.Bethesda.Starfield
             public NpcMorphBlend.TranslationMask? MorphBlends;
             public bool ActivateTextOverride;
             public bool SkinToneIndex;
+            public bool EYEC;
             public bool HairColor;
             public bool FacialHairColor;
             public bool EyebrowColor;
@@ -4698,6 +4830,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.XALG = defaultOn;
                 this.SnapTemplate = defaultOn;
                 this.Flags = defaultOn;
@@ -4738,6 +4871,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.FarAwayModelDistance = defaultOn;
                 this.GearedUpWeapons = defaultOn;
                 this.Unused = defaultOn;
+                this.HCLR = defaultOn;
+                this.BCLR = defaultOn;
                 this.HeadParts = defaultOn;
                 this.CombatStyle = defaultOn;
                 this.NAM5 = defaultOn;
@@ -4753,6 +4888,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FormationFaction = defaultOn;
                 this.ActivateTextOverride = defaultOn;
                 this.SkinToneIndex = defaultOn;
+                this.EYEC = defaultOn;
                 this.HairColor = defaultOn;
                 this.FacialHairColor = defaultOn;
                 this.EyebrowColor = defaultOn;
@@ -4771,6 +4907,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((XALG, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
@@ -4823,6 +4960,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FarAwayModelDistance, null));
                 ret.Add((GearedUpWeapons, null));
                 ret.Add((Unused, null));
+                ret.Add((HCLR, null));
+                ret.Add((BCLR, null));
                 ret.Add((HeadParts, null));
                 ret.Add((CombatStyle, null));
                 ret.Add((NAM5, null));
@@ -4845,6 +4984,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MorphBlends == null ? DefaultOn : !MorphBlends.GetCrystal().CopyNothing, MorphBlends?.GetCrystal()));
                 ret.Add((ActivateTextOverride, null));
                 ret.Add((SkinToneIndex, null));
+                ret.Add((EYEC, null));
                 ret.Add((HairColor, null));
                 ret.Add((FacialHairColor, null));
                 ret.Add((EyebrowColor, null));
@@ -5031,6 +5171,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new MemorySlice<Byte>? XALG { get; set; }
         new Transforms? Transforms { get; set; }
@@ -5089,6 +5230,8 @@ namespace Mutagen.Bethesda.Starfield
         new UInt16 FarAwayModelDistance { get; set; }
         new Byte GearedUpWeapons { get; set; }
         new Byte Unused { get; set; }
+        new Int32? HCLR { get; set; }
+        new Int32? BCLR { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
         new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new MemorySlice<Byte>? NAM5 { get; set; }
@@ -5111,6 +5254,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<NpcMorphBlend> MorphBlends { get; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new Byte? SkinToneIndex { get; set; }
+        new UInt32? EYEC { get; set; }
         new String? HairColor { get; set; }
         new String? FacialHairColor { get; set; }
         new String? EyebrowColor { get; set; }
@@ -5168,6 +5312,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         ReadOnlyMemorySlice<Byte>? XALG { get; }
         ITransformsGetter? Transforms { get; }
@@ -5230,6 +5375,8 @@ namespace Mutagen.Bethesda.Starfield
         UInt16 FarAwayModelDistance { get; }
         Byte GearedUpWeapons { get; }
         Byte Unused { get; }
+        Int32? HCLR { get; }
+        Int32? BCLR { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
         IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
         ReadOnlyMemorySlice<Byte>? NAM5 { get; }
@@ -5252,6 +5399,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<INpcMorphBlendGetter> MorphBlends { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
         Byte? SkinToneIndex { get; }
+        UInt32? EYEC { get; }
         String? HairColor { get; }
         String? FacialHairColor { get; }
         String? EyebrowColor { get; }
@@ -5443,88 +5591,92 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         ODTY = 9,
-        ObjectPlacementDefaults = 10,
-        XALG = 11,
-        Transforms = 12,
-        SnapTemplate = 13,
-        Components = 14,
-        Flags = 15,
-        XpValueOffset = 16,
-        Level = 17,
-        CalcMinLevel = 18,
-        CalcMaxLevel = 19,
-        DispositionBase = 20,
-        UseTemplateActors = 21,
-        Factions = 22,
-        DeathItem = 23,
-        Voice = 24,
-        DefaultTemplate = 25,
-        LegendaryTemplate = 26,
-        LegendaryChance = 27,
-        TemplateActors = 28,
-        Race = 29,
-        ActorEffect = 30,
-        Skin = 31,
-        AttackRace = 32,
-        SpectatorOverridePackageList = 33,
-        CombatOverridePackageList = 34,
-        Perks = 35,
-        Properties = 36,
-        ForcedLocations = 37,
-        NativeTerminal = 38,
-        Items = 39,
-        Aggression = 40,
-        Confidence = 41,
-        EnergyLevel = 42,
-        Responsibility = 43,
-        Mood = 44,
-        Assistance = 45,
-        UnknownAIDT = 46,
-        Packages = 47,
-        FLEE = 48,
-        RDSAs = 49,
-        Keywords = 50,
-        AttachParentSlots = 51,
-        ObjectTemplates = 52,
-        Class = 53,
-        Name = 54,
-        ShortName = 55,
-        LongName = 56,
-        CalculatedHealth = 57,
-        CalculatedActionPoints = 58,
-        FarAwayModelDistance = 59,
-        GearedUpWeapons = 60,
-        Unused = 61,
-        HeadParts = 62,
-        CombatStyle = 63,
-        NAM5 = 64,
-        HeightMin = 65,
-        HeightMax = 66,
-        Weight = 67,
-        Sounds = 68,
-        InheritsSoundsFrom = 69,
-        CompanionInfoQuest = 70,
-        CompanionInfoDialogue = 71,
-        DefaultOutfit = 72,
-        SpaceOutfit = 73,
-        DefaultPackageList = 74,
-        CrimeFaction = 75,
-        FormationFaction = 76,
-        Tints = 77,
-        BodyMorphRegionValues = 78,
-        FaceDialPositions = 79,
-        FaceMorphs = 80,
-        MorphBlends = 81,
-        ActivateTextOverride = 82,
-        SkinToneIndex = 83,
-        HairColor = 84,
-        FacialHairColor = 85,
-        EyebrowColor = 86,
-        EyeColor = 87,
-        JewelryColor = 88,
-        TeethColor = 89,
-        Pronoun = 90,
-        ONA2 = 91,
+        ODRT = 10,
+        ObjectPlacementDefaults = 11,
+        XALG = 12,
+        Transforms = 13,
+        SnapTemplate = 14,
+        Components = 15,
+        Flags = 16,
+        XpValueOffset = 17,
+        Level = 18,
+        CalcMinLevel = 19,
+        CalcMaxLevel = 20,
+        DispositionBase = 21,
+        UseTemplateActors = 22,
+        Factions = 23,
+        DeathItem = 24,
+        Voice = 25,
+        DefaultTemplate = 26,
+        LegendaryTemplate = 27,
+        LegendaryChance = 28,
+        TemplateActors = 29,
+        Race = 30,
+        ActorEffect = 31,
+        Skin = 32,
+        AttackRace = 33,
+        SpectatorOverridePackageList = 34,
+        CombatOverridePackageList = 35,
+        Perks = 36,
+        Properties = 37,
+        ForcedLocations = 38,
+        NativeTerminal = 39,
+        Items = 40,
+        Aggression = 41,
+        Confidence = 42,
+        EnergyLevel = 43,
+        Responsibility = 44,
+        Mood = 45,
+        Assistance = 46,
+        UnknownAIDT = 47,
+        Packages = 48,
+        FLEE = 49,
+        RDSAs = 50,
+        Keywords = 51,
+        AttachParentSlots = 52,
+        ObjectTemplates = 53,
+        Class = 54,
+        Name = 55,
+        ShortName = 56,
+        LongName = 57,
+        CalculatedHealth = 58,
+        CalculatedActionPoints = 59,
+        FarAwayModelDistance = 60,
+        GearedUpWeapons = 61,
+        Unused = 62,
+        HCLR = 63,
+        BCLR = 64,
+        HeadParts = 65,
+        CombatStyle = 66,
+        NAM5 = 67,
+        HeightMin = 68,
+        HeightMax = 69,
+        Weight = 70,
+        Sounds = 71,
+        InheritsSoundsFrom = 72,
+        CompanionInfoQuest = 73,
+        CompanionInfoDialogue = 74,
+        DefaultOutfit = 75,
+        SpaceOutfit = 76,
+        DefaultPackageList = 77,
+        CrimeFaction = 78,
+        FormationFaction = 79,
+        Tints = 80,
+        BodyMorphRegionValues = 81,
+        FaceDialPositions = 82,
+        FaceMorphs = 83,
+        MorphBlends = 84,
+        ActivateTextOverride = 85,
+        SkinToneIndex = 86,
+        EYEC = 87,
+        HairColor = 88,
+        FacialHairColor = 89,
+        EyebrowColor = 90,
+        EyeColor = 91,
+        JewelryColor = 92,
+        TeethColor = 93,
+        Pronoun = 94,
+        ONA2 = 95,
     }
     #endregion
 
@@ -5535,9 +5687,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 85;
+        public const ushort AdditionalFieldCount = 89;
 
-        public const ushort FieldCount = 92;
+        public const ushort FieldCount = 96;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -5574,6 +5726,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.OPDS,
                 RecordTypes.XALG,
                 RecordTypes.PTT2,
@@ -5619,6 +5772,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LNAM,
                 RecordTypes.DATA,
                 RecordTypes.DNAM,
+                RecordTypes.HCLR,
+                RecordTypes.BCLR,
                 RecordTypes.PNAM,
                 RecordTypes.ZNAM,
                 RecordTypes.NAM5,
@@ -5653,6 +5808,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BMPV,
                 RecordTypes.ATTX,
                 RecordTypes.STON,
+                RecordTypes.EYEC,
                 RecordTypes.HCOL,
                 RecordTypes.FHCL,
                 RecordTypes.BCOL,
@@ -5708,6 +5864,7 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.ObjectPlacementDefaults = null;
             item.XALG = default;
             item.Transforms = null;
@@ -5760,6 +5917,8 @@ namespace Mutagen.Bethesda.Starfield
             item.FarAwayModelDistance = default(UInt16);
             item.GearedUpWeapons = default(Byte);
             item.Unused = default(Byte);
+            item.HCLR = default;
+            item.BCLR = default;
             item.HeadParts.Clear();
             item.CombatStyle.Clear();
             item.NAM5 = default;
@@ -5782,6 +5941,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MorphBlends.Clear();
             item.ActivateTextOverride = default;
             item.SkinToneIndex = default;
+            item.EYEC = default;
             item.HairColor = default;
             item.FacialHairColor = default;
             item.EyebrowColor = default;
@@ -5945,6 +6105,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPlacementDefaults,
                 rhs.ObjectPlacementDefaults,
@@ -6049,6 +6210,8 @@ namespace Mutagen.Bethesda.Starfield
             ret.FarAwayModelDistance = item.FarAwayModelDistance == rhs.FarAwayModelDistance;
             ret.GearedUpWeapons = item.GearedUpWeapons == rhs.GearedUpWeapons;
             ret.Unused = item.Unused == rhs.Unused;
+            ret.HCLR = item.HCLR == rhs.HCLR;
+            ret.BCLR = item.BCLR == rhs.BCLR;
             ret.HeadParts = item.HeadParts.CollectionEqualsHelper(
                 rhs.HeadParts,
                 (l, r) => object.Equals(l, r),
@@ -6097,6 +6260,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.SkinToneIndex = item.SkinToneIndex == rhs.SkinToneIndex;
+            ret.EYEC = item.EYEC == rhs.EYEC;
             ret.HairColor = string.Equals(item.HairColor, rhs.HairColor);
             ret.FacialHairColor = string.Equals(item.FacialHairColor, rhs.FacialHairColor);
             ret.EyebrowColor = string.Equals(item.EyebrowColor, rhs.EyebrowColor);
@@ -6167,6 +6331,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
                 && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
@@ -6512,6 +6681,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Unused, "Unused");
             }
+            if ((printMask?.HCLR ?? true)
+                && item.HCLR is {} HCLRItem)
+            {
+                sb.AppendItem(HCLRItem, "HCLR");
+            }
+            if ((printMask?.BCLR ?? true)
+                && item.BCLR is {} BCLRItem)
+            {
+                sb.AppendItem(BCLRItem, "BCLR");
+            }
             if (printMask?.HeadParts?.Overall ?? true)
             {
                 sb.AppendLine("HeadParts =>");
@@ -6667,6 +6846,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(SkinToneIndexItem, "SkinToneIndex");
             }
+            if ((printMask?.EYEC ?? true)
+                && item.EYEC is {} EYECItem)
+            {
+                sb.AppendItem(EYECItem, "EYEC");
+            }
             if ((printMask?.HairColor ?? true)
                 && item.HairColor is {} HairColorItem)
             {
@@ -6776,6 +6960,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ODTY) ?? true))
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
@@ -7005,6 +7193,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HCLR) ?? true))
+            {
+                if (lhs.HCLR != rhs.HCLR) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BCLR) ?? true))
+            {
+                if (lhs.BCLR != rhs.BCLR) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
             {
                 if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
@@ -7101,6 +7297,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.SkinToneIndex != rhs.SkinToneIndex) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.EYEC) ?? true))
+            {
+                if (lhs.EYEC != rhs.EYEC) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
                 if (!string.Equals(lhs.HairColor, rhs.HairColor)) return false;
@@ -7169,6 +7369,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
@@ -7246,6 +7450,14 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.FarAwayModelDistance);
             hash.Add(item.GearedUpWeapons);
             hash.Add(item.Unused);
+            if (item.HCLR is {} HCLRitem)
+            {
+                hash.Add(HCLRitem);
+            }
+            if (item.BCLR is {} BCLRitem)
+            {
+                hash.Add(BCLRitem);
+            }
             hash.Add(item.HeadParts);
             hash.Add(item.CombatStyle);
             if (item.NAM5 is {} NAM5Item)
@@ -7282,6 +7494,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.SkinToneIndex is {} SkinToneIndexitem)
             {
                 hash.Add(SkinToneIndexitem);
+            }
+            if (item.EYEC is {} EYECitem)
+            {
+                hash.Add(EYECitem);
             }
             if (item.HairColor is {} HairColoritem)
             {
@@ -7684,6 +7900,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
@@ -8285,6 +8505,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unused = rhs.Unused;
             }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HCLR) ?? true))
+            {
+                item.HCLR = rhs.HCLR;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BCLR) ?? true))
+            {
+                item.BCLR = rhs.BCLR;
+            }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
             {
                 errorMask?.PushIndex((int)Npc_FieldIndex.HeadParts);
@@ -8555,6 +8783,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SkinToneIndex = rhs.SkinToneIndex;
             }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.EYEC) ?? true))
+            {
+                item.EYEC = rhs.EYEC;
+            }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
                 item.HairColor = rhs.HairColor;
@@ -8767,6 +8999,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
                 ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
@@ -9058,6 +9294,14 @@ namespace Mutagen.Bethesda.Starfield
                 writer.Write(item.GearedUpWeapons);
                 writer.Write(item.Unused);
             }
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.HCLR,
+                header: translationParams.ConvertToCustom(RecordTypes.HCLR));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BCLR,
+                header: translationParams.ConvertToCustom(RecordTypes.BCLR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
@@ -9203,6 +9447,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.SkinToneIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.STON));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.EYEC,
+                header: translationParams.ConvertToCustom(RecordTypes.EYEC));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColor,
@@ -9370,6 +9618,12 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Npc_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.OPDS:
                 {
@@ -9714,6 +9968,18 @@ namespace Mutagen.Bethesda.Starfield
                     item.Unused = dataFrame.ReadUInt8();
                     return (int)Npc_FieldIndex.Unused;
                 }
+                case RecordTypeInts.HCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HCLR = frame.ReadInt32();
+                    return (int)Npc_FieldIndex.HCLR;
+                }
+                case RecordTypeInts.BCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BCLR = frame.ReadInt32();
+                    return (int)Npc_FieldIndex.BCLR;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     item.HeadParts.SetTo(
@@ -9882,6 +10148,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.SkinToneIndex = frame.ReadUInt8();
                     return (int)Npc_FieldIndex.SkinToneIndex;
                 }
+                case RecordTypeInts.EYEC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EYEC = frame.ReadUInt32();
+                    return (int)Npc_FieldIndex.EYEC;
+                }
                 case RecordTypeInts.HCOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -10032,6 +10304,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
@@ -10233,6 +10509,14 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Unused_IsSet => _DNAMLocation.HasValue;
         public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
         #endregion
+        #region HCLR
+        private int? _HCLRLocation;
+        public Int32? HCLR => _HCLRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HCLRLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region BCLR
+        private int? _BCLRLocation;
+        public Int32? BCLR => _BCLRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BCLRLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region CombatStyle
         private int? _CombatStyleLocation;
@@ -10299,6 +10583,10 @@ namespace Mutagen.Bethesda.Starfield
         #region SkinToneIndex
         private int? _SkinToneIndexLocation;
         public Byte? SkinToneIndex => _SkinToneIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinToneIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region EYEC
+        private int? _EYECLocation;
+        public UInt32? EYEC => _EYECLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EYECLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region HairColor
         private int? _HairColorLocation;
@@ -10420,6 +10708,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)Npc_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.OPDS:
                 {
@@ -10705,6 +10998,16 @@ namespace Mutagen.Bethesda.Starfield
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Npc_FieldIndex.Unused;
                 }
+                case RecordTypeInts.HCLR:
+                {
+                    _HCLRLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.HCLR;
+                }
+                case RecordTypeInts.BCLR:
+                {
+                    _BCLRLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.BCLR;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
@@ -10860,6 +11163,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _SkinToneIndexLocation = (stream.Position - offset);
                     return (int)Npc_FieldIndex.SkinToneIndex;
+                }
+                case RecordTypeInts.EYEC:
+                {
+                    _EYECLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.EYEC;
                 }
                 case RecordTypeInts.HCOL:
                 {
