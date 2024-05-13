@@ -25,12 +25,4 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>
-  <Object name="PTTA" objType="Subrecord" recordType="PTTA" >
-    <Fields>
-      <Int32 name="Unknown" />
-      <Int32 name="Unknown2" />
-      <FormLink name="Transform" refName="Transform" />
-      <Int32 name="Unknown3" />
-    </Fields>
-  </Object>
 </Loqui>

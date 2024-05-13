@@ -6602,8 +6602,8 @@
     <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PTTA_Generated.cs">
-      <DependentUpon>ProjectedDecal.xml</DependentUpon>
+    <Compile Include="Records\Common Subrecords\PTTA_Generated.cs">
+      <DependentUpon>PTTA.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
