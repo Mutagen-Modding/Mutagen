@@ -74,12 +74,14 @@ public class StarfieldProcessor : Processor
 
     public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords => new KeyValuePair<RecordType, FormKey>[]
     {
-        new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
+        // new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
+        // new(RecordTypes.STAT, FormKey.Factory("00B7BE:Starfield.esm")),
+        // new(RecordTypes.STAT, FormKey.Factory("00B7C7:Starfield.esm")),
     };
 
     private void ProcessStaticCollections(
