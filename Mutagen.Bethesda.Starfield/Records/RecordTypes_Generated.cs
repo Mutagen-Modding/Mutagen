@@ -949,6 +949,7 @@ public partial class RecordTypes
     public static readonly RecordType WAIM = new(0x4D494157);
     public static readonly RecordType WAM2 = new(0x324D4157);
     public static readonly RecordType WAMB = new(0x424D4157);
+    public static readonly RecordType WAMM = new(0x4D4D4157);
     public static readonly RecordType WAOC = new(0x434F4157);
     public static readonly RecordType WAOS = new(0x534F4157);
     public static readonly RecordType WASH = new(0x48534157);
@@ -1031,6 +1032,7 @@ public partial class RecordTypes
     public static readonly RecordType WRNK = new(0x4B4E5257);
     public static readonly RecordType WRSG = new(0x47535257);
     public static readonly RecordType WRSP = new(0x50535257);
+    public static readonly RecordType WRUM = new(0x4D555257);
     public static readonly RecordType WSCP = new(0x50435357);
     public static readonly RecordType WSDM = new(0x4D445357);
     public static readonly RecordType WSED = new(0x44455357);

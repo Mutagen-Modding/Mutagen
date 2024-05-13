@@ -947,6 +947,7 @@ public partial class RecordTypeInts
     public const int WAIM = 0x4D494157;
     public const int WAM2 = 0x324D4157;
     public const int WAMB = 0x424D4157;
+    public const int WAMM = 0x4D4D4157;
     public const int WAOC = 0x434F4157;
     public const int WAOS = 0x534F4157;
     public const int WASH = 0x48534157;
@@ -1029,6 +1030,7 @@ public partial class RecordTypeInts
     public const int WRNK = 0x4B4E5257;
     public const int WRSG = 0x47535257;
     public const int WRSP = 0x50535257;
+    public const int WRUM = 0x4D555257;
     public const int WSCP = 0x50435357;
     public const int WSDM = 0x4D445357;
     public const int WSED = 0x44455357;
