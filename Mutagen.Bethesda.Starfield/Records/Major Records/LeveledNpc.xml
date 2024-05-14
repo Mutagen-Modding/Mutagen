@@ -9,7 +9,7 @@
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefList name="Components" refName="AComponent" />
       <ByteArray name="XALG" recordType="XALG" unknown="true" />
-      <Float name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Float name="ChanceNone" recordType="LVLD" nullable="False" binary="Custom" />
       <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="2" />
       <RefList name="Conditions" refName="Condition" />
