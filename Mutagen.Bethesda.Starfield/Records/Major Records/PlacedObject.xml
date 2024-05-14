@@ -114,7 +114,29 @@
   </Object>
   <Object name="PlacedObjectVolumeData" objType="Subrecord" recordType="XVL2" >
     <Fields>
-      <ByteArray name="Data" byteLength="85" nullable="false" />
+      <Int32 name="Unknown1" />
+      <Int32 name="Unknown2" />
+      <FormLink name="ImageSpace" refName="ImageSpace" />
+      <FormLink name="FogVolume" refName="FogVolume" />
+      <Int32 name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <Float name="Unknown7" />
+      <Int32 name="Unknown8" />
+      <Float name="Unknown9" />
+      <Float name="Unknown10" />
+      <Float name="Unknown11" />
+      <Int32 name="Unknown12" />
+      <Float name="Unknown13" />
+      <Float name="Unknown14" />
+      <Float name="Unknown15" />
+      <Float name="Unknown16" />
+      <Float name="Unknown17" />
+      <Float name="Unknown18" />
+      <Int8 name="Unknown19" />
+      <Break />
+      <Float name="Unknown20" />
     </Fields>
   </Object>
   <Object name="PlacedObjectLightArea" objType="Subrecord" recordType="XALD" >
