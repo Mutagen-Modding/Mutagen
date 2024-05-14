@@ -189,6 +189,7 @@
       <Float name="ShadowDepthBias" />
       <Float name="NearClip" />
       <Float name="VolumetricIntensity" />
+      <Break />
       <UInt32 name="Unknown1" />
       <UInt32 name="Unknown2" />
     </Fields>
