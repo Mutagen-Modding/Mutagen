@@ -117,6 +117,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IEffectGetter.Duration => this.Duration;
         #endregion
+        #region MAGF
+        public Int32? MAGF { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IEffectGetter.MAGF => this.MAGF;
+        #endregion
         #region EFIF
         public Int32? EFIF { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -172,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Magnitude = initialValue;
                 this.Area = initialValue;
                 this.Duration = initialValue;
+                this.MAGF = initialValue;
                 this.EFIF = initialValue;
                 this.MUID = initialValue;
             }
@@ -183,6 +189,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Magnitude,
                 TItem Area,
                 TItem Duration,
+                TItem MAGF,
                 TItem EFIF,
                 TItem MUID)
             {
@@ -192,6 +199,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Magnitude = Magnitude;
                 this.Area = Area;
                 this.Duration = Duration;
+                this.MAGF = MAGF;
                 this.EFIF = EFIF;
                 this.MUID = MUID;
             }
@@ -211,6 +219,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Magnitude;
             public TItem Area;
             public TItem Duration;
+            public TItem MAGF;
             public TItem EFIF;
             public TItem MUID;
             #endregion
@@ -231,6 +240,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Magnitude, rhs.Magnitude)) return false;
                 if (!object.Equals(this.Area, rhs.Area)) return false;
                 if (!object.Equals(this.Duration, rhs.Duration)) return false;
+                if (!object.Equals(this.MAGF, rhs.MAGF)) return false;
                 if (!object.Equals(this.EFIF, rhs.EFIF)) return false;
                 if (!object.Equals(this.MUID, rhs.MUID)) return false;
                 return true;
@@ -244,6 +254,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Magnitude);
                 hash.Add(this.Area);
                 hash.Add(this.Duration);
+                hash.Add(this.MAGF);
                 hash.Add(this.EFIF);
                 hash.Add(this.MUID);
                 return hash.ToHashCode();
@@ -275,6 +286,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Magnitude)) return false;
                 if (!eval(this.Area)) return false;
                 if (!eval(this.Duration)) return false;
+                if (!eval(this.MAGF)) return false;
                 if (!eval(this.EFIF)) return false;
                 if (!eval(this.MUID)) return false;
                 return true;
@@ -305,6 +317,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Magnitude)) return true;
                 if (eval(this.Area)) return true;
                 if (eval(this.Duration)) return true;
+                if (eval(this.MAGF)) return true;
                 if (eval(this.EFIF)) return true;
                 if (eval(this.MUID)) return true;
                 return false;
@@ -341,6 +354,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Magnitude = eval(this.Magnitude);
                 obj.Area = eval(this.Area);
                 obj.Duration = eval(this.Duration);
+                obj.MAGF = eval(this.MAGF);
                 obj.EFIF = eval(this.EFIF);
                 obj.MUID = eval(this.MUID);
             }
@@ -400,6 +414,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Duration, "Duration");
                     }
+                    if (printMask?.MAGF ?? true)
+                    {
+                        sb.AppendItem(MAGF, "MAGF");
+                    }
                     if (printMask?.EFIF ?? true)
                     {
                         sb.AppendItem(EFIF, "EFIF");
@@ -438,6 +456,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Magnitude;
             public Exception? Area;
             public Exception? Duration;
+            public Exception? MAGF;
             public Exception? EFIF;
             public Exception? MUID;
             #endregion
@@ -460,6 +479,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Area;
                     case Effect_FieldIndex.Duration:
                         return Duration;
+                    case Effect_FieldIndex.MAGF:
+                        return MAGF;
                     case Effect_FieldIndex.EFIF:
                         return EFIF;
                     case Effect_FieldIndex.MUID:
@@ -491,6 +512,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Effect_FieldIndex.Duration:
                         this.Duration = ex;
+                        break;
+                    case Effect_FieldIndex.MAGF:
+                        this.MAGF = ex;
                         break;
                     case Effect_FieldIndex.EFIF:
                         this.EFIF = ex;
@@ -526,6 +550,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Effect_FieldIndex.Duration:
                         this.Duration = (Exception?)obj;
                         break;
+                    case Effect_FieldIndex.MAGF:
+                        this.MAGF = (Exception?)obj;
+                        break;
                     case Effect_FieldIndex.EFIF:
                         this.EFIF = (Exception?)obj;
                         break;
@@ -546,6 +573,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Magnitude != null) return true;
                 if (Area != null) return true;
                 if (Duration != null) return true;
+                if (MAGF != null) return true;
                 if (EFIF != null) return true;
                 if (MUID != null) return true;
                 return false;
@@ -605,6 +633,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Duration, "Duration");
                 }
                 {
+                    sb.AppendItem(MAGF, "MAGF");
+                }
+                {
                     sb.AppendItem(EFIF, "EFIF");
                 }
                 {
@@ -624,6 +655,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Magnitude = this.Magnitude.Combine(rhs.Magnitude);
                 ret.Area = this.Area.Combine(rhs.Area);
                 ret.Duration = this.Duration.Combine(rhs.Duration);
+                ret.MAGF = this.MAGF.Combine(rhs.MAGF);
                 ret.EFIF = this.EFIF.Combine(rhs.EFIF);
                 ret.MUID = this.MUID.Combine(rhs.MUID);
                 return ret;
@@ -655,6 +687,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Magnitude;
             public bool Area;
             public bool Duration;
+            public bool MAGF;
             public bool EFIF;
             public bool MUID;
             #endregion
@@ -670,6 +703,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Magnitude = defaultOn;
                 this.Area = defaultOn;
                 this.Duration = defaultOn;
+                this.MAGF = defaultOn;
                 this.EFIF = defaultOn;
                 this.MUID = defaultOn;
             }
@@ -693,6 +727,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Magnitude, null));
                 ret.Add((Area, null));
                 ret.Add((Duration, null));
+                ret.Add((MAGF, null));
                 ret.Add((EFIF, null));
                 ret.Add((MUID, null));
             }
@@ -779,6 +814,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IGlobalGetter> Magnitude { get; set; }
         new IFormLinkNullable<IGlobalGetter> Area { get; set; }
         new IFormLinkNullable<IGlobalGetter> Duration { get; set; }
+        new Int32? MAGF { get; set; }
         new Int32? EFIF { get; set; }
         new Int32? MUID { get; set; }
     }
@@ -802,6 +838,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IGlobalGetter> Magnitude { get; }
         IFormLinkNullableGetter<IGlobalGetter> Area { get; }
         IFormLinkNullableGetter<IGlobalGetter> Duration { get; }
+        Int32? MAGF { get; }
         Int32? EFIF { get; }
         Int32? MUID { get; }
 
@@ -979,8 +1016,9 @@ namespace Mutagen.Bethesda.Starfield
         Magnitude = 3,
         Area = 4,
         Duration = 5,
-        EFIF = 6,
-        MUID = 7,
+        MAGF = 6,
+        EFIF = 7,
+        MUID = 8,
     }
     #endregion
 
@@ -991,9 +1029,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Effect.Mask<>);
 
@@ -1029,6 +1067,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
+                RecordTypes.MAGF,
                 RecordTypes.EFIF,
                 RecordTypes.MUID);
             var all = RecordCollection.Factory(
@@ -1038,6 +1077,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
+                RecordTypes.MAGF,
                 RecordTypes.EFIF,
                 RecordTypes.MUID,
                 RecordTypes.CITC,
@@ -1093,6 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Magnitude.Clear();
             item.Area.Clear();
             item.Duration.Clear();
+            item.MAGF = default;
             item.EFIF = default;
             item.MUID = default;
         }
@@ -1162,6 +1203,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Magnitude = item.Magnitude.Equals(rhs.Magnitude);
             ret.Area = item.Area.Equals(rhs.Area);
             ret.Duration = item.Duration.Equals(rhs.Duration);
+            ret.MAGF = item.MAGF == rhs.MAGF;
             ret.EFIF = item.EFIF == rhs.EFIF;
             ret.MUID = item.MUID == rhs.MUID;
         }
@@ -1243,6 +1285,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Duration.FormKeyNullable, "Duration");
             }
+            if ((printMask?.MAGF ?? true)
+                && item.MAGF is {} MAGFItem)
+            {
+                sb.AppendItem(MAGFItem, "MAGF");
+            }
             if ((printMask?.EFIF ?? true)
                 && item.EFIF is {} EFIFItem)
             {
@@ -1290,6 +1337,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Duration.Equals(rhs.Duration)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.MAGF) ?? true))
+            {
+                if (lhs.MAGF != rhs.MAGF) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.EFIF) ?? true))
             {
                 if (lhs.EFIF != rhs.EFIF) return false;
@@ -1313,6 +1364,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Magnitude);
             hash.Add(item.Area);
             hash.Add(item.Duration);
+            if (item.MAGF is {} MAGFitem)
+            {
+                hash.Add(MAGFitem);
+            }
             if (item.EFIF is {} EFIFitem)
             {
                 hash.Add(EFIFitem);
@@ -1438,6 +1493,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Duration) ?? true))
             {
                 item.Duration.SetTo(rhs.Duration.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.MAGF) ?? true))
+            {
+                item.MAGF = rhs.MAGF;
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.EFIF) ?? true))
             {
@@ -1580,6 +1639,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
+                item: item.MAGF,
+                header: translationParams.ConvertToCustom(RecordTypes.MAGF));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
                 item: item.EFIF,
                 header: translationParams.ConvertToCustom(RecordTypes.EFIF));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1672,6 +1735,13 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Duration.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Effect_FieldIndex.Duration;
+                }
+                case RecordTypeInts.MAGF:
+                {
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MAGF, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MAGF = frame.ReadInt32();
+                    return (int)Effect_FieldIndex.MAGF;
                 }
                 case RecordTypeInts.EFIF:
                 {
@@ -1776,6 +1846,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Duration
         private int? _DurationLocation;
         public IFormLinkNullableGetter<IGlobalGetter> Duration => _DurationLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DurationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region MAGF
+        private int? _MAGFLocation;
+        public Int32? MAGF => _MAGFLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MAGFLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region EFIF
         private int? _EFIFLocation;
@@ -1893,6 +1967,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Duration, translationParams)) return ParseResult.Stop;
                     _DurationLocation = (stream.Position - offset);
                     return (int)Effect_FieldIndex.Duration;
+                }
+                case RecordTypeInts.MAGF:
+                {
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MAGF, translationParams)) return ParseResult.Stop;
+                    _MAGFLocation = (stream.Position - offset);
+                    return (int)Effect_FieldIndex.MAGF;
                 }
                 case RecordTypeInts.EFIF:
                 {
