@@ -4948,6 +4948,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Base.Relink(mapping);
+            obj.VolumeData?.RemapLinks(mapping);
             obj.Emittance.Relink(mapping);
             obj.CurrentZoneCell.Relink(mapping);
             obj.Patrol?.RemapLinks(mapping);
@@ -6507,6 +6508,13 @@ namespace Mutagen.Bethesda.Starfield
                 yield return FormLinkInformation.Factory(item);
             }
             yield return FormLinkInformation.Factory(obj.Base);
+            if (obj.VolumeData is {} VolumeDataItems)
+            {
+                foreach (var item in VolumeDataItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
                 yield return EmittanceInfo;

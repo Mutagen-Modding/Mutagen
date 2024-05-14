@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -50,16 +51,88 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Data = new byte[85];
-        public MemorySlice<Byte> Data
+        #region Versioning
+        public PlacedObjectVolumeData.VersioningBreaks Versioning { get; set; } = default(PlacedObjectVolumeData.VersioningBreaks);
+        #endregion
+        #region Unknown1
+        public Int32 Unknown1 { get; set; } = default(Int32);
+        #endregion
+        #region Unknown2
+        public Int32 Unknown2 { get; set; } = default(Int32);
+        #endregion
+        #region ImageSpace
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpace = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpace
         {
-            get => _Data;
-            set => this._Data = value;
+            get => _ImageSpace;
+            set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPlacedObjectVolumeDataGetter.Data => this.Data;
+        IFormLinkGetter<IImageSpaceGetter> IPlacedObjectVolumeDataGetter.ImageSpace => this.ImageSpace;
+        #endregion
+        #region FogVolume
+        private readonly IFormLink<IFogVolumeGetter> _FogVolume = new FormLink<IFogVolumeGetter>();
+        public IFormLink<IFogVolumeGetter> FogVolume
+        {
+            get => _FogVolume;
+            set => _FogVolume.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFogVolumeGetter> IPlacedObjectVolumeDataGetter.FogVolume => this.FogVolume;
+        #endregion
+        #region Unknown3
+        public Int32 Unknown3 { get; set; } = default(Int32);
+        #endregion
+        #region Unknown4
+        public Single Unknown4 { get; set; } = default(Single);
+        #endregion
+        #region Unknown5
+        public Single Unknown5 { get; set; } = default(Single);
+        #endregion
+        #region Unknown6
+        public Single Unknown6 { get; set; } = default(Single);
+        #endregion
+        #region Unknown7
+        public Single Unknown7 { get; set; } = default(Single);
+        #endregion
+        #region Unknown8
+        public Int32 Unknown8 { get; set; } = default(Int32);
+        #endregion
+        #region Unknown9
+        public Single Unknown9 { get; set; } = default(Single);
+        #endregion
+        #region Unknown10
+        public Single Unknown10 { get; set; } = default(Single);
+        #endregion
+        #region Unknown11
+        public Single Unknown11 { get; set; } = default(Single);
+        #endregion
+        #region Unknown12
+        public Int32 Unknown12 { get; set; } = default(Int32);
+        #endregion
+        #region Unknown13
+        public Single Unknown13 { get; set; } = default(Single);
+        #endregion
+        #region Unknown14
+        public Single Unknown14 { get; set; } = default(Single);
+        #endregion
+        #region Unknown15
+        public Single Unknown15 { get; set; } = default(Single);
+        #endregion
+        #region Unknown16
+        public Single Unknown16 { get; set; } = default(Single);
+        #endregion
+        #region Unknown17
+        public Single Unknown17 { get; set; } = default(Single);
+        #endregion
+        #region Unknown18
+        public Single Unknown18 { get; set; } = default(Single);
+        #endregion
+        #region Unknown19
+        public SByte Unknown19 { get; set; } = default(SByte);
+        #endregion
+        #region Unknown20
+        public Single Unknown20 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -98,9 +171,81 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem Data)
+            public Mask(TItem initialValue)
             {
-                this.Data = Data;
+                this.Versioning = initialValue;
+                this.Unknown1 = initialValue;
+                this.Unknown2 = initialValue;
+                this.ImageSpace = initialValue;
+                this.FogVolume = initialValue;
+                this.Unknown3 = initialValue;
+                this.Unknown4 = initialValue;
+                this.Unknown5 = initialValue;
+                this.Unknown6 = initialValue;
+                this.Unknown7 = initialValue;
+                this.Unknown8 = initialValue;
+                this.Unknown9 = initialValue;
+                this.Unknown10 = initialValue;
+                this.Unknown11 = initialValue;
+                this.Unknown12 = initialValue;
+                this.Unknown13 = initialValue;
+                this.Unknown14 = initialValue;
+                this.Unknown15 = initialValue;
+                this.Unknown16 = initialValue;
+                this.Unknown17 = initialValue;
+                this.Unknown18 = initialValue;
+                this.Unknown19 = initialValue;
+                this.Unknown20 = initialValue;
+            }
+
+            public Mask(
+                TItem Versioning,
+                TItem Unknown1,
+                TItem Unknown2,
+                TItem ImageSpace,
+                TItem FogVolume,
+                TItem Unknown3,
+                TItem Unknown4,
+                TItem Unknown5,
+                TItem Unknown6,
+                TItem Unknown7,
+                TItem Unknown8,
+                TItem Unknown9,
+                TItem Unknown10,
+                TItem Unknown11,
+                TItem Unknown12,
+                TItem Unknown13,
+                TItem Unknown14,
+                TItem Unknown15,
+                TItem Unknown16,
+                TItem Unknown17,
+                TItem Unknown18,
+                TItem Unknown19,
+                TItem Unknown20)
+            {
+                this.Versioning = Versioning;
+                this.Unknown1 = Unknown1;
+                this.Unknown2 = Unknown2;
+                this.ImageSpace = ImageSpace;
+                this.FogVolume = FogVolume;
+                this.Unknown3 = Unknown3;
+                this.Unknown4 = Unknown4;
+                this.Unknown5 = Unknown5;
+                this.Unknown6 = Unknown6;
+                this.Unknown7 = Unknown7;
+                this.Unknown8 = Unknown8;
+                this.Unknown9 = Unknown9;
+                this.Unknown10 = Unknown10;
+                this.Unknown11 = Unknown11;
+                this.Unknown12 = Unknown12;
+                this.Unknown13 = Unknown13;
+                this.Unknown14 = Unknown14;
+                this.Unknown15 = Unknown15;
+                this.Unknown16 = Unknown16;
+                this.Unknown17 = Unknown17;
+                this.Unknown18 = Unknown18;
+                this.Unknown19 = Unknown19;
+                this.Unknown20 = Unknown20;
             }
 
             #pragma warning disable CS8618
@@ -112,7 +257,29 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Data;
+            public TItem Versioning;
+            public TItem Unknown1;
+            public TItem Unknown2;
+            public TItem ImageSpace;
+            public TItem FogVolume;
+            public TItem Unknown3;
+            public TItem Unknown4;
+            public TItem Unknown5;
+            public TItem Unknown6;
+            public TItem Unknown7;
+            public TItem Unknown8;
+            public TItem Unknown9;
+            public TItem Unknown10;
+            public TItem Unknown11;
+            public TItem Unknown12;
+            public TItem Unknown13;
+            public TItem Unknown14;
+            public TItem Unknown15;
+            public TItem Unknown16;
+            public TItem Unknown17;
+            public TItem Unknown18;
+            public TItem Unknown19;
+            public TItem Unknown20;
             #endregion
 
             #region Equals
@@ -125,13 +292,57 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
+                if (!object.Equals(this.FogVolume, rhs.FogVolume)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
+                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
+                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
+                if (!object.Equals(this.Unknown9, rhs.Unknown9)) return false;
+                if (!object.Equals(this.Unknown10, rhs.Unknown10)) return false;
+                if (!object.Equals(this.Unknown11, rhs.Unknown11)) return false;
+                if (!object.Equals(this.Unknown12, rhs.Unknown12)) return false;
+                if (!object.Equals(this.Unknown13, rhs.Unknown13)) return false;
+                if (!object.Equals(this.Unknown14, rhs.Unknown14)) return false;
+                if (!object.Equals(this.Unknown15, rhs.Unknown15)) return false;
+                if (!object.Equals(this.Unknown16, rhs.Unknown16)) return false;
+                if (!object.Equals(this.Unknown17, rhs.Unknown17)) return false;
+                if (!object.Equals(this.Unknown18, rhs.Unknown18)) return false;
+                if (!object.Equals(this.Unknown19, rhs.Unknown19)) return false;
+                if (!object.Equals(this.Unknown20, rhs.Unknown20)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
+                hash.Add(this.Versioning);
+                hash.Add(this.Unknown1);
+                hash.Add(this.Unknown2);
+                hash.Add(this.ImageSpace);
+                hash.Add(this.FogVolume);
+                hash.Add(this.Unknown3);
+                hash.Add(this.Unknown4);
+                hash.Add(this.Unknown5);
+                hash.Add(this.Unknown6);
+                hash.Add(this.Unknown7);
+                hash.Add(this.Unknown8);
+                hash.Add(this.Unknown9);
+                hash.Add(this.Unknown10);
+                hash.Add(this.Unknown11);
+                hash.Add(this.Unknown12);
+                hash.Add(this.Unknown13);
+                hash.Add(this.Unknown14);
+                hash.Add(this.Unknown15);
+                hash.Add(this.Unknown16);
+                hash.Add(this.Unknown17);
+                hash.Add(this.Unknown18);
+                hash.Add(this.Unknown19);
+                hash.Add(this.Unknown20);
                 return hash.ToHashCode();
             }
 
@@ -140,7 +351,29 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Data)) return false;
+                if (!eval(this.Versioning)) return false;
+                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.ImageSpace)) return false;
+                if (!eval(this.FogVolume)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.Unknown5)) return false;
+                if (!eval(this.Unknown6)) return false;
+                if (!eval(this.Unknown7)) return false;
+                if (!eval(this.Unknown8)) return false;
+                if (!eval(this.Unknown9)) return false;
+                if (!eval(this.Unknown10)) return false;
+                if (!eval(this.Unknown11)) return false;
+                if (!eval(this.Unknown12)) return false;
+                if (!eval(this.Unknown13)) return false;
+                if (!eval(this.Unknown14)) return false;
+                if (!eval(this.Unknown15)) return false;
+                if (!eval(this.Unknown16)) return false;
+                if (!eval(this.Unknown17)) return false;
+                if (!eval(this.Unknown18)) return false;
+                if (!eval(this.Unknown19)) return false;
+                if (!eval(this.Unknown20)) return false;
                 return true;
             }
             #endregion
@@ -148,7 +381,29 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Data)) return true;
+                if (eval(this.Versioning)) return true;
+                if (eval(this.Unknown1)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.ImageSpace)) return true;
+                if (eval(this.FogVolume)) return true;
+                if (eval(this.Unknown3)) return true;
+                if (eval(this.Unknown4)) return true;
+                if (eval(this.Unknown5)) return true;
+                if (eval(this.Unknown6)) return true;
+                if (eval(this.Unknown7)) return true;
+                if (eval(this.Unknown8)) return true;
+                if (eval(this.Unknown9)) return true;
+                if (eval(this.Unknown10)) return true;
+                if (eval(this.Unknown11)) return true;
+                if (eval(this.Unknown12)) return true;
+                if (eval(this.Unknown13)) return true;
+                if (eval(this.Unknown14)) return true;
+                if (eval(this.Unknown15)) return true;
+                if (eval(this.Unknown16)) return true;
+                if (eval(this.Unknown17)) return true;
+                if (eval(this.Unknown18)) return true;
+                if (eval(this.Unknown19)) return true;
+                if (eval(this.Unknown20)) return true;
                 return false;
             }
             #endregion
@@ -163,7 +418,29 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = eval(this.Data);
+                obj.Versioning = eval(this.Versioning);
+                obj.Unknown1 = eval(this.Unknown1);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.ImageSpace = eval(this.ImageSpace);
+                obj.FogVolume = eval(this.FogVolume);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.Unknown5 = eval(this.Unknown5);
+                obj.Unknown6 = eval(this.Unknown6);
+                obj.Unknown7 = eval(this.Unknown7);
+                obj.Unknown8 = eval(this.Unknown8);
+                obj.Unknown9 = eval(this.Unknown9);
+                obj.Unknown10 = eval(this.Unknown10);
+                obj.Unknown11 = eval(this.Unknown11);
+                obj.Unknown12 = eval(this.Unknown12);
+                obj.Unknown13 = eval(this.Unknown13);
+                obj.Unknown14 = eval(this.Unknown14);
+                obj.Unknown15 = eval(this.Unknown15);
+                obj.Unknown16 = eval(this.Unknown16);
+                obj.Unknown17 = eval(this.Unknown17);
+                obj.Unknown18 = eval(this.Unknown18);
+                obj.Unknown19 = eval(this.Unknown19);
+                obj.Unknown20 = eval(this.Unknown20);
             }
             #endregion
 
@@ -182,9 +459,97 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlacedObjectVolumeData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Data ?? true)
+                    if (printMask?.Versioning ?? true)
                     {
-                        sb.AppendItem(Data, "Data");
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        sb.AppendItem(Unknown1, "Unknown1");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        sb.AppendItem(ImageSpace, "ImageSpace");
+                    }
+                    if (printMask?.FogVolume ?? true)
+                    {
+                        sb.AppendItem(FogVolume, "FogVolume");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        sb.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        sb.AppendItem(Unknown4, "Unknown4");
+                    }
+                    if (printMask?.Unknown5 ?? true)
+                    {
+                        sb.AppendItem(Unknown5, "Unknown5");
+                    }
+                    if (printMask?.Unknown6 ?? true)
+                    {
+                        sb.AppendItem(Unknown6, "Unknown6");
+                    }
+                    if (printMask?.Unknown7 ?? true)
+                    {
+                        sb.AppendItem(Unknown7, "Unknown7");
+                    }
+                    if (printMask?.Unknown8 ?? true)
+                    {
+                        sb.AppendItem(Unknown8, "Unknown8");
+                    }
+                    if (printMask?.Unknown9 ?? true)
+                    {
+                        sb.AppendItem(Unknown9, "Unknown9");
+                    }
+                    if (printMask?.Unknown10 ?? true)
+                    {
+                        sb.AppendItem(Unknown10, "Unknown10");
+                    }
+                    if (printMask?.Unknown11 ?? true)
+                    {
+                        sb.AppendItem(Unknown11, "Unknown11");
+                    }
+                    if (printMask?.Unknown12 ?? true)
+                    {
+                        sb.AppendItem(Unknown12, "Unknown12");
+                    }
+                    if (printMask?.Unknown13 ?? true)
+                    {
+                        sb.AppendItem(Unknown13, "Unknown13");
+                    }
+                    if (printMask?.Unknown14 ?? true)
+                    {
+                        sb.AppendItem(Unknown14, "Unknown14");
+                    }
+                    if (printMask?.Unknown15 ?? true)
+                    {
+                        sb.AppendItem(Unknown15, "Unknown15");
+                    }
+                    if (printMask?.Unknown16 ?? true)
+                    {
+                        sb.AppendItem(Unknown16, "Unknown16");
+                    }
+                    if (printMask?.Unknown17 ?? true)
+                    {
+                        sb.AppendItem(Unknown17, "Unknown17");
+                    }
+                    if (printMask?.Unknown18 ?? true)
+                    {
+                        sb.AppendItem(Unknown18, "Unknown18");
+                    }
+                    if (printMask?.Unknown19 ?? true)
+                    {
+                        sb.AppendItem(Unknown19, "Unknown19");
+                    }
+                    if (printMask?.Unknown20 ?? true)
+                    {
+                        sb.AppendItem(Unknown20, "Unknown20");
                     }
                 }
             }
@@ -210,7 +575,29 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Data;
+            public Exception? Versioning;
+            public Exception? Unknown1;
+            public Exception? Unknown2;
+            public Exception? ImageSpace;
+            public Exception? FogVolume;
+            public Exception? Unknown3;
+            public Exception? Unknown4;
+            public Exception? Unknown5;
+            public Exception? Unknown6;
+            public Exception? Unknown7;
+            public Exception? Unknown8;
+            public Exception? Unknown9;
+            public Exception? Unknown10;
+            public Exception? Unknown11;
+            public Exception? Unknown12;
+            public Exception? Unknown13;
+            public Exception? Unknown14;
+            public Exception? Unknown15;
+            public Exception? Unknown16;
+            public Exception? Unknown17;
+            public Exception? Unknown18;
+            public Exception? Unknown19;
+            public Exception? Unknown20;
             #endregion
 
             #region IErrorMask
@@ -219,8 +606,52 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectVolumeData_FieldIndex enu = (PlacedObjectVolumeData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectVolumeData_FieldIndex.Data:
-                        return Data;
+                    case PlacedObjectVolumeData_FieldIndex.Versioning:
+                        return Versioning;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown1:
+                        return Unknown1;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case PlacedObjectVolumeData_FieldIndex.ImageSpace:
+                        return ImageSpace;
+                    case PlacedObjectVolumeData_FieldIndex.FogVolume:
+                        return FogVolume;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown5:
+                        return Unknown5;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown6:
+                        return Unknown6;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown7:
+                        return Unknown7;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown8:
+                        return Unknown8;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown9:
+                        return Unknown9;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown10:
+                        return Unknown10;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown11:
+                        return Unknown11;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown12:
+                        return Unknown12;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown13:
+                        return Unknown13;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown14:
+                        return Unknown14;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown15:
+                        return Unknown15;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown16:
+                        return Unknown16;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown17:
+                        return Unknown17;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown18:
+                        return Unknown18;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown19:
+                        return Unknown19;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown20:
+                        return Unknown20;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -231,8 +662,74 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectVolumeData_FieldIndex enu = (PlacedObjectVolumeData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectVolumeData_FieldIndex.Data:
-                        this.Data = ex;
+                    case PlacedObjectVolumeData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.FogVolume:
+                        this.FogVolume = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown5:
+                        this.Unknown5 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown6:
+                        this.Unknown6 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown7:
+                        this.Unknown7 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown8:
+                        this.Unknown8 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown9:
+                        this.Unknown9 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown10:
+                        this.Unknown10 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown11:
+                        this.Unknown11 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown12:
+                        this.Unknown12 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown13:
+                        this.Unknown13 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown14:
+                        this.Unknown14 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown15:
+                        this.Unknown15 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown16:
+                        this.Unknown16 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown17:
+                        this.Unknown17 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown18:
+                        this.Unknown18 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown19:
+                        this.Unknown19 = ex;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown20:
+                        this.Unknown20 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -244,8 +741,74 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectVolumeData_FieldIndex enu = (PlacedObjectVolumeData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectVolumeData_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
+                    case PlacedObjectVolumeData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.FogVolume:
+                        this.FogVolume = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown5:
+                        this.Unknown5 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown6:
+                        this.Unknown6 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown7:
+                        this.Unknown7 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown8:
+                        this.Unknown8 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown9:
+                        this.Unknown9 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown10:
+                        this.Unknown10 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown11:
+                        this.Unknown11 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown12:
+                        this.Unknown12 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown13:
+                        this.Unknown13 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown14:
+                        this.Unknown14 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown15:
+                        this.Unknown15 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown16:
+                        this.Unknown16 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown17:
+                        this.Unknown17 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown18:
+                        this.Unknown18 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown19:
+                        this.Unknown19 = (Exception?)obj;
+                        break;
+                    case PlacedObjectVolumeData_FieldIndex.Unknown20:
+                        this.Unknown20 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -255,7 +818,29 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
+                if (Versioning != null) return true;
+                if (Unknown1 != null) return true;
+                if (Unknown2 != null) return true;
+                if (ImageSpace != null) return true;
+                if (FogVolume != null) return true;
+                if (Unknown3 != null) return true;
+                if (Unknown4 != null) return true;
+                if (Unknown5 != null) return true;
+                if (Unknown6 != null) return true;
+                if (Unknown7 != null) return true;
+                if (Unknown8 != null) return true;
+                if (Unknown9 != null) return true;
+                if (Unknown10 != null) return true;
+                if (Unknown11 != null) return true;
+                if (Unknown12 != null) return true;
+                if (Unknown13 != null) return true;
+                if (Unknown14 != null) return true;
+                if (Unknown15 != null) return true;
+                if (Unknown16 != null) return true;
+                if (Unknown17 != null) return true;
+                if (Unknown18 != null) return true;
+                if (Unknown19 != null) return true;
+                if (Unknown20 != null) return true;
                 return false;
             }
             #endregion
@@ -282,7 +867,73 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Data, "Data");
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
+                {
+                    sb.AppendItem(FogVolume, "FogVolume");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(Unknown6, "Unknown6");
+                }
+                {
+                    sb.AppendItem(Unknown7, "Unknown7");
+                }
+                {
+                    sb.AppendItem(Unknown8, "Unknown8");
+                }
+                {
+                    sb.AppendItem(Unknown9, "Unknown9");
+                }
+                {
+                    sb.AppendItem(Unknown10, "Unknown10");
+                }
+                {
+                    sb.AppendItem(Unknown11, "Unknown11");
+                }
+                {
+                    sb.AppendItem(Unknown12, "Unknown12");
+                }
+                {
+                    sb.AppendItem(Unknown13, "Unknown13");
+                }
+                {
+                    sb.AppendItem(Unknown14, "Unknown14");
+                }
+                {
+                    sb.AppendItem(Unknown15, "Unknown15");
+                }
+                {
+                    sb.AppendItem(Unknown16, "Unknown16");
+                }
+                {
+                    sb.AppendItem(Unknown17, "Unknown17");
+                }
+                {
+                    sb.AppendItem(Unknown18, "Unknown18");
+                }
+                {
+                    sb.AppendItem(Unknown19, "Unknown19");
+                }
+                {
+                    sb.AppendItem(Unknown20, "Unknown20");
                 }
             }
             #endregion
@@ -292,7 +943,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data);
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
+                ret.FogVolume = this.FogVolume.Combine(rhs.FogVolume);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
+                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
+                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
+                ret.Unknown9 = this.Unknown9.Combine(rhs.Unknown9);
+                ret.Unknown10 = this.Unknown10.Combine(rhs.Unknown10);
+                ret.Unknown11 = this.Unknown11.Combine(rhs.Unknown11);
+                ret.Unknown12 = this.Unknown12.Combine(rhs.Unknown12);
+                ret.Unknown13 = this.Unknown13.Combine(rhs.Unknown13);
+                ret.Unknown14 = this.Unknown14.Combine(rhs.Unknown14);
+                ret.Unknown15 = this.Unknown15.Combine(rhs.Unknown15);
+                ret.Unknown16 = this.Unknown16.Combine(rhs.Unknown16);
+                ret.Unknown17 = this.Unknown17.Combine(rhs.Unknown17);
+                ret.Unknown18 = this.Unknown18.Combine(rhs.Unknown18);
+                ret.Unknown19 = this.Unknown19.Combine(rhs.Unknown19);
+                ret.Unknown20 = this.Unknown20.Combine(rhs.Unknown20);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -316,7 +989,29 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Data;
+            public bool Versioning;
+            public bool Unknown1;
+            public bool Unknown2;
+            public bool ImageSpace;
+            public bool FogVolume;
+            public bool Unknown3;
+            public bool Unknown4;
+            public bool Unknown5;
+            public bool Unknown6;
+            public bool Unknown7;
+            public bool Unknown8;
+            public bool Unknown9;
+            public bool Unknown10;
+            public bool Unknown11;
+            public bool Unknown12;
+            public bool Unknown13;
+            public bool Unknown14;
+            public bool Unknown15;
+            public bool Unknown16;
+            public bool Unknown17;
+            public bool Unknown18;
+            public bool Unknown19;
+            public bool Unknown20;
             #endregion
 
             #region Ctors
@@ -326,7 +1021,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Data = defaultOn;
+                this.Versioning = defaultOn;
+                this.Unknown1 = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.ImageSpace = defaultOn;
+                this.FogVolume = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.Unknown5 = defaultOn;
+                this.Unknown6 = defaultOn;
+                this.Unknown7 = defaultOn;
+                this.Unknown8 = defaultOn;
+                this.Unknown9 = defaultOn;
+                this.Unknown10 = defaultOn;
+                this.Unknown11 = defaultOn;
+                this.Unknown12 = defaultOn;
+                this.Unknown13 = defaultOn;
+                this.Unknown14 = defaultOn;
+                this.Unknown15 = defaultOn;
+                this.Unknown16 = defaultOn;
+                this.Unknown17 = defaultOn;
+                this.Unknown18 = defaultOn;
+                this.Unknown19 = defaultOn;
+                this.Unknown20 = defaultOn;
             }
 
             #endregion
@@ -342,7 +1059,29 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data, null));
+                ret.Add((Versioning, null));
+                ret.Add((Unknown1, null));
+                ret.Add((Unknown2, null));
+                ret.Add((ImageSpace, null));
+                ret.Add((FogVolume, null));
+                ret.Add((Unknown3, null));
+                ret.Add((Unknown4, null));
+                ret.Add((Unknown5, null));
+                ret.Add((Unknown6, null));
+                ret.Add((Unknown7, null));
+                ret.Add((Unknown8, null));
+                ret.Add((Unknown9, null));
+                ret.Add((Unknown10, null));
+                ret.Add((Unknown11, null));
+                ret.Add((Unknown12, null));
+                ret.Add((Unknown13, null));
+                ret.Add((Unknown14, null));
+                ret.Add((Unknown15, null));
+                ret.Add((Unknown16, null));
+                ret.Add((Unknown17, null));
+                ret.Add((Unknown18, null));
+                ret.Add((Unknown19, null));
+                ret.Add((Unknown20, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -351,6 +1090,16 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectVolumeDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -412,15 +1161,39 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlacedObjectVolumeData :
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedObjectVolumeData>,
         IPlacedObjectVolumeDataGetter
     {
-        new MemorySlice<Byte> Data { get; set; }
+        new PlacedObjectVolumeData.VersioningBreaks Versioning { get; set; }
+        new Int32 Unknown1 { get; set; }
+        new Int32 Unknown2 { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpace { get; set; }
+        new IFormLink<IFogVolumeGetter> FogVolume { get; set; }
+        new Int32 Unknown3 { get; set; }
+        new Single Unknown4 { get; set; }
+        new Single Unknown5 { get; set; }
+        new Single Unknown6 { get; set; }
+        new Single Unknown7 { get; set; }
+        new Int32 Unknown8 { get; set; }
+        new Single Unknown9 { get; set; }
+        new Single Unknown10 { get; set; }
+        new Single Unknown11 { get; set; }
+        new Int32 Unknown12 { get; set; }
+        new Single Unknown13 { get; set; }
+        new Single Unknown14 { get; set; }
+        new Single Unknown15 { get; set; }
+        new Single Unknown16 { get; set; }
+        new Single Unknown17 { get; set; }
+        new Single Unknown18 { get; set; }
+        new SByte Unknown19 { get; set; }
+        new Single Unknown20 { get; set; }
     }
 
     public partial interface IPlacedObjectVolumeDataGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IPlacedObjectVolumeDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -430,7 +1203,29 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlacedObjectVolumeData_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Data { get; }
+        PlacedObjectVolumeData.VersioningBreaks Versioning { get; }
+        Int32 Unknown1 { get; }
+        Int32 Unknown2 { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpace { get; }
+        IFormLinkGetter<IFogVolumeGetter> FogVolume { get; }
+        Int32 Unknown3 { get; }
+        Single Unknown4 { get; }
+        Single Unknown5 { get; }
+        Single Unknown6 { get; }
+        Single Unknown7 { get; }
+        Int32 Unknown8 { get; }
+        Single Unknown9 { get; }
+        Single Unknown10 { get; }
+        Single Unknown11 { get; }
+        Int32 Unknown12 { get; }
+        Single Unknown13 { get; }
+        Single Unknown14 { get; }
+        Single Unknown15 { get; }
+        Single Unknown16 { get; }
+        Single Unknown17 { get; }
+        Single Unknown18 { get; }
+        SByte Unknown19 { get; }
+        Single Unknown20 { get; }
 
     }
 
@@ -600,7 +1395,29 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum PlacedObjectVolumeData_FieldIndex
     {
-        Data = 0,
+        Versioning = 0,
+        Unknown1 = 1,
+        Unknown2 = 2,
+        ImageSpace = 3,
+        FogVolume = 4,
+        Unknown3 = 5,
+        Unknown4 = 6,
+        Unknown5 = 7,
+        Unknown6 = 8,
+        Unknown7 = 9,
+        Unknown8 = 10,
+        Unknown9 = 11,
+        Unknown10 = 12,
+        Unknown11 = 13,
+        Unknown12 = 14,
+        Unknown13 = 15,
+        Unknown14 = 16,
+        Unknown15 = 17,
+        Unknown16 = 18,
+        Unknown17 = 19,
+        Unknown18 = 20,
+        Unknown19 = 21,
+        Unknown20 = 22,
     }
     #endregion
 
@@ -611,9 +1428,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(PlacedObjectVolumeData.Mask<>);
 
@@ -686,12 +1503,36 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectVolumeData item)
         {
             ClearPartial();
-            item.Data = new byte[85];
+            item.Versioning = default(PlacedObjectVolumeData.VersioningBreaks);
+            item.Unknown1 = default(Int32);
+            item.Unknown2 = default(Int32);
+            item.ImageSpace.Clear();
+            item.FogVolume.Clear();
+            item.Unknown3 = default(Int32);
+            item.Unknown4 = default(Single);
+            item.Unknown5 = default(Single);
+            item.Unknown6 = default(Single);
+            item.Unknown7 = default(Single);
+            item.Unknown8 = default(Int32);
+            item.Unknown9 = default(Single);
+            item.Unknown10 = default(Single);
+            item.Unknown11 = default(Single);
+            item.Unknown12 = default(Int32);
+            item.Unknown13 = default(Single);
+            item.Unknown14 = default(Single);
+            item.Unknown15 = default(Single);
+            item.Unknown16 = default(Single);
+            item.Unknown17 = default(Single);
+            item.Unknown18 = default(Single);
+            item.Unknown19 = default(SByte);
+            item.Unknown20 = default(Single);
         }
         
         #region Mutagen
         public void RemapLinks(IPlacedObjectVolumeData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.ImageSpace.Relink(mapping);
+            obj.FogVolume.Relink(mapping);
         }
         
         #endregion
@@ -740,7 +1581,29 @@ namespace Mutagen.Bethesda.Starfield
             PlacedObjectVolumeData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = MemoryExtensions.SequenceEqual(item.Data.Span, rhs.Data.Span);
+            ret.Versioning = item.Versioning == rhs.Versioning;
+            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
+            ret.FogVolume = item.FogVolume.Equals(rhs.FogVolume);
+            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.Unknown4 = item.Unknown4.EqualsWithin(rhs.Unknown4);
+            ret.Unknown5 = item.Unknown5.EqualsWithin(rhs.Unknown5);
+            ret.Unknown6 = item.Unknown6.EqualsWithin(rhs.Unknown6);
+            ret.Unknown7 = item.Unknown7.EqualsWithin(rhs.Unknown7);
+            ret.Unknown8 = item.Unknown8 == rhs.Unknown8;
+            ret.Unknown9 = item.Unknown9.EqualsWithin(rhs.Unknown9);
+            ret.Unknown10 = item.Unknown10.EqualsWithin(rhs.Unknown10);
+            ret.Unknown11 = item.Unknown11.EqualsWithin(rhs.Unknown11);
+            ret.Unknown12 = item.Unknown12 == rhs.Unknown12;
+            ret.Unknown13 = item.Unknown13.EqualsWithin(rhs.Unknown13);
+            ret.Unknown14 = item.Unknown14.EqualsWithin(rhs.Unknown14);
+            ret.Unknown15 = item.Unknown15.EqualsWithin(rhs.Unknown15);
+            ret.Unknown16 = item.Unknown16.EqualsWithin(rhs.Unknown16);
+            ret.Unknown17 = item.Unknown17.EqualsWithin(rhs.Unknown17);
+            ret.Unknown18 = item.Unknown18.EqualsWithin(rhs.Unknown18);
+            ret.Unknown19 = item.Unknown19 == rhs.Unknown19;
+            ret.Unknown20 = item.Unknown20.EqualsWithin(rhs.Unknown20);
         }
         
         public string Print(
@@ -785,9 +1648,97 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             PlacedObjectVolumeData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Data ?? true)
+            if (printMask?.Versioning ?? true)
             {
-                sb.AppendLine($"Data => {SpanExt.ToHexString(item.Data)}");
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                sb.AppendItem(item.Unknown1, "Unknown1");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.ImageSpace ?? true)
+            {
+                sb.AppendItem(item.ImageSpace.FormKey, "ImageSpace");
+            }
+            if (printMask?.FogVolume ?? true)
+            {
+                sb.AppendItem(item.FogVolume.FormKey, "FogVolume");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                sb.AppendItem(item.Unknown3, "Unknown3");
+            }
+            if (printMask?.Unknown4 ?? true)
+            {
+                sb.AppendItem(item.Unknown4, "Unknown4");
+            }
+            if (printMask?.Unknown5 ?? true)
+            {
+                sb.AppendItem(item.Unknown5, "Unknown5");
+            }
+            if (printMask?.Unknown6 ?? true)
+            {
+                sb.AppendItem(item.Unknown6, "Unknown6");
+            }
+            if (printMask?.Unknown7 ?? true)
+            {
+                sb.AppendItem(item.Unknown7, "Unknown7");
+            }
+            if (printMask?.Unknown8 ?? true)
+            {
+                sb.AppendItem(item.Unknown8, "Unknown8");
+            }
+            if (printMask?.Unknown9 ?? true)
+            {
+                sb.AppendItem(item.Unknown9, "Unknown9");
+            }
+            if (printMask?.Unknown10 ?? true)
+            {
+                sb.AppendItem(item.Unknown10, "Unknown10");
+            }
+            if (printMask?.Unknown11 ?? true)
+            {
+                sb.AppendItem(item.Unknown11, "Unknown11");
+            }
+            if (printMask?.Unknown12 ?? true)
+            {
+                sb.AppendItem(item.Unknown12, "Unknown12");
+            }
+            if (printMask?.Unknown13 ?? true)
+            {
+                sb.AppendItem(item.Unknown13, "Unknown13");
+            }
+            if (printMask?.Unknown14 ?? true)
+            {
+                sb.AppendItem(item.Unknown14, "Unknown14");
+            }
+            if (printMask?.Unknown15 ?? true)
+            {
+                sb.AppendItem(item.Unknown15, "Unknown15");
+            }
+            if (printMask?.Unknown16 ?? true)
+            {
+                sb.AppendItem(item.Unknown16, "Unknown16");
+            }
+            if (printMask?.Unknown17 ?? true)
+            {
+                sb.AppendItem(item.Unknown17, "Unknown17");
+            }
+            if (printMask?.Unknown18 ?? true)
+            {
+                sb.AppendItem(item.Unknown18, "Unknown18");
+            }
+            if (printMask?.Unknown19 ?? true)
+            {
+                sb.AppendItem(item.Unknown19, "Unknown19");
+            }
+            if (printMask?.Unknown20 ?? true)
+            {
+                sb.AppendItem(item.Unknown20, "Unknown20");
             }
         }
         
@@ -798,9 +1749,97 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Versioning) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown1) ?? true))
+            {
+                if (lhs.Unknown1 != rhs.Unknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.ImageSpace) ?? true))
+            {
+                if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.FogVolume) ?? true))
+            {
+                if (!lhs.FogVolume.Equals(rhs.FogVolume)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown3) ?? true))
+            {
+                if (lhs.Unknown3 != rhs.Unknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown4) ?? true))
+            {
+                if (!lhs.Unknown4.EqualsWithin(rhs.Unknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown5) ?? true))
+            {
+                if (!lhs.Unknown5.EqualsWithin(rhs.Unknown5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown6) ?? true))
+            {
+                if (!lhs.Unknown6.EqualsWithin(rhs.Unknown6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown7) ?? true))
+            {
+                if (!lhs.Unknown7.EqualsWithin(rhs.Unknown7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown8) ?? true))
+            {
+                if (lhs.Unknown8 != rhs.Unknown8) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown9) ?? true))
+            {
+                if (!lhs.Unknown9.EqualsWithin(rhs.Unknown9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown10) ?? true))
+            {
+                if (!lhs.Unknown10.EqualsWithin(rhs.Unknown10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown11) ?? true))
+            {
+                if (!lhs.Unknown11.EqualsWithin(rhs.Unknown11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown12) ?? true))
+            {
+                if (lhs.Unknown12 != rhs.Unknown12) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown13) ?? true))
+            {
+                if (!lhs.Unknown13.EqualsWithin(rhs.Unknown13)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown14) ?? true))
+            {
+                if (!lhs.Unknown14.EqualsWithin(rhs.Unknown14)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown15) ?? true))
+            {
+                if (!lhs.Unknown15.EqualsWithin(rhs.Unknown15)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown16) ?? true))
+            {
+                if (!lhs.Unknown16.EqualsWithin(rhs.Unknown16)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown17) ?? true))
+            {
+                if (!lhs.Unknown17.EqualsWithin(rhs.Unknown17)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown18) ?? true))
+            {
+                if (!lhs.Unknown18.EqualsWithin(rhs.Unknown18)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown19) ?? true))
+            {
+                if (lhs.Unknown19 != rhs.Unknown19) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown20) ?? true))
+            {
+                if (!lhs.Unknown20.EqualsWithin(rhs.Unknown20)) return false;
             }
             return true;
         }
@@ -808,7 +1847,29 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlacedObjectVolumeDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
+            hash.Add(item.Versioning);
+            hash.Add(item.Unknown1);
+            hash.Add(item.Unknown2);
+            hash.Add(item.ImageSpace);
+            hash.Add(item.FogVolume);
+            hash.Add(item.Unknown3);
+            hash.Add(item.Unknown4);
+            hash.Add(item.Unknown5);
+            hash.Add(item.Unknown6);
+            hash.Add(item.Unknown7);
+            hash.Add(item.Unknown8);
+            hash.Add(item.Unknown9);
+            hash.Add(item.Unknown10);
+            hash.Add(item.Unknown11);
+            hash.Add(item.Unknown12);
+            hash.Add(item.Unknown13);
+            hash.Add(item.Unknown14);
+            hash.Add(item.Unknown15);
+            hash.Add(item.Unknown16);
+            hash.Add(item.Unknown17);
+            hash.Add(item.Unknown18);
+            hash.Add(item.Unknown19);
+            hash.Add(item.Unknown20);
             return hash.ToHashCode();
         }
         
@@ -823,6 +1884,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectVolumeDataGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.ImageSpace);
+            yield return FormLinkInformation.Factory(obj.FogVolume);
             yield break;
         }
         
@@ -841,9 +1904,98 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Versioning) ?? true))
             {
-                item.Data = rhs.Data.ToArray();
+                item.Versioning = rhs.Versioning;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown1) ?? true))
+            {
+                item.Unknown1 = rhs.Unknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.FogVolume) ?? true))
+            {
+                item.FogVolume.SetTo(rhs.FogVolume.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown4) ?? true))
+            {
+                item.Unknown4 = rhs.Unknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown5) ?? true))
+            {
+                item.Unknown5 = rhs.Unknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown6) ?? true))
+            {
+                item.Unknown6 = rhs.Unknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown7) ?? true))
+            {
+                item.Unknown7 = rhs.Unknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown8) ?? true))
+            {
+                item.Unknown8 = rhs.Unknown8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown9) ?? true))
+            {
+                item.Unknown9 = rhs.Unknown9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown10) ?? true))
+            {
+                item.Unknown10 = rhs.Unknown10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown11) ?? true))
+            {
+                item.Unknown11 = rhs.Unknown11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown12) ?? true))
+            {
+                item.Unknown12 = rhs.Unknown12;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown13) ?? true))
+            {
+                item.Unknown13 = rhs.Unknown13;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown14) ?? true))
+            {
+                item.Unknown14 = rhs.Unknown14;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown15) ?? true))
+            {
+                item.Unknown15 = rhs.Unknown15;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown16) ?? true))
+            {
+                item.Unknown16 = rhs.Unknown16;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown17) ?? true))
+            {
+                item.Unknown17 = rhs.Unknown17;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown18) ?? true))
+            {
+                item.Unknown18 = rhs.Unknown18;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown19) ?? true))
+            {
+                item.Unknown19 = rhs.Unknown19;
+            }
+            if (rhs.Versioning.HasFlag(PlacedObjectVolumeData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectVolumeData_FieldIndex.Unknown20) ?? true))
+            {
+                item.Unknown20 = rhs.Unknown20;
             }
         }
         
@@ -941,9 +2093,63 @@ namespace Mutagen.Bethesda.Starfield
             IPlacedObjectVolumeDataGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            writer.Write(item.Unknown1);
+            writer.Write(item.Unknown2);
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Data);
+                item: item.ImageSpace);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FogVolume);
+            writer.Write(item.Unknown3);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown4);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown5);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown6);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown7);
+            writer.Write(item.Unknown8);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown9);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown10);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown11);
+            writer.Write(item.Unknown12);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown13);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown14);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown15);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown16);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown17);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown18);
+            writer.Write(item.Unknown19);
+            if (!item.Versioning.HasFlag(PlacedObjectVolumeData.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown20);
+            }
         }
 
         public void Write(
@@ -984,7 +2190,33 @@ namespace Mutagen.Bethesda.Starfield
             IPlacedObjectVolumeData item,
             MutagenFrame frame)
         {
-            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(85));
+            item.Unknown1 = frame.ReadInt32();
+            item.Unknown2 = frame.ReadInt32();
+            item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.FogVolume.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Unknown3 = frame.ReadInt32();
+            item.Unknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown8 = frame.ReadInt32();
+            item.Unknown9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown12 = frame.ReadInt32();
+            item.Unknown13 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown14 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown15 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown16 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown17 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown18 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown19 = frame.ReadInt8();
+            if (frame.Complete)
+            {
+                item.Versioning |= PlacedObjectVolumeData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Unknown20 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1036,6 +2268,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedObjectVolumeDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1050,7 +2283,29 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public ReadOnlyMemorySlice<Byte> Data => _structData.Span.Slice(0x0, 0x55).ToArray();
+        public PlacedObjectVolumeData.VersioningBreaks Versioning { get; private set; }
+        public Int32 Unknown1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpace => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IFogVolumeGetter> FogVolume => new FormLink<IFogVolumeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
+        public Single Unknown4 => _structData.Slice(0x14, 0x4).Float();
+        public Single Unknown5 => _structData.Slice(0x18, 0x4).Float();
+        public Single Unknown6 => _structData.Slice(0x1C, 0x4).Float();
+        public Single Unknown7 => _structData.Slice(0x20, 0x4).Float();
+        public Int32 Unknown8 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x24, 0x4));
+        public Single Unknown9 => _structData.Slice(0x28, 0x4).Float();
+        public Single Unknown10 => _structData.Slice(0x2C, 0x4).Float();
+        public Single Unknown11 => _structData.Slice(0x30, 0x4).Float();
+        public Int32 Unknown12 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x34, 0x4));
+        public Single Unknown13 => _structData.Slice(0x38, 0x4).Float();
+        public Single Unknown14 => _structData.Slice(0x3C, 0x4).Float();
+        public Single Unknown15 => _structData.Slice(0x40, 0x4).Float();
+        public Single Unknown16 => _structData.Slice(0x44, 0x4).Float();
+        public Single Unknown17 => _structData.Slice(0x48, 0x4).Float();
+        public Single Unknown18 => _structData.Slice(0x4C, 0x4).Float();
+        public SByte Unknown19 => (sbyte)_structData.Slice(0x50, 0x1)[0];
+        public Single Unknown20 => _structData.Length <= 0x51 ? default : _structData.Slice(0x51, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1082,7 +2337,10 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlacedObjectVolumeDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x55 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x51)
+            {
+                ret.Versioning |= PlacedObjectVolumeData.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
