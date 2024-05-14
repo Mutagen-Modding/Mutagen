@@ -379,6 +379,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region SourcePackIn
+        private readonly IFormLinkNullable<IPackInGetter> _SourcePackIn = new FormLinkNullable<IPackInGetter>();
+        public IFormLinkNullable<IPackInGetter> SourcePackIn
+        {
+            get => _SourcePackIn;
+            set => _SourcePackIn.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPackInGetter> ICellGetter.SourcePackIn => this.SourcePackIn;
+        #endregion
         #region Timestamp
         public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
@@ -482,6 +492,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
                 this.NumTraversalFluffBytes = initialValue;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.SourcePackIn = initialValue;
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
                 this.PersistentTimestamp = initialValue;
@@ -532,6 +543,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Traversals,
                 TItem NumTraversalFluffBytes,
                 TItem NavigationMeshes,
+                TItem SourcePackIn,
                 TItem Timestamp,
                 TItem UnknownGroupData,
                 TItem PersistentTimestamp,
@@ -581,6 +593,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
                 this.NumTraversalFluffBytes = NumTraversalFluffBytes;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.SourcePackIn = SourcePackIn;
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
                 this.PersistentTimestamp = PersistentTimestamp;
@@ -632,6 +645,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>? Traversals;
             public TItem NumTraversalFluffBytes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
+            public TItem SourcePackIn;
             public TItem Timestamp;
             public TItem UnknownGroupData;
             public TItem PersistentTimestamp;
@@ -685,6 +699,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
                 if (!object.Equals(this.NumTraversalFluffBytes, rhs.NumTraversalFluffBytes)) return false;
                 if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
+                if (!object.Equals(this.SourcePackIn, rhs.SourcePackIn)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.UnknownGroupData, rhs.UnknownGroupData)) return false;
                 if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
@@ -730,6 +745,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Traversals);
                 hash.Add(this.NumTraversalFluffBytes);
                 hash.Add(this.NavigationMeshes);
+                hash.Add(this.SourcePackIn);
                 hash.Add(this.Timestamp);
                 hash.Add(this.UnknownGroupData);
                 hash.Add(this.PersistentTimestamp);
@@ -862,6 +878,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.SourcePackIn)) return false;
                 if (!eval(this.Timestamp)) return false;
                 if (!eval(this.UnknownGroupData)) return false;
                 if (!eval(this.PersistentTimestamp)) return false;
@@ -1014,6 +1031,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.SourcePackIn)) return true;
                 if (eval(this.Timestamp)) return true;
                 if (eval(this.UnknownGroupData)) return true;
                 if (eval(this.PersistentTimestamp)) return true;
@@ -1175,6 +1193,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.SourcePackIn = eval(this.SourcePackIn);
                 obj.Timestamp = eval(this.Timestamp);
                 obj.UnknownGroupData = eval(this.UnknownGroupData);
                 obj.PersistentTimestamp = eval(this.PersistentTimestamp);
@@ -1449,6 +1468,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.SourcePackIn ?? true)
+                    {
+                        sb.AppendItem(SourcePackIn, "SourcePackIn");
+                    }
                     if (printMask?.Timestamp ?? true)
                     {
                         sb.AppendItem(Timestamp, "Timestamp");
@@ -1554,6 +1577,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>? Traversals;
             public Exception? NumTraversalFluffBytes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>? NavigationMeshes;
+            public Exception? SourcePackIn;
             public Exception? Timestamp;
             public Exception? UnknownGroupData;
             public Exception? PersistentTimestamp;
@@ -1634,6 +1658,8 @@ namespace Mutagen.Bethesda.Starfield
                         return NumTraversalFluffBytes;
                     case Cell_FieldIndex.NavigationMeshes:
                         return NavigationMeshes;
+                    case Cell_FieldIndex.SourcePackIn:
+                        return SourcePackIn;
                     case Cell_FieldIndex.Timestamp:
                         return Timestamp;
                     case Cell_FieldIndex.UnknownGroupData:
@@ -1755,6 +1781,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = ex;
                         break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = ex;
@@ -1887,6 +1916,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>)obj;
                         break;
+                    case Cell_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = (Exception?)obj;
+                        break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = (Exception?)obj;
                         break;
@@ -1952,6 +1984,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Traversals != null) return true;
                 if (NumTraversalFluffBytes != null) return true;
                 if (NavigationMeshes != null) return true;
+                if (SourcePackIn != null) return true;
                 if (Timestamp != null) return true;
                 if (UnknownGroupData != null) return true;
                 if (PersistentTimestamp != null) return true;
@@ -2165,6 +2198,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(SourcePackIn, "SourcePackIn");
+                }
+                {
                     sb.AppendItem(Timestamp, "Timestamp");
                 }
                 {
@@ -2258,6 +2294,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Traversals?.Overall, rhs.Traversals?.Overall), Noggog.ExceptionExt.Combine(this.Traversals?.Specific, rhs.Traversals?.Specific));
                 ret.NumTraversalFluffBytes = this.NumTraversalFluffBytes.Combine(rhs.NumTraversalFluffBytes);
                 ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.SourcePackIn = this.SourcePackIn.Combine(rhs.SourcePackIn);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
@@ -2320,6 +2357,7 @@ namespace Mutagen.Bethesda.Starfield
             public TraversalReference.TranslationMask? Traversals;
             public bool NumTraversalFluffBytes;
             public NavigationMesh.TranslationMask? NavigationMeshes;
+            public bool SourcePackIn;
             public bool Timestamp;
             public bool UnknownGroupData;
             public bool PersistentTimestamp;
@@ -2358,6 +2396,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.IsLinkedRefTransient = defaultOn;
                 this.EnvironmentMap = defaultOn;
                 this.NumTraversalFluffBytes = defaultOn;
+                this.SourcePackIn = defaultOn;
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
                 this.PersistentTimestamp = defaultOn;
@@ -2405,6 +2444,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Traversals == null ? DefaultOn : !Traversals.GetCrystal().CopyNothing, Traversals?.GetCrystal()));
                 ret.Add((NumTraversalFluffBytes, null));
                 ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
+                ret.Add((SourcePackIn, null));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
                 ret.Add((PersistentTimestamp, null));
@@ -2649,6 +2689,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<TraversalReference>? Traversals { get; set; }
         new UInt32 NumTraversalFluffBytes { get; set; }
         new ExtendedList<NavigationMesh> NavigationMeshes { get; }
+        new IFormLinkNullable<IPackInGetter> SourcePackIn { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
@@ -2725,6 +2766,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
         UInt32 NumTraversalFluffBytes { get; }
         IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
+        IFormLinkNullableGetter<IPackInGetter> SourcePackIn { get; }
         Int32 Timestamp { get; }
         Int32 UnknownGroupData { get; }
         Int32 PersistentTimestamp { get; }
@@ -3171,14 +3213,15 @@ namespace Mutagen.Bethesda.Starfield
         Traversals = 36,
         NumTraversalFluffBytes = 37,
         NavigationMeshes = 38,
-        Timestamp = 39,
-        UnknownGroupData = 40,
-        PersistentTimestamp = 41,
-        PersistentUnknownGroupData = 42,
-        Persistent = 43,
-        TemporaryTimestamp = 44,
-        TemporaryUnknownGroupData = 45,
-        Temporary = 46,
+        SourcePackIn = 39,
+        Timestamp = 40,
+        UnknownGroupData = 41,
+        PersistentTimestamp = 42,
+        PersistentUnknownGroupData = 43,
+        Persistent = 44,
+        TemporaryTimestamp = 45,
+        TemporaryUnknownGroupData = 46,
+        Temporary = 47,
     }
     #endregion
 
@@ -3189,9 +3232,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 40;
+        public const ushort AdditionalFieldCount = 41;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 48;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -3262,13 +3305,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NVNM,
                 RecordTypes.NNAM,
                 RecordTypes.MNAM,
+                RecordTypes.XPCS,
                 RecordTypes.ACHR,
                 RecordTypes.REFR,
                 RecordTypes.NAME,
                 RecordTypes.XEMI,
                 RecordTypes.XRGD,
                 RecordTypes.XRFG,
-                RecordTypes.XPCS,
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLYR,
@@ -3354,6 +3397,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Traversals = null;
             item.NumTraversalFluffBytes = default(UInt32);
             item.NavigationMeshes.Clear();
+            item.SourcePackIn.Clear();
             item.Timestamp = default(Int32);
             item.UnknownGroupData = default(Int32);
             item.PersistentTimestamp = default(Int32);
@@ -3394,6 +3438,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LinkedReferences.RemapLinks(mapping);
             obj.Traversals?.RemapLinks(mapping);
             obj.NavigationMeshes.RemapLinks(mapping);
+            obj.SourcePackIn.Relink(mapping);
             obj.Persistent.RemapLinks(mapping);
             obj.Temporary.RemapLinks(mapping);
         }
@@ -3904,6 +3949,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.NavigationMeshes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.SourcePackIn = item.SourcePackIn.Equals(rhs.SourcePackIn);
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.UnknownGroupData = item.UnknownGroupData == rhs.UnknownGroupData;
             ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
@@ -4171,6 +4217,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.SourcePackIn ?? true)
+            {
+                sb.AppendItem(item.SourcePackIn.FormKeyNullable, "SourcePackIn");
+            }
             if (printMask?.Timestamp ?? true)
             {
                 sb.AppendItem(item.Timestamp, "Timestamp");
@@ -4417,6 +4467,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((NavigationMeshCommon)((INavigationMeshGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.SourcePackIn) ?? true))
+            {
+                if (!lhs.SourcePackIn.Equals(rhs.SourcePackIn)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
@@ -4551,6 +4605,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Traversals);
             hash.Add(item.NumTraversalFluffBytes);
             hash.Add(item.NavigationMeshes);
+            hash.Add(item.SourcePackIn);
             hash.Add(item.Timestamp);
             hash.Add(item.UnknownGroupData);
             hash.Add(item.PersistentTimestamp);
@@ -4655,6 +4710,10 @@ namespace Mutagen.Bethesda.Starfield
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.SourcePackIn, out var SourcePackInInfo))
+            {
+                yield return SourcePackInInfo;
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
@@ -5744,6 +5803,10 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SourcePackIn) ?? true))
+            {
+                item.SourcePackIn.SetTo(rhs.SourcePackIn.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
                 item.Timestamp = rhs.Timestamp;
@@ -6145,6 +6208,10 @@ namespace Mutagen.Bethesda.Starfield
             CellBinaryWriteTranslation.WriteBinaryTraversals(
                 writer: writer,
                 item: item);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SourcePackIn,
+                header: translationParams.ConvertToCustom(RecordTypes.XPCS));
         }
 
         public static partial void WriteBinaryTraversalsCustom(
@@ -6473,6 +6540,12 @@ namespace Mutagen.Bethesda.Starfield
                         lastParsed: lastParsed);
                     return (int)Cell_FieldIndex.Traversals;
                 }
+                case RecordTypeInts.XPCS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.SourcePackIn;
+                }
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
@@ -6677,6 +6750,10 @@ namespace Mutagen.Bethesda.Starfield
             int offset,
             RecordType type,
             PreviousParse lastParsed);
+        #endregion
+        #region SourcePackIn
+        private int? _SourcePackInLocation;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6939,6 +7016,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         lastParsed: lastParsed);
                     return (int)Cell_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    _SourcePackInLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XXXX:
                 {
