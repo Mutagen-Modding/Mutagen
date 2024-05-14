@@ -84,6 +84,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IProjectileGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IProjectileGetter.ODRT => this.ODRT;
+        #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ObjectPlacementDefaults? _ObjectPlacementDefaults;
@@ -420,6 +425,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
@@ -477,6 +483,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem ObjectPlacementDefaults,
                 TItem XALG,
                 TItem Components,
@@ -533,6 +540,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
@@ -591,6 +599,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
@@ -651,6 +660,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
@@ -703,6 +713,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.XALG);
                 hash.Add(this.Components);
@@ -764,6 +775,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
@@ -858,6 +870,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (eval(this.ObjectPlacementDefaults.Overall)) return true;
@@ -955,6 +968,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
@@ -1039,6 +1053,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
@@ -1248,6 +1266,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
@@ -1305,6 +1324,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Projectile_FieldIndex.ODTY:
                         return ODTY;
+                    case Projectile_FieldIndex.ODRT:
+                        return ODRT;
                     case Projectile_FieldIndex.ObjectPlacementDefaults:
                         return ObjectPlacementDefaults;
                     case Projectile_FieldIndex.XALG:
@@ -1410,6 +1431,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Projectile_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case Projectile_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case Projectile_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
@@ -1563,6 +1587,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Projectile_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case Projectile_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case Projectile_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
                         break;
@@ -1709,6 +1736,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (ObjectPlacementDefaults != null) return true;
                 if (XALG != null) return true;
                 if (Components != null) return true;
@@ -1783,6 +1811,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 ObjectPlacementDefaults?.Print(sb);
                 {
@@ -1932,6 +1963,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
@@ -2001,6 +2033,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public bool XALG;
             public AComponent.TranslationMask? Components;
@@ -2055,6 +2088,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Unused = defaultOn;
@@ -2102,6 +2136,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
@@ -2311,6 +2346,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new MemorySlice<Byte>? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
@@ -2395,6 +2431,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         ReadOnlyMemorySlice<Byte>? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
@@ -2628,51 +2665,52 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        ObjectPlacementDefaults = 9,
-        XALG = 10,
-        Components = 11,
-        Name = 12,
-        Model = 13,
-        Destructible = 14,
-        Unused = 15,
-        Flags = 16,
-        Type = 17,
-        Gravity = 18,
-        Speed = 19,
-        Range = 20,
-        Light = 21,
-        MuzzleFlash = 22,
-        ExplosionAltTriggerProximity = 23,
-        ExplosionAltTriggerTimer = 24,
-        Explosion = 25,
-        MuzzleFlashDuration = 26,
-        FadeDuration = 27,
-        ImpactForce = 28,
-        DefaultWeaponSource = 29,
-        ConeSpread = 30,
-        CollisionRadius = 31,
-        Lifetime = 32,
-        RelaunchInterval = 33,
-        DecalData = 34,
-        CollisionLayer = 35,
-        TracerFrequency = 36,
-        UnknownPROD1 = 37,
-        UnknownPRODString1 = 38,
-        UnknownPROD2 = 39,
-        UnknownPROD3 = 40,
-        UnknownPROD4 = 41,
-        UnknownPRODString2 = 42,
-        UnknownPROD5 = 43,
-        UnknownPROD6 = 44,
-        UnknownPROD7 = 45,
-        UnknownPROD8 = 46,
-        MuzzleFlashModel = 47,
-        FLLD = 48,
-        ActiveSound = 49,
-        CountdownEndSound = 50,
-        DisableSound = 51,
-        SoundLevel = 52,
-        CurveTable = 53,
+        ODRT = 9,
+        ObjectPlacementDefaults = 10,
+        XALG = 11,
+        Components = 12,
+        Name = 13,
+        Model = 14,
+        Destructible = 15,
+        Unused = 16,
+        Flags = 17,
+        Type = 18,
+        Gravity = 19,
+        Speed = 20,
+        Range = 21,
+        Light = 22,
+        MuzzleFlash = 23,
+        ExplosionAltTriggerProximity = 24,
+        ExplosionAltTriggerTimer = 25,
+        Explosion = 26,
+        MuzzleFlashDuration = 27,
+        FadeDuration = 28,
+        ImpactForce = 29,
+        DefaultWeaponSource = 30,
+        ConeSpread = 31,
+        CollisionRadius = 32,
+        Lifetime = 33,
+        RelaunchInterval = 34,
+        DecalData = 35,
+        CollisionLayer = 36,
+        TracerFrequency = 37,
+        UnknownPROD1 = 38,
+        UnknownPRODString1 = 39,
+        UnknownPROD2 = 40,
+        UnknownPROD3 = 41,
+        UnknownPROD4 = 42,
+        UnknownPRODString2 = 43,
+        UnknownPROD5 = 44,
+        UnknownPROD6 = 45,
+        UnknownPROD7 = 46,
+        UnknownPROD8 = 47,
+        MuzzleFlashModel = 48,
+        FLLD = 49,
+        ActiveSound = 50,
+        CountdownEndSound = 51,
+        DisableSound = 52,
+        SoundLevel = 53,
+        CurveTable = 54,
     }
     #endregion
 
@@ -2683,9 +2721,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 47;
+        public const ushort AdditionalFieldCount = 48;
 
-        public const ushort FieldCount = 54;
+        public const ushort FieldCount = 55;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2720,6 +2758,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PROJ,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.OPDS,
                 RecordTypes.XALG,
                 RecordTypes.BFCB,
@@ -2792,6 +2831,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.ObjectPlacementDefaults = null;
             item.XALG = default;
             item.Components.Clear();
@@ -2976,6 +3016,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPlacementDefaults,
                 rhs.ObjectPlacementDefaults,
@@ -3105,6 +3146,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
                 && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
@@ -3369,6 +3415,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
@@ -3605,6 +3655,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
@@ -3893,6 +3947,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
@@ -4413,6 +4471,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
                 ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
@@ -4695,6 +4757,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Projectile_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Projectile_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
@@ -4965,6 +5033,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
@@ -5250,6 +5322,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)Projectile_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.OPDS:
                 {

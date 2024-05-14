@@ -3048,9 +3048,43 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MAGF:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MAGF = frame.ReadInt32();
-                    return (int)Spell_FieldIndex.MAGF;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.MAGF = frame.ReadInt32();
+                        return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        item.Effects.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Effect_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Effect.TryCreateFromBinary));
+                        return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.MAGF = frame.ReadInt32();
+                                return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
+                            case 1:
+                                item.Effects.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Effect_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Effect.TryCreateFromBinary));
+                                return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.MUID:
                 {
@@ -3389,8 +3423,43 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MAGF:
                 {
-                    _MAGFLocation = (stream.Position - offset);
-                    return (int)Spell_FieldIndex.MAGF;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
+                    {
+                        _MAGFLocation = (stream.Position - offset);
+                        return new ParseResult((int)Spell_FieldIndex.MAGF, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                            stream: stream,
+                            translationParams: translationParams,
+                            trigger: Effect_Registration.TriggerSpecs,
+                            factory: EffectBinaryOverlay.EffectFactory);
+                        return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _MAGFLocation = (stream.Position - offset);
+                                return new ParseResult((int)Spell_FieldIndex.MAGF, type);
+                            }
+                            case 1:
+                            {
+                                this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: Effect_Registration.TriggerSpecs,
+                                    factory: EffectBinaryOverlay.EffectFactory);
+                                return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.MUID:
                 {

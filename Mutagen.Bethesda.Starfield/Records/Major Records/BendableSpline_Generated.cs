@@ -82,6 +82,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IBendableSplineGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IBendableSplineGetter.ODRT => this.ODRT;
+        #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
@@ -164,6 +169,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.DefaultNumberOfTiles = initialValue;
                 this.DefaultNumberOfSlices = initialValue;
@@ -185,6 +191,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem Components,
                 TItem DefaultNumberOfTiles,
                 TItem DefaultNumberOfSlices,
@@ -205,6 +212,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.DefaultNumberOfTiles = DefaultNumberOfTiles;
                 this.DefaultNumberOfSlices = DefaultNumberOfSlices;
@@ -227,6 +235,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem DefaultNumberOfTiles;
             public TItem DefaultNumberOfSlices;
@@ -251,6 +260,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.DefaultNumberOfTiles, rhs.DefaultNumberOfTiles)) return false;
                 if (!object.Equals(this.DefaultNumberOfSlices, rhs.DefaultNumberOfSlices)) return false;
@@ -267,6 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.Components);
                 hash.Add(this.DefaultNumberOfTiles);
                 hash.Add(this.DefaultNumberOfSlices);
@@ -292,6 +303,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -326,6 +338,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -363,6 +376,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -411,6 +425,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -476,6 +494,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? DefaultNumberOfTiles;
             public Exception? DefaultNumberOfSlices;
@@ -497,6 +516,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case BendableSpline_FieldIndex.ODTY:
                         return ODTY;
+                    case BendableSpline_FieldIndex.ODRT:
+                        return ODRT;
                     case BendableSpline_FieldIndex.Components:
                         return Components;
                     case BendableSpline_FieldIndex.DefaultNumberOfTiles:
@@ -530,6 +551,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case BendableSpline_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case BendableSpline_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case BendableSpline_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
@@ -575,6 +599,9 @@ namespace Mutagen.Bethesda.Starfield
                     case BendableSpline_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case BendableSpline_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case BendableSpline_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
@@ -613,6 +640,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (Components != null) return true;
                 if (DefaultNumberOfTiles != null) return true;
                 if (DefaultNumberOfSlices != null) return true;
@@ -651,6 +679,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 if (Components is {} ComponentsItem)
                 {
@@ -704,6 +735,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.DefaultNumberOfTiles = this.DefaultNumberOfTiles.Combine(rhs.DefaultNumberOfTiles);
                 ret.DefaultNumberOfSlices = this.DefaultNumberOfSlices.Combine(rhs.DefaultNumberOfSlices);
@@ -737,6 +769,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public AComponent.TranslationMask? Components;
             public bool DefaultNumberOfTiles;
             public bool DefaultNumberOfSlices;
@@ -755,6 +788,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.DefaultNumberOfTiles = defaultOn;
                 this.DefaultNumberOfSlices = defaultOn;
                 this.DefaultNumberOfTilesIsRelativeToLength = defaultOn;
@@ -772,6 +806,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((DefaultNumberOfTiles, null));
                 ret.Add((DefaultNumberOfSlices, null));
@@ -945,6 +980,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new Single DefaultNumberOfTiles { get; set; }
         new UInt16 DefaultNumberOfSlices { get; set; }
@@ -982,6 +1018,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         Single DefaultNumberOfTiles { get; }
         UInt16 DefaultNumberOfSlices { get; }
@@ -1169,15 +1206,16 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        Components = 9,
-        DefaultNumberOfTiles = 10,
-        DefaultNumberOfSlices = 11,
-        DefaultNumberOfTilesIsRelativeToLength = 12,
-        DefaultColor = 13,
-        WindSensibility = 14,
-        WindFlexibility = 15,
-        MaterialPath = 16,
-        DNAMDataTypeState = 17,
+        ODRT = 9,
+        Components = 10,
+        DefaultNumberOfTiles = 11,
+        DefaultNumberOfSlices = 12,
+        DefaultNumberOfTilesIsRelativeToLength = 13,
+        DefaultColor = 14,
+        WindSensibility = 15,
+        WindFlexibility = 16,
+        MaterialPath = 17,
+        DNAMDataTypeState = 18,
     }
     #endregion
 
@@ -1188,9 +1226,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(BendableSpline.Mask<>);
 
@@ -1225,6 +1263,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BNDS,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.DNAM,
@@ -1275,6 +1314,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds = null;
             item.ODTY = default;
+            item.ODRT = default;
             item.Components.Clear();
             item.DefaultNumberOfTiles = default(Single);
             item.DefaultNumberOfSlices = default(UInt16);
@@ -1400,6 +1440,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1470,6 +1511,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -1579,6 +1625,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.Components) ?? true))
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BendableSpline_FieldIndex.Components)))) return false;
@@ -1650,6 +1700,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             hash.Add(item.Components);
             hash.Add(item.DefaultNumberOfTiles);
@@ -1818,6 +1872,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.Components) ?? true))
             {
@@ -2052,6 +2110,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -2193,6 +2255,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)BendableSpline_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)BendableSpline_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     item.Components.SetTo(
@@ -2301,6 +2369,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         private RangeInt32? _DNAMLocation;
@@ -2417,6 +2489,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)BendableSpline_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)BendableSpline_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.BFCB:
                 {
