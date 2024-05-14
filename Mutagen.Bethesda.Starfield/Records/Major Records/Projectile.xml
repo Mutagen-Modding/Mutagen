@@ -48,6 +48,7 @@
         </Fields>
       </Data>
       <String name="MuzzleFlashModel" recordType="NAM1" nullable="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM2" />
       <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
       <RefDirect name="ActiveSound" refName="SoundReference" recordType="PRAS" />
       <RefDirect name="CountdownEndSound" refName="SoundReference" recordType="PRCS" />

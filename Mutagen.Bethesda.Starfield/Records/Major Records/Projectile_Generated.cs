@@ -339,6 +339,17 @@ namespace Mutagen.Bethesda.Starfield
         #region MuzzleFlashModel
         public String MuzzleFlashModel { get; set; } = string.Empty;
         #endregion
+        #region TextureFilesHashes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _TextureFilesHashes;
+        public MemorySlice<Byte>? TextureFilesHashes
+        {
+            get => this._TextureFilesHashes;
+            set => this._TextureFilesHashes = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IProjectileGetter.TextureFilesHashes => this.TextureFilesHashes;
+        #endregion
         #region FLLD
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _FLLD;
@@ -465,6 +476,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownPROD7 = initialValue;
                 this.UnknownPROD8 = initialValue;
                 this.MuzzleFlashModel = initialValue;
+                this.TextureFilesHashes = initialValue;
                 this.FLLD = initialValue;
                 this.ActiveSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.CountdownEndSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -523,6 +535,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem UnknownPROD7,
                 TItem UnknownPROD8,
                 TItem MuzzleFlashModel,
+                TItem TextureFilesHashes,
                 TItem FLLD,
                 TItem ActiveSound,
                 TItem CountdownEndSound,
@@ -580,6 +593,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownPROD7 = UnknownPROD7;
                 this.UnknownPROD8 = UnknownPROD8;
                 this.MuzzleFlashModel = MuzzleFlashModel;
+                this.TextureFilesHashes = TextureFilesHashes;
                 this.FLLD = FLLD;
                 this.ActiveSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ActiveSound, new SoundReference.Mask<TItem>(ActiveSound));
                 this.CountdownEndSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CountdownEndSound, new SoundReference.Mask<TItem>(CountdownEndSound));
@@ -639,6 +653,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem UnknownPROD7;
             public TItem UnknownPROD8;
             public TItem MuzzleFlashModel;
+            public TItem TextureFilesHashes;
             public TItem FLLD;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? ActiveSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? CountdownEndSound { get; set; }
@@ -700,6 +715,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.UnknownPROD7, rhs.UnknownPROD7)) return false;
                 if (!object.Equals(this.UnknownPROD8, rhs.UnknownPROD8)) return false;
                 if (!object.Equals(this.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+                if (!object.Equals(this.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
                 if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.ActiveSound, rhs.ActiveSound)) return false;
                 if (!object.Equals(this.CountdownEndSound, rhs.CountdownEndSound)) return false;
@@ -753,6 +769,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.UnknownPROD7);
                 hash.Add(this.UnknownPROD8);
                 hash.Add(this.MuzzleFlashModel);
+                hash.Add(this.TextureFilesHashes);
                 hash.Add(this.FLLD);
                 hash.Add(this.ActiveSound);
                 hash.Add(this.CountdownEndSound);
@@ -838,6 +855,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.UnknownPROD7)) return false;
                 if (!eval(this.UnknownPROD8)) return false;
                 if (!eval(this.MuzzleFlashModel)) return false;
+                if (!eval(this.TextureFilesHashes)) return false;
                 if (!eval(this.FLLD)) return false;
                 if (ActiveSound != null)
                 {
@@ -933,6 +951,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.UnknownPROD7)) return true;
                 if (eval(this.UnknownPROD8)) return true;
                 if (eval(this.MuzzleFlashModel)) return true;
+                if (eval(this.TextureFilesHashes)) return true;
                 if (eval(this.FLLD)) return true;
                 if (ActiveSound != null)
                 {
@@ -1022,6 +1041,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.UnknownPROD7 = eval(this.UnknownPROD7);
                 obj.UnknownPROD8 = eval(this.UnknownPROD8);
                 obj.MuzzleFlashModel = eval(this.MuzzleFlashModel);
+                obj.TextureFilesHashes = eval(this.TextureFilesHashes);
                 obj.FLLD = eval(this.FLLD);
                 obj.ActiveSound = this.ActiveSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ActiveSound.Overall), this.ActiveSound.Specific?.Translate(eval));
                 obj.CountdownEndSound = this.CountdownEndSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CountdownEndSound.Overall), this.CountdownEndSound.Specific?.Translate(eval));
@@ -1229,6 +1249,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
                     }
+                    if (printMask?.TextureFilesHashes ?? true)
+                    {
+                        sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                    }
                     if (printMask?.FLLD ?? true)
                     {
                         sb.AppendItem(FLLD, "FLLD");
@@ -1306,6 +1330,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? UnknownPROD7;
             public Exception? UnknownPROD8;
             public Exception? MuzzleFlashModel;
+            public Exception? TextureFilesHashes;
             public Exception? FLLD;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? ActiveSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? CountdownEndSound;
@@ -1404,6 +1429,8 @@ namespace Mutagen.Bethesda.Starfield
                         return UnknownPROD8;
                     case Projectile_FieldIndex.MuzzleFlashModel:
                         return MuzzleFlashModel;
+                    case Projectile_FieldIndex.TextureFilesHashes:
+                        return TextureFilesHashes;
                     case Projectile_FieldIndex.FLLD:
                         return FLLD;
                     case Projectile_FieldIndex.ActiveSound:
@@ -1551,6 +1578,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Projectile_FieldIndex.MuzzleFlashModel:
                         this.MuzzleFlashModel = ex;
+                        break;
+                    case Projectile_FieldIndex.TextureFilesHashes:
+                        this.TextureFilesHashes = ex;
                         break;
                     case Projectile_FieldIndex.FLLD:
                         this.FLLD = ex;
@@ -1707,6 +1737,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Projectile_FieldIndex.MuzzleFlashModel:
                         this.MuzzleFlashModel = (Exception?)obj;
                         break;
+                    case Projectile_FieldIndex.TextureFilesHashes:
+                        this.TextureFilesHashes = (Exception?)obj;
+                        break;
                     case Projectile_FieldIndex.FLLD:
                         this.FLLD = (Exception?)obj;
                         break;
@@ -1776,6 +1809,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (UnknownPROD7 != null) return true;
                 if (UnknownPROD8 != null) return true;
                 if (MuzzleFlashModel != null) return true;
+                if (TextureFilesHashes != null) return true;
                 if (FLLD != null) return true;
                 if (ActiveSound != null) return true;
                 if (CountdownEndSound != null) return true;
@@ -1942,6 +1976,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
                 }
                 {
+                    sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                }
+                {
                     sb.AppendItem(FLLD, "FLLD");
                 }
                 ActiveSound?.Print(sb);
@@ -2003,6 +2040,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.UnknownPROD7 = this.UnknownPROD7.Combine(rhs.UnknownPROD7);
                 ret.UnknownPROD8 = this.UnknownPROD8.Combine(rhs.UnknownPROD8);
                 ret.MuzzleFlashModel = this.MuzzleFlashModel.Combine(rhs.MuzzleFlashModel);
+                ret.TextureFilesHashes = this.TextureFilesHashes.Combine(rhs.TextureFilesHashes);
                 ret.FLLD = this.FLLD.Combine(rhs.FLLD);
                 ret.ActiveSound = this.ActiveSound.Combine(rhs.ActiveSound, (l, r) => l.Combine(r));
                 ret.CountdownEndSound = this.CountdownEndSound.Combine(rhs.CountdownEndSound, (l, r) => l.Combine(r));
@@ -2073,6 +2111,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool UnknownPROD7;
             public bool UnknownPROD8;
             public bool MuzzleFlashModel;
+            public bool TextureFilesHashes;
             public bool FLLD;
             public SoundReference.TranslationMask? ActiveSound;
             public SoundReference.TranslationMask? CountdownEndSound;
@@ -2124,6 +2163,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownPROD7 = defaultOn;
                 this.UnknownPROD8 = defaultOn;
                 this.MuzzleFlashModel = defaultOn;
+                this.TextureFilesHashes = defaultOn;
                 this.FLLD = defaultOn;
                 this.SoundLevel = defaultOn;
                 this.CurveTable = defaultOn;
@@ -2176,6 +2216,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((UnknownPROD7, null));
                 ret.Add((UnknownPROD8, null));
                 ret.Add((MuzzleFlashModel, null));
+                ret.Add((TextureFilesHashes, null));
                 ret.Add((FLLD, null));
                 ret.Add((ActiveSound != null ? ActiveSound.OnOverall : DefaultOn, ActiveSound?.GetCrystal()));
                 ret.Add((CountdownEndSound != null ? CountdownEndSound.OnOverall : DefaultOn, CountdownEndSound?.GetCrystal()));
@@ -2392,6 +2433,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single UnknownPROD7 { get; set; }
         new Single UnknownPROD8 { get; set; }
         new String MuzzleFlashModel { get; set; }
+        new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new MemorySlice<Byte>? FLLD { get; set; }
         new SoundReference? ActiveSound { get; set; }
         new SoundReference? CountdownEndSound { get; set; }
@@ -2481,6 +2523,7 @@ namespace Mutagen.Bethesda.Starfield
         Single UnknownPROD7 { get; }
         Single UnknownPROD8 { get; }
         String MuzzleFlashModel { get; }
+        ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         ReadOnlyMemorySlice<Byte>? FLLD { get; }
         ISoundReferenceGetter? ActiveSound { get; }
         ISoundReferenceGetter? CountdownEndSound { get; }
@@ -2705,12 +2748,13 @@ namespace Mutagen.Bethesda.Starfield
         UnknownPROD7 = 46,
         UnknownPROD8 = 47,
         MuzzleFlashModel = 48,
-        FLLD = 49,
-        ActiveSound = 50,
-        CountdownEndSound = 51,
-        DisableSound = 52,
-        SoundLevel = 53,
-        CurveTable = 54,
+        TextureFilesHashes = 49,
+        FLLD = 50,
+        ActiveSound = 51,
+        CountdownEndSound = 52,
+        DisableSound = 53,
+        SoundLevel = 54,
+        CurveTable = 55,
     }
     #endregion
 
@@ -2721,9 +2765,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 48;
+        public const ushort AdditionalFieldCount = 49;
 
-        public const ushort FieldCount = 55;
+        public const ushort FieldCount = 56;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2780,6 +2824,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DATA,
                 RecordTypes.PROD,
                 RecordTypes.NAM1,
+                RecordTypes.NAM2,
                 RecordTypes.PRAS,
                 RecordTypes.PRCS,
                 RecordTypes.PRDS,
@@ -2871,6 +2916,7 @@ namespace Mutagen.Bethesda.Starfield
             item.UnknownPROD7 = default(Single);
             item.UnknownPROD8 = default(Single);
             item.MuzzleFlashModel = string.Empty;
+            item.TextureFilesHashes = default;
             item.FLLD = default;
             item.ActiveSound = null;
             item.CountdownEndSound = null;
@@ -3071,6 +3117,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.UnknownPROD7 = item.UnknownPROD7.EqualsWithin(rhs.UnknownPROD7);
             ret.UnknownPROD8 = item.UnknownPROD8.EqualsWithin(rhs.UnknownPROD8);
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
             ret.ActiveSound = EqualsMaskHelper.EqualsHelper(
                 item.ActiveSound,
@@ -3323,6 +3370,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.MuzzleFlashModel ?? true)
             {
                 sb.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
+            }
+            if ((printMask?.TextureFilesHashes ?? true)
+                && item.TextureFilesHashes is {} TextureFilesHashesItem)
+            {
+                sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
             if ((printMask?.FLLD ?? true)
                 && item.FLLD is {} FLLDItem)
@@ -3587,6 +3639,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.FLLD) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
@@ -3717,6 +3773,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.UnknownPROD7);
             hash.Add(item.UnknownPROD8);
             hash.Add(item.MuzzleFlashModel);
+            if (item.TextureFilesHashes is {} TextureFilesHashesItem)
+            {
+                hash.Add(TextureFilesHashesItem);
+            }
             if (item.FLLD is {} FLLDItem)
             {
                 hash.Add(FLLDItem);
@@ -4208,6 +4268,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MuzzleFlashModel = rhs.MuzzleFlashModel;
             }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
+            {
+                if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
+                {
+                    item.TextureFilesHashes = TextureFilesHashesrhs.ToArray();
+                }
+                else
+                {
+                    item.TextureFilesHashes = default;
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.FLLD) ?? true))
             {
                 if(rhs.FLLD is {} FLLDrhs)
@@ -4620,6 +4691,10 @@ namespace Mutagen.Bethesda.Starfield
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
+                item: item.TextureFilesHashes,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
                 item: item.FLLD,
                 header: translationParams.ConvertToCustom(RecordTypes.FLLD));
             if (item.ActiveSound is {} ActiveSoundItem)
@@ -4811,7 +4886,7 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Projectile_FieldIndex.Model, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Projectile_FieldIndex.MuzzleFlashModel)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Projectile_FieldIndex.TextureFilesHashes)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
@@ -4932,6 +5007,12 @@ namespace Mutagen.Bethesda.Starfield
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureFilesHashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.PRAS:
                 {
@@ -5227,6 +5308,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MuzzleFlashModelLocation;
         public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
+        #region TextureFilesHashes
+        private int? _TextureFilesHashesLocation;
+        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         #region FLLD
         private int? _FLLDLocation;
         public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -5371,7 +5456,7 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Projectile_FieldIndex.Model, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Projectile_FieldIndex.MuzzleFlashModel)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Projectile_FieldIndex.TextureFilesHashes)
                     {
                         _FLLDLocation = (stream.Position - offset);
                         return new ParseResult((int)Projectile_FieldIndex.FLLD, type);
@@ -5423,6 +5508,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _MuzzleFlashModelLocation = (stream.Position - offset);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _TextureFilesHashesLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.PRAS:
                 {
