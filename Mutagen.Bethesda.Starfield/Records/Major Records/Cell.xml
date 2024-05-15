@@ -29,11 +29,13 @@
       <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
       <Float name="WaterHeight" recordType="XCLW" />
       <Float name="XILS" recordType="XILS" unknown="true" />
+      <FormLink name="XCLR" refName="Npc" recordType="XCLR" unknown="true" />
       <RefList name="XCLAs" refName="CellXCLAItem" />
       <ByteArray name="XWCN" recordType="XWCN" />
       <FormLink name="CellSkyRegion" refName="Region" recordType="XCCM" />
       <RefDirect name="Ownership" refName="Ownership" />
       <FormLink name="Location" refName="Location" recordType="XLCN" />
+      <RefDirect name="XTRV" refName="XTRV" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <String name="WaterType" recordType="XCWM" />
       <RefList name="ShipBlueprintSnapLinks" refName="CellShipBlueprintSnapLink" recordType="XBPS" />

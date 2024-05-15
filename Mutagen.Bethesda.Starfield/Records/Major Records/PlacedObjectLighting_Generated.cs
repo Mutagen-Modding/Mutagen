@@ -1251,11 +1251,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.VolumetricIntensity = rhs.VolumetricIntensity;
             }
-            if (rhs.Versioning.HasFlag(PlacedObjectLighting.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Unknown1) ?? true))
             {
                 item.Unknown1 = rhs.Unknown1;
             }
+            if (rhs.Versioning.HasFlag(PlacedObjectLighting.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
@@ -1374,9 +1374,9 @@ namespace Mutagen.Bethesda.Starfield
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VolumetricIntensity);
+            writer.Write(item.Unknown1);
             if (!item.Versioning.HasFlag(PlacedObjectLighting.VersioningBreaks.Break0))
             {
-                writer.Write(item.Unknown1);
                 writer.Write(item.Unknown2);
             }
         }
@@ -1425,12 +1425,12 @@ namespace Mutagen.Bethesda.Starfield
             item.ShadowDepthBias = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NearClip = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.VolumetricIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown1 = frame.ReadUInt32();
             if (frame.Complete)
             {
                 item.Versioning |= PlacedObjectLighting.VersioningBreaks.Break0;
                 return;
             }
-            item.Unknown1 = frame.ReadUInt32();
             item.Unknown2 = frame.ReadUInt32();
         }
 
@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single ShadowDepthBias => _structData.Slice(0xC, 0x4).Float();
         public Single NearClip => _structData.Slice(0x10, 0x4).Float();
         public Single VolumetricIntensity => _structData.Slice(0x14, 0x4).Float();
-        public UInt32 Unknown1 => _structData.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public UInt32 Unknown1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
         public UInt32 Unknown2 => _structData.Length <= 0x1C ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlacedObjectLightingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            if (ret._structData.Length <= 0x18)
+            if (ret._structData.Length <= 0x1C)
             {
                 ret.Versioning |= PlacedObjectLighting.VersioningBreaks.Break0;
             }

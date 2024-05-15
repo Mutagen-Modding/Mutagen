@@ -1316,6 +1316,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             WWiseKeywordMappingItem_Registration.Instance,
             WWiseKeywordMappingSoundItem_Registration.Instance,
             WWiseKeywordMappingSoundItemGuidPair_Registration.Instance,
+            XTRV_Registration.Instance,
             Zoom_Registration.Instance
         );
     }
