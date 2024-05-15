@@ -29,6 +29,7 @@ public class MutagenFieldData
     public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
     public bool IsTriggerForObject;
     public RecordTypeConverter RecordTypeConverter;
+    public List<(ushort Version, RecordType Type)> RecordTypeVersioning;
     public ushort? CustomVersion;
     public List<(ushort Version, VersionAction Action)> Versioning = new();
     public bool HasVersioning => Versioning.Count > 0;
