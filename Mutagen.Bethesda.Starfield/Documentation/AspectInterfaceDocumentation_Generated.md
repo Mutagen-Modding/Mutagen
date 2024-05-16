@@ -124,6 +124,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledNpc
 - LeveledPackIn
 - Light
+- MaterialType
 - MiscItem
 - ModelComponent
 - MoveableStatic
@@ -608,6 +609,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IScripted
 ### MaterialType
+- IModeled
 - INamed
 ### Message
 - INamed

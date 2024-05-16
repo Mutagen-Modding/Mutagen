@@ -8,6 +8,7 @@
       <Float name="Buoyancy" recordType="BNAM" />
       <Enum name="Flags" enumName="MaterialType.Flag" recordType="FNAM" />
       <FormLink name="HavokImpactDataSet" recordType="HNAM" refName="ImpactDataSet" />
+      <RefDirect name="Model" refName="Model" />
       <String name="BreakableFX" recordType="ANAM" />
       <ByteArray name="ModelData" recordType="FLLD" />
     </Fields>

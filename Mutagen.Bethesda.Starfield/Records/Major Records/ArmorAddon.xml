@@ -57,7 +57,7 @@
           <Mapping From="MODF" To="MO6F" />
         </RecordTypeOverrides>
       </RefDirect>
-      <RefDirect name="UnknownModel" refName="Model" shortCircuit="true" parseNonConvertedItems="true">
+      <RefDirect name="UnknownModel7" refName="Model" shortCircuit="true" parseNonConvertedItems="true">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD7" />
           <Mapping From="MODT" To="MO7T" />
@@ -66,6 +66,7 @@
           <Mapping From="MODF" To="MO7F" />
         </RecordTypeOverrides>
       </RefDirect>
+      <RefDirect name="UnknownModel" refName="Model" />
       <Gendered name="Morphs" shortCircuit="false" parseNonConvertedItems="false">
         <FemaleTypeOverrides>
           <Mapping From="NAM4" To="NAM6" />

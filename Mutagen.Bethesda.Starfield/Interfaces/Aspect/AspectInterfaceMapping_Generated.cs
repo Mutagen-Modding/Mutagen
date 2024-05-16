@@ -167,6 +167,7 @@ namespace Mutagen.Bethesda.Starfield
                     LeveledNpc_Registration.Instance,
                     LeveledPackIn_Registration.Instance,
                     Light_Registration.Instance,
+                    MaterialType_Registration.Instance,
                     MiscItem_Registration.Instance,
                     ModelComponent_Registration.Instance,
                     MoveableStatic_Registration.Instance,
