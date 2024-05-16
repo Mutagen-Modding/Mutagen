@@ -1730,7 +1730,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 using (sb.IncreaseDepth())
                                 {
                                     sb.AppendLine(
-                                        $"when stream.MetaData.FormVersion <= {recordTypeVersioning.Version}:");
+                                        $"when this._package.FormVersion!.FormVersion <= {recordTypeVersioning.Version}:");
                                 }
                             }
                             

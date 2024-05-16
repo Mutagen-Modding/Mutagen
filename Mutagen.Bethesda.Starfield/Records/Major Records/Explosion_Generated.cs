@@ -4460,7 +4460,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Explosion_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA
-                    when stream.MetaData.FormVersion <= 506:
+                    when this._package.FormVersion!.FormVersion <= 506:
                 case RecordTypeInts.ENAM:
                 {
                     _ENAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
