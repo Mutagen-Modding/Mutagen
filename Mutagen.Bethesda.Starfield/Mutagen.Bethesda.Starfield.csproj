@@ -2221,6 +2221,9 @@
     <Compile Include="Records\Major Records\LeveledPackIn.cs">
       <DependentUpon>LeveledPackIn.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledSpaceCell.cs">
+      <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
