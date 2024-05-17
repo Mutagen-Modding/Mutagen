@@ -127,6 +127,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MaterialType
 - MiscItem
 - ModelComponent
+- MorphableObject
 - MoveableStatic
 - NpcModification
 - ObjectModification
@@ -621,6 +622,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### ModelComponent
+- IModeled
+### MorphableObject
 - IModeled
 ### MorphGroup
 - INamed

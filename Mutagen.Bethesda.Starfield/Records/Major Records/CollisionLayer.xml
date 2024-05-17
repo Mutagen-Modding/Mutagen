@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <String name="Description" recordType="DESC" />
       <String name="Context" recordType="NLDT" />
       <UInt32 name="Index" recordType="BNAM" nullable="False" />
       <Color name="DebugColor" binaryType="Alpha" recordType="FNAM" />

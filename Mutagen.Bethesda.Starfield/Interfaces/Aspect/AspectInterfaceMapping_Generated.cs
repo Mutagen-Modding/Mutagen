@@ -170,6 +170,7 @@ namespace Mutagen.Bethesda.Starfield
                     MaterialType_Registration.Instance,
                     MiscItem_Registration.Instance,
                     ModelComponent_Registration.Instance,
+                    MorphableObject_Registration.Instance,
                     MoveableStatic_Registration.Instance,
                     NpcModification_Registration.Instance,
                     ObjectModification_Registration.Instance,

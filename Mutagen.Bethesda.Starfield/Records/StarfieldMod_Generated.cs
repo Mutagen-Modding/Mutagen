@@ -10593,6 +10593,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.GroundCovers.RemapLinks(mapping);
+            obj.MorphableObjects.RemapLinks(mapping);
             obj.ResourceGenerationData.RemapLinks(mapping);
             obj.Atmospheres.RemapLinks(mapping);
             obj.LeveledSpaceCells.RemapLinks(mapping);
@@ -13118,6 +13119,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.MorphableObjects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.SurfaceBlocks is IAssetLinkContainer SurfaceBlockslinkCont)
             {
                 foreach (var item in SurfaceBlockslinkCont.EnumerateListedAssetLinks())
@@ -13291,6 +13298,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplates.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.GroundCovers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MorphableObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfaceBlocks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfacePatterns.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfaceTrees.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -17365,6 +17373,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.GroundCovers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MorphableObjects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -24511,6 +24523,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
+                }
+                foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
                 if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
                 {
