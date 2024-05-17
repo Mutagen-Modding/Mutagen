@@ -464,6 +464,7 @@
   <Object name="BlockCellHeightGridComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <ByteArray name="DATA" recordType="DATA" />
+
     </Fields>
   </Object>
   <Object name="BlockHeightAdjustmentComponent" objType="Subrecord" baseClass="AComponent">
@@ -471,6 +472,7 @@
       <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="DAT2" nullable="False">
         <RefDirect refName="BlockHeightAdjustmentComponentItem" />
       </Array2D>
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
     </Fields>
   </Object>
   <Object name="BlockHeightAdjustmentComponentItem" objType="Subrecord">
