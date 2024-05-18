@@ -5,8 +5,8 @@
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" nullable="false" />
       <String name="Context" recordType="NLDT" />
       <RefList name="ActorReactions" refName="ActorReaction" />
-      <FormLink name="ActorValue" recordType="ANAM" refName="ActorValueInformation" nullable="False" />
-      <FormLink name="Size" recordType="ENAM" refName="Global" nullable="False" />
+      <FormLink name="ActorValue" recordType="ANAM" refName="ActorValueInformation" />
+      <FormLink name="Size" recordType="ENAM" refName="Global" />
       <FormLink name="Distance" recordType="DNAM" refName="Global" />
       <FormLink name="Cooldown" recordType="CNAM" refName="Global" />
       <FormLink name="Faction" recordType="BNAM" refName="Faction" />

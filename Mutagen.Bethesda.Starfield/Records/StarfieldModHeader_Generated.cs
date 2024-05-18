@@ -104,6 +104,17 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IStarfieldModHeaderGetter.Description => this.Description;
         #endregion
+        #region CHGL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _CHGL;
+        public MemorySlice<Byte>? CHGL
+        {
+            get => this._CHGL;
+            set => this._CHGL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IStarfieldModHeaderGetter.CHGL => this.CHGL;
+        #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
@@ -184,17 +195,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IStarfieldModHeaderGetter.INCC => this.INCC;
         #endregion
-        #region CHGL
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CHGL;
-        public MemorySlice<Byte>? CHGL
-        {
-            get => this._CHGL;
-            set => this._CHGL = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IStarfieldModHeaderGetter.CHGL => this.CHGL;
-        #endregion
 
         #region To String
 
@@ -244,6 +244,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Deleted = initialValue;
                 this.Author = initialValue;
                 this.Description = initialValue;
+                this.CHGL = initialValue;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Screenshot = initialValue;
@@ -251,7 +252,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.BNAM = initialValue;
                 this.INTV = initialValue;
                 this.INCC = initialValue;
-                this.CHGL = initialValue;
             }
 
             public Mask(
@@ -265,14 +265,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Deleted,
                 TItem Author,
                 TItem Description,
+                TItem CHGL,
                 TItem MasterReferences,
                 TItem OverriddenForms,
                 TItem Screenshot,
                 TItem TransientTypes,
                 TItem BNAM,
                 TItem INTV,
-                TItem INCC,
-                TItem CHGL)
+                TItem INCC)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
@@ -284,6 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Deleted = Deleted;
                 this.Author = Author;
                 this.Description = Description;
+                this.CHGL = CHGL;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Screenshot = Screenshot;
@@ -291,7 +292,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.BNAM = BNAM;
                 this.INTV = INTV;
                 this.INCC = INCC;
-                this.CHGL = CHGL;
             }
 
             #pragma warning disable CS8618
@@ -313,6 +313,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Deleted;
             public TItem Author;
             public TItem Description;
+            public TItem CHGL;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>? MasterReferences;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OverriddenForms;
             public TItem Screenshot;
@@ -320,7 +321,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem BNAM;
             public TItem INTV;
             public TItem INCC;
-            public TItem CHGL;
             #endregion
 
             #region Equals
@@ -343,6 +343,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
                 if (!object.Equals(this.Author, rhs.Author)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.CHGL, rhs.CHGL)) return false;
                 if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
                 if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
                 if (!object.Equals(this.Screenshot, rhs.Screenshot)) return false;
@@ -350,7 +351,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
                 if (!object.Equals(this.INTV, rhs.INTV)) return false;
                 if (!object.Equals(this.INCC, rhs.INCC)) return false;
-                if (!object.Equals(this.CHGL, rhs.CHGL)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -366,6 +366,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Deleted);
                 hash.Add(this.Author);
                 hash.Add(this.Description);
+                hash.Add(this.CHGL);
                 hash.Add(this.MasterReferences);
                 hash.Add(this.OverriddenForms);
                 hash.Add(this.Screenshot);
@@ -373,7 +374,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.BNAM);
                 hash.Add(this.INTV);
                 hash.Add(this.INCC);
-                hash.Add(this.CHGL);
                 return hash.ToHashCode();
             }
 
@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Deleted)) return false;
                 if (!eval(this.Author)) return false;
                 if (!eval(this.Description)) return false;
+                if (!eval(this.CHGL)) return false;
                 if (this.MasterReferences != null)
                 {
                     if (!eval(this.MasterReferences.Overall)) return false;
@@ -435,7 +436,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.BNAM)) return false;
                 if (!eval(this.INTV)) return false;
                 if (!eval(this.INCC)) return false;
-                if (!eval(this.CHGL)) return false;
                 return true;
             }
             #endregion
@@ -457,6 +457,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Deleted)) return true;
                 if (eval(this.Author)) return true;
                 if (eval(this.Description)) return true;
+                if (eval(this.CHGL)) return true;
                 if (this.MasterReferences != null)
                 {
                     if (eval(this.MasterReferences.Overall)) return true;
@@ -496,7 +497,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.BNAM)) return true;
                 if (eval(this.INTV)) return true;
                 if (eval(this.INCC)) return true;
-                if (eval(this.CHGL)) return true;
                 return false;
             }
             #endregion
@@ -521,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Deleted = eval(this.Deleted);
                 obj.Author = eval(this.Author);
                 obj.Description = eval(this.Description);
+                obj.CHGL = eval(this.CHGL);
                 if (MasterReferences != null)
                 {
                     obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>?>(eval(this.MasterReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterReference.Mask<R>?>>());
@@ -569,7 +570,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BNAM = eval(this.BNAM);
                 obj.INTV = eval(this.INTV);
                 obj.INCC = eval(this.INCC);
-                obj.CHGL = eval(this.CHGL);
             }
             #endregion
 
@@ -627,6 +627,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Description ?? true)
                     {
                         sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.CHGL ?? true)
+                    {
+                        sb.AppendItem(CHGL, "CHGL");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
                         && MasterReferences is {} MasterReferencesItem)
@@ -703,10 +707,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(INCC, "INCC");
                     }
-                    if (printMask?.CHGL ?? true)
-                    {
-                        sb.AppendItem(CHGL, "CHGL");
-                    }
                 }
             }
             #endregion
@@ -741,6 +741,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Deleted;
             public Exception? Author;
             public Exception? Description;
+            public Exception? CHGL;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
             public Exception? Screenshot;
@@ -748,7 +749,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? BNAM;
             public Exception? INTV;
             public Exception? INCC;
-            public Exception? CHGL;
             #endregion
 
             #region IErrorMask
@@ -777,6 +777,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Author;
                     case StarfieldModHeader_FieldIndex.Description:
                         return Description;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        return CHGL;
                     case StarfieldModHeader_FieldIndex.MasterReferences:
                         return MasterReferences;
                     case StarfieldModHeader_FieldIndex.OverriddenForms:
@@ -791,8 +793,6 @@ namespace Mutagen.Bethesda.Starfield
                         return INTV;
                     case StarfieldModHeader_FieldIndex.INCC:
                         return INCC;
-                    case StarfieldModHeader_FieldIndex.CHGL:
-                        return CHGL;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -833,6 +833,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldModHeader_FieldIndex.Description:
                         this.Description = ex;
                         break;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        this.CHGL = ex;
+                        break;
                     case StarfieldModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
                         break;
@@ -853,9 +856,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldModHeader_FieldIndex.INCC:
                         this.INCC = ex;
-                        break;
-                    case StarfieldModHeader_FieldIndex.CHGL:
-                        this.CHGL = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -897,6 +897,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldModHeader_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        this.CHGL = (Exception?)obj;
+                        break;
                     case StarfieldModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
                         break;
@@ -918,9 +921,6 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldModHeader_FieldIndex.INCC:
                         this.INCC = (Exception?)obj;
                         break;
-                    case StarfieldModHeader_FieldIndex.CHGL:
-                        this.CHGL = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -939,6 +939,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Deleted != null) return true;
                 if (Author != null) return true;
                 if (Description != null) return true;
+                if (CHGL != null) return true;
                 if (MasterReferences != null) return true;
                 if (OverriddenForms != null) return true;
                 if (Screenshot != null) return true;
@@ -946,7 +947,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (BNAM != null) return true;
                 if (INTV != null) return true;
                 if (INCC != null) return true;
-                if (CHGL != null) return true;
                 return false;
             }
             #endregion
@@ -999,6 +999,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 {
                     sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(CHGL, "CHGL");
                 }
                 if (MasterReferences is {} MasterReferencesItem)
                 {
@@ -1068,9 +1071,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(INCC, "INCC");
                 }
-                {
-                    sb.AppendItem(CHGL, "CHGL");
-                }
             }
             #endregion
 
@@ -1089,6 +1089,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Deleted = this.Deleted.Combine(rhs.Deleted);
                 ret.Author = this.Author.Combine(rhs.Author);
                 ret.Description = this.Description.Combine(rhs.Description);
+                ret.CHGL = this.CHGL.Combine(rhs.CHGL);
                 ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
                 ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), Noggog.ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
                 ret.Screenshot = this.Screenshot.Combine(rhs.Screenshot);
@@ -1096,7 +1097,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.BNAM = this.BNAM.Combine(rhs.BNAM);
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.INCC = this.INCC.Combine(rhs.INCC);
-                ret.CHGL = this.CHGL.Combine(rhs.CHGL);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1130,6 +1130,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Deleted;
             public bool Author;
             public bool Description;
+            public bool CHGL;
             public MasterReference.TranslationMask? MasterReferences;
             public bool OverriddenForms;
             public bool Screenshot;
@@ -1137,7 +1138,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool BNAM;
             public bool INTV;
             public bool INCC;
-            public bool CHGL;
             #endregion
 
             #region Ctors
@@ -1156,12 +1156,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
                 this.Description = defaultOn;
+                this.CHGL = defaultOn;
                 this.OverriddenForms = defaultOn;
                 this.Screenshot = defaultOn;
                 this.BNAM = defaultOn;
                 this.INTV = defaultOn;
                 this.INCC = defaultOn;
-                this.CHGL = defaultOn;
             }
 
             #endregion
@@ -1187,6 +1187,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
+                ret.Add((CHGL, null));
                 ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
                 ret.Add((OverriddenForms, null));
                 ret.Add((Screenshot, null));
@@ -1194,7 +1195,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((BNAM, null));
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));
-                ret.Add((CHGL, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1284,6 +1284,7 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
+        new MemorySlice<Byte>? CHGL { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
         new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; set; }
         new MemorySlice<Byte>? Screenshot { get; set; }
@@ -1291,7 +1292,6 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? INTV { get; set; }
         new Int32? INCC { get; set; }
-        new MemorySlice<Byte>? CHGL { get; set; }
     }
 
     public partial interface IStarfieldModHeaderGetter :
@@ -1317,6 +1317,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? Deleted { get; }
         String? Author { get; }
         String? Description { get; }
+        ReadOnlyMemorySlice<Byte>? CHGL { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; }
         ReadOnlyMemorySlice<Byte>? Screenshot { get; }
@@ -1324,7 +1325,6 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? BNAM { get; }
         ReadOnlyMemorySlice<Byte>? INTV { get; }
         Int32? INCC { get; }
-        ReadOnlyMemorySlice<Byte>? CHGL { get; }
 
     }
 
@@ -1504,14 +1504,14 @@ namespace Mutagen.Bethesda.Starfield
         Deleted = 7,
         Author = 8,
         Description = 9,
-        MasterReferences = 10,
-        OverriddenForms = 11,
-        Screenshot = 12,
-        TransientTypes = 13,
-        BNAM = 14,
-        INTV = 15,
-        INCC = 16,
-        CHGL = 17,
+        CHGL = 10,
+        MasterReferences = 11,
+        OverriddenForms = 12,
+        Screenshot = 13,
+        TransientTypes = 14,
+        BNAM = 15,
+        INTV = 16,
+        INCC = 17,
     }
     #endregion
 
@@ -1562,6 +1562,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DELE,
                 RecordTypes.CNAM,
                 RecordTypes.SNAM,
+                RecordTypes.CHGL,
                 RecordTypes.MAST,
                 RecordTypes.DATA,
                 RecordTypes.ONAM,
@@ -1570,8 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.TNAM,
                 RecordTypes.BNAM,
                 RecordTypes.INTV,
-                RecordTypes.INCC,
-                RecordTypes.CHGL);
+                RecordTypes.INCC);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1626,6 +1626,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Deleted = default;
             item.Author = default;
             item.Description = default;
+            item.CHGL = default;
             item.MasterReferences.Clear();
             item.OverriddenForms = null;
             item.Screenshot = default;
@@ -1633,7 +1634,6 @@ namespace Mutagen.Bethesda.Starfield
             item.BNAM = default;
             item.INTV = default;
             item.INCC = default;
-            item.CHGL = default;
         }
         
         #region Mutagen
@@ -1699,6 +1699,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Deleted = MemorySliceExt.SequenceEqual(item.Deleted, rhs.Deleted);
             ret.Author = string.Equals(item.Author, rhs.Author);
             ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.CHGL = MemorySliceExt.SequenceEqual(item.CHGL, rhs.CHGL);
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
                 rhs.MasterReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1715,7 +1716,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.BNAM = MemorySliceExt.SequenceEqual(item.BNAM, rhs.BNAM);
             ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
             ret.INCC = item.INCC == rhs.INCC;
-            ret.CHGL = MemorySliceExt.SequenceEqual(item.CHGL, rhs.CHGL);
         }
         
         public string Print(
@@ -1804,6 +1804,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(DescriptionItem, "Description");
             }
+            if ((printMask?.CHGL ?? true)
+                && item.CHGL is {} CHGLItem)
+            {
+                sb.AppendLine($"CHGL => {SpanExt.ToHexString(CHGLItem)}");
+            }
             if (printMask?.MasterReferences?.Overall ?? true)
             {
                 sb.AppendLine("MasterReferences =>");
@@ -1867,11 +1872,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(INCCItem, "INCC");
             }
-            if ((printMask?.CHGL ?? true)
-                && item.CHGL is {} CHGLItem)
-            {
-                sb.AppendLine($"CHGL => {SpanExt.ToHexString(CHGLItem)}");
-            }
         }
         
         #region Equals and Hash
@@ -1925,6 +1925,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.CHGL, rhs.CHGL)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.MasterReferences) ?? true))
             {
                 if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StarfieldModHeader_FieldIndex.MasterReferences)))) return false;
@@ -1952,10 +1956,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INCC) ?? true))
             {
                 if (lhs.INCC != rhs.INCC) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.CHGL, rhs.CHGL)) return false;
             }
             return true;
         }
@@ -1985,6 +1985,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Descriptionitem);
             }
+            if (item.CHGL is {} CHGLItem)
+            {
+                hash.Add(CHGLItem);
+            }
             hash.Add(item.MasterReferences);
             hash.Add(item.OverriddenForms);
             if (item.Screenshot is {} ScreenshotItem)
@@ -2003,10 +2007,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.INCC is {} INCCitem)
             {
                 hash.Add(INCCitem);
-            }
-            if (item.CHGL is {} CHGLItem)
-            {
-                hash.Add(CHGLItem);
             }
             return hash.ToHashCode();
         }
@@ -2123,6 +2123,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Description = rhs.Description;
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
+            {
+                if(rhs.CHGL is {} CHGLrhs)
+                {
+                    item.CHGL = CHGLrhs.ToArray();
+                }
+                else
+                {
+                    item.CHGL = default;
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.MasterReferences) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldModHeader_FieldIndex.MasterReferences);
@@ -2234,17 +2245,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INCC) ?? true))
             {
                 item.INCC = rhs.INCC;
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
-            {
-                if(rhs.CHGL is {} CHGLrhs)
-                {
-                    item.CHGL = CHGLrhs.ToArray();
-                }
-                else
-                {
-                    item.CHGL = default;
-                }
             }
         }
         
@@ -2380,6 +2380,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.CHGL,
+                header: translationParams.ConvertToCustom(RecordTypes.CHGL));
             StarfieldModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
@@ -2421,10 +2425,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.INCC,
                 header: translationParams.ConvertToCustom(RecordTypes.INCC));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CHGL,
-                header: translationParams.ConvertToCustom(RecordTypes.CHGL));
         }
 
         public static partial void WriteBinaryMasterReferencesCustom(
@@ -2534,6 +2534,12 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)StarfieldModHeader_FieldIndex.Description;
                 }
+                case RecordTypeInts.CHGL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CHGL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)StarfieldModHeader_FieldIndex.CHGL;
+                }
                 case RecordTypeInts.MAST:
                 {
                     StarfieldModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
@@ -2585,12 +2591,6 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
                     return (int)StarfieldModHeader_FieldIndex.INCC;
-                }
-                case RecordTypeInts.CHGL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CHGL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)StarfieldModHeader_FieldIndex.CHGL;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2698,6 +2698,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
+        #region CHGL
+        private int? _CHGLLocation;
+        public ReadOnlyMemorySlice<Byte>? CHGL => _CHGLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CHGLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
@@ -2716,10 +2720,6 @@ namespace Mutagen.Bethesda.Starfield
         #region INCC
         private int? _INCCLocation;
         public Int32? INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INCCLocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
-        #region CHGL
-        private int? _CHGLLocation;
-        public ReadOnlyMemorySlice<Byte>? CHGL => _CHGLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CHGLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2812,6 +2812,11 @@ namespace Mutagen.Bethesda.Starfield
                     _DescriptionLocation = (stream.Position - offset);
                     return (int)StarfieldModHeader_FieldIndex.Description;
                 }
+                case RecordTypeInts.CHGL:
+                {
+                    _CHGLLocation = (stream.Position - offset);
+                    return (int)StarfieldModHeader_FieldIndex.CHGL;
+                }
                 case RecordTypeInts.MAST:
                 {
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<IMasterReferenceGetter>(
@@ -2867,11 +2872,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _INCCLocation = (stream.Position - offset);
                     return (int)StarfieldModHeader_FieldIndex.INCC;
-                }
-                case RecordTypeInts.CHGL:
-                {
-                    _CHGLLocation = (stream.Position - offset);
-                    return (int)StarfieldModHeader_FieldIndex.CHGL;
                 }
                 case RecordTypeInts.XXXX:
                 {

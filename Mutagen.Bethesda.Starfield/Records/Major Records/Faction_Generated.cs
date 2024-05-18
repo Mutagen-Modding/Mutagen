@@ -231,6 +231,9 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IFactionGetter.HERD => this.HERD;
         #endregion
+        #region CRGP
+        public Boolean CRGP { get; set; } = default(Boolean);
+        #endregion
         #region GRPH
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _GRPH;
@@ -281,6 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
                 this.VoiceType = initialValue;
                 this.HERD = initialValue;
+                this.CRGP = initialValue;
                 this.GRPH = initialValue;
             }
 
@@ -306,6 +310,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VendorLocation,
                 TItem VoiceType,
                 TItem HERD,
+                TItem CRGP,
                 TItem GRPH)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -330,6 +335,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
                 this.VoiceType = VoiceType;
                 this.HERD = HERD;
+                this.CRGP = CRGP;
                 this.GRPH = GRPH;
             }
 
@@ -356,6 +362,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>? VendorLocation { get; set; }
             public TItem VoiceType;
             public TItem HERD;
+            public TItem CRGP;
             public TItem GRPH;
             #endregion
 
@@ -384,6 +391,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
                 if (!object.Equals(this.VoiceType, rhs.VoiceType)) return false;
                 if (!object.Equals(this.HERD, rhs.HERD)) return false;
+                if (!object.Equals(this.CRGP, rhs.CRGP)) return false;
                 if (!object.Equals(this.GRPH, rhs.GRPH)) return false;
                 return true;
             }
@@ -404,6 +412,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VendorLocation);
                 hash.Add(this.VoiceType);
                 hash.Add(this.HERD);
+                hash.Add(this.CRGP);
                 hash.Add(this.GRPH);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -463,6 +472,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.VoiceType)) return false;
                 if (!eval(this.HERD)) return false;
+                if (!eval(this.CRGP)) return false;
                 if (!eval(this.GRPH)) return false;
                 return true;
             }
@@ -520,6 +530,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.VoiceType)) return true;
                 if (eval(this.HERD)) return true;
+                if (eval(this.CRGP)) return true;
                 if (eval(this.GRPH)) return true;
                 return false;
             }
@@ -578,6 +589,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 obj.VoiceType = eval(this.VoiceType);
                 obj.HERD = eval(this.HERD);
+                obj.CRGP = eval(this.CRGP);
                 obj.GRPH = eval(this.GRPH);
             }
             #endregion
@@ -683,6 +695,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(HERD, "HERD");
                     }
+                    if (printMask?.CRGP ?? true)
+                    {
+                        sb.AppendItem(CRGP, "CRGP");
+                    }
                     if (printMask?.GRPH ?? true)
                     {
                         sb.AppendItem(GRPH, "GRPH");
@@ -712,6 +728,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, LocationTargetRadius.ErrorMask?>? VendorLocation;
             public Exception? VoiceType;
             public Exception? HERD;
+            public Exception? CRGP;
             public Exception? GRPH;
             #endregion
 
@@ -749,6 +766,8 @@ namespace Mutagen.Bethesda.Starfield
                         return VoiceType;
                     case Faction_FieldIndex.HERD:
                         return HERD;
+                    case Faction_FieldIndex.CRGP:
+                        return CRGP;
                     case Faction_FieldIndex.GRPH:
                         return GRPH;
                     default:
@@ -802,6 +821,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Faction_FieldIndex.HERD:
                         this.HERD = ex;
+                        break;
+                    case Faction_FieldIndex.CRGP:
+                        this.CRGP = ex;
                         break;
                     case Faction_FieldIndex.GRPH:
                         this.GRPH = ex;
@@ -859,6 +881,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Faction_FieldIndex.HERD:
                         this.HERD = (Exception?)obj;
                         break;
+                    case Faction_FieldIndex.CRGP:
+                        this.CRGP = (Exception?)obj;
+                        break;
                     case Faction_FieldIndex.GRPH:
                         this.GRPH = (Exception?)obj;
                         break;
@@ -885,6 +910,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (VendorLocation != null) return true;
                 if (VoiceType != null) return true;
                 if (HERD != null) return true;
+                if (CRGP != null) return true;
                 if (GRPH != null) return true;
                 return false;
             }
@@ -979,6 +1005,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(HERD, "HERD");
                 }
                 {
+                    sb.AppendItem(CRGP, "CRGP");
+                }
+                {
                     sb.AppendItem(GRPH, "GRPH");
                 }
             }
@@ -1003,6 +1032,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
                 ret.VoiceType = this.VoiceType.Combine(rhs.VoiceType);
                 ret.HERD = this.HERD.Combine(rhs.HERD);
+                ret.CRGP = this.CRGP.Combine(rhs.CRGP);
                 ret.GRPH = this.GRPH.Combine(rhs.GRPH);
                 return ret;
             }
@@ -1040,6 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
             public LocationTargetRadius.TranslationMask? VendorLocation;
             public bool VoiceType;
             public bool HERD;
+            public bool CRGP;
             public bool GRPH;
             #endregion
 
@@ -1058,6 +1089,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PRIS = defaultOn;
                 this.VoiceType = defaultOn;
                 this.HERD = defaultOn;
+                this.CRGP = defaultOn;
                 this.GRPH = defaultOn;
             }
 
@@ -1080,6 +1112,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VendorLocation != null ? VendorLocation.OnOverall : DefaultOn, VendorLocation?.GetCrystal()));
                 ret.Add((VoiceType, null));
                 ret.Add((HERD, null));
+                ret.Add((CRGP, null));
                 ret.Add((GRPH, null));
             }
 
@@ -1258,6 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
         new LocationTargetRadius? VendorLocation { get; set; }
         new IFormLinkNullable<IVoiceTypeOrListGetter> VoiceType { get; set; }
         new MemorySlice<Byte>? HERD { get; set; }
+        new Boolean CRGP { get; set; }
         new MemorySlice<Byte>? GRPH { get; set; }
     }
 
@@ -1305,6 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
         ILocationTargetRadiusGetter? VendorLocation { get; }
         IFormLinkNullableGetter<IVoiceTypeOrListGetter> VoiceType { get; }
         ReadOnlyMemorySlice<Byte>? HERD { get; }
+        Boolean CRGP { get; }
         ReadOnlyMemorySlice<Byte>? GRPH { get; }
 
     }
@@ -1496,7 +1531,8 @@ namespace Mutagen.Bethesda.Starfield
         VendorLocation = 18,
         VoiceType = 19,
         HERD = 20,
-        GRPH = 21,
+        CRGP = 21,
+        GRPH = 22,
     }
     #endregion
 
@@ -1507,9 +1543,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -1618,6 +1654,7 @@ namespace Mutagen.Bethesda.Starfield
             item.VendorLocation = null;
             item.VoiceType.Clear();
             item.HERD = default;
+            item.CRGP = default(Boolean);
             item.GRPH = default;
             base.Clear(item);
         }
@@ -1767,6 +1804,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.VoiceType = item.VoiceType.Equals(rhs.VoiceType);
             ret.HERD = MemorySliceExt.SequenceEqual(item.HERD, rhs.HERD);
+            ret.CRGP = item.CRGP == rhs.CRGP;
             ret.GRPH = MemorySliceExt.SequenceEqual(item.GRPH, rhs.GRPH);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1899,6 +1937,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"HERD => {SpanExt.ToHexString(HERDItem)}");
             }
+            if (printMask?.CRGP ?? true)
+            {
+                sb.AppendItem(item.CRGP, "CRGP");
+            }
             if ((printMask?.GRPH ?? true)
                 && item.GRPH is {} GRPHItem)
             {
@@ -2022,6 +2064,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.HERD, rhs.HERD)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.CRGP) ?? true))
+            {
+                if (lhs.CRGP != rhs.CRGP) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.GRPH) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.GRPH, rhs.GRPH)) return false;
@@ -2086,6 +2132,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(HERDItem);
             }
+            hash.Add(item.CRGP);
             if (item.GRPH is {} GRPHItem)
             {
                 hash.Add(GRPHItem);
@@ -2422,6 +2469,10 @@ namespace Mutagen.Bethesda.Starfield
                     item.HERD = default;
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CRGP) ?? true))
+            {
+                item.CRGP = rhs.CRGP;
+            }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.GRPH) ?? true))
             {
                 if(rhs.GRPH is {} GRPHrhs)
@@ -2676,7 +2727,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.HERD,
                 header: translationParams.ConvertToCustom(RecordTypes.HERD),
                 markerType: RecordTypes.CRHR);
-            using (HeaderExport.Subrecord(writer, RecordTypes.CRGP)) { }
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.CRGP,
+                header: translationParams.ConvertToCustom(RecordTypes.CRGP));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GRPH,
@@ -2867,8 +2921,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    frame.ReadSubrecord();
-                    return default(int?);
+                    item.CRGP = true;
+                    return (int)Faction_FieldIndex.CRGP;
                 }
                 case RecordTypeInts.GRPH:
                 {
@@ -2990,6 +3044,10 @@ namespace Mutagen.Bethesda.Starfield
         #region HERD
         private int? _HERDLocation;
         public ReadOnlyMemorySlice<Byte>? HERD => _HERDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HERDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region CRGP
+        private int? _CRGPLocation;
+        public Boolean CRGP => _CRGPLocation.HasValue ? true : default(Boolean);
         #endregion
         #region GRPH
         private int? _GRPHLocation;
@@ -3157,8 +3215,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    stream.ReadSubrecord();
-                    return default(int?);
+                    _CRGPLocation = (stream.Position - offset);
+                    return (int)Faction_FieldIndex.CRGP;
                 }
                 case RecordTypeInts.GRPH:
                 {

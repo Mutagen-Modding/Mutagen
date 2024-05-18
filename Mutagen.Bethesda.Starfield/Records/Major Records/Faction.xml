@@ -18,7 +18,7 @@
         <Interface>IVoiceTypeOrList</Interface>
       </FormLink>
       <ByteArray name="HERD" markerType="CRHR" recordType="HERD" unknown="true" />
-      <Marker name="CRGP" recordType="CRGP" />
+      <Bool name="CRGP" recordType="CRGP" boolAsMarker="True" unknown="true" />
       <ByteArray name="GRPH" recordType="GRPH" unknown="true" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
