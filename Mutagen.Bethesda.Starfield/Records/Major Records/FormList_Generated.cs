@@ -138,9 +138,14 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region ANAM
-        public Int32? ANAM { get; set; }
+        private readonly IFormLinkNullable<IFormListGetter> _ANAM = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ANAM
+        {
+            get => _ANAM;
+            set => _ANAM.SetTo(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IFormListGetter.ANAM => this.ANAM;
+        IFormLinkNullableGetter<IFormListGetter> IFormListGetter.ANAM => this.ANAM;
         #endregion
 
         #region To String
@@ -899,7 +904,7 @@ namespace Mutagen.Bethesda.Starfield
         new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
         new ExtendedList<FormListConditionalEntry> ConditionalEntries { get; }
-        new Int32? ANAM { get; set; }
+        new IFormLinkNullable<IFormListGetter> ANAM { get; set; }
     }
 
     public partial interface IFormListInternal :
@@ -935,7 +940,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
         IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; }
-        Int32? ANAM { get; }
+        IFormLinkNullableGetter<IFormListGetter> ANAM { get; }
 
     }
 
@@ -1220,7 +1225,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Items.Clear();
             item.ConditionalEntries.Clear();
-            item.ANAM = default;
+            item.ANAM.Clear();
             base.Clear(item);
         }
         
@@ -1241,6 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.Items.RemapLinks(mapping);
             obj.ConditionalEntries.RemapLinks(mapping);
+            obj.ANAM.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFormList obj)
@@ -1345,7 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ConditionalEntries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ANAM = item.ANAM == rhs.ANAM;
+            ret.ANAM = item.ANAM.Equals(rhs.ANAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1442,10 +1448,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ANAM ?? true)
-                && item.ANAM is {} ANAMItem)
+            if (printMask?.ANAM ?? true)
             {
-                sb.AppendItem(ANAMItem, "ANAM");
+                sb.AppendItem(item.ANAM.FormKeyNullable, "ANAM");
             }
         }
         
@@ -1515,7 +1520,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.ANAM) ?? true))
             {
-                if (lhs.ANAM != rhs.ANAM) return false;
+                if (!lhs.ANAM.Equals(rhs.ANAM)) return false;
             }
             return true;
         }
@@ -1552,10 +1557,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Items);
             hash.Add(item.ConditionalEntries);
-            if (item.ANAM is {} ANAMitem)
-            {
-                hash.Add(ANAMitem);
-            }
+            hash.Add(item.ANAM);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1597,6 +1599,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.ConditionalEntries.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ANAM, out var ANAMInfo))
+            {
+                yield return ANAMInfo;
             }
             yield break;
         }
@@ -1762,7 +1768,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.ANAM) ?? true))
             {
-                item.ANAM = rhs.ANAM;
+                item.ANAM.SetTo(rhs.ANAM.FormKeyNullable);
             }
         }
         
@@ -1959,7 +1965,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ANAM,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
@@ -2091,7 +2097,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ANAM = frame.ReadInt32();
+                    item.ANAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)FormList_FieldIndex.ANAM;
                 }
                 default:
@@ -2171,7 +2177,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = Array.Empty<IFormListConditionalEntryGetter>();
         #region ANAM
         private int? _ANAMLocation;
-        public Int32? ANAM => _ANAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public IFormLinkNullableGetter<IFormListGetter> ANAM => _ANAMLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

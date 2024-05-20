@@ -6602,5 +6602,8 @@
     <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

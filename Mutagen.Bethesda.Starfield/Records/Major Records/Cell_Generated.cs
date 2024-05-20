@@ -3635,6 +3635,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "OrbitalDataComponent":
                 case "IOrbitalDataComponentGetter":
                 case "IOrbitalDataComponent":
+                case "CityMapsUsageComponent":
+                case "ICityMapsUsageComponentGetter":
+                case "ICityMapsUsageComponent":
                     break;
                 case "CellXCLAItem":
                 case "ICellXCLAItemGetter":

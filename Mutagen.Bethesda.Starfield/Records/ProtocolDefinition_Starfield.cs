@@ -139,6 +139,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Chargen_Registration.Instance,
             ChargenAndSkintones_Registration.Instance,
             CheckContrabandStatusConditionData_Registration.Instance,
+            CityMapsUsageComponent_Registration.Instance,
             Class_Registration.Instance,
             Climate_Registration.Instance,
             ClimateWeatherSettings_Registration.Instance,
