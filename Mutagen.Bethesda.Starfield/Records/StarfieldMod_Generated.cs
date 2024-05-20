@@ -9029,22 +9029,25 @@ namespace Mutagen.Bethesda.Starfield
             ModPath path,
             StarfieldRelease release,
             StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             return StarfieldModBinaryOverlay.StarfieldModFactory(
                 path: path,
                 stringsParam: stringsParam,
                 release: release,
-                fileSystem: fileSystem);
+                fileSystem: fileSystem,
+                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
         }
 
         public static IStarfieldModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             StarfieldRelease release,
-            ModKey modKey)
+            ModKey modKey,
+            bool throwOnUnknownSubrecord = false)
         {
             return StarfieldModBinaryOverlay.StarfieldModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: throwOnUnknownSubrecord),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);

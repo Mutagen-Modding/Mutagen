@@ -6236,22 +6236,25 @@ namespace Mutagen.Bethesda.Skyrim
             ModPath path,
             SkyrimRelease release,
             StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
                 stringsParam: stringsParam,
                 release: release,
-                fileSystem: fileSystem);
+                fileSystem: fileSystem,
+                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             SkyrimRelease release,
-            ModKey modKey)
+            ModKey modKey,
+            bool throwOnUnknownSubrecord = false)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: throwOnUnknownSubrecord),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);

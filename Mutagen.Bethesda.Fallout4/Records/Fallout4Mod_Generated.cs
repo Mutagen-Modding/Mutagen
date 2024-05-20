@@ -6824,22 +6824,25 @@ namespace Mutagen.Bethesda.Fallout4
             ModPath path,
             Fallout4Release release,
             StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 path: path,
                 stringsParam: stringsParam,
                 release: release,
-                fileSystem: fileSystem);
+                fileSystem: fileSystem,
+                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
         }
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             Fallout4Release release,
-            ModKey modKey)
+            ModKey modKey,
+            bool throwOnUnknownSubrecord = false)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: throwOnUnknownSubrecord),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);

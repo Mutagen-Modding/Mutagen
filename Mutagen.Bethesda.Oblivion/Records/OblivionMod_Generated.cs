@@ -3354,19 +3354,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            bool throwOnUnknownSubrecord = false)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 path: path,
-                fileSystem: fileSystem);
+                fileSystem: fileSystem,
+                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
-            ModKey modKey)
+            ModKey modKey,
+            bool throwOnUnknownSubrecord = false)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion),
+                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion, throwOnUnknownSubrecord: throwOnUnknownSubrecord),
                 modKey: modKey,
                 shouldDispose: false);
         }
