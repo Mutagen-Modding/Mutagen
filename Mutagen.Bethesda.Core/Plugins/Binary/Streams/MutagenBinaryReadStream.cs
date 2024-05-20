@@ -91,20 +91,25 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     /// <param name="bufferSize">Size of internal buffer</param>
     /// <param name="dispose">Whether to dispose the source stream</param>
     /// <param name="offsetReference">Optional offset reference position to use</param>
+    /// <param name="throwOnUnknownSubrecord">Whether to throw on unknown subrecords</param>
     public MutagenBinaryReadStream(
         Stream stream,
         ModKey modKey,
         GameRelease release,
         int bufferSize = 4096,
         bool dispose = true,
-        long offsetReference = 0)
+        long offsetReference = 0,
+        bool throwOnUnknownSubrecord = false)
         : base(stream, bufferSize, dispose)
     {
         var startPos = stream.Position;
         MetaData = new ParsingBundle(
             release,
             modKey, 
-            MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false));
+            MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false))
+        {
+            ThrowOnUnknown = throwOnUnknownSubrecord
+        };
         stream.Position = startPos;
         OffsetReference = offsetReference;
     }

@@ -533,6 +533,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
             }
             args.Add($"IFileSystem? fileSystem = null");
+            args.Add($"bool throwOnUnknownSubrecord = false");
         }
         using (sb.CurlyBrace())
         {
@@ -549,6 +550,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     args.AddPassArg("release");
                 }
                 args.AddPassArg("fileSystem");
+                args.AddPassArg("throwOnUnknownSubrecord");
             }
         }
         sb.AppendLine();
@@ -562,6 +564,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.Add($"{ModModule.ReleaseEnumName(obj)} release");
             }
             args.Add($"ModKey modKey");
+            args.Add($"bool throwOnUnknownSubrecord = false");
         }
         using (sb.CurlyBrace())
         {
@@ -577,7 +580,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     gameReleaseStr = $"release.ToGameRelease()";
                 }
-                args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr})");
+                args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}, throwOnUnknownSubrecord: throwOnUnknownSubrecord)");
                 args.AddPassArg("modKey");
                 if (objData.GameReleaseOptions != null)
                 {

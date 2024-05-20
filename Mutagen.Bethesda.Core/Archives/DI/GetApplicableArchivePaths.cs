@@ -79,25 +79,25 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(null), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityOrderComparer(null, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityOrderComparer(archiveOrdering, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
@@ -121,7 +121,15 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
         if (modKey != null)
         {
-            var iniListedArchives = _iniListings.Get().ToHashSet();
+            IReadOnlyCollection<FileName> iniListedArchives;
+            if (returnEmptyIfMissing)
+            {
+                iniListedArchives = (IReadOnlyCollection<FileName>?)_iniListings.TryGet()?.ToHashSet() ?? Array.Empty<FileName>();
+            }
+            else
+            {
+                iniListedArchives = _iniListings.Get().ToHashSet();
+            }
             ret = ret
                 .Where(archive =>
                 {
@@ -136,9 +144,16 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         return ret;
     }
 
-    private IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName>? listedArchiveOrdering)
+    private IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName>? listedArchiveOrdering, bool emptyIfMissing)
     {
-        listedArchiveOrdering ??= _iniListings.Get();
+        if (emptyIfMissing)
+        {
+            listedArchiveOrdering ??= _iniListings.TryGet() ?? Enumerable.Empty<FileName>();
+        }
+        else
+        {
+            listedArchiveOrdering ??= _iniListings.Get();
+        }
         var archiveOrderingList = listedArchiveOrdering.ToList();
         if (archiveOrderingList.Count == 0) return null;
         archiveOrderingList.Reverse();
