@@ -12,7 +12,6 @@
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <ByteArray name="CHGL" recordType="CHGL" unknown="true" />
       <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
       <List name="OverriddenForms" recordType="ONAM" overflowRecordType="XXXX">
         <FormLink refName="StarfieldMajorRecord" />
@@ -22,6 +21,7 @@
       <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
       <ByteArray name="INTV" recordType="INTV" unknown="true" />
       <Int32 name="INCC" recordType="INCC" unknown="true" />
+      <ByteArray name="CHGL" recordType="CHGL" unknown="true" />
     </Fields>
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord">
