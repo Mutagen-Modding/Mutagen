@@ -121,7 +121,15 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
         if (modKey != null)
         {
-            var iniListedArchives = _iniListings.Get().ToHashSet();
+            IReadOnlyCollection<FileName> iniListedArchives;
+            if (returnEmptyIfMissing)
+            {
+                iniListedArchives = (IReadOnlyCollection<FileName>?)_iniListings.TryGet()?.ToHashSet() ?? Array.Empty<FileName>();
+            }
+            else
+            {
+                iniListedArchives = _iniListings.Get().ToHashSet();
+            }
             ret = ret
                 .Where(archive =>
                 {

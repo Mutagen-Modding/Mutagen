@@ -2,16 +2,19 @@
 using IniParser;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
-using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Inis;
 using Mutagen.Bethesda.Inis.DI;
-using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Archives.DI;
 
 public interface IGetArchiveIniListings
 {
+    /// <summary>
+    /// Queries the related ini file and looks for Archive ordering information
+    /// </summary>
+    /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
+    IEnumerable<FileName>? TryGet();
+    
     /// <summary>
     /// Queries the related ini file and looks for Archive ordering information
     /// </summary>
@@ -54,6 +57,18 @@ public sealed class GetArchiveIniListings : IGetArchiveIniListings
     {
         _fileSystem = fileSystem;
         _iniPathProvider = iniPathProvider;
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<FileName>? TryGet()
+    {
+        var path = _iniPathProvider.TryGetPath();
+        if (path == null)
+        {
+            return null;
+        }
+        
+        return Get();
     }
         
     /// <inheritdoc />
