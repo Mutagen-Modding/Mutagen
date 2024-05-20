@@ -1,10 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
+
+// Re-enable at some point
+#nullable disable
 
 internal sealed class InternalImmutableModLinkCache
 {
@@ -274,16 +277,14 @@ internal sealed class InternalImmutableModLinkCache
 
     public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
-        var typeArr = types.ToArray();
-        if (TryResolve(formKey, typeArr, out var commonRec, out matchedType, target)) return commonRec;
-        throw new MissingRecordException(formKey, typeArr);
+        if (TryResolve(formKey, types, out var commonRec, out matchedType, target)) return commonRec;
+        throw new MissingRecordException(formKey, types.ToArray());
     }
 
     public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType)
     {
-        var typeArr = types.ToArray();
-        if (TryResolve(editorId, typeArr, out var commonRec, out matchedType)) return commonRec;
-        throw new MissingRecordException(editorId, typeArr.ToArray());
+        if (TryResolve(editorId, types, out var commonRec, out matchedType)) return commonRec;
+        throw new MissingRecordException(editorId, types.ToArray());
     }
 
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
