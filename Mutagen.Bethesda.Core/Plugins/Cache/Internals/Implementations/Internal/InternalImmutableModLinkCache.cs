@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -274,13 +274,13 @@ internal sealed class InternalImmutableModLinkCache
 
     public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolve(formKey, types, out var commonRec, out matchedType, target)) return commonRec;
+        if (TryResolve(formKey, types, out var commonRec, out matchedType!, target)) return commonRec!;
         throw new MissingRecordException(formKey, types.ToArray());
     }
 
     public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType)
     {
-        if (TryResolve(editorId, types, out var commonRec, out matchedType)) return commonRec;
+        if (TryResolve(editorId, types, out var commonRec, out matchedType!)) return commonRec!;
         throw new MissingRecordException(editorId, types.ToArray());
     }
 

@@ -137,6 +137,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region ANAM
+        private readonly IFormLinkNullable<IFormListGetter> _ANAM = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ANAM
+        {
+            get => _ANAM;
+            set => _ANAM.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> IFormListGetter.ANAM => this.ANAM;
+        #endregion
 
         #region To String
 
@@ -166,6 +176,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
+                this.ANAM = initialValue;
             }
 
             public Mask(
@@ -179,7 +190,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem Name,
                 TItem Items,
-                TItem ConditionalEntries)
+                TItem ConditionalEntries,
+                TItem ANAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -193,6 +205,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(ConditionalEntries, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
+                this.ANAM = ANAM;
             }
 
             #pragma warning disable CS8618
@@ -208,6 +221,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Items;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>? ConditionalEntries;
+            public TItem ANAM;
             #endregion
 
             #region Equals
@@ -225,6 +239,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
                 if (!object.Equals(this.ConditionalEntries, rhs.ConditionalEntries)) return false;
+                if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -234,6 +249,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Name);
                 hash.Add(this.Items);
                 hash.Add(this.ConditionalEntries);
+                hash.Add(this.ANAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -280,6 +296,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.ANAM)) return false;
                 return true;
             }
             #endregion
@@ -324,6 +341,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.ANAM)) return true;
                 return false;
             }
             #endregion
@@ -384,6 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.ANAM = eval(this.ANAM);
             }
             #endregion
 
@@ -465,6 +484,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.ANAM ?? true)
+                    {
+                        sb.AppendItem(ANAM, "ANAM");
+                    }
                 }
             }
             #endregion
@@ -480,6 +503,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Items;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>? ConditionalEntries;
+            public Exception? ANAM;
             #endregion
 
             #region IErrorMask
@@ -496,6 +520,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Items;
                     case FormList_FieldIndex.ConditionalEntries:
                         return ConditionalEntries;
+                    case FormList_FieldIndex.ANAM:
+                        return ANAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -517,6 +543,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case FormList_FieldIndex.ConditionalEntries:
                         this.ConditionalEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case FormList_FieldIndex.ANAM:
+                        this.ANAM = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -541,6 +570,9 @@ namespace Mutagen.Bethesda.Starfield
                     case FormList_FieldIndex.ConditionalEntries:
                         this.ConditionalEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>)obj;
                         break;
+                    case FormList_FieldIndex.ANAM:
+                        this.ANAM = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -554,6 +586,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Name != null) return true;
                 if (Items != null) return true;
                 if (ConditionalEntries != null) return true;
+                if (ANAM != null) return true;
                 return false;
             }
             #endregion
@@ -639,6 +672,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(ANAM, "ANAM");
+                }
             }
             #endregion
 
@@ -651,6 +687,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.ConditionalEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ConditionalEntries?.Overall, rhs.ConditionalEntries?.Overall), Noggog.ExceptionExt.Combine(this.ConditionalEntries?.Specific, rhs.ConditionalEntries?.Specific));
+                ret.ANAM = this.ANAM.Combine(rhs.ANAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -677,6 +714,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Name;
             public bool Items;
             public FormListConditionalEntry.TranslationMask? ConditionalEntries;
+            public bool ANAM;
             #endregion
 
             #region Ctors
@@ -687,6 +725,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = defaultOn;
                 this.Items = defaultOn;
+                this.ANAM = defaultOn;
             }
 
             #endregion
@@ -698,6 +737,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Name, null));
                 ret.Add((Items, null));
                 ret.Add((ConditionalEntries == null ? DefaultOn : !ConditionalEntries.GetCrystal().CopyNothing, ConditionalEntries?.GetCrystal()));
+                ret.Add((ANAM, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -864,6 +904,7 @@ namespace Mutagen.Bethesda.Starfield
         new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
         new ExtendedList<FormListConditionalEntry> ConditionalEntries { get; }
+        new IFormLinkNullable<IFormListGetter> ANAM { get; set; }
     }
 
     public partial interface IFormListInternal :
@@ -899,6 +940,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
         IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; }
+        IFormLinkNullableGetter<IFormListGetter> ANAM { get; }
 
     }
 
@@ -1079,6 +1121,7 @@ namespace Mutagen.Bethesda.Starfield
         Name = 8,
         Items = 9,
         ConditionalEntries = 10,
+        ANAM = 11,
     }
     #endregion
 
@@ -1089,9 +1132,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FormList.Mask<>);
 
@@ -1132,7 +1175,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.ANAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1181,6 +1225,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Items.Clear();
             item.ConditionalEntries.Clear();
+            item.ANAM.Clear();
             base.Clear(item);
         }
         
@@ -1201,6 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.Items.RemapLinks(mapping);
             obj.ConditionalEntries.RemapLinks(mapping);
+            obj.ANAM.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFormList obj)
@@ -1305,6 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ConditionalEntries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.ANAM = item.ANAM.Equals(rhs.ANAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1401,6 +1448,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.ANAM ?? true)
+            {
+                sb.AppendItem(item.ANAM.FormKeyNullable, "ANAM");
+            }
         }
         
         public static FormList_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1467,6 +1518,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ConditionalEntries.SequenceEqual(rhs.ConditionalEntries, (l, r) => ((FormListConditionalEntryCommon)((IFormListConditionalEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FormList_FieldIndex.ConditionalEntries)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.ANAM) ?? true))
+            {
+                if (!lhs.ANAM.Equals(rhs.ANAM)) return false;
+            }
             return true;
         }
         
@@ -1502,6 +1557,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Items);
             hash.Add(item.ConditionalEntries);
+            hash.Add(item.ANAM);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1543,6 +1599,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.ConditionalEntries.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ANAM, out var ANAMInfo))
+            {
+                yield return ANAMInfo;
             }
             yield break;
         }
@@ -1705,6 +1765,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.ANAM) ?? true))
+            {
+                item.ANAM.SetTo(rhs.ANAM.FormKeyNullable);
             }
         }
         
@@ -1901,6 +1965,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ANAM,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
         }
 
         public void Write(
@@ -2026,6 +2094,12 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormListConditionalEntry.TryCreateFromBinary));
                     return (int)FormList_FieldIndex.ConditionalEntries;
                 }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ANAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)FormList_FieldIndex.ANAM;
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2101,6 +2175,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
         public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = Array.Empty<IFormListConditionalEntryGetter>();
+        #region ANAM
+        private int? _ANAMLocation;
+        public IFormLinkNullableGetter<IFormListGetter> ANAM => _ANAMLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2208,6 +2286,11 @@ namespace Mutagen.Bethesda.Starfield
                         trigger: FormListConditionalEntry_Registration.TriggerSpecs,
                         factory: FormListConditionalEntryBinaryOverlay.FormListConditionalEntryFactory);
                     return (int)FormList_FieldIndex.ConditionalEntries;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _ANAMLocation = (stream.Position - offset);
+                    return (int)FormList_FieldIndex.ANAM;
                 }
                 default:
                     return base.FillRecordType(

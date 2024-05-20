@@ -6623,5 +6623,8 @@
     <Compile Include="Records\Major Records\ColorFrame_Generated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

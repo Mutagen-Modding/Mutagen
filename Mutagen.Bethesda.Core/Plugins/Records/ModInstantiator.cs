@@ -138,58 +138,41 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static ModInstantiator<TMod>.ImporterDelegate GetImporter<TMod>(ILoquiRegistration regis)
             where TMod : IModGetter
         {
-            if (regis.ClassType == typeof(TMod)
-                || regis.SetterType == typeof(TMod))
+            var methodInfo = regis.ClassType.GetMethods()
+                .Where(m => m.Name == "CreateFromBinary")
+                .Where(c => c.GetParameters().Length >= 3)
+                .Where(c => c.GetParameters()[0].ParameterType == typeof(ModPath))
+                .First();
+            var paramInfo = methodInfo.GetParameters();
+            var paramExprs = paramInfo.Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray();
+            MethodCallExpression callExp = Expression.Call(methodInfo, paramExprs);
+            var funcType =
+                Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(typeof(TMod)).ToArray());
+            LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
+            var deleg = lambda.Compile();
+            var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
+            var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
+            var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
+            var parallelIndex = paramInfo.Select(x => x.Name).IndexOf("parallel");
+            return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
+                StringsReadParameters? stringsParam) =>
             {
-                var methodInfo = regis.ClassType.GetMethods()
-                    .Where(m => m.Name == "CreateFromBinary")
-                    .Where(c => c.GetParameters().Length >= 3)
-                    .Where(c => c.GetParameters()[0].ParameterType == typeof(ModPath))
-                    .First();
-                var paramInfo = methodInfo.GetParameters();
-                var paramExprs = paramInfo.Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray();
-                MethodCallExpression callExp = Expression.Call(methodInfo, paramExprs);
-                var funcType =
-                    Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(typeof(TMod)).ToArray());
-                LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
-                var deleg = lambda.Compile();
-                var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
-                var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
-                var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
-                var parallelIndex = paramInfo.Select(x => x.Name).IndexOf("parallel");
-                return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                    StringsReadParameters? stringsParam) =>
+                var args = new object?[paramInfo.Length];
+                args[0] = modPath;
+                if (releaseIndex != -1)
                 {
-                    var args = new object?[paramInfo.Length];
-                    args[0] = modPath;
-                    if (releaseIndex != -1)
-                    {
-                        args[releaseIndex] = release;
-                    }
+                    args[releaseIndex] = release;
+                }
 
-                    if (stringsParamIndex != -1)
-                    {
-                        args[stringsParamIndex] = stringsParam;
-                    }
-
-                    args[parallelIndex] = true;
-                    args[fileSystemIndex] = fileSystem;
-                    return (TMod)deleg.DynamicInvoke(args)!;
-                };
-            }
-            else if (regis.GetterType == typeof(TMod))
-            {
-                var overlayGet = GetOverlay<TMod>(regis);
-                return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                    StringsReadParameters? stringsParam) =>
+                if (stringsParamIndex != -1)
                 {
-                    return overlayGet(modPath, release, fileSystem, stringsParam);
-                };
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+                    args[stringsParamIndex] = stringsParam;
+                }
+
+                args[parallelIndex] = true;
+                args[fileSystemIndex] = fileSystem;
+                return (TMod)deleg.DynamicInvoke(args)!;
+            };
         }
 
         public static ModInstantiator<TMod>.ImporterDelegate GetOverlay<TMod>(ILoquiRegistration regis)

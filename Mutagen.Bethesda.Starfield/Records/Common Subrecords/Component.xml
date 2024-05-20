@@ -548,4 +548,9 @@
       <ByteArray name="DATA" recordType="DATA" unknown="true" />
     </Fields>
   </Object>
+  <Object name="CityMapsUsageComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="MOD2" recordType="MOD2" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>
