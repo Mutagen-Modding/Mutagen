@@ -36,7 +36,7 @@ public class OblivionBinaryTranslation
         DataPath = new ModPath(
             new ModKey("Oblivion", ModType.Master),
             Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm"));
-        TempFolder = TempFolder.Factory(deleteAfter: true);
+        TempFolder = TempFolder.Factory();
         BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
         // Setup
