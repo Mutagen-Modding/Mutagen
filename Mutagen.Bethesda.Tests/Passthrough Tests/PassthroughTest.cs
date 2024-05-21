@@ -69,7 +69,7 @@ public abstract class PassthroughTest
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
 
         var test = new Test(
             $"Setup Processed Files",
