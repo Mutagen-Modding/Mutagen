@@ -182,6 +182,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - FurnitureMarkerFile
 - FxSceneAction
+- GenericBaseForm
 - Hazard
 - HeadPart
 - IdleAnimation
@@ -530,6 +531,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### GenericBaseForm
 - IHaveVirtualMachineAdapter
+- INamed
 - IObjectBounded
 - IScripted
 ### Grass

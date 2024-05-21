@@ -124,6 +124,7 @@
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
     <Compile Include="Assets\StarfieldTextureAssetType.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />

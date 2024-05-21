@@ -117,6 +117,7 @@ public class StarfieldProcessor : Processor
     {
         return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
         {
+            { (Constants.Starfield, StringsSource.Normal), new() { 0x71B7 } }
         };
     }
 
@@ -186,6 +187,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "CHAL", "FULL" },
                     new RecordType[] { "DOOR", "FULL", "ONAM", "CNAM" },
                     new RecordType[] { "FXPD", "FULL" },
+                    new RecordType[] { "GBFM", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
