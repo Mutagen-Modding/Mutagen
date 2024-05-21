@@ -443,7 +443,7 @@
   </Object>
   <Object name="BlockEditorMetaDataComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <Data>
+      <Data recordType="DAT2">
         <Fields>
           <String name="UnknownString1" binaryType="PrependLength" />
           <UInt8 name="UnknownByte" />

@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.DATA);
+                RecordTypes.DAT2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DAT2)))
             {
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -1628,7 +1628,7 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.DATA:
+                case RecordTypeInts.DAT2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -1715,27 +1715,27 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        private RangeInt32? _DATALocation;
+        private RangeInt32? _DAT2Location;
         #region UnknownString1
-        private int _UnknownString1Location => _DATALocation!.Value.Min;
-        private bool _UnknownString1_IsSet => _DATALocation.HasValue;
+        private int _UnknownString1Location => _DAT2Location!.Value.Min;
+        private bool _UnknownString1_IsSet => _DAT2Location.HasValue;
         public String UnknownString1 => _UnknownString1_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_UnknownString1Location), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int UnknownString1EndingPos;
         #endregion
         #region UnknownByte
         private int _UnknownByteLocation => UnknownString1EndingPos;
-        private bool _UnknownByte_IsSet => _DATALocation.HasValue;
+        private bool _UnknownByte_IsSet => _DAT2Location.HasValue;
         public Byte UnknownByte => _UnknownByte_IsSet ? _recordData.Span[_UnknownByteLocation] : default;
         #endregion
         #region UnknownString2
         private int _UnknownString2Location => UnknownString1EndingPos + 0x1;
-        private bool _UnknownString2_IsSet => _DATALocation.HasValue;
+        private bool _UnknownString2_IsSet => _DAT2Location.HasValue;
         public String UnknownString2 => _UnknownString2_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_UnknownString2Location), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int UnknownString2EndingPos;
         #endregion
         #region UnknownString3
         private int _UnknownString3Location => UnknownString2EndingPos;
-        private bool _UnknownString3_IsSet => _DATALocation.HasValue;
+        private bool _UnknownString3_IsSet => _DAT2Location.HasValue;
         public String UnknownString3 => _UnknownString3_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_UnknownString3Location), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int UnknownString3EndingPos;
         #endregion
@@ -1745,28 +1745,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region UnknownInt1
         private int _UnknownInt1Location => UnknownIntsEndingPos;
-        private bool _UnknownInt1_IsSet => _DATALocation.HasValue;
+        private bool _UnknownInt1_IsSet => _DAT2Location.HasValue;
         public Int32 UnknownInt1 => _UnknownInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt1Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt2
         private int _UnknownInt2Location => UnknownIntsEndingPos + 0x4;
-        private bool _UnknownInt2_IsSet => _DATALocation.HasValue;
+        private bool _UnknownInt2_IsSet => _DAT2Location.HasValue;
         public Int32 UnknownInt2 => _UnknownInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt2Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt3
         private int _UnknownInt3Location => UnknownIntsEndingPos + 0x8;
-        private bool _UnknownInt3_IsSet => _DATALocation.HasValue;
+        private bool _UnknownInt3_IsSet => _DAT2Location.HasValue;
         public Int32 UnknownInt3 => _UnknownInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt3Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt4
         private int _UnknownInt4Location => UnknownIntsEndingPos + 0xC;
-        private bool _UnknownInt4_IsSet => _DATALocation.HasValue;
+        private bool _UnknownInt4_IsSet => _DAT2Location.HasValue;
         public Int32 UnknownInt4 => _UnknownInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt4Location, 4)) : default(Int32);
         #endregion
         #region UnknownEnding
         private int _UnknownEndingLocation => UnknownIntsEndingPos + 0x10;
-        private bool _UnknownEnding_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> UnknownEnding => _UnknownEnding_IsSet ? _recordData.Span.Slice(_UnknownEndingLocation, _DATALocation!.Value.Max - _UnknownEndingLocation + 1).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        private bool _UnknownEnding_IsSet => _DAT2Location.HasValue;
+        public ReadOnlyMemorySlice<Byte> UnknownEnding => _UnknownEnding_IsSet ? _recordData.Span.Slice(_UnknownEndingLocation, _DAT2Location!.Value.Max - _UnknownEndingLocation + 1).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         protected int UnknownEndingEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.UnknownString1EndingPos = ret._DATALocation!.Value.Min + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._DATALocation!.Value.Min)) + 4;
+            ret.UnknownString1EndingPos = ret._DAT2Location!.Value.Min + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._DAT2Location!.Value.Min)) + 4;
             ret.UnknownString2EndingPos = ret.UnknownString1EndingPos + 0x1 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret.UnknownString1EndingPos + 0x1)) + 4;
             ret.UnknownString3EndingPos = ret.UnknownString2EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret.UnknownString2EndingPos)) + 4;
             ret.UnknownIntsEndingPos = ret.UnknownString3EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret.UnknownString3EndingPos)) * 4 + 4;
@@ -1836,9 +1836,9 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.DATA:
+                case RecordTypeInts.DAT2:
                 {
-                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    _DAT2Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)BlockEditorMetaDataComponent_FieldIndex.UnknownEnding;
                 }
                 default:
