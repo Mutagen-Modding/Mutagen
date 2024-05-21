@@ -12913,8 +12913,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.BiomeMarkers is IAssetLinkContainer BiomeMarkerslinkCont)
             {
-                foreach (var item in obj.BiomeMarkers.EnumerateListedAssetLinks())
+                foreach (var item in BiomeMarkerslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -24334,9 +24335,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
-                foreach (var item in obj.BiomeMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
                 {
-                    yield return item;
+                    foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
                 {

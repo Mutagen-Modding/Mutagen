@@ -7,6 +7,7 @@
       <Float name="ODTY" recordType="ODTY" unknown="true" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
