@@ -127,17 +127,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IArmorAddonGetter.UnknownModel7 => this.UnknownModel7;
         #endregion
-        #region UnknownModel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _UnknownModel;
-        public Model? UnknownModel
-        {
-            get => _UnknownModel;
-            set => _UnknownModel = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IArmorAddonGetter.UnknownModel => this.UnknownModel;
-        #endregion
         #region Morphs
         public IGenderedItem<ArmorAddonMorph?>? Morphs { get; set; }
         IGenderedItemGetter<IArmorAddonMorphGetter?>? IArmorAddonGetter.Morphs => this.Morphs;
@@ -241,7 +230,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.Skeleton = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.UnknownModel7 = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.UnknownModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(initialValue, default);
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = initialValue;
@@ -270,7 +258,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FirstPersonModel,
                 TItem Skeleton,
                 TItem UnknownModel7,
-                TItem UnknownModel,
                 TItem Morphs,
                 TItem AdditionalRaces,
                 TItem FootstepSound,
@@ -298,7 +285,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(FirstPersonModel, default);
                 this.Skeleton = new MaskItem<TItem, Model.Mask<TItem>?>(Skeleton, new Model.Mask<TItem>(Skeleton));
                 this.UnknownModel7 = new MaskItem<TItem, Model.Mask<TItem>?>(UnknownModel7, new Model.Mask<TItem>(UnknownModel7));
-                this.UnknownModel = new MaskItem<TItem, Model.Mask<TItem>?>(UnknownModel, new Model.Mask<TItem>(UnknownModel));
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(Morphs, default);
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = FootstepSound;
@@ -328,7 +314,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? FirstPersonModel;
             public MaskItem<TItem, Model.Mask<TItem>?>? Skeleton { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? UnknownModel7 { get; set; }
-            public MaskItem<TItem, Model.Mask<TItem>?>? UnknownModel { get; set; }
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>? Morphs;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdditionalRaces;
             public TItem FootstepSound;
@@ -360,7 +345,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
                 if (!object.Equals(this.Skeleton, rhs.Skeleton)) return false;
                 if (!object.Equals(this.UnknownModel7, rhs.UnknownModel7)) return false;
-                if (!object.Equals(this.UnknownModel, rhs.UnknownModel)) return false;
                 if (!object.Equals(this.Morphs, rhs.Morphs)) return false;
                 if (!object.Equals(this.AdditionalRaces, rhs.AdditionalRaces)) return false;
                 if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
@@ -384,7 +368,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FirstPersonModel);
                 hash.Add(this.Skeleton);
                 hash.Add(this.UnknownModel7);
-                hash.Add(this.UnknownModel);
                 hash.Add(this.Morphs);
                 hash.Add(this.AdditionalRaces);
                 hash.Add(this.FootstepSound);
@@ -435,11 +418,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.UnknownModel7.Overall)) return false;
                     if (this.UnknownModel7.Specific != null && !this.UnknownModel7.Specific.All(eval)) return false;
-                }
-                if (UnknownModel != null)
-                {
-                    if (!eval(this.UnknownModel.Overall)) return false;
-                    if (this.UnknownModel.Specific != null && !this.UnknownModel.Specific.All(eval)) return false;
                 }
                 if (!GenderedItem.AllMask(
                     this.Morphs,
@@ -501,11 +479,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.UnknownModel7.Overall)) return true;
                     if (this.UnknownModel7.Specific != null && this.UnknownModel7.Specific.Any(eval)) return true;
-                }
-                if (UnknownModel != null)
-                {
-                    if (eval(this.UnknownModel.Overall)) return true;
-                    if (this.UnknownModel.Specific != null && this.UnknownModel.Specific.Any(eval)) return true;
                 }
                 if (GenderedItem.AnyMask(
                     this.Morphs,
@@ -572,7 +545,6 @@ namespace Mutagen.Bethesda.Starfield
                     (m, e) => m?.Translate(e));
                 obj.Skeleton = this.Skeleton == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Skeleton.Overall), this.Skeleton.Specific?.Translate(eval));
                 obj.UnknownModel7 = this.UnknownModel7 == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.UnknownModel7.Overall), this.UnknownModel7.Specific?.Translate(eval));
-                obj.UnknownModel = this.UnknownModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.UnknownModel.Overall), this.UnknownModel.Specific?.Translate(eval));
                 obj.Morphs = GenderedItem.TranslateHelper(
                     this.Morphs,
                     eval,
@@ -668,10 +640,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         UnknownModel7?.Print(sb);
                     }
-                    if (printMask?.UnknownModel?.Overall ?? true)
-                    {
-                        UnknownModel?.Print(sb);
-                    }
                     if (Morphs != null
                         && (printMask?.Morphs?.Overall ?? true))
                     {
@@ -749,7 +717,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, GenderedItem<Exception?>?>? FirstPersonModel;
             public MaskItem<Exception?, Model.ErrorMask?>? Skeleton;
             public MaskItem<Exception?, Model.ErrorMask?>? UnknownModel7;
-            public MaskItem<Exception?, Model.ErrorMask?>? UnknownModel;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Morphs;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdditionalRaces;
             public Exception? FootstepSound;
@@ -784,8 +751,6 @@ namespace Mutagen.Bethesda.Starfield
                         return Skeleton;
                     case ArmorAddon_FieldIndex.UnknownModel7:
                         return UnknownModel7;
-                    case ArmorAddon_FieldIndex.UnknownModel:
-                        return UnknownModel;
                     case ArmorAddon_FieldIndex.Morphs:
                         return Morphs;
                     case ArmorAddon_FieldIndex.AdditionalRaces:
@@ -839,9 +804,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ArmorAddon_FieldIndex.UnknownModel7:
                         this.UnknownModel7 = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case ArmorAddon_FieldIndex.UnknownModel:
-                        this.UnknownModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     case ArmorAddon_FieldIndex.Morphs:
                         this.Morphs = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -908,9 +870,6 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.UnknownModel7:
                         this.UnknownModel7 = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.UnknownModel:
-                        this.UnknownModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
-                        break;
                     case ArmorAddon_FieldIndex.Morphs:
                         this.Morphs = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
@@ -958,7 +917,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (FirstPersonModel != null) return true;
                 if (Skeleton != null) return true;
                 if (UnknownModel7 != null) return true;
-                if (UnknownModel != null) return true;
                 if (Morphs != null) return true;
                 if (AdditionalRaces != null) return true;
                 if (FootstepSound != null) return true;
@@ -1032,7 +990,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Skeleton?.Print(sb);
                 UnknownModel7?.Print(sb);
-                UnknownModel?.Print(sb);
                 if (Morphs != null)
                 {
                     sb.AppendLine($"Morphs => {Morphs}");
@@ -1097,7 +1054,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
                 ret.Skeleton = this.Skeleton.Combine(rhs.Skeleton, (l, r) => l.Combine(r));
                 ret.UnknownModel7 = this.UnknownModel7.Combine(rhs.UnknownModel7, (l, r) => l.Combine(r));
-                ret.UnknownModel = this.UnknownModel.Combine(rhs.UnknownModel, (l, r) => l.Combine(r));
                 ret.Morphs = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), GenderedItem.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
                 ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
@@ -1138,7 +1094,6 @@ namespace Mutagen.Bethesda.Starfield
             public GenderedItem<Model.TranslationMask>? FirstPersonModel;
             public Model.TranslationMask? Skeleton;
             public Model.TranslationMask? UnknownModel7;
-            public Model.TranslationMask? UnknownModel;
             public GenderedItem<ArmorAddonMorph.TranslationMask>? Morphs;
             public bool AdditionalRaces;
             public bool FootstepSound;
@@ -1183,7 +1138,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FirstPersonModel != null || DefaultOn, null));
                 ret.Add((Skeleton != null ? Skeleton.OnOverall : DefaultOn, Skeleton?.GetCrystal()));
                 ret.Add((UnknownModel7 != null ? UnknownModel7.OnOverall : DefaultOn, UnknownModel7?.GetCrystal()));
-                ret.Add((UnknownModel != null ? UnknownModel.OnOverall : DefaultOn, UnknownModel?.GetCrystal()));
                 ret.Add((Morphs != null || DefaultOn, null));
                 ret.Add((AdditionalRaces, null));
                 ret.Add((FootstepSound, null));
@@ -1359,7 +1313,6 @@ namespace Mutagen.Bethesda.Starfield
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
         new Model? Skeleton { get; set; }
         new Model? UnknownModel7 { get; set; }
-        new Model? UnknownModel { get; set; }
         new IGenderedItem<ArmorAddonMorph?>? Morphs { get; set; }
         new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
@@ -1405,7 +1358,6 @@ namespace Mutagen.Bethesda.Starfield
         IGenderedItemGetter<IModelGetter?>? FirstPersonModel { get; }
         IModelGetter? Skeleton { get; }
         IModelGetter? UnknownModel7 { get; }
-        IModelGetter? UnknownModel { get; }
         IGenderedItemGetter<IArmorAddonMorphGetter?>? Morphs { get; }
         IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
@@ -1604,17 +1556,16 @@ namespace Mutagen.Bethesda.Starfield
         FirstPersonModel = 12,
         Skeleton = 13,
         UnknownModel7 = 14,
-        UnknownModel = 15,
-        Morphs = 16,
-        AdditionalRaces = 17,
-        FootstepSound = 18,
-        ArtObject = 19,
-        BodyPartData = 20,
-        TintType = 21,
-        TintColorMapping = 22,
-        TintEntryName = 23,
-        TintEntryValue = 24,
-        BoneDataModifiers = 25,
+        Morphs = 15,
+        AdditionalRaces = 16,
+        FootstepSound = 17,
+        ArtObject = 18,
+        BodyPartData = 19,
+        TintType = 20,
+        TintColorMapping = 21,
+        TintEntryName = 22,
+        TintEntryValue = 23,
+        BoneDataModifiers = 24,
     }
     #endregion
 
@@ -1625,9 +1576,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1699,15 +1650,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MLM7,
                 RecordTypes.MO7C,
                 RecordTypes.MO7F,
-                RecordTypes.MODL,
-                RecordTypes.MODT,
-                RecordTypes.MOLM,
-                RecordTypes.MODC,
-                RecordTypes.MODF,
                 RecordTypes.NAM6,
                 RecordTypes.NAM4,
                 RecordTypes.NAM7,
                 RecordTypes.NAM5,
+                RecordTypes.MODL,
                 RecordTypes.SNDD,
                 RecordTypes.ONAM,
                 RecordTypes.PNAM,
@@ -1872,7 +1819,6 @@ namespace Mutagen.Bethesda.Starfield
             item.FirstPersonModel = null;
             item.Skeleton = null;
             item.UnknownModel7 = null;
-            item.UnknownModel = null;
             item.Morphs = null;
             item.AdditionalRaces.Clear();
             item.FootstepSound.Clear();
@@ -1907,7 +1853,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.FirstPersonModel?.RemapLinks(mapping);
             obj.Skeleton?.RemapLinks(mapping);
             obj.UnknownModel7?.RemapLinks(mapping);
-            obj.UnknownModel?.RemapLinks(mapping);
             obj.Morphs?.RemapLinks(mapping);
             obj.AdditionalRaces.RemapLinks(mapping);
             obj.FootstepSound.Relink(mapping);
@@ -1954,13 +1899,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.UnknownModel is {} UnknownModelItems)
-            {
-                foreach (var item in UnknownModelItems.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -1976,7 +1914,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.FirstPersonModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Skeleton?.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.UnknownModel7?.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.UnknownModel?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2069,11 +2006,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.UnknownModel7 = EqualsMaskHelper.EqualsHelper(
                 item.UnknownModel7,
                 rhs.UnknownModel7,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.UnknownModel = EqualsMaskHelper.EqualsHelper(
-                item.UnknownModel,
-                rhs.UnknownModel,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Morphs = GenderedItem.EqualityMaskHelper(
@@ -2190,11 +2122,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.UnknownModel7 is {} UnknownModel7Item)
             {
                 UnknownModel7Item?.Print(sb, "UnknownModel7");
-            }
-            if ((printMask?.UnknownModel?.Overall ?? true)
-                && item.UnknownModel is {} UnknownModelItem)
-            {
-                UnknownModelItem?.Print(sb, "UnknownModel");
             }
             if ((printMask?.Morphs?.Overall ?? true)
                 && item.Morphs is {} MorphsItem)
@@ -2340,14 +2267,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isUnknownModel7Equal) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.UnknownModel) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.UnknownModel, rhs.UnknownModel, out var lhsUnknownModel, out var rhsUnknownModel, out var isUnknownModelEqual))
-                {
-                    if (!((ModelCommon)((IModelGetter)lhsUnknownModel).CommonInstance()!).Equals(lhsUnknownModel, rhsUnknownModel, equalsMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.UnknownModel))) return false;
-                }
-                else if (!isUnknownModelEqual) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Morphs) ?? true))
             {
                 if (!Equals(lhs.Morphs, rhs.Morphs)) return false;
@@ -2439,10 +2358,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(UnknownModel7item);
             }
-            if (item.UnknownModel is {} UnknownModelitem)
-            {
-                hash.Add(UnknownModelitem);
-            }
             if (item.Morphs is {} Morphsitem)
             {
                 hash.Add(HashCode.Combine(Morphsitem.Male, Morphsitem.Female));
@@ -2531,13 +2446,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.UnknownModel is {} UnknownModelItems)
-            {
-                foreach (var item in UnknownModelItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
             if (obj.Morphs is {} MorphsItem)
             {
                 foreach (var item in MorphsItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
@@ -2601,13 +2509,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.UnknownModel7 is {} UnknownModel7Items)
                 {
                     foreach (var item in UnknownModel7Items.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.UnknownModel is {} UnknownModelItems)
-                {
-                    foreach (var item in UnknownModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -2791,32 +2692,6 @@ namespace Mutagen.Bethesda.Starfield
                     else
                     {
                         item.UnknownModel7 = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.UnknownModel) ?? true))
-            {
-                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.UnknownModel);
-                try
-                {
-                    if(rhs.UnknownModel is {} rhsUnknownModel)
-                    {
-                        item.UnknownModel = rhsUnknownModel.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.UnknownModel));
-                    }
-                    else
-                    {
-                        item.UnknownModel = default;
                     }
                 }
                 catch (Exception ex)
@@ -3120,13 +2995,6 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
             }
-            if (item.UnknownModel is {} UnknownModelItem)
-            {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)UnknownModelItem).BinaryWriteTranslator).Write(
-                    item: UnknownModelItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Morphs,
@@ -3364,13 +3232,6 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
                         return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.UnknownModel7)
-                    {
-                        item.UnknownModel = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                            frame: frame,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, nextRecordType);
-                    }
                     else
                     {
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
@@ -3399,11 +3260,6 @@ namespace Mutagen.Bethesda.Starfield
                                     frame: frame,
                                     translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
                                 return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, nextRecordType);
-                            case 4:
-                                item.UnknownModel = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                                    frame: frame,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3449,50 +3305,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
                     return (int)ArmorAddon_FieldIndex.UnknownModel7;
                 }
-                case RecordTypeInts.MODT:
-                case RecordTypeInts.MOLM:
-                case RecordTypeInts.MODC:
-                case RecordTypeInts.MODF:
-                case RecordTypeInts.MODL:
-                {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.UnknownModel7)
-                    {
-                        item.UnknownModel = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                            frame: frame,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Morphs)
-                    {
-                        item.AdditionalRaces.SetTo(
-                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Parse(
-                                reader: frame,
-                                triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MODL),
-                                transl: FormLinkBinaryTranslation.Instance.Parse));
-                        return new ParseResult((int)ArmorAddon_FieldIndex.AdditionalRaces, nextRecordType);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
-                        {
-                            case 0:
-                                item.UnknownModel = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                                    frame: frame,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, nextRecordType);
-                            case 1:
-                                item.AdditionalRaces.SetTo(
-                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Parse(
-                                        reader: frame,
-                                        triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MODL),
-                                        transl: FormLinkBinaryTranslation.Instance.Parse));
-                                return new ParseResult((int)ArmorAddon_FieldIndex.AdditionalRaces, nextRecordType);
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
-                }
                 case RecordTypeInts.NAM6:
                 case RecordTypeInts.NAM4:
                 case RecordTypeInts.NAM7:
@@ -3504,6 +3316,15 @@ namespace Mutagen.Bethesda.Starfield
                         shortCircuit: false,
                         transl: ArmorAddonMorph.TryCreateFromBinary);
                     return (int)ArmorAddon_FieldIndex.Morphs;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.AdditionalRaces.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MODL),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -3659,7 +3480,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IModelGetter? Skeleton { get; private set; }
         public IModelGetter? UnknownModel7 { get; private set; }
-        public IModelGetter? UnknownModel { get; private set; }
         #region Morphs
         private IGenderedItemGetter<IArmorAddonMorphGetter?>? _MorphsOverlay;
         public IGenderedItemGetter<IArmorAddonMorphGetter?>? Morphs => _MorphsOverlay;
@@ -3845,14 +3665,6 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: ArmorAddon_Registration.UnknownModel7Converter);
                         return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.UnknownModel7)
-                    {
-                        this.UnknownModel = ModelBinaryOverlay.ModelFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, type);
-                    }
                     else
                     {
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
@@ -3894,14 +3706,6 @@ namespace Mutagen.Bethesda.Starfield
                                     package: _package,
                                     translationParams: ArmorAddon_Registration.UnknownModel7Converter);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, type);
-                            }
-                            case 4:
-                            {
-                                this.UnknownModel = ModelBinaryOverlay.ModelFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, type);
                             }
                             default:
                                 throw new NotImplementedException();
@@ -3952,66 +3756,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
                     return (int)ArmorAddon_FieldIndex.UnknownModel7;
                 }
-                case RecordTypeInts.MODT:
-                case RecordTypeInts.MOLM:
-                case RecordTypeInts.MODC:
-                case RecordTypeInts.MODF:
-                case RecordTypeInts.MODL:
-                {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.UnknownModel7)
-                    {
-                        this.UnknownModel = ModelBinaryOverlay.ModelFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Morphs)
-                    {
-                        this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
-                            mem: stream.RemainingMemory,
-                            package: _package,
-                            getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                            locs: ParseRecordLocations(
-                                stream: stream,
-                                constants: _package.MetaData.Constants.SubConstants,
-                                trigger: RecordTypes.MODL,
-                                skipHeader: true,
-                                translationParams: translationParams));
-                        return new ParseResult((int)ArmorAddon_FieldIndex.AdditionalRaces, type);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
-                        {
-                            case 0:
-                            {
-                                this.UnknownModel = ModelBinaryOverlay.ModelFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel, type);
-                            }
-                            case 1:
-                            {
-                                this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
-                                    mem: stream.RemainingMemory,
-                                    package: _package,
-                                    getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                                    locs: ParseRecordLocations(
-                                        stream: stream,
-                                        constants: _package.MetaData.Constants.SubConstants,
-                                        trigger: RecordTypes.MODL,
-                                        skipHeader: true,
-                                        translationParams: translationParams));
-                                return new ParseResult((int)ArmorAddon_FieldIndex.AdditionalRaces, type);
-                            }
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
-                }
                 case RecordTypeInts.NAM6:
                 case RecordTypeInts.NAM4:
                 case RecordTypeInts.NAM7:
@@ -4024,6 +3768,20 @@ namespace Mutagen.Bethesda.Starfield
                         femaleRecordConverter: ArmorAddon_Registration.MorphsFemaleConverter,
                         shortCircuit: false);
                     return (int)ArmorAddon_FieldIndex.Morphs;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.MODL,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
