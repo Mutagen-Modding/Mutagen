@@ -213,8 +213,6 @@
           <Bool name="UseVariableRange" byteLength="1" />
         </Fields>
       </Data>
-      <UInt16 name="MO4C" recordType="MO4C" unknown="true" />
-      <UInt16 name="BLMS" recordType="BLMS" unknown="true" />
       <RefDirect name="FirstPersonModel" refName="FirstPersonModel" />
       <Data recordType="WVIS" >
         <Fields>

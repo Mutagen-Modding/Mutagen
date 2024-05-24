@@ -901,16 +901,6 @@ namespace Mutagen.Bethesda.Starfield
         #region UseVariableRange
         public Boolean UseVariableRange { get; set; } = default(Boolean);
         #endregion
-        #region MO4C
-        public UInt16? MO4C { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IWeaponGetter.MO4C => this.MO4C;
-        #endregion
-        #region BLMS
-        public UInt16? BLMS { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IWeaponGetter.BLMS => this.BLMS;
-        #endregion
         #region FirstPersonModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private FirstPersonModel? _FirstPersonModel;
@@ -1144,8 +1134,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DistanceAcceleration = initialValue;
                 this.DistanceDeceleration = initialValue;
                 this.UseVariableRange = initialValue;
-                this.MO4C = initialValue;
-                this.BLMS = initialValue;
                 this.FirstPersonModel = new MaskItem<TItem, FirstPersonModel.Mask<TItem>?>(initialValue, new FirstPersonModel.Mask<TItem>(initialValue));
                 this.WVISUnknown1 = initialValue;
                 this.WVISUnknown2 = initialValue;
@@ -1318,8 +1306,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem DistanceAcceleration,
                 TItem DistanceDeceleration,
                 TItem UseVariableRange,
-                TItem MO4C,
-                TItem BLMS,
                 TItem FirstPersonModel,
                 TItem WVISUnknown1,
                 TItem WVISUnknown2,
@@ -1491,8 +1477,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DistanceAcceleration = DistanceAcceleration;
                 this.DistanceDeceleration = DistanceDeceleration;
                 this.UseVariableRange = UseVariableRange;
-                this.MO4C = MO4C;
-                this.BLMS = BLMS;
                 this.FirstPersonModel = new MaskItem<TItem, FirstPersonModel.Mask<TItem>?>(FirstPersonModel, new FirstPersonModel.Mask<TItem>(FirstPersonModel));
                 this.WVISUnknown1 = WVISUnknown1;
                 this.WVISUnknown2 = WVISUnknown2;
@@ -1666,8 +1650,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem DistanceAcceleration;
             public TItem DistanceDeceleration;
             public TItem UseVariableRange;
-            public TItem MO4C;
-            public TItem BLMS;
             public MaskItem<TItem, FirstPersonModel.Mask<TItem>?>? FirstPersonModel { get; set; }
             public TItem WVISUnknown1;
             public TItem WVISUnknown2;
@@ -1843,8 +1825,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.DistanceAcceleration, rhs.DistanceAcceleration)) return false;
                 if (!object.Equals(this.DistanceDeceleration, rhs.DistanceDeceleration)) return false;
                 if (!object.Equals(this.UseVariableRange, rhs.UseVariableRange)) return false;
-                if (!object.Equals(this.MO4C, rhs.MO4C)) return false;
-                if (!object.Equals(this.BLMS, rhs.BLMS)) return false;
                 if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
                 if (!object.Equals(this.WVISUnknown1, rhs.WVISUnknown1)) return false;
                 if (!object.Equals(this.WVISUnknown2, rhs.WVISUnknown2)) return false;
@@ -2012,8 +1992,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.DistanceAcceleration);
                 hash.Add(this.DistanceDeceleration);
                 hash.Add(this.UseVariableRange);
-                hash.Add(this.MO4C);
-                hash.Add(this.BLMS);
                 hash.Add(this.FirstPersonModel);
                 hash.Add(this.WVISUnknown1);
                 hash.Add(this.WVISUnknown2);
@@ -2295,8 +2273,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.DistanceAcceleration)) return false;
                 if (!eval(this.DistanceDeceleration)) return false;
                 if (!eval(this.UseVariableRange)) return false;
-                if (!eval(this.MO4C)) return false;
-                if (!eval(this.BLMS)) return false;
                 if (FirstPersonModel != null)
                 {
                     if (!eval(this.FirstPersonModel.Overall)) return false;
@@ -2580,8 +2556,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.DistanceAcceleration)) return true;
                 if (eval(this.DistanceDeceleration)) return true;
                 if (eval(this.UseVariableRange)) return true;
-                if (eval(this.MO4C)) return true;
-                if (eval(this.BLMS)) return true;
                 if (FirstPersonModel != null)
                 {
                     if (eval(this.FirstPersonModel.Overall)) return true;
@@ -2831,8 +2805,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DistanceAcceleration = eval(this.DistanceAcceleration);
                 obj.DistanceDeceleration = eval(this.DistanceDeceleration);
                 obj.UseVariableRange = eval(this.UseVariableRange);
-                obj.MO4C = eval(this.MO4C);
-                obj.BLMS = eval(this.BLMS);
                 obj.FirstPersonModel = this.FirstPersonModel == null ? null : new MaskItem<R, FirstPersonModel.Mask<R>?>(eval(this.FirstPersonModel.Overall), this.FirstPersonModel.Specific?.Translate(eval));
                 obj.WVISUnknown1 = eval(this.WVISUnknown1);
                 obj.WVISUnknown2 = eval(this.WVISUnknown2);
@@ -3542,14 +3514,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(UseVariableRange, "UseVariableRange");
                     }
-                    if (printMask?.MO4C ?? true)
-                    {
-                        sb.AppendItem(MO4C, "MO4C");
-                    }
-                    if (printMask?.BLMS ?? true)
-                    {
-                        sb.AppendItem(BLMS, "BLMS");
-                    }
                     if (printMask?.FirstPersonModel?.Overall ?? true)
                     {
                         FirstPersonModel?.Print(sb);
@@ -3759,8 +3723,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? DistanceAcceleration;
             public Exception? DistanceDeceleration;
             public Exception? UseVariableRange;
-            public Exception? MO4C;
-            public Exception? BLMS;
             public MaskItem<Exception?, FirstPersonModel.ErrorMask?>? FirstPersonModel;
             public Exception? WVISUnknown1;
             public Exception? WVISUnknown2;
@@ -4081,10 +4043,6 @@ namespace Mutagen.Bethesda.Starfield
                         return DistanceDeceleration;
                     case Weapon_FieldIndex.UseVariableRange:
                         return UseVariableRange;
-                    case Weapon_FieldIndex.MO4C:
-                        return MO4C;
-                    case Weapon_FieldIndex.BLMS:
-                        return BLMS;
                     case Weapon_FieldIndex.FirstPersonModel:
                         return FirstPersonModel;
                     case Weapon_FieldIndex.WVISUnknown1:
@@ -4568,12 +4526,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Weapon_FieldIndex.UseVariableRange:
                         this.UseVariableRange = ex;
-                        break;
-                    case Weapon_FieldIndex.MO4C:
-                        this.MO4C = ex;
-                        break;
-                    case Weapon_FieldIndex.BLMS:
-                        this.BLMS = ex;
                         break;
                     case Weapon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = new MaskItem<Exception?, FirstPersonModel.ErrorMask?>(ex, null);
@@ -5072,12 +5024,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Weapon_FieldIndex.UseVariableRange:
                         this.UseVariableRange = (Exception?)obj;
                         break;
-                    case Weapon_FieldIndex.MO4C:
-                        this.MO4C = (Exception?)obj;
-                        break;
-                    case Weapon_FieldIndex.BLMS:
-                        this.BLMS = (Exception?)obj;
-                        break;
                     case Weapon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = (MaskItem<Exception?, FirstPersonModel.ErrorMask?>?)obj;
                         break;
@@ -5273,8 +5219,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (DistanceAcceleration != null) return true;
                 if (DistanceDeceleration != null) return true;
                 if (UseVariableRange != null) return true;
-                if (MO4C != null) return true;
-                if (BLMS != null) return true;
                 if (FirstPersonModel != null) return true;
                 if (WVISUnknown1 != null) return true;
                 if (WVISUnknown2 != null) return true;
@@ -5814,12 +5758,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(UseVariableRange, "UseVariableRange");
                 }
-                {
-                    sb.AppendItem(MO4C, "MO4C");
-                }
-                {
-                    sb.AppendItem(BLMS, "BLMS");
-                }
                 FirstPersonModel?.Print(sb);
                 {
                     sb.AppendItem(WVISUnknown1, "WVISUnknown1");
@@ -6012,8 +5950,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.DistanceAcceleration = this.DistanceAcceleration.Combine(rhs.DistanceAcceleration);
                 ret.DistanceDeceleration = this.DistanceDeceleration.Combine(rhs.DistanceDeceleration);
                 ret.UseVariableRange = this.UseVariableRange.Combine(rhs.UseVariableRange);
-                ret.MO4C = this.MO4C.Combine(rhs.MO4C);
-                ret.BLMS = this.BLMS.Combine(rhs.BLMS);
                 ret.FirstPersonModel = this.FirstPersonModel.Combine(rhs.FirstPersonModel, (l, r) => l.Combine(r));
                 ret.WVISUnknown1 = this.WVISUnknown1.Combine(rhs.WVISUnknown1);
                 ret.WVISUnknown2 = this.WVISUnknown2.Combine(rhs.WVISUnknown2);
@@ -6198,8 +6134,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool DistanceAcceleration;
             public bool DistanceDeceleration;
             public bool UseVariableRange;
-            public bool MO4C;
-            public bool BLMS;
             public FirstPersonModel.TranslationMask? FirstPersonModel;
             public bool WVISUnknown1;
             public bool WVISUnknown2;
@@ -6353,8 +6287,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DistanceAcceleration = defaultOn;
                 this.DistanceDeceleration = defaultOn;
                 this.UseVariableRange = defaultOn;
-                this.MO4C = defaultOn;
-                this.BLMS = defaultOn;
                 this.WVISUnknown1 = defaultOn;
                 this.WVISUnknown2 = defaultOn;
                 this.WVISUnknown3 = defaultOn;
@@ -6523,8 +6455,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((DistanceAcceleration, null));
                 ret.Add((DistanceDeceleration, null));
                 ret.Add((UseVariableRange, null));
-                ret.Add((MO4C, null));
-                ret.Add((BLMS, null));
                 ret.Add((FirstPersonModel != null ? FirstPersonModel.OnOverall : DefaultOn, FirstPersonModel?.GetCrystal()));
                 ret.Add((WVISUnknown1, null));
                 ret.Add((WVISUnknown2, null));
@@ -6872,8 +6802,6 @@ namespace Mutagen.Bethesda.Starfield
         new Single DistanceAcceleration { get; set; }
         new Single DistanceDeceleration { get; set; }
         new Boolean UseVariableRange { get; set; }
-        new UInt16? MO4C { get; set; }
-        new UInt16? BLMS { get; set; }
         new FirstPersonModel? FirstPersonModel { get; set; }
         new UInt32 WVISUnknown1 { get; set; }
         new UInt32 WVISUnknown2 { get; set; }
@@ -7098,8 +7026,6 @@ namespace Mutagen.Bethesda.Starfield
         Single DistanceAcceleration { get; }
         Single DistanceDeceleration { get; }
         Boolean UseVariableRange { get; }
-        UInt16? MO4C { get; }
-        UInt16? BLMS { get; }
         IFirstPersonModelGetter? FirstPersonModel { get; }
         UInt32 WVISUnknown1 { get; }
         UInt32 WVISUnknown2 { get; }
@@ -7442,20 +7368,18 @@ namespace Mutagen.Bethesda.Starfield
         DistanceAcceleration = 154,
         DistanceDeceleration = 155,
         UseVariableRange = 156,
-        MO4C = 157,
-        BLMS = 158,
-        FirstPersonModel = 159,
-        WVISUnknown1 = 160,
-        WVISUnknown2 = 161,
-        WVISUnknown3 = 162,
-        ImpactDataSet = 163,
-        ColorRemappingIndex = 164,
-        ImageSpaceAdapter = 165,
-        WTRMUnknown1 = 166,
-        WTRMUnknown2 = 167,
-        WTRMUnknown3 = 168,
-        WTRMUnknown4 = 169,
-        WTRMUnknown5 = 170,
+        FirstPersonModel = 157,
+        WVISUnknown1 = 158,
+        WVISUnknown2 = 159,
+        WVISUnknown3 = 160,
+        ImpactDataSet = 161,
+        ColorRemappingIndex = 162,
+        ImageSpaceAdapter = 163,
+        WTRMUnknown1 = 164,
+        WTRMUnknown2 = 165,
+        WTRMUnknown3 = 166,
+        WTRMUnknown4 = 167,
+        WTRMUnknown5 = 168,
     }
     #endregion
 
@@ -7466,9 +7390,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 164;
+        public const ushort AdditionalFieldCount = 162;
 
-        public const ushort FieldCount = 171;
+        public const ushort FieldCount = 169;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -7555,9 +7479,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.WRLO,
                 RecordTypes.WRUM,
                 RecordTypes.WVAR,
-                RecordTypes.MO4C,
                 RecordTypes.MOD4,
                 RecordTypes.MO4S,
+                RecordTypes.MO4C,
                 RecordTypes.WVIS,
                 RecordTypes.WTRM);
             return new RecordTriggerSpecs(
@@ -7754,8 +7678,6 @@ namespace Mutagen.Bethesda.Starfield
             item.DistanceAcceleration = default(Single);
             item.DistanceDeceleration = default(Single);
             item.UseVariableRange = default(Boolean);
-            item.MO4C = default;
-            item.BLMS = default;
             item.FirstPersonModel = null;
             item.WVISUnknown1 = default(UInt32);
             item.WVISUnknown2 = default(UInt32);
@@ -8124,8 +8046,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.DistanceAcceleration = item.DistanceAcceleration.EqualsWithin(rhs.DistanceAcceleration);
             ret.DistanceDeceleration = item.DistanceDeceleration.EqualsWithin(rhs.DistanceDeceleration);
             ret.UseVariableRange = item.UseVariableRange == rhs.UseVariableRange;
-            ret.MO4C = item.MO4C == rhs.MO4C;
-            ret.BLMS = item.BLMS == rhs.BLMS;
             ret.FirstPersonModel = EqualsMaskHelper.EqualsHelper(
                 item.FirstPersonModel,
                 rhs.FirstPersonModel,
@@ -8860,16 +8780,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.UseVariableRange ?? true)
             {
                 sb.AppendItem(item.UseVariableRange, "UseVariableRange");
-            }
-            if ((printMask?.MO4C ?? true)
-                && item.MO4C is {} MO4CItem)
-            {
-                sb.AppendItem(MO4CItem, "MO4C");
-            }
-            if ((printMask?.BLMS ?? true)
-                && item.BLMS is {} BLMSItem)
-            {
-                sb.AppendItem(BLMSItem, "BLMS");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
                 && item.FirstPersonModel is {} FirstPersonModelItem)
@@ -9626,14 +9536,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.UseVariableRange != rhs.UseVariableRange) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MO4C) ?? true))
-            {
-                if (lhs.MO4C != rhs.MO4C) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BLMS) ?? true))
-            {
-                if (lhs.BLMS != rhs.BLMS) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FirstPersonModel, rhs.FirstPersonModel, out var lhsFirstPersonModel, out var rhsFirstPersonModel, out var isFirstPersonModelEqual))
@@ -9912,14 +9814,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.DistanceAcceleration);
             hash.Add(item.DistanceDeceleration);
             hash.Add(item.UseVariableRange);
-            if (item.MO4C is {} MO4Citem)
-            {
-                hash.Add(MO4Citem);
-            }
-            if (item.BLMS is {} BLMSitem)
-            {
-                hash.Add(BLMSitem);
-            }
             if (item.FirstPersonModel is {} FirstPersonModelitem)
             {
                 hash.Add(FirstPersonModelitem);
@@ -11241,14 +11135,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UseVariableRange = rhs.UseVariableRange;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MO4C) ?? true))
-            {
-                item.MO4C = rhs.MO4C;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BLMS) ?? true))
-            {
-                item.BLMS = rhs.BLMS;
-            }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.FirstPersonModel);
@@ -11986,14 +11872,6 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.DistanceDeceleration);
                 writer.Write(item.UseVariableRange);
             }
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.MO4C,
-                header: translationParams.ConvertToCustom(RecordTypes.MO4C));
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.BLMS,
-                header: translationParams.ConvertToCustom(RecordTypes.BLMS));
             if (item.FirstPersonModel is {} FirstPersonModelItem)
             {
                 ((FirstPersonModelBinaryWriteTranslation)((IBinaryItem)FirstPersonModelItem).BinaryWriteTranslator).Write(
@@ -12188,13 +12066,7 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Weapon_FieldIndex.Model, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.MO4C)
-                    {
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.BLMS = frame.ReadUInt16();
-                        return new ParseResult((int)Weapon_FieldIndex.BLMS, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.BLMS)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.UseVariableRange)
                     {
                         item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
                             frame: frame,
@@ -12211,10 +12083,6 @@ namespace Mutagen.Bethesda.Starfield
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Weapon_FieldIndex.Model, nextRecordType);
                             case 1:
-                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.BLMS = frame.ReadUInt16();
-                                return new ParseResult((int)Weapon_FieldIndex.BLMS, nextRecordType);
-                            case 2:
                                 item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
                                     frame: frame,
                                     translationParams: translationParams.DoNotShortCircuit());
@@ -12695,14 +12563,9 @@ namespace Mutagen.Bethesda.Starfield
                     item.UseVariableRange = dataFrame.ReadBoolean();
                     return (int)Weapon_FieldIndex.UseVariableRange;
                 }
-                case RecordTypeInts.MO4C:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MO4C = frame.ReadUInt16();
-                    return (int)Weapon_FieldIndex.MO4C;
-                }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MO4S:
+                case RecordTypeInts.MO4C:
                 {
                     item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
                         frame: frame,
@@ -13540,14 +13403,6 @@ namespace Mutagen.Bethesda.Starfield
         private bool _UseVariableRange_IsSet => _WVARLocation.HasValue;
         public Boolean UseVariableRange => _UseVariableRange_IsSet ? _recordData.Slice(_UseVariableRangeLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
-        #region MO4C
-        private int? _MO4CLocation;
-        public UInt16? MO4C => _MO4CLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MO4CLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
-        #endregion
-        #region BLMS
-        private int? _BLMSLocation;
-        public UInt16? BLMS => _BLMSLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BLMSLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
-        #endregion
         public IFirstPersonModelGetter? FirstPersonModel { get; private set; }
         private RangeInt32? _WVISLocation;
         #region WVISUnknown1
@@ -13743,12 +13598,7 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Weapon_FieldIndex.Model, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.MO4C)
-                    {
-                        _BLMSLocation = (stream.Position - offset);
-                        return new ParseResult((int)Weapon_FieldIndex.BLMS, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.BLMS)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.UseVariableRange)
                     {
                         this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
                             stream: stream,
@@ -13769,11 +13619,6 @@ namespace Mutagen.Bethesda.Starfield
                                 return new ParseResult((int)Weapon_FieldIndex.Model, type);
                             }
                             case 1:
-                            {
-                                _BLMSLocation = (stream.Position - offset);
-                                return new ParseResult((int)Weapon_FieldIndex.BLMS, type);
-                            }
-                            case 2:
                             {
                                 this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
                                     stream: stream,
@@ -13984,13 +13829,9 @@ namespace Mutagen.Bethesda.Starfield
                     _WVARLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Weapon_FieldIndex.UseVariableRange;
                 }
-                case RecordTypeInts.MO4C:
-                {
-                    _MO4CLocation = (stream.Position - offset);
-                    return (int)Weapon_FieldIndex.MO4C;
-                }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MO4S:
+                case RecordTypeInts.MO4C:
                 {
                     this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
                         stream: stream,
