@@ -55,15 +55,15 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Patterns
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<SurfaceTreePatternSwapInfoComponentItem>? _Patterns;
-        public ExtendedList<SurfaceTreePatternSwapInfoComponentItem>? Patterns
+        private ExtendedList<IFormLinkGetter<ISurfacePatternGetter>>? _Patterns;
+        public ExtendedList<IFormLinkGetter<ISurfacePatternGetter>>? Patterns
         {
             get => this._Patterns;
             set => this._Patterns = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ISurfaceTreePatternSwapInfoComponentItemGetter>? ISurfaceTreePatternSwapInfoComponentGetter.Patterns => _Patterns;
+        IReadOnlyList<IFormLinkGetter<ISurfacePatternGetter>>? ISurfaceTreePatternSwapInfoComponentGetter.Patterns => _Patterns;
         #endregion
 
         #endregion
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem Patterns)
             : base()
             {
-                this.Patterns = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoComponentItem.Mask<TItem>?>>?>(Patterns, Enumerable.Empty<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoComponentItem.Mask<TItem>?>>());
+                this.Patterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Patterns, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoComponentItem.Mask<TItem>?>>?>? Patterns;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Patterns;
             #endregion
 
             #region Equals
@@ -158,8 +158,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         foreach (var item in this.Patterns.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -178,8 +177,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         foreach (var item in this.Patterns.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -200,16 +198,15 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Patterns != null)
                 {
-                    obj.Patterns = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfaceTreePatternSwapInfoComponentItem.Mask<R>?>>?>(eval(this.Patterns.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfaceTreePatternSwapInfoComponentItem.Mask<R>?>>());
+                    obj.Patterns = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Patterns.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Patterns.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, SurfaceTreePatternSwapInfoComponentItem.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.Patterns.Specific = l;
                         foreach (var item in Patterns.Specific)
                         {
-                            MaskItemIndexed<R, SurfaceTreePatternSwapInfoComponentItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SurfaceTreePatternSwapInfoComponentItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
@@ -244,7 +241,9 @@ namespace Mutagen.Bethesda.Starfield
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -261,7 +260,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentItem.ErrorMask?>>?>? Patterns;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Patterns;
             #endregion
 
             #region IErrorMask
@@ -283,7 +282,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns:
-                        this.Patterns = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentItem.ErrorMask?>>?>(ex, null);
+                        this.Patterns = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -297,7 +296,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns:
-                        this.Patterns = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentItem.ErrorMask?>>?>)obj;
+                        this.Patterns = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -347,7 +346,9 @@ namespace Mutagen.Bethesda.Starfield
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -361,7 +362,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Patterns = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Patterns?.Overall, rhs.Patterns?.Overall), Noggog.ExceptionExt.Combine(this.Patterns?.Specific, rhs.Patterns?.Specific));
+                ret.Patterns = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Patterns?.Overall, rhs.Patterns?.Overall), Noggog.ExceptionExt.Combine(this.Patterns?.Specific, rhs.Patterns?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -384,7 +385,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public SurfaceTreePatternSwapInfoComponentItem.TranslationMask? Patterns;
+            public bool Patterns;
             #endregion
 
             #region Ctors
@@ -393,6 +394,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Patterns = defaultOn;
             }
 
             #endregion
@@ -400,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Patterns == null ? DefaultOn : !Patterns.GetCrystal().CopyNothing, Patterns?.GetCrystal()));
+                ret.Add((Patterns, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -478,7 +480,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ISurfaceTreePatternSwapInfoComponent>,
         ISurfaceTreePatternSwapInfoComponentGetter
     {
-        new ExtendedList<SurfaceTreePatternSwapInfoComponentItem>? Patterns { get; set; }
+        new ExtendedList<IFormLinkGetter<ISurfacePatternGetter>>? Patterns { get; set; }
     }
 
     public partial interface ISurfaceTreePatternSwapInfoComponentGetter :
@@ -488,7 +490,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<ISurfaceTreePatternSwapInfoComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoComponent_Registration.Instance;
-        IReadOnlyList<ISurfaceTreePatternSwapInfoComponentItemGetter>? Patterns { get; }
+        IReadOnlyList<IFormLinkGetter<ISurfacePatternGetter>>? Patterns { get; }
 
     }
 
@@ -679,7 +681,7 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.DATA);
+                RecordTypes.DAT2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -795,7 +797,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.Patterns = item.Patterns.CollectionEqualsHelper(
                 rhs.Patterns,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -856,7 +858,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
@@ -882,7 +884,7 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns) ?? true))
             {
-                if (!lhs.Patterns.SequenceEqualNullable(rhs.Patterns, (l, r) => ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns)))) return false;
+                if (!lhs.Patterns.SequenceEqualNullable(rhs.Patterns)) return false;
             }
             return true;
         }
@@ -928,7 +930,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.Patterns is {} PatternsItem)
             {
-                foreach (var item in PatternsItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PatternsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -966,13 +968,8 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Patterns = 
                             rhs.Patterns
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<SurfaceTreePatternSwapInfoComponentItem>();
+                                .Select(b => (IFormLinkGetter<ISurfacePatternGetter>)new FormLink<ISurfacePatternGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISurfacePatternGetter>>();
                     }
                     else
                     {
@@ -1102,18 +1099,16 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISurfaceTreePatternSwapInfoComponentItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Patterns,
-                recordType: translationParams.ConvertToCustom(RecordTypes.DATA),
+                recordType: translationParams.ConvertToCustom(RecordTypes.DAT2),
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, ISurfaceTreePatternSwapInfoComponentItemGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfacePatternGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem);
                 });
         }
 
@@ -1169,15 +1164,15 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.DATA:
+                case RecordTypeInts.DAT2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Patterns = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SurfaceTreePatternSwapInfoComponentItem>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Parse(
                             amount: frame.ReadInt32(),
                             reader: frame,
-                            transl: SurfaceTreePatternSwapInfoComponentItem.TryCreateFromBinary)
-                        .CastExtendedList<SurfaceTreePatternSwapInfoComponentItem>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ISurfacePatternGetter>>();
                     return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns;
                 }
                 default:
@@ -1237,7 +1232,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<ISurfaceTreePatternSwapInfoComponentItemGetter>? Patterns { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISurfacePatternGetter>>? Patterns { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1301,16 +1296,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.DATA:
+                case RecordTypeInts.DAT2:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
-                    this.Patterns = BinaryOverlayList.FactoryByCountLength<ISurfaceTreePatternSwapInfoComponentItemGetter>(
+                    this.Patterns = BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<ISurfacePatternGetter>>(
                         stream: stream,
                         package: _package,
-                        itemLength: 8,
+                        itemLength: 4,
                         count: count,
-                        getter: (s, p) => SurfaceTreePatternSwapInfoComponentItemBinaryOverlay.SurfaceTreePatternSwapInfoComponentItemFactory(s, p));
+                        getter: (s, p) => new FormLink<ISurfacePatternGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Patterns;
                 }
                 default:
