@@ -2195,9 +2195,6 @@
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ImageSpaceAdapter.cs">
-      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Impact.cs">
       <DependentUpon>Impact.xml</DependentUpon>
     </Compile>
@@ -6614,12 +6611,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\XTRV_Generated.cs">
       <DependentUpon>XTRV.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\KeyFrame_Generated.cs">
-      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ColorFrame_Generated.cs">
-      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>

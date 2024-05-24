@@ -2,12 +2,6 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypeInts
 {
-    public const int _9_IAD = 0x44414909;
-    public const int _A_IAD = 0x4441490A;
-    public const int _B_IAD = 0x4441490B;
-    public const int _C_IAD = 0x4441490C;
-    public const int _D_IAD = 0x4441490D;
-    public const int @IAD = 0x44414940;
     public const int AA00 = 0x30304141;
     public const int AA01 = 0x31304141;
     public const int AA02 = 0x32304141;
@@ -66,7 +60,6 @@ public partial class RecordTypeInts
     public const int AHCM = 0x4D434841;
     public const int AHEL = 0x4C454841;
     public const int AHLT = 0x544C4841;
-    public const int AIAD = 0x44414941;
     public const int AIDT = 0x54444941;
     public const int AIND = 0x444E4941;
     public const int AIPL = 0x4C504941;
@@ -170,7 +163,6 @@ public partial class RecordTypeInts
     public const int BDST = 0x54534442;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;
-    public const int BIAD = 0x44414942;
     public const int BIAS = 0x53414942;
     public const int BIDS = 0x53444942;
     public const int BIMT = 0x544D4942;
@@ -216,7 +208,6 @@ public partial class RecordTypeInts
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
     public const int CHRR = 0x52524843;
-    public const int CIAD = 0x44414943;
     public const int CIS1 = 0x31534943;
     public const int CIS2 = 0x32534943;
     public const int CITC = 0x43544943;
@@ -286,7 +277,6 @@ public partial class RecordTypeInts
     public const int DEVT = 0x54564544;
     public const int DFOB = 0x424F4644;
     public const int DFTM = 0x4D544644;
-    public const int DIAD = 0x44414944;
     public const int DIAL = 0x4C414944;
     public const int DIFF = 0x46464944;
     public const int DLBR = 0x52424C44;
@@ -329,7 +319,6 @@ public partial class RecordTypeInts
     public const int EFSD = 0x44534645;
     public const int EFSH = 0x48534645;
     public const int EFSQ = 0x51534645;
-    public const int EIAD = 0x44414945;
     public const int EITM = 0x4D544945;
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
@@ -368,7 +357,6 @@ public partial class RecordTypeInts
     public const int FHDT = 0x54444846;
     public const int FHLS = 0x534C4846;
     public const int FHST = 0x54534846;
-    public const int FIAD = 0x44414946;
     public const int FIMD = 0x444D4946;
     public const int FKEY = 0x59454B46;
     public const int FLAD = 0x44414C46;
@@ -421,7 +409,6 @@ public partial class RecordTypeInts
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
     public const int GCVR = 0x52564347;
-    public const int GIAD = 0x44414947;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GNAM = 0x4D414E47;
@@ -441,27 +428,10 @@ public partial class RecordTypeInts
     public const int HEDR = 0x52444548;
     public const int HEFA = 0x41464548;
     public const int HERD = 0x44524548;
-    public const int HIAD = 0x44414948;
     public const int HNAM = 0x4D414E48;
     public const int HSTT = 0x54545348;
     public const int HTID = 0x44495448;
     public const int HULL = 0x4C4C5548;
-    public const int _0_IAD = 0x44414900;
-    public const int _1_IAD = 0x44414901;
-    public const int _2_IAD = 0x44414902;
-    public const int _3_IAD = 0x44414903;
-    public const int _4_IAD = 0x44414904;
-    public const int _5_IAD = 0x44414905;
-    public const int _6_IAD = 0x44414906;
-    public const int _7_IAD = 0x44414907;
-    public const int _8_IAD = 0x44414908;
-    public const int _E_IAD = 0x4441490E;
-    public const int _F_IAD = 0x4441490F;
-    public const int _10_IAD = 0x44414910;
-    public const int _11_IAD = 0x44414911;
-    public const int _12_IAD = 0x44414912;
-    public const int _13_IAD = 0x44414913;
-    public const int _14_IAD = 0x44414914;
     public const int ICON = 0x4E4F4349;
     public const int IDLA = 0x414C4449;
     public const int IDLC = 0x434C4449;
@@ -472,16 +442,10 @@ public partial class RecordTypeInts
     public const int IDP1 = 0x31504449;
     public const int IDP3 = 0x33504449;
     public const int IDSH = 0x48534449;
-    public const int IIAD = 0x44414949;
     public const int ILOC = 0x434F4C49;
     public const int IMAD = 0x44414D49;
     public const int IMGS = 0x53474D49;
     public const int IMSP = 0x50534D49;
-    public const int _0_IMZ = 0x5A4D4900;
-    public const int _1_IMZ = 0x5A4D4901;
-    public const int _2_IMZ = 0x5A4D4902;
-    public const int _3_IMZ = 0x5A4D4903;
-    public const int _4_IMZ = 0x5A4D4904;
     public const int INAM = 0x4D414E49;
     public const int INCC = 0x43434E49;
     public const int INDX = 0x58444E49;
@@ -505,10 +469,8 @@ public partial class RecordTypeInts
     public const int ITXT = 0x54585449;
     public const int JAIL = 0x4C49414A;
     public const int JCOL = 0x4C4F434A;
-    public const int JIAD = 0x4441494A;
     public const int JNAM = 0x4D414E4A;
     public const int KEYM = 0x4D59454B;
-    public const int KIAD = 0x4441494B;
     public const int KILL = 0x4C4C494B;
     public const int KNAM = 0x4D414E4B;
     public const int KSIZ = 0x5A49534B;
@@ -534,7 +496,6 @@ public partial class RecordTypeInts
     public const int LFSP = 0x5053464C;
     public const int LGDI = 0x4944474C;
     public const int LGTM = 0x4D54474C;
-    public const int LIAD = 0x4441494C;
     public const int LIGH = 0x4847494C;
     public const int LIMC = 0x434D494C;
     public const int LLCT = 0x54434C4C;
@@ -571,7 +532,6 @@ public partial class RecordTypeInts
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
     public const int MHDT = 0x5444484D;
-    public const int MIAD = 0x4441494D;
     public const int MISC = 0x4353494D;
     public const int MLM1 = 0x314D4C4D;
     public const int MLM2 = 0x324D4C4D;
@@ -656,7 +616,6 @@ public partial class RecordTypeInts
     public const int NEXT = 0x5458454E;
     public const int NFAC = 0x4341464E;
     public const int NGFA = 0x4146474E;
-    public const int NIAD = 0x4441494E;
     public const int NINV = 0x564E494E;
     public const int NKEY = 0x59454B4E;
     public const int NLDT = 0x54444C4E;
@@ -694,7 +653,6 @@ public partial class RecordTypeInts
     public const int ODRT = 0x5452444F;
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
-    public const int OIAD = 0x4441494F;
     public const int OMOD = 0x444F4D4F;
     public const int ONA2 = 0x32414E4F;
     public const int ONAM = 0x4D414E4F;
@@ -731,7 +689,6 @@ public partial class RecordTypeInts
     public const int PGRE = 0x45524750;
     public const int PHLA = 0x414C4850;
     public const int PHZD = 0x445A4850;
-    public const int PIAD = 0x44414950;
     public const int PKC2 = 0x32434B50;
     public const int PKCU = 0x55434B50;
     public const int PKDT = 0x54444B50;
@@ -779,7 +736,6 @@ public partial class RecordTypeInts
     public const int PTTA = 0x41545450;
     public const int PUSE = 0x45535550;
     public const int PUSH = 0x48535550;
-    public const int QIAD = 0x44414951;
     public const int QMDP = 0x50444D51;
     public const int QMDS = 0x53444D51;
     public const int QMDT = 0x54444D51;
@@ -823,7 +779,6 @@ public partial class RecordTypeInts
     public const int REVB = 0x42564552;
     public const int RFDP = 0x50444652;
     public const int RFGP = 0x50474652;
-    public const int RIAD = 0x44414952;
     public const int RNAM = 0x4D414E52;
     public const int RPLD = 0x444C5052;
     public const int RPLI = 0x494C5052;
@@ -862,7 +817,6 @@ public partial class RecordTypeInts
     public const int SGNM = 0x4D4E4753;
     public const int SHRT = 0x54524853;
     public const int SHWB = 0x42574853;
-    public const int SIAD = 0x44414953;
     public const int SINV = 0x564E4953;
     public const int SKEY = 0x59454B53;
     public const int SKIL = 0x4C494B53;
@@ -930,7 +884,6 @@ public partial class RecordTypeInts
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TETC = 0x43544554;
-    public const int TIAD = 0x44414954;
     public const int TIFC = 0x43464954;
     public const int TIFL = 0x4C464954;
     public const int TINC = 0x434E4954;
