@@ -749,7 +749,8 @@ public abstract class Processor
         {
             stream.Position = loc;
             var groupMeta = stream.ReadGroupHeader();
-            if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
+            if (groupMeta.ContentLength != 0 
+                || (groupMeta.GroupType != 0 && groupMeta.GroupType != 6)) continue;
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
         }
     }
