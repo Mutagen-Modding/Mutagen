@@ -1112,6 +1112,7 @@ public partial class RecordTypeInts
     public const int XLMS = 0x534D4C58;
     public const int XLOC = 0x434F4C58;
     public const int XLRD = 0x44524C58;
+    public const int XLRL = 0x4C524C58;
     public const int XLRT = 0x54524C58;
     public const int XLSM = 0x4D534C58;
     public const int XLVD = 0x44564C58;

@@ -1114,6 +1114,7 @@ public partial class RecordTypes
     public static readonly RecordType XLMS = new(0x534D4C58);
     public static readonly RecordType XLOC = new(0x434F4C58);
     public static readonly RecordType XLRD = new(0x44524C58);
+    public static readonly RecordType XLRL = new(0x4C524C58);
     public static readonly RecordType XLRT = new(0x54524C58);
     public static readonly RecordType XLSM = new(0x4D534C58);
     public static readonly RecordType XLVD = new(0x44564C58);

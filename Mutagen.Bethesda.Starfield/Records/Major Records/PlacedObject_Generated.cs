@@ -559,6 +559,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayerGetter> IPlacedObjectGetter.Layer => this.Layer;
         #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.Location => this.Location;
+        #endregion
         #region XTRI
         public UInt32? XTRI { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -855,6 +865,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
                 this.BlueprintPartOrigin = initialValue;
                 this.Layer = initialValue;
+                this.Location = initialValue;
                 this.XTRI = initialValue;
                 this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(initialValue, new PlacedObjectLightRoundedness.Mask<TItem>(initialValue));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
@@ -943,6 +954,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GroupedPackIn,
                 TItem BlueprintPartOrigin,
                 TItem Layer,
+                TItem Location,
                 TItem XTRI,
                 TItem LightRoundedness,
                 TItem LinkedReferences,
@@ -1030,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
                 this.BlueprintPartOrigin = BlueprintPartOrigin;
                 this.Layer = Layer;
+                this.Location = Location;
                 this.XTRI = XTRI;
                 this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(LightRoundedness, new PlacedObjectLightRoundedness.Mask<TItem>(LightRoundedness));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
@@ -1119,6 +1132,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
             public TItem BlueprintPartOrigin;
             public TItem Layer;
+            public TItem Location;
             public TItem XTRI;
             public MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>? LightRoundedness { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
@@ -1210,6 +1224,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
                 if (!object.Equals(this.BlueprintPartOrigin, rhs.BlueprintPartOrigin)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.XTRI, rhs.XTRI)) return false;
                 if (!object.Equals(this.LightRoundedness, rhs.LightRoundedness)) return false;
                 if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
@@ -1293,6 +1308,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GroupedPackIn);
                 hash.Add(this.BlueprintPartOrigin);
                 hash.Add(this.Layer);
+                hash.Add(this.Location);
                 hash.Add(this.XTRI);
                 hash.Add(this.LightRoundedness);
                 hash.Add(this.LinkedReferences);
@@ -1531,6 +1547,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.BlueprintPartOrigin)) return false;
                 if (!eval(this.Layer)) return false;
+                if (!eval(this.Location)) return false;
                 if (!eval(this.XTRI)) return false;
                 if (LightRoundedness != null)
                 {
@@ -1835,6 +1852,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.BlueprintPartOrigin)) return true;
                 if (eval(this.Layer)) return true;
+                if (eval(this.Location)) return true;
                 if (eval(this.XTRI)) return true;
                 if (LightRoundedness != null)
                 {
@@ -2091,6 +2109,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GroupedPackIn = this.GroupedPackIn == null ? null : new MaskItem<R, GroupedPackIn.Mask<R>?>(eval(this.GroupedPackIn.Overall), this.GroupedPackIn.Specific?.Translate(eval));
                 obj.BlueprintPartOrigin = eval(this.BlueprintPartOrigin);
                 obj.Layer = eval(this.Layer);
+                obj.Location = eval(this.Location);
                 obj.XTRI = eval(this.XTRI);
                 obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, PlacedObjectLightRoundedness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
                 if (LinkedReferences != null)
@@ -2504,6 +2523,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Layer, "Layer");
                     }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
                     if (printMask?.XTRI ?? true)
                     {
                         sb.AppendItem(XTRI, "XTRI");
@@ -2737,6 +2760,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
             public Exception? BlueprintPartOrigin;
             public Exception? Layer;
+            public Exception? Location;
             public Exception? XTRI;
             public MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>? LightRoundedness;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
@@ -2873,6 +2897,8 @@ namespace Mutagen.Bethesda.Starfield
                         return BlueprintPartOrigin;
                     case PlacedObject_FieldIndex.Layer:
                         return Layer;
+                    case PlacedObject_FieldIndex.Location:
+                        return Location;
                     case PlacedObject_FieldIndex.XTRI:
                         return XTRI;
                     case PlacedObject_FieldIndex.LightRoundedness:
@@ -3088,6 +3114,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Location:
+                        this.Location = ex;
                         break;
                     case PlacedObject_FieldIndex.XTRI:
                         this.XTRI = ex;
@@ -3334,6 +3363,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.XTRI:
                         this.XTRI = (Exception?)obj;
                         break;
@@ -3477,6 +3509,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (GroupedPackIn != null) return true;
                 if (BlueprintPartOrigin != null) return true;
                 if (Layer != null) return true;
+                if (Location != null) return true;
                 if (XTRI != null) return true;
                 if (LightRoundedness != null) return true;
                 if (LinkedReferences != null) return true;
@@ -3755,6 +3788,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Layer, "Layer");
                 }
                 {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
                     sb.AppendItem(XTRI, "XTRI");
                 }
                 LightRoundedness?.Print(sb);
@@ -3944,6 +3980,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
                 ret.BlueprintPartOrigin = this.BlueprintPartOrigin.Combine(rhs.BlueprintPartOrigin);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.Location = this.Location.Combine(rhs.Location);
                 ret.XTRI = this.XTRI.Combine(rhs.XTRI);
                 ret.LightRoundedness = this.LightRoundedness.Combine(rhs.LightRoundedness, (l, r) => l.Combine(r));
                 ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
@@ -4044,6 +4081,7 @@ namespace Mutagen.Bethesda.Starfield
             public GroupedPackIn.TranslationMask? GroupedPackIn;
             public bool BlueprintPartOrigin;
             public bool Layer;
+            public bool Location;
             public bool XTRI;
             public PlacedObjectLightRoundedness.TranslationMask? LightRoundedness;
             public LinkedReferences.TranslationMask? LinkedReferences;
@@ -4107,6 +4145,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightVolumetricData = defaultOn;
                 this.BlueprintPartOrigin = defaultOn;
                 this.Layer = defaultOn;
+                this.Location = defaultOn;
                 this.XTRI = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
                 this.EncounterZone = defaultOn;
@@ -4182,6 +4221,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
                 ret.Add((BlueprintPartOrigin, null));
                 ret.Add((Layer, null));
+                ret.Add((Location, null));
                 ret.Add((XTRI, null));
                 ret.Add((LightRoundedness != null ? LightRoundedness.OnOverall : DefaultOn, LightRoundedness?.GetCrystal()));
                 ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
@@ -4424,6 +4464,7 @@ namespace Mutagen.Bethesda.Starfield
         new GroupedPackIn? GroupedPackIn { get; set; }
         new UInt32? BlueprintPartOrigin { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new UInt32? XTRI { get; set; }
         new PlacedObjectLightRoundedness? LightRoundedness { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
@@ -4536,6 +4577,7 @@ namespace Mutagen.Bethesda.Starfield
         IGroupedPackInGetter? GroupedPackIn { get; }
         UInt32? BlueprintPartOrigin { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
         UInt32? XTRI { get; }
         IPlacedObjectLightRoundednessGetter? LightRoundedness { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
@@ -4790,34 +4832,35 @@ namespace Mutagen.Bethesda.Starfield
         GroupedPackIn = 54,
         BlueprintPartOrigin = 55,
         Layer = 56,
-        XTRI = 57,
-        LightRoundedness = 58,
-        LinkedReferences = 59,
-        IsLinkedRefTransient = 60,
-        SnapLinks = 61,
-        EncounterZone = 62,
-        GeometryDirtinessScale = 63,
-        Lock = 64,
-        Properties = 65,
-        ExternalEmittance = 66,
-        HeadTrackingWeight = 67,
-        BOLV = 68,
-        Spline = 69,
-        XNSE = 70,
-        AttachRef = 71,
-        RagdollBipedRotation = 72,
-        HealthPercent = 73,
-        TimeOfDay = 74,
-        EnableParent = 75,
-        Traversals = 76,
-        NumTraversalFluffBytes = 77,
-        NavigationDoorLink = 78,
-        IsActivationPoint = 79,
-        Scale = 80,
-        OpenByDefault = 81,
-        Position = 82,
-        Rotation = 83,
-        Comments = 84,
+        Location = 57,
+        XTRI = 58,
+        LightRoundedness = 59,
+        LinkedReferences = 60,
+        IsLinkedRefTransient = 61,
+        SnapLinks = 62,
+        EncounterZone = 63,
+        GeometryDirtinessScale = 64,
+        Lock = 65,
+        Properties = 66,
+        ExternalEmittance = 67,
+        HeadTrackingWeight = 68,
+        BOLV = 69,
+        Spline = 70,
+        XNSE = 71,
+        AttachRef = 72,
+        RagdollBipedRotation = 73,
+        HealthPercent = 74,
+        TimeOfDay = 75,
+        EnableParent = 76,
+        Traversals = 77,
+        NumTraversalFluffBytes = 78,
+        NavigationDoorLink = 79,
+        IsActivationPoint = 80,
+        Scale = 81,
+        OpenByDefault = 82,
+        Position = 83,
+        Rotation = 84,
+        Comments = 85,
     }
     #endregion
 
@@ -4828,9 +4871,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 78;
+        public const ushort AdditionalFieldCount = 79;
 
-        public const ushort FieldCount = 85;
+        public const ushort FieldCount = 86;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -4916,6 +4959,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XWPK,
                 RecordTypes.XBPO,
                 RecordTypes.XLYR,
+                RecordTypes.XLRL,
                 RecordTypes.XTRI,
                 RecordTypes.XLRD,
                 RecordTypes.XLKR,
@@ -5036,6 +5080,7 @@ namespace Mutagen.Bethesda.Starfield
             item.GroupedPackIn = null;
             item.BlueprintPartOrigin = default;
             item.Layer.Clear();
+            item.Location.Clear();
             item.XTRI = default;
             item.LightRoundedness = null;
             item.LinkedReferences.Clear();
@@ -5104,6 +5149,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ownership?.RemapLinks(mapping);
             obj.GroupedPackIn?.RemapLinks(mapping);
             obj.Layer.Relink(mapping);
+            obj.Location.Relink(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
             obj.SnapLinks?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
@@ -5352,6 +5398,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
             ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.XTRI = item.XTRI == rhs.XTRI;
             ret.LightRoundedness = EqualsMaskHelper.EqualsHelper(
                 item.LightRoundedness,
@@ -5770,6 +5817,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Layer ?? true)
             {
                 sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.XTRI ?? true)
                 && item.XTRI is {} XTRIItem)
@@ -6267,6 +6318,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRI) ?? true))
             {
                 if (lhs.XTRI != rhs.XTRI) return false;
@@ -6577,6 +6632,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(BlueprintPartOriginitem);
             }
             hash.Add(item.Layer);
+            hash.Add(item.Location);
             if (item.XTRI is {} XTRIitem)
             {
                 hash.Add(XTRIitem);
@@ -6801,6 +6857,10 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.Layer, out var LayerInfo))
             {
                 yield return LayerInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
             }
             foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -7747,6 +7807,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRI) ?? true))
             {
                 item.XTRI = rhs.XTRI;
@@ -8577,6 +8641,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Layer,
                 header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.XLRL));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XTRI,
@@ -9163,6 +9231,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
+                case RecordTypeInts.XLRL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Location;
+                }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -9567,6 +9641,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Layer
         private int? _LayerLocation;
         public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region XTRI
         private int? _XTRILocation;
@@ -10066,6 +10144,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _LayerLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XLRL:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Location;
                 }
                 case RecordTypeInts.XTRI:
                 {
