@@ -6615,5 +6615,8 @@
     <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SurfaceTreePatterns_Generated.cs">
+      <DependentUpon>SurfaceTree.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

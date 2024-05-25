@@ -5,14 +5,17 @@
       <RefList name="Components" refName="AComponent" />
       <ByteArray name="CNAM" recordType="CNAM" unknown="true" nullable="False" />
       <ByteArray name="DNAM" recordType="DNAM" unknown="true" nullable="False" />
-      <Array name="SurfacePatterns" recordType="FNAM" nullable="False" overflowRecordType="XXXX" fixedSize="65536">
-        <FormLink refName="SurfacePattern" />
-      </Array>
-      <Array name="SurfacePatterns2" recordType="FNAM" nullable="False" overflowRecordType="XXXX" fixedSize="65536">
-        <FormLink refName="SurfacePattern" />
-      </Array>
-      <ByteArray name="GNAM" recordType="GNAM" unknown="true" overflowRecordType="XXXX" />
+      <RefDirect name="SurfaceTreePatterns" refName="SurfaceTreePatterns" overflowRecordType="XXXX" shortCircuit="true" />
+      <RefDirect name="SurfaceTreePatterns2" refName="SurfaceTreePatterns" overflowRecordType="XXXX" />
       <String name="Filter" recordType="NAM1" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatterns" objType="Subrecord" >
+    <Fields>
+      <Array name="SurfacePatterns" recordType="FNAM" nullable="False" overflowRecordType="XXXX" fixedSize="65536" >
+        <FormLink refName="SurfacePattern" />
+      </Array>
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" overflowRecordType="XXXX" fixedSize="65536"/>
     </Fields>
   </Object>
 </Loqui>

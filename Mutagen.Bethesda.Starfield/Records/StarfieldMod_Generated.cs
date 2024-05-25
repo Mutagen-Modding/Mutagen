@@ -17412,9 +17412,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.SurfaceTrees.EnumerateFormLinks())
+            if (obj.SurfaceTrees is IFormLinkContainerGetter SurfaceTreeslinkCont)
             {
-                yield return item;
+                foreach (var item in SurfaceTreeslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.PlanetContentManagerTrees.EnumerateFormLinks())
             {
