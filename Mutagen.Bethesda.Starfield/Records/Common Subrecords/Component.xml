@@ -505,9 +505,7 @@
   </Object>
   <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <List name="Patterns" recordType="DAT2" counterLength="4" >
-        <FormLink refName="SurfacePattern" />
-      </List>
+      <ByteArray name="DAT2" recordType="DAT2" />
     </Fields>
   </Object>
   <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">
