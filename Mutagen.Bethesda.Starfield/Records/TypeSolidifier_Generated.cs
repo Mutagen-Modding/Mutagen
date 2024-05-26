@@ -1664,6 +1664,54 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
+        /// Scope a load order query to GameplayOptions
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GameplayOptions</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter> GameplayOptions(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGameplayOptionsGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GameplayOptions
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GameplayOptions</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter> GameplayOptions(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGameplayOptionsGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameplayOptions, IGameplayOptionsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GameplayOptionsGroup
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GameplayOptionsGroup</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter> GameplayOptionsGroup(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGameplayOptionsGroupGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GameplayOptionsGroup
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GameplayOptionsGroup</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter> GameplayOptionsGroup(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGameplayOptionsGroupGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameplayOptionsGroup, IGameplayOptionsGroupGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to GameSetting
         /// </summary>
         /// <param name="listings">ModListings to query</param>

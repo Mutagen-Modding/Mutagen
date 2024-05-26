@@ -407,6 +407,10 @@ public partial class RecordTypeInts
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GNAM = 0x4D414E47;
+    public const int GOGL = 0x4C474F47;
+    public const int GPOD = 0x444F5047;
+    public const int GPOF = 0x464F5047;
+    public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRPH = 0x48505247;
     public const int GRUP = 0x50555247;
@@ -767,6 +771,7 @@ public partial class RecordTypeInts
     public const int REGN = 0x4E474552;
     public const int REMP = 0x504D4552;
     public const int REPL = 0x4C504552;
+    public const int RESN = 0x4E534552;
     public const int REVB = 0x42564552;
     public const int RFDP = 0x50444652;
     public const int RFGP = 0x50474652;
@@ -927,6 +932,9 @@ public partial class RecordTypeInts
     public const int VNAM = 0x4D414E56;
     public const int VNML = 0x4C4D4E56;
     public const int VOLI = 0x494C4F56;
+    public const int VORN = 0x4E524F56;
+    public const int VORV = 0x56524F56;
+    public const int VOVS = 0x53564F56;
     public const int VTCK = 0x4B435456;
     public const int VTXT = 0x54585456;
     public const int VTYP = 0x50595456;

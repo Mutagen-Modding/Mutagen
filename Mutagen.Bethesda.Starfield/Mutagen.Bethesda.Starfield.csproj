@@ -6605,5 +6605,17 @@
     <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\GameplayOptions_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GPOD_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SliderEntry_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
