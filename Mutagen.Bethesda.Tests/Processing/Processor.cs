@@ -423,6 +423,16 @@ public abstract class Processor
             sub: lenData);
     }
 
+    public void ProcessLengths(
+        GroupHeader frame,
+        long amount,
+        long refLoc)
+    {
+        if (amount == 0) return;
+        var formKey = FormKey.Factory(Masters, (uint)frame.ContainedRecordType.TypeInt);
+        ModifyParentGroupLengths(amount, formKey);
+    }
+
     public void Remove(
         MajorRecordFrame majorFrame,
         long refLoc)
@@ -752,6 +762,7 @@ public abstract class Processor
             if (groupMeta.ContentLength != 0 
                 || (groupMeta.GroupType != 0 && groupMeta.GroupType != 6)) continue;
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
+            ProcessLengths(groupMeta, -groupMeta.TotalLength, loc);
         }
     }
 
