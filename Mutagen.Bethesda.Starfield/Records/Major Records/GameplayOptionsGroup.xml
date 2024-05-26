@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GameplayOptionsGroup" recordType="GPOG" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Title" recordType="NNAM" translated="Normal" />
+      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
+      <List name="Options" recordType="GOGL" >
+        <FormLink refName="GameplayOptions" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

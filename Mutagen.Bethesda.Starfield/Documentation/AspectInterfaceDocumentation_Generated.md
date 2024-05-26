@@ -246,6 +246,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptStructProperty
 - ScriptVariableListProperty
 - ScriptVariableProperty
+- SliderEntry
 - Spell
 - Star
 - StartSceneAction
@@ -813,6 +814,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### SkeletalModel
 - IModeled
+### SliderEntry
+- INamed
 ### SnapTemplateNode
 - IKeyworded
 - IModeled

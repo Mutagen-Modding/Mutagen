@@ -174,6 +174,8 @@
       <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />
       <Group name="SunPresets" refName="SunPreset" />
       <Group name="PhotoModeFeatures" refName="PhotoModeFeature" />
+      <Group name="GameplayOptions" refName="GameplayOptions" />
+      <Group name="GameplayOptionsGroups" refName="GameplayOptionsGroup" />
       <Group name="TimeOfDays" refName="TimeOfDayRecord" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="Challenges" refName="Challenge" />

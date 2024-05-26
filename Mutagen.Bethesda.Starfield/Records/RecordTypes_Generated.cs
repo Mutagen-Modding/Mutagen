@@ -414,6 +414,10 @@ public partial class RecordTypes
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GNAM = new(0x4D414E47);
+    public static readonly RecordType GOGL = new(0x4C474F47);
+    public static readonly RecordType GPOD = new(0x444F5047);
+    public static readonly RecordType GPOF = new(0x464F5047);
+    public static readonly RecordType GPOG = new(0x474F5047);
     public static readonly RecordType GRAS = new(0x53415247);
     public static readonly RecordType GRPH = new(0x48505247);
     public static readonly RecordType GRUP = new(0x50555247);
@@ -778,6 +782,7 @@ public partial class RecordTypes
     public static readonly RecordType REGN = new(0x4E474552);
     public static readonly RecordType REMP = new(0x504D4552);
     public static readonly RecordType REPL = new(0x4C504552);
+    public static readonly RecordType RESN = new(0x4E534552);
     public static readonly RecordType REVB = new(0x42564552);
     public static readonly RecordType RFDP = new(0x50444652);
     public static readonly RecordType RFGP = new(0x50474652);
@@ -939,6 +944,9 @@ public partial class RecordTypes
     public static readonly RecordType VNAM = new(0x4D414E56);
     public static readonly RecordType VNML = new(0x4C4D4E56);
     public static readonly RecordType VOLI = new(0x494C4F56);
+    public static readonly RecordType VORN = new(0x4E524F56);
+    public static readonly RecordType VORV = new(0x56524F56);
+    public static readonly RecordType VOVS = new(0x53564F56);
     public static readonly RecordType VTCK = new(0x4B435456);
     public static readonly RecordType VTXT = new(0x54585456);
     public static readonly RecordType VTYP = new(0x50595456);
