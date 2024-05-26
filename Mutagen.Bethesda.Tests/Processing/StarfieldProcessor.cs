@@ -578,6 +578,13 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+
         ZeroXOWNBool(stream, majorFrame, fileOffset);
         // ProcessXTV2(majorFrame, fileOffset);
     }
