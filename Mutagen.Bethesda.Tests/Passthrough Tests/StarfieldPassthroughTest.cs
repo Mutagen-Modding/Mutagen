@@ -133,6 +133,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             
             RecordTypes.XBPO,
             RecordTypes.XLYR,
+            RecordTypes.XLRL,
             RecordTypes.XLRD,
             AlignmentRepeatedRule.Basic(RecordTypes.XLKR),
             RecordTypes.XLKT,
