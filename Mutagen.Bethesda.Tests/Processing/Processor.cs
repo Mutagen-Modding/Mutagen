@@ -762,7 +762,10 @@ public abstract class Processor
             if (groupMeta.ContentLength != 0 
                 || (groupMeta.GroupType != 0 && groupMeta.GroupType != 6)) continue;
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
-            ProcessLengths(groupMeta, -groupMeta.TotalLength, loc);
+            if (groupMeta.GroupType != 0)
+            {
+                ProcessLengths(groupMeta, -groupMeta.TotalLength, loc);
+            }
         }
     }
 
