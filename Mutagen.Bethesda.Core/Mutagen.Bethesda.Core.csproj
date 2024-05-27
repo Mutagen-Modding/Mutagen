@@ -298,6 +298,9 @@
         <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
         <Compile Include="Plugins\Internals\RecordCollection.cs" />
         <Compile Include="Plugins\Internals\RecordTriggerSpecs.cs" />
+        <Compile Include="Plugins\IO\DI\AssociatedFilesLocator.cs" />
+        <Compile Include="Plugins\IO\AssociatedModFileCategory.cs" />
+        <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
         <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
