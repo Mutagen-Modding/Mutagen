@@ -28,11 +28,11 @@ public interface IModFilesMover
 public class ModFilesMover : IModFilesMover
 {
     private readonly IFileSystem _fileSystem;
-    private readonly AssociatedFilesLocator _associatedFilesLocator;
+    private readonly IAssociatedFilesLocator _associatedFilesLocator;
 
     public ModFilesMover(
         IFileSystem fileSystem,
-        AssociatedFilesLocator associatedFilesLocator)
+        IAssociatedFilesLocator associatedFilesLocator)
     {
         _fileSystem = fileSystem;
         _associatedFilesLocator = associatedFilesLocator;
