@@ -12,6 +12,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Utility;
 
 public class ModFilesMoverTests
 {
+    public class StructureUnderTest
+    {
+        public readonly ModFilesMover Sut;
+
+        public StructureUnderTest(IFileSystem fileSystem)
+        {
+            Sut = new ModFilesMover(
+                fileSystem,
+                new AssociatedFilesLocator(
+                    fileSystem));
+        }
+    }
+    
     public class ExistingSetupFixture
     {
         public DirectoryPath ExistingDirectory { get; }
@@ -139,10 +152,10 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         ModPath modPath,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
-        sut.MoveModTo(modPath, existingDirectoryPath2);
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeFalse();
         fileSystem.File.Exists(modPath2).Should().BeFalse();
     }
@@ -154,13 +167,13 @@ public class ModFilesMoverTests
         Npc npc,
         DirectoryPath existingDirectoryPath,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
         mod.WriteToBinaryParallel(modPath, fileSystem: fileSystem);
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
-        sut.MoveModTo(modPath, existingDirectoryPath2);
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeFalse();
         fileSystem.File.Exists(modPath2).Should().BeTrue();
     }
@@ -170,13 +183,13 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         Fixture fixture,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         fileSystem.File.Exists(fixture.ModPath).Should().BeTrue();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, fixture.ModKey.FileName);
         var stringsFolder2 = Path.Combine(existingDirectoryPath2, "Strings");
         
-        sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
+        sut.Sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
         fileSystem.File.Exists(fixture.ModPath).Should().BeFalse();
         fixture.AssertStrings(false);
@@ -194,11 +207,11 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         Fixture fixture,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, fixture.ModPath.ModKey.FileName);
         
-        sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
+        sut.Sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
         fileSystem.File.Exists(fixture.ModPath).Should().BeFalse();
         fixture.AssertBsas(false);
@@ -217,7 +230,7 @@ public class ModFilesMoverTests
         ModPath modPath,
         ModKey otherModKey,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         var otherModPath = new ModPath(otherModKey, Path.Combine(modPath.Path.Directory!.Value, otherModKey.FileName));
         fileSystem.File.Create(otherModPath);
@@ -236,7 +249,7 @@ public class ModFilesMoverTests
         fileSystem.File.Create(otherBsaPath2);
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
-        sut.MoveModTo(modPath, existingDirectoryPath2);
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeFalse();
         fileSystem.File.Exists(modPath2).Should().BeFalse();
         fileSystem.File.Exists(otherModPath).Should().BeTrue();
@@ -251,7 +264,7 @@ public class ModFilesMoverTests
         Fixture Fixture,
         ModKey otherModKey,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         var otherModPath = new ModPath(otherModKey, Path.Combine(Fixture.ModPath.Path.Directory!.Value, otherModKey.FileName));
         fileSystem.File.Create(otherModPath);
@@ -270,7 +283,7 @@ public class ModFilesMoverTests
         fileSystem.File.Create(otherBsaPath2);
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, Fixture.ModPath.ModKey.FileName);
-        sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2);
+        sut.Sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2);
         fileSystem.File.Exists(Fixture.ModPath).Should().BeFalse();
         fileSystem.File.Exists(modPath2).Should().BeTrue();
         fileSystem.File.Exists(otherModPath).Should().BeTrue();
@@ -287,7 +300,7 @@ public class ModFilesMoverTests
         string modContent2,
         string stringContent2,
         string bsaContent2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         var modPath2 = Path.Combine(existingDirectoryPath2, Fixture.ModPath.ModKey.FileName);
         fileSystem.File.WriteAllText(modPath2, modContent2);
@@ -301,7 +314,7 @@ public class ModFilesMoverTests
             bsaPath2,
             bsaContent2);
         
-        sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2, overwrite: true);
+        sut.Sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2, overwrite: true);
         fileSystem.File.Exists(Fixture.ModPath).Should().BeFalse();
         Fixture.StringPaths.ForEach(f =>
         {
@@ -322,7 +335,7 @@ public class ModFilesMoverTests
         ModPath modPath,
         string content,
         DirectoryPath existingDirectoryPath2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         fileSystem.File.WriteAllText(modPath, content);
         fileSystem.Directory.CreateDirectory(Path.Combine(modPath.Path.Directory!, "Strings"));
@@ -340,7 +353,7 @@ public class ModFilesMoverTests
 
         Assert.Throws<IOException>(() =>
         {
-            sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
+            sut.Sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
         });
         fileSystem.File.Delete(modPath2);
         
@@ -351,7 +364,7 @@ public class ModFilesMoverTests
             content);
         Assert.Throws<IOException>(() =>
         {
-            sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
+            sut.Sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
         });
         fileSystem.File.Delete(stringsPath2);
         
@@ -361,7 +374,7 @@ public class ModFilesMoverTests
             content);
         Assert.Throws<IOException>(() =>
         {
-            sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
+            sut.Sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: false);
         });
     }
     
@@ -370,10 +383,10 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         Fixture fixture,
         ExistingSetupFixture fullSetup2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         fullSetup2.SetupFor(fixture.ModKey);
-        sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
+        sut.Sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
             overwrite: true,
             categories: AssociatedModFileCategory.Archives
                         | AssociatedModFileCategory.Plugin);
@@ -390,10 +403,10 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         Fixture fixture,
         ExistingSetupFixture fullSetup2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         fullSetup2.SetupFor(fixture.ModKey);
-        sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
+        sut.Sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Plugin);
@@ -410,10 +423,10 @@ public class ModFilesMoverTests
         IFileSystem fileSystem,
         Fixture fixture,
         ExistingSetupFixture fullSetup2,
-        ModFilesMover sut)
+        StructureUnderTest sut)
     {
         fullSetup2.SetupFor(fixture.ModKey);
-        sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
+        sut.Sut.MoveModTo(fixture.ModPath, fullSetup2.ExistingDirectory,
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Archives);
