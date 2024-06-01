@@ -489,6 +489,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\AssociatedRecordTypesAttribute.cs" />
         <Compile Include="Plugins\Records\Mapping\GetterTypeMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\InheritingInterfaceMapping.cs">
@@ -518,10 +519,9 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
