@@ -7,7 +7,6 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
@@ -31,9 +30,8 @@ public partial class OblivionMod : AMod
             release: GameRelease.Oblivion,
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: DefaultInitialNextFormID);
+            constants: GameConstants.Get(GameRelease.Oblivion));
     }
 
     partial void GetCustomRecordCount(Action<uint> setter)

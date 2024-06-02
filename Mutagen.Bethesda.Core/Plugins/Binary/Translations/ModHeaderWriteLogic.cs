@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
@@ -6,8 +5,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
-using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -23,21 +22,20 @@ public sealed class ModHeaderWriteLogic
     private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
-    private readonly GameRelease _release;
     private readonly GameCategory _category;
     private FormKey? _disallowedFormKey;
     private uint _higherFormIDRange;
+    private GameConstants _constants;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
-        IModGetter mod,
-        IModHeaderCommon modHeader)
+        IModGetter mod)
     {
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
-        _release = mod.GameRelease;
         _category = mod.GameRelease.ToCategory();
-        _higherFormIDRange = HeaderVersionHelper.GetDefaultHigherFormID(this._release);
+        _constants = GameConstants.Get(mod.GameRelease);
+        _higherFormIDRange = _constants.DefaultHighRangeFormID;
     }
 
     public static void WriteHeader(
@@ -49,8 +47,7 @@ public sealed class ModHeaderWriteLogic
     {
         var modHeaderWriter = new ModHeaderWriteLogic(
             param: param,
-            mod: mod,
-            modHeader: modHeader);
+            mod: mod);
         modHeaderWriter.AddProcessors(mod, modHeader);
         modHeaderWriter.RunProcessors(mod);
         modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader);

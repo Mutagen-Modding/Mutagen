@@ -46,9 +46,8 @@ public partial class SkyrimMod : AMod
             release: release.ToGameRelease(),
             allowedReleases: _allowedLowerRangeReleases,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 1.71f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
 }
 

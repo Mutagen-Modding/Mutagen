@@ -40,9 +40,8 @@ public partial class StarfieldMod : AMod
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 0f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
 }
 
