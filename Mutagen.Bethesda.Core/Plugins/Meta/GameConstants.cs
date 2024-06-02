@@ -50,6 +50,8 @@ public sealed record GameConstants
     
     public ushort? DefaultFormVersion { get; init; }
     
+    public float? DefaultModHeaderVersion { get; init; }
+    
     public string? MyDocumentsString { get; init; }
     
     public string IniName { get; init; }
@@ -78,6 +80,7 @@ public sealed record GameConstants
         EncodingBundle encodings,
         bool hasEnabledMarkers,
         ushort? defaultFormVersion,
+        float? defaultModHeaderVersion,
         string? myDocumentsString,
         string iniName)
     {
@@ -91,6 +94,7 @@ public sealed record GameConstants
         Encodings = encodings;
         HasEnabledMarkers = hasEnabledMarkers;
         DefaultFormVersion = defaultFormVersion;
+        DefaultModHeaderVersion = defaultModHeaderVersion;
         MyDocumentsString = myDocumentsString;
         StringsLanguageFormat = languageFormat;
         IniName = iniName;
@@ -152,6 +156,7 @@ public sealed record GameConstants
         languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,
+        defaultModHeaderVersion: 1f,
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -219,6 +224,7 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.FullName,
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
+        defaultModHeaderVersion: 1.71f,
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -337,6 +343,7 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 131,
+        defaultModHeaderVersion: 1f,
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -418,6 +425,7 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 555,
+        defaultModHeaderVersion: 0.96f,
         myDocumentsString: null,
         iniName: "Starfield",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
