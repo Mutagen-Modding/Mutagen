@@ -21,7 +21,15 @@ public partial class Fallout4Mod : AMod
 
     public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    
+    public override bool CanBeLightMaster => true;
 
+    public override bool IsLightMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Light, value);
+    }
+    
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
@@ -45,6 +53,9 @@ internal partial class Fallout4ModBinaryOverlay
             this.Fallout4Release,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => true;
+    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
 }
 
 partial class Fallout4ModCommon

@@ -34,6 +34,8 @@ public class TestMod : ITestMod, IDisposable
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }
+    public bool CanBeLightMaster { get; }
+    public bool IsLightMaster { get; set; }
 
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {

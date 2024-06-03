@@ -25,6 +25,14 @@ public partial class SkyrimMod : AMod
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
 
+    public override bool CanBeLightMaster => true;
+
+    public override bool IsLightMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
+    }
+
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
@@ -58,6 +66,9 @@ internal partial class SkyrimModBinaryOverlay
             this.SkyrimRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => true;
+    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
 }
 
 partial class SkyrimModSetterCommon

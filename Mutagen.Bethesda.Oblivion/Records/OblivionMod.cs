@@ -22,6 +22,13 @@ public partial class OblivionMod : AMod
         GetDefaultInitialNextFormID(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public override bool CanBeLightMaster => false;
+    public override bool IsLightMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
+    }
 
     public static uint GetDefaultInitialNextFormID(float headerVersion,
         bool? forceUseLowerFormIDRanges)
@@ -92,6 +99,9 @@ internal partial class OblivionModBinaryOverlay
         OblivionMod.GetDefaultInitialNextFormID(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => false;
+    public bool IsLightMaster => false;
 }
 
 partial class OblivionModCommon

@@ -102,6 +102,16 @@ public interface IModGetter :
     /// Whether a mod has localization enabled
     /// </summary>
     bool UsingLocalization { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Light Master features
+    /// </summary>
+    bool CanBeLightMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Light Master flag enabled
+    /// </summary>
+    bool IsLightMaster { get; }
 
     /// <summary>
     /// The next FormID to be allocated
@@ -158,6 +168,11 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     /// Whether a mod has localization enabled
     /// </summary>
     new bool UsingLocalization { get; set; }
+
+    /// <summary>
+    /// Whether a mod has Light Master flag enabled
+    /// </summary>
+    new bool IsLightMaster { get; set; }
 
     /// <summary>
     /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.
