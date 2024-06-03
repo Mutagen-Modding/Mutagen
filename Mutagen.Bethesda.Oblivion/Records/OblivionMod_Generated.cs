@@ -11976,7 +11976,8 @@ namespace Mutagen.Bethesda.Oblivion
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {

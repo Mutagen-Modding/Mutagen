@@ -425,6 +425,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
+            prop.Add($"Header = item");
         }
         sb.AppendLine($"if (param.{nameof(BinaryWriteParameters.Encodings)} != null)");
         using (sb.CurlyBrace())

@@ -1,8 +1,8 @@
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
-using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
@@ -44,4 +44,6 @@ public sealed record WritingBundle(GameConstants Constants)
     public Language? TargetLanguageOverride { get; set; }
 
     public EncodingBundle Encodings { get; set; } = Constants.Encodings;
+    
+    public IModFlagsGetter? Header { get; set; }
 }

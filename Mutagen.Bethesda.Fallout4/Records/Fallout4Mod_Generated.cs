@@ -24440,7 +24440,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {
