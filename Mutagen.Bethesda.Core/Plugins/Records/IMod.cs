@@ -6,10 +6,44 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
+public interface IModFlagsGetter
+{
+    /// <summary>
+    /// Whether a mod supports localization features
+    /// </summary>
+    bool CanUseLocalization { get; }
+
+    /// <summary>
+    /// Whether a mod has localization enabled
+    /// </summary>
+    bool UsingLocalization { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Light Master features
+    /// </summary>
+    bool CanBeLightMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Light Master flag enabled
+    /// </summary>
+    bool IsLightMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Half Master features
+    /// </summary>
+    bool CanBeHalfMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Half Master flag enabled
+    /// </summary>
+    bool IsHalfMaster { get; }
+}
+
 /// <summary>
 /// An interface that Mod objects implement to hook into the common getter systems
 /// </summary>
 public interface IModGetter : 
+    IModFlagsGetter,
     IMajorRecordGetterEnumerable,
     IMajorRecordSimpleContextEnumerable,
     IFormLinkContainerGetter, 
@@ -92,36 +126,6 @@ public interface IModGetter :
     /// <param name="param">Optional customization parameters</param>
     /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
     void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
-
-    /// <summary>
-    /// Whether a mod supports localization features
-    /// </summary>
-    bool CanUseLocalization { get; }
-
-    /// <summary>
-    /// Whether a mod has localization enabled
-    /// </summary>
-    bool UsingLocalization { get; }
-    
-    /// <summary>
-    /// Whether a mod supports Light Master features
-    /// </summary>
-    bool CanBeLightMaster { get; }
-
-    /// <summary>
-    /// Whether a mod has Light Master flag enabled
-    /// </summary>
-    bool IsLightMaster { get; }
-    
-    /// <summary>
-    /// Whether a mod supports Half Master features
-    /// </summary>
-    bool CanBeHalfMaster { get; }
-
-    /// <summary>
-    /// Whether a mod has Half Master flag enabled
-    /// </summary>
-    bool IsHalfMaster { get; }
 
     /// <summary>
     /// The next FormID to be allocated

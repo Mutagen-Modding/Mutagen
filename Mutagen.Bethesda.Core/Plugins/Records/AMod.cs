@@ -50,13 +50,13 @@ public abstract class AMod : IMod
     uint IModGetter.NextFormID { get => throw new NotImplementedException(); }
     public abstract bool CanUseLocalization { get; }
     public abstract bool UsingLocalization { get; set; }
-    bool IModGetter.UsingLocalization => throw new NotImplementedException();
+    bool IModFlagsGetter.UsingLocalization => throw new NotImplementedException();
     public abstract bool CanBeLightMaster { get; }
     public abstract bool IsLightMaster { get; set; }
-    bool IModGetter.IsLightMaster => throw new NotImplementedException();
+    bool IModFlagsGetter.IsLightMaster => throw new NotImplementedException();
     public abstract bool CanBeHalfMaster { get; }
     public abstract bool IsHalfMaster { get; set; }
-    bool IModGetter.IsHalfMaster => throw new NotImplementedException();
+    bool IModFlagsGetter.IsHalfMaster => throw new NotImplementedException();
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
