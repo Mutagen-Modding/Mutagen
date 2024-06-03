@@ -199,7 +199,6 @@
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\LightLimitOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MasterFlagOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />

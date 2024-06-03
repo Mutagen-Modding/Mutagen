@@ -56,11 +56,6 @@ public sealed class BinaryWriteParameters
     public MasterFlagOption MasterFlag { get; set; } = MasterFlagOption.ChangeToMatchModKey;
 
     /// <summary>
-    /// Logic to use to ensure a light master mod does not go over its FormID count
-    /// </summary>
-    public LightLimitOption LightLimit { get; set; } = LightLimitOption.ExceptionOnOverflow;
-
-    /// <summary>
     /// Optional StringsWriter override, for mods that are able to localize.
     /// </summary>
     public StringsWriter? StringsWriter { get; set; }
