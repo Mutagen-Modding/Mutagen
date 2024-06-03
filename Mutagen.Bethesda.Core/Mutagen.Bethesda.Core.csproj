@@ -137,6 +137,7 @@
         <Compile Include="Installs\RegistryGameSource.cs" />
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
+        <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">
             <CodeLanguage>cs</CodeLanguage>
