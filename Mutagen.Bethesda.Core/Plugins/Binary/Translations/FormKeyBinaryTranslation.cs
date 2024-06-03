@@ -63,7 +63,26 @@ public sealed class FormKeyBinaryTranslation
         }
         UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
             writer: writer,
-            item: writer.MetaData.MasterReferences!.GetFormID(item).Raw);
+            item: GetFormID(writer.MetaData.MasterReferences!, item).Raw);
+    }
+
+    private FormID GetFormID(IReadOnlyMasterReferenceCollection masterIndices, FormKey key)
+    {
+        if (masterIndices.TryGetIndex(key.ModKey, out var index))
+        {
+            return new FormID(
+                index,
+                key.ID);
+        }
+        if (key == FormKey.Null)
+        {
+            return FormID.Null;
+        }
+        throw new UnmappableFormIDException(
+            key, 
+            masterIndices.Masters
+                .Select(x => x.Master)
+                .ToArray());
     }
 
     public void Write(

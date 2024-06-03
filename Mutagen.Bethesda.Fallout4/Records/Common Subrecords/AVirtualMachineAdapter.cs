@@ -289,10 +289,10 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
             case 2:
                 writer.Write(obj.Unused);
                 writer.Write(obj.Alias);
-                writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object.FormKey);
                 break;
             case 1:
-                writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object.FormKey);
                 writer.Write(obj.Alias);
                 writer.Write(obj.Unused);
                 break;

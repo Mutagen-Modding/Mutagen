@@ -21,16 +21,12 @@ public interface IReadOnlyMasterReferenceCollection
     /// <summary>
     /// ModKey that should be considered to be the current mod
     /// </summary>
-    public ModKey CurrentMod { get; }
+    ModKey CurrentMod { get; }
 
     /// <summary>
-    /// Converts a FormKey to a FormID representation, with its mod index calibrated
-    /// against the contents of the registrar.
+    /// Attempts to look up index associated with a given ModKey
     /// </summary>
-    /// <param name="key">FormKey to convert</param>
-    /// <returns>FormID calibrated to registrar contents</returns>
-    /// <exception cref="ArgumentException">If FormKey's ModKey is not present in registrar</exception>
-    FormID GetFormID(FormKey key);
+    bool TryGetIndex(ModKey modKey, out ModIndex index);
 }
 
 public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
@@ -116,24 +112,9 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     }
 
     /// <inheritdoc />
-    public FormID GetFormID(FormKey key)
+    public bool TryGetIndex(ModKey modKey, out ModIndex index)
     {
-        if (_masterIndices.TryGetValue(key.ModKey, out var index))
-        {
-            return new FormID(
-                index,
-                key.ID);
-        }
-        if (key == FormKey.Null)
-        {
-            return FormID.Null;
-        }
-        throw new UnmappableFormIDException(
-            key, 
-            _masterIndices
-                .OrderBy(kv => kv.Value.ID)
-                .Select(x => x.Key)
-                .ToArray());
+        return _masterIndices.TryGetValue(modKey, out index);
     }
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
