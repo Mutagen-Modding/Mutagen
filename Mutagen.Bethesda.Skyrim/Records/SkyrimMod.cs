@@ -56,7 +56,7 @@ public partial class SkyrimMod : AMod
         float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: _allowedLowerRangeReleases,
             headerVersion: headerVersion,

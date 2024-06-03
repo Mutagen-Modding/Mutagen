@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 
 internal static class HeaderVersionHelper
 {
-    public static uint GetNextFormId(
+    public static uint GetInitialFormId(
         GameRelease release,
         HashSet<GameRelease>? allowedReleases,
         float headerVersion,
@@ -35,14 +35,14 @@ internal static class HeaderVersionHelper
         return higherFormIdRange;
     }
     
-    public static uint GetNextFormId(
+    public static uint GetInitialFormId(
         GameRelease release,
         HashSet<GameRelease>? allowedReleases,
         float headerVersion,
         bool? forceUseLowerFormIDRanges,
         GameConstants constants)
     {
-        return GetNextFormId(
+        return GetInitialFormId(
             release,
             allowedReleases,
             headerVersion,

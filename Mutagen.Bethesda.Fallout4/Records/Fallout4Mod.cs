@@ -43,7 +43,7 @@ public partial class Fallout4Mod : AMod
     
     public static uint GetDefaultInitialNextFormID(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,

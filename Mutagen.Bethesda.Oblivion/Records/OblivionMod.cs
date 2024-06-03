@@ -39,7 +39,7 @@ public partial class OblivionMod : AMod
     public static uint GetDefaultInitialNextFormID(float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: GameRelease.Oblivion,
             allowedReleases: null,
             headerVersion: headerVersion,
