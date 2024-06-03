@@ -29,6 +29,12 @@ public partial class OblivionMod : AMod
         get => false;
         set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
     }
+    public override bool CanBeHalfMaster => false;
+    public override bool IsHalfMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
     public static uint GetDefaultInitialNextFormID(float headerVersion,
         bool? forceUseLowerFormIDRanges)
@@ -102,6 +108,8 @@ internal partial class OblivionModBinaryOverlay
     
     public bool CanBeLightMaster => false;
     public bool IsLightMaster => false;
+    public bool CanBeHalfMaster => false;
+    public bool IsHalfMaster => false;
 }
 
 partial class OblivionModCommon

@@ -16,6 +16,7 @@ public partial class StarfieldModHeader
         Localized = 0x0000_0080,
         Light = 0x0000_0100,
         Overlay = 0x0000_0200,
+        Half = 0x0000_0400,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

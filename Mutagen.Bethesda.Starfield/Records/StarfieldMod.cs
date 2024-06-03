@@ -1,5 +1,4 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -34,6 +33,14 @@ public partial class StarfieldMod : AMod
         set => this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
     }
 
+    public override bool CanBeHalfMaster => true;
+
+    public override bool IsHalfMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
+        set => this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
+    }
+
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
@@ -63,6 +70,8 @@ internal partial class StarfieldModBinaryOverlay
     
     public bool CanBeLightMaster => true;
     public bool IsLightMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+    public bool CanBeHalfMaster => true;
+    public bool IsHalfMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
 }
 
 partial class StarfieldModSetterCommon

@@ -29,6 +29,12 @@ public partial class Fallout4Mod : AMod
         get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
         set => this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Light, value);
     }
+    public override bool CanBeHalfMaster => false;
+    public override bool IsHalfMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
     
     partial void CustomCtor()
     {
@@ -56,6 +62,9 @@ internal partial class Fallout4ModBinaryOverlay
     
     public bool CanBeLightMaster => true;
     public bool IsLightMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
+
+    public bool CanBeHalfMaster => false;
+    public bool IsHalfMaster => false;
 }
 
 partial class Fallout4ModCommon

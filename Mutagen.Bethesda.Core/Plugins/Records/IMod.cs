@@ -112,6 +112,16 @@ public interface IModGetter :
     /// Whether a mod has Light Master flag enabled
     /// </summary>
     bool IsLightMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Half Master features
+    /// </summary>
+    bool CanBeHalfMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Half Master flag enabled
+    /// </summary>
+    bool IsHalfMaster { get; }
 
     /// <summary>
     /// The next FormID to be allocated

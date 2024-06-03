@@ -36,6 +36,8 @@ public class TestMod : ITestMod, IDisposable
     public bool UsingLocalization { get; set; }
     public bool CanBeLightMaster { get; }
     public bool IsLightMaster { get; set; }
+    public bool CanBeHalfMaster { get; }
+    public bool IsHalfMaster { get; set; }
 
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
