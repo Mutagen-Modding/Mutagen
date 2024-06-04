@@ -49,10 +49,10 @@ public sealed class FormKeyBinaryTranslation
 
     public void Write(
         MutagenWriter writer,
-        FormKey item,
+        IFormLinkIdentifier item,
         bool nullable = false)
     {
-        if (item == FormKey.None)
+        if (item.FormKey == FormKey.None)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -60,9 +60,9 @@ public sealed class FormKeyBinaryTranslation
             return;
         }
 
-        if (writer.MetaData.CleanNulls && item.IsNull)
+        if (writer.MetaData.CleanNulls && item.FormKey.IsNull)
         {
-            item = FormKey.Null;
+            item = FormLinkInformation.Null;
         }
 
         var formID = GetFormID(
@@ -78,9 +78,9 @@ public sealed class FormKeyBinaryTranslation
     private FormID GetFormID(
         IModFlagsGetter? modFlags,
         IReadOnlyMasterReferenceCollection masterIndices,
-        FormKey key)
+        IFormLinkIdentifier key)
     {
-        if (modFlags != null && key.ModKey == masterIndices.CurrentMod)
+        if (modFlags != null && key.FormKey.ModKey == masterIndices.CurrentMod)
         {
             bool isLightMaster = modFlags.CanBeLightMaster
                                  && modFlags.IsLightMaster;
@@ -95,31 +95,31 @@ public sealed class FormKeyBinaryTranslation
             {
                 return new FormID(
                     ModIndex.LightMaster,
-                    key.ID);
+                    key.FormKey.ID);
             }
 
             if (isHalfMaster)
             {
                 return new FormID(
                     ModIndex.HalfMaster,
-                    key.ID);
+                    key.FormKey.ID);
             }
         }
 
-        if (masterIndices.TryGetIndex(key.ModKey, out var index))
+        if (masterIndices.TryGetIndex(key.FormKey.ModKey, out var index))
         {
             return new FormID(
                 index,
-                key.ID);
+                key.FormKey.ID);
         }
 
-        if (key == FormKey.Null)
+        if (key.FormKey == FormKey.Null)
         {
             return FormID.Null;
         }
 
         throw new UnmappableFormIDException(
-            key,
+            key.FormKey,
             masterIndices.Masters
                 .Select(x => x.Master)
                 .ToArray());
@@ -127,9 +127,8 @@ public sealed class FormKeyBinaryTranslation
 
     public void Write(
         MutagenWriter writer,
-        FormKey item,
-        RecordType header,
-        bool nullable = false)
+        IFormLinkIdentifier item,
+        RecordType header)
     {
         try
         {
@@ -144,5 +143,15 @@ public sealed class FormKeyBinaryTranslation
         {
             throw SubrecordException.Enrich(ex, header);
         }
+    }
+
+    public void Write<TMajor>(
+        MutagenWriter writer,
+        IFormLinkNullableGetter<TMajor> item,
+        RecordType header)
+        where TMajor : class, IMajorRecordGetter
+    {
+        if (item.FormKeyNullable == null) return;
+        Write(writer, item.ToStandardizedIdentifier(), header);
     }
 }

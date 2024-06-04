@@ -168,10 +168,10 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
             case 2:
                 writer.Write(obj.Unused);
                 writer.Write(obj.Alias);
-                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object);
                 break;
             case 1:
-                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object);
                 writer.Write(obj.Alias);
                 writer.Write(obj.Unused);
                 break;

@@ -285,10 +285,7 @@ partial class FurnitureBinaryWriteTranslation
                 }
             }
 
-            if (markerKeyword.FormKeyNullable != null)
-            {
-                FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword.FormKeyNullable.Value, FurnitureBinaryCreateTranslation.FNMK);
-            }
+            FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword, FurnitureBinaryCreateTranslation.FNMK);
         }
     }
 

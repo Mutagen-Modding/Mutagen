@@ -288,7 +288,7 @@ partial class QuestBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.QuestChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.Unknown);

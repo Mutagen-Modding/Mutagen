@@ -99,7 +99,7 @@ partial class TraversalReferenceBinaryWriteTranslation
         else
         {
             writer.Write(0);
-            FormKeyBinaryTranslation.Instance.Write(writer, trav.FormKey);
+            FormKeyBinaryTranslation.Instance.Write(writer, trav);
         }
         writer.Write(item.Unknown);
     }

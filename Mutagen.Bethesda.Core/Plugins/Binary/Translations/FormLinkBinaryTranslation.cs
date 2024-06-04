@@ -121,7 +121,7 @@ public sealed class FormLinkBinaryTranslation
     {
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKey);
+            item);
     }
 
     public void Write<T>(
@@ -134,7 +134,7 @@ public sealed class FormLinkBinaryTranslation
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
-                item.FormKey,
+                item,
                 header);
         }
         catch (Exception ex)
@@ -151,7 +151,7 @@ public sealed class FormLinkBinaryTranslation
     {
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKey,
+            item,
             header);
     }
 
@@ -164,7 +164,7 @@ public sealed class FormLinkBinaryTranslation
         if (item.FormKeyNullable == null) return;
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKeyNullable.Value,
+            item,
             header);
     }
 
@@ -177,7 +177,7 @@ public sealed class FormLinkBinaryTranslation
         if (item.FormKeyNullable == null) return;
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKeyNullable.Value,
+            item,
             header);
     }
 
@@ -189,7 +189,7 @@ public sealed class FormLinkBinaryTranslation
         if (item.FormKeyNullable == null) return;
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKeyNullable.Value);
+            item);
     }
 
     public void WriteNullable<T>(
@@ -200,6 +200,6 @@ public sealed class FormLinkBinaryTranslation
         if (item.FormKeyNullable == null) return;
         FormKeyBinaryTranslation.Instance.Write(
             writer,
-            item.FormKeyNullable.Value);
+            item);
     }
 }

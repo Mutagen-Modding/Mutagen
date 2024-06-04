@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             writer.Write(item.MajorRecordFlagsRaw);
             FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FormKey);
+                item: item);
             writer.Write(item.VersionControl);
         }
 

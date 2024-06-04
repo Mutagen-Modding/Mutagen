@@ -362,7 +362,7 @@ partial class PackageBinaryWriteTranslation
         {
             jumpbackPos = writer.Position;
             writer.Write(data.Count);
-            FormKeyBinaryTranslation.Instance.Write(writer, item.PackageTemplate.FormKey);
+            FormKeyBinaryTranslation.Instance.Write(writer, item.PackageTemplate);
             writer.Write(item.DataInputVersion);
         }
 

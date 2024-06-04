@@ -64,11 +64,11 @@ partial class ExtraDataBinaryWriteTranslation
                 writer.Write(noOwner.RawVariableData);
                 break;
             case NpcOwner npcOwner:
-                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc.FormKey);
-                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Global.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc);
+                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Global);
                 break;
             case FactionOwner factionOwner:
-                FormKeyBinaryTranslation.Instance.Write(writer, factionOwner.Faction.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, factionOwner.Faction);
                 writer.Write(factionOwner.RequiredRank);
                 break;
             default:

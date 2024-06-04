@@ -72,4 +72,26 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
             args.Add($"translationMask: {translationMaskAccessor}");
         }
     }
+    
+    public override async Task GenerateWrite(
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor writerAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor,
+        Accessor converterAccessor)
+    {
+        if (!(await objGen.IsMajorRecord()))
+        {
+            throw new NotImplementedException();
+        }
+        using (var args = sb.Call(
+                   $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+        {
+            args.Add($"writer: {writerAccessor}");
+            args.Add($"item: item");
+        }
+    }
 }

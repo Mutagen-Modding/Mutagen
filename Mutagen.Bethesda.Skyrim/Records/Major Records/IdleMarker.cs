@@ -73,7 +73,7 @@ partial class IdleMarkerBinaryWriteTranslation
         {
             foreach (var anim in anims)
             {
-                FormKeyBinaryTranslation.Instance.Write(writer, anim.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, anim);
             }
         }
     }
