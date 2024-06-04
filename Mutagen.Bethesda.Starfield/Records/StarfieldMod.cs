@@ -25,7 +25,7 @@ public partial class StarfieldMod : AMod
     public override bool IsLightMaster
     {
         get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
-        set => this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
     }
 
     public override bool CanBeHalfMaster => true;
@@ -33,7 +33,7 @@ public partial class StarfieldMod : AMod
     public override bool IsHalfMaster
     {
         get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
-        set => this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
     }
 
     partial void CustomCtor()

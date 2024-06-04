@@ -25,7 +25,7 @@ public partial class SkyrimMod : AMod
     public override bool IsLightMaster
     {
         get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
-        set => this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
     }
     public override bool CanBeHalfMaster => false;
     public override bool IsHalfMaster

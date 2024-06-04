@@ -21,7 +21,7 @@ public partial class Fallout4Mod : AMod
     public override bool IsLightMaster
     {
         get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
-        set => this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Light, value);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Light, value);
     }
     public override bool CanBeHalfMaster => false;
     public override bool IsHalfMaster
