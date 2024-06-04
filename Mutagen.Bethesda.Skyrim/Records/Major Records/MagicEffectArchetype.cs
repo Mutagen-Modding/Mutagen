@@ -59,5 +59,5 @@ public partial class MagicEffectArchetype
     }
 
     MagicEffectArchetype.TypeEnum IAMagicEffectArchetypeGetter.Type => Type;
-    public override FormKey AssociationKey => Association.FormKey;
+    public override IFormLinkIdentifier AssociationKey => Association;
 }
