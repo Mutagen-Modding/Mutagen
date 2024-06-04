@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -176,5 +177,88 @@ public class WriteOptionsTests
         }, fileSystem: fileSystem);
         using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, fileSystem: fileSystem);
         reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
+    }
+
+    [Theory, MutagenAutoData]
+    public void LightMasterFormIDCompactionThrows(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        mod.IsLightMaster = true;
+        mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
+        
+        Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
+        {
+            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+            {
+                ModKey = ModKeyOption.NoCheck,
+                FormIDCompaction = FormIDCompactionOption.Iterate
+            }, fileSystem: fileSystem);
+        });
+    }
+
+    [Theory, MutagenAutoData]
+    public void LightMasterFormIDCompactionNoCheck(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        mod.IsLightMaster = true;
+        mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            FormIDCompaction = FormIDCompactionOption.NoCheck
+        }, fileSystem: fileSystem);
+    }
+
+    [Theory, MutagenAutoData]
+    public void HalfMasterFormIDCompactionThrows(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        mod.IsLightMaster = true;
+        mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
+        
+        Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
+        {
+            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+            {
+                ModKey = ModKeyOption.NoCheck,
+                FormIDCompaction = FormIDCompactionOption.Iterate
+            }, fileSystem: fileSystem);
+        });
+    }
+
+    [Theory, MutagenAutoData]
+    public void HalfMasterFormIDCompactionNoCheck(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        mod.IsLightMaster = true;
+        mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            FormIDCompaction = FormIDCompactionOption.NoCheck
+        }, fileSystem: fileSystem);
+    }
+
+    [Theory, MutagenAutoData]
+    public void HalfMasterFormIDCompactionCheck(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        mod.IsHalfMaster = true;
+        mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            FormIDCompaction = FormIDCompactionOption.Iterate
+        }, fileSystem: fileSystem);
     }
 }

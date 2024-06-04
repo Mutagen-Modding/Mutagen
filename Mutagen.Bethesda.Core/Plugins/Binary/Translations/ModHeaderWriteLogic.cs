@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
@@ -6,7 +7,6 @@ using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -26,11 +26,13 @@ internal sealed class ModHeaderWriteLogic
     private FormKey? _disallowedFormKey;
     private uint _higherFormIDRange;
     private GameConstants _constants;
+    private readonly IModGetter _mod;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
         IModGetter mod)
     {
+        _mod = mod;
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
         _category = mod.GameRelease.ToCategory();
@@ -63,6 +65,7 @@ internal sealed class ModHeaderWriteLogic
         AddRecordCount();
         AddNextFormIDActions();
         AddFormIDUniqueness();
+        AddFormIDCompactionLogic();
         AddLightFormLimit(modHeader);
         AddCompressionCheck();
         AddDisallowedLowerFormIDs();
@@ -203,6 +206,32 @@ internal sealed class ModHeaderWriteLogic
                     }
                 });
                 break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    #endregion
+
+    #region FormID Compaction Logic
+    private void AddFormIDCompactionLogic()
+    {
+        switch (_params.FormIDCompaction)
+        {
+            case FormIDCompactionOption.NoCheck:
+                break;
+            case FormIDCompactionOption.Iterate:
+            {
+                var detector = new RecordCompactionCompatibilityDetector();
+                var formIdRange = detector.GetRange(_mod);
+                if (formIdRange != null)
+                {
+                    _recordIterationActions.Add(maj =>
+                    {
+                        detector.ThrowIfIncompatible(_mod, formIdRange.Value, maj);
+                    });
+                }
+                break;
+            }
             default:
                 throw new NotImplementedException();
         }

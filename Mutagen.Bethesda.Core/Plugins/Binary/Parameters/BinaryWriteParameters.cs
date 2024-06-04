@@ -51,6 +51,12 @@ public sealed class BinaryWriteParameters
     public FormIDUniquenessOption FormIDUniqueness { get; set; } = FormIDUniquenessOption.Iterate;
 
     /// <summary>
+    /// Logic to use to ensure a mod's formIDs are compacted according to a mod's header flags.<br/>
+    /// If there is a record outside the allowed setting, an ArgumentException will be thrown.
+    /// </summary>
+    public FormIDCompactionOption FormIDCompaction { get; set; } = FormIDCompactionOption.Iterate;
+
+    /// <summary>
     /// Logic to use to ensure a mod's master flag matches the specified ModKey
     /// </summary>
     public MasterFlagOption MasterFlag { get; set; } = MasterFlagOption.ChangeToMatchModKey;
