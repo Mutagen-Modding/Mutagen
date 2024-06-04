@@ -5324,7 +5324,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             this.SkyrimRelease = release;
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
-                release: release,
                 forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
             _Keywords_Object = new SkyrimGroup<Keyword>(this);

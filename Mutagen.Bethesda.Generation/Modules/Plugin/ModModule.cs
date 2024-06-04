@@ -149,10 +149,6 @@ public class ModModule : GenerationModule
 
             using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
             {
-                if (objData.GameReleaseOptions != null)
-                {
-                    a.AddPassArg("release");
-                }
                 a.AddPassArg("forceUseLowerFormIDRanges");
             }
 

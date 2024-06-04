@@ -13,13 +13,8 @@ namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
-    private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID(
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
@@ -36,7 +31,7 @@ public partial class OblivionMod : AMod
         set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
     }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion,
+    internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
         return HeaderVersionHelper.GetInitialFormId(
@@ -101,8 +96,8 @@ public partial class OblivionMod : AMod
 
 internal partial class OblivionModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        OblivionMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        OblivionMod.GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     

@@ -1,5 +1,4 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -14,13 +13,8 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        Fallout4Release release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
     
     public override bool CanBeLightMaster => true;
 
@@ -41,7 +35,7 @@ public partial class Fallout4Mod : AMod
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
     
-    public static uint GetDefaultInitialNextFormID(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
+    internal static uint GetDefaultInitialNextFormIDStatic(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
     {
         return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
@@ -54,8 +48,8 @@ public partial class Fallout4Mod : AMod
 
 internal partial class Fallout4ModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        Fallout4Mod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        Fallout4Mod.GetDefaultInitialNextFormIDStatic(
             this.Fallout4Release,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);

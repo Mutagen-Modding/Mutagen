@@ -5840,7 +5840,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             this.Fallout4Release = release;
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
-                release: release,
                 forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new Fallout4Group<GameSetting>(this);
             _Keywords_Object = new Fallout4Group<Keyword>(this);

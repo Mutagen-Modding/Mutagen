@@ -30,7 +30,7 @@ public class TestMod : ITestMod, IDisposable
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }

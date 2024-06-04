@@ -132,7 +132,7 @@ public interface IModGetter :
     /// </summary>
     uint NextFormID { get; }
 
-    uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
+    uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 }
 
 /// <summary>

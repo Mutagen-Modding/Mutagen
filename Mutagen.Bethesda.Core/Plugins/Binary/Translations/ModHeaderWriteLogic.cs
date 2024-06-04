@@ -129,7 +129,7 @@ internal sealed class ModHeaderWriteLogic
             {
                 forceLowerBound = force.ForceLowerRangeSetting;
             }
-            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID(forceLowerBound);
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.GetDefaultInitialNextFormID(forceLowerBound);
         }
 
         var lightIndex = _category.GetLightFlagIndex();

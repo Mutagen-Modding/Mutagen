@@ -23,7 +23,7 @@ public abstract class AMod : IMod
     private IFormKeyAllocator _allocator;
 
     /// <inheritdoc />
-    public abstract uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
+    public abstract uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 
     protected AMod()
     {

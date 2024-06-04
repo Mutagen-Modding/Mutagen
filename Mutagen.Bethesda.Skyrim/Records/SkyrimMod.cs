@@ -15,13 +15,8 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        SkyrimRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        GetDefaultInitialNextFormID(this.SkyrimRelease, 
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        GetDefaultInitialNextFormIDStatic(this.SkyrimRelease, 
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
 
@@ -51,7 +46,7 @@ public partial class SkyrimMod : AMod
         GameRelease.EnderalSE,
     };
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         SkyrimRelease release,
         float headerVersion,
         bool? forceUseLowerFormIDRanges)
@@ -67,8 +62,8 @@ public partial class SkyrimMod : AMod
 
 internal partial class SkyrimModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        SkyrimMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        SkyrimMod.GetDefaultInitialNextFormIDStatic(
             this.SkyrimRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);

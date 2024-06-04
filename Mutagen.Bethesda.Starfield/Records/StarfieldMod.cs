@@ -14,13 +14,8 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        StarfieldRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
@@ -46,7 +41,7 @@ public partial class StarfieldMod : AMod
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         StarfieldRelease release, 
         float headerVersion, 
         bool? forceUseLowerFormIDRanges)
@@ -62,8 +57,8 @@ public partial class StarfieldMod : AMod
 
 internal partial class StarfieldModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        StarfieldMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        StarfieldMod.GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
