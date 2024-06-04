@@ -119,7 +119,7 @@ public sealed class FormKeyBinaryTranslation
         }
 
         throw new UnmappableFormIDException(
-            key.FormKey,
+            key,
             masterIndices.Masters
                 .Select(x => x.Master)
                 .ToArray());

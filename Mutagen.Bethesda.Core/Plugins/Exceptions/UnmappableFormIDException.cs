@@ -4,13 +4,13 @@ namespace Mutagen.Bethesda.Plugins.Exceptions;
 
 public class UnmappableFormIDException : Exception
 {
-    public FormKey UnmappableFormKey { get; }
+    public FormLinkInformation UnmappableFormKey { get; }
     public IReadOnlyList<ModKey> ListedMasters { get; }
 
-    public UnmappableFormIDException(FormKey unmappableFormKey, IReadOnlyList<ModKey> listedMasters)
+    public UnmappableFormIDException(IFormLinkIdentifier unmappableFormKey, IReadOnlyList<ModKey> listedMasters)
         : base("Could not map FormKey to a master index")
     {
-        UnmappableFormKey = unmappableFormKey;
+        UnmappableFormKey = FormLinkInformation.Factory(unmappableFormKey);
         ListedMasters = listedMasters;
     }
 
