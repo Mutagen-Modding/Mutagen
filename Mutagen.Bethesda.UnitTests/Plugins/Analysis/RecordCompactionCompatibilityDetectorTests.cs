@@ -3,9 +3,11 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 using Npc = Mutagen.Bethesda.Skyrim.Npc;
+using StarfieldNpc = Mutagen.Bethesda.Starfield.Npc;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 
@@ -16,7 +18,9 @@ public class RecordCompactionCompatibilityDetectorTests
         OblivionMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightModCompatible(mod)
+        sut.IsLightMasterCompatible(mod)
+            .Should().BeFalse();
+        sut.IsHalfMasterCompatible(mod)
             .Should().BeFalse();
     }
     
@@ -25,7 +29,16 @@ public class RecordCompactionCompatibilityDetectorTests
         SkyrimMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightModCompatible(mod)
+        sut.IsLightMasterCompatible(mod)
+            .Should().BeTrue();
+    }
+    
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
+    public void HalfMasterEmpty(
+        StarfieldMod mod,
+        RecordCompactionCompatibilityDetector sut)
+    {
+        sut.IsHalfMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -35,18 +48,19 @@ public class RecordCompactionCompatibilityDetectorTests
         Npc n,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightModCompatible(mod)
+        sut.IsLightMasterCompatible(mod)
             .Should().BeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
     public void LightMasterLowerFormIDIncompatible(
         SkyrimMod mod,
-        Npc n,
         RecordCompactionCompatibilityDetector sut)
     {
-        mod.ModHeader.Version = 55;
-        sut.IsLightModCompatible(mod)
+        Npc n = new Npc(new FormKey(mod.ModKey, 0x500), SkyrimRelease.SkyrimSE);
+        mod.Npcs.Add(n);
+        mod.ModHeader.Stats.Version = 1.60f;
+        sut.IsLightMasterCompatible(mod)
             .Should().BeFalse();
     }
     
@@ -56,7 +70,17 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0x801), SkyrimRelease.SkyrimSE));
-        sut.IsLightModCompatible(mod)
+        sut.IsLightMasterCompatible(mod)
+            .Should().BeTrue();
+    }
+    
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
+    public void HalfMasterNormalFormID(
+        StarfieldMod mod,
+        RecordCompactionCompatibilityDetector sut)
+    {
+        mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0x801), StarfieldRelease.Starfield));
+        sut.IsHalfMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -66,7 +90,17 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0xFFFF), SkyrimRelease.SkyrimSE));
-        sut.IsLightModCompatible(mod)
+        sut.IsLightMasterCompatible(mod)
+            .Should().BeFalse();
+    }
+    
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
+    public void HalfMasterNotCompatible(
+        StarfieldMod mod,
+        RecordCompactionCompatibilityDetector sut)
+    {
+        mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0xFFFFF), StarfieldRelease.Starfield));
+        sut.IsHalfMasterCompatible(mod)
             .Should().BeFalse();
     }
 }
