@@ -109,7 +109,7 @@ jobs:
     - name: Pack Preview
       if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix ".1-nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
