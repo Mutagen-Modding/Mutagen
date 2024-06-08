@@ -9777,8 +9777,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem) : null;
-            bool disposeStrings = param.StringsWriter != null;
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
             using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 StarfieldModCommon.WriteParallel(
@@ -9788,10 +9787,7 @@ namespace Mutagen.Bethesda.Starfield
                     param: param,
                     modKey: modKey);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         [DebuggerStepThrough]
@@ -33262,8 +33258,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)StarfieldModHeader.HeaderFlag.Localized) ? new StringsWriter(item.StarfieldRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem.GetOrDefault()) : null;
-            bool disposeStrings = param.StringsWriter != null;
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
             var bundle = new WritingBundle(item.StarfieldRelease.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
@@ -33293,10 +33288,7 @@ namespace Mutagen.Bethesda.Starfield
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(

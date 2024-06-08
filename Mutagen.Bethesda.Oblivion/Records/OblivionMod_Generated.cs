@@ -3769,6 +3769,7 @@ namespace Mutagen.Bethesda.Oblivion
                     param: param,
                     modKey: modKey);
             }
+            param.StringsWriter?.Dispose();
         }
 
         [DebuggerStepThrough]
@@ -12001,6 +12002,7 @@ namespace Mutagen.Bethesda.Oblivion
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(
