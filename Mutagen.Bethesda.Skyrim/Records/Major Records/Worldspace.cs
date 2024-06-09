@@ -140,7 +140,7 @@ partial class WorldspaceBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 writer.Write(obj.SubCellsTimestamp);
                 writer.Write(obj.SubCellsUnknown);

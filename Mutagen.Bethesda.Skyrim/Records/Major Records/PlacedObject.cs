@@ -233,17 +233,11 @@ partial class PlacedObjectBinaryWriteTranslation
             writer.Write(flags);
             writer.Write(unknown2);
         }
-        if (lightingTemplate.FormKeyNullable != null)
-        {
-            FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKeyNullable.Value, RecordTypes.LNAM);
-        }
-        if (imageSpace.FormKeyNullable != null)
-        {
-            FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKeyNullable.Value, RecordTypes.INAM);
-        }
+        FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate, RecordTypes.LNAM);
+        FormKeyBinaryTranslation.Instance.Write(writer, imageSpace, RecordTypes.INAM);
         foreach (var room in linkedRooms)
         {
-            FormKeyBinaryTranslation.Instance.Write(writer, room.FormKey, RecordTypes.XLRM);
+            FormKeyBinaryTranslation.Instance.Write(writer, room, RecordTypes.XLRM);
         }
     }
 }

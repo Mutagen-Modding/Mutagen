@@ -50,22 +50,18 @@ public sealed record GameConstants
     
     public ushort? DefaultFormVersion { get; init; }
     
+    public float? DefaultModHeaderVersion { get; init; }
+    
     public string? MyDocumentsString { get; init; }
     
     public string IniName { get; init; }
     
+    public uint DefaultHighRangeFormID { get; init; }
+    
+    public float? UseLowerRangeFormIDVersion { get; init; }
+    
     public StringsLanguageFormat? StringsLanguageFormat { get; init; }
     
-    /// <summary> 
-    /// Constructor 
-    /// </summary> 
-    /// <param name="release">Game Release to associate with the constants</param> 
-    /// <param name="modHeaderLength">Length of the ModHeader</param> 
-    /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param> 
-    /// <param name="groupConstants">Constants defining Groups</param> 
-    /// <param name="majorConstants">Constants defining Major Records</param> 
-    /// <param name="subConstants">Constants defining Sub Records</param>
-    /// <param name="languages">Languages supported</param>
     public GameConstants(
         GameRelease release,
         sbyte modHeaderLength,
@@ -78,8 +74,11 @@ public sealed record GameConstants
         EncodingBundle encodings,
         bool hasEnabledMarkers,
         ushort? defaultFormVersion,
+        float? defaultModHeaderVersion,
         string? myDocumentsString,
-        string iniName)
+        string iniName,
+        uint defaultHighRangeFormId, 
+        float? useLowerRangeFormIdVersion)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -91,9 +90,12 @@ public sealed record GameConstants
         Encodings = encodings;
         HasEnabledMarkers = hasEnabledMarkers;
         DefaultFormVersion = defaultFormVersion;
+        DefaultModHeaderVersion = defaultModHeaderVersion;
         MyDocumentsString = myDocumentsString;
         StringsLanguageFormat = languageFormat;
         IniName = iniName;
+        DefaultHighRangeFormID = defaultHighRangeFormId;
+        UseLowerRangeFormIDVersion = useLowerRangeFormIdVersion;
     }
 
     /// <summary> 
@@ -152,6 +154,9 @@ public sealed record GameConstants
         languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,
+        defaultModHeaderVersion: 1f,
+        defaultHighRangeFormId: 0xD62,
+        useLowerRangeFormIdVersion: null,
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -219,6 +224,9 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.FullName,
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
+        defaultModHeaderVersion: 1.71f,
+        defaultHighRangeFormId: 0x800,
+        useLowerRangeFormIdVersion: 1.71f,
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -337,6 +345,9 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 131,
+        defaultModHeaderVersion: 1f,
+        defaultHighRangeFormId: 0x800,
+        useLowerRangeFormIdVersion: 1f,
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -418,6 +429,9 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 555,
+        defaultModHeaderVersion: 0.96f,
+        defaultHighRangeFormId: 0x800,
+        useLowerRangeFormIdVersion: 0f,
         myDocumentsString: null,
         iniName: "Starfield",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));

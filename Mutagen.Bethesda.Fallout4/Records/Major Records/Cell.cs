@@ -302,7 +302,7 @@ partial class CellBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.UnknownGroupData);
@@ -312,7 +312,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         writer.Write(obj.PersistentTimestamp);
                         writer.Write(obj.PersistentUnknownGroupData);
@@ -330,7 +330,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         writer.Write(obj.TemporaryUnknownGroupData);

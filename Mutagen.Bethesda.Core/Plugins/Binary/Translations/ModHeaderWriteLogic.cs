@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
@@ -6,12 +6,11 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Utility;
-using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public sealed class ModHeaderWriteLogic
+internal sealed class ModHeaderWriteLogic
 {
     private readonly List<Action<IMajorRecordGetter>> _recordIterationActions = new();
     private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();
@@ -23,21 +22,22 @@ public sealed class ModHeaderWriteLogic
     private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
-    private readonly GameRelease _release;
     private readonly GameCategory _category;
     private FormKey? _disallowedFormKey;
     private uint _higherFormIDRange;
+    private GameConstants _constants;
+    private readonly IModGetter _mod;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
-        IModGetter mod,
-        IModHeaderCommon modHeader)
+        IModGetter mod)
     {
+        _mod = mod;
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
-        _release = mod.GameRelease;
         _category = mod.GameRelease.ToCategory();
-        _higherFormIDRange = HeaderVersionHelper.GetDefaultHigherFormID(this._release);
+        _constants = GameConstants.Get(mod.GameRelease);
+        _higherFormIDRange = _constants.DefaultHighRangeFormID;
     }
 
     public static void WriteHeader(
@@ -49,8 +49,7 @@ public sealed class ModHeaderWriteLogic
     {
         var modHeaderWriter = new ModHeaderWriteLogic(
             param: param,
-            mod: mod,
-            modHeader: modHeader);
+            mod: mod);
         modHeaderWriter.AddProcessors(mod, modHeader);
         modHeaderWriter.RunProcessors(mod);
         modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader);
@@ -66,6 +65,7 @@ public sealed class ModHeaderWriteLogic
         AddRecordCount();
         AddNextFormIDActions();
         AddFormIDUniqueness();
+        AddFormIDCompactionLogic();
         AddLightFormLimit(modHeader);
         AddCompressionCheck();
         AddDisallowedLowerFormIDs();
@@ -132,7 +132,7 @@ public sealed class ModHeaderWriteLogic
             {
                 forceLowerBound = force.ForceLowerRangeSetting;
             }
-            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID(forceLowerBound);
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.GetDefaultInitialNextFormID(forceLowerBound);
         }
 
         var lightIndex = _category.GetLightFlagIndex();
@@ -206,6 +206,32 @@ public sealed class ModHeaderWriteLogic
                     }
                 });
                 break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    #endregion
+
+    #region FormID Compaction Logic
+    private void AddFormIDCompactionLogic()
+    {
+        switch (_params.FormIDCompaction)
+        {
+            case FormIDCompactionOption.NoCheck:
+                break;
+            case FormIDCompactionOption.Iterate:
+            {
+                var detector = new RecordCompactionCompatibilityDetector();
+                var formIdRange = detector.GetRange(_mod);
+                if (formIdRange != null)
+                {
+                    _recordIterationActions.Add(maj =>
+                    {
+                        detector.ThrowIfIncompatible(_mod, formIdRange.Value, maj);
+                    });
+                }
+                break;
+            }
             default:
                 throw new NotImplementedException();
         }

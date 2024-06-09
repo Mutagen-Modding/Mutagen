@@ -1,5 +1,4 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -14,38 +13,52 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        Fallout4Release release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    
+    public override bool CanBeLightMaster => true;
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
+    public override bool IsLightMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Light, value);
+    }
+    public override bool CanBeHalfMaster => false;
+    public override bool IsHalfMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
+    
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
     
-    public static uint GetDefaultInitialNextFormID(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
+    internal static uint GetDefaultInitialNextFormIDStatic(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 1f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
 }
 
 internal partial class Fallout4ModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        Fallout4Mod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        Fallout4Mod.GetDefaultInitialNextFormIDStatic(
             this.Fallout4Release,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => true;
+    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Light);
+
+    public bool CanBeHalfMaster => false;
+    public bool IsHalfMaster => false;
 }
 
 partial class Fallout4ModCommon
@@ -208,7 +221,7 @@ partial class Fallout4ModCommon
             worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);

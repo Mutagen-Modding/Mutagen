@@ -1253,7 +1253,7 @@ partial class FunctionConditionDataBinaryWriteTranslation
                 writer.Write(item.ParameterOneNumber);
                 break;
             case Condition.ParameterCategory.Form:
-                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord);
                 break;
             default:
                 throw new NotImplementedException();
@@ -1266,7 +1266,7 @@ partial class FunctionConditionDataBinaryWriteTranslation
                 writer.Write(item.ParameterTwoNumber);
                 break;
             case Condition.ParameterCategory.Form:
-                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord);
                 break;
             default:
                 throw new NotImplementedException();

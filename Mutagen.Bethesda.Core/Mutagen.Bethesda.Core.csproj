@@ -137,6 +137,7 @@
         <Compile Include="Installs\RegistryGameSource.cs" />
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
+        <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -197,8 +198,8 @@
         <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
+        <Compile Include="Plugins\Binary\Parameters\FormIDCompactionOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\LightLimitOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MasterFlagOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />
@@ -255,6 +256,7 @@
         <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
         <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
         <Compile Include="Plugins\Exceptions\FloatStoredAsIntegerOverflowException.cs" />
+        <Compile Include="Plugins\Exceptions\FormIDCompactionOutOfBoundsException.cs" />
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
@@ -298,6 +300,10 @@
         <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
         <Compile Include="Plugins\Internals\RecordCollection.cs" />
         <Compile Include="Plugins\Internals\RecordTriggerSpecs.cs" />
+        <Compile Include="Plugins\IO\DI\AssociatedFilesLocator.cs" />
+        <Compile Include="Plugins\IO\DI\ModFilesMover.cs" />
+        <Compile Include="Plugins\IO\AssociatedModFileCategory.cs" />
+        <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
         <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -485,6 +491,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\AssociatedRecordTypesAttribute.cs" />
         <Compile Include="Plugins\Records\Mapping\GetterTypeMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\InheritingInterfaceMapping.cs">
@@ -514,10 +521,9 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>

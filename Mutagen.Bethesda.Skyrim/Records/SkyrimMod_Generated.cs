@@ -5323,9 +5323,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
             this.SkyrimRelease = release;
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
-                release: release,
-                forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
             _Keywords_Object = new SkyrimGroup<Keyword>(this);
             _LocationReferenceTypes_Object = new SkyrimGroup<LocationReferenceType>(this);
@@ -6770,8 +6768,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem) : null;
-            bool disposeStrings = param.StringsWriter != null;
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
             using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
@@ -6781,10 +6778,7 @@ namespace Mutagen.Bethesda.Skyrim
                     param: param,
                     modKey: modKey);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         [DebuggerStepThrough]
@@ -22860,13 +22854,13 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)SkyrimModHeader.HeaderFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem.GetOrDefault()) : null;
-            bool disposeStrings = param.StringsWriter != null;
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {
@@ -22890,10 +22884,7 @@ namespace Mutagen.Bethesda.Skyrim
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(

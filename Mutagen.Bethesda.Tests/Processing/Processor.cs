@@ -253,17 +253,25 @@ public abstract class Processor
         long fileOffset)
     {
         var formID = majorFrame.FormID;
-        if (formID.ModIndex.ID <= _numMasters) return;
+        if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
         Instructions.SetSubstitution(
             fileOffset + Meta.MajorConstants.FormIDLocationOffset + 3,
             _numMasters);
     }
 
+    private bool CheckIsFormIDOverflow(FormID formID)
+    {
+        if (formID.ModIndex.ID <= _numMasters) return false;
+        if (formID.ModIndex.ID == 0xFE) return false;
+        if (formID.ModIndex.ID == 0xFD) return false;
+        return true;
+    }
+
     public void ProcessFormIDOverflow(ReadOnlySpan<byte> span, ref long offsetLoc)
     {
         var formID = new FormID(span.UInt32());
-        if (formID.ModIndex.ID <= _numMasters) return;
+        if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
         Instructions.SetSubstitution(
             offsetLoc + 3,
@@ -272,7 +280,7 @@ public abstract class Processor
 
     public FormID ProcessFormIDOverflow(FormID formId)
     {
-        if (formId.ModIndex.ID <= _numMasters) return formId;
+        if (!CheckIsFormIDOverflow(formId)) return formId;
         return new FormID(new ModIndex(_numMasters), formId.ID);
     }
 

@@ -1,5 +1,4 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -15,44 +14,59 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        StarfieldRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
+
+    public override bool CanBeLightMaster => true;
+
+    public override bool IsLightMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
+    }
+
+    public override bool CanBeHalfMaster => true;
+
+    public override bool IsHalfMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
+    }
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         StarfieldRelease release, 
         float headerVersion, 
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 0f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
 }
 
 internal partial class StarfieldModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        StarfieldMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        StarfieldMod.GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => true;
+    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+    public bool CanBeHalfMaster => true;
+    public bool IsHalfMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
 }
 
 partial class StarfieldModSetterCommon
@@ -232,7 +246,7 @@ partial class StarfieldModCommon
             worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);

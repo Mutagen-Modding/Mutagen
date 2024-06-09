@@ -1,4 +1,4 @@
-﻿namespace Mutagen.Bethesda.Plugins.RecordTypeMapping;
+﻿namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Interface,
     Inherited = true)]

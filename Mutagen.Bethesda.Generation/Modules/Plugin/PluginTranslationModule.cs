@@ -413,8 +413,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int){obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}, fileSystem: fileSystem.GetOrDefault()) : null;");
-            sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
+            sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
         using (var prop = sb.PropertyCtor())
@@ -425,6 +424,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
+            prop.Add($"Header = item");
         }
         sb.AppendLine($"if (param.{nameof(BinaryWriteParameters.Encodings)} != null)");
         using (sb.CurlyBrace())
@@ -451,14 +451,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine($"memStream.Position = 0;");
             sb.AppendLine($"memStream.CopyTo(fs);");
         }
-        if (objData.UsesStringFiles)
-        {
-            sb.AppendLine("if (disposeStrings)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("param.StringsWriter?.Dispose();");
-            }
-        }
+        sb.AppendLine("param.StringsWriter?.Dispose();");
     }
 
     private void ConvertFromPathIn(ObjectGeneration obj, StructuredStringBuilder sb, InternalTranslation internalToDo)

@@ -10,6 +10,16 @@ public readonly struct ModIndex
     /// A static readonly singleton ModID with value 0
     /// </summary>
     public static readonly ModIndex Zero = new ModIndex(0);
+    
+    /// <summary>
+    /// A static readonly singleton ModID with value 0xFE for Light Masters
+    /// </summary>
+    public static readonly ModIndex LightMaster = new ModIndex(0xFE);
+    
+    /// <summary>
+    /// A static readonly singleton ModID with value 0xFE for Half Masters
+    /// </summary>
+    public static readonly ModIndex HalfMaster = new ModIndex(0xFD);
 
     public const byte MaxIndex = 254;
 

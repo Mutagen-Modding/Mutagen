@@ -78,28 +78,28 @@ partial class APlacedTrapBinaryWriteTranslation
         switch (item)
         {
             case IPlacedArrowGetter arrow:
-                FormKeyBinaryTranslation.Instance.Write(writer, arrow.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, arrow.Projectile);
                 break;
             case IPlacedBeamGetter beam:
-                FormKeyBinaryTranslation.Instance.Write(writer, beam.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, beam.Projectile);
                 break;
             case IPlacedFlameGetter flame:
-                FormKeyBinaryTranslation.Instance.Write(writer, flame.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, flame.Projectile);
                 break;
             case IPlacedConeGetter cone:
-                FormKeyBinaryTranslation.Instance.Write(writer, cone.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, cone.Projectile);
                 break;
             case IPlacedBarrierGetter barrier:
-                FormKeyBinaryTranslation.Instance.Write(writer, barrier.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, barrier.Projectile);
                 break;
             case IPlacedTrapGetter trap:
-                FormKeyBinaryTranslation.Instance.Write(writer, trap.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, trap.Projectile);
                 break;
             case IPlacedHazardGetter hazard:
-                FormKeyBinaryTranslation.Instance.Write(writer, hazard.Hazard.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, hazard.Hazard);
                 break;
             case IPlacedMissileGetter missile:
-                FormKeyBinaryTranslation.Instance.Write(writer, missile.Projectile.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, missile.Projectile);
                 break;
             default:
                 throw new NotImplementedException();

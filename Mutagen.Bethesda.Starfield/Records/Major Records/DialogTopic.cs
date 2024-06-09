@@ -246,7 +246,7 @@ partial class DialogTopicBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.Unknown);

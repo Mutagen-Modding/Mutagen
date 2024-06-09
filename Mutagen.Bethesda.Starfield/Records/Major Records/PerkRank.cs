@@ -371,11 +371,11 @@ partial class PerkRankBinaryWriteTranslation
                 switch (effect)
                 {
                     case PerkQuestEffect quest:
-                        FormKeyBinaryTranslation.Instance.Write(writer, quest.Quest.FormKey);
+                        FormKeyBinaryTranslation.Instance.Write(writer, quest.Quest);
                         writer.Write(quest.Stage);
                         break;
                     case PerkAbilityEffect ability:
-                        FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability.FormKey);
+                        FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability);
                         break;
                     case APerkEntryPointEffect entryPt:
                         writer.Write((byte)entryPt.EntryPoint);
@@ -515,25 +515,13 @@ partial class PerkRankBinaryWriteTranslation
                         }
                         break;
                     case PerkEntryPointAddLeveledItem lev:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(writer, lev.Item.FormKey);
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, lev.Item, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointAddActivateChoice activateChoice:
-                        if (activateChoice.Spell.FormKeyNullable != null)
-                        {
-                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                            {
-                                FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell.FormKeyNullable.Value);
-                            }
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointSelectSpell spell:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell.FormKey);
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointSelectText text:
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
@@ -550,10 +538,7 @@ partial class PerkRankBinaryWriteTranslation
                     case PerkEntryPointAbsoluteValue abs:
                         break;
                     case PerkEntryPointLegendaryMagicEffectEvent leg:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(writer, leg.Projectile.FormKey);
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, leg.Projectile, RecordTypes.EPFD);
                         
                         break;
                     default:

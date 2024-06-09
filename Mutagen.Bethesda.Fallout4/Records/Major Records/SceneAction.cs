@@ -118,13 +118,7 @@ partial class SceneActionBinaryWriteTranslation
                 }
                 break;
             case ISceneActionTypicalTypeGetter typical:
-                if (typical.PlaySound.FormKeyNullable is { } fk)
-                {
-                    using (HeaderExport.Subrecord(writer, RecordTypes.HTID))
-                    {
-                        FormKeyBinaryTranslation.Instance.Write(writer, fk);
-                    }
-                }
+                FormKeyBinaryTranslation.Instance.Write(writer, typical.PlaySound, RecordTypes.HTID);
                 break;
             default:
                 throw new NotImplementedException();

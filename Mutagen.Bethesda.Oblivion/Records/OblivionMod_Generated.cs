@@ -3769,6 +3769,7 @@ namespace Mutagen.Bethesda.Oblivion
                     param: param,
                     modKey: modKey);
             }
+            param.StringsWriter?.Dispose();
         }
 
         [DebuggerStepThrough]
@@ -11976,7 +11977,8 @@ namespace Mutagen.Bethesda.Oblivion
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {
@@ -12000,6 +12002,7 @@ namespace Mutagen.Bethesda.Oblivion
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(

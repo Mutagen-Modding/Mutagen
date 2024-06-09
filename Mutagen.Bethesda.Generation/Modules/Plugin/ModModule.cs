@@ -149,10 +149,6 @@ public class ModModule : GenerationModule
 
             using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
             {
-                if (objData.GameReleaseOptions != null)
-                {
-                    a.AddPassArg("release");
-                }
                 a.AddPassArg("forceUseLowerFormIDRanges");
             }
 
@@ -511,8 +507,7 @@ public class ModModule : GenerationModule
             }
             if (obj.GetObjectData().UsesStringFiles)
             {
-                sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}, fileSystem: fileSystem) : null;");
-                sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
+                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);");
             }
             sb.AppendLine("using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())
@@ -527,14 +522,7 @@ public class ModModule : GenerationModule
                     args.AddPassArg("modKey");
                 }
             }
-            if (obj.GetObjectData().UsesStringFiles)
-            {
-                sb.AppendLine("if (disposeStrings)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("param.StringsWriter?.Dispose();");
-                }
-            }
+            sb.AppendLine("param.StringsWriter?.Dispose();");
         }
         sb.AppendLine();
     }

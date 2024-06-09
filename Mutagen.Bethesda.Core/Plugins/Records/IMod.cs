@@ -6,10 +6,44 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
+public interface IModFlagsGetter
+{
+    /// <summary>
+    /// Whether a mod supports localization features
+    /// </summary>
+    bool CanUseLocalization { get; }
+
+    /// <summary>
+    /// Whether a mod has localization enabled
+    /// </summary>
+    bool UsingLocalization { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Light Master features
+    /// </summary>
+    bool CanBeLightMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Light Master flag enabled
+    /// </summary>
+    bool IsLightMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Half Master features
+    /// </summary>
+    bool CanBeHalfMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Half Master flag enabled
+    /// </summary>
+    bool IsHalfMaster { get; }
+}
+
 /// <summary>
 /// An interface that Mod objects implement to hook into the common getter systems
 /// </summary>
 public interface IModGetter : 
+    IModFlagsGetter,
     IMajorRecordGetterEnumerable,
     IMajorRecordSimpleContextEnumerable,
     IFormLinkContainerGetter, 
@@ -94,21 +128,11 @@ public interface IModGetter :
     void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
 
     /// <summary>
-    /// Whether a mod supports localization features
-    /// </summary>
-    bool CanUseLocalization { get; }
-
-    /// <summary>
-    /// Whether a mod has localization enabled
-    /// </summary>
-    bool UsingLocalization { get; }
-
-    /// <summary>
     /// The next FormID to be allocated
     /// </summary>
     uint NextFormID { get; }
 
-    uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
+    uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 }
 
 /// <summary>
@@ -158,6 +182,11 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     /// Whether a mod has localization enabled
     /// </summary>
     new bool UsingLocalization { get; set; }
+
+    /// <summary>
+    /// Whether a mod has Light Master flag enabled
+    /// </summary>
+    new bool IsLightMaster { get; set; }
 
     /// <summary>
     /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.

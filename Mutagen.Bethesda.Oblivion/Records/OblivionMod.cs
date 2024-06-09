@@ -7,33 +7,39 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
-    private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID(
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public override bool CanBeLightMaster => false;
+    public override bool IsLightMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
+    }
+    public override bool CanBeHalfMaster => false;
+    public override bool IsHalfMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion,
+    internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: GameRelease.Oblivion,
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: DefaultInitialNextFormID);
+            constants: GameConstants.Get(GameRelease.Oblivion));
     }
 
     partial void GetCustomRecordCount(Action<uint> setter)
@@ -90,10 +96,15 @@ public partial class OblivionMod : AMod
 
 internal partial class OblivionModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        OblivionMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        OblivionMod.GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => false;
+    public bool IsLightMaster => false;
+    public bool CanBeHalfMaster => false;
+    public bool IsHalfMaster => false;
 }
 
 partial class OblivionModCommon
@@ -251,7 +262,7 @@ partial class OblivionModCommon
             worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             road?.WriteToBinary(worldGroupWriter);

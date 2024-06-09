@@ -15,15 +15,24 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        SkyrimRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        GetDefaultInitialNextFormID(this.SkyrimRelease, 
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        GetDefaultInitialNextFormIDStatic(this.SkyrimRelease, 
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
+
+    public override bool CanBeLightMaster => true;
+
+    public override bool IsLightMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
+    }
+    public override bool CanBeHalfMaster => false;
+    public override bool IsHalfMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
     partial void CustomCtor()
     {
@@ -37,28 +46,33 @@ public partial class SkyrimMod : AMod
         GameRelease.EnderalSE,
     };
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         SkyrimRelease release,
         float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: _allowedLowerRangeReleases,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 1.71f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
 }
 
 internal partial class SkyrimModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        SkyrimMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        SkyrimMod.GetDefaultInitialNextFormIDStatic(
             this.SkyrimRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeLightMaster => true;
+    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
+    
+    public bool CanBeHalfMaster => false;
+    public bool IsHalfMaster => false;
 }
 
 partial class SkyrimModSetterCommon
@@ -246,7 +260,7 @@ partial class SkyrimModCommon
             worldGroupWriter.Write(Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);

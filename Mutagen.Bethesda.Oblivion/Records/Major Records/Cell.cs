@@ -216,7 +216,7 @@ partial class CellBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 writer.Write(obj.Timestamp);
                 if (obj.Persistent?.Count > 0)
@@ -225,7 +225,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         writer.Write(obj.PersistentTimestamp);
                         ListBinaryTranslation<IPlacedGetter>.Instance.Write(
@@ -245,7 +245,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         landscape?.WriteToBinary(writer);
@@ -268,7 +268,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                         writer.Write(obj.VisibleWhenDistantTimestamp);
                         ListBinaryTranslation<IPlacedGetter>.Instance.Write(
