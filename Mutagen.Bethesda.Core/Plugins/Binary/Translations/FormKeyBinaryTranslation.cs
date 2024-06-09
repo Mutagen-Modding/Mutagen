@@ -66,7 +66,6 @@ public sealed class FormKeyBinaryTranslation
         }
 
         var formID = GetFormID(
-            writer.MetaData.Header!,
             writer.MetaData.MasterReferences!,
             item);
 
@@ -76,36 +75,9 @@ public sealed class FormKeyBinaryTranslation
     }
 
     private FormID GetFormID(
-        IModFlagsGetter? modFlags,
         IReadOnlyMasterReferenceCollection masterIndices,
         IFormLinkIdentifier key)
     {
-        if (modFlags != null && key.FormKey.ModKey == masterIndices.CurrentMod)
-        {
-            bool isLightMaster = modFlags.CanBeLightMaster
-                                 && modFlags.IsLightMaster;
-            bool isHalfMaster = modFlags.CanBeHalfMaster
-                                && modFlags.IsHalfMaster;
-            if (isLightMaster && isHalfMaster)
-            {
-                throw new NotImplementedException("Mod cannot be both a light and half master");
-            }
-
-            if (isLightMaster)
-            {
-                return new FormID(
-                    ModIndex.LightMaster,
-                    key.FormKey.ID);
-            }
-
-            if (isHalfMaster)
-            {
-                return new FormID(
-                    ModIndex.HalfMaster,
-                    key.FormKey.ID);
-            }
-        }
-
         if (masterIndices.TryGetIndex(key.FormKey.ModKey, out var index))
         {
             return new FormID(
