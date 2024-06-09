@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
+using Mutagen.Bethesda.Plugins.IO.DI;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -24,6 +25,7 @@ public class MutagenModule : Module
                 typeof(ILoadOrderWriter),
                 typeof(IModActivator),
                 typeof(IIniPathLookup),
+                typeof(IModFilesMover),
                 typeof(IMasterReferenceReaderFactory))
             .NotInjection()
             .AsMatchingInterface();
