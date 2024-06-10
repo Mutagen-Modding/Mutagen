@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <ByteArray name="XALG" recordType="XALG" unknown="true" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
@@ -42,6 +43,7 @@
           <Int32 name="EnamInt5" />
           <Float name="ENAMFloat11" />
         </Fields>
+        <RecordTypeVersioning formVersion="506" recordType="DATA" />
       </Data>
       <RefList name="DamageType" refName="DamageTypeValue" recordType="DAMA" />
     </Fields>

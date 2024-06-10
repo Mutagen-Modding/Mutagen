@@ -25,6 +25,8 @@
           <FormLink name="CastingPerk" refName="Perk" />
         </Fields>
       </Data>
+      <Int32 name="MAGF" recordType="MAGF" unknown="true" />
+      <Int32 name="MUID" recordType="MUID" unknown="true" />
       <RefList name="Effects" refName="Effect" />
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>

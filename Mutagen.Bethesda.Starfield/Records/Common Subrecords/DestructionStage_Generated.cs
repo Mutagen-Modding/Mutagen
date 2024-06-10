@@ -1110,8 +1110,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.MODT,
+                RecordTypes.DMDT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1125,7 +1127,10 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
-                RecordTypes.DMDL));
+                RecordTypes.DMDL),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODT,
+                RecordTypes.DMDT));
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1789,8 +1794,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
-                case RecordTypeInts.MODT:
+                case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2012,8 +2019,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
-                case RecordTypeInts.MODT:
+                case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

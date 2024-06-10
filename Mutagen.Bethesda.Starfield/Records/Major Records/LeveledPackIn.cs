@@ -4,34 +4,23 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Starfield;
 
-public partial class LeveledItem
+partial class LeveledPackInBinaryCreateTranslation
 {
-    [Flags]
-    public enum Flag
-    {
-        CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
-        CalculateForEachItemInCount = 0x02,
-        UseAll = 0x04
-    }
-}
-
-partial class LeveledItemBinaryCreateTranslation
-{
-    public static partial void FillBinaryChanceNoneCustom(MutagenFrame frame, ILeveledItemInternal item, PreviousParse lastParsed)
+    public static partial void FillBinaryChanceNoneCustom(MutagenFrame frame, ILeveledPackInInternal item, PreviousParse lastParsed)
     {
         item.ChanceNone = LeveledNpcBinaryCreateTranslation.GetChance(frame.ReadSubrecord(), frame.MetaData.FormVersion!.Value);
     }
 }
 
-partial class LeveledItemBinaryWriteTranslation
+partial class LeveledPackInBinaryWriteTranslation
 {
-    public static partial void WriteBinaryChanceNoneCustom(MutagenWriter writer, ILeveledItemGetter item)
+    public static partial void WriteBinaryChanceNoneCustom(MutagenWriter writer, ILeveledPackInGetter item)
     {
         LeveledNpcBinaryWriteTranslation.WriteBinaryChanceNoneCustom(writer, item.ChanceNone, item.FormVersion);
     }
 }
 
-partial class LeveledItemBinaryOverlay
+partial class LeveledPackInBinaryOverlay
 {
     private float _chanceNone;
     

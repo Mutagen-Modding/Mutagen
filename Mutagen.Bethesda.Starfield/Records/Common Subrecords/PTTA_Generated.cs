@@ -38,31 +38,37 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class SurfaceTreePatternSwapInfoComponentItem :
-        IEquatable<ISurfaceTreePatternSwapInfoComponentItemGetter>,
-        ILoquiObjectSetter<SurfaceTreePatternSwapInfoComponentItem>,
-        ISurfaceTreePatternSwapInfoComponentItem
+    public partial class PTTA :
+        IEquatable<IPTTAGetter>,
+        ILoquiObjectSetter<PTTA>,
+        IPTTA
     {
         #region Ctor
-        public SurfaceTreePatternSwapInfoComponentItem()
+        public PTTA()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region SurfacePattern
-        private readonly IFormLink<ISurfacePatternGetter> _SurfacePattern = new FormLink<ISurfacePatternGetter>();
-        public IFormLink<ISurfacePatternGetter> SurfacePattern
-        {
-            get => _SurfacePattern;
-            set => _SurfacePattern.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISurfacePatternGetter> ISurfaceTreePatternSwapInfoComponentItemGetter.SurfacePattern => this.SurfacePattern;
-        #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default(Int32);
+        #endregion
+        #region Unknown2
+        public Int32 Unknown2 { get; set; } = default(Int32);
+        #endregion
+        #region Transform
+        private readonly IFormLink<ITransformGetter> _Transform = new FormLink<ITransformGetter>();
+        public IFormLink<ITransformGetter> Transform
+        {
+            get => _Transform;
+            set => _Transform.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ITransformGetter> IPTTAGetter.Transform => this.Transform;
+        #endregion
+        #region Unknown3
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -71,7 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SurfaceTreePatternSwapInfoComponentItemMixIn.Print(
+            PTTAMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -82,16 +88,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISurfaceTreePatternSwapInfoComponentItemGetter rhs) return false;
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPTTAGetter rhs) return false;
+            return ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISurfaceTreePatternSwapInfoComponentItemGetter? obj)
+        public bool Equals(IPTTAGetter? obj)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -103,16 +109,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.SurfacePattern = initialValue;
                 this.Unknown = initialValue;
+                this.Unknown2 = initialValue;
+                this.Transform = initialValue;
+                this.Unknown3 = initialValue;
             }
 
             public Mask(
-                TItem SurfacePattern,
-                TItem Unknown)
+                TItem Unknown,
+                TItem Unknown2,
+                TItem Transform,
+                TItem Unknown3)
             {
-                this.SurfacePattern = SurfacePattern;
                 this.Unknown = Unknown;
+                this.Unknown2 = Unknown2;
+                this.Transform = Transform;
+                this.Unknown3 = Unknown3;
             }
 
             #pragma warning disable CS8618
@@ -124,8 +136,10 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem SurfacePattern;
             public TItem Unknown;
+            public TItem Unknown2;
+            public TItem Transform;
+            public TItem Unknown3;
             #endregion
 
             #region Equals
@@ -138,15 +152,19 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.SurfacePattern, rhs.SurfacePattern)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Transform, rhs.Transform)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.SurfacePattern);
                 hash.Add(this.Unknown);
+                hash.Add(this.Unknown2);
+                hash.Add(this.Transform);
+                hash.Add(this.Unknown3);
                 return hash.ToHashCode();
             }
 
@@ -155,8 +173,10 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.SurfacePattern)) return false;
                 if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Transform)) return false;
+                if (!eval(this.Unknown3)) return false;
                 return true;
             }
             #endregion
@@ -164,8 +184,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.SurfacePattern)) return true;
                 if (eval(this.Unknown)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.Transform)) return true;
+                if (eval(this.Unknown3)) return true;
                 return false;
             }
             #endregion
@@ -173,40 +195,50 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new SurfaceTreePatternSwapInfoComponentItem.Mask<R>();
+                var ret = new PTTA.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.SurfacePattern = eval(this.SurfacePattern);
                 obj.Unknown = eval(this.Unknown);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.Transform = eval(this.Transform);
+                obj.Unknown3 = eval(this.Unknown3);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            public string Print(PTTA.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PTTA.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(SurfaceTreePatternSwapInfoComponentItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PTTA.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.SurfacePattern ?? true)
-                    {
-                        sb.AppendItem(SurfacePattern, "SurfacePattern");
-                    }
                     if (printMask?.Unknown ?? true)
                     {
                         sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.Transform ?? true)
+                    {
+                        sb.AppendItem(Transform, "Transform");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                 }
             }
@@ -232,20 +264,26 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? SurfacePattern;
             public Exception? Unknown;
+            public Exception? Unknown2;
+            public Exception? Transform;
+            public Exception? Unknown3;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                SurfaceTreePatternSwapInfoComponentItem_FieldIndex enu = (SurfaceTreePatternSwapInfoComponentItem_FieldIndex)index;
+                PTTA_FieldIndex enu = (PTTA_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.SurfacePattern:
-                        return SurfacePattern;
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.Unknown:
+                    case PTTA_FieldIndex.Unknown:
                         return Unknown;
+                    case PTTA_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case PTTA_FieldIndex.Transform:
+                        return Transform;
+                    case PTTA_FieldIndex.Unknown3:
+                        return Unknown3;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -253,14 +291,20 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                SurfaceTreePatternSwapInfoComponentItem_FieldIndex enu = (SurfaceTreePatternSwapInfoComponentItem_FieldIndex)index;
+                PTTA_FieldIndex enu = (PTTA_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.SurfacePattern:
-                        this.SurfacePattern = ex;
-                        break;
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.Unknown:
+                    case PTTA_FieldIndex.Unknown:
                         this.Unknown = ex;
+                        break;
+                    case PTTA_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case PTTA_FieldIndex.Transform:
+                        this.Transform = ex;
+                        break;
+                    case PTTA_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -269,14 +313,20 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                SurfaceTreePatternSwapInfoComponentItem_FieldIndex enu = (SurfaceTreePatternSwapInfoComponentItem_FieldIndex)index;
+                PTTA_FieldIndex enu = (PTTA_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.SurfacePattern:
-                        this.SurfacePattern = (Exception?)obj;
-                        break;
-                    case SurfaceTreePatternSwapInfoComponentItem_FieldIndex.Unknown:
+                    case PTTA_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
+                        break;
+                    case PTTA_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case PTTA_FieldIndex.Transform:
+                        this.Transform = (Exception?)obj;
+                        break;
+                    case PTTA_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,8 +336,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (SurfacePattern != null) return true;
                 if (Unknown != null) return true;
+                if (Unknown2 != null) return true;
+                if (Transform != null) return true;
+                if (Unknown3 != null) return true;
                 return false;
             }
             #endregion
@@ -314,10 +366,16 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(SurfacePattern, "SurfacePattern");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(Transform, "Transform");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
                 }
             }
             #endregion
@@ -327,8 +385,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SurfacePattern = this.SurfacePattern.Combine(rhs.SurfacePattern);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Transform = this.Transform.Combine(rhs.Transform);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -352,8 +412,10 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool SurfacePattern;
             public bool Unknown;
+            public bool Unknown2;
+            public bool Transform;
+            public bool Unknown3;
             #endregion
 
             #region Ctors
@@ -363,8 +425,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.SurfacePattern = defaultOn;
                 this.Unknown = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.Transform = defaultOn;
+                this.Unknown3 = defaultOn;
             }
 
             #endregion
@@ -380,8 +444,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((SurfacePattern, null));
                 ret.Add((Unknown, null));
+                ret.Add((Unknown2, null));
+                ret.Add((Transform, null));
+                ret.Add((Unknown3, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -393,31 +459,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentItemCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfaceTreePatternSwapInfoComponentItemSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PTTACommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PTTASetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PTTABinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PTTABinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static SurfaceTreePatternSwapInfoComponentItem CreateFromBinary(
+        public static PTTA CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new SurfaceTreePatternSwapInfoComponentItem();
-            ((SurfaceTreePatternSwapInfoComponentItemSetterCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PTTA();
+            ((PTTASetterCommon)((IPTTAGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -428,7 +494,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out SurfaceTreePatternSwapInfoComponentItem item,
+            out PTTA item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -443,32 +509,34 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PTTASetterCommon)((IPTTAGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static SurfaceTreePatternSwapInfoComponentItem GetNew()
+        internal static PTTA GetNew()
         {
-            return new SurfaceTreePatternSwapInfoComponentItem();
+            return new PTTA();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISurfaceTreePatternSwapInfoComponentItem :
+    public partial interface IPTTA :
         IFormLinkContainer,
-        ILoquiObjectSetter<ISurfaceTreePatternSwapInfoComponentItem>,
-        ISurfaceTreePatternSwapInfoComponentItemGetter
+        ILoquiObjectSetter<IPTTA>,
+        IPTTAGetter
     {
-        new IFormLink<ISurfacePatternGetter> SurfacePattern { get; set; }
         new Int32 Unknown { get; set; }
+        new Int32 Unknown2 { get; set; }
+        new IFormLink<ITransformGetter> Transform { get; set; }
+        new Int32 Unknown3 { get; set; }
     }
 
-    public partial interface ISurfaceTreePatternSwapInfoComponentItemGetter :
+    public partial interface IPTTAGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ISurfaceTreePatternSwapInfoComponentItemGetter>
+        ILoquiObject<IPTTAGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -476,51 +544,53 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoComponentItem_Registration.Instance;
-        IFormLinkGetter<ISurfacePatternGetter> SurfacePattern { get; }
+        static ILoquiRegistration StaticRegistration => PTTA_Registration.Instance;
         Int32 Unknown { get; }
+        Int32 Unknown2 { get; }
+        IFormLinkGetter<ITransformGetter> Transform { get; }
+        Int32 Unknown3 { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SurfaceTreePatternSwapInfoComponentItemMixIn
+    public static partial class PTTAMixIn
     {
-        public static void Clear(this ISurfaceTreePatternSwapInfoComponentItem item)
+        public static void Clear(this IPTTA item)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PTTASetterCommon)((IPTTAGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SurfaceTreePatternSwapInfoComponentItem.Mask<bool> GetEqualsMask(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
+        public static PTTA.Mask<bool> GetEqualsMask(
+            this IPTTAGetter item,
+            IPTTAGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PTTACommon)((IPTTAGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            this IPTTAGetter item,
             string? name = null,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            PTTA.Mask<bool>? printMask = null)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).Print(
+            return ((PTTACommon)((IPTTAGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            this IPTTAGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            PTTA.Mask<bool>? printMask = null)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).Print(
+            ((PTTACommon)((IPTTAGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -528,21 +598,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? equalsMask = null)
+            this IPTTAGetter item,
+            IPTTAGetter rhs,
+            PTTA.TranslationMask? equalsMask = null)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).Equals(
+            return ((PTTACommon)((IPTTAGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISurfaceTreePatternSwapInfoComponentItem lhs,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs)
+            this IPTTA lhs,
+            IPTTAGetter rhs)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PTTASetterTranslationCommon)((IPTTAGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -551,11 +621,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISurfaceTreePatternSwapInfoComponentItem lhs,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+            this IPTTA lhs,
+            IPTTAGetter rhs,
+            PTTA.TranslationMask? copyMask = null)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PTTASetterTranslationCommon)((IPTTAGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -564,28 +634,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISurfaceTreePatternSwapInfoComponentItem lhs,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
-            out SurfaceTreePatternSwapInfoComponentItem.ErrorMask errorMask,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+            this IPTTA lhs,
+            IPTTAGetter rhs,
+            out PTTA.ErrorMask errorMask,
+            PTTA.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PTTASetterTranslationCommon)((IPTTAGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = SurfaceTreePatternSwapInfoComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PTTA.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISurfaceTreePatternSwapInfoComponentItem lhs,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
+            this IPTTA lhs,
+            IPTTAGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PTTASetterTranslationCommon)((IPTTAGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -593,32 +663,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+        public static PTTA DeepCopy(
+            this IPTTAGetter item,
+            PTTA.TranslationMask? copyMask = null)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PTTASetterTranslationCommon)((IPTTAGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            out SurfaceTreePatternSwapInfoComponentItem.ErrorMask errorMask,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+        public static PTTA DeepCopy(
+            this IPTTAGetter item,
+            out PTTA.ErrorMask errorMask,
+            PTTA.TranslationMask? copyMask = null)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PTTASetterTranslationCommon)((IPTTAGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
+        public static PTTA DeepCopy(
+            this IPTTAGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PTTASetterTranslationCommon)((IPTTAGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -626,11 +696,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISurfaceTreePatternSwapInfoComponentItem item,
+            this IPTTA item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemSetterCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PTTASetterCommon)((IPTTAGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -646,41 +716,43 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum SurfaceTreePatternSwapInfoComponentItem_FieldIndex
+    internal enum PTTA_FieldIndex
     {
-        SurfacePattern = 0,
-        Unknown = 1,
+        Unknown = 0,
+        Unknown2 = 1,
+        Transform = 2,
+        Unknown3 = 3,
     }
     #endregion
 
     #region Registration
-    internal partial class SurfaceTreePatternSwapInfoComponentItem_Registration : ILoquiRegistration
+    internal partial class PTTA_Registration : ILoquiRegistration
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItem_Registration Instance = new SurfaceTreePatternSwapInfoComponentItem_Registration();
+        public static readonly PTTA_Registration Instance = new PTTA_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(SurfaceTreePatternSwapInfoComponentItem.Mask<>);
+        public static readonly Type MaskType = typeof(PTTA.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SurfaceTreePatternSwapInfoComponentItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PTTA.ErrorMask);
 
-        public static readonly Type ClassType = typeof(SurfaceTreePatternSwapInfoComponentItem);
+        public static readonly Type ClassType = typeof(PTTA);
 
-        public static readonly Type GetterType = typeof(ISurfaceTreePatternSwapInfoComponentItemGetter);
+        public static readonly Type GetterType = typeof(IPTTAGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISurfaceTreePatternSwapInfoComponentItem);
+        public static readonly Type SetterType = typeof(IPTTA);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.SurfaceTreePatternSwapInfoComponentItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PTTA";
 
-        public const string Name = "SurfaceTreePatternSwapInfoComponentItem";
+        public const string Name = "PTTA";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -688,7 +760,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PTTA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PTTA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
+        public static readonly Type BinaryWriteTranslation = typeof(PTTABinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -719,54 +798,60 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SurfaceTreePatternSwapInfoComponentItemSetterCommon
+    internal partial class PTTASetterCommon
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItemSetterCommon Instance = new SurfaceTreePatternSwapInfoComponentItemSetterCommon();
+        public static readonly PTTASetterCommon Instance = new PTTASetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISurfaceTreePatternSwapInfoComponentItem item)
+        public void Clear(IPTTA item)
         {
             ClearPartial();
-            item.SurfacePattern.Clear();
             item.Unknown = default(Int32);
+            item.Unknown2 = default(Int32);
+            item.Transform.Clear();
+            item.Unknown3 = default(Int32);
         }
         
         #region Mutagen
-        public void RemapLinks(ISurfaceTreePatternSwapInfoComponentItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPTTA obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.SurfacePattern.Relink(mapping);
+            obj.Transform.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISurfaceTreePatternSwapInfoComponentItem item,
+            IPTTA item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.PTTA),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SurfaceTreePatternSwapInfoComponentItemBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PTTABinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class SurfaceTreePatternSwapInfoComponentItemCommon
+    internal partial class PTTACommon
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItemCommon Instance = new SurfaceTreePatternSwapInfoComponentItemCommon();
+        public static readonly PTTACommon Instance = new PTTACommon();
 
-        public SurfaceTreePatternSwapInfoComponentItem.Mask<bool> GetEqualsMask(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
+        public PTTA.Mask<bool> GetEqualsMask(
+            IPTTAGetter item,
+            IPTTAGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SurfaceTreePatternSwapInfoComponentItem.Mask<bool>(false);
-            ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PTTA.Mask<bool>(false);
+            ((PTTACommon)((IPTTAGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -775,19 +860,21 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool> ret,
+            IPTTAGetter item,
+            IPTTAGetter rhs,
+            PTTA.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SurfacePattern = item.SurfacePattern.Equals(rhs.SurfacePattern);
             ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Transform = item.Transform.Equals(rhs.Transform);
+            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
         }
         
         public string Print(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            IPTTAGetter item,
             string? name = null,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            PTTA.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -799,18 +886,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            IPTTAGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            PTTA.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"SurfaceTreePatternSwapInfoComponentItem =>");
+                sb.AppendLine($"PTTA =>");
             }
             else
             {
-                sb.AppendLine($"{name} (SurfaceTreePatternSwapInfoComponentItem) =>");
+                sb.AppendLine($"{name} (PTTA) =>");
             }
             using (sb.Brace())
             {
@@ -822,43 +909,61 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            IPTTAGetter item,
             StructuredStringBuilder sb,
-            SurfaceTreePatternSwapInfoComponentItem.Mask<bool>? printMask = null)
+            PTTA.Mask<bool>? printMask = null)
         {
-            if (printMask?.SurfacePattern ?? true)
-            {
-                sb.AppendItem(item.SurfacePattern.FormKey, "SurfacePattern");
-            }
             if (printMask?.Unknown ?? true)
             {
                 sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.Transform ?? true)
+            {
+                sb.AppendItem(item.Transform.FormKey, "Transform");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                sb.AppendItem(item.Unknown3, "Unknown3");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISurfaceTreePatternSwapInfoComponentItemGetter? lhs,
-            ISurfaceTreePatternSwapInfoComponentItemGetter? rhs,
+            IPTTAGetter? lhs,
+            IPTTAGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponentItem_FieldIndex.SurfacePattern) ?? true))
-            {
-                if (!lhs.SurfacePattern.Equals(rhs.SurfacePattern)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponentItem_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PTTA_FieldIndex.Transform) ?? true))
+            {
+                if (!lhs.Transform.Equals(rhs.Transform)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown3) ?? true))
+            {
+                if (lhs.Unknown3 != rhs.Unknown3) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ISurfaceTreePatternSwapInfoComponentItemGetter item)
+        public virtual int GetHashCode(IPTTAGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.SurfacePattern);
             hash.Add(item.Unknown);
+            hash.Add(item.Unknown2);
+            hash.Add(item.Transform);
+            hash.Add(item.Unknown3);
             return hash.ToHashCode();
         }
         
@@ -867,49 +972,57 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return SurfaceTreePatternSwapInfoComponentItem.GetNew();
+            return PTTA.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfaceTreePatternSwapInfoComponentItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPTTAGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.SurfacePattern);
+            yield return FormLinkInformation.Factory(obj.Transform);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon
+    internal partial class PTTASetterTranslationCommon
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon Instance = new SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon();
+        public static readonly PTTASetterTranslationCommon Instance = new PTTASetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISurfaceTreePatternSwapInfoComponentItem item,
-            ISurfaceTreePatternSwapInfoComponentItemGetter rhs,
+            IPTTA item,
+            IPTTAGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponentItem_FieldIndex.SurfacePattern) ?? true))
-            {
-                item.SurfacePattern.SetTo(rhs.SurfacePattern.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponentItem_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PTTA_FieldIndex.Transform) ?? true))
+            {
+                item.Transform.SetTo(rhs.Transform.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PTTA_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3;
             }
         }
         
         #endregion
         
-        public SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+        public PTTA DeepCopy(
+            IPTTAGetter item,
+            PTTA.TranslationMask? copyMask = null)
         {
-            SurfaceTreePatternSwapInfoComponentItem ret = (SurfaceTreePatternSwapInfoComponentItem)((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PTTA ret = (PTTA)((PTTACommon)((IPTTAGetter)item).CommonInstance()!).GetNew();
+            ((PTTASetterTranslationCommon)((IPTTAGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -918,30 +1031,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
-            out SurfaceTreePatternSwapInfoComponentItem.ErrorMask errorMask,
-            SurfaceTreePatternSwapInfoComponentItem.TranslationMask? copyMask = null)
+        public PTTA DeepCopy(
+            IPTTAGetter item,
+            out PTTA.ErrorMask errorMask,
+            PTTA.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SurfaceTreePatternSwapInfoComponentItem ret = (SurfaceTreePatternSwapInfoComponentItem)((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PTTA ret = (PTTA)((PTTACommon)((IPTTAGetter)item).CommonInstance()!).GetNew();
+            ((PTTASetterTranslationCommon)((IPTTAGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = SurfaceTreePatternSwapInfoComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PTTA.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public SurfaceTreePatternSwapInfoComponentItem DeepCopy(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+        public PTTA DeepCopy(
+            IPTTAGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SurfaceTreePatternSwapInfoComponentItem ret = (SurfaceTreePatternSwapInfoComponentItem)((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PTTA ret = (PTTA)((PTTACommon)((IPTTAGetter)item).CommonInstance()!).GetNew();
+            ((PTTASetterTranslationCommon)((IPTTAGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -957,27 +1070,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SurfaceTreePatternSwapInfoComponentItem
+    public partial class PTTA
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SurfaceTreePatternSwapInfoComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PTTA_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PTTA_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => SurfaceTreePatternSwapInfoComponentItemCommon.Instance;
+        protected object CommonInstance() => PTTACommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return SurfaceTreePatternSwapInfoComponentItemSetterCommon.Instance;
+            return PTTASetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PTTASetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISurfaceTreePatternSwapInfoComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object IPTTAGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ISurfaceTreePatternSwapInfoComponentItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPTTAGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ISurfaceTreePatternSwapInfoComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPTTAGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -988,28 +1101,37 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class PTTABinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation Instance = new();
+        public static readonly PTTABinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            IPTTAGetter item,
             MutagenWriter writer)
         {
+            writer.Write(item.Unknown);
+            writer.Write(item.Unknown2);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SurfacePattern);
-            writer.Write(item.Unknown);
+                item: item.Transform);
+            writer.Write(item.Unknown3);
         }
 
         public void Write(
             MutagenWriter writer,
-            ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            IPTTAGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Subrecord(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.PTTA),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1018,23 +1140,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISurfaceTreePatternSwapInfoComponentItemGetter)item,
+                item: (IPTTAGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SurfaceTreePatternSwapInfoComponentItemBinaryCreateTranslation
+    internal partial class PTTABinaryCreateTranslation
     {
-        public static readonly SurfaceTreePatternSwapInfoComponentItemBinaryCreateTranslation Instance = new SurfaceTreePatternSwapInfoComponentItemBinaryCreateTranslation();
+        public static readonly PTTABinaryCreateTranslation Instance = new PTTABinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ISurfaceTreePatternSwapInfoComponentItem item,
+            IPTTA item,
             MutagenFrame frame)
         {
-            item.SurfacePattern.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
+            item.Unknown2 = frame.ReadInt32();
+            item.Transform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Unknown3 = frame.ReadInt32();
         }
 
     }
@@ -1043,14 +1167,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class SurfaceTreePatternSwapInfoComponentItemBinaryTranslationMixIn
+    public static class PTTABinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ISurfaceTreePatternSwapInfoComponentItemGetter item,
+            this IPTTAGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((PTTABinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1063,53 +1187,55 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class SurfaceTreePatternSwapInfoComponentItemBinaryOverlay :
+    internal partial class PTTABinaryOverlay :
         PluginBinaryOverlay,
-        ISurfaceTreePatternSwapInfoComponentItemGetter
+        IPTTAGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SurfaceTreePatternSwapInfoComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PTTA_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PTTA_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => SurfaceTreePatternSwapInfoComponentItemCommon.Instance;
+        protected object CommonInstance() => PTTACommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => SurfaceTreePatternSwapInfoComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PTTASetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISurfaceTreePatternSwapInfoComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object IPTTAGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ISurfaceTreePatternSwapInfoComponentItemGetter.CommonSetterInstance() => null;
+        object? IPTTAGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ISurfaceTreePatternSwapInfoComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPTTAGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PTTACommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PTTABinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfaceTreePatternSwapInfoComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PTTABinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISurfacePatternGetter> SurfacePattern => new FormLink<ISurfacePatternGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<ITransformGetter> Transform => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected SurfaceTreePatternSwapInfoComponentItemBinaryOverlay(
+        protected PTTABinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1119,22 +1245,22 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ISurfaceTreePatternSwapInfoComponentItemGetter SurfaceTreePatternSwapInfoComponentItemFactory(
+        public static IPTTAGetter PTTAFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordStructMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x8,
+                length: 0x10,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new SurfaceTreePatternSwapInfoComponentItemBinaryOverlay(
+            var ret = new PTTABinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x8;
+            stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1142,12 +1268,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ISurfaceTreePatternSwapInfoComponentItemGetter SurfaceTreePatternSwapInfoComponentItemFactory(
+        public static IPTTAGetter PTTAFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return SurfaceTreePatternSwapInfoComponentItemFactory(
+            return PTTAFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1159,7 +1285,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SurfaceTreePatternSwapInfoComponentItemMixIn.Print(
+            PTTAMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1170,16 +1296,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISurfaceTreePatternSwapInfoComponentItemGetter rhs) return false;
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPTTAGetter rhs) return false;
+            return ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISurfaceTreePatternSwapInfoComponentItemGetter? obj)
+        public bool Equals(IPTTAGetter? obj)
         {
-            return ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SurfaceTreePatternSwapInfoComponentItemCommon)((ISurfaceTreePatternSwapInfoComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PTTACommon)((IPTTAGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

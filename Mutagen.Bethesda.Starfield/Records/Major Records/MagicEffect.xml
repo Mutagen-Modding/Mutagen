@@ -39,6 +39,8 @@
           <UInt32 name="UnkownInt3" unknown="true" />
           <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="8" />
           <ByteArray name="Unknown" byteLength="22" nullable="false" unknown="true" />
+          <Break />
+          <ByteArray name="Unknown2" byteLength="6" nullable="false" unknown="true" />
         </Fields>
       </Data>
       <RefList name="Sounds" refName="MagicEffectSound" />
@@ -50,6 +52,10 @@
     <Fields>
       <Enum name="Type" enumName="MagicEffectSound.SoundType" byteLength="1" />
       <RefDirect name="Sound" refName="SoundReference" />
+      <Break />
+      <ByteArray name="Unknown" unknown="true" byteLength="3" nullable="False" >
+        <Versioning formVersion="518" action="Remove" />
+      </ByteArray>
     </Fields>
   </Object>
   <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord" ctorPermission="noGeneration">

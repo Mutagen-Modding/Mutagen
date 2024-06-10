@@ -82,6 +82,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IIdleMarkerGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IIdleMarkerGetter.ODRT => this.ODRT;
+        #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
@@ -192,6 +197,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = initialValue;
                 this.IdleTimer = initialValue;
@@ -211,6 +217,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem Keywords,
                 TItem Flags,
                 TItem IdleTimer,
@@ -229,6 +236,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = Flags;
                 this.IdleTimer = IdleTimer;
@@ -249,6 +257,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public TItem Flags;
             public TItem IdleTimer;
@@ -271,6 +280,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.IdleTimer, rhs.IdleTimer)) return false;
@@ -285,6 +295,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.Keywords);
                 hash.Add(this.Flags);
                 hash.Add(this.IdleTimer);
@@ -308,6 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -353,6 +365,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -401,6 +414,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -459,6 +473,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
@@ -535,6 +553,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public Exception? Flags;
             public Exception? IdleTimer;
@@ -554,6 +573,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case IdleMarker_FieldIndex.ODTY:
                         return ODTY;
+                    case IdleMarker_FieldIndex.ODRT:
+                        return ODRT;
                     case IdleMarker_FieldIndex.Keywords:
                         return Keywords;
                     case IdleMarker_FieldIndex.Flags:
@@ -583,6 +604,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case IdleMarker_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case IdleMarker_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case IdleMarker_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -622,6 +646,9 @@ namespace Mutagen.Bethesda.Starfield
                     case IdleMarker_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case IdleMarker_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case IdleMarker_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -654,6 +681,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (Keywords != null) return true;
                 if (Flags != null) return true;
                 if (IdleTimer != null) return true;
@@ -690,6 +718,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
@@ -754,6 +785,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
@@ -785,6 +817,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public bool Keywords;
             public bool Flags;
             public bool IdleTimer;
@@ -801,6 +834,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.Keywords = defaultOn;
                 this.Flags = defaultOn;
                 this.IdleTimer = defaultOn;
@@ -816,6 +850,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((Keywords, null));
                 ret.Add((Flags, null));
                 ret.Add((IdleTimer, null));
@@ -989,6 +1024,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1036,6 +1072,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
@@ -1235,13 +1272,14 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        Keywords = 9,
-        Flags = 10,
-        IdleTimer = 11,
-        Animations = 12,
-        Model = 13,
-        AnimationFlavor = 14,
-        PNAM = 15,
+        ODRT = 9,
+        Keywords = 10,
+        Flags = 11,
+        IdleTimer = 12,
+        Animations = 13,
+        Model = 14,
+        AnimationFlavor = 15,
+        PNAM = 16,
     }
     #endregion
 
@@ -1252,9 +1290,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(IdleMarker.Mask<>);
 
@@ -1289,6 +1327,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.IDLM,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.IDLF,
@@ -1298,6 +1337,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1350,6 +1391,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.Keywords = null;
             item.Flags = default;
             item.IdleTimer = default;
@@ -1474,6 +1516,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -1548,6 +1591,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
@@ -1664,6 +1712,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
@@ -1728,6 +1780,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             hash.Add(item.Keywords);
             if (item.Flags is {} Flagsitem)
@@ -1921,6 +1977,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Keywords) ?? true))
             {
@@ -2184,6 +2244,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -2348,6 +2412,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleMarker_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)IdleMarker_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -2393,6 +2463,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2494,6 +2566,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -2609,6 +2685,11 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)IdleMarker_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)IdleMarker_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -2652,6 +2733,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

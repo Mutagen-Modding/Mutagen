@@ -10696,6 +10696,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.GroundCovers.RemapLinks(mapping);
+            obj.MorphableObjects.RemapLinks(mapping);
             obj.ResourceGenerationData.RemapLinks(mapping);
             obj.Atmospheres.RemapLinks(mapping);
             obj.LeveledSpaceCells.RemapLinks(mapping);
@@ -13031,8 +13032,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.BiomeMarkers is IAssetLinkContainer BiomeMarkerslinkCont)
             {
-                foreach (var item in obj.BiomeMarkers.EnumerateListedAssetLinks())
+                foreach (var item in BiomeMarkerslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -13171,6 +13173,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.MaterialTypes.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Impacts is IAssetLinkContainer ImpactslinkCont)
             {
                 foreach (var item in ImpactslinkCont.EnumerateListedAssetLinks())
@@ -13230,6 +13238,12 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.GroundCovers is IAssetLinkContainer GroundCoverslinkCont)
             {
                 foreach (var item in GroundCoverslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MorphableObjects.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -13397,6 +13411,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BodyParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AddonNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.CameraShots.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MaterialTypes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -13406,6 +13421,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplates.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.GroundCovers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MorphableObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfaceBlocks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfacePatterns.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SurfaceTrees.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -17520,6 +17536,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.GroundCovers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MorphableObjects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -24550,9 +24570,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
-                foreach (var item in obj.BiomeMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
                 {
-                    yield return item;
+                    foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
                 {
@@ -24676,6 +24699,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+                foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
                 if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
                 {
                     foreach (var item in ImpactslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -24738,6 +24765,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
+                }
+                foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
                 if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
                 {

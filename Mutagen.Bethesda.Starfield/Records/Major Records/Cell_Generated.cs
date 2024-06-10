@@ -164,6 +164,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICellGetter.XILS => this.XILS;
         #endregion
+        #region XCLR
+        private readonly IFormLinkNullable<INpcGetter> _XCLR = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> XCLR
+        {
+            get => _XCLR;
+            set => _XCLR.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcGetter> ICellGetter.XCLR => this.XCLR;
+        #endregion
         #region XCLAs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<CellXCLAItem> _XCLAs = new ExtendedList<CellXCLAItem>();
@@ -219,6 +229,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ICellGetter.Location => this.Location;
+        #endregion
+        #region XTRV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XTRV? _XTRV;
+        public XTRV? XTRV
+        {
+            get => _XTRV;
+            set => _XTRV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IXTRVGetter? ICellGetter.XTRV => this.XTRV;
         #endregion
         #region Water
         private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
@@ -378,6 +399,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region SourcePackIn
+        private readonly IFormLinkNullable<IPackInGetter> _SourcePackIn = new FormLinkNullable<IPackInGetter>();
+        public IFormLinkNullable<IPackInGetter> SourcePackIn
+        {
+            get => _SourcePackIn;
+            set => _SourcePackIn.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPackInGetter> ICellGetter.SourcePackIn => this.SourcePackIn;
+        #endregion
         #region Timestamp
         public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
@@ -458,11 +489,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightingTemplate = initialValue;
                 this.WaterHeight = initialValue;
                 this.XILS = initialValue;
+                this.XCLR = initialValue;
                 this.XCLAs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellXCLAItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellXCLAItem.Mask<TItem>?>>());
                 this.XWCN = initialValue;
                 this.CellSkyRegion = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.Location = initialValue;
+                this.XTRV = new MaskItem<TItem, XTRV.Mask<TItem>?>(initialValue, new XTRV.Mask<TItem>(initialValue));
                 this.Water = initialValue;
                 this.WaterType = initialValue;
                 this.ShipBlueprintSnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellShipBlueprintSnapLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellShipBlueprintSnapLink.Mask<TItem>?>>());
@@ -481,6 +514,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
                 this.NumTraversalFluffBytes = initialValue;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.SourcePackIn = initialValue;
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
                 this.PersistentTimestamp = initialValue;
@@ -508,11 +542,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LightingTemplate,
                 TItem WaterHeight,
                 TItem XILS,
+                TItem XCLR,
                 TItem XCLAs,
                 TItem XWCN,
                 TItem CellSkyRegion,
                 TItem Ownership,
                 TItem Location,
+                TItem XTRV,
                 TItem Water,
                 TItem WaterType,
                 TItem ShipBlueprintSnapLinks,
@@ -531,6 +567,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Traversals,
                 TItem NumTraversalFluffBytes,
                 TItem NavigationMeshes,
+                TItem SourcePackIn,
                 TItem Timestamp,
                 TItem UnknownGroupData,
                 TItem PersistentTimestamp,
@@ -557,11 +594,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightingTemplate = LightingTemplate;
                 this.WaterHeight = WaterHeight;
                 this.XILS = XILS;
+                this.XCLR = XCLR;
                 this.XCLAs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellXCLAItem.Mask<TItem>?>>?>(XCLAs, Enumerable.Empty<MaskItemIndexed<TItem, CellXCLAItem.Mask<TItem>?>>());
                 this.XWCN = XWCN;
                 this.CellSkyRegion = CellSkyRegion;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.Location = Location;
+                this.XTRV = new MaskItem<TItem, XTRV.Mask<TItem>?>(XTRV, new XTRV.Mask<TItem>(XTRV));
                 this.Water = Water;
                 this.WaterType = WaterType;
                 this.ShipBlueprintSnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellShipBlueprintSnapLink.Mask<TItem>?>>?>(ShipBlueprintSnapLinks, Enumerable.Empty<MaskItemIndexed<TItem, CellShipBlueprintSnapLink.Mask<TItem>?>>());
@@ -580,6 +619,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
                 this.NumTraversalFluffBytes = NumTraversalFluffBytes;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.SourcePackIn = SourcePackIn;
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
                 this.PersistentTimestamp = PersistentTimestamp;
@@ -608,11 +648,13 @@ namespace Mutagen.Bethesda.Starfield
             public TItem LightingTemplate;
             public TItem WaterHeight;
             public TItem XILS;
+            public TItem XCLR;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellXCLAItem.Mask<TItem>?>>?>? XCLAs;
             public TItem XWCN;
             public TItem CellSkyRegion;
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem Location;
+            public MaskItem<TItem, XTRV.Mask<TItem>?>? XTRV { get; set; }
             public TItem Water;
             public TItem WaterType;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellShipBlueprintSnapLink.Mask<TItem>?>>?>? ShipBlueprintSnapLinks;
@@ -631,6 +673,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>? Traversals;
             public TItem NumTraversalFluffBytes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
+            public TItem SourcePackIn;
             public TItem Timestamp;
             public TItem UnknownGroupData;
             public TItem PersistentTimestamp;
@@ -661,11 +704,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
                 if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
                 if (!object.Equals(this.XILS, rhs.XILS)) return false;
+                if (!object.Equals(this.XCLR, rhs.XCLR)) return false;
                 if (!object.Equals(this.XCLAs, rhs.XCLAs)) return false;
                 if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
                 if (!object.Equals(this.CellSkyRegion, rhs.CellSkyRegion)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.XTRV, rhs.XTRV)) return false;
                 if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.WaterType, rhs.WaterType)) return false;
                 if (!object.Equals(this.ShipBlueprintSnapLinks, rhs.ShipBlueprintSnapLinks)) return false;
@@ -684,6 +729,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
                 if (!object.Equals(this.NumTraversalFluffBytes, rhs.NumTraversalFluffBytes)) return false;
                 if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
+                if (!object.Equals(this.SourcePackIn, rhs.SourcePackIn)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.UnknownGroupData, rhs.UnknownGroupData)) return false;
                 if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
@@ -706,11 +752,13 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LightingTemplate);
                 hash.Add(this.WaterHeight);
                 hash.Add(this.XILS);
+                hash.Add(this.XCLR);
                 hash.Add(this.XCLAs);
                 hash.Add(this.XWCN);
                 hash.Add(this.CellSkyRegion);
                 hash.Add(this.Ownership);
                 hash.Add(this.Location);
+                hash.Add(this.XTRV);
                 hash.Add(this.Water);
                 hash.Add(this.WaterType);
                 hash.Add(this.ShipBlueprintSnapLinks);
@@ -729,6 +777,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Traversals);
                 hash.Add(this.NumTraversalFluffBytes);
                 hash.Add(this.NavigationMeshes);
+                hash.Add(this.SourcePackIn);
                 hash.Add(this.Timestamp);
                 hash.Add(this.UnknownGroupData);
                 hash.Add(this.PersistentTimestamp);
@@ -775,6 +824,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.LightingTemplate)) return false;
                 if (!eval(this.WaterHeight)) return false;
                 if (!eval(this.XILS)) return false;
+                if (!eval(this.XCLR)) return false;
                 if (this.XCLAs != null)
                 {
                     if (!eval(this.XCLAs.Overall)) return false;
@@ -795,6 +845,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Location)) return false;
+                if (XTRV != null)
+                {
+                    if (!eval(this.XTRV.Overall)) return false;
+                    if (this.XTRV.Specific != null && !this.XTRV.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Water)) return false;
                 if (!eval(this.WaterType)) return false;
                 if (this.ShipBlueprintSnapLinks != null)
@@ -861,6 +916,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.SourcePackIn)) return false;
                 if (!eval(this.Timestamp)) return false;
                 if (!eval(this.UnknownGroupData)) return false;
                 if (!eval(this.PersistentTimestamp)) return false;
@@ -927,6 +983,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.LightingTemplate)) return true;
                 if (eval(this.WaterHeight)) return true;
                 if (eval(this.XILS)) return true;
+                if (eval(this.XCLR)) return true;
                 if (this.XCLAs != null)
                 {
                     if (eval(this.XCLAs.Overall)) return true;
@@ -947,6 +1004,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Location)) return true;
+                if (XTRV != null)
+                {
+                    if (eval(this.XTRV.Overall)) return true;
+                    if (this.XTRV.Specific != null && this.XTRV.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Water)) return true;
                 if (eval(this.WaterType)) return true;
                 if (this.ShipBlueprintSnapLinks != null)
@@ -1013,6 +1075,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.SourcePackIn)) return true;
                 if (eval(this.Timestamp)) return true;
                 if (eval(this.UnknownGroupData)) return true;
                 if (eval(this.PersistentTimestamp)) return true;
@@ -1081,6 +1144,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LightingTemplate = eval(this.LightingTemplate);
                 obj.WaterHeight = eval(this.WaterHeight);
                 obj.XILS = eval(this.XILS);
+                obj.XCLR = eval(this.XCLR);
                 if (XCLAs != null)
                 {
                     obj.XCLAs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellXCLAItem.Mask<R>?>>?>(eval(this.XCLAs.Overall), Enumerable.Empty<MaskItemIndexed<R, CellXCLAItem.Mask<R>?>>());
@@ -1100,6 +1164,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CellSkyRegion = eval(this.CellSkyRegion);
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.Location = eval(this.Location);
+                obj.XTRV = this.XTRV == null ? null : new MaskItem<R, XTRV.Mask<R>?>(eval(this.XTRV.Overall), this.XTRV.Specific?.Translate(eval));
                 obj.Water = eval(this.Water);
                 obj.WaterType = eval(this.WaterType);
                 if (ShipBlueprintSnapLinks != null)
@@ -1174,6 +1239,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.SourcePackIn = eval(this.SourcePackIn);
                 obj.Timestamp = eval(this.Timestamp);
                 obj.UnknownGroupData = eval(this.UnknownGroupData);
                 obj.PersistentTimestamp = eval(this.PersistentTimestamp);
@@ -1281,6 +1347,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(XILS, "XILS");
                     }
+                    if (printMask?.XCLR ?? true)
+                    {
+                        sb.AppendItem(XCLR, "XCLR");
+                    }
                     if ((printMask?.XCLAs?.Overall ?? true)
                         && XCLAs is {} XCLAsItem)
                     {
@@ -1315,6 +1385,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Location ?? true)
                     {
                         sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.XTRV?.Overall ?? true)
+                    {
+                        XTRV?.Print(sb);
                     }
                     if (printMask?.Water ?? true)
                     {
@@ -1448,6 +1522,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.SourcePackIn ?? true)
+                    {
+                        sb.AppendItem(SourcePackIn, "SourcePackIn");
+                    }
                     if (printMask?.Timestamp ?? true)
                     {
                         sb.AppendItem(Timestamp, "Timestamp");
@@ -1530,11 +1608,13 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? LightingTemplate;
             public Exception? WaterHeight;
             public Exception? XILS;
+            public Exception? XCLR;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellXCLAItem.ErrorMask?>>?>? XCLAs;
             public Exception? XWCN;
             public Exception? CellSkyRegion;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? Location;
+            public MaskItem<Exception?, XTRV.ErrorMask?>? XTRV;
             public Exception? Water;
             public Exception? WaterType;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellShipBlueprintSnapLink.ErrorMask?>>?>? ShipBlueprintSnapLinks;
@@ -1553,6 +1633,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>? Traversals;
             public Exception? NumTraversalFluffBytes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>? NavigationMeshes;
+            public Exception? SourcePackIn;
             public Exception? Timestamp;
             public Exception? UnknownGroupData;
             public Exception? PersistentTimestamp;
@@ -1587,6 +1668,8 @@ namespace Mutagen.Bethesda.Starfield
                         return WaterHeight;
                     case Cell_FieldIndex.XILS:
                         return XILS;
+                    case Cell_FieldIndex.XCLR:
+                        return XCLR;
                     case Cell_FieldIndex.XCLAs:
                         return XCLAs;
                     case Cell_FieldIndex.XWCN:
@@ -1597,6 +1680,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Ownership;
                     case Cell_FieldIndex.Location:
                         return Location;
+                    case Cell_FieldIndex.XTRV:
+                        return XTRV;
                     case Cell_FieldIndex.Water:
                         return Water;
                     case Cell_FieldIndex.WaterType:
@@ -1633,6 +1718,8 @@ namespace Mutagen.Bethesda.Starfield
                         return NumTraversalFluffBytes;
                     case Cell_FieldIndex.NavigationMeshes:
                         return NavigationMeshes;
+                    case Cell_FieldIndex.SourcePackIn:
+                        return SourcePackIn;
                     case Cell_FieldIndex.Timestamp:
                         return Timestamp;
                     case Cell_FieldIndex.UnknownGroupData:
@@ -1686,6 +1773,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Cell_FieldIndex.XILS:
                         this.XILS = ex;
                         break;
+                    case Cell_FieldIndex.XCLR:
+                        this.XCLR = ex;
+                        break;
                     case Cell_FieldIndex.XCLAs:
                         this.XCLAs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellXCLAItem.ErrorMask?>>?>(ex, null);
                         break;
@@ -1700,6 +1790,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Cell_FieldIndex.Location:
                         this.Location = ex;
+                        break;
+                    case Cell_FieldIndex.XTRV:
+                        this.XTRV = new MaskItem<Exception?, XTRV.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.Water:
                         this.Water = ex;
@@ -1754,6 +1847,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = ex;
                         break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = ex;
@@ -1817,6 +1913,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Cell_FieldIndex.XILS:
                         this.XILS = (Exception?)obj;
                         break;
+                    case Cell_FieldIndex.XCLR:
+                        this.XCLR = (Exception?)obj;
+                        break;
                     case Cell_FieldIndex.XCLAs:
                         this.XCLAs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellXCLAItem.ErrorMask?>>?>)obj;
                         break;
@@ -1831,6 +1930,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Cell_FieldIndex.Location:
                         this.Location = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.XTRV:
+                        this.XTRV = (MaskItem<Exception?, XTRV.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.Water:
                         this.Water = (Exception?)obj;
@@ -1886,6 +1988,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>)obj;
                         break;
+                    case Cell_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = (Exception?)obj;
+                        break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = (Exception?)obj;
                         break;
@@ -1928,11 +2033,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (LightingTemplate != null) return true;
                 if (WaterHeight != null) return true;
                 if (XILS != null) return true;
+                if (XCLR != null) return true;
                 if (XCLAs != null) return true;
                 if (XWCN != null) return true;
                 if (CellSkyRegion != null) return true;
                 if (Ownership != null) return true;
                 if (Location != null) return true;
+                if (XTRV != null) return true;
                 if (Water != null) return true;
                 if (WaterType != null) return true;
                 if (ShipBlueprintSnapLinks != null) return true;
@@ -1951,6 +2058,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Traversals != null) return true;
                 if (NumTraversalFluffBytes != null) return true;
                 if (NavigationMeshes != null) return true;
+                if (SourcePackIn != null) return true;
                 if (Timestamp != null) return true;
                 if (UnknownGroupData != null) return true;
                 if (PersistentTimestamp != null) return true;
@@ -2023,6 +2131,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(XILS, "XILS");
                 }
+                {
+                    sb.AppendItem(XCLR, "XCLR");
+                }
                 if (XCLAs is {} XCLAsItem)
                 {
                     sb.AppendLine("XCLAs =>");
@@ -2051,6 +2162,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Location, "Location");
                 }
+                XTRV?.Print(sb);
                 {
                     sb.AppendItem(Water, "Water");
                 }
@@ -2164,6 +2276,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(SourcePackIn, "SourcePackIn");
+                }
+                {
                     sb.AppendItem(Timestamp, "Timestamp");
                 }
                 {
@@ -2234,11 +2349,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 ret.XILS = this.XILS.Combine(rhs.XILS);
+                ret.XCLR = this.XCLR.Combine(rhs.XCLR);
                 ret.XCLAs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellXCLAItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.XCLAs?.Overall, rhs.XCLAs?.Overall), Noggog.ExceptionExt.Combine(this.XCLAs?.Specific, rhs.XCLAs?.Specific));
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.CellSkyRegion = this.CellSkyRegion.Combine(rhs.CellSkyRegion);
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.Location = this.Location.Combine(rhs.Location);
+                ret.XTRV = this.XTRV.Combine(rhs.XTRV, (l, r) => l.Combine(r));
                 ret.Water = this.Water.Combine(rhs.Water);
                 ret.WaterType = this.WaterType.Combine(rhs.WaterType);
                 ret.ShipBlueprintSnapLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellShipBlueprintSnapLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ShipBlueprintSnapLinks?.Overall, rhs.ShipBlueprintSnapLinks?.Overall), Noggog.ExceptionExt.Combine(this.ShipBlueprintSnapLinks?.Specific, rhs.ShipBlueprintSnapLinks?.Specific));
@@ -2257,6 +2374,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Traversals?.Overall, rhs.Traversals?.Overall), Noggog.ExceptionExt.Combine(this.Traversals?.Specific, rhs.Traversals?.Specific));
                 ret.NumTraversalFluffBytes = this.NumTraversalFluffBytes.Combine(rhs.NumTraversalFluffBytes);
                 ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.SourcePackIn = this.SourcePackIn.Combine(rhs.SourcePackIn);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
@@ -2296,11 +2414,13 @@ namespace Mutagen.Bethesda.Starfield
             public bool LightingTemplate;
             public bool WaterHeight;
             public bool XILS;
+            public bool XCLR;
             public CellXCLAItem.TranslationMask? XCLAs;
             public bool XWCN;
             public bool CellSkyRegion;
             public Ownership.TranslationMask? Ownership;
             public bool Location;
+            public XTRV.TranslationMask? XTRV;
             public bool Water;
             public bool WaterType;
             public CellShipBlueprintSnapLink.TranslationMask? ShipBlueprintSnapLinks;
@@ -2319,6 +2439,7 @@ namespace Mutagen.Bethesda.Starfield
             public TraversalReference.TranslationMask? Traversals;
             public bool NumTraversalFluffBytes;
             public NavigationMesh.TranslationMask? NavigationMeshes;
+            public bool SourcePackIn;
             public bool Timestamp;
             public bool UnknownGroupData;
             public bool PersistentTimestamp;
@@ -2341,6 +2462,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightingTemplate = defaultOn;
                 this.WaterHeight = defaultOn;
                 this.XILS = defaultOn;
+                this.XCLR = defaultOn;
                 this.XWCN = defaultOn;
                 this.CellSkyRegion = defaultOn;
                 this.Location = defaultOn;
@@ -2357,6 +2479,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.IsLinkedRefTransient = defaultOn;
                 this.EnvironmentMap = defaultOn;
                 this.NumTraversalFluffBytes = defaultOn;
+                this.SourcePackIn = defaultOn;
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
                 this.PersistentTimestamp = defaultOn;
@@ -2381,11 +2504,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LightingTemplate, null));
                 ret.Add((WaterHeight, null));
                 ret.Add((XILS, null));
+                ret.Add((XCLR, null));
                 ret.Add((XCLAs == null ? DefaultOn : !XCLAs.GetCrystal().CopyNothing, XCLAs?.GetCrystal()));
                 ret.Add((XWCN, null));
                 ret.Add((CellSkyRegion, null));
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((Location, null));
+                ret.Add((XTRV != null ? XTRV.OnOverall : DefaultOn, XTRV?.GetCrystal()));
                 ret.Add((Water, null));
                 ret.Add((WaterType, null));
                 ret.Add((ShipBlueprintSnapLinks == null ? DefaultOn : !ShipBlueprintSnapLinks.GetCrystal().CopyNothing, ShipBlueprintSnapLinks?.GetCrystal()));
@@ -2404,6 +2529,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Traversals == null ? DefaultOn : !Traversals.GetCrystal().CopyNothing, Traversals?.GetCrystal()));
                 ret.Add((NumTraversalFluffBytes, null));
                 ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
+                ret.Add((SourcePackIn, null));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
                 ret.Add((PersistentTimestamp, null));
@@ -2625,11 +2751,13 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
         new Single? WaterHeight { get; set; }
         new Single? XILS { get; set; }
+        new IFormLinkNullable<INpcGetter> XCLR { get; set; }
         new ExtendedList<CellXCLAItem> XCLAs { get; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new IFormLinkNullable<IRegionGetter> CellSkyRegion { get; set; }
         new Ownership? Ownership { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
+        new XTRV? XTRV { get; set; }
         new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new String? WaterType { get; set; }
         new ExtendedList<CellShipBlueprintSnapLink>? ShipBlueprintSnapLinks { get; set; }
@@ -2648,6 +2776,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<TraversalReference>? Traversals { get; set; }
         new UInt32 NumTraversalFluffBytes { get; set; }
         new ExtendedList<NavigationMesh> NavigationMeshes { get; }
+        new IFormLinkNullable<IPackInGetter> SourcePackIn { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
@@ -2701,11 +2830,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ILightingTemplateGetter> LightingTemplate { get; }
         Single? WaterHeight { get; }
         Single? XILS { get; }
+        IFormLinkNullableGetter<INpcGetter> XCLR { get; }
         IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         IFormLinkNullableGetter<IRegionGetter> CellSkyRegion { get; }
         IOwnershipGetter? Ownership { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        IXTRVGetter? XTRV { get; }
         IFormLinkNullableGetter<IWaterGetter> Water { get; }
         String? WaterType { get; }
         IReadOnlyList<ICellShipBlueprintSnapLinkGetter>? ShipBlueprintSnapLinks { get; }
@@ -2724,6 +2855,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
         UInt32 NumTraversalFluffBytes { get; }
         IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
+        IFormLinkNullableGetter<IPackInGetter> SourcePackIn { get; }
         Int32 Timestamp { get; }
         Int32 UnknownGroupData { get; }
         Int32 PersistentTimestamp { get; }
@@ -3147,37 +3279,40 @@ namespace Mutagen.Bethesda.Starfield
         LightingTemplate = 13,
         WaterHeight = 14,
         XILS = 15,
-        XCLAs = 16,
-        XWCN = 17,
-        CellSkyRegion = 18,
-        Ownership = 19,
-        Location = 20,
-        Water = 21,
-        WaterType = 22,
-        ShipBlueprintSnapLinks = 23,
-        WaterVelocity = 24,
-        AcousticSpace = 25,
-        ImageSpace = 26,
-        WaterEnvironmentMap = 27,
-        Music = 28,
-        GlobalDirtLayerMaterial = 29,
-        XCIB = 30,
-        TimeOfDay = 31,
-        EncounterLocation = 32,
-        LinkedReferences = 33,
-        IsLinkedRefTransient = 34,
-        EnvironmentMap = 35,
-        Traversals = 36,
-        NumTraversalFluffBytes = 37,
-        NavigationMeshes = 38,
-        Timestamp = 39,
-        UnknownGroupData = 40,
-        PersistentTimestamp = 41,
-        PersistentUnknownGroupData = 42,
-        Persistent = 43,
-        TemporaryTimestamp = 44,
-        TemporaryUnknownGroupData = 45,
-        Temporary = 46,
+        XCLR = 16,
+        XCLAs = 17,
+        XWCN = 18,
+        CellSkyRegion = 19,
+        Ownership = 20,
+        Location = 21,
+        XTRV = 22,
+        Water = 23,
+        WaterType = 24,
+        ShipBlueprintSnapLinks = 25,
+        WaterVelocity = 26,
+        AcousticSpace = 27,
+        ImageSpace = 28,
+        WaterEnvironmentMap = 29,
+        Music = 30,
+        GlobalDirtLayerMaterial = 31,
+        XCIB = 32,
+        TimeOfDay = 33,
+        EncounterLocation = 34,
+        LinkedReferences = 35,
+        IsLinkedRefTransient = 36,
+        EnvironmentMap = 37,
+        Traversals = 38,
+        NumTraversalFluffBytes = 39,
+        NavigationMeshes = 40,
+        SourcePackIn = 41,
+        Timestamp = 42,
+        UnknownGroupData = 43,
+        PersistentTimestamp = 44,
+        PersistentUnknownGroupData = 45,
+        Persistent = 46,
+        TemporaryTimestamp = 47,
+        TemporaryUnknownGroupData = 48,
+        Temporary = 49,
     }
     #endregion
 
@@ -3188,9 +3323,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 40;
+        public const ushort AdditionalFieldCount = 43;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 50;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -3233,12 +3368,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LTMP,
                 RecordTypes.XCLW,
                 RecordTypes.XILS,
+                RecordTypes.XCLR,
                 RecordTypes.XCLA,
                 RecordTypes.XCLD,
                 RecordTypes.XWCN,
                 RecordTypes.XCCM,
                 RecordTypes.XOWN,
                 RecordTypes.XLCN,
+                RecordTypes.XTRV,
                 RecordTypes.XCWT,
                 RecordTypes.XCWM,
                 RecordTypes.XBPS,
@@ -3261,13 +3398,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NVNM,
                 RecordTypes.NNAM,
                 RecordTypes.MNAM,
+                RecordTypes.XPCS,
                 RecordTypes.ACHR,
                 RecordTypes.REFR,
                 RecordTypes.NAME,
                 RecordTypes.XEMI,
                 RecordTypes.XRGD,
                 RecordTypes.XRFG,
-                RecordTypes.XPCS,
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLYR,
@@ -3330,11 +3467,13 @@ namespace Mutagen.Bethesda.Starfield
             item.LightingTemplate.Clear();
             item.WaterHeight = default;
             item.XILS = default;
+            item.XCLR.Clear();
             item.XCLAs.Clear();
             item.XWCN = default;
             item.CellSkyRegion.Clear();
             item.Ownership = null;
             item.Location.Clear();
+            item.XTRV = null;
             item.Water.Clear();
             item.WaterType = default;
             item.ShipBlueprintSnapLinks = null;
@@ -3353,6 +3492,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Traversals = null;
             item.NumTraversalFluffBytes = default(UInt32);
             item.NavigationMeshes.Clear();
+            item.SourcePackIn.Clear();
             item.Timestamp = default(Int32);
             item.UnknownGroupData = default(Int32);
             item.PersistentTimestamp = default(Int32);
@@ -3380,9 +3520,11 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
             obj.LightingTemplate.Relink(mapping);
+            obj.XCLR.Relink(mapping);
             obj.CellSkyRegion.Relink(mapping);
             obj.Ownership?.RemapLinks(mapping);
             obj.Location.Relink(mapping);
+            obj.XTRV?.RemapLinks(mapping);
             obj.Water.Relink(mapping);
             obj.ShipBlueprintSnapLinks?.RemapLinks(mapping);
             obj.AcousticSpace.Relink(mapping);
@@ -3393,6 +3535,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LinkedReferences.RemapLinks(mapping);
             obj.Traversals?.RemapLinks(mapping);
             obj.NavigationMeshes.RemapLinks(mapping);
+            obj.SourcePackIn.Relink(mapping);
             obj.Persistent.RemapLinks(mapping);
             obj.Temporary.RemapLinks(mapping);
         }
@@ -3860,6 +4003,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
             ret.XILS = item.XILS.EqualsWithin(rhs.XILS);
+            ret.XCLR = item.XCLR.Equals(rhs.XCLR);
             ret.XCLAs = item.XCLAs.CollectionEqualsHelper(
                 rhs.XCLAs,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3872,6 +4016,11 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Location = item.Location.Equals(rhs.Location);
+            ret.XTRV = EqualsMaskHelper.EqualsHelper(
+                item.XTRV,
+                rhs.XTRV,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Water = item.Water.Equals(rhs.Water);
             ret.WaterType = string.Equals(item.WaterType, rhs.WaterType);
             ret.ShipBlueprintSnapLinks = item.ShipBlueprintSnapLinks.CollectionEqualsHelper(
@@ -3906,6 +4055,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.NavigationMeshes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.SourcePackIn = item.SourcePackIn.Equals(rhs.SourcePackIn);
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.UnknownGroupData = item.UnknownGroupData == rhs.UnknownGroupData;
             ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
@@ -4021,6 +4171,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(XILSItem, "XILS");
             }
+            if (printMask?.XCLR ?? true)
+            {
+                sb.AppendItem(item.XCLR.FormKeyNullable, "XCLR");
+            }
             if (printMask?.XCLAs?.Overall ?? true)
             {
                 sb.AppendLine("XCLAs =>");
@@ -4052,6 +4206,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Location ?? true)
             {
                 sb.AppendItem(item.Location.FormKeyNullable, "Location");
+            }
+            if ((printMask?.XTRV?.Overall ?? true)
+                && item.XTRV is {} XTRVItem)
+            {
+                XTRVItem?.Print(sb, "XTRV");
             }
             if (printMask?.Water ?? true)
             {
@@ -4172,6 +4331,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.SourcePackIn ?? true)
+            {
+                sb.AppendItem(item.SourcePackIn.FormKeyNullable, "SourcePackIn");
             }
             if (printMask?.Timestamp ?? true)
             {
@@ -4319,6 +4482,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.XILS.EqualsWithin(rhs.XILS)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.XCLR) ?? true))
+            {
+                if (!lhs.XCLR.Equals(rhs.XCLR)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.XCLAs) ?? true))
             {
                 if (!lhs.XCLAs.SequenceEqual(rhs.XCLAs, (l, r) => ((CellXCLAItemCommon)((ICellXCLAItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.XCLAs)))) return false;
@@ -4342,6 +4509,14 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.XTRV) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.XTRV, rhs.XTRV, out var lhsXTRV, out var rhsXTRV, out var isXTRVEqual))
+                {
+                    if (!((XTRVCommon)((IXTRVGetter)lhsXTRV).CommonInstance()!).Equals(lhsXTRV, rhsXTRV, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.XTRV))) return false;
+                }
+                else if (!isXTRVEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
@@ -4418,6 +4593,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {
                 if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((NavigationMeshCommon)((INavigationMeshGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.SourcePackIn) ?? true))
+            {
+                if (!lhs.SourcePackIn.Equals(rhs.SourcePackIn)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
@@ -4506,6 +4685,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(XILSitem);
             }
+            hash.Add(item.XCLR);
             hash.Add(item.XCLAs);
             if (item.XWCN is {} XWCNItem)
             {
@@ -4517,6 +4697,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Ownershipitem);
             }
             hash.Add(item.Location);
+            if (item.XTRV is {} XTRVitem)
+            {
+                hash.Add(XTRVitem);
+            }
             hash.Add(item.Water);
             if (item.WaterType is {} WaterTypeitem)
             {
@@ -4553,6 +4737,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Traversals);
             hash.Add(item.NumTraversalFluffBytes);
             hash.Add(item.NavigationMeshes);
+            hash.Add(item.SourcePackIn);
             hash.Add(item.Timestamp);
             hash.Add(item.UnknownGroupData);
             hash.Add(item.PersistentTimestamp);
@@ -4596,6 +4781,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return FormLinkInformation.Factory(item);
             }
             yield return FormLinkInformation.Factory(obj.LightingTemplate);
+            if (FormLinkInformation.TryFactory(obj.XCLR, out var XCLRInfo))
+            {
+                yield return XCLRInfo;
+            }
             if (FormLinkInformation.TryFactory(obj.CellSkyRegion, out var CellSkyRegionInfo))
             {
                 yield return CellSkyRegionInfo;
@@ -4610,6 +4799,13 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
             {
                 yield return LocationInfo;
+            }
+            if (obj.XTRV is {} XTRVItems)
+            {
+                foreach (var item in XTRVItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
@@ -4657,6 +4853,10 @@ namespace Mutagen.Bethesda.Starfield
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.SourcePackIn, out var SourcePackInInfo))
+            {
+                yield return SourcePackInInfo;
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
@@ -5487,6 +5687,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.XILS = rhs.XILS;
             }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XCLR) ?? true))
+            {
+                item.XCLR.SetTo(rhs.XCLR.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XCLAs) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.XCLAs);
@@ -5555,6 +5759,32 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
                 item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XTRV) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.XTRV);
+                try
+                {
+                    if(rhs.XTRV is {} rhsXTRV)
+                    {
+                        item.XTRV = rhsXTRV.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.XTRV));
+                    }
+                    else
+                    {
+                        item.XTRV = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
@@ -5745,6 +5975,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SourcePackIn) ?? true))
+            {
+                item.SourcePackIn.SetTo(rhs.SourcePackIn.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
@@ -6032,6 +6266,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.XILS,
                 header: translationParams.ConvertToCustom(RecordTypes.XILS));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.XCLR,
+                header: translationParams.ConvertToCustom(RecordTypes.XCLR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ICellXCLAItemGetter>.Instance.Write(
                 writer: writer,
                 items: item.XCLAs,
@@ -6062,6 +6300,13 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Location,
                 header: translationParams.ConvertToCustom(RecordTypes.XLCN));
+            if (item.XTRV is {} XTRVItem)
+            {
+                ((XTRVBinaryWriteTranslation)((IBinaryItem)XTRVItem).BinaryWriteTranslator).Write(
+                    item: XTRVItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
@@ -6147,6 +6392,10 @@ namespace Mutagen.Bethesda.Starfield
             CellBinaryWriteTranslation.WriteBinaryTraversals(
                 writer: writer,
                 item: item);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SourcePackIn,
+                header: translationParams.ConvertToCustom(RecordTypes.XPCS));
         }
 
         public static partial void WriteBinaryTraversalsCustom(
@@ -6329,6 +6578,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.XILS = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.XILS;
                 }
+                case RecordTypeInts.XCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XCLR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.XCLR;
+                }
                 case RecordTypeInts.XCLA:
                 case RecordTypeInts.XCLD:
                 {
@@ -6362,6 +6617,11 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.Location;
+                }
+                case RecordTypeInts.XTRV:
+                {
+                    item.XTRV = Mutagen.Bethesda.Starfield.XTRV.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.XTRV;
                 }
                 case RecordTypeInts.XCWT:
                 {
@@ -6474,6 +6734,12 @@ namespace Mutagen.Bethesda.Starfield
                         item: item,
                         lastParsed: lastParsed);
                     return (int)Cell_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -6604,6 +6870,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XILSLocation;
         public Single? XILS => _XILSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XILSLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region XCLR
+        private int? _XCLRLocation;
+        public IFormLinkNullableGetter<INpcGetter> XCLR => _XCLRLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XCLRLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        #endregion
         public IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; private set; } = Array.Empty<ICellXCLAItemGetter>();
         #region XWCN
         private int? _XWCNLocation;
@@ -6617,6 +6887,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Location
         private int? _LocationLocation;
         public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region XTRV
+        private RangeInt32? _XTRVLocation;
+        public IXTRVGetter? XTRV => _XTRVLocation.HasValue ? XTRVBinaryOverlay.XTRVFactory(_recordData.Slice(_XTRVLocation!.Value.Min), _package) : default;
         #endregion
         #region Water
         private int? _WaterLocation;
@@ -6679,6 +6953,10 @@ namespace Mutagen.Bethesda.Starfield
             int offset,
             RecordType type,
             PreviousParse lastParsed);
+        #endregion
+        #region SourcePackIn
+        private int? _SourcePackInLocation;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6807,6 +7085,11 @@ namespace Mutagen.Bethesda.Starfield
                     _XILSLocation = (stream.Position - offset);
                     return (int)Cell_FieldIndex.XILS;
                 }
+                case RecordTypeInts.XCLR:
+                {
+                    _XCLRLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.XCLR;
+                }
                 case RecordTypeInts.XCLA:
                 case RecordTypeInts.XCLD:
                 {
@@ -6839,6 +7122,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _LocationLocation = (stream.Position - offset);
                     return (int)Cell_FieldIndex.Location;
+                }
+                case RecordTypeInts.XTRV:
+                {
+                    _XTRVLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.XTRV;
                 }
                 case RecordTypeInts.XCWT:
                 {
@@ -6941,6 +7229,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         lastParsed: lastParsed);
                     return (int)Cell_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    _SourcePackInLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XXXX:
                 {

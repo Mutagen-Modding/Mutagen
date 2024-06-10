@@ -65,11 +65,11 @@ partial class NavmeshGeometryBinaryOverlay
         return NavmeshGeometryBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_structData.Slice(8), _package));
     }
 
-    partial void CustomTrianglesEndPos()
-    {
-        var count = BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(VerticesEndingPos));
-        TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x15) + 4));
-    }
+    // partial void CustomTrianglesEndPos()
+    // {
+    //     var count = BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(VerticesEndingPos));
+    //     TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x15) + 4));
+    // }
 
     class TrianglesOverlay : IReadOnlyList<INavmeshTriangleGetter>
     {

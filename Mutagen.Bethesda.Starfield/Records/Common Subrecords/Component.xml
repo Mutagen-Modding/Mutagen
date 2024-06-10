@@ -443,7 +443,7 @@
   </Object>
   <Object name="BlockEditorMetaDataComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <Data>
+      <Data recordType="DAT2">
         <Fields>
           <String name="UnknownString1" binaryType="PrependLength" />
           <UInt8 name="UnknownByte" />
@@ -464,6 +464,7 @@
   <Object name="BlockCellHeightGridComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <ByteArray name="DATA" recordType="DATA" />
+
     </Fields>
   </Object>
   <Object name="BlockHeightAdjustmentComponent" objType="Subrecord" baseClass="AComponent">
@@ -471,6 +472,7 @@
       <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="DAT2" nullable="False">
         <RefDirect refName="BlockHeightAdjustmentComponentItem" />
       </Array2D>
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
     </Fields>
   </Object>
   <Object name="BlockHeightAdjustmentComponentItem" objType="Subrecord">
@@ -503,13 +505,7 @@
   </Object>
   <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <RefList name="Patterns" refName="SurfaceTreePatternSwapInfoComponentItem" recordType="DATA" counterLength="4" />
-    </Fields>
-  </Object>
-  <Object name="SurfaceTreePatternSwapInfoComponentItem" objType="Subrecord">
-    <Fields>
-      <FormLink name="SurfacePattern" refName="SurfacePattern" />
-      <Int32 name="Unknown" unknown="true" />
+      <ByteArray name="DAT2" recordType="DAT2" />
     </Fields>
   </Object>
   <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">

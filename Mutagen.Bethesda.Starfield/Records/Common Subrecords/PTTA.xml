@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PTTA" objType="Subrecord" recordType="PTTA" >
+    <Fields>
+      <Int32 name="Unknown" />
+      <Int32 name="Unknown2" />
+      <FormLink name="Transform" refName="Transform" />
+      <Int32 name="Unknown3" />
+    </Fields>
+  </Object>
+</Loqui>

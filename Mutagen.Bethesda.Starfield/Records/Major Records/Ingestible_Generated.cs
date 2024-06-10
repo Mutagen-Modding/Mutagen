@@ -2164,6 +2164,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2183,6 +2185,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
+                RecordTypes.MAGF,
                 RecordTypes.EFIF,
                 RecordTypes.MUID,
                 RecordTypes.CITC,
@@ -3933,6 +3936,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4029,6 +4034,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
+                case RecordTypeInts.MAGF:
                 case RecordTypeInts.EFIF:
                 case RecordTypeInts.MUID:
                 {
@@ -4309,6 +4315,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4397,6 +4405,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
+                case RecordTypeInts.MAGF:
                 case RecordTypeInts.EFIF:
                 case RecordTypeInts.MUID:
                 {

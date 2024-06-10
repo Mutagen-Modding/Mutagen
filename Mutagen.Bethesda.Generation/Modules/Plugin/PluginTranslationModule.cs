@@ -956,6 +956,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                             var doubledToProcess = GetDoubledToProcess(gen, doubleUsages);
                             var nonDoubledKeys = gen.Key.Where(x => !doubleUsages.ContainsKey(x)).ToArray();
 
+                            foreach (var recordTypeVersioning in gen.Value.GetFieldData().RecordTypeVersioning.EmptyIfNull())
+                            {
+                                sb.AppendLine($"case RecordTypeInts.{recordTypeVersioning.Type}");
+                                using (sb.IncreaseDepth())
+                                {
+                                    sb.AppendLine(
+                                        $"when frame.MetaData.FormVersion <= {recordTypeVersioning.Version}:");
+                                }
+                            }
+
                             if (gen.Value.GetFieldData().HasVersioning
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
@@ -1710,6 +1720,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                             var doubledToProcess = GetDoubledToProcess(gen, doubleUsages);
                             var nonDoubledKeys = gen.Key.Where(x => !doubleUsages.ContainsKey(x)).ToArray();
 
+                            foreach (var recordTypeVersioning in gen.Value.GetFieldData().RecordTypeVersioning.EmptyIfNull())
+                            {
+                                sb.AppendLine($"case RecordTypeInts.{recordTypeVersioning.Type}");
+                                using (sb.IncreaseDepth())
+                                {
+                                    sb.AppendLine(
+                                        $"when this._package.FormVersion!.FormVersion <= {recordTypeVersioning.Version}:");
+                                }
+                            }
+                            
                             if (gen.Value.GetFieldData().HasVersioning
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
@@ -3677,6 +3697,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         args.Add($"overflowRecord: {obj.RecordTypeHeaderName(fieldData.OverflowRecordType.Value)}");
                                         args.Add("out var writerToUse");
                                     }
+                                }
+                                else if (fieldData.RecordTypeVersioning?.Count > 0)
+                                {
+                                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom(writer.MetaData.FormVersion!.Value switch");
+                                    using (sb.CurlyBrace())
+                                    {
+                                        foreach (var vers in fieldData.RecordTypeVersioning)
+                                        {
+                                            sb.AppendLine($"<= {vers.Version} => {obj.RecordTypeHeaderName(vers.Type)},");
+                                        }
+                                        sb.AppendLine($"_ => {obj.RecordTypeHeaderName(fieldData.RecordType.Value)}");
+                                    }
+                                    sb.AppendLine(")))");
                                 }
                                 else
                                 {

@@ -5,6 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
@@ -67,6 +68,7 @@
           <UInt8 name="WAM2Unknown1" unknown="true" />
         </Fields>
       </Data>
+      <ByteArray name="WAMM" recordType="WAMM" unknown="true" />
       <Data recordType="WAUD" >
         <Fields>
           <RefDirect name="MeleeOrCreature" refName="SoundReference" />
@@ -193,6 +195,7 @@
           <Bool name="ReloadSingle" byteLength="1" />
         </Fields>
       </Data>
+      <ByteArray name="WRUM" recordType="WRUM" unknown="true" />
       <Data recordType="WVAR" >
         <Fields>
           <Float name="ApertureValueMin" />

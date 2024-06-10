@@ -124,8 +124,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledNpc
 - LeveledPackIn
 - Light
+- MaterialType
 - MiscItem
 - ModelComponent
+- MorphableObject
 - MoveableStatic
 - NpcModification
 - ObjectModification
@@ -180,6 +182,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - FurnitureMarkerFile
 - FxSceneAction
+- GenericBaseForm
 - Hazard
 - HeadPart
 - IdleAnimation
@@ -529,6 +532,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### GenericBaseForm
 - IHaveVirtualMachineAdapter
+- INamed
 - IObjectBounded
 - IScripted
 ### Grass
@@ -609,6 +613,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IScripted
 ### MaterialType
+- IModeled
 - INamed
 ### Message
 - INamed
@@ -620,6 +625,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### ModelComponent
+- IModeled
+### MorphableObject
 - IModeled
 ### MorphGroup
 - INamed

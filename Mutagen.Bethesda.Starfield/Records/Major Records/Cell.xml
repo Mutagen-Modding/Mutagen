@@ -29,11 +29,13 @@
       <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
       <Float name="WaterHeight" recordType="XCLW" />
       <Float name="XILS" recordType="XILS" unknown="true" />
+      <FormLink name="XCLR" refName="Npc" recordType="XCLR" unknown="true" />
       <RefList name="XCLAs" refName="CellXCLAItem" />
       <ByteArray name="XWCN" recordType="XWCN" />
       <FormLink name="CellSkyRegion" refName="Region" recordType="XCCM" />
       <RefDirect name="Ownership" refName="Ownership" />
       <FormLink name="Location" refName="Location" recordType="XLCN" />
+      <RefDirect name="XTRV" refName="XTRV" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <String name="WaterType" recordType="XCWM" />
       <RefList name="ShipBlueprintSnapLinks" refName="CellShipBlueprintSnapLink" recordType="XBPS" />
@@ -52,6 +54,7 @@
       <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" overflowRecordType="XXXX" binary="Custom" />
       <UInt32 name="NumTraversalFluffBytes" binary="NoGeneration" />
       <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
+      <FormLink name="SourcePackIn" refName="PackIn" recordType="XPCS"/>
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />

@@ -79,6 +79,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IAudioOcclusionPrimitiveGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IAudioOcclusionPrimitiveGetter.ODRT => this.ODRT;
+        #endregion
         #region OBSV
         public Single? OBSV { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,6 +121,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.OBSV = initialValue;
                 this.OCCV = initialValue;
             }
@@ -130,6 +136,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem OBSV,
                 TItem OCCV)
             : base(
@@ -143,6 +150,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.OBSV = OBSV;
                 this.OCCV = OCCV;
             }
@@ -158,6 +166,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public TItem OBSV;
             public TItem OCCV;
             #endregion
@@ -175,6 +184,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.OBSV, rhs.OBSV)) return false;
                 if (!object.Equals(this.OCCV, rhs.OCCV)) return false;
                 return true;
@@ -184,6 +194,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.OBSV);
                 hash.Add(this.OCCV);
                 hash.Add(base.GetHashCode());
@@ -202,6 +213,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (!eval(this.OBSV)) return false;
                 if (!eval(this.OCCV)) return false;
                 return true;
@@ -218,6 +230,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (eval(this.OBSV)) return true;
                 if (eval(this.OCCV)) return true;
                 return false;
@@ -237,6 +250,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.OBSV = eval(this.OBSV);
                 obj.OCCV = eval(this.OCCV);
             }
@@ -265,6 +279,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ODTY, "ODTY");
                     }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
+                    }
                     if (printMask?.OBSV ?? true)
                     {
                         sb.AppendItem(OBSV, "OBSV");
@@ -286,6 +304,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public Exception? OBSV;
             public Exception? OCCV;
             #endregion
@@ -300,6 +319,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         return ODTY;
+                    case AudioOcclusionPrimitive_FieldIndex.ODRT:
+                        return ODRT;
                     case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         return OBSV;
                     case AudioOcclusionPrimitive_FieldIndex.OCCV:
@@ -319,6 +340,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case AudioOcclusionPrimitive_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         this.OBSV = ex;
@@ -343,6 +367,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case AudioOcclusionPrimitive_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         this.OBSV = (Exception?)obj;
                         break;
@@ -360,6 +387,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (OBSV != null) return true;
                 if (OCCV != null) return true;
                 return false;
@@ -393,6 +421,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ODTY, "ODTY");
                 }
                 {
+                    sb.AppendItem(ODRT, "ODRT");
+                }
+                {
                     sb.AppendItem(OBSV, "OBSV");
                 }
                 {
@@ -408,6 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.OBSV = this.OBSV.Combine(rhs.OBSV);
                 ret.OCCV = this.OCCV.Combine(rhs.OCCV);
                 return ret;
@@ -434,6 +466,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public bool OBSV;
             public bool OCCV;
             #endregion
@@ -445,6 +478,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.OBSV = defaultOn;
                 this.OCCV = defaultOn;
             }
@@ -456,6 +490,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((OBSV, null));
                 ret.Add((OCCV, null));
             }
@@ -609,6 +644,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new Single? OBSV { get; set; }
         new Single? OCCV { get; set; }
     }
@@ -637,6 +673,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         Single? OBSV { get; }
         Single? OCCV { get; }
 
@@ -817,8 +854,9 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        OBSV = 9,
-        OCCV = 10,
+        ODRT = 9,
+        OBSV = 10,
+        OCCV = 11,
     }
     #endregion
 
@@ -829,9 +867,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(AudioOcclusionPrimitive.Mask<>);
 
@@ -866,6 +904,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.AOPF,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.OBSV,
                 RecordTypes.OCCV);
             return new RecordTriggerSpecs(
@@ -914,6 +953,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.OBSV = default;
             item.OCCV = default;
             base.Clear(item);
@@ -1002,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.OBSV = item.OBSV.EqualsWithin(rhs.OBSV);
             ret.OCCV = item.OCCV.EqualsWithin(rhs.OCCV);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1061,6 +1102,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.OBSV ?? true)
                 && item.OBSV is {} OBSVItem)
@@ -1134,6 +1180,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OBSV) ?? true))
             {
                 if (!lhs.OBSV.EqualsWithin(rhs.OBSV)) return false;
@@ -1174,6 +1224,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.OBSV is {} OBSVitem)
             {
@@ -1311,6 +1365,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OBSV) ?? true))
             {
@@ -1488,6 +1546,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
                 item: item.OBSV,
                 header: translationParams.ConvertToCustom(RecordTypes.OBSV));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1590,6 +1652,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)AudioOcclusionPrimitive_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OBSV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1668,6 +1736,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region OBSV
         private int? _OBSVLocation;
@@ -1755,6 +1827,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)AudioOcclusionPrimitive_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.OBSV:
                 {

@@ -6,18 +6,7 @@ using Mutagen.Bethesda.Starfield.Internals;
 
 namespace Mutagen.Bethesda.Starfield;
 
-partial class LeveledNpc
-{
-    [Flags]
-    public enum Flag
-    {
-        CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
-        CalculateForEachItemInCount = 0x02,
-        CalculateAll = 0x04
-    }
-}
-
-partial class LeveledNpcBinaryCreateTranslation
+partial class LeveledSpaceCellBinaryCreateTranslation
 {
     public const int FloatChanceNoneVersion = 510;
 
@@ -34,18 +23,18 @@ partial class LeveledNpcBinaryCreateTranslation
         }
     }
     
-    public static partial void FillBinaryChanceNoneCustom(MutagenFrame frame, ILeveledNpcInternal item, PreviousParse lastParsed)
+    public static partial void FillBinaryChanceNoneCustom(MutagenFrame frame, ILeveledSpaceCellInternal item, PreviousParse lastParsed)
     {
         item.ChanceNone = GetChance(frame.ReadSubrecord(), frame.MetaData.FormVersion!.Value);
     }
 }
 
-partial class LeveledNpcBinaryWriteTranslation
+partial class LeveledSpaceCellBinaryWriteTranslation
 {
     public static void WriteBinaryChanceNoneCustom(MutagenWriter writer, float chanceNone, ushort formVersion)
     {
         using var s = HeaderExport.Subrecord(writer, RecordTypes.LVLD);
-        if (formVersion < LeveledNpcBinaryCreateTranslation.FloatChanceNoneVersion)
+        if (formVersion < LeveledSpaceCellBinaryCreateTranslation.FloatChanceNoneVersion)
         {
             writer.Write((byte)(chanceNone * 255));
         }
@@ -55,19 +44,19 @@ partial class LeveledNpcBinaryWriteTranslation
         }
     }
     
-    public static partial void WriteBinaryChanceNoneCustom(MutagenWriter writer, ILeveledNpcGetter item)
+    public static partial void WriteBinaryChanceNoneCustom(MutagenWriter writer, ILeveledSpaceCellGetter item)
     {
         WriteBinaryChanceNoneCustom(writer, item.ChanceNone, item.FormVersion);
     }
 }
 
-partial class LeveledNpcBinaryOverlay
+partial class LeveledSpaceCellBinaryOverlay
 {
     private float _chanceNone;
     
     partial void ChanceNoneCustomParse(OverlayStream stream, int finalPos, int offset)
     {
-        _chanceNone = LeveledNpcBinaryCreateTranslation.GetChance(stream.ReadSubrecord(), this.FormVersion);
+        _chanceNone = LeveledSpaceCellBinaryCreateTranslation.GetChance(stream.ReadSubrecord(), this.FormVersion);
     }
 
     public partial float GetChanceNoneCustom()

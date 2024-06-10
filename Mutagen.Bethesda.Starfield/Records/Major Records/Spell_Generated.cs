@@ -208,6 +208,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> ISpellGetter.CastingPerk => this.CastingPerk;
         #endregion
+        #region MAGF
+        public Int32? MAGF { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? ISpellGetter.MAGF => this.MAGF;
+        #endregion
+        #region MUID
+        public Int32? MUID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? ISpellGetter.MUID => this.MUID;
+        #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
@@ -264,6 +274,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.CastDuration = initialValue;
                 this.Range = initialValue;
                 this.CastingPerk = initialValue;
+                this.MAGF = initialValue;
+                this.MUID = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -292,6 +304,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CastDuration,
                 TItem Range,
                 TItem CastingPerk,
+                TItem MAGF,
+                TItem MUID,
                 TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -319,6 +333,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.CastDuration = CastDuration;
                 this.Range = Range;
                 this.CastingPerk = CastingPerk;
+                this.MAGF = MAGF;
+                this.MUID = MUID;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -348,6 +364,8 @@ namespace Mutagen.Bethesda.Starfield
             public TItem CastDuration;
             public TItem Range;
             public TItem CastingPerk;
+            public TItem MAGF;
+            public TItem MUID;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
@@ -379,6 +397,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CastDuration, rhs.CastDuration)) return false;
                 if (!object.Equals(this.Range, rhs.Range)) return false;
                 if (!object.Equals(this.CastingPerk, rhs.CastingPerk)) return false;
+                if (!object.Equals(this.MAGF, rhs.MAGF)) return false;
+                if (!object.Equals(this.MUID, rhs.MUID)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
@@ -402,6 +422,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CastDuration);
                 hash.Add(this.Range);
                 hash.Add(this.CastingPerk);
+                hash.Add(this.MAGF);
+                hash.Add(this.MUID);
                 hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -452,6 +474,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.CastDuration)) return false;
                 if (!eval(this.Range)) return false;
                 if (!eval(this.CastingPerk)) return false;
+                if (!eval(this.MAGF)) return false;
+                if (!eval(this.MUID)) return false;
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -511,6 +535,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.CastDuration)) return true;
                 if (eval(this.Range)) return true;
                 if (eval(this.CastingPerk)) return true;
+                if (eval(this.MAGF)) return true;
+                if (eval(this.MUID)) return true;
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -568,6 +594,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CastDuration = eval(this.CastDuration);
                 obj.Range = eval(this.Range);
                 obj.CastingPerk = eval(this.CastingPerk);
+                obj.MAGF = eval(this.MAGF);
+                obj.MUID = eval(this.MUID);
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -686,6 +714,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(CastingPerk, "CastingPerk");
                     }
+                    if (printMask?.MAGF ?? true)
+                    {
+                        sb.AppendItem(MAGF, "MAGF");
+                    }
+                    if (printMask?.MUID ?? true)
+                    {
+                        sb.AppendItem(MUID, "MUID");
+                    }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
@@ -733,6 +769,8 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? CastDuration;
             public Exception? Range;
             public Exception? CastingPerk;
+            public Exception? MAGF;
+            public Exception? MUID;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
             #endregion
 
@@ -776,6 +814,10 @@ namespace Mutagen.Bethesda.Starfield
                         return Range;
                     case Spell_FieldIndex.CastingPerk:
                         return CastingPerk;
+                    case Spell_FieldIndex.MAGF:
+                        return MAGF;
+                    case Spell_FieldIndex.MUID:
+                        return MUID;
                     case Spell_FieldIndex.Effects:
                         return Effects;
                     default:
@@ -838,6 +880,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Spell_FieldIndex.CastingPerk:
                         this.CastingPerk = ex;
+                        break;
+                    case Spell_FieldIndex.MAGF:
+                        this.MAGF = ex;
+                        break;
+                    case Spell_FieldIndex.MUID:
+                        this.MUID = ex;
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
@@ -904,6 +952,12 @@ namespace Mutagen.Bethesda.Starfield
                     case Spell_FieldIndex.CastingPerk:
                         this.CastingPerk = (Exception?)obj;
                         break;
+                    case Spell_FieldIndex.MAGF:
+                        this.MAGF = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.MUID:
+                        this.MUID = (Exception?)obj;
+                        break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
@@ -933,6 +987,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (CastDuration != null) return true;
                 if (Range != null) return true;
                 if (CastingPerk != null) return true;
+                if (MAGF != null) return true;
+                if (MUID != null) return true;
                 if (Effects != null) return true;
                 return false;
             }
@@ -1022,6 +1078,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(CastingPerk, "CastingPerk");
                 }
+                {
+                    sb.AppendItem(MAGF, "MAGF");
+                }
+                {
+                    sb.AppendItem(MUID, "MUID");
+                }
                 if (Effects is {} EffectsItem)
                 {
                     sb.AppendLine("Effects =>");
@@ -1065,6 +1127,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.CastingPerk = this.CastingPerk.Combine(rhs.CastingPerk);
+                ret.MAGF = this.MAGF.Combine(rhs.MAGF);
+                ret.MUID = this.MUID.Combine(rhs.MUID);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
@@ -1105,6 +1169,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool CastDuration;
             public bool Range;
             public bool CastingPerk;
+            public bool MAGF;
+            public bool MUID;
             public Effect.TranslationMask? Effects;
             #endregion
 
@@ -1128,6 +1194,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.CastDuration = defaultOn;
                 this.Range = defaultOn;
                 this.CastingPerk = defaultOn;
+                this.MAGF = defaultOn;
+                this.MUID = defaultOn;
             }
 
             #endregion
@@ -1152,6 +1220,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CastDuration, null));
                 ret.Add((Range, null));
                 ret.Add((CastingPerk, null));
+                ret.Add((MAGF, null));
+                ret.Add((MUID, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
             }
 
@@ -1335,6 +1405,8 @@ namespace Mutagen.Bethesda.Starfield
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
         new IFormLink<IPerkGetter> CastingPerk { get; set; }
+        new Int32? MAGF { get; set; }
+        new Int32? MUID { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
@@ -1395,6 +1467,8 @@ namespace Mutagen.Bethesda.Starfield
         Single CastDuration { get; }
         Single Range { get; }
         IFormLinkGetter<IPerkGetter> CastingPerk { get; }
+        Int32? MAGF { get; }
+        Int32? MUID { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1589,7 +1663,9 @@ namespace Mutagen.Bethesda.Starfield
         CastDuration = 21,
         Range = 22,
         CastingPerk = 23,
-        Effects = 24,
+        MAGF = 24,
+        MUID = 25,
+        Effects = 26,
     }
     #endregion
 
@@ -1600,9 +1676,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -1645,6 +1721,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PDSH,
                 RecordTypes.DESC,
                 RecordTypes.SPIT,
+                RecordTypes.MAGF,
+                RecordTypes.MUID,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
                 RecordTypes.CTDA,
@@ -1652,7 +1730,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
                 RecordTypes.EFIF,
-                RecordTypes.MUID,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
@@ -1717,6 +1794,8 @@ namespace Mutagen.Bethesda.Starfield
             item.CastDuration = default(Single);
             item.Range = default(Single);
             item.CastingPerk.Clear();
+            item.MAGF = default;
+            item.MUID = default;
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1836,6 +1915,8 @@ namespace Mutagen.Bethesda.Starfield
             ret.CastDuration = item.CastDuration.EqualsWithin(rhs.CastDuration);
             ret.Range = item.Range.EqualsWithin(rhs.Range);
             ret.CastingPerk = item.CastingPerk.Equals(rhs.CastingPerk);
+            ret.MAGF = item.MAGF == rhs.MAGF;
+            ret.MUID = item.MUID == rhs.MUID;
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1971,6 +2052,16 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.CastingPerk ?? true)
             {
                 sb.AppendItem(item.CastingPerk.FormKey, "CastingPerk");
+            }
+            if ((printMask?.MAGF ?? true)
+                && item.MAGF is {} MAGFItem)
+            {
+                sb.AppendItem(MAGFItem, "MAGF");
+            }
+            if ((printMask?.MUID ?? true)
+                && item.MUID is {} MUIDItem)
+            {
+                sb.AppendItem(MUIDItem, "MUID");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -2116,6 +2207,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.CastingPerk.Equals(rhs.CastingPerk)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.MAGF) ?? true))
+            {
+                if (lhs.MAGF != rhs.MAGF) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.MUID) ?? true))
+            {
+                if (lhs.MUID != rhs.MUID) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
@@ -2177,6 +2276,14 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CastDuration);
             hash.Add(item.Range);
             hash.Add(item.CastingPerk);
+            if (item.MAGF is {} MAGFitem)
+            {
+                hash.Add(MAGFitem);
+            }
+            if (item.MUID is {} MUIDitem)
+            {
+                hash.Add(MUIDitem);
+            }
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2464,6 +2571,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CastingPerk.SetTo(rhs.CastingPerk.FormKey);
             }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MAGF) ?? true))
+            {
+                item.MAGF = rhs.MAGF;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MUID) ?? true))
+            {
+                item.MUID = rhs.MUID;
+            }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
                 errorMask?.PushIndex((int)Spell_FieldIndex.Effects);
@@ -2734,6 +2849,14 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     item: item.CastingPerk);
             }
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MAGF,
+                header: translationParams.ConvertToCustom(RecordTypes.MAGF));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MUID,
+                header: translationParams.ConvertToCustom(RecordTypes.MUID));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
@@ -2922,6 +3045,86 @@ namespace Mutagen.Bethesda.Starfield
                     item.CastingPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Spell_FieldIndex.CastingPerk;
                 }
+                case RecordTypeInts.MAGF:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.MAGF = frame.ReadInt32();
+                        return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        item.Effects.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Effect_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Effect.TryCreateFromBinary));
+                        return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.MAGF = frame.ReadInt32();
+                                return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
+                            case 1:
+                                item.Effects.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Effect_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Effect.TryCreateFromBinary));
+                                return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.MUID:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MAGF)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.MUID = frame.ReadInt32();
+                        return new ParseResult((int)Spell_FieldIndex.MUID, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        item.Effects.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Effect_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Effect.TryCreateFromBinary));
+                        return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.MUID = frame.ReadInt32();
+                                return new ParseResult((int)Spell_FieldIndex.MUID, nextRecordType);
+                            case 1:
+                                item.Effects.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Effect_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Effect.TryCreateFromBinary));
+                                return new ParseResult((int)Spell_FieldIndex.Effects, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
@@ -2929,7 +3132,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
                 case RecordTypeInts.EFIF:
-                case RecordTypeInts.MUID:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -3079,6 +3281,14 @@ namespace Mutagen.Bethesda.Starfield
         private bool _CastingPerk_IsSet => _SPITLocation.HasValue;
         public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
+        #region MAGF
+        private int? _MAGFLocation;
+        public Int32? MAGF => _MAGFLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MAGFLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region MUID
+        private int? _MUIDLocation;
+        public Int32? MUID => _MUIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MUIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3210,6 +3420,86 @@ namespace Mutagen.Bethesda.Starfield
                     _SPITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Spell_FieldIndex.CastingPerk;
                 }
+                case RecordTypeInts.MAGF:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
+                    {
+                        _MAGFLocation = (stream.Position - offset);
+                        return new ParseResult((int)Spell_FieldIndex.MAGF, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                            stream: stream,
+                            translationParams: translationParams,
+                            trigger: Effect_Registration.TriggerSpecs,
+                            factory: EffectBinaryOverlay.EffectFactory);
+                        return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _MAGFLocation = (stream.Position - offset);
+                                return new ParseResult((int)Spell_FieldIndex.MAGF, type);
+                            }
+                            case 1:
+                            {
+                                this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: Effect_Registration.TriggerSpecs,
+                                    factory: EffectBinaryOverlay.EffectFactory);
+                                return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.MUID:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MAGF)
+                    {
+                        _MUIDLocation = (stream.Position - offset);
+                        return new ParseResult((int)Spell_FieldIndex.MUID, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
+                    {
+                        this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                            stream: stream,
+                            translationParams: translationParams,
+                            trigger: Effect_Registration.TriggerSpecs,
+                            factory: EffectBinaryOverlay.EffectFactory);
+                        return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _MUIDLocation = (stream.Position - offset);
+                                return new ParseResult((int)Spell_FieldIndex.MUID, type);
+                            }
+                            case 1:
+                            {
+                                this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: Effect_Registration.TriggerSpecs,
+                                    factory: EffectBinaryOverlay.EffectFactory);
+                                return new ParseResult((int)Spell_FieldIndex.Effects, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
@@ -3217,7 +3507,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
                 case RecordTypeInts.EFIF:
-                case RecordTypeInts.MUID:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,

@@ -1102,6 +1102,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ProjectedDecal_Registration.Instance,
             Projectile_Registration.Instance,
             PropertySheetComponent_Registration.Instance,
+            PTTA_Registration.Instance,
             Quest_Registration.Instance,
             QuestAdapter_Registration.Instance,
             QuestCollectionAlias_Registration.Instance,
@@ -1247,7 +1248,6 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SurfacePatternStyle_Registration.Instance,
             SurfaceTree_Registration.Instance,
             SurfaceTreePatternSwapInfoComponent_Registration.Instance,
-            SurfaceTreePatternSwapInfoComponentItem_Registration.Instance,
             SystemBodyHasKeywordConditionData_Registration.Instance,
             SystemHasKeywordConditionData_Registration.Instance,
             TeleportDestination_Registration.Instance,
@@ -1320,6 +1320,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             WWiseKeywordMappingItem_Registration.Instance,
             WWiseKeywordMappingSoundItem_Registration.Instance,
             WWiseKeywordMappingSoundItemGuidPair_Registration.Instance,
+            XTRV_Registration.Instance,
             Zoom_Registration.Instance
         );
     }

@@ -5,6 +5,15 @@
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
       <FormLink name="ReflectionParent" refName="WeatherSetting" recordType="RFDP" />
       <ByteArray name="ReflectionDiff" recordType="RDIF" unknown="true" />
+      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
+      <ByteArray name="CNAM" recordType="CNAM" unknown="true" />
+      <ByteArray name="TNAM" recordType="TNAM" unknown="true" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="XNAM" recordType="XNAM" unknown="true" />
+      <ByteArray name="INAM" recordType="INAM" unknown="true" />
+      <ByteArray name="YNAM" recordType="YNAM" unknown="true" />
+      <ByteArray name="ZNAM" recordType="ZNAM" unknown="true" />
+      <String name="Lut" recordType="TX00" />
     </Fields>
   </Object>
 </Loqui>

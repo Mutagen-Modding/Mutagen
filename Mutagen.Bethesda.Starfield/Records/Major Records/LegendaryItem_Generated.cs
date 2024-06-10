@@ -80,6 +80,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ILegendaryItemGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILegendaryItemGetter.ODRT => this.ODRT;
+        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -198,6 +203,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.DATA = initialValue;
                 this.ApplicableItemList = initialValue;
@@ -217,6 +223,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem Model,
                 TItem DATA,
                 TItem ApplicableItemList,
@@ -235,6 +242,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DATA = DATA;
                 this.ApplicableItemList = ApplicableItemList;
@@ -255,6 +263,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem DATA;
             public TItem ApplicableItemList;
@@ -277,6 +286,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.ApplicableItemList, rhs.ApplicableItemList)) return false;
@@ -291,6 +301,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.Model);
                 hash.Add(this.DATA);
                 hash.Add(this.ApplicableItemList);
@@ -314,6 +325,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
@@ -372,6 +384,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
@@ -433,6 +446,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.DATA = eval(this.DATA);
                 obj.ApplicableItemList = eval(this.ApplicableItemList);
@@ -507,6 +521,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -594,6 +612,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? DATA;
             public Exception? ApplicableItemList;
@@ -613,6 +632,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case LegendaryItem_FieldIndex.ODTY:
                         return ODTY;
+                    case LegendaryItem_FieldIndex.ODRT:
+                        return ODRT;
                     case LegendaryItem_FieldIndex.Model:
                         return Model;
                     case LegendaryItem_FieldIndex.DATA:
@@ -642,6 +663,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case LegendaryItem_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -681,6 +705,9 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case LegendaryItem_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
@@ -713,6 +740,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (Model != null) return true;
                 if (DATA != null) return true;
                 if (ApplicableItemList != null) return true;
@@ -749,6 +777,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 Model?.Print(sb);
                 {
@@ -824,6 +855,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.ApplicableItemList = this.ApplicableItemList.Combine(rhs.ApplicableItemList);
@@ -855,6 +887,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public Model.TranslationMask? Model;
             public bool DATA;
             public bool ApplicableItemList;
@@ -871,6 +904,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.DATA = defaultOn;
                 this.ApplicableItemList = defaultOn;
                 this.LegendaryTemplateList = defaultOn;
@@ -883,6 +917,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((DATA, null));
                 ret.Add((ApplicableItemList, null));
@@ -1051,6 +1086,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -1091,6 +1127,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1281,13 +1318,14 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        Model = 9,
-        DATA = 10,
-        ApplicableItemList = 11,
-        LegendaryTemplateList = 12,
-        LegendaryMods = 13,
-        IncludeFilters = 14,
-        ExcludeFilters = 15,
+        ODRT = 9,
+        Model = 10,
+        DATA = 11,
+        ApplicableItemList = 12,
+        LegendaryTemplateList = 13,
+        LegendaryMods = 14,
+        IncludeFilters = 15,
+        ExcludeFilters = 16,
     }
     #endregion
 
@@ -1298,9 +1336,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(LegendaryItem.Mask<>);
 
@@ -1335,9 +1373,12 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LGDI,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1394,6 +1435,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds = null;
             item.ODTY = default;
+            item.ODRT = default;
             item.Model = null;
             item.DATA = default;
             item.ApplicableItemList.Clear();
@@ -1523,6 +1565,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1601,6 +1644,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -1727,6 +1775,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
@@ -1794,6 +1846,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.Model is {} Modelitem)
             {
@@ -1995,6 +2051,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
@@ -2305,6 +2365,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2456,9 +2520,17 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LegendaryItem_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2585,6 +2657,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         public IModelGetter? Model { get; private set; }
         #region DATA
         private int? _DATALocation;
@@ -2680,9 +2756,16 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

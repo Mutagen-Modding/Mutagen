@@ -56,6 +56,11 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Description
+        public String? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICollisionLayerGetter.Description => this.Description;
+        #endregion
         #region Context
         public String? Context { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -117,6 +122,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Description = initialValue;
                 this.Context = initialValue;
                 this.Index = initialValue;
                 this.DebugColor = initialValue;
@@ -133,6 +139,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem Description,
                 TItem Context,
                 TItem Index,
                 TItem DebugColor,
@@ -148,6 +155,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Description = Description;
                 this.Context = Context;
                 this.Index = Index;
                 this.DebugColor = DebugColor;
@@ -165,6 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Description;
             public TItem Context;
             public TItem Index;
             public TItem DebugColor;
@@ -184,6 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Context, rhs.Context)) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
                 if (!object.Equals(this.DebugColor, rhs.DebugColor)) return false;
@@ -195,6 +205,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Description);
                 hash.Add(this.Context);
                 hash.Add(this.Index);
                 hash.Add(this.DebugColor);
@@ -211,6 +222,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Description)) return false;
                 if (!eval(this.Context)) return false;
                 if (!eval(this.Index)) return false;
                 if (!eval(this.DebugColor)) return false;
@@ -235,6 +247,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Description)) return true;
                 if (eval(this.Context)) return true;
                 if (eval(this.Index)) return true;
                 if (eval(this.DebugColor)) return true;
@@ -266,6 +279,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Description = eval(this.Description);
                 obj.Context = eval(this.Context);
                 obj.Index = eval(this.Index);
                 obj.DebugColor = eval(this.DebugColor);
@@ -303,6 +317,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(CollisionLayer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
                     if (printMask?.Context ?? true)
                     {
                         sb.AppendItem(Context, "Context");
@@ -355,6 +373,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Description;
             public Exception? Context;
             public Exception? Index;
             public Exception? DebugColor;
@@ -369,6 +388,8 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        return Description;
                     case CollisionLayer_FieldIndex.Context:
                         return Context;
                     case CollisionLayer_FieldIndex.Index:
@@ -391,6 +412,9 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
                     case CollisionLayer_FieldIndex.Context:
                         this.Context = ex;
                         break;
@@ -420,6 +444,9 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
                     case CollisionLayer_FieldIndex.Context:
                         this.Context = (Exception?)obj;
                         break;
@@ -447,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Description != null) return true;
                 if (Context != null) return true;
                 if (Index != null) return true;
                 if (DebugColor != null) return true;
@@ -479,6 +507,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 {
                     sb.AppendItem(Context, "Context");
                 }
@@ -522,6 +553,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Description = this.Description.Combine(rhs.Description);
                 ret.Context = this.Context.Combine(rhs.Context);
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.DebugColor = this.DebugColor.Combine(rhs.DebugColor);
@@ -550,6 +582,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public bool Description;
             public bool Context;
             public bool Index;
             public bool DebugColor;
@@ -564,6 +597,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Description = defaultOn;
                 this.Context = defaultOn;
                 this.Index = defaultOn;
                 this.DebugColor = defaultOn;
@@ -577,6 +611,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Description, null));
                 ret.Add((Context, null));
                 ret.Add((Index, null));
                 ret.Add((DebugColor, null));
@@ -731,6 +766,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedRequired,
         IStarfieldMajorRecordInternal
     {
+        new String? Description { get; set; }
         new String? Context { get; set; }
         new UInt32 Index { get; set; }
         new Color? DebugColor { get; set; }
@@ -759,6 +795,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
+        String? Description { get; }
         String? Context { get; }
         UInt32 Index { get; }
         Color? DebugColor { get; }
@@ -946,12 +983,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Context = 7,
-        Index = 8,
-        DebugColor = 9,
-        Flags = 10,
-        Name = 11,
-        CollidesWith = 12,
+        Description = 7,
+        Context = 8,
+        Index = 9,
+        DebugColor = 10,
+        Flags = 11,
+        Name = 12,
+        CollidesWith = 13,
     }
     #endregion
 
@@ -962,9 +1000,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -997,6 +1035,7 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.COLL);
             var all = RecordCollection.Factory(
                 RecordTypes.COLL,
+                RecordTypes.DESC,
                 RecordTypes.NLDT,
                 RecordTypes.BNAM,
                 RecordTypes.FNAM,
@@ -1047,6 +1086,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICollisionLayerInternal item)
         {
             ClearPartial();
+            item.Description = default;
             item.Context = default;
             item.Index = default(UInt32);
             item.DebugColor = default;
@@ -1138,6 +1178,7 @@ namespace Mutagen.Bethesda.Starfield
             CollisionLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Context = string.Equals(item.Context, rhs.Context);
             ret.Index = item.Index == rhs.Index;
             ret.DebugColor = item.DebugColor.ColorOnlyEquals(rhs.DebugColor);
@@ -1196,6 +1237,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
             if ((printMask?.Context ?? true)
                 && item.Context is {} ContextItem)
             {
@@ -1283,6 +1329,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Context) ?? true))
             {
                 if (!string.Equals(lhs.Context, rhs.Context)) return false;
@@ -1335,6 +1385,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ICollisionLayerGetter item)
         {
             var hash = new HashCode();
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
             if (item.Context is {} Contextitem)
             {
                 hash.Add(Contextitem);
@@ -1457,6 +1511,10 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
             if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Context) ?? true))
             {
                 item.Context = rhs.Context;
@@ -1663,6 +1721,11 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
                 item: item.Context,
                 header: translationParams.ConvertToCustom(RecordTypes.NLDT),
                 binaryType: StringBinaryType.NullTerminate);
@@ -1779,6 +1842,14 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CollisionLayer_FieldIndex.Description;
+                }
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1884,6 +1955,10 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ICollisionLayer);
 
 
+        #region Description
+        private int? _DescriptionLocation;
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         #region Context
         private int? _ContextLocation;
         public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1974,6 +2049,11 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Description;
+                }
                 case RecordTypeInts.NLDT:
                 {
                     _ContextLocation = (stream.Position - offset);

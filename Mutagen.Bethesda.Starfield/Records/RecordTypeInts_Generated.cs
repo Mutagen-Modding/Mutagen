@@ -156,6 +156,7 @@ public partial class RecordTypeInts
     public const int AVSG = 0x47535641;
     public const int AWGT = 0x54475741;
     public const int BAMT = 0x544D4142;
+    public const int BCLR = 0x524C4342;
     public const int BCOL = 0x4C4F4342;
     public const int BDED = 0x44454442;
     public const int BDFS = 0x53464442;
@@ -167,6 +168,7 @@ public partial class RecordTypeInts
     public const int BIMT = 0x544D4942;
     public const int BIOM = 0x4D4F4942;
     public const int BIPL = 0x4C504942;
+    public const int BLMS = 0x534D4C42;
     public const int BLUF = 0x46554C42;
     public const int BMC1 = 0x31434D42;
     public const int BMC2 = 0x32434D42;
@@ -280,8 +282,10 @@ public partial class RecordTypeInts
     public const int DLBR = 0x52424C44;
     public const int DLSH = 0x48534C44;
     public const int DMAX = 0x58414D44;
+    public const int DMDC = 0x43444D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
+    public const int DMDT = 0x54444D44;
     public const int DMGT = 0x54474D44;
     public const int DMIN = 0x4E494D44;
     public const int DNAM = 0x4D414E44;
@@ -339,6 +343,7 @@ public partial class RecordTypeInts
     public const int EXDC = 0x43445845;
     public const int EXDZ = 0x5A445845;
     public const int EXPL = 0x4C505845;
+    public const int EYEC = 0x43455945;
     public const int FACT = 0x54434146;
     public const int FBDS = 0x53444246;
     public const int FBOL = 0x4C4F4246;
@@ -420,6 +425,7 @@ public partial class RecordTypeInts
     public const int GWOR = 0x524F5747;
     public const int HACK = 0x4B434148;
     public const int HAZD = 0x445A4148;
+    public const int HCLR = 0x524C4348;
     public const int HCOL = 0x4C4F4348;
     public const int HDPT = 0x54504448;
     public const int HEAD = 0x44414548;
@@ -523,6 +529,7 @@ public partial class RecordTypeInts
     public const int LVLP = 0x504C564C;
     public const int LVSC = 0x4353564C;
     public const int MAAM = 0x4D41414D;
+    public const int MAGF = 0x4647414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
     public const int MCQP = 0x5051434D;
@@ -647,6 +654,7 @@ public partial class RecordTypeInts
     public const int OBTS = 0x5354424F;
     public const int OCCV = 0x5643434F;
     public const int OCOR = 0x524F434F;
+    public const int ODRT = 0x5452444F;
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int OMOD = 0x444F4D4F;
@@ -729,6 +737,7 @@ public partial class RecordTypeInts
     public const int PTOP = 0x504F5450;
     public const int PTST = 0x54535450;
     public const int PTT2 = 0x32545450;
+    public const int PTTA = 0x41545450;
     public const int PUSE = 0x45535550;
     public const int PUSH = 0x48535550;
     public const int QMDP = 0x50444D51;
@@ -903,6 +912,7 @@ public partial class RecordTypeInts
     public const int TX01 = 0x31305854;
     public const int TX08 = 0x38305854;
     public const int TX09 = 0x39305854;
+    public const int TX15 = 0x35315854;
     public const int TX16 = 0x36315854;
     public const int TX17 = 0x37315854;
     public const int TX19 = 0x39315854;
@@ -948,6 +958,7 @@ public partial class RecordTypeInts
     public const int WAIM = 0x4D494157;
     public const int WAM2 = 0x324D4157;
     public const int WAMB = 0x424D4157;
+    public const int WAMM = 0x4D4D4157;
     public const int WAOC = 0x434F4157;
     public const int WAOS = 0x534F4157;
     public const int WASH = 0x48534157;
@@ -1030,6 +1041,7 @@ public partial class RecordTypeInts
     public const int WRNK = 0x4B4E5257;
     public const int WRSG = 0x47535257;
     public const int WRSP = 0x50535257;
+    public const int WRUM = 0x4D555257;
     public const int WSCP = 0x50435357;
     public const int WSDM = 0x4D445357;
     public const int WSED = 0x44455357;
@@ -1072,6 +1084,7 @@ public partial class RecordTypeInts
     public const int XCLD = 0x444C4358;
     public const int XCLL = 0x4C4C4358;
     public const int XCLP = 0x504C4358;
+    public const int XCLR = 0x524C4358;
     public const int XCLW = 0x574C4358;
     public const int XCMO = 0x4F4D4358;
     public const int XCNT = 0x544E4358;
@@ -1107,6 +1120,7 @@ public partial class RecordTypeInts
     public const int XLMS = 0x534D4C58;
     public const int XLOC = 0x434F4C58;
     public const int XLRD = 0x44524C58;
+    public const int XLRL = 0x4C524C58;
     public const int XLRT = 0x54524C58;
     public const int XLSM = 0x4D534C58;
     public const int XLVD = 0x44564C58;
@@ -1139,6 +1153,7 @@ public partial class RecordTypeInts
     public const int XTEL = 0x4C455458;
     public const int XTNM = 0x4D4E5458;
     public const int XTRI = 0x49525458;
+    public const int XTRV = 0x56525458;
     public const int XTV2 = 0x32565458;
     public const int XVL2 = 0x324C5658;
     public const int XVOI = 0x494F5658;

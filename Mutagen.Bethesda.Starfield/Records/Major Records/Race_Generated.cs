@@ -3741,6 +3741,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,

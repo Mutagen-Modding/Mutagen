@@ -74,12 +74,7 @@ public class StarfieldProcessor : Processor
 
     public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords => new KeyValuePair<RecordType, FormKey>[]
     {
-        new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
+        new(RecordTypes.GBFM, FormKey.Factory("2B3DDB:Starfield.esm")),
     };
 
     private void ProcessStaticCollections(
@@ -122,6 +117,7 @@ public class StarfieldProcessor : Processor
     {
         return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
         {
+            { (Constants.Starfield, StringsSource.Normal), new() { 0x71B7 } }
         };
     }
 
@@ -191,6 +187,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "CHAL", "FULL" },
                     new RecordType[] { "DOOR", "FULL", "ONAM", "CNAM" },
                     new RecordType[] { "FXPD", "FULL" },
+                    new RecordType[] { "GBFM", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -581,6 +578,13 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+
         ZeroXOWNBool(stream, majorFrame, fileOffset);
         // ProcessXTV2(majorFrame, fileOffset);
     }

@@ -8,6 +8,8 @@
       <FormLink name="Base" recordType="NAME" nullable="false">
         <Interface>IPlaceableObject</Interface>
       </FormLink>
+      <FormLink name="XMSP" refName="StarfieldMajorRecord" recordType="XMSP" unknown="true" />
+      <RefDirect name="XTRV" refName="XTRV" />
       <RefDirect name="VolumeData" refName="PlacedObjectVolumeData" />
       <RefDirect name="ShipArrival" refName="PlacedObjectShipArrival" />
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
@@ -62,6 +64,8 @@
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <FormLink name="Location" refName="Location" recordType="XLRL" />
+      <UInt32 name="XTRI" recordType="XTRI" unknown="true" />
       <RefDirect name="LightRoundedness" refName="PlacedObjectLightRoundedness" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
@@ -190,6 +194,7 @@
       <Float name="NearClip" />
       <Float name="VolumetricIntensity" />
       <UInt32 name="Unknown1" />
+      <Break />
       <UInt32 name="Unknown2" />
     </Fields>
   </Object>

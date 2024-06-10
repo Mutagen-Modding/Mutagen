@@ -154,6 +154,7 @@
           <xs:sequence>
             <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
             <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="RecordTypeVersioning" type="RecordTypeVersioningType" minOccurs="0" maxOccurs="unbounded" />
           </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
@@ -678,6 +679,11 @@
     <xs:attribute name="action" type="MutagenVersionAction" />
   </xs:complexType>
 
+  <xs:complexType name="RecordTypeVersioningType" >
+    <xs:attribute name="formVersion" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="recordType" type="xs:string" />
+  </xs:complexType>
+
   <xs:complexType name="NBuffer" >
     <xs:complexContent>
       <xs:extension base="Buffer">
@@ -900,6 +906,7 @@
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
       <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
       <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="RecordTypeVersioning" type="RecordTypeVersioningType" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="recordType" />
     <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
