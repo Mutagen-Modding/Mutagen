@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
-public interface IModFlagsGetter
+public interface IModFlagsGetter : IModKeyed
 {
     /// <summary>
     /// Whether a mod supports localization features
@@ -47,7 +47,6 @@ public interface IModGetter :
     IMajorRecordGetterEnumerable,
     IMajorRecordSimpleContextEnumerable,
     IFormLinkContainerGetter, 
-    IModKeyed, 
     IEqualsMask
 {
     /// <summary>
