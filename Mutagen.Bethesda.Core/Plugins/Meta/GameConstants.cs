@@ -62,6 +62,8 @@ public sealed record GameConstants
     
     public StringsLanguageFormat? StringsLanguageFormat { get; init; }
     
+    public bool SeparateMasterLoadOrders { get; init; }
+    
     public GameConstants(
         GameRelease release,
         sbyte modHeaderLength,
@@ -78,7 +80,8 @@ public sealed record GameConstants
         string? myDocumentsString,
         string iniName,
         uint defaultHighRangeFormId, 
-        float? useLowerRangeFormIdVersion)
+        float? useLowerRangeFormIdVersion,
+        bool separateMasterLoadOrders)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -96,6 +99,7 @@ public sealed record GameConstants
         IniName = iniName;
         DefaultHighRangeFormID = defaultHighRangeFormId;
         UseLowerRangeFormIDVersion = useLowerRangeFormIdVersion;
+        SeparateMasterLoadOrders = separateMasterLoadOrders;
     }
 
     /// <summary> 
@@ -159,6 +163,7 @@ public sealed record GameConstants
         useLowerRangeFormIdVersion: null,
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
+        separateMasterLoadOrders: false,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
@@ -229,6 +234,7 @@ public sealed record GameConstants
         useLowerRangeFormIdVersion: 1.71f,
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
+        separateMasterLoadOrders: false,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants EnderalLE = SkyrimLE with
@@ -350,6 +356,7 @@ public sealed record GameConstants
         useLowerRangeFormIdVersion: 1f,
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
+        separateMasterLoadOrders: false,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants Fallout4VR = Fallout4 with
@@ -434,6 +441,7 @@ public sealed record GameConstants
         useLowerRangeFormIdVersion: 0f,
         myDocumentsString: null,
         iniName: "Starfield",
+        separateMasterLoadOrders: true,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
