@@ -94,7 +94,14 @@ namespace Mutagen.Bethesda.Plugins.Records
                 throw new ArgumentException();
             }
             Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
-            Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+            if (typeof(TMod).InheritsFrom(typeof(IMod)))
+            {
+                Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+            }
+            else
+            {
+                Importer = ModInstantiatorReflection.GetOverlay<TMod>(regis);
+            }
         }
     }
 
