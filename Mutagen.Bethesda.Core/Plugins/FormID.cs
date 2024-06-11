@@ -289,17 +289,13 @@ internal readonly struct MediumMasterFormID
     public readonly uint Raw;
     public const uint Max = 0xFFFF;
     public uint ID => Raw & 0xFFFF;
-    public uint ModIndex => (Raw & 0x00FF0000) >> 16;
+    public byte ModIndex => (byte)((Raw & 0x00FF0000) >> 16);
     
-    public MediumMasterFormID(uint modID, uint id)
+    public MediumMasterFormID(byte modID, uint id)
     {
         if ((id & 0xFFFF0000) != 0)
         {
             throw new ArgumentException("Data present in Mod index bytes of id");
-        }
-        if ((modID & 0xFFFFFF00) != 0)
-        {
-            throw new ArgumentException("ModID was bigger than allowed");
         }
         Raw = (uint)(modID << 16);
         Raw += Raw + id & Max;

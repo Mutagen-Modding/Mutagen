@@ -115,7 +115,7 @@ public class FormIDTests
     {
         var id = new MediumMasterFormID(0xFD345678);
         Assert.Equal((uint)(0x5678), id.ID);
-        Assert.Equal((uint)(0x34), id.ModIndex);
+        Assert.Equal((byte)(0x34), id.ModIndex);
         Assert.Equal((uint)0xFD345678, id.Raw);
     }
 
@@ -124,15 +124,13 @@ public class FormIDTests
     {
         var id = new MediumMasterFormID(0x34, 0x5678);
         Assert.Equal((uint)(0x5678), id.ID);
-        Assert.Equal((uint)(0x34), id.ModIndex);
+        Assert.Equal((byte)(0x34), id.ModIndex);
         Assert.Equal((uint)0xFD345678, id.Raw);
     }
 
     [Fact]
     public void Medium_Ctor_WithIncorrectID()
     {
-        Assert.Throws<ArgumentException>(() => new MediumMasterFormID(
-            0x345, 0x00000678));
         Assert.Throws<ArgumentException>(() => new MediumMasterFormID(
             0x34, 0x00045678));
         Assert.Throws<ArgumentException>(() => new MediumMasterFormID(
