@@ -95,6 +95,7 @@ public class SeparatedMasterPackageTests
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
+        lo.Add(MastersTestUtil.GetFlags(originating, MasterStyle.Normal));
 
         var package = SeparatedMasterPackage.Factory(masterColl, lo);
         package.Normal.Should().NotBeNull();

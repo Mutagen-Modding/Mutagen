@@ -14,18 +14,20 @@ internal enum MasterStyle
 
 internal class SeparatedMasterPackage
 {
-    public IReadOnlyMasterReferenceCollection Normal { get; private set; } = null!;
-    public IReadOnlyMasterReferenceCollection? Light { get; private set; }
-    public IReadOnlyMasterReferenceCollection? Medium { get; private set; }
+    public List<ModKey> Normal { get; private set; } = null!;
+    public List<ModKey>? Light { get; private set; }
+    public List<ModKey>? Medium { get; private set; }
     public IReadOnlyMasterReferenceCollection Original { get; private set; } = null!;
 
     public IReadOnlyDictionary<ModKey, (ModIndex Index, MasterStyle Style)> Lookup { get; private set; } = null!;
 
     public static SeparatedMasterPackage Factory(IReadOnlyMasterReferenceCollection masters)
     {
+        var normal = new List<ModKey>(masters.Masters.Select((x => x.Master)));
+        normal.Add(masters.CurrentMod);
         var ret = new SeparatedMasterPackage()
         {
-            Normal = masters,
+            Normal = normal,
             Original = masters
         };
         ret.SetupLookup();
@@ -36,9 +38,31 @@ internal class SeparatedMasterPackage
         IReadOnlyMasterReferenceCollection masters, 
         ILoadOrderGetter<IModFlagsGetter> loadOrder)
     {
-        var normal = new List<IMasterReferenceGetter>();
-        var medium = new List<IMasterReferenceGetter>();
-        var light = new List<IMasterReferenceGetter>();
+        var normal = new List<ModKey>();
+        var medium = new List<ModKey>();
+        var light = new List<ModKey>();
+        
+        if (!loadOrder.TryGetValue(masters.CurrentMod, out var currentMod))
+        {
+            throw new MissingModException(masters.CurrentMod,
+                "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
+        }
+        
+        void AddToList(IModFlagsGetter mod, ModKey modKey)
+        {
+            if (mod.IsHalfMaster)
+            {
+                medium.Add(modKey);
+            }
+            else if (mod.IsLightMaster)
+            {
+                light.Add(modKey);
+            }
+            else
+            {
+                normal.Add(modKey);
+            }
+        }
         
         foreach (var master in masters.Masters)
         {
@@ -53,44 +77,28 @@ internal class SeparatedMasterPackage
                 throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
             }
 
-            if (mod.IsHalfMaster)
-            {
-                medium.Add(master);
-            }
-            else if (mod.IsLightMaster)
-            {
-                light.Add(master);
-            }
-            else
-            {
-                normal.Add(master);
-            }
+            AddToList(mod, master.Master);
         }
-
-        var normalRefs = new MasterReferenceCollection(masters.CurrentMod);
-        var mediumRefs = new MasterReferenceCollection(masters.CurrentMod);
-        var lightRefs = new MasterReferenceCollection(masters.CurrentMod);
         
-        normalRefs.SetTo(normal);
-        mediumRefs.SetTo(medium);
-        lightRefs.SetTo(light);
+        AddToList(currentMod, masters.CurrentMod);
 
         var ret = new SeparatedMasterPackage()
         {
-            Normal = normalRefs,
-            Medium = mediumRefs,
-            Light = lightRefs,
+            Normal = normal,
+            Medium = medium,
+            Light = light,
             Original = masters,
         };
         ret.SetupLookup();
         return ret;
+
     }
     
     private void SetupLookup()
     {
         var lookup = new Dictionary<ModKey, (ModIndex Index, MasterStyle Style)>();
-        var index = FillLookup(Normal, lookup, MasterStyle.Normal);
-        lookup.Set(Normal.CurrentMod, (new ModIndex(index), MasterStyle.Normal));
+        FillLookup(Normal, lookup, MasterStyle.Normal);
+        
         if (Light != null)
         {
             FillLookup(Light, lookup, MasterStyle.Light);
@@ -105,14 +113,14 @@ internal class SeparatedMasterPackage
     }
 
     private byte FillLookup(
-        IReadOnlyMasterReferenceCollection masters,
+        List<ModKey> masters,
         Dictionary<ModKey, (ModIndex Index, MasterStyle Style)> dict,
         MasterStyle style)
     {
         byte index = 0;
-        foreach (var master in masters.Masters)
+        foreach (var modKey in masters)
         {
-            dict.Set(master.Master, (new ModIndex(index), style));
+            dict.Set(modKey, (new ModIndex(index), style));
             index++;
         }
 
