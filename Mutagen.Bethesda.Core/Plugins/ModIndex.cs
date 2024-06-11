@@ -19,7 +19,7 @@ public readonly struct ModIndex
     /// <summary>
     /// A static readonly singleton ModID with value 0xFE for Half Masters
     /// </summary>
-    public static readonly ModIndex HalfMaster = new ModIndex(0xFD);
+    public static readonly ModIndex MediumMaster = new ModIndex(0xFD);
 
     public const byte MaxIndex = 254;
 

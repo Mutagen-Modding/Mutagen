@@ -45,7 +45,7 @@ internal class SeparatedMasterPackage
         
         void AddToList(IModFlagsGetter mod, ModKey modKey)
         {
-            if (mod.IsHalfMaster)
+            if (mod.IsMediumMaster)
             {
                 medium.Add(modKey);
             }
@@ -69,7 +69,7 @@ internal class SeparatedMasterPackage
                         "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
                 }
 
-                if (mod.IsLightMaster && mod.IsHalfMaster)
+                if (mod.IsLightMaster && mod.IsMediumMaster)
                 {
                     throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
                 }

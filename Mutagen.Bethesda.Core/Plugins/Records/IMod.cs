@@ -31,12 +31,12 @@ public interface IModFlagsGetter : IModKeyed
     /// <summary>
     /// Whether a mod supports Half Master features
     /// </summary>
-    bool CanBeHalfMaster { get; }
+    bool CanBeMediumMaster { get; }
 
     /// <summary>
     /// Whether a mod has Half Master flag enabled
     /// </summary>
-    bool IsHalfMaster { get; }
+    bool IsMediumMaster { get; }
 }
 
 /// <summary>

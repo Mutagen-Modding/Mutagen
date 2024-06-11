@@ -14,9 +14,9 @@ public class RecordCompactionCompatibilityDetector
         return IsCompatible(mod, range.Value);
     }
     
-    public bool IsHalfMasterCompatible(IModGetter mod)
+    public bool IsMediumMasterCompatible(IModGetter mod)
     {
-        var range = GetHalfMasterRange(mod);
+        var range = GetMediumMasterRange(mod);
         if (range == null) return false;
 
         return IsCompatible(mod, range.Value);
@@ -29,18 +29,18 @@ public class RecordCompactionCompatibilityDetector
         return new RangeUInt32(lowerRange, LightMasterFormID.Max);
     }
 
-    public RangeUInt32? GetHalfMasterRange(IModGetter mod)
+    public RangeUInt32? GetMediumMasterRange(IModGetter mod)
     {
-        if (!mod.CanBeHalfMaster) return null;
+        if (!mod.CanBeMediumMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
         return new RangeUInt32(lowerRange, MediumMasterFormID.Max);
     }
 
     public RangeUInt32? GetRange(IModGetter mod)
     {
-        if (mod.IsHalfMaster)
+        if (mod.IsMediumMaster)
         {
-            return GetHalfMasterRange(mod);
+            return GetMediumMasterRange(mod);
         }
         if (mod.IsLightMaster)
         {
@@ -87,7 +87,7 @@ public class RecordCompactionCompatibilityDetector
         {
             throw new FormIDCompactionOutOfBoundsException(
                 light: mod.IsLightMaster,
-                half: mod.IsHalfMaster,
+                Medium: mod.IsMediumMaster,
                 range: range,
                 outOfBounds: rec
             );

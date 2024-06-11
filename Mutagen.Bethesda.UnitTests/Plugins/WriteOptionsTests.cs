@@ -214,7 +214,7 @@ public class WriteOptionsTests
     }
 
     [Theory, MutagenAutoData]
-    public void HalfMasterFormIDCompactionThrows(
+    public void MediumMasterFormIDCompactionThrows(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -233,7 +233,7 @@ public class WriteOptionsTests
     }
 
     [Theory, MutagenAutoData]
-    public void HalfMasterFormIDCompactionNoCheck(
+    public void MediumMasterFormIDCompactionNoCheck(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -248,12 +248,12 @@ public class WriteOptionsTests
     }
 
     [Theory, MutagenAutoData]
-    public void HalfMasterFormIDCompactionCheck(
+    public void MediumMasterFormIDCompactionCheck(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
         StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
-        mod.IsHalfMaster = true;
+        mod.IsMediumMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {

@@ -28,9 +28,9 @@ public partial class StarfieldMod : AMod
         set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
     }
 
-    public override bool CanBeHalfMaster => true;
+    public override bool CanBeMediumMaster => true;
 
-    public override bool IsHalfMaster
+    public override bool IsMediumMaster
     {
         get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
         set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
@@ -65,8 +65,8 @@ internal partial class StarfieldModBinaryOverlay
     
     public bool CanBeLightMaster => true;
     public bool IsLightMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
-    public bool CanBeHalfMaster => true;
-    public bool IsHalfMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
+    public bool CanBeMediumMaster => true;
+    public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
 }
 
 partial class StarfieldModSetterCommon

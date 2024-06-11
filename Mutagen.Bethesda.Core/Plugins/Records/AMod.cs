@@ -54,9 +54,9 @@ public abstract class AMod : IMod
     public abstract bool CanBeLightMaster { get; }
     public abstract bool IsLightMaster { get; set; }
     bool IModFlagsGetter.IsLightMaster => throw new NotImplementedException();
-    public abstract bool CanBeHalfMaster { get; }
-    public abstract bool IsHalfMaster { get; set; }
-    bool IModFlagsGetter.IsHalfMaster => throw new NotImplementedException();
+    public abstract bool CanBeMediumMaster { get; }
+    public abstract bool IsMediumMaster { get; set; }
+    bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();

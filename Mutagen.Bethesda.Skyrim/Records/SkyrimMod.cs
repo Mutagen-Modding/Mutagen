@@ -27,8 +27,8 @@ public partial class SkyrimMod : AMod
         get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
         set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
     }
-    public override bool CanBeHalfMaster => false;
-    public override bool IsHalfMaster
+    public override bool CanBeMediumMaster => false;
+    public override bool IsMediumMaster
     {
         get => false;
         set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
@@ -71,8 +71,8 @@ internal partial class SkyrimModBinaryOverlay
     public bool CanBeLightMaster => true;
     public bool IsLightMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
     
-    public bool CanBeHalfMaster => false;
-    public bool IsHalfMaster => false;
+    public bool CanBeMediumMaster => false;
+    public bool IsMediumMaster => false;
 }
 
 partial class SkyrimModSetterCommon

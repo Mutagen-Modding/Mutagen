@@ -20,7 +20,7 @@ public class RecordCompactionCompatibilityDetectorTests
     {
         sut.IsLightMasterCompatible(mod)
             .Should().BeFalse();
-        sut.IsHalfMasterCompatible(mod)
+        sut.IsMediumMasterCompatible(mod)
             .Should().BeFalse();
     }
     
@@ -34,11 +34,11 @@ public class RecordCompactionCompatibilityDetectorTests
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
-    public void HalfMasterEmpty(
+    public void MediumMasterEmpty(
         StarfieldMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsHalfMasterCompatible(mod)
+        sut.IsMediumMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -75,12 +75,12 @@ public class RecordCompactionCompatibilityDetectorTests
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
-    public void HalfMasterNormalFormID(
+    public void MediumMasterNormalFormID(
         StarfieldMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0x801), StarfieldRelease.Starfield));
-        sut.IsHalfMasterCompatible(mod)
+        sut.IsMediumMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -95,12 +95,12 @@ public class RecordCompactionCompatibilityDetectorTests
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
-    public void HalfMasterNotCompatible(
+    public void MediumMasterNotCompatible(
         StarfieldMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0xFFFFF), StarfieldRelease.Starfield));
-        sut.IsHalfMasterCompatible(mod)
+        sut.IsMediumMasterCompatible(mod)
             .Should().BeFalse();
     }
 }

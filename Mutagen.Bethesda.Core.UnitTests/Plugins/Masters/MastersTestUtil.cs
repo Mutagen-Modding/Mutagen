@@ -12,20 +12,20 @@ internal static class MastersTestUtil
         var modGetter = Substitute.For<IModFlagsGetter>();
         modGetter.ModKey.Returns(modKey);
         modGetter.CanBeLightMaster.Returns(true);
-        modGetter.CanBeHalfMaster.Returns(true);
+        modGetter.CanBeMediumMaster.Returns(true);
         switch (style)
         {
             case MasterStyle.Normal:
                 modGetter.IsLightMaster.Returns(false);
-                modGetter.IsHalfMaster.Returns(false);
+                modGetter.IsMediumMaster.Returns(false);
                 break;
             case MasterStyle.Light:
                 modGetter.IsLightMaster.Returns(true);
-                modGetter.IsHalfMaster.Returns(false);
+                modGetter.IsMediumMaster.Returns(false);
                 break;
             case MasterStyle.Medium:
                 modGetter.IsLightMaster.Returns(false);
-                modGetter.IsHalfMaster.Returns(true);
+                modGetter.IsMediumMaster.Returns(true);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(style), style, null);
