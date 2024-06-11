@@ -30,7 +30,7 @@ public class SeparatedMasterPackageTests
             }
         });
 
-        var package = SeparatedMasterPackage.Factory(masterColl);
+        var package = SeparatedMasterPackage.NotSeparate(masterColl);
         package.Normal.Should().NotBeNull();
         package.Lookup.Should().NotBeNull();
         package.Light.Should().BeNull();
@@ -88,6 +88,7 @@ public class SeparatedMasterPackageTests
             }
         });
 
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
         var lo = new LoadOrder<IModFlagsGetter>();
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
@@ -95,9 +96,9 @@ public class SeparatedMasterPackageTests
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(originating, MasterStyle.Normal));
+        lo.Add(orig);
 
-        var package = SeparatedMasterPackage.Factory(masterColl, lo);
+        var package = SeparatedMasterPackage.Separate(orig, masterColl, lo);
         package.Normal.Should().NotBeNull();
         package.Lookup.Should().NotBeNull();
         package.Light.Should().NotBeNull();

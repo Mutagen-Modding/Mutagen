@@ -21,7 +21,7 @@ internal class SeparatedMasterPackage
 
     public IReadOnlyDictionary<ModKey, (ModIndex Index, MasterStyle Style)> Lookup { get; private set; } = null!;
 
-    public static SeparatedMasterPackage Factory(IReadOnlyMasterReferenceCollection masters)
+    public static SeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
     {
         var normal = new List<ModKey>(masters.Masters.Select((x => x.Master)));
         normal.Add(masters.CurrentMod);
@@ -34,19 +34,14 @@ internal class SeparatedMasterPackage
         return ret;
     }
     
-    public static SeparatedMasterPackage Factory(
+    public static SeparatedMasterPackage Separate(
+        IModFlagsGetter currentMod,
         IReadOnlyMasterReferenceCollection masters, 
-        ILoadOrderGetter<IModFlagsGetter> loadOrder)
+        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
         var light = new List<ModKey>();
-        
-        if (!loadOrder.TryGetValue(masters.CurrentMod, out var currentMod))
-        {
-            throw new MissingModException(masters.CurrentMod,
-                "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
-        }
         
         void AddToList(IModFlagsGetter mod, ModKey modKey)
         {
@@ -63,24 +58,34 @@ internal class SeparatedMasterPackage
                 normal.Add(modKey);
             }
         }
-        
+
         foreach (var master in masters.Masters)
         {
-            if (!loadOrder.TryGetValue(master.Master, out var mod))
+            if (loadOrder != null)
             {
-                throw new MissingModException(master.Master,
-                    "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
-            }
+                if (!loadOrder.TryGetValue(master.Master, out var mod))
+                {
+                    throw new MissingModException(master.Master,
+                        "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
+                }
 
-            if (mod.IsLightMaster && mod.IsHalfMaster)
+                if (mod.IsLightMaster && mod.IsHalfMaster)
+                {
+                    throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
+                }
+
+                AddToList(mod, master.Master);
+            }
+            // Don't have a load order, assume normal
+            // Viewed as user error if this turns out to be wrong
+            // They should provide load order unless they're sure it's not needed
+            else
             {
-                throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
+                normal.Add(master.Master);
             }
-
-            AddToList(mod, master.Master);
         }
-        
-        AddToList(currentMod, masters.CurrentMod);
+
+        normal.Add(currentMod.ModKey);
 
         var ret = new SeparatedMasterPackage()
         {
@@ -112,7 +117,7 @@ internal class SeparatedMasterPackage
         Lookup = lookup;
     }
 
-    private byte FillLookup(
+    private void FillLookup(
         List<ModKey> masters,
         Dictionary<ModKey, (ModIndex Index, MasterStyle Style)> dict,
         MasterStyle style)
@@ -123,7 +128,5 @@ internal class SeparatedMasterPackage
             dict.Set(modKey, (new ModIndex(index), style));
             index++;
         }
-
-        return index;
     }
 }

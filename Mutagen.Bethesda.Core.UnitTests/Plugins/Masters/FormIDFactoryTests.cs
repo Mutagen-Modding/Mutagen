@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing.AutoData;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
@@ -31,7 +32,7 @@ public class FormIDFactoryTests
                 Master = modKeyB
             },
         });
-        var masterPackage = SeparatedMasterPackage.Factory(coll);
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
 
         sut.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -64,7 +65,7 @@ public class FormIDFactoryTests
         FormIDFactory sut)
     {
         var coll = new MasterReferenceCollection(originating);
-        var masterPackage = SeparatedMasterPackage.Factory(coll);
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
 
         sut.GetFormID(
             masterPackage,
@@ -117,14 +118,15 @@ public class FormIDFactoryTests
             },
         });
         var lo = new LoadOrder<IModFlagsGetter>();
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(originating, MasterStyle.Normal));
-        var masterPackage = SeparatedMasterPackage.Factory(coll, lo);
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
         sut.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -198,10 +200,11 @@ public class FormIDFactoryTests
             },
         });
         var lo = new LoadOrder<IModFlagsGetter>();
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Light);
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
-        lo.Add(MastersTestUtil.GetFlags(originating, MasterStyle.Light));
-        var masterPackage = SeparatedMasterPackage.Factory(coll, lo);
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
         sut.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -222,8 +225,8 @@ public class FormIDFactoryTests
                     new FormKey(originating, 0x123), recordType))
             .Should().Be(
                 new FormID(
-                    new ModIndex(0xFE),
-                    0x001123));
+                    new ModIndex(0x1),
+                    0x000123));
     }
     
     [Theory, MutagenAutoData]
@@ -246,11 +249,12 @@ public class FormIDFactoryTests
                 Master = mediumA
             },
         });
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Medium);
         var lo = new LoadOrder<IModFlagsGetter>();
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(originating, MasterStyle.Medium));
-        var masterPackage = SeparatedMasterPackage.Factory(coll, lo);
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
         sut.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -271,7 +275,7 @@ public class FormIDFactoryTests
                     new FormKey(originating, 0x1234), recordType))
             .Should().Be(
                 new FormID(
-                    new ModIndex(0xFD),
-                    0x011234));
+                    new ModIndex(0x1),
+                    0x001234));
     }
 }
