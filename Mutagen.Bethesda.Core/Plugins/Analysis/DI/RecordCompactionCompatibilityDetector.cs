@@ -6,9 +6,6 @@ namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
 public class RecordCompactionCompatibilityDetector
 {
-    private const uint LightMasterMax = 0xFFF;
-    private const uint HalfMasterMax = 0xFFFF;
-    
     public bool IsLightMasterCompatible(IModGetter mod)
     {
         var range = GetLightMasterRange(mod);
@@ -29,14 +26,14 @@ public class RecordCompactionCompatibilityDetector
     {
         if (!mod.CanBeLightMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
-        return new RangeUInt32(lowerRange, LightMasterMax);
+        return new RangeUInt32(lowerRange, LightMasterFormID.Max);
     }
 
     public RangeUInt32? GetHalfMasterRange(IModGetter mod)
     {
         if (!mod.CanBeHalfMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
-        return new RangeUInt32(lowerRange, HalfMasterMax);
+        return new RangeUInt32(lowerRange, MediumMasterFormID.Max);
     }
 
     public RangeUInt32? GetRange(IModGetter mod)

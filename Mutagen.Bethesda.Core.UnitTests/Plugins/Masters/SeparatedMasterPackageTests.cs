@@ -48,32 +48,6 @@ public class SeparatedMasterPackageTests
         bResult.Style.Should().Be(MasterStyle.Normal);
     }
 
-    private IModFlagsGetter GetFlags(ModKey modKey, MasterStyle style)
-    {
-        var modGetter = Substitute.For<IModFlagsGetter>();
-        modGetter.ModKey.Returns(modKey);
-        modGetter.CanBeLightMaster.Returns(true);
-        modGetter.CanBeHalfMaster.Returns(true);
-        switch (style)
-        {
-            case MasterStyle.Normal:
-                modGetter.IsLightMaster.Returns(false);
-                modGetter.IsHalfMaster.Returns(false);
-                break;
-            case MasterStyle.Light:
-                modGetter.IsLightMaster.Returns(true);
-                modGetter.IsHalfMaster.Returns(false);
-                break;
-            case MasterStyle.Medium:
-                modGetter.IsLightMaster.Returns(false);
-                modGetter.IsHalfMaster.Returns(true);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(style), style, null);
-        }
-
-        return modGetter;
-    }
     
     [Theory, MutagenAutoData]
     public void Separated(
@@ -115,12 +89,12 @@ public class SeparatedMasterPackageTests
         });
 
         var lo = new LoadOrder<IModFlagsGetter>();
-        lo.Add(GetFlags(modA, MasterStyle.Normal));
-        lo.Add(GetFlags(lightA, MasterStyle.Light));
-        lo.Add(GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(GetFlags(modB, MasterStyle.Normal));
-        lo.Add(GetFlags(lightB, MasterStyle.Light));
-        lo.Add(GetFlags(mediumB, MasterStyle.Medium));
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
 
         var package = SeparatedMasterPackage.Factory(masterColl, lo);
         package.Normal.Should().NotBeNull();
