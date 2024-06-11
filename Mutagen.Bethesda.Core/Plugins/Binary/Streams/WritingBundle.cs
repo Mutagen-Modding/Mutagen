@@ -21,6 +21,8 @@ public sealed record WritingBundle(GameConstants Constants)
     /// </summary>
     public IReadOnlyMasterReferenceCollection? MasterReferences { get; set; }
 
+    internal SeparatedMasterPackage? SeparatedMasterPackage { get; set; }
+
     /// <summary>
     /// Optional strings writer for easy access during write operations
     /// </summary>

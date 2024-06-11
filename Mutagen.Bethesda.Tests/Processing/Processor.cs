@@ -263,8 +263,6 @@ public abstract class Processor
     private bool CheckIsFormIDOverflow(FormID formID)
     {
         if (formID.ModIndex.ID <= _numMasters) return false;
-        if (formID.ModIndex.ID == 0xFE) return false;
-        if (formID.ModIndex.ID == 0xFD) return false;
         return true;
     }
 

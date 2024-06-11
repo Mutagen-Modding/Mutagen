@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -88,6 +89,11 @@ public sealed record BinaryWriteParameters
     /// By default
     /// </summary>
     public ALowerRangeDisallowedHandlerOption LowerRangeDisallowedHandler { get; init; } = new AddPlaceholderMasterIfLowerRangeDisallowed();
+
+    /// <summary>
+    /// Load order.  Required for games with Separated Load Order lists per master type
+    /// </summary>
+    public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
 
     /// <summary>
     /// Aligns a mod's ModKey to a path's implied ModKey.

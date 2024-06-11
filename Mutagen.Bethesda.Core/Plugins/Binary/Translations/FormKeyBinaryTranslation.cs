@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Translations.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -11,6 +12,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 public sealed class FormKeyBinaryTranslation
 {
     public static readonly FormKeyBinaryTranslation Instance = new();
+    private static readonly FormIDFactory _formIdFactory = new();
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,
@@ -65,36 +67,13 @@ public sealed class FormKeyBinaryTranslation
             item = FormLinkInformation.Null;
         }
 
-        var formID = GetFormID(
-            writer.MetaData.MasterReferences!,
+        var formID = _formIdFactory.GetFormID(
+            writer.MetaData.SeparatedMasterPackage!, 
             item);
 
         UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
             writer: writer,
             item: formID.Raw);
-    }
-
-    private FormID GetFormID(
-        IReadOnlyMasterReferenceCollection masterIndices,
-        IFormLinkIdentifier key)
-    {
-        if (masterIndices.TryGetIndex(key.FormKey.ModKey, out var index))
-        {
-            return new FormID(
-                index,
-                key.FormKey.ID);
-        }
-
-        if (key.FormKey == FormKey.Null)
-        {
-            return FormID.Null;
-        }
-
-        throw new UnmappableFormIDException(
-            key,
-            masterIndices.Masters
-                .Select(x => x.Master)
-                .ToArray());
     }
 
     public void Write(

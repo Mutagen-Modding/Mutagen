@@ -37,7 +37,7 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
         return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, _fileSystem, stringsParam);
     }
 
-    public IModGetter Import(ModPath modPath,StringsReadParameters? stringsParam = null)
+    public IModGetter Import(ModPath modPath, StringsReadParameters? stringsParam = null)
     {
         return ModInstantiator.ImportGetter(modPath, _gameRelease.Release, _fileSystem, stringsParam);
     }

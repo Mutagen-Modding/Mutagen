@@ -31,6 +31,7 @@ public class ListTests
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
             writer.MetaData.MasterReferences = masters;
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(masters);
             leveledItem.WriteToBinary(writer);
         }
 
@@ -58,6 +59,7 @@ public class ListTests
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
             writer.MetaData.MasterReferences = masters;
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(masters);
             leveledItem.WriteToBinary(writer);
         }
 

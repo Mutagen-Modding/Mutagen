@@ -7,6 +7,7 @@ using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -29,11 +30,11 @@ internal sealed class ModHeaderWriteLogic
     private readonly IModGetter _mod;
 
     private ModHeaderWriteLogic(
-        BinaryWriteParameters? param,
+        BinaryWriteParameters param,
         IModGetter mod)
     {
         _mod = mod;
-        _params = param ?? BinaryWriteParameters.Default;
+        _params = param;
         _modKey = mod.ModKey;
         _category = mod.GameRelease.ToCategory();
         _constants = GameConstants.Get(mod.GameRelease);
@@ -47,12 +48,16 @@ internal sealed class ModHeaderWriteLogic
         IModHeaderCommon modHeader,
         ModKey modKey)
     {
+        param ??= BinaryWriteParameters.Default;
         var modHeaderWriter = new ModHeaderWriteLogic(
             param: param,
             mod: mod);
         modHeaderWriter.AddProcessors(mod, modHeader);
         modHeaderWriter.RunProcessors(mod);
-        modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader);
+        modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader, 
+            modHeaderWriter._constants.SeparateMasterLoadOrders
+                ? param.LoadOrder 
+                : null);
         modHeader.WriteToBinary(writer);
     }
 
@@ -116,10 +121,23 @@ internal sealed class ModHeaderWriteLogic
     private void PostProcessAdjustments(
         MutagenWriter writer,
         IModGetter mod,
-        IModHeaderCommon modHeader)
+        IModHeaderCommon modHeader,
+        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
+        if (writer.MetaData.Constants.SeparateMasterLoadOrders)
+        {
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Separate(
+                mod,
+                writer.MetaData.MasterReferences,
+                loadOrder);
+        }
+        else
+        {
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(
+                writer.MetaData.MasterReferences);
+        }
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {
