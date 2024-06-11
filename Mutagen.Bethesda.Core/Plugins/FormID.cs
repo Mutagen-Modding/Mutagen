@@ -16,6 +16,8 @@ namespace Mutagen.Bethesda.Plugins;
 /// </summary>
 public readonly struct FormID : IEquatable<FormID>
 {
+    public const uint Max = 0xFFFFFF;
+    
     /// <summary>
     /// A static readonly singleton that represents a null FormID (all zeros).
     /// </summary>
@@ -242,5 +244,79 @@ public readonly struct FormID : IEquatable<FormID>
     public static bool operator !=(FormID a, FormID b)
     {
         return !(a == b);
+    }
+}
+
+internal readonly struct LightMasterFormID
+{
+    public readonly uint Raw;
+    public const uint Max = 0xFFF;
+    public uint ID => Raw & 0xFFF;
+    public uint ModIndex => (Raw & 0x00FFF000) >> 12;
+    
+    public LightMasterFormID(uint modID, uint id)
+    {
+        if ((id & 0xFFFFF000) != 0)
+        {
+            throw new ArgumentException("Data present in Mod index bytes of id");
+        }
+        if ((modID & 0xFFFFF000) != 0)
+        {
+            throw new ArgumentException("ModID was bigger than allowed");
+        }
+        Raw = (uint)(modID << 12);
+        Raw += Raw + id & Max;
+        Raw += 0xFE000000;
+    }
+    
+    public LightMasterFormID(uint idWithModIndex)
+    {
+        if ((idWithModIndex & 0xFF000000) != 0xFE000000)
+        {
+            throw new ArgumentException("ID with mod index must start with FE for Light FormIDs");
+        }
+        Raw = idWithModIndex;
+    }
+
+    public byte[] ToBytes()
+    {
+        return BitConverter.GetBytes(Raw);
+    }
+}
+
+internal readonly struct MediumMasterFormID
+{
+    public readonly uint Raw;
+    public const uint Max = 0xFFFF;
+    public uint ID => Raw & 0xFFFF;
+    public uint ModIndex => (Raw & 0x00FF0000) >> 16;
+    
+    public MediumMasterFormID(uint modID, uint id)
+    {
+        if ((id & 0xFFFF0000) != 0)
+        {
+            throw new ArgumentException("Data present in Mod index bytes of id");
+        }
+        if ((modID & 0xFFFFFF00) != 0)
+        {
+            throw new ArgumentException("ModID was bigger than allowed");
+        }
+        Raw = (uint)(modID << 16);
+        Raw += Raw + id & Max;
+        Raw += 0xFD000000;
+    }
+    
+    public MediumMasterFormID(uint idWithModIndex)
+    {
+        if ((idWithModIndex & 0xFF000000) != 0xFD000000)
+        {
+            throw new ArgumentException("ID with mod index must start with FD for Medium FormIDs");
+        }
+        Raw = idWithModIndex;
+    }
+
+    public byte[] ToBytes()
+    {
+        return BitConverter.GetBytes(Raw);
     }
 }
