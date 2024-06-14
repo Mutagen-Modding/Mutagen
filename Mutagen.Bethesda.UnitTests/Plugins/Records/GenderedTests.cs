@@ -20,7 +20,7 @@ public class GenderedTests
         var frame = new MutagenFrame(
             new MutagenBinaryReadStream(
                 File.OpenRead(TestDataPathing.RaceHeadPartDanglingMaster), 
-                new ParsingBundle(
+                new ParsingMeta(
                     GameRelease.SkyrimSE, 
                     Constants.Skyrim,
                     new MasterReferenceCollection(Constants.Skyrim))));

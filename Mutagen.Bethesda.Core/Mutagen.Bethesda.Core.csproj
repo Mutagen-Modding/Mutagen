@@ -638,7 +638,7 @@
         <Compile Include="Plugins\Binary\Headers\SubrecordHeader.cs" />
         <Compile Include="Plugins\Binary\Headers\VariableHeader.cs" />
         <Compile Include="Plugins\Binary\Streams\WritingBundle.cs" />
-        <Compile Include="Plugins\Binary\Streams\ParsingBundle.cs" />
+        <Compile Include="Plugins\Binary\Streams\ParsingMeta.cs" />
         <Compile Include="Strings\IStringsLookup.cs" />
         <Compile Include="Strings\ITranslatedString.cs" />
         <Compile Include="Strings\IStringsFolderLookup.cs" />

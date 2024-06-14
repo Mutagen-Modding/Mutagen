@@ -12391,7 +12391,7 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryReadParameters? param)
         {
             param ??= BinaryReadParameters.Default;
-            var meta = new ParsingBundle(GameRelease.Oblivion, path.ModKey, new MasterReferenceCollection(path.ModKey))
+            var meta = new ParsingMeta(GameRelease.Oblivion, path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: param.FileSystem))
             };

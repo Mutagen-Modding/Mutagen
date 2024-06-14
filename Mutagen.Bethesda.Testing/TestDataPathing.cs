@@ -57,7 +57,7 @@ public class TestDataPathing
         return new MutagenFrame(
             new MutagenBinaryReadStream(
                 File.OpenRead(path),
-                new ParsingBundle(
+                new ParsingMeta(
                     release,
                     path.ModKey,
                     new MasterReferenceCollection(modKey ?? path.ModKey))));
@@ -67,7 +67,7 @@ public class TestDataPathing
     {
         return new OverlayStream(
             File.ReadAllBytes(path),
-            new ParsingBundle(
+            new ParsingMeta(
                 GameConstants.Get(release),
                 path.ModKey,
                 new MasterReferenceCollection(

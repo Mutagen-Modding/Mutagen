@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// Class containing all the extra meta bits for parsing
 /// </summary>
-public sealed class ParsingBundle
+public sealed class ParsingMeta
 {
     /// <summary>
     /// Game constants meta object to reference for header length measurements
@@ -17,7 +17,7 @@ public sealed class ParsingBundle
     public GameConstants Constants { get; }
 
     /// <summary>
-    /// MasterReferenceReader to reference while reading
+    /// Masters to reference while reading
     /// </summary>
     public IMasterReferenceCollection MasterReferences { get; }
 
@@ -57,7 +57,7 @@ public sealed class ParsingBundle
 
     public bool ThrowOnUnknown { get; set; }
 
-    public ParsingBundle(
+    public ParsingMeta(
         GameConstants constants,
         ModKey modKey,
         IMasterReferenceCollection masterReferences)
@@ -67,7 +67,7 @@ public sealed class ParsingBundle
         MasterReferences = masterReferences;
     }
 
-    public static implicit operator GameConstants(ParsingBundle bundle)
+    public static implicit operator GameConstants(ParsingMeta bundle)
     {
         return bundle.Constants;
     }

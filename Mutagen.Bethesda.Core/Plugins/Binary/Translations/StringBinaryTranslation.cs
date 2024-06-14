@@ -140,7 +140,7 @@ public sealed class StringBinaryTranslation
     public TranslatedString Parse(
         ReadOnlyMemorySlice<byte> data,
         StringsSource source,
-        ParsingBundle parsingBundle)
+        ParsingMeta parsingBundle)
     {
         if (parsingBundle.StringsLookup != null)
         {

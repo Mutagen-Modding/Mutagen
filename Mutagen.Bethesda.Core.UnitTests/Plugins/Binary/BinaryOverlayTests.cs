@@ -36,7 +36,7 @@ public class BinaryOverlayTests
 
         data.Position = 0;
         var triggers = new RecordTriggerSpecs(RecordCollection.Factory(RecordTypes.EDID));
-        var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
             3,
@@ -77,7 +77,7 @@ public class BinaryOverlayTests
 
         data.Position = 0;
         var triggers = new RecordTriggerSpecs(RecordCollection.Factory(RecordTypes.EDID));
-        var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
             3,
@@ -126,7 +126,7 @@ public class BinaryOverlayTests
 
         data.Position = 0;
         var triggers = new RecordTriggerSpecs(RecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA));
-        var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
             3,
@@ -179,7 +179,7 @@ public class BinaryOverlayTests
 
         data.Position = 0;
         var triggers = new RecordTriggerSpecs(RecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA));
-        var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
             3,

@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks;
 public class MiscOverhead
 {
     static byte[] bytes = new byte[] { 1, 2, 3 };
-    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingBundle(GameRelease.Oblivion, ModKey.Null, masterReferences: null!)));
+    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingMeta(GameRelease.Oblivion, ModKey.Null, masterReferences: null!)));
     static ByteBinaryTranslation<MutagenFrame, MutagenWriter> transl = ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance;
 
     [Benchmark]

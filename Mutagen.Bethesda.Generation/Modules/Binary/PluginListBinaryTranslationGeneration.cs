@@ -333,11 +333,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
         }
         else if (listBinaryType == ListBinaryType.Trigger || (data.HasTrigger && !subData.HasTrigger))
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
@@ -487,7 +487,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 if (threading)
                 {
-                    args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
+                    args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Parallel)}");
                 }
                 if (needsRecordConv)
                 {
@@ -815,7 +815,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         var data = list.GetFieldData();
         if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"{streamAccessor}.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
+            sb.AppendLine($"{streamAccessor}.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
         var subData = list.SubTypeGeneration.GetFieldData();
         var subGenTypes = subData.GenerationTypes.ToList();
@@ -911,13 +911,13 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                     switch (loqui.TargetObjectGeneration.GetObjectType())
                                     {
                                         case ObjectType.Subrecord:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                             break;
                                         case ObjectType.Record:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.MajorConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.MajorConstants)}");
                                             break;
                                         case ObjectType.Group:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.GroupConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.GroupConstants)}");
                                             break;
                                         case ObjectType.Mod:
                                         default:
@@ -943,7 +943,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.Add($"stream: {streamAccessor}");
-                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: true");
                                 subArgs.Add($"translationParams: {converterAccessor}");
@@ -958,14 +958,14 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         args.Add($"mem: {streamAccessor}.RemainingMemory");
                         args.Add($"package: _package");
-                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(s).Content", "p")}");
+                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.Subrecord(s).Content", "p")}");
                         args.Add(subFg =>
                         {
                             using (var subArgs = subFg.Function(
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.Add($"stream: {streamAccessor}");
-                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: false");
                                 subArgs.Add($"translationParams: {converterAccessor}");
@@ -1134,7 +1134,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
             case ListBinaryType.PrependCount:
                 if (data.HasTrigger)
                 {
-                    sb.AppendLine($"{streamAccessor}.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
+                    sb.AppendLine($"{streamAccessor}.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength;");
                 }
                 byte countLen = (byte)list.CustomData[CounterByteLength];
                 switch (countLen)

@@ -27,7 +27,7 @@ public abstract class Processor
     private readonly Dictionary<long, uint> _lengthTracker = new();
     protected byte _numMasters;
     public IMasterReferenceCollection Masters;
-    protected ParsingBundle Bundle;
+    protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
@@ -64,7 +64,7 @@ public abstract class Processor
     {
         SourcePath = sourcePath;
         Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease); 
-        Bundle = new ParsingBundle(GameRelease, ModKey, Masters);
+        Bundle = new ParsingMeta(GameRelease, ModKey, Masters);
         _numMasters = checked((byte)Masters.Masters.Count);
         _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, previousPath), GameRelease);
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))

@@ -25196,7 +25196,7 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryReadParameters? param)
         {
             param ??= BinaryReadParameters.Default;
-            var meta = new ParsingBundle(release.ToGameRelease(), path.ModKey, new MasterReferenceCollection(path.ModKey))
+            var meta = new ParsingMeta(release.ToGameRelease(), path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: param.FileSystem))
             };

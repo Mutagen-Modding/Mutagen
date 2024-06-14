@@ -45,12 +45,12 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         if (data.RecordType.HasValue)
         {
             sb.AppendLine(
-                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
         else if (data.MarkerType.HasValue && !gender.MarkerPerGender)
         {
             sb.AppendLine(
-                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
+                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
         }
 
         bool notNull = gender.ItemNullable && !gender.SubTypeGeneration.IsNullable;
@@ -386,7 +386,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         sb.AppendLine(
                             $"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
                         sb.AppendLine(
-                            $"var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
+                            $"var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)});");
 
                         var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
                         using (var args = sb.Call(
@@ -492,7 +492,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         if (typeGen.GetFieldData().MarkerType.HasValue && !gendered.MarkerPerGender)
         {
             sb.AppendLine(
-                $"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
+                $"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
         
         if (!this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subTransl))
@@ -582,7 +582,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             args.AddPassArg("stream");
                             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
                             args.Add(
-                                $"creator: static (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
+                                $"creator: static (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)})", "p")}");
                         }
 
                         if (gendered.FemaleConversions != null)

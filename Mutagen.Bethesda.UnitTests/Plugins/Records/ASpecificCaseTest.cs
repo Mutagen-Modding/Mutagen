@@ -37,7 +37,7 @@ public abstract class ASpecificCaseTest<TSetter, TGetter>
         var item = LoquiBinaryOverlayTranslation<TGetter>.Create(
             TestDataPathing.GetOverlayStream(Path, Release),
             new BinaryOverlayFactoryPackage(
-                new ParsingBundle(
+                new ParsingMeta(
                     GameConstants.Get(Release),
                     Path.ModKey,
                     new MasterReferenceCollection(

@@ -19,7 +19,7 @@ public class FormLinkOrIndexTranslationGeneration : FormLinkBinaryTranslationGen
         Accessor packageAccessor)
     {
         FormLinkType linkType = typeGen as FormLinkType;
-        return $"{linkType.DirectTypeName(getter: true, internalInterface: true)}.Factory(this, FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})), BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}))";
+        return $"{linkType.DirectTypeName(getter: true, internalInterface: true)}.Factory(this, FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})), BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}))";
     }
 
     public override async Task GenerateCopyIn(
@@ -34,7 +34,7 @@ public class FormLinkOrIndexTranslationGeneration : FormLinkBinaryTranslationGen
         var data = typeGen.GetFieldData();
         if (data.RecordType.HasValue)
         {
-            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         using (var args = sb.Call(

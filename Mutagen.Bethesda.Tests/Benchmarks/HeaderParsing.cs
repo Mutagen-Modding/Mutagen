@@ -28,7 +28,7 @@ public class HeaderParsing
         0x64, 0x00
     };
     static GameConstants constants = GameConstants.Oblivion;
-    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingBundle(constants, ModKey.Null, masterReferences: null!)));
+    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingMeta(constants, ModKey.Null, masterReferences: null!)));
     static RecordType type = new("WEAP");
 
     [Benchmark]

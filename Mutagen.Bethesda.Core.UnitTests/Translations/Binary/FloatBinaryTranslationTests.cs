@@ -358,7 +358,7 @@ public class FloatBinaryTranslationTests
         var mutagenFrame = new MutagenFrame(
             new MutagenInterfaceReadStream(
                 new BinaryReadStream(memStream),
-                new ParsingBundle(GameConstants.SkyrimSE, ModKey.Null, new MasterReferenceCollection(ModKey.Null))));
+                new ParsingMeta(GameConstants.SkyrimSE, ModKey.Null, new MasterReferenceCollection(ModKey.Null))));
         return toDo(FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance, mutagenFrame);
     }
 

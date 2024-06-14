@@ -15,7 +15,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     public long OffsetReference { get; }
 
     /// <inheritdoc/>
-    public ParsingBundle MetaData { get; }
+    public ParsingMeta MetaData { get; }
 
     /// <summary>
     /// Constructor that opens a read stream to a path
@@ -27,7 +27,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     /// <param name="fileSystem">FileSystem to read from</param>
     public MutagenBinaryReadStream(
         FilePath path,
-        ParsingBundle metaData,
+        ParsingMeta metaData,
         int bufferSize = 4096,
         long offsetReference = 0,
         IFileSystem? fileSystem = null)
@@ -55,7 +55,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
         : base(fileSystem.GetOrDefault().File.OpenRead(path), bufferSize)
     {
         _path = path;
-        MetaData = new ParsingBundle(
+        MetaData = new ParsingMeta(
             release, 
             path.ModKey,
             MasterReferenceCollection.FromPath(path, release, fileSystem: fileSystem));
@@ -72,7 +72,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     /// <param name="offsetReference">Optional offset reference position to use</param>
     public MutagenBinaryReadStream(
         Stream stream,
-        ParsingBundle metaData,
+        ParsingMeta metaData,
         int bufferSize = 4096,
         bool dispose = true,
         long offsetReference = 0)
@@ -103,7 +103,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
         : base(stream, bufferSize, dispose)
     {
         var startPos = stream.Position;
-        MetaData = new ParsingBundle(
+        MetaData = new ParsingMeta(
             release,
             modKey, 
             MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false))

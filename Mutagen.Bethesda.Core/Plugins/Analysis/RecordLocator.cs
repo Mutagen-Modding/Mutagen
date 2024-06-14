@@ -62,7 +62,7 @@ public sealed class RecordLocator
     {
         using var stream = new MutagenBinaryReadStream(
             filePath,
-            new ParsingBundle(
+            new ParsingMeta(
                 constants, 
                 filePath.ModKey,
                 MasterReferenceCollection.FromPath(filePath, constants.Release)));

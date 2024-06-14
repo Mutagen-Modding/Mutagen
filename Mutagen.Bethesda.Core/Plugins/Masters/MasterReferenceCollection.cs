@@ -121,7 +121,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     {
         var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
         using var stream = new MutagenBinaryReadStream(fs, 
-            new ParsingBundle(
+            new ParsingMeta(
                 release, 
                 path.ModKey,
                 masterReferences: null!));
@@ -132,7 +132,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     {
         using var interf = new MutagenInterfaceReadStream(
             new BinaryReadStream(stream, dispose: disposeStream), 
-            new ParsingBundle(
+            new ParsingMeta(
                 release, 
                 modKey,
                 masterReferences: null!));

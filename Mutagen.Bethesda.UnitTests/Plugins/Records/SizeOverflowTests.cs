@@ -84,7 +84,7 @@ public class SizeOverflowTestsDirect : SizeOverflowTests
     protected override IWorldspaceGetter Get(IFileSystem fileSystem, ModPath path)
     {
         using var reader = new MutagenBinaryReadStream(fileSystem.File.OpenRead(path),
-            new ParsingBundle(GameConstants.SkyrimSE, 
+            new ParsingMeta(GameConstants.SkyrimSE, 
                 Constants.Skyrim,
                 new MasterReferenceCollection("Skyrim.esm")));
         return Worldspace.CreateFromBinary(new MutagenFrame(reader));
@@ -99,7 +99,7 @@ public class SizeOverflowTestsOverlay : SizeOverflowTests
         return WorldspaceBinaryOverlay.WorldspaceFactory(
             bytes,
             new BinaryOverlayFactoryPackage(
-                new ParsingBundle(
+                new ParsingMeta(
                     GameConstants.SkyrimSE,
                     path.ModKey,
                     null!)));

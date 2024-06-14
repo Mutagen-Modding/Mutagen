@@ -61,7 +61,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         if (data.HasTrigger)
         {
             fg.AppendLine(
-                $"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                $"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         List<string> extraArgs = new List<string>();
@@ -171,7 +171,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         {
             case StringBinaryType.NullTerminate:
                 sb.AppendLine(
-                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
+                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
                 sb.AppendLine(
                     $"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(asset.Translated == null ? $"ret.{AccessorTransform(typeGen, typeGen.Name)}.Length + 1" : "5")};");
                 break;

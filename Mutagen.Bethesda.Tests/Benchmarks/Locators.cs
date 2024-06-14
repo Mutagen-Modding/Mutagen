@@ -24,7 +24,7 @@ public class Locators
         Console.WriteLine("Target settings: " + settings.ToString());
         var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
         data = File.ReadAllBytes(dataPath);
-        stream = new MutagenMemoryReadStream(data, new ParsingBundle(GameConstants.Oblivion, ModKey.Null, masterReferences: null!));
+        stream = new MutagenMemoryReadStream(data, new ParsingMeta(GameConstants.Oblivion, ModKey.Null, masterReferences: null!));
     }
 
     [GlobalCleanup]
