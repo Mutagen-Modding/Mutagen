@@ -12,7 +12,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 public sealed class FormKeyBinaryTranslation
 {
     public static readonly FormKeyBinaryTranslation Instance = new();
-    private static readonly FormIDFactory _formIdFactory = new();
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,
@@ -67,7 +66,7 @@ public sealed class FormKeyBinaryTranslation
             item = FormLinkInformation.Null;
         }
 
-        var formID = _formIdFactory.GetFormID(
+        var formID = FormIDTranslator.GetFormID(
             writer.MetaData.SeparatedMasterPackage!, 
             item);
 

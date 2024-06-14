@@ -10,15 +10,14 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
 
-public class FormIDFactoryTests
+public class FormIdTranslatorTests
 {
     [Theory, MutagenAutoData]
     internal void TypicalMasters(
         ModKey originating,
         ModKey modKeyA,
         ModKey modKeyB,
-        Type recordType,
-        FormIDFactory sut)
+        Type recordType)
     {
         var coll = new MasterReferenceCollection(originating);
         coll.SetTo(new []
@@ -34,7 +33,7 @@ public class FormIDFactoryTests
         });
         var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
 
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(modKeyA, 123), recordType))
             .Should().Be(
@@ -42,14 +41,14 @@ public class FormIDFactoryTests
                     new ModIndex(0),
                     123));
         
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
             new FormLinkInformation(
                 new FormKey(modKeyB, 456), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(1),
                     456));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
             new FormLinkInformation(
                 new FormKey(originating, 789), recordType))
             .Should().Be(
@@ -61,13 +60,12 @@ public class FormIDFactoryTests
     [Theory, MutagenAutoData]
     internal void NoMasters(
         ModKey originating,
-        Type recordType,
-        FormIDFactory sut)
+        Type recordType)
     {
         var coll = new MasterReferenceCollection(originating);
         var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
 
-        sut.GetFormID(
+        FormIDTranslator.GetFormID(
             masterPackage,
             new FormLinkInformation(
                     new FormKey(originating, 789), recordType))
@@ -86,8 +84,7 @@ public class FormIDFactoryTests
         ModKey lightB,
         ModKey mediumA,
         ModKey mediumB,
-        Type recordType,
-        FormIDFactory sut)
+        Type recordType)
     {
         var coll = new MasterReferenceCollection(originating);
         coll.SetTo(new []
@@ -128,49 +125,49 @@ public class FormIDFactoryTests
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(modA, 123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0),
                     123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(modB, 456), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(1),
                     456));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(originating, 789), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(2),
                     789));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(lightA, 0x123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0xFE),
                     0x000123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(lightB, 0x123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0xFE),
                     0x001123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(mediumA, 0x1234), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0xFD),
                     0x001234));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(mediumB, 0x1234), recordType))
             .Should().Be(
@@ -184,8 +181,7 @@ public class FormIDFactoryTests
         ModKey originating,
         ModKey modA,
         ModKey lightA,
-        Type recordType,
-        FormIDFactory sut)
+        Type recordType)
     {
         var coll = new MasterReferenceCollection(originating);
         coll.SetTo(new []
@@ -206,21 +202,21 @@ public class FormIDFactoryTests
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(modA, 123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0),
                     123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(lightA, 0x123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0xFE),
                     0x000123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(originating, 0x123), recordType))
             .Should().Be(
@@ -234,8 +230,7 @@ public class FormIDFactoryTests
         ModKey originating,
         ModKey modA,
         ModKey mediumA,
-        Type recordType,
-        FormIDFactory sut)
+        Type recordType)
     {
         var coll = new MasterReferenceCollection(originating);
         coll.SetTo(new []
@@ -256,21 +251,21 @@ public class FormIDFactoryTests
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig, coll, lo);
 
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(modA, 123), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0),
                     123));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(mediumA, 0x1234), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(0xFD),
                     0x001234));
-        sut.GetFormID(masterPackage,
+        FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
                     new FormKey(originating, 0x1234), recordType))
             .Should().Be(

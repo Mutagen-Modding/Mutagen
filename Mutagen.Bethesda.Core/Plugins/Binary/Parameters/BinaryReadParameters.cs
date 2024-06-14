@@ -1,4 +1,6 @@
 ﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -12,6 +14,11 @@ public record BinaryReadParameters
     
     public StringsReadParameters? StringsParam { get; init; }
     
+    /// <summary>
+    /// Load order.  Required for games with Separated Load Order lists per master type
+    /// </summary>
+    public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
+
     /// <summary>
     /// Whether to use multithreading when possible
     /// </summary>

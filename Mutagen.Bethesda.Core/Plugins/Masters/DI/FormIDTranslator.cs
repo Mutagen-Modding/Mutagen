@@ -2,9 +2,32 @@
 
 namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
-internal class FormIDFactory
+internal static class FormIDTranslator
 {
-    public FormID GetFormID(
+    public static FormKey GetFormKey(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID)
+    {
+        var modID = ModIndex.GetModIndexByteFromUInt(idWithModID);
+
+        if (modID >= masterReferences.Masters.Count)
+        {
+            return new FormKey(
+                masterReferences.CurrentMod,
+                idWithModID);
+        }
+
+        var justId = idWithModID & 0xFFFFFF;
+        if (modID == 0 && justId == 0)
+        {
+            return FormKey.Null;
+        }
+
+        var master = masterReferences.Masters[modID];
+        return new FormKey(
+            master.Master,
+            idWithModID);
+    }
+    
+    public static FormID GetFormID(
         SeparatedMasterPackage masters,
         IFormLinkIdentifier key)
     {

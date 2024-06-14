@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins;
@@ -73,27 +74,9 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <param name="masterReferences">Master reference list to refer to</param>
     /// <param name="idWithModID">Mod index and Record ID to use</param>
     /// <returns>Converted FormID</returns>
-    public static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID)
+    internal static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID)
     {
-        var modID = ModIndex.GetModIndexByteFromUInt(idWithModID);
-
-        if (modID >= masterReferences.Masters.Count)
-        {
-            return new FormKey(
-                masterReferences.CurrentMod,
-                idWithModID);
-        }
-
-        var justId = idWithModID & 0xFFFFFF;
-        if (modID == 0 && justId == 0)
-        {
-            return Null;
-        }
-
-        var master = masterReferences.Masters[modID];
-        return new FormKey(
-            master.Master,
-            idWithModID);
+        return FormIDTranslator.GetFormKey(masterReferences, idWithModID);
     }
 
     /// <summary>
@@ -103,7 +86,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <param name="idWithModID">Mod index and Record ID to use</param>
     /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
     /// <returns>Converted FormID</returns>
-    public static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID, bool maxIsNull)
+    internal static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID, bool maxIsNull)
     {
         if (maxIsNull && idWithModID == uint.MaxValue)
         {
