@@ -311,6 +311,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">

@@ -31,7 +31,7 @@ internal static class FormIDTranslator
         SeparatedMasterPackage masters,
         IFormLinkIdentifier key)
     {
-        if (!masters.Lookup.TryGetValue(key.FormKey.ModKey, out var index))
+        if (!masters.TryLookup(key.FormKey.ModKey, out var index))
         {
             if (key.FormKey == FormKey.Null)
             {
@@ -40,7 +40,7 @@ internal static class FormIDTranslator
 
             throw new UnmappableFormIDException(
                 key,
-                masters.Original.Masters
+                masters.Raw.Masters
                     .Select(x => x.Master)
                     .ToArray());
         }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -5,21 +6,16 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Masters;
 
-internal enum MasterStyle
-{
-    Normal,
-    Light,
-    Medium
-}
+public record MasterStyleIndex(ModIndex Index, MasterStyle Style);
 
-internal class SeparatedMasterPackage
+public class SeparatedMasterPackage
 {
-    public List<ModKey> Normal { get; private set; } = null!;
-    public List<ModKey>? Light { get; private set; }
-    public List<ModKey>? Medium { get; private set; }
-    public IReadOnlyMasterReferenceCollection Original { get; private set; } = null!;
+    public ILoadOrderGetter<ModKey> Normal { get; private set; } = null!;
+    public ILoadOrderGetter<ModKey>? Light { get; private set; }
+    public ILoadOrderGetter<ModKey>? Medium { get; private set; }
+    public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
-    public IReadOnlyDictionary<ModKey, (ModIndex Index, MasterStyle Style)> Lookup { get; private set; } = null!;
+    private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
     public static SeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
     {
@@ -27,8 +23,8 @@ internal class SeparatedMasterPackage
         normal.Add(masters.CurrentMod);
         var ret = new SeparatedMasterPackage()
         {
-            Normal = normal,
-            Original = masters
+            Normal = new LoadOrder<ModKey>(normal, disposeItems: false),
+            Raw = masters
         };
         ret.SetupLookup();
         return ret;
@@ -89,10 +85,10 @@ internal class SeparatedMasterPackage
 
         var ret = new SeparatedMasterPackage()
         {
-            Normal = normal,
-            Medium = medium,
-            Light = light,
-            Original = masters,
+            Normal = new LoadOrder<ModKey>(normal, disposeItems: false),
+            Medium = new LoadOrder<ModKey>(medium, disposeItems: false),
+            Light = new LoadOrder<ModKey>(light, disposeItems: false),
+            Raw = masters,
         };
         ret.SetupLookup();
         return ret;
@@ -101,7 +97,7 @@ internal class SeparatedMasterPackage
     
     private void SetupLookup()
     {
-        var lookup = new Dictionary<ModKey, (ModIndex Index, MasterStyle Style)>();
+        var lookup = new Dictionary<ModKey, MasterStyleIndex>();
         FillLookup(Normal, lookup, MasterStyle.Normal);
         
         if (Light != null)
@@ -114,19 +110,24 @@ internal class SeparatedMasterPackage
             FillLookup(Medium, lookup, MasterStyle.Medium);
         }
 
-        Lookup = lookup;
+        _lookup = lookup;
     }
 
     private void FillLookup(
-        List<ModKey> masters,
-        Dictionary<ModKey, (ModIndex Index, MasterStyle Style)> dict,
+        ILoadOrderGetter<ModKey> masters,
+        Dictionary<ModKey, MasterStyleIndex> dict,
         MasterStyle style)
     {
         byte index = 0;
-        foreach (var modKey in masters)
+        foreach (var modKey in masters.ListedOrder)
         {
-            dict.Set(modKey, (new ModIndex(index), style));
+            dict.Set(modKey, new (new ModIndex(index), style));
             index++;
         }
+    }
+
+    public bool TryLookup(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index)
+    {
+        return _lookup.TryGetValue(modKey, out index);
     }
 }
