@@ -126,18 +126,11 @@ internal sealed class ModHeaderWriteLogic
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
-        if (writer.MetaData.Constants.SeparateMasterLoadOrders)
-        {
-            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Separate(
-                mod,
-                writer.MetaData.MasterReferences,
-                loadOrder);
-        }
-        else
-        {
-            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(
-                writer.MetaData.MasterReferences);
-        }
+        writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Factory(
+            mod.GameRelease,
+            mod.ModKey,
+            writer.MetaData.MasterReferences,
+            loadOrder);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {
