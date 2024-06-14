@@ -94,8 +94,7 @@ public interface IModGetter :
     /// </summary>
     /// <param name="path">Path to export to</param>
     /// <param name="param">Optional customization parameters</param>
-    /// <param name="fileSystem">Optional filesystem substitution</param>
-    void WriteToBinary(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null);
+    void WriteToBinary(FilePath path, BinaryWriteParameters? param = null);
 
     /// <summary>
     /// Exports to disk in Bethesda binary format.
@@ -104,9 +103,8 @@ public interface IModGetter :
     /// </summary>
     /// <param name="path">Path to export to</param>
     /// <param name="param">Optional customization parameters</param>
-    /// <param name="fileSystem">Optional filesystem substitution</param>
     /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
-    void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null);
+    void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
 
     /// <summary>
     /// Exports to disk in Bethesda binary format.

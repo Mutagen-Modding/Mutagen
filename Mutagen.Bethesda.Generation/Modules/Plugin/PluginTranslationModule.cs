@@ -14,7 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Strings.DI;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
@@ -118,11 +117,13 @@ public class PluginTranslationModule : BinaryTranslationModule
         _typeGenerations[typeof(GuidType)] = new GuidBinaryTranslationGeneration();
         APILine[] modAPILines = new APILine[]
         {
-            new APILine(
-                nicknameKey: "GroupMask",
-                resolutionString: "GroupMask? importMask = null",
-                when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod)
+            
         };
+
+        var groupMask = new APILine(
+            nicknameKey: "GroupMask",
+            resolutionString: "GroupMask? importMask = null",
+            when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod);
         var modKey = new APILine(
             nicknameKey: "ModKey",
             resolutionString: "ModKey modKey",
@@ -147,14 +148,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                 if (dir == TranslationDirection.Reader) return false;
                 return obj.GetObjectType() == ObjectType.Mod;
             });
-        var stringsReadParamOptional = new APILine(
-            nicknameKey: "StringsParamsOptional",
-            resolutionString: $"{nameof(StringsReadParameters)}? stringsParam = null",
+        var binaryReadParameters = new APILine(
+            nicknameKey: "ReadParameters",
+            resolutionString: $"{nameof(BinaryReadParameters)}? param = null",
             when: (obj, dir) =>
             {
                 if (dir == TranslationDirection.Writer) return false;
-                return obj.GetObjectType() == ObjectType.Mod
-                       && obj.GetObjectData().UsesStringFiles;
+                return obj.GetObjectType() == ObjectType.Mod;
             });
         var recordInfoCache = new APILine(
             nicknameKey: "RecordInfoCache",
@@ -162,29 +162,6 @@ public class PluginTranslationModule : BinaryTranslationModule
             when: (obj, dir) =>
             {
                 if (dir != TranslationDirection.Reader) return false;
-                return obj.GetObjectType() == ObjectType.Mod;
-            });
-        var parallel = new APILine(
-            nicknameKey: "Parallel",
-            resolutionString: "bool parallel = true",
-            when: (obj, dir) =>
-            {
-                if (dir == TranslationDirection.Writer) return false;
-                return obj.GetObjectType() == ObjectType.Mod;
-            });
-        var throwOnUnknown = new APILine(
-            nicknameKey: "UnknownSubrecord",
-            resolutionString: "bool throwOnUnknownSubrecord = false",
-            when: (obj, dir) =>
-            {
-                if (dir == TranslationDirection.Writer) return false;
-                return obj.GetObjectType() == ObjectType.Mod;
-            });
-        var fileSystem = new APILine(
-            nicknameKey: "FileSystem",
-            resolutionString: "IFileSystem? fileSystem = null",
-            when: (obj, dir) =>
-            {
                 return obj.GetObjectType() == ObjectType.Mod;
             });
         var gameRelease = new APILine(
@@ -242,6 +219,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 optionalAPI: modAPILines
                     .And(typedWriteParams)
                     .And(typedParseParams)
+                    .And(groupMask)
                     .And(writeParamOptional)
                     .ToArray(),
                 customAPI: new CustomMethodAPI[]
@@ -254,6 +232,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 optionalAPI: modAPILines
                     .And(typedWriteParams)
                     .And(typedParseParams)
+                    .And(groupMask)
                     .And(writeParamOptional)
                     .ToArray(),
                 customAPI: new CustomMethodAPI[]
@@ -271,10 +250,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                     optionalAPI: writeParamOptional
                         .AsEnumerable()
                         .And(modAPILines)
-                        .And(stringsReadParamOptional)
-                        .And(parallel)
-                        .And(throwOnUnknown)
-                        .And(fileSystem)
+                        .And(binaryReadParameters)
+                        .And(groupMask)
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
@@ -294,10 +271,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                     optionalAPI: writeParamOptional
                         .AsEnumerable()
                         .And(modAPILines)
-                        .And(stringsReadParamOptional)
-                        .And(parallel)
-                        .And(throwOnUnknown)
-                        .And(fileSystem)
+                        .And(binaryReadParameters)
+                        .And(groupMask)
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
@@ -315,11 +290,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPublic(gameRelease),
                         CustomMethodAPI.FactoryPublic(recordInfoCache),
-                        CustomMethodAPI.FactoryPublic(writeParamOptional),
                     },
                     optionalAPI: modAPILines
-                        .And(parallel)
-                        .And(throwOnUnknown)
+                        .And(writeParamOptional)
+                        .And(binaryReadParameters)
+                        .And(groupMask)
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
@@ -374,13 +349,14 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 gameReleaseStr = $"release.ToGameRelease()";
             }
+            sb.AppendLine("param ??= BinaryReadParameters.Default;");
             sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = param.Parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
                 internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -413,7 +389,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);");
+            sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
         using (var prop = sb.PropertyCtor())
@@ -445,7 +421,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
-        sb.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
+        sb.AppendLine($"using (var fs = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
         using (sb.CurlyBrace())
         {
             sb.AppendLine($"memStream.Position = 0;");
@@ -469,16 +445,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"var gameRelease = release.ToGameRelease();");
                 gameReleaseStr = $"gameRelease";
             }
+
+            sb.AppendLine("param ??= BinaryReadParameters.Default;");
+            sb.AppendLine("var fileSystem = param.FileSystem.GetOrDefault();");
             sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem));");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem));");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = param.Parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
-                    sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
+                    sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(param.StringsParam);");
                     sb.AppendLine("if (reader.Remaining < 12)");
                     using (sb.CurlyBrace())
                     {
@@ -488,7 +467,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     sb.AppendLine($"if (Enums.HasFlag(flags, (int){obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized))");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
+                        sb.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, param.StringsParam);");
                     }
                 }
                 internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
@@ -521,12 +500,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 args.Add($"{ModModule.ReleaseEnumName(obj)} release");
             }
-            if (objData.UsesStringFiles)
-            {
-                args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
-            }
-            args.Add($"IFileSystem? fileSystem = null");
-            args.Add($"bool throwOnUnknownSubrecord = false");
+            args.Add($"{nameof(BinaryReadParameters)}? param = null");
         }
         using (sb.CurlyBrace())
         {
@@ -534,16 +508,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
                 args.AddPassArg("path");
-                if (objData.UsesStringFiles)
-                {
-                    args.AddPassArg("stringsParam");
-                }
                 if (objData.GameReleaseOptions != null)
                 {
                     args.AddPassArg("release");
                 }
-                args.AddPassArg("fileSystem");
-                args.AddPassArg("throwOnUnknownSubrecord");
+                args.AddPassArg("param");
             }
         }
         sb.AppendLine();
@@ -557,10 +526,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.Add($"{ModModule.ReleaseEnumName(obj)} release");
             }
             args.Add($"ModKey modKey");
-            args.Add($"bool throwOnUnknownSubrecord = false");
+            args.Add($"{nameof(BinaryReadParameters)}? param = null");
         }
         using (sb.CurlyBrace())
         {
+            sb.AppendLine("param ??= BinaryReadParameters.Default;");
             using (var args = sb.Call(
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
@@ -573,7 +543,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     gameReleaseStr = $"release.ToGameRelease()";
                 }
-                args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}, throwOnUnknownSubrecord: throwOnUnknownSubrecord)");
+                args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}, throwOnUnknownSubrecord: param.ThrowOnUnknownSubrecord)");
                 args.AddPassArg("modKey");
                 if (objData.GameReleaseOptions != null)
                 {
@@ -2400,8 +2370,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 sb.AppendLine($"IGroupGetter<T>? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}<T>() => this.{nameof(IModGetter.TryGetTopLevelGroup)}<T>();");
                 sb.AppendLine($"IGroupGetter? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.TryGetTopLevelGroup)}(type);");
-                sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
-                sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
+                sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
+                sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, parallelParam: parallelWriteParams);");
                 sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
                 sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);");
                 sb.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
@@ -2620,7 +2590,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     using (var args = sb.Call(
                                $"this._package = new {nameof(BinaryOverlayFactoryPackage)}"))
                     {
-                        args.Add($"stream.{nameof(IMutagenReadStream.MetaData)}");
+                        args.Add($"stream.{nameof(IMutagenReadStream.MetaData)}"); 
                     }
                     sb.AppendLine("this._shouldDispose = shouldDispose;");
                 }
@@ -2668,34 +2638,30 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             args.Add($"{ModModule.ReleaseEnumName(obj)} release");
                         }
-                        if (objData.UsesStringFiles)
-                        {
-                            args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
-                        }
-                        args.Add("IFileSystem? fileSystem = null");
-                        args.Add("bool throwOnUnknownSubrecord = false");
+                        args.Add("BinaryReadParameters? param");
                     }
                     using (sb.CurlyBrace())
                     {
+                        sb.AppendLine("param ??= BinaryReadParameters.Default;");
                         sb.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, path.ModKey, new {nameof(MasterReferenceCollection)}(path.ModKey))");
                         using (sb.CurlyBrace(appendSemiColon: true))
                         {
-                            sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
+                            sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem))");
                         }
-                        sb.AppendLine($"meta.{nameof(ParsingBundle.ThrowOnUnknown)} = throwOnUnknownSubrecord;");
+                        sb.AppendLine($"meta.{nameof(ParsingBundle.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {
                             args.Add($"path: path.{nameof(ModPath.Path)}");
                             args.Add($"metaData: meta");
-                            args.AddPassArg("fileSystem");
+                            args.Add("fileSystem: param.FileSystem");
                         }
                         sb.AppendLine("try");
                         using (sb.CurlyBrace())
                         {
                             if (objData.UsesStringFiles)
                             {
-                                sb.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(stringsParam);");
+                                sb.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(param.StringsParam);");
                                 sb.AppendLine("if (stream.Remaining < 12)");
                                 using (sb.CurlyBrace())
                                 {
@@ -2705,7 +2671,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 sb.AppendLine($"if (Enums.HasFlag(flags, (int){obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized))");
                                 using (sb.CurlyBrace())
                                 {
-                                    sb.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam, fileSystem: fileSystem);");
+                                    sb.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, param.StringsParam, fileSystem: param.FileSystem);");
                                 }
                             }
 

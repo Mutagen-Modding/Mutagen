@@ -28,9 +28,14 @@ public class WriteOptionsTests
         npc.FormKey.ID.Should().Be(nextId);
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
-            ModKey = ModKeyOption.NoCheck
-        }, fileSystem: fileSystem);
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath, fileSystem: fileSystem);
+            ModKey = ModKeyOption.NoCheck,
+            FileSystem = fileSystem
+        });
+        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath,
+            new BinaryReadParameters()
+            {
+                FileSystem = fileSystem
+            });
         reimport.ModHeader.Stats.NextFormID.Should().Be(nextId + 1);
     }
     
@@ -47,11 +52,16 @@ public class WriteOptionsTests
         npc.Race.SetTo(race);
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
-            ModKey = ModKeyOption.CorrectToPath
-        }, fileSystem: fileSystem);
+            ModKey = ModKeyOption.CorrectToPath,
+            FileSystem = fileSystem
+        });
         
         // Check FormKeys
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath, fileSystem: fileSystem);
+        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath, 
+            new BinaryReadParameters()
+            {
+                FileSystem = fileSystem
+            });
         var reimportWeapon = reimport.Weapons.First();
         reimportWeapon.FormKey.Should().Be(weap.FormKey);
         var reimportNpc = reimport.Npcs.First();
@@ -108,8 +118,9 @@ public class WriteOptionsTests
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
             {
                 ModKey = ModKeyOption.NoCheck,
-                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.Throw
-            }, fileSystem: fileSystem);
+                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.Throw,
+                FileSystem = fileSystem
+            });
         });
     }
 
@@ -125,9 +136,14 @@ public class WriteOptionsTests
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
             ModKey = ModKeyOption.NoCheck,
-            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(modKey)
-        }, fileSystem: fileSystem);
-        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, fileSystem: fileSystem);
+            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(modKey),
+            FileSystem = fileSystem
+        });
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, 
+            new BinaryReadParameters()
+            {
+                FileSystem = fileSystem
+            });
         reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
     }
 
@@ -147,8 +163,9 @@ public class WriteOptionsTests
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
             {
                 ModKey = ModKeyOption.NoCheck,
-                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-            }, fileSystem: fileSystem);
+                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo),
+                FileSystem = fileSystem
+            });
         });
     }
 
@@ -173,9 +190,14 @@ public class WriteOptionsTests
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
             ModKey = ModKeyOption.NoCheck,
-            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-        }, fileSystem: fileSystem);
-        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, fileSystem: fileSystem);
+            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo),
+            FileSystem = fileSystem
+        });
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE,
+            new BinaryReadParameters()
+            {
+                FileSystem = fileSystem
+            });
         reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
     }
 
@@ -193,8 +215,9 @@ public class WriteOptionsTests
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
             {
                 ModKey = ModKeyOption.NoCheck,
-                FormIDCompaction = FormIDCompactionOption.Iterate
-            }, fileSystem: fileSystem);
+                FormIDCompaction = FormIDCompactionOption.Iterate,
+                FileSystem = fileSystem
+            });
         });
     }
 
@@ -209,8 +232,9 @@ public class WriteOptionsTests
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
             ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.NoCheck
-        }, fileSystem: fileSystem);
+            FormIDCompaction = FormIDCompactionOption.NoCheck,
+            FileSystem = fileSystem
+        });
     }
 
     [Theory, MutagenAutoData]
@@ -227,8 +251,9 @@ public class WriteOptionsTests
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
             {
                 ModKey = ModKeyOption.NoCheck,
-                FormIDCompaction = FormIDCompactionOption.Iterate
-            }, fileSystem: fileSystem);
+                FormIDCompaction = FormIDCompactionOption.Iterate,
+                FileSystem = fileSystem
+            });
         });
     }
 
@@ -243,8 +268,9 @@ public class WriteOptionsTests
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
             ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.NoCheck
-        }, fileSystem: fileSystem);
+            FormIDCompaction = FormIDCompactionOption.NoCheck,
+            FileSystem = fileSystem
+        });
     }
 
     [Theory, MutagenAutoData]
@@ -258,7 +284,8 @@ public class WriteOptionsTests
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
         {
             ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.Iterate
-        }, fileSystem: fileSystem);
+            FormIDCompaction = FormIDCompactionOption.Iterate,
+            FileSystem = fileSystem
+        });
     }
 }

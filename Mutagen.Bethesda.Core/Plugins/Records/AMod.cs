@@ -62,8 +62,8 @@ public abstract class AMod : IMod
     public abstract void SyncRecordCount();
     IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
-    void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
-    void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
+    void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => throw new NotImplementedException();
+    void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => throw new NotImplementedException();
     void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();

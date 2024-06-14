@@ -65,8 +65,8 @@ public class ModModule : GenerationModule
         sb.AppendLine($"IGroupGetter? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.TryGetTopLevelGroup)}(type);");
         sb.AppendLine($"IGroup<T>? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}<T>() => this.{nameof(IMod.TryGetTopLevelGroup)}<T>();");
         sb.AppendLine($"IGroup? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}(Type type) => this.{nameof(IMod.TryGetTopLevelGroup)}(type);");
-        sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
-        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
+        sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
+        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param, parallelParam: parallelWriteParams);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
         sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);");
         sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
@@ -492,11 +492,9 @@ public class ModModule : GenerationModule
             args.Add($"string path");
             args.Add($"{nameof(BinaryWriteParameters)}? param = null");
             args.Add($"{nameof(ParallelWriteParameters)}? parallelParam = null");
-            args.Add($"{nameof(IFileSystem)}? fileSystem = null");
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine($"fileSystem = fileSystem.GetOrDefault();");
             sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
             using (var args = sb.Call(
@@ -507,9 +505,9 @@ public class ModModule : GenerationModule
             }
             if (obj.GetObjectData().UsesStringFiles)
             {
-                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);");
+                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());");
             }
-            sb.AppendLine("using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))");
+            sb.AppendLine("using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())
             {
                 using (var args = sb.Call(

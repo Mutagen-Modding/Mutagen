@@ -172,12 +172,12 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    public void WriteToBinary(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null)
+    public void WriteToBinary(FilePath path, BinaryWriteParameters? param = null)
     {
         throw new NotImplementedException();
     }
 
-    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null)
+    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
     {
         throw new NotImplementedException();
     }

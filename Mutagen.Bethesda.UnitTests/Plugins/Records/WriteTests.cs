@@ -224,8 +224,9 @@ public class WriteTests
         mod.ModKey.Should().NotBe(modPath.ModKey);
         mod.WriteToBinary(modPath, new BinaryWriteParameters()
         {
-            ModKey = ModKeyOption.CorrectToPath
-        }, fileSystem: fileSystem);
+            ModKey = ModKeyOption.CorrectToPath,
+            FileSystem = fileSystem
+        });
         var stringsPath = Path.Combine(modPath.Path.Directory, "Strings");
         fileSystem.Directory.Exists(stringsPath).Should().BeTrue();
         fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.STRINGS"));

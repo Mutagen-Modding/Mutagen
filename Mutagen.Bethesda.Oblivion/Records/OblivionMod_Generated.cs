@@ -2789,8 +2789,8 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
@@ -3244,19 +3244,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static OblivionMod CreateFromBinary(
             ModPath path,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3271,19 +3271,19 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             ModPath path,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3299,18 +3299,18 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ModKey modKey,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3327,18 +3327,18 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3354,22 +3354,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            IFileSystem? fileSystem = null,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 path: path,
-                fileSystem: fileSystem,
-                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
+                param: param);
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             ModKey modKey,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null)
         {
+            param ??= BinaryReadParameters.Default;
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion, throwOnUnknownSubrecord: throwOnUnknownSubrecord),
+                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion, throwOnUnknownSubrecord: param.ThrowOnUnknownSubrecord),
                 modKey: modKey,
                 shouldDispose: false);
         }
@@ -3751,16 +3750,14 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             string path,
             BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null,
-            IFileSystem? fileSystem = null)
+            ParallelWriteParameters? parallelParam = null)
         {
-            fileSystem = fileSystem.GetOrDefault();
             param ??= BinaryWriteParameters.Default;
             parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 OblivionModCommon.WriteParallel(
                     item: item,
@@ -4058,19 +4055,19 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMod item,
             ModPath path,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -4088,18 +4085,18 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ModKey modKey,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -11967,8 +11964,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null,
-            IFileSystem? fileSystem = null)
+            GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
@@ -11997,7 +11993,7 @@ namespace Mutagen.Bethesda.Oblivion
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var fs = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
@@ -12058,8 +12054,8 @@ namespace Mutagen.Bethesda.Oblivion
         public GameRelease GameRelease => GameRelease.Oblivion;
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -12392,18 +12388,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionModBinaryOverlay OblivionModFactory(
             ModPath path,
-            IFileSystem? fileSystem = null,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param)
         {
+            param ??= BinaryReadParameters.Default;
             var meta = new ParsingBundle(GameRelease.Oblivion, path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: param.FileSystem))
             };
-            meta.ThrowOnUnknown = throwOnUnknownSubrecord;
+            meta.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,
-                fileSystem: fileSystem);
+                fileSystem: param.FileSystem);
             try
             {
                 return OblivionModFactory(

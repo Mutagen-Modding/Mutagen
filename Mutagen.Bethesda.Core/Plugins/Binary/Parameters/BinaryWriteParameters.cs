@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Strings;
@@ -94,6 +95,10 @@ public sealed record BinaryWriteParameters
     /// Load order.  Required for games with Separated Load Order lists per master type
     /// </summary>
     public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
+    
+    public bool Parallel { get; init; } = true;
+    public bool ThrowOnUnknownSubrecord { get; init; } = false;
+    public IFileSystem? FileSystem { get; init; }
 
     /// <summary>
     /// Aligns a mod's ModKey to a path's implied ModKey.

@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.IO;
 using Mutagen.Bethesda.Plugins.IO.DI;
 using Mutagen.Bethesda.Skyrim;
@@ -173,7 +174,10 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinaryParallel(modPath, fileSystem: fileSystem);
+        mod.WriteToBinaryParallel(modPath, new BinaryWriteParameters()
+        {
+            FileSystem = fileSystem
+        });
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeFalse();
@@ -468,7 +472,10 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinaryParallel(modPath, fileSystem: fileSystem);
+        mod.WriteToBinaryParallel(modPath, new BinaryWriteParameters()
+        {
+            FileSystem = fileSystem
+        });
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.CopyModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeTrue();

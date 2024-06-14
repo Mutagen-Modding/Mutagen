@@ -4,6 +4,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
@@ -32,7 +33,10 @@ public class GameEnvironmentBuilderTests
         modKeys.ForEach(m =>
         {
             var mod = new SkyrimMod(m, SkyrimRelease.SkyrimSE);
-            mod.WriteToBinaryParallel(Path.Combine(dataDirectoryProvider.Path, m.FileName), fileSystem: fs);
+            mod.WriteToBinaryParallel(Path.Combine(dataDirectoryProvider.Path, m.FileName), new BinaryWriteParameters()
+            {
+                FileSystem = fs
+            });
         });
     }
     

@@ -5,6 +5,7 @@ using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -53,7 +54,10 @@ public class GameEnvironmentBuilder : ISpecimenBuilder
         loWriter.Write(pluginPath.Path, modKeys.Select((x, i) => new LoadOrderListing(x, i % 2 == 0)));
 
         var mods = modKeys.Select(x => ModInstantiator.Activator(x, _release)).ToArray();
-        mods.ForEach(m => m.WriteToBinary(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName), fileSystem: fs));
+        mods.ForEach(m => m.WriteToBinary(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName), new BinaryWriteParameters()
+        {
+            FileSystem = fs
+        }));
 
         var resolver = new Func<Type, object?>(t =>
         {

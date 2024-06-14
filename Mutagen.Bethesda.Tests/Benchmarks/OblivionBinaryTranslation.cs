@@ -60,14 +60,14 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         DataOutput.Position = 0;
         mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
     }
@@ -75,14 +75,14 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         DataOutput.Position = 0;
         mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
     }

@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -458,8 +459,11 @@ public class Fallout4PassthroughTest : PassthroughTest
         return Fallout4ModBinaryOverlay.Fallout4ModFactory(
             new ModPath(ModKey, path),
             Fallout4Release.Fallout4,
-            stringsParams,
-            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
+            new BinaryReadParameters()
+            {
+                StringsParam = stringsParams,
+                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
+            });
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
@@ -467,9 +471,12 @@ public class Fallout4PassthroughTest : PassthroughTest
         return Fallout4Mod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
             Fallout4Release.Fallout4,
-            parallel: Settings.ParallelProcessingSteps, 
-            stringsParam: stringsParams,
-            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
+            new BinaryReadParameters()
+            {
+                Parallel = Settings.ParallelProcessingSteps,
+                StringsParam = stringsParams,
+                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
+            });
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

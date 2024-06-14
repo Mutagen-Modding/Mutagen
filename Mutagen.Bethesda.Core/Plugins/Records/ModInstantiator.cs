@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Linq.Expressions;
 using DynamicData;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.Loqui;
 using Mutagen.Bethesda.Strings;
 
@@ -39,19 +40,19 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         [Obsolete("Use ImportGetter")]
-        public static IModDisposeGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        public static IModDisposeGetter Importer(ModPath path, GameRelease release, BinaryReadParameters? param = null)
         {
-            return _dict[release.ToCategory()].ImportGetter(path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].ImportGetter(path, release, param);
         }
 
-        public static IModDisposeGetter ImportGetter(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        public static IModDisposeGetter ImportGetter(ModPath path, GameRelease release, BinaryReadParameters? param = null)
         {
-            return _dict[release.ToCategory()].ImportGetter(path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].ImportGetter(path, release, param);
         }
 
-        public static IMod ImportSetter(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        public static IMod ImportSetter(ModPath path, GameRelease release, BinaryReadParameters? param = null)
         {
-            return _dict[release.ToCategory()].ImportSetter(path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].ImportSetter(path, release, param);
         }
 
         public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         where TMod : IModGetter
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
-        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null);
+        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -159,10 +160,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             var deleg = lambda.Compile();
             var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
             var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
-            var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
-            var parallelIndex = paramInfo.Select(x => x.Name).IndexOf("parallel");
-            return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                StringsReadParameters? stringsParam) =>
+            var paramIndex = paramInfo.Select(x => x.Name).IndexOf("param");
+            return (ModPath modPath, GameRelease release, BinaryReadParameters? param) =>
             {
                 var args = new object?[paramInfo.Length];
                 args[0] = modPath;
@@ -171,13 +170,11 @@ namespace Mutagen.Bethesda.Plugins.Records
                     args[releaseIndex] = release;
                 }
 
-                if (stringsParamIndex != -1)
+                if (paramIndex != -1)
                 {
-                    args[stringsParamIndex] = stringsParam;
+                    args[paramIndex] = param;
                 }
 
-                args[parallelIndex] = true;
-                args[fileSystemIndex] = fileSystem;
                 return (TMod)deleg.DynamicInvoke(args)!;
             };
         }
@@ -198,10 +195,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
             var deleg = lambda.Compile();
             var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
-            var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
-            var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
-            return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                StringsReadParameters? stringsParam) =>
+            var paramIndex = paramInfo.Select(x => x.Name).IndexOf("param");
+            return (ModPath modPath, GameRelease release, BinaryReadParameters? param) =>
             {
                 var args = new object?[paramInfo.Length];
                 args[0] = modPath;
@@ -210,12 +205,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                     args[releaseIndex] = release;
                 }
 
-                if (stringsParamIndex != -1)
-                {
-                    args[stringsParamIndex] = stringsParam;
-                }
-
-                args[fileSystemIndex] = fileSystem;
+                args[paramIndex] = param;
                 return (TMod)deleg.DynamicInvoke(args)!;
             };
         }

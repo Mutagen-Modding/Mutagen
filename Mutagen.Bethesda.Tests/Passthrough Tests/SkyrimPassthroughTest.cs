@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -222,8 +223,11 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimModBinaryOverlay.SkyrimModFactory(
             new ModPath(ModKey, FilePath.Path),
             GameRelease.ToSkyrimRelease(),
-            stringsParam: stringsParams,
-            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
+            new BinaryReadParameters()
+            {
+                StringsParam = stringsParams,
+                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
+            });
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
@@ -231,9 +235,12 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
             GameRelease.ToSkyrimRelease(),
-            parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams,
-            throwOnUnknownSubrecord: Settings.ThrowOnUnknown);
+            new BinaryReadParameters()
+            {
+                Parallel = Settings.ParallelProcessingSteps,
+                StringsParam = stringsParams,
+                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
+            });
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

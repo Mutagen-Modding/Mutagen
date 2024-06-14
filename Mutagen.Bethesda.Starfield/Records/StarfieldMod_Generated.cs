@@ -7821,8 +7821,8 @@ namespace Mutagen.Bethesda.Starfield
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => StarfieldModMixIn.GetEqualsMask(this, (IStarfieldModGetter)rhs, include);
@@ -8982,22 +8982,21 @@ namespace Mutagen.Bethesda.Starfield
         public static StarfieldMod CreateFromBinary(
             ModPath path,
             StarfieldRelease release,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -9005,7 +9004,7 @@ namespace Mutagen.Bethesda.Starfield
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     return CreateFromBinary(
                         release: release,
@@ -9023,22 +9022,21 @@ namespace Mutagen.Bethesda.Starfield
             ModPath path,
             StarfieldRelease release,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -9046,7 +9044,7 @@ namespace Mutagen.Bethesda.Starfield
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     return CreateFromBinary(
                         release: release,
@@ -9065,18 +9063,18 @@ namespace Mutagen.Bethesda.Starfield
             ModKey modKey,
             StarfieldRelease release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -9095,18 +9093,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldRelease release,
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -9124,26 +9122,23 @@ namespace Mutagen.Bethesda.Starfield
         public static IStarfieldModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             StarfieldRelease release,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null)
         {
             return StarfieldModBinaryOverlay.StarfieldModFactory(
                 path: path,
-                stringsParam: stringsParam,
                 release: release,
-                fileSystem: fileSystem,
-                throwOnUnknownSubrecord: throwOnUnknownSubrecord);
+                param: param);
         }
 
         public static IStarfieldModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             StarfieldRelease release,
             ModKey modKey,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null)
         {
+            param ??= BinaryReadParameters.Default;
             return StarfieldModBinaryOverlay.StarfieldModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: throwOnUnknownSubrecord),
+                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: param.ThrowOnUnknownSubrecord),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
@@ -9768,17 +9763,15 @@ namespace Mutagen.Bethesda.Starfield
             this IStarfieldModGetter item,
             string path,
             BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null,
-            IFileSystem? fileSystem = null)
+            ParallelWriteParameters? parallelParam = null)
         {
-            fileSystem = fileSystem.GetOrDefault();
             param ??= BinaryWriteParameters.Default;
             parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
-            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());
+            using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 StarfieldModCommon.WriteParallel(
                     item: item,
@@ -10079,22 +10072,21 @@ namespace Mutagen.Bethesda.Starfield
             this IStarfieldMod item,
             ModPath path,
             StarfieldRelease release,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -10102,7 +10094,7 @@ namespace Mutagen.Bethesda.Starfield
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     CopyInFromBinary(
                         item: item,
@@ -10123,18 +10115,18 @@ namespace Mutagen.Bethesda.Starfield
             ModKey modKey,
             StarfieldRelease release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
+                param ??= BinaryReadParameters.Default;
                 using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ThrowOnUnknown = throwOnUnknownSubrecord;
+                    frame.MetaData.Parallel = param.Parallel;
+                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -33282,14 +33274,13 @@ namespace Mutagen.Bethesda.Starfield
             this IStarfieldModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null,
-            IFileSystem? fileSystem = null)
+            GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, fileSystem);
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());
             var bundle = new WritingBundle(item.StarfieldRelease.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
@@ -33314,7 +33305,7 @@ namespace Mutagen.Bethesda.Starfield
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var fs = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
@@ -33376,8 +33367,8 @@ namespace Mutagen.Bethesda.Starfield
         public GameRelease GameRelease => StarfieldRelease.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -34298,22 +34289,21 @@ namespace Mutagen.Bethesda.Starfield
         public static StarfieldModBinaryOverlay StarfieldModFactory(
             ModPath path,
             StarfieldRelease release,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null,
-            bool throwOnUnknownSubrecord = false)
+            BinaryReadParameters? param)
         {
+            param ??= BinaryReadParameters.Default;
             var meta = new ParsingBundle(release.ToGameRelease(), path.ModKey, new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: param.FileSystem))
             };
-            meta.ThrowOnUnknown = throwOnUnknownSubrecord;
+            meta.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,
-                fileSystem: fileSystem);
+                fileSystem: param.FileSystem);
             try
             {
-                meta.Absorb(stringsParam);
+                meta.Absorb(param.StringsParam);
                 if (stream.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -34321,7 +34311,7 @@ namespace Mutagen.Bethesda.Starfield
                 var flags = stream.GetInt32(offset: 8);
                 if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam, fileSystem: param.FileSystem);
                 }
                 return StarfieldModFactory(
                     stream: stream,
