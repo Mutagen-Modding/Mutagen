@@ -96,8 +96,14 @@ public sealed record BinaryWriteParameters
     /// </summary>
     public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
     
+    /// <summary>
+    /// Whether to use multithreading when possible
+    /// </summary>
     public bool Parallel { get; init; } = true;
-    public bool ThrowOnUnknownSubrecord { get; init; } = false;
+    
+    /// <summary>
+    /// FileSystem to write to
+    /// </summary>
     public IFileSystem? FileSystem { get; init; }
 
     /// <summary>
