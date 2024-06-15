@@ -6289,11 +6289,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestType
         private int? _QuestTypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestType => _QuestTypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestTypeLocation, _package, _recordData);
         #endregion
         #region QuestFaction
         private int? _QuestFactionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => _QuestFactionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestFactionLocation, _package, _recordData);
         #endregion
         #region Event
         private int? _EventLocation;
@@ -6301,15 +6301,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
         #endregion
         #region QuestTimeLimit
         private int? _QuestTimeLimitLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => _QuestTimeLimitLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTimeLimitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_QuestTimeLimitLocation, _package, _recordData);
         #endregion
         #region SourceQuest
         private int? _SourceQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => _SourceQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_SourceQuestLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region Filter
@@ -6344,11 +6344,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestGroup
         private int? _QuestGroupLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => _QuestGroupLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestGroupLocation, _package, _recordData);
         #endregion
         #region MissionTypeKeyword
         private int? _MissionTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => _MissionTypeKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionTypeKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_MissionTypeKeywordLocation, _package, _recordData);
         #endregion
         #region MissionBoardDescription
         private int? _MissionBoardDescriptionLocation;

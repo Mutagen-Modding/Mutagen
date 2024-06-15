@@ -2160,7 +2160,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_OwnerQuestLocation, _package, _recordData);
         #endregion
         #region Flags
         private int? _FlagsLocation;

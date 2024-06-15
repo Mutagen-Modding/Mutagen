@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region NpcAnimation
         private int? _NpcAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation => _NpcAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_NpcAnimationLocation, _package, _recordData);
         #endregion
         #region STRV
         private int? _STRVLocation;
@@ -2330,15 +2330,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public IFormLinkGetter<IKeywordGetter> VCLR => _VCLRLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> VCLR => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_VCLRLocation, _package, _recordData);
         #endregion
         #region FLMV
         private int? _FLMVLocation;
-        public IFormLinkGetter<IKeywordGetter> FLMV => _FLMVLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> FLMV => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_FLMVLocation, _package, _recordData);
         #endregion
         #region FLAV
         private int? _FLAVLocation;
-        public IFormLinkGetter<IKeywordGetter> FLAV => _FLAVLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLAVLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> FLAV => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_FLAVLocation, _package, _recordData);
         #endregion
         #region QUAL
         private int? _QUALLocation;
@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region ATAC
         private int? _ATACLocation;
-        public IFormLinkGetter<IActionRecordGetter> ATAC => _ATACLocation.HasValue ? new FormLink<IActionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ATACLocation.Value, _package.MetaData.Constants)))) : FormLink<IActionRecordGetter>.Null;
+        public IFormLinkGetter<IActionRecordGetter> ATAC => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActionRecordGetter>(_ATACLocation, _package, _recordData);
         #endregion
         #region PLRL
         private int? _PLRLLocation;

@@ -1572,11 +1572,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region LCEPScene
         private int? _LCEPSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> LCEPScene => _LCEPSceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LCEPSceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> LCEPScene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_LCEPSceneLocation, _package, _recordData);
         #endregion
         #region STSCScene
         private int? _STSCSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> STSCScene => _STSCSceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _STSCSceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> STSCScene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_STSCSceneLocation, _package, _recordData);
         #endregion
         #region INTTPhaseIndex
         private int? _INTTPhaseIndexLocation;

@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CraftingSound
         private int? _CraftingSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_CraftingSoundLocation, _package, _recordData);
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
@@ -1906,11 +1906,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ScrapItem
         private int? _ScrapItemLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => _ScrapItemLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScrapItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMiscItemGetter>(_ScrapItemLocation, _package, _recordData);
         #endregion
         #region ModScrapScalar
         private int? _ModScrapScalarLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => _ModScrapScalarLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModScrapScalarLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_ModScrapScalarLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

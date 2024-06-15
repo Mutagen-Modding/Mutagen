@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLinkNullable<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStarfieldMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_ObjectLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

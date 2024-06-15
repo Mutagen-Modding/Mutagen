@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<IFallout4MajorRecordGetter>.Null;
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFallout4MajorRecordGetter>(_ObjectLocation, _package, _recordData);
         #endregion
         private RangeInt32? _ALCALocation;
         #region AliasID

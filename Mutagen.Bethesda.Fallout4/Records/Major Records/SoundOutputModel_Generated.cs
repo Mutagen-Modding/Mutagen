@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region EffectChain
         private int? _EffectChainLocation;
-        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => _EffectChainLocation.HasValue ? new FormLinkNullable<IAudioEffectChainGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EffectChainLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAudioEffectChainGetter>.Null;
+        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAudioEffectChainGetter>(_EffectChainLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

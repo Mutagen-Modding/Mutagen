@@ -2093,15 +2093,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => _ReferenceLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_ReferenceLocation, _package, _recordData);
         #endregion
         #region PackIn
         private int? _PackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> PackIn => _PackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> PackIn => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_PackInLocation, _package, _recordData);
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => _LNAMLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_LNAMLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<UInt32>? MNAM { get; private set; }
         partial void CustomFactoryEnd(

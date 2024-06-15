@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Cell
         private int? _CellLocation;
-        public IFormLinkNullableGetter<ICellGetter> Cell => _CellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        public IFormLinkNullableGetter<ICellGetter> Cell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_CellLocation, _package, _recordData);
         #endregion
         #region Version
         private int? _VersionLocation;

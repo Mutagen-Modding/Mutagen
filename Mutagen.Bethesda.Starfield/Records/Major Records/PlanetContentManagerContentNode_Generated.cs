@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Content
         private int? _ContentLocation;
-        public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => _ContentLocation.HasValue ? new FormLinkNullable<IPlanetContentTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlanetContentTargetGetter>.Null;
+        public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlanetContentTargetGetter>(_ContentLocation, _package, _recordData);
         #endregion
         #region IOVR
         private int? _IOVRLocation;

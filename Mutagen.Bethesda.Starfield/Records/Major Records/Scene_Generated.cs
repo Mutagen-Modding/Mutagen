@@ -4653,7 +4653,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;
@@ -4674,7 +4674,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Template => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_TemplateLocation, _package, _recordData);
         #endregion
         #region BOLV
         private int? _BOLVLocation;
@@ -4694,7 +4694,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SCPP
         private int? _SCPPLocation;
-        public IFormLinkNullableGetter<ISceneGetter> SCPP => _SCPPLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCPPLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> SCPP => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_SCPPLocation, _package, _recordData);
         #endregion
         #region DEVT
         private int? _DEVTLocation;

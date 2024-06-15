@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IColorRecordGetter>(_PresetDefaultLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = Array.Empty<ITintPresetGetter>();
         partial void CustomFactoryEnd(

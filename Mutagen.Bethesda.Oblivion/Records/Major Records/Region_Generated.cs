@@ -2279,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWorldspaceGetter>(_WorldspaceLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = Array.Empty<IRegionAreaGetter>();
         #region RegionAreaLogic

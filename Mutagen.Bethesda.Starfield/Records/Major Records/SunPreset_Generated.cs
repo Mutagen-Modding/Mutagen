@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ReflectionParent
         private int? _ReflectionParentLocation;
-        public IFormLinkNullableGetter<ISunPresetGetter> ReflectionParent => _ReflectionParentLocation.HasValue ? new FormLinkNullable<ISunPresetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReflectionParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISunPresetGetter>.Null;
+        public IFormLinkNullableGetter<ISunPresetGetter> ReflectionParent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISunPresetGetter>(_ReflectionParentLocation, _package, _recordData);
         #endregion
         #region ReflectionDiff
         private int? _ReflectionDiffLocation;

@@ -261,8 +261,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         if (data.RecordType.HasValue)
         {
             if (dataType != null) throw new ArgumentException();
-            recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)})";
-            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {nameof(FormKeyBinaryTranslation)}.Instance.{nameof(FormKeyBinaryTranslation.OverlayNullableHelper)}<{linkType.GenericString}>(_{typeGen.Name}Location, _package, {recordDataAccessor});");
         }
         else
         {

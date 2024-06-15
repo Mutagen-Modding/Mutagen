@@ -4592,7 +4592,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IHarvestTargetGetter>(_IngredientLocation, _package, _recordData);
         #endregion
         public ISoundReferenceGetter? PFHS { get; private set; }
         #region Production
@@ -4603,7 +4603,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; private set; }
         #region ActionKeyword
         private int? _ActionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => _ActionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_ActionKeywordLocation, _package, _recordData);
         #endregion
         #region BNAM
         private int? _BNAMLocation;
@@ -4619,15 +4619,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaxGlobal
         private int? _MaxGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> MaxGlobal => _MaxGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> MaxGlobal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_MaxGlobalLocation, _package, _recordData);
         #endregion
         #region MinGlobal
         private int? _MinGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> MinGlobal => _MinGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> MinGlobal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_MinGlobalLocation, _package, _recordData);
         #endregion
         #region Explosion
         private int? _ExplosionLocation;
-        public IFormLinkNullableGetter<IExplosionGetter> Explosion => _ExplosionLocation.HasValue ? new FormLinkNullable<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExplosionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExplosionGetter>.Null;
+        public IFormLinkNullableGetter<IExplosionGetter> Explosion => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IExplosionGetter>(_ExplosionLocation, _package, _recordData);
         #endregion
         public ISoundReferenceGetter? FHLS { get; private set; }
         partial void CustomFactoryEnd(

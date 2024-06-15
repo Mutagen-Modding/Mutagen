@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Restriction
         private int? _RestrictionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Restriction => _RestrictionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RestrictionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> Restriction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_RestrictionLocation, _package, _recordData);
         #endregion
         #region PerkIcon
         private int? _PerkIconLocation;
@@ -2633,7 +2633,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Training
         private int? _TrainingLocation;
-        public IFormLinkNullableGetter<IPerkGetter> Training => _TrainingLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrainingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> Training => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPerkGetter>(_TrainingLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = Array.Empty<IPerkRankGetter>();
         public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = Array.Empty<IFormLinkGetter<IPerkGetter>>();

@@ -2668,11 +2668,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ApplicableItemList
         private int? _ApplicableItemListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => _ApplicableItemListLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ApplicableItemListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_ApplicableItemListLocation, _package, _recordData);
         #endregion
         #region LegendaryTemplateList
         private int? _LegendaryTemplateListLocation;
-        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => _LegendaryTemplateListLocation.HasValue ? new FormLinkNullable<ILegendaryItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LegendaryTemplateListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILegendaryItemGetter>.Null;
+        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILegendaryItemGetter>(_LegendaryTemplateListLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; private set; }
         public IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; private set; }

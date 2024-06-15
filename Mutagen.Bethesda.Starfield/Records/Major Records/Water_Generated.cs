@@ -3134,11 +3134,11 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? WASH { get; private set; }
         #region ConsumeSpell
         private int? _ConsumeSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> ConsumeSpell => _ConsumeSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConsumeSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> ConsumeSpell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISpellGetter>(_ConsumeSpellLocation, _package, _recordData);
         #endregion
         #region ContactSpell
         private int? _ContactSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> ContactSpell => _ContactSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContactSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> ContactSpell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISpellGetter>(_ContactSpellLocation, _package, _recordData);
         #endregion
         #region DATA
         private int? _DATALocation;
@@ -3182,31 +3182,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region RiverAbsorptionCurve
         private int? _RiverAbsorptionCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> RiverAbsorptionCurve => _RiverAbsorptionCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RiverAbsorptionCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> RiverAbsorptionCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_RiverAbsorptionCurveLocation, _package, _recordData);
         #endregion
         #region OceanAbsorptionCurve
         private int? _OceanAbsorptionCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> OceanAbsorptionCurve => _OceanAbsorptionCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OceanAbsorptionCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> OceanAbsorptionCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_OceanAbsorptionCurveLocation, _package, _recordData);
         #endregion
         #region RiverScatteringCurve
         private int? _RiverScatteringCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> RiverScatteringCurve => _RiverScatteringCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RiverScatteringCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> RiverScatteringCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_RiverScatteringCurveLocation, _package, _recordData);
         #endregion
         #region OceanScatteringCurve
         private int? _OceanScatteringCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> OceanScatteringCurve => _OceanScatteringCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OceanScatteringCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> OceanScatteringCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_OceanScatteringCurveLocation, _package, _recordData);
         #endregion
         #region PhytoplanktonCurve
         private int? _PhytoplanktonCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> PhytoplanktonCurve => _PhytoplanktonCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhytoplanktonCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> PhytoplanktonCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_PhytoplanktonCurveLocation, _package, _recordData);
         #endregion
         #region SedimentCurve
         private int? _SedimentCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> SedimentCurve => _SedimentCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SedimentCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> SedimentCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_SedimentCurveLocation, _package, _recordData);
         #endregion
         #region YelowMatterCurve
         private int? _YelowMatterCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> YelowMatterCurve => _YelowMatterCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _YelowMatterCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> YelowMatterCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurve3DGetter>(_YelowMatterCurveLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

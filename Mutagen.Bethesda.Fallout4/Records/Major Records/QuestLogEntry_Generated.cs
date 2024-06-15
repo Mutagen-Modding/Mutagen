@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> NextQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_NextQuestLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

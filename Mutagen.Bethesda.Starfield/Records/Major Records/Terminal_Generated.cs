@@ -4021,7 +4021,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Menu
         private int? _MenuLocation;
-        public IFormLinkNullableGetter<ITerminalMenuGetter> Menu => _MenuLocation.HasValue ? new FormLinkNullable<ITerminalMenuGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalMenuGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> Menu => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalMenuGetter>(_MenuLocation, _package, _recordData);
         #endregion
         #region Background
         private int? _BackgroundLocation;
@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FurnitureTemplate
         private int? _FurnitureTemplateLocation;
-        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => _FurnitureTemplateLocation.HasValue ? new FormLinkNullable<IFurnitureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FurnitureTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFurnitureGetter>.Null;
+        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFurnitureGetter>(_FurnitureTemplateLocation, _package, _recordData);
         #endregion
         #region FNPR
         private int? _FNPRLocation;

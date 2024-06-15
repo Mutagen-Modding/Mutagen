@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMagicEffectGetter>(_BaseEffectLocation, _package, _recordData);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -1837,15 +1837,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Magnitude
         private int? _MagnitudeLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Magnitude => _MagnitudeLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MagnitudeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Magnitude => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_MagnitudeLocation, _package, _recordData);
         #endregion
         #region Area
         private int? _AreaLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Area => _AreaLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AreaLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Area => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_AreaLocation, _package, _recordData);
         #endregion
         #region Duration
         private int? _DurationLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Duration => _DurationLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DurationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Duration => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_DurationLocation, _package, _recordData);
         #endregion
         #region MAGF
         private int? _MAGFLocation;

@@ -1444,11 +1444,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region GNAM
         private int? _GNAMLocation;
-        public IFormLinkNullableGetter<IPackInGetter> GNAM => _GNAMLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> GNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_GNAMLocation, _package, _recordData);
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> HNAM => _HNAMLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_HNAMLocation, _package, _recordData);
         #endregion
         #region INAM
         private int? _INAMLocation;
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region JNAM
         private int? _JNAMLocation;
-        public IFormLinkNullableGetter<IPackInGetter> JNAM => _JNAMLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _JNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> JNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_JNAMLocation, _package, _recordData);
         #endregion
         #region LNAM
         private int? _LNAMLocation;

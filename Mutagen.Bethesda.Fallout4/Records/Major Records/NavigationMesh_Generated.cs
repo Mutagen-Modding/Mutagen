@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticTargetGetter>(_ONAMLocation, _package, _recordData);
         #endregion
         #region NNAM
         private int? _NNAMLocation;

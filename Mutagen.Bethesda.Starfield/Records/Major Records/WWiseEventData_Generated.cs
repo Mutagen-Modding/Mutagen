@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Condition
         private int? _ConditionLocation;
-        public IFormLinkNullableGetter<IConditionRecordGetter> Condition => _ConditionLocation.HasValue ? new FormLinkNullable<IConditionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConditionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConditionRecordGetter>.Null;
+        public IFormLinkNullableGetter<IConditionRecordGetter> Condition => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IConditionRecordGetter>(_ConditionLocation, _package, _recordData);
         #endregion
         #region End
         private int? _EndLocation;

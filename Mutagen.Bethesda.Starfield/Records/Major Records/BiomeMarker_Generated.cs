@@ -2918,15 +2918,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region MarkerType
         private int? _MarkerTypeLocation;
-        public IFormLinkGetter<IKeywordGetter> MarkerType => _MarkerTypeLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> MarkerType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_MarkerTypeLocation, _package, _recordData);
         #endregion
         #region FloraList
         private int? _FloraListLocation;
-        public IFormLinkGetter<ILeveledItemGetter> FloraList => _FloraListLocation.HasValue ? new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FloraListLocation.Value, _package.MetaData.Constants)))) : FormLink<ILeveledItemGetter>.Null;
+        public IFormLinkGetter<ILeveledItemGetter> FloraList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_FloraListLocation, _package, _recordData);
         #endregion
         #region LNA2
         private int? _LNA2Location;
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> LNA2 => _LNA2Location.HasValue ? new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNA2Location.Value, _package.MetaData.Constants)))) : FormLink<IStarfieldMajorRecordGetter>.Null;
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> LNA2 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_LNA2Location, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

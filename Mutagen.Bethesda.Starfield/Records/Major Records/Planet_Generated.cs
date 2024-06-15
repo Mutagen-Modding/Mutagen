@@ -3411,7 +3411,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
-        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => _SurfaceTreeLocation.HasValue ? new FormLinkNullable<ISurfaceTreeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceTreeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceTreeGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfaceTreeGetter>(_SurfaceTreeLocation, _package, _recordData);
         #endregion
         #region GNAM
         private int? _GNAMLocation;

@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Submenu
         private int? _SubmenuLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> Submenu => _SubmenuLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubmenuLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalGetter> Submenu => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalGetter>(_SubmenuLocation, _package, _recordData);
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;

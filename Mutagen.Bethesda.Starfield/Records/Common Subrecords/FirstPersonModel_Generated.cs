@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<ILayeredMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayeredMaterialSwapGetter>.Null;
+        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayeredMaterialSwapGetter>(_MaterialSwapLocation, _package, _recordData);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;

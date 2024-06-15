@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? CraftingSound { get; private set; }
         #region List
         private int? _ListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> List => _ListLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> List => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_ListLocation, _package, _recordData);
         #endregion
         #region Rarity
         private int? _RarityLocation;
@@ -2612,15 +2612,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => _ActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_ActorValueLocation, _package, _recordData);
         #endregion
         #region Produce
         private int? _ProduceLocation;
-        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => _ProduceLocation.HasValue ? new FormLinkNullable<IResourceTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ProduceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IResourceTargetGetter>.Null;
+        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IResourceTargetGetter>(_ProduceLocation, _package, _recordData);
         #endregion
         #region Interval
         private int? _IntervalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Interval => _IntervalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntervalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Interval => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_IntervalLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

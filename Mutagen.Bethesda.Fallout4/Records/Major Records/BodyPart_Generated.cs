@@ -4357,23 +4357,23 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region GoreEffectsDismemberBloodArt
         private int? _GoreEffectsDismemberBloodArtLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> GoreEffectsDismemberBloodArt => _GoreEffectsDismemberBloodArtLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoreEffectsDismemberBloodArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> GoreEffectsDismemberBloodArt => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_GoreEffectsDismemberBloodArtLocation, _package, _recordData);
         #endregion
         #region GoreEffectsBloodImpactMaterialType
         private int? _GoreEffectsBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => _GoreEffectsBloodImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoreEffectsBloodImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_GoreEffectsBloodImpactMaterialTypeLocation, _package, _recordData);
         #endregion
         #region OnCrippleBloodImpactMaterialType
         private int? _OnCrippleBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => _OnCrippleBloodImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OnCrippleBloodImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_OnCrippleBloodImpactMaterialTypeLocation, _package, _recordData);
         #endregion
         #region MeatCapTextureSet
         private int? _MeatCapTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => _MeatCapTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MeatCapTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_MeatCapTextureSetLocation, _package, _recordData);
         #endregion
         #region CollarTextureSet
         private int? _CollarTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => _CollarTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CollarTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_CollarTextureSetLocation, _package, _recordData);
         #endregion
         #region TwistVariablePrefix
         private int? _TwistVariablePrefixLocation;

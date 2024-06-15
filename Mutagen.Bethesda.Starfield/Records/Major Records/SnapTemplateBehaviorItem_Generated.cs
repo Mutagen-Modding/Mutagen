@@ -1498,16 +1498,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BaseObject
         private int? _BaseObjectLocation;
-        public IFormLinkGetter<IBaseObjectGetter> BaseObject => _BaseObjectLocation.HasValue ? new FormLink<IBaseObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<IBaseObjectGetter>.Null;
+        public IFormLinkGetter<IBaseObjectGetter> BaseObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBaseObjectGetter>(_BaseObjectLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region SnapTemplateNode
         private int? _SnapTemplateNodeLocation;
-        public IFormLinkGetter<ISnapTemplateNodeGetter> SnapTemplateNode => _SnapTemplateNodeLocation.HasValue ? new FormLink<ISnapTemplateNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapTemplateNodeLocation.Value, _package.MetaData.Constants)))) : FormLink<ISnapTemplateNodeGetter>.Null;
+        public IFormLinkGetter<ISnapTemplateNodeGetter> SnapTemplateNode => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateNodeGetter>(_SnapTemplateNodeLocation, _package, _recordData);
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

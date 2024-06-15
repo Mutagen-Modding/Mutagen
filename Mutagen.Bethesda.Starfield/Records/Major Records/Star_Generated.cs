@@ -2288,7 +2288,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SunPreset
         private int? _SunPresetLocation;
-        public IFormLinkNullableGetter<ISunPresetGetter> SunPreset => _SunPresetLocation.HasValue ? new FormLinkNullable<ISunPresetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunPresetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISunPresetGetter>.Null;
+        public IFormLinkNullableGetter<ISunPresetGetter> SunPreset => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISunPresetGetter>(_SunPresetLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

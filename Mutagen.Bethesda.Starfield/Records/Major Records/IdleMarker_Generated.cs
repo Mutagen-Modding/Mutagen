@@ -2600,11 +2600,11 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         #region AnimationFlavor
         private int? _AnimationFlavorLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor => _AnimationFlavorLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationFlavorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_AnimationFlavorLocation, _package, _recordData);
         #endregion
         #region PNAM
         private int? _PNAMLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PNAM => _PNAMLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_PNAMLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

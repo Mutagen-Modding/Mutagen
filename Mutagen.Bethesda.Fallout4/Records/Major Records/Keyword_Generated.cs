@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;
-        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAttractionRuleGetter>(_AttractionRuleLocation, _package, _recordData);
         #endregion
         #region Name
         private int? _NameLocation;

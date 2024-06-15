@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SpawnOnDestroy
         private int? _SpawnOnDestroyLocation;
-        public IFormLinkNullableGetter<IPlaceableObjectGetter> SpawnOnDestroy => _SpawnOnDestroyLocation.HasValue ? new FormLinkNullable<IPlaceableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpawnOnDestroyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlaceableObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlaceableObjectGetter> SpawnOnDestroy => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlaceableObjectGetter>(_SpawnOnDestroyLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

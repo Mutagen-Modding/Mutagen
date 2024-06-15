@@ -4555,17 +4555,17 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Plants { get; private set; }
         #region ResourceGenerationData
         private int? _ResourceGenerationDataLocation;
-        public IFormLinkNullableGetter<IResourceGenerationDataGetter> ResourceGenerationData => _ResourceGenerationDataLocation.HasValue ? new FormLinkNullable<IResourceGenerationDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResourceGenerationDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IResourceGenerationDataGetter>.Null;
+        public IFormLinkNullableGetter<IResourceGenerationDataGetter> ResourceGenerationData => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IResourceGenerationDataGetter>(_ResourceGenerationDataLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IBiomeFNAMItemGetter> FNAMs { get; private set; } = Array.Empty<IBiomeFNAMItemGetter>();
         #region BiomeSwap
         private int? _BiomeSwapLocation;
-        public IFormLinkNullableGetter<IBiomeSwapGetter> BiomeSwap => _BiomeSwapLocation.HasValue ? new FormLinkNullable<IBiomeSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBiomeSwapGetter>.Null;
+        public IFormLinkNullableGetter<IBiomeSwapGetter> BiomeSwap => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBiomeSwapGetter>(_BiomeSwapLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; private set; } = Array.Empty<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClimateGetter>(_ClimateLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IBiomeWaterDataGetter> WaterDatas { get; private set; } = Array.Empty<IBiomeWaterDataGetter>();
         #region WNAM
@@ -4582,19 +4582,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AmbientSet
         private int? _AmbientSetLocation;
-        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => _AmbientSetLocation.HasValue ? new FormLinkNullable<IAmbienceSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmbientSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAmbienceSetGetter>.Null;
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAmbienceSetGetter>(_AmbientSetLocation, _package, _recordData);
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
         #endregion
         #region NAM0
         private int? _NAM0Location;
-        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 => _NAM0Location.HasValue ? new FormLinkNullable<ITimeOfDayRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM0Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayRecordGetter>.Null;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITimeOfDayRecordGetter>(_NAM0Location, _package, _recordData);
         #endregion
         #region PatternStyle
         private int? _PatternStyleLocation;
-        public IFormLinkNullableGetter<ISurfacePatternStyleGetter> PatternStyle => _PatternStyleLocation.HasValue ? new FormLinkNullable<ISurfacePatternStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PatternStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfacePatternStyleGetter>.Null;
+        public IFormLinkNullableGetter<ISurfacePatternStyleGetter> PatternStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfacePatternStyleGetter>(_PatternStyleLocation, _package, _recordData);
         #endregion
         #region CNAM
         private int? _CNAMLocation;
@@ -4636,15 +4636,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NAM2
         private int? _NAM2Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM2 => _NAM2Location.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> NAM2 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_NAM2Location, _package, _recordData);
         #endregion
         #region NAM3
         private int? _NAM3Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM3 => _NAM3Location.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM3Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> NAM3 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_NAM3Location, _package, _recordData);
         #endregion
         #region NAM4
         private int? _NAM4Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM4 => _NAM4Location.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> NAM4 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_NAM4Location, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

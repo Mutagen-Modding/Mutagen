@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEnchantmentGetter>(_EnchantmentLocation, _package, _recordData);
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

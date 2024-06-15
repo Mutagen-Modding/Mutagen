@@ -1982,11 +1982,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundCategoryGetter>(_ParentLocation, _package, _recordData);
         #endregion
         #region MenuSlider
         private int? _MenuSliderLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => _MenuSliderLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSliderLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundCategoryGetter>(_MenuSliderLocation, _package, _recordData);
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;

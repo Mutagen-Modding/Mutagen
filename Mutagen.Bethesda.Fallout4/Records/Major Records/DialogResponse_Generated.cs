@@ -2130,11 +2130,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_SpeakerIdleAnimationLocation, _package, _recordData);
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_ListenerIdleAnimationLocation, _package, _recordData);
         #endregion
         #region InterruptPercentageTNAM
         public partial ParseResult InterruptPercentageTNAMCustomParse(
@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => _CameraPathLocation.HasValue ? new FormLinkNullable<ICameraPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICameraPathGetter>.Null;
+        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICameraPathGetter>(_CameraPathLocation, _package, _recordData);
         #endregion
         #region StopOnSceneEnd
         private int? _StopOnSceneEndLocation;

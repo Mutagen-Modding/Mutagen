@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = Array.Empty<IFormListConditionalEntryGetter>();
         #region ANAM
         private int? _ANAMLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ANAM => _ANAMLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ANAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_ANAMLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

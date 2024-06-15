@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AnimationFaceArchetype
         private int? _AnimationFaceArchetypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype => _AnimationFaceArchetypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationFaceArchetypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_AnimationFaceArchetypeLocation, _package, _recordData);
         #endregion
         #region PNAM
         private int? _PNAMLocation;

@@ -3930,7 +3930,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FeaturedItemMessage
         private int? _FeaturedItemMessageLocation;
-        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => _FeaturedItemMessageLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FeaturedItemMessageLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_FeaturedItemMessageLocation, _package, _recordData);
         #endregion
         private RangeInt32? _DATALocation;
         #region Value
@@ -3983,11 +3983,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
-        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => _InventoryArtLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InventoryArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_InventoryArtLocation, _package, _recordData);
         #endregion
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Scene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_SceneLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

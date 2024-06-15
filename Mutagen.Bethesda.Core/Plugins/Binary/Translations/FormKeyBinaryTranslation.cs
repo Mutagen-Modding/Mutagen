@@ -2,10 +2,12 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Translations.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -103,5 +105,19 @@ public sealed class FormKeyBinaryTranslation
     {
         if (item.FormKeyNullable == null) return;
         Write(writer, item.ToStandardizedIdentifier(), header);
+    }
+
+    internal IFormLinkNullableGetter<TMajor> OverlayNullableHelper<TMajor>(
+        int? location,
+        BinaryOverlayFactoryPackage package,
+        ReadOnlyMemorySlice<byte> recordData)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return location.HasValue ? 
+            new FormLinkNullable<TMajor>(
+                FormKey.Factory(
+                    package.MetaData.MasterReferences,
+                    BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(recordData, location.Value, package.MetaData.Constants)))) : 
+            FormLinkNullable<TMajor>.Null;
     }
 }

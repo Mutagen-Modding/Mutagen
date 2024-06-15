@@ -3057,7 +3057,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
         #region LooseMod
         private int? _LooseModLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => _LooseModLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LooseModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMiscItemGetter>(_LooseModLocation, _package, _recordData);
         #endregion
         #region Priority
         private int? _PriorityLocation;

@@ -2802,11 +2802,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => _SnapBehaviorLocation.HasValue ? new FormLinkNullable<ISnapTemplateBehaviorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapBehaviorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateBehaviorGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateBehaviorGetter>(_SnapBehaviorLocation, _package, _recordData);
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public IFormLinkNullableGetter<IMaterialPathGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialPathGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialPathGetter> Material => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialPathGetter>(_MaterialLocation, _package, _recordData);
         #endregion
         private RangeInt32? _DATALocation;
         public ProjectedDecal.DATADataType DATADataTypeState { get; private set; }

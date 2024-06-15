@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Idle
         private int? _IdleLocation;
-        public IFormLinkGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
+        public IFormLinkGetter<IIdleAnimationGetter> Idle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_IdleLocation, _package, _recordData);
         #endregion
         #region Topics
         partial void TopicsCustomParse(

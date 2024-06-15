@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ImageSpaceAdapter
         private int? _ImageSpaceAdapterLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => _ImageSpaceAdapterLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceAdapterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceAdapterGetter>(_ImageSpaceAdapterLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

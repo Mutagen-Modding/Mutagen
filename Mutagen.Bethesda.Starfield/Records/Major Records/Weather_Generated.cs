@@ -7487,11 +7487,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IShaderParticleGeometryGetter>(_PrecipitationLocation, _package, _recordData);
         #endregion
         #region CameraEffect
         private int? _CameraEffectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => _CameraEffectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_CameraEffectLocation, _package, _recordData);
         #endregion
         #region CLDC
         private int? _CLDCLocation;
@@ -7882,7 +7882,7 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILensFlareGetter>(_SunGlareLensFlareLocation, _package, _recordData);
         #endregion
         #region Magic
         private RangeInt32? _MagicLocation;

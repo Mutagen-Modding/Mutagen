@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AffinityChange
         private int? _AffinityChangeLocation;
-        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityChange => _AffinityChangeLocation.HasValue ? new FormLinkNullable<IAffinityEventGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AffinityChangeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAffinityEventGetter>.Null;
+        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityChange => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAffinityEventGetter>(_AffinityChangeLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<IQuestStageRewardDataGetter> RewardDatas { get; private set; } = Array.Empty<IQuestStageRewardDataGetter>();
         partial void CustomFactoryEnd(

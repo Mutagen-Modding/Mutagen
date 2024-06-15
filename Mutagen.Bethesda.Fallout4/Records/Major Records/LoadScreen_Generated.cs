@@ -2069,11 +2069,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticObjectGetter>.Null;
+        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticObjectGetter>(_LoadingScreenNifLocation, _package, _recordData);
         #endregion
         #region Transform
         private int? _TransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> Transform => _TransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        public IFormLinkNullableGetter<ITransformGetter> Transform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_TransformLocation, _package, _recordData);
         #endregion
         public ILoadScreenRotationGetter? Rotation { get; private set; }
         public ILoadScreenZoomGetter? Zoom { get; private set; }

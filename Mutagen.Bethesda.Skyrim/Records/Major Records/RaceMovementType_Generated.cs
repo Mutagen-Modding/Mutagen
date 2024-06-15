@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_MovementTypeLocation, _package, _recordData);
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;

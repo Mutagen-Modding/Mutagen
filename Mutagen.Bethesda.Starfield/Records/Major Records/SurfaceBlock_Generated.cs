@@ -2873,7 +2873,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISurfaceBlockFloatItemGetter? NAM4 { get; private set; }
         #region NAM5
         private int? _NAM5Location;
-        public IFormLinkNullableGetter<ISurfaceBlockGetter> NAM5 => _NAM5Location.HasValue ? new FormLinkNullable<ISurfaceBlockGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceBlockGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceBlockGetter> NAM5 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfaceBlockGetter>(_NAM5Location, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

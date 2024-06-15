@@ -2981,7 +2981,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<IGenericBaseFormTemplateGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IGenericBaseFormTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGenericBaseFormTemplateGetter>.Null;
+        public IFormLinkNullableGetter<IGenericBaseFormTemplateGetter> Template => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGenericBaseFormTemplateGetter>(_TemplateLocation, _package, _recordData);
         #endregion
         public IReadOnlyList<String> STRVs { get; private set; } = Array.Empty<String>();
         public IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; private set; }

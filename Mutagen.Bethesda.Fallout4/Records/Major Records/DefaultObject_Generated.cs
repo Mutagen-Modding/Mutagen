@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IFallout4MajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLinkNullable<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFallout4MajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IFallout4MajorRecordGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFallout4MajorRecordGetter>(_ObjectLocation, _package, _recordData);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

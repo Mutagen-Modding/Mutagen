@@ -2027,15 +2027,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region PrimaryDescriptor
         private int? _PrimaryDescriptorLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PrimaryDescriptor => _PrimaryDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrimaryDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PrimaryDescriptor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PrimaryDescriptorLocation, _package, _recordData);
         #endregion
         #region ExteriorTail
         private int? _ExteriorTailLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> ExteriorTail => _ExteriorTailLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExteriorTailLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> ExteriorTail => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_ExteriorTailLocation, _package, _recordData);
         #endregion
         #region VatsDescriptor
         private int? _VatsDescriptorLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> VatsDescriptor => _VatsDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VatsDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> VatsDescriptor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_VatsDescriptorLocation, _package, _recordData);
         #endregion
         #region VatsThreshold
         private int? _VatsThresholdLocation;
