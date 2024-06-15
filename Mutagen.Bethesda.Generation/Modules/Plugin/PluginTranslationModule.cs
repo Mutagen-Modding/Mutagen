@@ -455,6 +455,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem));");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Parallel)} = param.Parallel;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.MasterReferences)} = MasterReferenceCollection.FromPath(path, {gameReleaseStr}, fileSystem: param.FileSystem);");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Absorb)}(param.StringsParam);");
@@ -1750,28 +1751,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 locationAccessor: "(stream.Position - offset)",
                                                 packageAccessor: "_package",
                                                 converterAccessor: recConverter);
-                                            if (obj.GetObjectType() == ObjectType.Mod
-                                                && field.Field.Name == "ModHeader")
-                                            {
-                                                using (var args = sb.Call(
-                                                           $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}!.SetTo"))
-                                                {
-                                                    args.Add(subFg =>
-                                                    {
-                                                        subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                        using (subFg.IncreaseDepth())
-                                                        {
-                                                            subFg.AppendLine(
-                                                                $"master => new {nameof(MasterReference)}()");
-                                                            using (subFg.CurlyBrace(appendParenthesis: true))
-                                                            {
-                                                                subFg.AppendLine("Master = master.Master,");
-                                                                subFg.AppendLine("FileSize = master.FileSize,");
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
 
                                             return false;
                                         });
@@ -1910,33 +1889,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                                     locationAccessor: "(stream.Position - offset)",
                                                                     packageAccessor: "_package",
                                                                     converterAccessor: recConverter);
-                                                            }
-
-                                                            if (obj.GetObjectType() == ObjectType.Mod
-                                                                && doublesField.Field.Name == "ModHeader")
-                                                            {
-                                                                using (var args = sb.Call(
-                                                                           $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}!.SetTo"))
-                                                                {
-                                                                    args.Add(subFg =>
-                                                                    {
-                                                                        subFg.AppendLine(
-                                                                            "this.ModHeader.MasterReferences.Select(");
-                                                                        using (subFg.IncreaseDepth())
-                                                                        {
-                                                                            subFg.AppendLine(
-                                                                                $"master => new {nameof(MasterReference)}()");
-                                                                            using (subFg.CurlyBrace(
-                                                                                appendParenthesis: true))
-                                                                            {
-                                                                                subFg.AppendLine(
-                                                                                    "Master = master.Master,");
-                                                                                subFg.AppendLine(
-                                                                                    "FileSize = master.FileSize,");
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }
                                                             }
 
                                                             return false;
@@ -2649,6 +2601,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             sb.AppendLine($"{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem))");
                         }
                         sb.AppendLine($"meta.{nameof(ParsingMeta.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
+                        sb.AppendLine($"meta.{nameof(ParsingMeta.MasterReferences)} = MasterReferenceCollection.FromPath(path, {gameReleaseStr}, fileSystem: param.FileSystem);");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {

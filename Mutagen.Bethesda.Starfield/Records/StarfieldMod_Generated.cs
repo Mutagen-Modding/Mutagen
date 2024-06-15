@@ -8996,6 +8996,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
                     frame.MetaData.Parallel = param.Parallel;
                     frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
                     frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -9036,6 +9037,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
                     frame.MetaData.Parallel = param.Parallel;
                     frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
                     frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -10086,6 +10088,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
                     frame.MetaData.Parallel = param.Parallel;
                     frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
                     frame.MetaData.Absorb(param.StringsParam);
                     if (reader.Remaining < 12)
                     {
@@ -34297,6 +34300,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: param.FileSystem))
             };
             meta.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
+            meta.MasterReferences = MasterReferenceCollection.FromPath(path, release.ToGameRelease(), fileSystem: param.FileSystem);
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,
@@ -34359,13 +34363,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TES4:
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
-                    _package.MetaData.MasterReferences!.SetTo(
-                        this.ModHeader.MasterReferences.Select(
-                            master => new MasterReference()
-                            {
-                                Master = master.Master,
-                                FileSize = master.FileSize,
-                            }));
                     return (int)StarfieldMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:

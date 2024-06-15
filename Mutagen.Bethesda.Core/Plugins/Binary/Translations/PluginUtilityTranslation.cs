@@ -398,7 +398,6 @@ internal static class PluginUtilityTranslation
             nextRecordType: modHeader.RecordType,
             contentLength: checked((int)modHeader.ContentLength),
             translationParams: null);
-        frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
         while (!frame.Complete)
         {
             var groupHeader = frame.GetGroupHeader();

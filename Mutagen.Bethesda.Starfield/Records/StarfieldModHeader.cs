@@ -56,7 +56,6 @@ partial class StarfieldModHeaderBinaryCreateTranslation
                 reader: frame.SpawnAll(),
                 triggeringRecord: RecordTypes.MAST,
                 transl: MasterReference.TryCreateFromBinary));
-        frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
     }
 }
 

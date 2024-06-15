@@ -19,7 +19,7 @@ public sealed class ParsingMeta
     /// <summary>
     /// Masters to reference while reading
     /// </summary>
-    public IMasterReferenceCollection MasterReferences { get; }
+    public IReadOnlyMasterReferenceCollection MasterReferences { get; set; }
 
     /// <summary>
     /// Optional RecordInfoCache to reference while reading
@@ -60,7 +60,7 @@ public sealed class ParsingMeta
     public ParsingMeta(
         GameConstants constants,
         ModKey modKey,
-        IMasterReferenceCollection masterReferences)
+        IReadOnlyMasterReferenceCollection masterReferences)
     {
         Constants = constants;
         ModKey = modKey;
