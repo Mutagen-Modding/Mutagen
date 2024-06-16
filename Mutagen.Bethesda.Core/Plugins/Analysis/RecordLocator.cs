@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
@@ -57,15 +56,12 @@ public sealed class RecordLocator
 
     public static RecordLocatorResults GetLocations(
         ModPath filePath,
-        GameConstants constants,
+        GameRelease release,
         RecordInterest? interest = null)
     {
         using var stream = new MutagenBinaryReadStream(
             filePath,
-            new ParsingMeta(
-                constants, 
-                filePath.ModKey,
-                MasterReferenceCollection.FromPath(filePath, constants.Release)));
+            ParsingMeta.Factory(release, filePath));
         return GetLocations(stream, interest);
     }
 

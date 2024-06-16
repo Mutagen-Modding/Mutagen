@@ -18,6 +18,8 @@ public class SeparatedMasterPackage
     public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
     private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
+
+    internal static readonly SeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
     
     public static SeparatedMasterPackage Factory(
         GameRelease release,

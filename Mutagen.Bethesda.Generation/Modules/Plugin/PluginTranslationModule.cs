@@ -448,17 +448,15 @@ public class PluginTranslationModule : BinaryTranslationModule
 
             sb.AppendLine("param ??= BinaryReadParameters.Default;");
             sb.AppendLine("var fileSystem = param.FileSystem.GetOrDefault();");
-            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
+            sb.AppendLine($"var meta = ParsingMeta.Factory(param, {gameReleaseStr}, path);");
+            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, meta, fileSystem: fileSystem))");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem));");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Parallel)} = param.Parallel;");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.MasterReferences)} = MasterReferenceCollection.FromPath(path, {gameReleaseStr}, fileSystem: param.FileSystem);");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
-                    sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Absorb)}(param.StringsParam);");
                     sb.AppendLine("if (reader.Remaining < 12)");
                     using (sb.CurlyBrace())
                     {
@@ -2595,12 +2593,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                     using (sb.CurlyBrace())
                     {
                         sb.AppendLine("param ??= BinaryReadParameters.Default;");
-                        sb.AppendLine($"var meta = new {nameof(ParsingMeta)}({gameReleaseStr}, path.ModKey, new {nameof(MasterReferenceCollection)}(path.ModKey))");
-                        using (sb.CurlyBrace(appendSemiColon: true))
-                        {
-                            sb.AppendLine($"{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem))");
-                        }
-                        sb.AppendLine($"meta.{nameof(ParsingMeta.ThrowOnUnknown)} = param.ThrowOnUnknownSubrecord;");
+                        sb.AppendLine($"var meta = {nameof(ParsingMeta)}.Factory(param, {gameReleaseStr}, path);");
+                        sb.AppendLine($"meta.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: param.FileSystem));");
                         sb.AppendLine($"meta.{nameof(ParsingMeta.MasterReferences)} = MasterReferenceCollection.FromPath(path, {gameReleaseStr}, fileSystem: param.FileSystem);");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
@@ -2614,7 +2608,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             if (objData.UsesStringFiles)
                             {
-                                sb.AppendLine($"meta.{nameof(ParsingMeta.Absorb)}(param.StringsParam);");
                                 sb.AppendLine("if (stream.Remaining < 12)");
                                 using (sb.CurlyBrace())
                                 {

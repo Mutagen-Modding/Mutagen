@@ -27,7 +27,7 @@ public class OtherTests
         using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Import");
         var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
         mod.WriteToBinary(oblivionOutputPath);
-        var fileLocs = RecordLocator.GetLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
+        var fileLocs = RecordLocator.GetLocations(oblivionOutputPath, release: GameRelease.Oblivion);
         using var reader = new BinaryReadStream(oblivionOutputPath);
         foreach (var rec in fileLocs.ListedRecords.Keys)
         {

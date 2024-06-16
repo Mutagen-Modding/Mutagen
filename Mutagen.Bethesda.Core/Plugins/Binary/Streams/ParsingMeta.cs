@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -57,7 +58,7 @@ public sealed class ParsingMeta
 
     public bool ThrowOnUnknown { get; set; }
 
-    public ParsingMeta(
+    internal ParsingMeta(
         GameConstants constants,
         ModKey modKey,
         IReadOnlyMasterReferenceCollection masterReferences)
@@ -77,7 +78,7 @@ public sealed class ParsingMeta
         // Nothing for now.  Need to implement
     }
 
-    public void Absorb(StringsReadParameters? stringsReadParameters)
+    private void Absorb(StringsReadParameters? stringsReadParameters)
     {
         if (stringsReadParameters == null) return;
         if (stringsReadParameters.TargetLanguage != null)
@@ -108,5 +109,33 @@ public sealed class ParsingMeta
                 NonTranslated = stringsReadParameters.NonTranslatedEncodingOverride
             };
         }
+    }
+
+    private void Absorb(BinaryReadParameters? readParameters)
+    {
+        if (readParameters == null) return;
+        if (Constants.UsesStrings)
+        {
+            Absorb(readParameters.StringsParam);
+        }
+        ThrowOnUnknown = readParameters.ThrowOnUnknownSubrecord;
+        Parallel = readParameters.Parallel;
+    }
+
+    public static ParsingMeta Factory(BinaryReadParameters param, GameRelease release, ModPath modPath)
+    {
+        var rawMasters = MasterReferenceCollection.FromPath(modPath, release, param.FileSystem);
+        var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, rawMasters);
+        meta.Absorb(param);
+        return meta;
+    }
+
+    public static ParsingMeta Factory(GameRelease release, ModPath path)
+    {
+        var constants = GameConstants.Get(release);
+        return new ParsingMeta(
+            constants,
+            path.ModKey,
+            MasterReferenceCollection.FromPath(path, release));
     }
 }

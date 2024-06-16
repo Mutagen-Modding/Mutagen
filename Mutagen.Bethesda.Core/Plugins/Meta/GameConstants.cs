@@ -61,6 +61,8 @@ public sealed record GameConstants
     public float? UseLowerRangeFormIDVersion { get; init; }
     
     public StringsLanguageFormat? StringsLanguageFormat { get; init; }
+
+    public bool UsesStrings => StringsLanguageFormat != null;
     
     public bool SeparateMasterLoadOrders { get; init; }
     
