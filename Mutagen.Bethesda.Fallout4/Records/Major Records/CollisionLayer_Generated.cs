@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.INTV,
                         trigger: RecordTypes.CNAM,
-                        getter: (s, p) => new FormLink<ICollisionLayerGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(p, s));
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }
                 default:

@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
-        public IFormLinkGetter<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<INpcSpawnGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Int16? Count => _structData.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2)) : default(Int16?);
         public Int16? Unknown2 => _structData.Length >= 12 ? BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2)) : default(Int16?);
         partial void CustomFactoryEnd(

@@ -1,7 +1,10 @@
+using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -201,5 +204,17 @@ public sealed class FormLinkBinaryTranslation
         FormKeyBinaryTranslation.Instance.Write(
             writer,
             item);
+    }
+
+    internal IFormLinkGetter<TMajorGetter> OverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlySpan<byte> s, bool isSet = true, bool maxIsNull = false)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return isSet ? new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s), maxIsNull: maxIsNull)) : FormLinkGetter<TMajorGetter>.Null;
+    }
+
+    internal IFormLinkNullableGetter<TMajorGetter> NullableOverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlySpan<byte> s)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s)));
     }
 }

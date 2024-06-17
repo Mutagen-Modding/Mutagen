@@ -9976,7 +9976,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
@@ -9988,7 +9988,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
                     stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LayeredMaterialSwaps;
                 }
@@ -10020,7 +10020,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.ProjectedDecalReferences;
                 }

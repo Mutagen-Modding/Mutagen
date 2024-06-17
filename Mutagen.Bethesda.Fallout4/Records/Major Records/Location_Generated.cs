@@ -5510,7 +5510,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
@@ -5546,7 +5546,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
@@ -5582,7 +5582,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
@@ -5624,7 +5624,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
@@ -5636,7 +5636,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
@@ -5679,7 +5679,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

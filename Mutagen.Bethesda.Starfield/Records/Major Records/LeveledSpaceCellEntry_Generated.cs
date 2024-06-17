@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Reference
         private int _ReferenceLocation => _LVLOLocation!.Value.Min + 0x4;
         private bool _Reference_IsSet => _LVLOLocation.HasValue;
-        public IFormLinkGetter<ISpaceCellSpawnGetter> Reference => _Reference_IsSet ? new FormLink<ISpaceCellSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ReferenceLocation, 0x4)))) : FormLink<ISpaceCellSpawnGetter>.Null;
+        public IFormLinkGetter<ISpaceCellSpawnGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpaceCellSpawnGetter>(_package, _recordData.Span.Slice(_ReferenceLocation, 0x4), isSet: _Reference_IsSet);
         #endregion
         #region Count
         private int _CountLocation => _LVLOLocation!.Value.Min + 0x8;

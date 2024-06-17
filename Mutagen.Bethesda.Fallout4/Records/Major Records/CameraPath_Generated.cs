@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ICameraPathGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(p, s));
                     stream.Position += subLen;
                     return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Shots = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ICameraShotGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraShotGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int NameEndingPos;
         #endregion
-        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(NameEndingPos, 0x4))));
+        public IFormLinkGetter<ITextureSetGetter> NewTexture => FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _structData.Span.Slice(NameEndingPos, 0x4));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(NameEndingPos + 0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -4317,7 +4317,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     stream.Position += subLen;
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }

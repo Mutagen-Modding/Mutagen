@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkGetter<ITransformGetter> Transform => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ITransformGetter> Transform => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

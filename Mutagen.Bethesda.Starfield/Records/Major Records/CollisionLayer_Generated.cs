@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ICollisionLayerGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(p, s));
                     stream.Position += subLen;
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }

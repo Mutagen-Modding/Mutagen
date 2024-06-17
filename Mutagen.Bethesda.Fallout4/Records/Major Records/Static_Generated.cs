@@ -2932,7 +2932,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialObjectGetter>(_package, _recordData.Span.Slice(_MaterialLocation, 0x4), isSet: _Material_IsSet);
         #endregion
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _DNAMLocation!.Value.Min + 0x8;

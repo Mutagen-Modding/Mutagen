@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         itemLength: 4,
                         count: count,
-                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
                     return (int)Model_FieldIndex.MaterialSwaps;
                 }
                 case RecordTypeInts.DMDC:

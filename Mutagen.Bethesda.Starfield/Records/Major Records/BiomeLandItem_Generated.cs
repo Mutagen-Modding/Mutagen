@@ -1166,8 +1166,8 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public UInt32 Index => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<ILandscapeTextureGetter> LandTexture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IGroundCoverGetter> GroundCover => new FormLink<IGroundCoverGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ILandscapeTextureGetter> LandTexture => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandscapeTextureGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IGroundCoverGetter> GroundCover => FormLinkBinaryTranslation.Instance.OverlayFactory<IGroundCoverGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

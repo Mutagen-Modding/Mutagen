@@ -1582,14 +1582,14 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Transforms.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ITransformGetter> InventoryIcon => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Outpost => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Ship => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Preview => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Inventory => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Workbench => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<ITransformGetter> MainGameUI => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Unknown => _structData.Length <= 0x1C ? FormLink<ITransformGetter>.Null : new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
+        public IFormLinkGetter<ITransformGetter> InventoryIcon => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<ITransformGetter> Outpost => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<ITransformGetter> Ship => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<ITransformGetter> Preview => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<ITransformGetter> Inventory => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x10, 0x4));
+        public IFormLinkGetter<ITransformGetter> Workbench => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<ITransformGetter> MainGameUI => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public IFormLinkGetter<ITransformGetter> Unknown => _structData.Length <= 0x1C ? FormLink<ITransformGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2234,7 +2234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.RandomTeleportDestinations = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlaceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

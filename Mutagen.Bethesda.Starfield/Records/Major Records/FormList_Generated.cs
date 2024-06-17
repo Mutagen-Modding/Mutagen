@@ -2266,7 +2266,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.Items = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStarfieldMajorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

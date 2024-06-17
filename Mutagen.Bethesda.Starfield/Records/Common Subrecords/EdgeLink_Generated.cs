@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<INavigationMeshGetter> Mesh => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
         public SByte Unknown2 => (sbyte)_structData.Slice(0xA, 0x1)[0];
         partial void CustomFactoryEnd(

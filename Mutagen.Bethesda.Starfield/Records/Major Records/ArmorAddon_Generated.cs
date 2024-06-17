@@ -3773,7 +3773,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -3829,7 +3829,7 @@ namespace Mutagen.Bethesda.Starfield
                             return BinaryOverlayList.FactoryByArray<IFormLinkGetter<IBoneModifierGetter>>(
                                 mem: s.RemainingMemory,
                                 package: _package,
-                                getter: (s, p) => new FormLink<IBoneModifierGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                                getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IBoneModifierGetter>(p, s),
                                 locs: ParseRecordLocations(
                                     stream: s,
                                     constants: _package.MetaData.Constants.SubConstants,

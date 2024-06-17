@@ -1414,11 +1414,11 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IEffectShaderGetter> EnchantEffect => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ISoundGetter> CastingSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ISoundGetter> BoltSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<ISoundGetter> HitSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public IFormLinkGetter<IEffectShaderGetter> EnchantEffect => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<ISoundGetter> CastingSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<ISoundGetter> BoltSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<ISoundGetter> HitSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<ISoundGetter> AreaSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x10, 0x4));
         public Single ConstantEffectEnchantmentFactor => _structData.Slice(0x14, 0x4).Float();
         public Single ConstantEffectBarterFactor => _structData.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(

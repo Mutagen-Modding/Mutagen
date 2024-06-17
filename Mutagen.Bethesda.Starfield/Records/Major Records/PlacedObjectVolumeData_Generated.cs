@@ -2286,8 +2286,8 @@ namespace Mutagen.Bethesda.Starfield
         public PlacedObjectVolumeData.VersioningBreaks Versioning { get; private set; }
         public Int32 Unknown1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpace => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IFogVolumeGetter> FogVolume => new FormLink<IFogVolumeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpace => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IFogVolumeGetter> FogVolume => FormLinkBinaryTranslation.Instance.OverlayFactory<IFogVolumeGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         public Single Unknown4 => _structData.Slice(0x14, 0x4).Float();
         public Single Unknown5 => _structData.Slice(0x18, 0x4).Float();

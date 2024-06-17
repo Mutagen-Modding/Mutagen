@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IOblivionMajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
         public Single Density => _structData.Slice(0x8, 0x4).Float();

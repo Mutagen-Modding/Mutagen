@@ -3367,8 +3367,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_VoicesLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IRaceGetter>>(
-                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -3381,8 +3381,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_DefaultHairLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IHairGetter>>(
-                    new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -3508,7 +3508,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -3597,7 +3597,7 @@ namespace Mutagen.Bethesda.Oblivion
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IHairGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Race_FieldIndex.Hairs;
                 }
@@ -3609,7 +3609,7 @@ namespace Mutagen.Bethesda.Oblivion
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Race_FieldIndex.Eyes;
                 }

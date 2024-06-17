@@ -4204,7 +4204,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Light
         private int _LightLocation => _ENAMLocation!.Value.Min;
         private bool _Light_IsSet => _ENAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
         #endregion
         #region Sound1
         private int _Sound1Location => _ENAMLocation!.Value.Min + 0x4;
@@ -4221,22 +4221,22 @@ namespace Mutagen.Bethesda.Starfield
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _ENAMLocation!.Value.Min + 0x54;
         private bool _ImpactDataSet_IsSet => _ENAMLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
         #endregion
         #region PlacedObject
         private int _PlacedObjectLocation => _ENAMLocation!.Value.Min + 0x58;
         private bool _PlacedObject_IsSet => _ENAMLocation.HasValue;
-        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<IExplodeSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<IExplodeSpawnGetter>.Null;
+        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplodeSpawnGetter>(_package, _recordData.Span.Slice(_PlacedObjectLocation, 0x4), isSet: _PlacedObject_IsSet);
         #endregion
         #region SpawnProjectile
         private int _SpawnProjectileLocation => _ENAMLocation!.Value.Min + 0x5C;
         private bool _SpawnProjectile_IsSet => _ENAMLocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_SpawnProjectileLocation, 0x4), isSet: _SpawnProjectile_IsSet);
         #endregion
         #region Condition
         private int _ConditionLocation => _ENAMLocation!.Value.Min + 0x60;
         private bool _Condition_IsSet => _ENAMLocation.HasValue;
-        public IFormLinkGetter<IConditionRecordGetter> Condition => _Condition_IsSet ? new FormLink<IConditionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ConditionLocation, 0x4)))) : FormLink<IConditionRecordGetter>.Null;
+        public IFormLinkGetter<IConditionRecordGetter> Condition => FormLinkBinaryTranslation.Instance.OverlayFactory<IConditionRecordGetter>(_package, _recordData.Span.Slice(_ConditionLocation, 0x4), isSet: _Condition_IsSet);
         #endregion
         #region ENAMFloat1
         private int _ENAMFloat1Location => _ENAMLocation!.Value.Min + 0x64;

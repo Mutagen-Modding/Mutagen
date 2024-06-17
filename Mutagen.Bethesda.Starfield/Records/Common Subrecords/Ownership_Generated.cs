@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Owner
         private int _OwnerLocation => _XOWNLocation!.Value.Min;
         private bool _Owner_IsSet => _XOWNLocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public IFormLinkGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.OverlayFactory<IOwnerGetter>(_package, _recordData.Span.Slice(_OwnerLocation, 0x4), isSet: _Owner_IsSet);
         #endregion
         #region Unknown
         private int _UnknownLocation => _XOWNLocation!.Value.Min + 0x4;

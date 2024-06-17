@@ -3010,7 +3010,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM0,
                         female: RecordTypes.NAM1,
                         stream: stream,
-                        creator: static (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ITextureSetGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
                         fallback: FormLinkNullable<ITextureSetGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
@@ -3022,7 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM2,
                         female: RecordTypes.NAM3,
                         stream: stream,
-                        creator: static (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IFormListGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
                         fallback: FormLinkNullable<IFormListGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
@@ -3031,7 +3031,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

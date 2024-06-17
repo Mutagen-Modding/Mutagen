@@ -2249,7 +2249,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Light
         private int _LightLocation => NodeNameEndingPos + 0x8;
         private bool _Light_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
         #endregion
         #region Unknown1
         private int _Unknown1Location => NodeNameEndingPos + 0xC;
@@ -2269,12 +2269,12 @@ namespace Mutagen.Bethesda.Starfield
         #region BeamArtObject
         private int _BeamArtObjectLocation => NodeNameEndingPos + 0x18;
         private bool _BeamArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => _BeamArtObject_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_BeamArtObjectLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_BeamArtObjectLocation, 0x4), isSet: _BeamArtObject_IsSet);
         #endregion
         #region DotArtObject
         private int _DotArtObjectLocation => NodeNameEndingPos + 0x1C;
         private bool _DotArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> DotArtObject => _DotArtObject_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DotArtObjectLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> DotArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_DotArtObjectLocation, 0x4), isSet: _DotArtObject_IsSet);
         #endregion
         #region Unknown3
         private int _Unknown3Location => NodeNameEndingPos + 0x20;

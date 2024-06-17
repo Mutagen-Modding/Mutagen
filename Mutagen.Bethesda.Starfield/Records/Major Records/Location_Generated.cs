@@ -6419,7 +6419,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Faction
         private int _FactionLocation => _DATALocation!.Value.Min;
         private bool _Faction_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IFactionGetter> Faction => _Faction_IsSet ? new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_FactionLocation, 0x4)))) : FormLink<IFactionGetter>.Null;
+        public IFormLinkGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.OverlayFactory<IFactionGetter>(_package, _recordData.Span.Slice(_FactionLocation, 0x4), isSet: _Faction_IsSet);
         #endregion
         #region UnknownDATA
         private int _UnknownDATALocation => _DATALocation!.Value.Min + 0x4;
@@ -6633,7 +6633,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.RemovedPersistLocationReferences;
                 }
@@ -6672,7 +6672,7 @@ namespace Mutagen.Bethesda.Starfield
                             mem: stream.RemainingMemory.Slice(0, subLen),
                             package: _package,
                             itemLength: 4,
-                            getter: (s, p) => new FormLink<IGenericBaseFormGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(p, s));
                         stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.RemovedUniqueBaseForms, type);
                     }
@@ -6684,7 +6684,7 @@ namespace Mutagen.Bethesda.Starfield
                             mem: stream.RemainingMemory.Slice(0, subLen),
                             package: _package,
                             itemLength: 4,
-                            getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
                         stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.RemovedUniqueNpcs, type);
                     }
@@ -6700,7 +6700,7 @@ namespace Mutagen.Bethesda.Starfield
                                     mem: stream.RemainingMemory.Slice(0, subLen),
                                     package: _package,
                                     itemLength: 4,
-                                    getter: (s, p) => new FormLink<IGenericBaseFormGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                                    getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(p, s));
                                 stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.RemovedUniqueBaseForms, type);
                             }
@@ -6712,7 +6712,7 @@ namespace Mutagen.Bethesda.Starfield
                                     mem: stream.RemainingMemory.Slice(0, subLen),
                                     package: _package,
                                     itemLength: 4,
-                                    getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                                    getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
                                 stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.RemovedUniqueNpcs, type);
                             }
@@ -6777,7 +6777,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.RemovedSpecialReferences;
                 }
@@ -6799,7 +6799,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedInitiallyDisabledReferences;
                 }
@@ -6811,7 +6811,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterInitiallyDisabledReferences;
                 }
@@ -6854,7 +6854,7 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:

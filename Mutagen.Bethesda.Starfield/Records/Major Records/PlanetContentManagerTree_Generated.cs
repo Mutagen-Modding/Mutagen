@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.Nodes = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlanetContentManagerBranchNodeGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPlanetContentManagerBranchNodeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlanetContentManagerBranchNodeGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

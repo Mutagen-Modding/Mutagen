@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         itemLength: 4,
                         size: SurfacePattern.SurfaceBlocksFixedSize,
-                        getter: (s, p) => new FormLink<ISurfaceBlockGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfaceBlockGetter>(p, s));
                     return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
                 }
                 case RecordTypeInts.GNAM:
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IWorldspaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(p, s));
                     stream.Position += subLen;
                     return (int)SurfacePattern_FieldIndex.Worldspaces;
                 }

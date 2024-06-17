@@ -2840,7 +2840,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Descriptors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISoundDescriptorGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IComponentGetter> Component => new FormLink<IComponentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComponentGetter> Component => FormLinkBinaryTranslation.Instance.OverlayFactory<IComponentGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

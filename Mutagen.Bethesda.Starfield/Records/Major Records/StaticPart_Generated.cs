@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Static
         private int _StaticLocation => _ONAMLocation!.Value.Min;
         private bool _Static_IsSet => _ONAMLocation.HasValue;
-        public IFormLinkGetter<IStaticTargetGetter> Static => _Static_IsSet ? new FormLink<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_StaticLocation, 0x4)))) : FormLink<IStaticTargetGetter>.Null;
+        public IFormLinkGetter<IStaticTargetGetter> Static => FormLinkBinaryTranslation.Instance.OverlayFactory<IStaticTargetGetter>(_package, _recordData.Span.Slice(_StaticLocation, 0x4), isSet: _Static_IsSet);
         #endregion
         #region Unknown
         private int _UnknownLocation => _ONAMLocation!.Value.Min + 0x4;

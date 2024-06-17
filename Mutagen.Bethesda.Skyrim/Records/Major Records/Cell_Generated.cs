@@ -5873,7 +5873,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IRegionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRegionGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Cell_FieldIndex.Regions;
                 }

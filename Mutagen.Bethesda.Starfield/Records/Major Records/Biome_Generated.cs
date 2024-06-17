@@ -4733,7 +4733,7 @@ namespace Mutagen.Bethesda.Starfield
                             countLength: 4,
                             countType: RecordTypes.KSIZ,
                             trigger: RecordTypes.KWDA,
-                            getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                         return new ParseResult((int)Biome_FieldIndex.Keywords, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Biome_FieldIndex.TNAM)
@@ -4758,7 +4758,7 @@ namespace Mutagen.Bethesda.Starfield
                                     countLength: 4,
                                     countType: RecordTypes.KSIZ,
                                     trigger: RecordTypes.KWDA,
-                                    getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                                    getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                                 return new ParseResult((int)Biome_FieldIndex.Keywords, type);
                             }
                             case 1:
@@ -4788,7 +4788,7 @@ namespace Mutagen.Bethesda.Starfield
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IFloraGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(p, s));
                     stream.Position += subLen;
                     return (int)Biome_FieldIndex.Plants;
                 }
@@ -4819,7 +4819,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.MaterialSwaps = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
