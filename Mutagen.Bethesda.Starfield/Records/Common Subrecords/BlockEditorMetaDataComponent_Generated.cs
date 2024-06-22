@@ -1546,7 +1546,12 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DAT2)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(writer.MetaData.FormVersion!.Value switch
+            {
+                <= 558 => RecordTypes.DATA,
+                _ => RecordTypes.DAT2
+            }
+            )))
             {
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -1628,6 +1633,8 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.DATA
+                    when frame.MetaData.FormVersion <= 558:
                 case RecordTypeInts.DAT2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1836,6 +1843,8 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.DATA
+                    when this._package.FormVersion!.FormVersion <= 558:
                 case RecordTypeInts.DAT2:
                 {
                     _DAT2Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);

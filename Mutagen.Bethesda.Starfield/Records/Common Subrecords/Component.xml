@@ -458,13 +458,13 @@
           <Int32 name="UnknownInt4" />
           <ByteArray name="UnknownEnding" />
         </Fields>
+        <RecordTypeVersioning formVersion="558" recordType="DATA" />
       </Data>
     </Fields>
   </Object>
   <Object name="BlockCellHeightGridComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <ByteArray name="DATA" recordType="DATA" />
-
     </Fields>
   </Object>
   <Object name="BlockHeightAdjustmentComponent" objType="Subrecord" baseClass="AComponent">

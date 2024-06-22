@@ -65,6 +65,9 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.DLBR,
             RecordTypes.DIAL,
             RecordTypes.SCEN);
+        ret.SetGroupAlignment(
+            (int)GroupTypeEnum.CellTemporaryChildren,
+            RecordTypes.NAVM);
         
         ret.StartMarkers.Add(RecordTypes.REFR, new[]
         {
