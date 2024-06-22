@@ -8801,14 +8801,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XPOD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Portals = BinaryOverlayList.FactoryByStartIndex<IPortalGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Portals = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPortalGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => PortalBinaryOverlay.PortalFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.Portals;
                 }
                 case RecordTypeInts.XPTL:
@@ -8848,14 +8846,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:
@@ -9054,14 +9050,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:
@@ -9217,14 +9211,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.DistantLodData;
                 }
                 case RecordTypeInts.DATA:

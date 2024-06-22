@@ -12983,686 +12983,572 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.BlurRadius;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.TintColor = BinaryOverlayList.FactoryByStartIndexWithTrigger<IColorFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 20,
                         getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.FadeColor = BinaryOverlayList.FactoryByStartIndexWithTrigger<IColorFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 20,
                         getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.FadeColor;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldVignetteRadius = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DepthOfFieldVignetteRadius = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius;
                 }
                 case RecordTypeInts.NAM6:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldVignetteStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DepthOfFieldVignetteStrength = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
                 }
                 case RecordTypeInts._0_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
                 }
                 case RecordTypeInts.@IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
                 }
                 case RecordTypeInts._1_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
                 }
                 case RecordTypeInts.AIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
                 }
                 case RecordTypeInts._2_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
                 }
                 case RecordTypeInts.BIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
                 }
                 case RecordTypeInts._3_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
                 }
                 case RecordTypeInts.CIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
                 }
                 case RecordTypeInts._4_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
                 }
                 case RecordTypeInts.DIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
                 }
                 case RecordTypeInts._5_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
                 }
                 case RecordTypeInts.EIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
                 }
                 case RecordTypeInts._6_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
                 }
                 case RecordTypeInts.FIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
                 }
                 case RecordTypeInts._7_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
                 }
                 case RecordTypeInts.GIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
                 }
                 case RecordTypeInts._8_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown08;
                 }
                 case RecordTypeInts.HIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown48;
                 }
                 case RecordTypeInts._9_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown09;
                 }
                 case RecordTypeInts.IIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown49;
                 }
                 case RecordTypeInts._A_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0A;
                 }
                 case RecordTypeInts.JIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4A;
                 }
                 case RecordTypeInts._B_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0B;
                 }
                 case RecordTypeInts.KIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4B;
                 }
                 case RecordTypeInts._C_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0C;
                 }
                 case RecordTypeInts.LIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4C;
                 }
                 case RecordTypeInts._D_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0D;
                 }
                 case RecordTypeInts.MIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4D;
                 }
                 case RecordTypeInts._E_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0E;
                 }
                 case RecordTypeInts.NIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4E;
                 }
                 case RecordTypeInts._F_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0F;
                 }
                 case RecordTypeInts.OIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4F;
                 }
                 case RecordTypeInts._10_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown10;
                 }
                 case RecordTypeInts.PIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown50;
                 }
                 case RecordTypeInts._11_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
                 }
                 case RecordTypeInts.QIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
                 }
                 case RecordTypeInts._12_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
                 }
                 case RecordTypeInts.RIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
                 }
                 case RecordTypeInts._13_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
                 }
                 case RecordTypeInts.SIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
                 }
                 case RecordTypeInts._14_IAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown14;
                 }
                 case RecordTypeInts.TIAD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IKeyFrameGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown54;
                 }
                 default:

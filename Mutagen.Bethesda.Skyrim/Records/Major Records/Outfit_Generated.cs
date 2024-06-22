@@ -1610,14 +1610,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IOutfitTargetGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Items = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IOutfitTargetGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IOutfitTargetGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:

@@ -1783,14 +1783,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GOGL:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Options = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IGameplayOptionsGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Options = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IGameplayOptionsGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGameplayOptionsGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)GameplayOptionsGroup_FieldIndex.Options;
                 }
                 default:

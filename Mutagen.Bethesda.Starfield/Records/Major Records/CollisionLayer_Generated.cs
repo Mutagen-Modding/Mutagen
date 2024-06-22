@@ -2081,14 +2081,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CollidesWith = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICollisionLayerGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CollidesWith = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICollisionLayerGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }
                 default:

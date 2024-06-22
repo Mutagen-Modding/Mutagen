@@ -2204,14 +2204,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MNAM = BinaryOverlayList.FactoryByStartIndex<UInt32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)ReferenceGroup_FieldIndex.MNAM;
                 }
                 default:

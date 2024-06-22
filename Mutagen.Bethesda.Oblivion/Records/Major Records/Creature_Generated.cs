@@ -4161,13 +4161,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.NIFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Models = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Models = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
                     return (int)Creature_FieldIndex.Models;
                 }
                 case RecordTypeInts.NIFT:
@@ -4226,13 +4224,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.KFFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Animations = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
                     return (int)Creature_FieldIndex.Animations;
                 }
                 case RecordTypeInts.DATA:

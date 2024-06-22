@@ -2351,14 +2351,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleRelationGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IIdleRelationGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleRelationGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:

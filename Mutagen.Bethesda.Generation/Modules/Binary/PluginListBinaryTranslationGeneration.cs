@@ -975,15 +975,14 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 break;
             case ListBinaryType.Trigger:
-                sb.AppendLine($"var subMeta = {streamAccessor}.ReadSubrecordHeader();");
-                sb.AppendLine($"var subLen = finalPos - {streamAccessor}.Position;");
                 if (expectedLen.HasValue)
                 {
                     using (var args = sb.Call(
-                               $"{retAccessor}BinaryOverlayList.FactoryByStartIndex<{typeName}>"))
+                               $"{retAccessor}BinaryOverlayList.FactoryByStartIndexWithTrigger<{typeName}>"))
                     {
-                        args.Add($"mem: {streamAccessor}.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"stream: {streamAccessor}");
                         args.Add($"package: _package");
+                        args.Add("finalPos: finalPos");
                         args.Add($"itemLength: {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
                         if (subGenTypes.Count <= 1)
                         {
@@ -1025,10 +1024,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 else
                 {
                     using (var args = sb.Call(
-                               $"{retAccessor}BinaryOverlayList.FactoryByLazyParse<{typeName}>"))
+                               $"{retAccessor}BinaryOverlayList.FactoryByLazyParseWithTrigger<{typeName}>"))
                     {
-                        args.Add($"mem: {streamAccessor}.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"stream: {streamAccessor}");
                         args.Add($"package: _package");
+                        args.Add("finalPos: finalPos");
                         if (subGenTypes.Count <= 1)
                         {
                             args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
@@ -1039,7 +1039,6 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                     }
                 }
-                sb.AppendLine($"{streamAccessor}.Position += subLen;");
                 break;
             case ListBinaryType.CounterRecord:
                 var counterLen = (byte)list.CustomData[CounterByteLength];

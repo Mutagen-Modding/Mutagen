@@ -1766,14 +1766,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.PNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEquipTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SlotParents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEquipTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEquipTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:

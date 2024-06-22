@@ -1615,14 +1615,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IDefaultObjectGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Objects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IDefaultObjectGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => DefaultObjectBinaryOverlay.DefaultObjectFactory(s, p));
-                    stream.Position += subLen;
                     return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:

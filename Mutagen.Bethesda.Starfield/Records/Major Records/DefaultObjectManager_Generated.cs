@@ -1615,14 +1615,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IDefaultObjectUseGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Objects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IDefaultObjectUseGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => DefaultObjectUseBinaryOverlay.DefaultObjectUseFactory(s, p));
-                    stream.Position += subLen;
                     return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:

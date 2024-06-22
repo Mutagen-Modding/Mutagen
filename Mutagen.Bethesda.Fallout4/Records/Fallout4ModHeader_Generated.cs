@@ -2653,14 +2653,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IFallout4MajorRecordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.SCRN:

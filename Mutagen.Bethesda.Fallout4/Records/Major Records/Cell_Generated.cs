@@ -6814,14 +6814,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XCLR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Regions = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IRegionGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRegionGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
@@ -6904,14 +6902,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XPRI:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.PhysicsReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedThingGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.PhysicsReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedThingGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedThingGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Cell_FieldIndex.PhysicsReferences;
                 }
                 case RecordTypeInts.XCRI:

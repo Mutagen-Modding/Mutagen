@@ -3591,26 +3591,22 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IHairGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Hairs = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IHairGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEyeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.FGGS:

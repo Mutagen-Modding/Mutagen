@@ -5251,14 +5251,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IMagicEffectSoundGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IMagicEffectSoundGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(s, p));
-                    stream.Position += subLen;
                     return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:

@@ -2055,14 +2055,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICameraPathGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICameraPathGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:

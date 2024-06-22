@@ -3393,26 +3393,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Components = BinaryOverlayList.FactoryByStartIndex<IMiscItemComponentGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Components = BinaryOverlayList.FactoryByStartIndexWithTrigger<IMiscItemComponentGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => MiscItemComponentBinaryOverlay.MiscItemComponentFactory(s, p));
-                    stream.Position += subLen;
                     return (int)MiscItem_FieldIndex.Components;
                 }
                 case RecordTypeInts.CDIX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndex<Byte>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndexWithTrigger<Byte>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 1,
                         getter: (s, p) => s[0]);
-                    stream.Position += subLen;
                     return (int)MiscItem_FieldIndex.ComponentDisplayIndices;
                 }
                 case RecordTypeInts.XXXX:

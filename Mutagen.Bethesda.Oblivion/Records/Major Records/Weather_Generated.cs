@@ -2413,14 +2413,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Colors = BinaryOverlayList.FactoryByStartIndex<IWeatherColorsGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Colors = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherColorsGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => WeatherColorsBinaryOverlay.WeatherColorsFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:

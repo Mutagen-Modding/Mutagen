@@ -4687,14 +4687,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedNpc_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:
@@ -4790,14 +4788,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:

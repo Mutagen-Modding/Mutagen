@@ -1413,14 +1413,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Placements = BinaryOverlayList.FactoryByStartIndex<IStaticPlacementGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Placements = BinaryOverlayList.FactoryByStartIndexWithTrigger<IStaticPlacementGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => StaticPlacementBinaryOverlay.StaticPlacementFactory(s, p));
-                    stream.Position += subLen;
                     return (int)StaticPart_FieldIndex.Placements;
                 }
                 default:

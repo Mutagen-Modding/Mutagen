@@ -2230,14 +2230,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IWorldspaceGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IWorldspaceGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)SurfacePattern_FieldIndex.Worldspaces;
                 }
                 default:

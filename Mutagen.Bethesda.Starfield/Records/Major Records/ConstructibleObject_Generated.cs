@@ -3654,26 +3654,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ConstructableComponents = BinaryOverlayList.FactoryByStartIndex<IConstructibleObjectComponentGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ConstructableComponents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.ConstructableComponents;
                 }
                 case RecordTypeInts.RQPK:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndex<IConstructibleRequiredPerkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleRequiredPerkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ConstructibleRequiredPerkBinaryOverlay.ConstructibleRequiredPerkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.RequiredPerks;
                 }
                 case RecordTypeInts.CNAM:
@@ -3745,14 +3741,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Categories = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Categories = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.Categories;
                 }
                 case RecordTypeInts.RECF:

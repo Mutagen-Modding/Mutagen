@@ -3560,14 +3560,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 20,
                             getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                        stream.Position += subLen;
                         return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
@@ -3581,14 +3579,12 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 20,
                                     getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                             }
                             case 1:

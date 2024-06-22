@@ -1944,13 +1944,11 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<IPreCutMapEntryGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParseWithTrigger<IPreCutMapEntryGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => PreCutMapEntryBinaryOverlay.PreCutMapEntryFactory(s, p));
-                    stream.Position += subLen;
                     return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
                 }
                 case RecordTypeInts.XXXX:

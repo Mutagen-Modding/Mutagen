@@ -2794,38 +2794,32 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LegendaryMods = BinaryOverlayList.FactoryByStartIndex<ILegendaryModGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LegendaryMods = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILegendaryModGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => LegendaryModBinaryOverlay.LegendaryModFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LegendaryItem_FieldIndex.LegendaryMods;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.IncludeFilters = BinaryOverlayList.FactoryByStartIndex<ILegendaryFilterGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.IncludeFilters = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILegendaryFilterGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LegendaryFilterBinaryOverlay.LegendaryFilterFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LegendaryItem_FieldIndex.IncludeFilters;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ExcludeFilters = BinaryOverlayList.FactoryByStartIndex<ILegendaryFilterGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ExcludeFilters = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILegendaryFilterGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LegendaryFilterBinaryOverlay.LegendaryFilterFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LegendaryItem_FieldIndex.ExcludeFilters;
                 }
                 default:

@@ -1318,14 +1318,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RegionPointListData = BinaryOverlayList.FactoryByStartIndex<P2Float>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RegionPointListData = BinaryOverlayList.FactoryByStartIndexWithTrigger<P2Float>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
-                    stream.Position += subLen;
                     return (int)RegionArea_FieldIndex.RegionPointListData;
                 }
                 default:

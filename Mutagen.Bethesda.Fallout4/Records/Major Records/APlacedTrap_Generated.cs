@@ -4350,14 +4350,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XLRL:
@@ -4372,14 +4370,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.DistantLodData;
                 }
                 case RecordTypeInts.DATA:

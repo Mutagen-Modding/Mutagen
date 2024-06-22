@@ -6370,14 +6370,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.UNAM = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICombatStyleGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.UNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICombatStyleGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICombatStyleGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)CombatStyle_FieldIndex.UNAM;
                 }
                 default:

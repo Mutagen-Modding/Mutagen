@@ -2308,14 +2308,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPMA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Scenes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Scenes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISceneGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISceneGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)SpeechChallenge_FieldIndex.Scenes;
                 }
                 case RecordTypeInts.DIFF:

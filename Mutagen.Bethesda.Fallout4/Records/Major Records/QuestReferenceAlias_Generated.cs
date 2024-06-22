@@ -4386,14 +4386,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALLA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LinkedAliases = BinaryOverlayList.FactoryByStartIndex<ILinkedAliasGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LinkedAliases = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILinkedAliasGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => LinkedAliasBinaryOverlay.LinkedAliasFactory(s, p));
-                    stream.Position += subLen;
                     return (int)QuestReferenceAlias_FieldIndex.LinkedAliases;
                 }
                 case RecordTypeInts.ALDN:

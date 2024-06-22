@@ -1881,14 +1881,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IMusicTrackGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Tracks = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IMusicTrackGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMusicTrackGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)MusicType_FieldIndex.Tracks;
                 }
                 default:

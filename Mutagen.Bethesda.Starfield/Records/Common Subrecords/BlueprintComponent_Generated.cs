@@ -1642,14 +1642,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BUO4:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IBlueprintComponentItemGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Items = BinaryOverlayList.FactoryByStartIndexWithTrigger<IBlueprintComponentItemGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 36,
                         getter: (s, p) => BlueprintComponentItemBinaryOverlay.BlueprintComponentItemFactory(s, p));
-                    stream.Position += subLen;
                     return (int)BlueprintComponent_FieldIndex.Items;
                 }
                 case RecordTypeInts.BODM:

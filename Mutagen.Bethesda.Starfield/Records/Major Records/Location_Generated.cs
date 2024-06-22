@@ -6546,26 +6546,22 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)MajorRecord_FieldIndex.EditorID)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 12,
                             getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                        stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.Properties, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.Keywords)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.Properties2 = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.Properties2 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 12,
                             getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                        stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.Properties2, type);
                     }
                     else
@@ -6574,26 +6570,22 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 12,
                                     getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.Properties, type);
                             }
                             case 1:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.Properties2 = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.Properties2 = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 12,
                                     getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.Properties2, type);
                             }
                             default:
@@ -6603,62 +6595,52 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ACPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedPersistLocationReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedPersistLocationReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedPersistLocationReferences;
                 }
                 case RecordTypeInts.LCPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MasterPersistLocationReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MasterPersistLocationReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterPersistLocationReferences;
                 }
                 case RecordTypeInts.RCPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RemovedPersistLocationReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RemovedPersistLocationReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.RemovedPersistLocationReferences;
                 }
                 case RecordTypeInts.ACUR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellUniqueReferenceBinaryOverlay.LocationCellUniqueReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedUniqueBaseForms;
                 }
                 case RecordTypeInts.LCUR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationCellUniqueReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationCellUniqueReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellUniqueReferenceBinaryOverlay.LocationCellUniqueReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.LocationCellUniqueReferences;
                 }
                 case RecordTypeInts.RCUR:
@@ -6666,26 +6648,22 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.LocationCellUniqueReferences)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.RemovedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IGenericBaseFormGetter>>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.RemovedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IGenericBaseFormGetter>>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 4,
                             getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(p, s));
-                        stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.RemovedUniqueBaseForms, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.MasterUniqueNpcs)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.RemovedUniqueNpcs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<INpcGetter>>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.RemovedUniqueNpcs = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 4,
                             getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
-                        stream.Position += subLen;
                         return new ParseResult((int)Location_FieldIndex.RemovedUniqueNpcs, type);
                     }
                     else
@@ -6694,26 +6672,22 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.RemovedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IGenericBaseFormGetter>>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.RemovedUniqueBaseForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IGenericBaseFormGetter>>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 4,
                                     getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(p, s));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.RemovedUniqueBaseForms, type);
                             }
                             case 1:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.RemovedUniqueNpcs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<INpcGetter>>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.RemovedUniqueNpcs = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 4,
                                     getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Location_FieldIndex.RemovedUniqueNpcs, type);
                             }
                             default:
@@ -6723,62 +6697,52 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ACUN:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedUniqueNpcs = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedUniqueNpcs = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedUniqueNpcs;
                 }
                 case RecordTypeInts.LCUN:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MasterUniqueNpcs = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MasterUniqueNpcs = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterUniqueNpcs;
                 }
                 case RecordTypeInts.ACSR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedSpecialReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedSpecialReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellStaticReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 20,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedSpecialReferences;
                 }
                 case RecordTypeInts.LCSR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MasterSpecialReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MasterSpecialReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellStaticReferenceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 20,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterSpecialReferences;
                 }
                 case RecordTypeInts.RCSR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RemovedSpecialReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RemovedSpecialReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.RemovedSpecialReferences;
                 }
                 case RecordTypeInts.LCEC:
@@ -6793,50 +6757,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ACID:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedInitiallyDisabledReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedInitiallyDisabledReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedInitiallyDisabledReferences;
                 }
                 case RecordTypeInts.LCID:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MasterInitiallyDisabledReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MasterInitiallyDisabledReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterInitiallyDisabledReferences;
                 }
                 case RecordTypeInts.ACEP:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AddedEnablePointReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AddedEnablePointReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellEnablePointGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.AddedEnablePointReferences;
                 }
                 case RecordTypeInts.LCEP:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MasterEnablePointReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MasterEnablePointReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellEnablePointGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Location_FieldIndex.MasterEnablePointReferences;
                 }
                 case RecordTypeInts.FULL:

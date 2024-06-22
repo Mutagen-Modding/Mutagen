@@ -4844,14 +4844,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.XCLR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Regions = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IRegionGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRegionGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XCMT:

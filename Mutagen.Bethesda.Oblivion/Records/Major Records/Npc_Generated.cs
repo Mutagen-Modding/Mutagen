@@ -4150,13 +4150,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.KFFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Animations = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
                     return (int)Npc_FieldIndex.Animations;
                 }
                 case RecordTypeInts.CNAM:
@@ -4181,14 +4179,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEyeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Npc_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.HCLR:

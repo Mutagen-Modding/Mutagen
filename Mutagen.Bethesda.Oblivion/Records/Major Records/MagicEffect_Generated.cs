@@ -2112,14 +2112,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ESCE:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CounterEffects = BinaryOverlayList.FactoryByStartIndex<IEDIDLinkGetter<IMagicEffectGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CounterEffects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IEDIDLinkGetter<IMagicEffectGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:

@@ -4782,14 +4782,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Plants = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFloraGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Plants = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IFloraGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Biome_FieldIndex.Plants;
                 }
                 case RecordTypeInts.RNAM:

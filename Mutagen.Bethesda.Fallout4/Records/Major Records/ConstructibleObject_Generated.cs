@@ -2936,14 +2936,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Components = BinaryOverlayList.FactoryByStartIndex<IConstructibleObjectComponentGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Components = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.Components;
                 }
                 case RecordTypeInts.DESC:
@@ -2998,26 +2996,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Categories = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Categories = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.Categories;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CreatedObjectCounts = BinaryOverlayList.FactoryByStartIndex<IConstructibleCreatedObjectCountGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CreatedObjectCounts = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleCreatedObjectCountGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => ConstructibleCreatedObjectCountBinaryOverlay.ConstructibleCreatedObjectCountFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.CreatedObjectCounts;
                 }
                 default:

@@ -3901,14 +3901,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFilterKeywordChanceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LeveledItem_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.LVLL:
@@ -3944,14 +3942,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)LeveledItem_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.XXXX:

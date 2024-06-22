@@ -2627,14 +2627,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.VTEX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandscapeTextureGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Textures = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILandscapeTextureGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandscapeTextureGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 case RecordTypeInts.MPCD:

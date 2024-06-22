@@ -4923,26 +4923,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPMA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPMA = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPMA = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISceneGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISceneGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Scene_FieldIndex.SPMA;
                 }
                 case RecordTypeInts.SPEX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPEX = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPEX = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISceneGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISceneGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Scene_FieldIndex.SPEX;
                 }
                 case RecordTypeInts.SPRK:
@@ -4972,38 +4968,32 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPKW:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPKW = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPKW = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Scene_FieldIndex.SPKW;
                 }
                 case RecordTypeInts.SPPK:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPPK = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPerkGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPPK = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPerkGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Scene_FieldIndex.SPPK;
                 }
                 case RecordTypeInts.SPKY:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPKY = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPKY = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Scene_FieldIndex.SPKY;
                 }
                 case RecordTypeInts.XXXX:

@@ -7367,14 +7367,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XPOD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Portals = BinaryOverlayList.FactoryByStartIndex<IPortalGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Portals = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPortalGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => PortalBinaryOverlay.PortalFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.Portals;
                 }
                 case RecordTypeInts.XPTL:
@@ -7562,14 +7560,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:

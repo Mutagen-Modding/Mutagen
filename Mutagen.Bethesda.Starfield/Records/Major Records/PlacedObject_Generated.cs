@@ -9943,14 +9943,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XTEL:
@@ -9970,26 +9968,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XLMS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LayeredMaterialSwaps = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LayeredMaterialSwaps = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.LayeredMaterialSwaps;
                 }
                 case RecordTypeInts.XPCK:
@@ -10014,14 +10008,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XPDO:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ProjectedDecalReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ProjectedDecalReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.ProjectedDecalReferences;
                 }
                 case RecordTypeInts.XCDD:
@@ -10181,13 +10173,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XSL1:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SnapLinks = BinaryOverlayList.FactoryByLazyParse<ISnapLinkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SnapLinks = BinaryOverlayList.FactoryByLazyParseWithTrigger<ISnapLinkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => SnapLinkBinaryOverlay.SnapLinkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.SnapLinks;
                 }
                 case RecordTypeInts.XEZN:
@@ -10207,14 +10197,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XPPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.Properties;
                 }
                 case RecordTypeInts.XEED:

@@ -1556,14 +1556,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RDSA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IRegionSoundGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionSoundGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.RLDM:

@@ -2004,14 +2004,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.DATA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RelatedIdleAnimations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RelatedIdleAnimations = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IIdleAnimationGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleAnimationGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:

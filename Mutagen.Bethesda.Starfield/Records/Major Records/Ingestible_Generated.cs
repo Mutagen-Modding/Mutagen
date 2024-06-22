@@ -4362,26 +4362,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resources = BinaryOverlayList.FactoryByStartIndex<IItemResourceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IItemResourceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ItemResourceBinaryOverlay.ItemResourceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Ingestible_FieldIndex.Resources;
                 }
                 case RecordTypeInts.CDIX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndex<Byte>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndexWithTrigger<Byte>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 1,
                         getter: (s, p) => s[0]);
-                    stream.Position += subLen;
                     return (int)Ingestible_FieldIndex.ComponentDisplayIndices;
                 }
                 case RecordTypeInts.DATA:

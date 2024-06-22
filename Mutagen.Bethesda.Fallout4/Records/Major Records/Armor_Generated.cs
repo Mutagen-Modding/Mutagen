@@ -4720,14 +4720,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DAMA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IArmorResistanceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IArmorResistanceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ArmorResistanceBinaryOverlay.ArmorResistanceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Armor_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.TNAM:
@@ -4737,14 +4735,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.APPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Armor_FieldIndex.AttachParentSlots;
                 }
                 case RecordTypeInts.OBTE:

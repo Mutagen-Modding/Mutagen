@@ -7140,14 +7140,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XBPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ShipBlueprintSnapLinks = BinaryOverlayList.FactoryByStartIndex<ICellShipBlueprintSnapLinkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ShipBlueprintSnapLinks = BinaryOverlayList.FactoryByStartIndexWithTrigger<ICellShipBlueprintSnapLinkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => CellShipBlueprintSnapLinkBinaryOverlay.CellShipBlueprintSnapLinkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Cell_FieldIndex.ShipBlueprintSnapLinks;
                 }
                 case RecordTypeInts.XWCU:

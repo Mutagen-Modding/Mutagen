@@ -5211,14 +5211,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DTID:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.NpcHeadtrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.NpcHeadtrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)SceneAction_FieldIndex.NpcHeadtrackingActorIds;
                 }
                 case RecordTypeInts.NPOT:
@@ -5333,14 +5331,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EmotionValue)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 4,
                             getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                        stream.Position += subLen;
                         return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
                     }
                     else
@@ -5356,14 +5352,12 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                             case 1:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 4,
                                     getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                                stream.Position += subLen;
                                 return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
                             }
                             default:

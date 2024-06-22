@@ -2175,14 +2175,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.VTEX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandTextureGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Textures = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILandTextureGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandTextureGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 default:

@@ -3237,14 +3237,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ProjectedDecals = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IProjectedDecalGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ProjectedDecals = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IProjectedDecalGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)Impact_FieldIndex.ProjectedDecals;
                 }
                 case RecordTypeInts.HNAM:

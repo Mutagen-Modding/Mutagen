@@ -2675,26 +2675,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resources = BinaryOverlayList.FactoryByStartIndex<IResearchProjectResourceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectResourceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ResearchProjectResourceBinaryOverlay.ResearchProjectResourceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ResearchProject_FieldIndex.Resources;
                 }
                 case RecordTypeInts.RQPK:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndex<IResearchProjectRequiredPerkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectRequiredPerkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ResearchProjectRequiredPerkBinaryOverlay.ResearchProjectRequiredPerkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ResearchProject_FieldIndex.RequiredPerks;
                 }
                 case RecordTypeInts.CNAM:

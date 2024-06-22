@@ -6739,26 +6739,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCLW:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.XCLWs = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.XCLWs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)Worldspace_FieldIndex.XCLWs;
                 }
                 case RecordTypeInts.WHGT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.WHGTs = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.WHGTs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)Worldspace_FieldIndex.WHGTs;
                 }
                 case RecordTypeInts.HNAM:

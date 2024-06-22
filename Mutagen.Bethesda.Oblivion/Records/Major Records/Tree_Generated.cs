@@ -2013,14 +2013,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SpeedTreeSeeds = BinaryOverlayList.FactoryByStartIndex<UInt32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SpeedTreeSeeds = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)Tree_FieldIndex.SpeedTreeSeeds;
                 }
                 case RecordTypeInts.CNAM:

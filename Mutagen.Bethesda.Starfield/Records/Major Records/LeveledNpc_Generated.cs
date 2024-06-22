@@ -3523,14 +3523,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFilterKeywordChanceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LeveledNpc_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.ONAM:

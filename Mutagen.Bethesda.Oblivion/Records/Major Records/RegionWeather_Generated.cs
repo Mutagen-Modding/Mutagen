@@ -1321,14 +1321,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDWT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Weathers = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherTypeGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:

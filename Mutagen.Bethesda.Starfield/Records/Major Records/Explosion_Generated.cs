@@ -4467,14 +4467,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DAMA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DamageType = BinaryOverlayList.FactoryByStartIndex<IDamageTypeValueGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DamageType = BinaryOverlayList.FactoryByStartIndexWithTrigger<IDamageTypeValueGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => DamageTypeValueBinaryOverlay.DamageTypeValueFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Explosion_FieldIndex.DamageType;
                 }
                 default:

@@ -3861,14 +3861,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TIFL:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.TopicInfoList = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IDialogResponsesGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.TopicInfoList = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IDialogResponsesGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogResponsesGetter>(p, s));
-                    stream.Position += subLen;
                     return (int)DialogTopic_FieldIndex.TopicInfoList;
                 }
                 case RecordTypeInts.TIFC:

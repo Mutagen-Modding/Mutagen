@@ -64,6 +64,24 @@ internal abstract class BinaryOverlayList
             itemLength);
     }
 
+    public static IReadOnlyList<T> FactoryByStartIndexWithTrigger<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int finalPos,
+        int itemLength,
+        PluginBinaryOverlay.SpanFactory<T> getter)
+    {
+        var subMeta = stream.ReadSubrecordHeader();
+        var subLen = finalPos - stream.Position;
+        var ret = BinaryOverlayList.FactoryByStartIndex<T>(
+            mem: stream.RemainingMemory.Slice(0, subLen),
+            package: package,
+            itemLength: itemLength,
+            getter: getter);
+        stream.Position += subLen;
+        return ret;
+    }
+
     public static IReadOnlyList<T> FactoryByCount<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
@@ -568,6 +586,22 @@ internal abstract class BinaryOverlayList
             });
     }
 
+    public static IReadOnlyList<T> FactoryByLazyParseWithTrigger<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int finalPos,
+        PluginBinaryOverlay.Factory<T> getter)
+    {
+        var subMeta = stream.ReadSubrecordHeader();
+        var subLen = finalPos - stream.Position;
+        var ret = FactoryByLazyParse<T>(
+            stream.RemainingMemory.Slice(0, subLen),
+            package,
+            getter);
+        stream.Position += subLen;
+        return ret;
+    }
+
     public static IReadOnlyList<T> FactoryByLazyParse<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
@@ -577,6 +611,22 @@ internal abstract class BinaryOverlayList
             mem,
             package,
             getter);
+    }
+
+    public static IReadOnlyList<T> FactoryByLazyParseWithTrigger<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int finalPos,
+        Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
+    {
+        var subMeta = stream.ReadSubrecordHeader();
+        var subLen = finalPos - stream.Position;
+        var ret = new BinaryOverlayLazyList<T>(
+            stream.RemainingMemory.Slice(0, subLen),
+            package,
+            getter);
+        stream.Position += subLen;
+        return ret;
     }
 
     public static IReadOnlyList<T> FactoryByLazyParse<T>(

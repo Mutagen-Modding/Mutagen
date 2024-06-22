@@ -1349,14 +1349,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ObjectBounds = BinaryOverlayList.FactoryByStartIndex<IObjectBoundsFloatGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ObjectBounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectBoundsFloatGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 24,
                         getter: (s, p) => ObjectBoundsFloatBinaryOverlay.ObjectBoundsFloatFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds;
                 }
                 default:
