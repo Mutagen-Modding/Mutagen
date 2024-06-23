@@ -25,20 +25,20 @@ partial class NavigationMapInfoBinaryCreateTranslation
     public static ANavigationMapInfoParent GetParent<TStream>(TStream frame)
         where TStream : IMutagenReadStream
     {
-        var workspaceFk = FormKeyBinaryTranslation.Instance.Parse(frame.GetSpan(4), frame.MetaData.MasterReferences.Raw);
+        var workspaceFk = FormKeyBinaryTranslation.Instance.Parse(frame.GetSpan(4), frame.MetaData.MasterReferences);
         if (workspaceFk.IsNull)
         {
             return new NavigationMapInfoCellParent()
             {
                 Unused = frame.ReadInt32(),
-                ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences.Raw).ToLink<ICellGetter>()
+                ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<ICellGetter>()
             };
         }
         else
         {
             return new NavigationMapInfoWorldParent()
             {
-                ParentWorldspace = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences.Raw).ToLink<IWorldspaceGetter>(),
+                ParentWorldspace = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<IWorldspaceGetter>(),
                 ParentWorldspaceCoord = new P2Int16(
                     frame.ReadInt16(),
                     frame.ReadInt16())

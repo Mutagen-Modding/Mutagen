@@ -46,11 +46,11 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
     {
         for (int i = 0; i < count; i++)
         {
-            yield return ReadProperty(stream.MetaData.MasterReferences.Raw, stream.ReadSpan(24));
+            yield return ReadProperty(stream.MetaData.MasterReferences, stream.ReadSpan(24));
         }
     }
 
-    public static AObjectModProperty<T> ReadProperty(IReadOnlyMasterReferenceCollection masters, ReadOnlySpan<byte> data)
+    public static AObjectModProperty<T> ReadProperty(ISeparatedMasterPackage masters, ReadOnlySpan<byte> data)
     {
         AObjectModProperty<T> ret;
         var type = (ObjectModProperty.ValueType)data[0];
@@ -262,7 +262,7 @@ partial class ObjectTemplateBinaryOverlay<T>
             _recordData.Slice(IncludeLoc + includeLen, propLen),
             _package,
             itemLength: 24,
-            getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences.Raw, s));
+            getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences, s));
         return (int)ObjectTemplate_FieldIndex.Properties;
     }
 

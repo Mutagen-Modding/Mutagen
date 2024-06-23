@@ -178,19 +178,19 @@ partial class BookBinaryOverlay
             case BookBinaryCreateTranslation.TeachesOption.Skill:
                 return new BookActorValue()
                 {
-                    ActorValue = new FormLink<IActorValueInformationGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences.Raw))
+                    ActorValue = new FormLink<IActorValueInformationGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences))
                 };
                 break;
             case BookBinaryCreateTranslation.TeachesOption.Spell:
                 return new BookSpell()
                 {
-                    Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences.Raw))
+                    Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences))
                 };
                 break;
             case BookBinaryCreateTranslation.TeachesOption.Perk:
                 return new BookPerk()
                 {
-                    Perk = new FormLink<IPerkGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences.Raw))
+                    Perk = new FormLink<IPerkGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences))
                 };
                 break;
             default:

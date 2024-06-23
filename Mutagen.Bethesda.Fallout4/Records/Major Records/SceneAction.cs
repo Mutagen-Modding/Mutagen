@@ -75,7 +75,7 @@ partial class SceneActionBinaryCreateTranslation
                 startScene.EndSceneSayGreeting = true;
                 break;
             case SceneActionTypicalType typical:
-                typical.PlaySound.SetTo(FormKeyBinaryTranslation.Instance.Parse(subRec.Content, frame.MetaData.MasterReferences.Raw));
+                typical.PlaySound.SetTo(FormKeyBinaryTranslation.Instance.Parse(subRec.Content, frame.MetaData.MasterReferences));
                 break;
             default:
                 throw new NotImplementedException();
@@ -164,7 +164,7 @@ partial class SceneActionBinaryOverlay
                 startScene.EndSceneSayGreeting = true;
                 break;
             case SceneActionTypicalType typical:
-                typical.PlaySound.SetTo(FormKeyBinaryTranslation.Instance.Parse(subRec.Content, stream.MetaData.MasterReferences.Raw));
+                typical.PlaySound.SetTo(FormKeyBinaryTranslation.Instance.Parse(subRec.Content, stream.MetaData.MasterReferences));
                 break;
             default:
                 throw new NotImplementedException();

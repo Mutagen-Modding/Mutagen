@@ -2356,7 +2356,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SurfacePatternsLengthOverride;
         private int? _SurfacePatternsLocation;
         private readonly static ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> _defaultSurfacePatterns = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
-        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns => _SurfacePatternsLocation.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternsLocation.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatternsLengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences.Raw) : _defaultSurfacePatterns;
+        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns => _SurfacePatternsLocation.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternsLocation.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatternsLengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences) : _defaultSurfacePatterns;
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SurfacePatterns2LengthOverride;
         private int? _SurfacePatterns2Location;
         private readonly static ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> _defaultSurfacePatterns2 = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
-        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns2 => _SurfacePatterns2Location.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatterns2Location.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatterns2LengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences.Raw) : _defaultSurfacePatterns2;
+        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns2 => _SurfacePatterns2Location.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatterns2Location.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatterns2LengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences) : _defaultSurfacePatterns2;
         #endregion
         #region GNAM2
         private int? _GNAM2Location;

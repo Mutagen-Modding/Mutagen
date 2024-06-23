@@ -12,8 +12,10 @@ public record MasterStyleIndex(ModIndex Index, MasterStyle Style);
 
 public interface ISeparatedMasterPackage
 {
+    ModKey CurrentMod { get; }
     IReadOnlyMasterReferenceCollection Raw { get; }
-    bool TryLookup(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index);
+    bool TryLookupModKey(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index);
+    ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex);
     internal ILoadOrderGetter<ModKey> Normal { get; }
     internal ILoadOrderGetter<ModKey>? Light { get; }
     internal ILoadOrderGetter<ModKey>? Medium { get; }
@@ -24,6 +26,7 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
     public ILoadOrderGetter<ModKey> Normal { get; private set; } = null!;
     public ILoadOrderGetter<ModKey>? Light { get; private set; }
     public ILoadOrderGetter<ModKey>? Medium { get; private set; }
+    public ModKey CurrentMod { get; private set; }
     public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
     private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
@@ -64,7 +67,8 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
         var ret = new SeparatedMasterPackage()
         {
             Normal = new LoadOrder<ModKey>(normal, disposeItems: false),
-            Raw = masters
+            Raw = masters,
+            CurrentMod = masters.CurrentMod,
         };
         ret.SetupLookup();
         return ret;
@@ -129,6 +133,7 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
             Medium = new LoadOrder<ModKey>(medium, disposeItems: false),
             Light = new LoadOrder<ModKey>(light, disposeItems: false),
             Raw = masters,
+            CurrentMod = masters.CurrentMod,
         };
         ret.SetupLookup();
         return ret;
@@ -177,8 +182,24 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
         }
     }
 
-    public bool TryLookup(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index)
+    public bool TryLookupModKey(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index)
     {
         return _lookup.TryGetValue(modKey, out index);
+    }
+    
+    public ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex)
+    {
+        if (modIndex == ModIndex.LightMaster)
+        {
+            return Light ?? Normal;
+        }
+        else if (modIndex == ModIndex.MediumMaster)
+        {
+            return Medium ?? Normal;
+        }
+        else
+        {
+            return Normal;
+        }
     }
 }

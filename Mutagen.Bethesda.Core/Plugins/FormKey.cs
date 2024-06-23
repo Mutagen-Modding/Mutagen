@@ -74,7 +74,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <param name="masterReferences">Master reference list to refer to</param>
     /// <param name="idWithModID">Mod index and Record ID to use</param>
     /// <returns>Converted FormID</returns>
-    internal static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID)
+    internal static FormKey Factory(ISeparatedMasterPackage masterReferences, uint idWithModID)
     {
         return FormIDTranslator.GetFormKey(masterReferences, idWithModID);
     }
@@ -86,7 +86,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <param name="idWithModID">Mod index and Record ID to use</param>
     /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
     /// <returns>Converted FormID</returns>
-    internal static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID, bool maxIsNull)
+    internal static FormKey Factory(ISeparatedMasterPackage masterReferences, uint idWithModID, bool maxIsNull)
     {
         if (maxIsNull && idWithModID == uint.MaxValue)
         {

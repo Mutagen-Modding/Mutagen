@@ -70,7 +70,7 @@ internal sealed class SubgroupsBinaryTranslation<T>
             record = default;
             return false;
         }
-        var fk = FormKeyBinaryTranslation.Instance.Parse(group.ContainedRecordTypeData, frame.MetaData.MasterReferences.Raw);
+        var fk = FormKeyBinaryTranslation.Instance.Parse(group.ContainedRecordTypeData, frame.MetaData.MasterReferences);
         record = MajorRecordInstantiator<T>.Activator(fk, frame.MetaData.Constants.Release);
         Fill.Value(frame, record);
         return true;

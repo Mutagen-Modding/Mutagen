@@ -35,13 +35,13 @@ public class SeparatedMasterPackageTests
         package.Light.Should().BeNull();
         package.Medium.Should().BeNull();
 
-        package.TryLookup(originating, out var origResult).Should().BeTrue();
+        package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);
         origResult.Style.Should().Be(MasterStyle.Normal);
-        package.TryLookup(modA, out var aResult).Should().BeTrue();
+        package.TryLookupModKey(modA, out var aResult).Should().BeTrue();
         aResult!.Index.ID.Should().Be(0);
         aResult.Style.Should().Be(MasterStyle.Normal);
-        package.TryLookup(modB, out var bResult).Should().BeTrue();
+        package.TryLookupModKey(modB, out var bResult).Should().BeTrue();
         bResult!.Index.ID.Should().Be(1);
         bResult.Style.Should().Be(MasterStyle.Normal);
     }
@@ -101,25 +101,25 @@ public class SeparatedMasterPackageTests
         package.Light.Should().NotBeNull();
         package.Medium.Should().NotBeNull();
 
-        package.TryLookup(originating, out var origResult).Should().BeTrue();
+        package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);
         origResult.Style.Should().Be(MasterStyle.Normal);
-        package.TryLookup(modA, out var aResult).Should().BeTrue();
+        package.TryLookupModKey(modA, out var aResult).Should().BeTrue();
         aResult!.Index.ID.Should().Be(0);
         aResult.Style.Should().Be(MasterStyle.Normal);
-        package.TryLookup(modB, out var bResult).Should().BeTrue();
+        package.TryLookupModKey(modB, out var bResult).Should().BeTrue();
         bResult!.Index.ID.Should().Be(1);
         bResult.Style.Should().Be(MasterStyle.Normal);
-        package.TryLookup(lightA, out var lightAResult).Should().BeTrue();
+        package.TryLookupModKey(lightA, out var lightAResult).Should().BeTrue();
         lightAResult!.Index.ID.Should().Be(0);
         lightAResult.Style.Should().Be(MasterStyle.Light);
-        package.TryLookup(lightB, out var lightBResult).Should().BeTrue();
+        package.TryLookupModKey(lightB, out var lightBResult).Should().BeTrue();
         lightBResult!.Index.ID.Should().Be(1);
         lightBResult.Style.Should().Be(MasterStyle.Light);
-        package.TryLookup(mediumA, out var mediumAResult).Should().BeTrue();
+        package.TryLookupModKey(mediumA, out var mediumAResult).Should().BeTrue();
         mediumAResult!.Index.ID.Should().Be(0);
         mediumAResult.Style.Should().Be(MasterStyle.Medium);
-        package.TryLookup(mediumB, out var mediumBResult).Should().BeTrue();
+        package.TryLookupModKey(mediumB, out var mediumBResult).Should().BeTrue();
         mediumBResult!.Index.ID.Should().Be(1);
         mediumBResult.Style.Should().Be(MasterStyle.Medium);
     }

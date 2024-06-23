@@ -1216,8 +1216,8 @@ partial class FunctionConditionDataBinaryCreateTranslation
     {
         item.ParameterOneNumber = frame.ReadInt32();
         item.ParameterTwoNumber = frame.ReadInt32();
-        item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences.Raw, (uint)item.ParameterOneNumber);
-        item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences.Raw, (uint)item.ParameterTwoNumber);
+        item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences, (uint)item.ParameterOneNumber);
+        item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences, (uint)item.ParameterTwoNumber);
         GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
     }
 }

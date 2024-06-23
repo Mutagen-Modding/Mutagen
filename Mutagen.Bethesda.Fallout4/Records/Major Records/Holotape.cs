@@ -176,7 +176,7 @@ partial class HolotapeBinaryOverlay
                         sound.Sound.SetTo(
                             FormKeyBinaryTranslation.Instance.Parse(
                                 HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
-                                _package.MetaData.MasterReferences.Raw));
+                                _package.MetaData.MasterReferences));
                     }
                     return sound;
                 case Holotape.Types.Voice:
@@ -186,7 +186,7 @@ partial class HolotapeBinaryOverlay
                         voice.Scene.SetTo(
                             FormKeyBinaryTranslation.Instance.Parse(
                                 HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
-                                _package.MetaData.MasterReferences.Raw));
+                                _package.MetaData.MasterReferences));
                     }
                     return voice;
                 case Holotape.Types.Program:
@@ -203,7 +203,7 @@ partial class HolotapeBinaryOverlay
                         term.Terminal.SetTo(
                             FormKeyBinaryTranslation.Instance.Parse(
                                 HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
-                                _package.MetaData.MasterReferences.Raw));
+                                _package.MetaData.MasterReferences));
                     }
                     return term;
                 default:

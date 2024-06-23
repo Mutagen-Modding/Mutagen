@@ -31,7 +31,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// <summary>
     /// The ModIndex bytes of the FormID
     /// </summary>
-    public ModIndex ModIndex => new ModIndex(ModIndex.GetModIndexByteFromUInt(Raw));
+    public ModIndex ModIndex => ModIndex.GetModIndexFromUInt(Raw);
         
     /// <summary>
     /// The ID bytes of a FormID.

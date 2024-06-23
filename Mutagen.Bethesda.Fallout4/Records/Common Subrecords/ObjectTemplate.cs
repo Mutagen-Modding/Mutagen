@@ -98,7 +98,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
                 {
                     FunctionType = (ObjectModProperty.FormLinkFunctionType)enumVal,
                 };
-                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters.Raw));
+                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
                 prop.Value = BinaryPrimitives.ReadUInt32LittleEndian(data[16..]);
                 ret = prop;
                 break;
@@ -117,7 +117,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
                 {
                     FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
                 };
-                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters.Raw));
+                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
                 prop.Value = BinaryPrimitives.ReadSingleLittleEndian(data[16..]);
                 ret = prop;
                 break;

@@ -12,7 +12,7 @@ public class LoquiTranslationReflection
     byte[] _data = new byte[0x14];
     MutagenFrame _frame;
     MasterReferenceCollection _masterRefs = new(Constants.Oblivion);
-    SeparatedMasterPackage _separated => SeparatedMasterPackage.NotSeparate(_masterRefs);
+    ISeparatedMasterPackage _separated => SeparatedMasterPackage.NotSeparate(_masterRefs);
     ParsingMeta _parsingBundle;
 
     [GlobalSetup]

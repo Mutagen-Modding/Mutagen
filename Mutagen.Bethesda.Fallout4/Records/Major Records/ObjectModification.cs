@@ -71,7 +71,7 @@ partial class AObjectModification
         {
             throw RecordException.Enrich(
                 e,
-                FormKey.Factory(frame.MetaData.MasterReferences.Raw, majorMeta.FormID.ID),
+                FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID.ID),
                 typeof(AObjectModification));
         }
     }

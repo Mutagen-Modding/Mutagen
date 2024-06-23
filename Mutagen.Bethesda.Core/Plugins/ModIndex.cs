@@ -78,9 +78,9 @@ public readonly struct ModIndex
     /// Extracts the index byte from a uint input
     /// </summary>
     /// <param name="i">uint to retrieve mod index from</param>
-    /// <returns>Byte containing the mod index</returns>
-    public static byte GetModIndexByteFromUInt(uint i)
+    /// <returns>ModIndex</returns>
+    public static ModIndex GetModIndexFromUInt(uint i)
     {
-        return (byte)(i >> 24);
+        return new ModIndex((byte)(i >> 24));
     }
 }

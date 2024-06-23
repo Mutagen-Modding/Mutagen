@@ -136,7 +136,7 @@ partial class RaceBinaryCreateTranslation
             }
             else
             {
-                link = FormKeyBinaryTranslation.Instance.Parse(content, frame.MetaData.MasterReferences.Raw);
+                link = FormKeyBinaryTranslation.Instance.Parse(content, frame.MetaData.MasterReferences);
             }
 
             dict[(BipedObject)i].Conditions = link;
