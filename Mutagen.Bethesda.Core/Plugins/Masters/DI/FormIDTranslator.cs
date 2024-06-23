@@ -28,7 +28,7 @@ internal static class FormIDTranslator
     }
     
     public static FormID GetFormID(
-        SeparatedMasterPackage masters,
+        ISeparatedMasterPackage masters,
         IFormLinkIdentifier key)
     {
         if (!masters.TryLookup(key.FormKey.ModKey, out var index))

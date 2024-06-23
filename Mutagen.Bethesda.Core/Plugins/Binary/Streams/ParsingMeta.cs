@@ -22,7 +22,7 @@ public sealed class ParsingMeta
     /// <summary>
     /// Masters to reference while reading
     /// </summary>
-    public SeparatedMasterPackage MasterReferences { get; set; }
+    public ISeparatedMasterPackage MasterReferences { get; set; }
 
     /// <summary>
     /// Optional RecordInfoCache to reference while reading
@@ -63,7 +63,7 @@ public sealed class ParsingMeta
     internal ParsingMeta(
         GameConstants constants,
         ModKey modKey,
-        SeparatedMasterPackage masterReferences)
+        ISeparatedMasterPackage masterReferences)
     {
         Constants = constants;
         ModKey = modKey;

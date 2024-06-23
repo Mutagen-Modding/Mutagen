@@ -10,7 +10,16 @@ namespace Mutagen.Bethesda.Plugins.Masters;
 
 public record MasterStyleIndex(ModIndex Index, MasterStyle Style);
 
-public class SeparatedMasterPackage
+public interface ISeparatedMasterPackage
+{
+    IReadOnlyMasterReferenceCollection Raw { get; }
+    bool TryLookup(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index);
+    internal ILoadOrderGetter<ModKey> Normal { get; }
+    internal ILoadOrderGetter<ModKey>? Light { get; }
+    internal ILoadOrderGetter<ModKey>? Medium { get; }
+}
+
+public class SeparatedMasterPackage : ISeparatedMasterPackage
 {
     public ILoadOrderGetter<ModKey> Normal { get; private set; } = null!;
     public ILoadOrderGetter<ModKey>? Light { get; private set; }
@@ -19,9 +28,9 @@ public class SeparatedMasterPackage
 
     private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
-    internal static readonly SeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
+    internal static readonly ISeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
     
-    public static SeparatedMasterPackage Factory(
+    public static ISeparatedMasterPackage Factory(
         GameRelease release,
         ModKey currentModKey,
         IReadOnlyMasterReferenceCollection masters, 
@@ -38,7 +47,7 @@ public class SeparatedMasterPackage
         }
     }
     
-    public static SeparatedMasterPackage Factory(
+    public static ISeparatedMasterPackage Factory(
         GameRelease release,
         ModPath modPath,
         ILoadOrderGetter<IModFlagsGetter>? loadOrder,
@@ -48,7 +57,7 @@ public class SeparatedMasterPackage
         return Factory(release, modPath.ModKey, masters, loadOrder);
     }
 
-    internal static SeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
+    internal static ISeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
     {
         var normal = new List<ModKey>(masters.Masters.Select((x => x.Master)));
         normal.Add(masters.CurrentMod);
@@ -61,7 +70,7 @@ public class SeparatedMasterPackage
         return ret;
     }
     
-    internal static SeparatedMasterPackage Separate(
+    internal static ISeparatedMasterPackage Separate(
         ModKey currentModKey,
         IReadOnlyMasterReferenceCollection masters, 
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
@@ -126,7 +135,7 @@ public class SeparatedMasterPackage
 
     }
 
-    public static SeparatedMasterPackage FromConstants(GameConstants constants, ModPath path, IFileSystem? fileSystem = null)
+    public static ISeparatedMasterPackage FromConstants(GameConstants constants, ModPath path, IFileSystem? fileSystem = null)
     {
         if (constants.SeparateMasterLoadOrders)
         {
