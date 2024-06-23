@@ -143,6 +143,7 @@ public sealed class ParsingMeta
         Stream stream)
     {
         var rawMasters = MasterReferenceCollection.FromStream(stream, modKey, release);
+        stream.Position = 0;
         var masters = SeparatedMasterPackage.Factory(release, modKey, rawMasters, param.LoadOrder);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
         meta.Absorb(param);
