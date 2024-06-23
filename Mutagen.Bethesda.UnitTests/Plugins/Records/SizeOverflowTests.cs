@@ -83,10 +83,13 @@ public class SizeOverflowTestsDirect : SizeOverflowTests
 {
     protected override IWorldspaceGetter Get(IFileSystem fileSystem, ModPath path)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(
+                "Skyrim.esm"));
         using var reader = new MutagenBinaryReadStream(fileSystem.File.OpenRead(path),
             new ParsingMeta(GameConstants.SkyrimSE, 
                 Constants.Skyrim,
-                new MasterReferenceCollection("Skyrim.esm")));
+                masters));
         return Worldspace.CreateFromBinary(new MutagenFrame(reader));
     }
 }

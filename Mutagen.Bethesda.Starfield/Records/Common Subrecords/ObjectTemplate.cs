@@ -46,7 +46,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
     {
         for (int i = 0; i < count; i++)
         {
-            yield return ReadProperty(stream.MetaData.MasterReferences, stream.ReadSpan(24));
+            yield return ReadProperty(stream.MetaData.MasterReferences.Raw, stream.ReadSpan(24));
         }
     }
 
@@ -249,7 +249,7 @@ partial class ObjectTemplateBinaryOverlay<T>
             _recordData.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
             _package,
             itemLength: 4,
-            getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
         _postKeywordLoc = _obtsLoc!.Value + 16 + (4 * _keywordCount!.Value);
         var includeLen = checked((int)(7 * _includeCount));
         Includes = BinaryOverlayList.FactoryByStartIndex(
@@ -262,7 +262,7 @@ partial class ObjectTemplateBinaryOverlay<T>
             _recordData.Slice(IncludeLoc + includeLen, propLen),
             _package,
             itemLength: 24,
-            getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences, s));
+            getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences.Raw, s));
         return (int)ObjectTemplate_FieldIndex.Properties;
     }
 

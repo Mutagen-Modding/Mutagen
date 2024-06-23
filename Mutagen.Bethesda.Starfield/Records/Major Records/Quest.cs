@@ -157,7 +157,7 @@ partial class QuestBinaryCreateTranslation
             {
                 obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.Unknown = frame.GetInt32(offset: 20);
-                if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                if (FormKey.Factory(frame.MetaData.MasterReferences.Raw, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
                 {
                     throw new ArgumentException("Quest children group did not match the FormID of the parent.");
                 }
@@ -437,7 +437,7 @@ partial class QuestBinaryOverlay
             if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.QuestChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-            var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+            var formKey = FormKey.Factory(_package.MetaData.MasterReferences.Raw, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
             if (formKey != this.FormKey)
             {
                 throw new ArgumentException("Quest children group did not match the FormID of the parent.");

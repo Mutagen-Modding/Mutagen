@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing;
@@ -113,7 +114,12 @@ public class HeaderExtTests
     private MutagenBinaryReadStream GetModStream()
     {
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.SmallOblivionMod);
-        return new MutagenBinaryReadStream(new MemoryStream(b), ModKey.FromNameAndExtension("SmallOblivionMod.esp"), GameRelease.Oblivion);
+        return new MutagenBinaryReadStream(
+            new MemoryStream(b),
+            new ParsingMeta(
+                GameConstants.Get(GameRelease.Oblivion),
+                ModKey.FromNameAndExtension("SmallOblivionMod.esp"),
+                SeparatedMasterPackage.EmptyNull));
     }
 
     [Fact]

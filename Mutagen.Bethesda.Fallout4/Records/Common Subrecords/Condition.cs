@@ -1216,8 +1216,8 @@ partial class FunctionConditionDataBinaryCreateTranslation
     {
         item.ParameterOneNumber = frame.ReadInt32();
         item.ParameterTwoNumber = frame.ReadInt32();
-        item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
-        item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
+        item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences.Raw, (uint)item.ParameterOneNumber);
+        item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences.Raw, (uint)item.ParameterTwoNumber);
         GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
     }
 }
@@ -1342,7 +1342,7 @@ partial class ConditionGlobalBinaryOverlay
 partial class ConditionDataBinaryOverlay
 {
     public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
-    public IFormLinkGetter<IFallout4MajorRecordGetter> Reference => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+    public IFormLinkGetter<IFallout4MajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0x10, 0x4));
     public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
 }
 
@@ -1350,11 +1350,11 @@ partial class FunctionConditionDataBinaryOverlay
 {
     private ReadOnlyMemorySlice<byte> _data2;
 
-    public IFormLinkGetter<IFallout4MajorRecordGetter> ParameterOneRecord => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
+    public IFormLinkGetter<IFallout4MajorRecordGetter> ParameterOneRecord => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _data2);
 
     public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
 
-    public IFormLinkGetter<IFallout4MajorRecordGetter> ParameterTwoRecord => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
+    public IFormLinkGetter<IFallout4MajorRecordGetter> ParameterTwoRecord => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _data2.Slice(4));
 
     public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
 

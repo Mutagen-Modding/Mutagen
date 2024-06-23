@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences.Raw);
         public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;

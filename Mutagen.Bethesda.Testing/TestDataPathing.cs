@@ -54,23 +54,24 @@ public class TestDataPathing
 
     public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey ?? path.ModKey));
         return new MutagenFrame(
             new MutagenBinaryReadStream(
                 File.OpenRead(path),
                 new ParsingMeta(
                     release,
                     path.ModKey,
-                    new MasterReferenceCollection(modKey ?? path.ModKey))));
+                    masters)));
     }
 
     internal static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey ?? path.ModKey));
         return new OverlayStream(
             File.ReadAllBytes(path),
             new ParsingMeta(
                 GameConstants.Get(release),
                 path.ModKey,
-                new MasterReferenceCollection(
-                    modKey ?? path.ModKey)));
+                masters));
     }
 }

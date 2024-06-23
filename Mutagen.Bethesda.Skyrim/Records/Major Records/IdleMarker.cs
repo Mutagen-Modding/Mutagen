@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System.Buffers.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -42,8 +41,7 @@ partial class IdleMarkerBinaryCreateTranslation
         while (pos < subFrame.Content.Length)
         {
             ret.Add(
-                new FormLink<IIdleAnimationGetter>(
-                    FormKeyBinaryTranslation.Instance.Parse(subFrame.Content.Slice(pos), stream.MetaData.MasterReferences!)));
+                FormLinkBinaryTranslation.Instance.Factory<IIdleAnimationGetter>(stream.MetaData, subFrame.Content.Slice(pos)));
             pos += 4;
         }
         return ret;
@@ -97,6 +95,6 @@ partial class IdleMarkerBinaryOverlay
             mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
             package: _package,
             itemLength: 4,
-            getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleAnimationGetter>(p, s));
     }
 }

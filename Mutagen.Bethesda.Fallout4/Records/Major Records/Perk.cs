@@ -49,7 +49,7 @@ partial class PerkBinaryCreateTranslation
                     case Perk.EffectType.Quest:
                         effect = new PerkQuestEffect()
                         {
-                            Quest = new FormLink<IQuestGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
+                            Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, dataFrame.Content),
                             Stage = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content.Slice(4)),
                         };
                         effect.Conditions.SetTo(
@@ -65,7 +65,7 @@ partial class PerkBinaryCreateTranslation
                     case Perk.EffectType.Ability:
                         effect = new PerkAbilityEffect()
                         {
-                            Ability = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
+                            Ability = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, dataFrame.Content),
                         };
                         effect.Conditions.SetTo(
                             Plugins.Binary.Translations.ListBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -214,7 +214,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointModifyActorValue()
                                 {
-                                    ActorValue = new FormLinkNullable<IActorValueInformationGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
+                                    ActorValue = FormLinkBinaryTranslation.Instance.Factory<IActorValueInformationGetter>(stream.MetaData, epfd),
                                     Value = epfd.Value.Slice(4).Float(),
                                     Modification = func switch
                                     {
@@ -249,7 +249,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointAddLeveledItem()
                                 {
-                                    Item = new FormLink<ILeveledItemGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null)
+                                    Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, epfd)
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddActivateChoice:
@@ -261,7 +261,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointAddActivateChoice()
                                 {
-                                    Spell = new FormLinkNullable<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
+                                    Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, epfd),
                                     ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData) : null,
                                     Flags = (PerkEntryPointAddActivateChoice.Flag)BinaryPrimitives.ReadInt16LittleEndian(epf3.Value),
                                 };
@@ -276,7 +276,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointSelectSpell()
                                 {
-                                    Spell = new FormLink<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null),
+                                    Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, epfd),
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectText:

@@ -227,7 +227,7 @@ partial class BookBinaryOverlay
             case BookBinaryCreateTranslation.TeachesOption.Spell:
                 return new BookSpell()
                 {
-                    Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+                    Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(_package, _recordData.Slice(_TeachesLocation, 4))
                 };
                 break;
             default:

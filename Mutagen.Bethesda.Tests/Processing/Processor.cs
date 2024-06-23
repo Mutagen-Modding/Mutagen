@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -26,7 +27,7 @@ public abstract class Processor
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
     private readonly Dictionary<long, uint> _lengthTracker = new();
     protected byte _numMasters;
-    public IMasterReferenceCollection Masters;
+    public SeparatedMasterPackage Masters;
     protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
@@ -63,10 +64,11 @@ public abstract class Processor
         string previousPath)
     {
         SourcePath = sourcePath;
-        Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease); 
+        Masters = SeparatedMasterPackage.NotSeparate(MasterReferenceCollection.FromPath(SourcePath, GameRelease)); 
         Bundle = new ParsingMeta(GameRelease, ModKey, Masters);
-        _numMasters = checked((byte)Masters.Masters.Count);
-        _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, previousPath), GameRelease);
+        _numMasters = checked((byte)Masters.Raw.Masters.Count);
+        var modPath = new ModPath(ModKey, previousPath);
+        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, loadOrder: null));
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))
         {
             lock (_lengthTracker)
@@ -241,7 +243,7 @@ public abstract class Processor
         long fileOffset)
     {
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters.Raw, majorFrame.FormID.Raw);
         ProcessStringTermination(
             edidFrame,
             fileOffset + majorFrame.HeaderLength + edidFrame.Location,
@@ -418,7 +420,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters.Raw, frame.FormID.Raw);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -435,7 +437,7 @@ public abstract class Processor
     {
         Instructions.SetRemove(RangeInt64.FromLength(refLoc, majorFrame.TotalLength));
         
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters.Raw, majorFrame.FormID.Raw);
         ModifyParentGroupLengths(-majorFrame.TotalLength, formKey);
     }
 
@@ -446,7 +448,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters.Raw, frame.FormID.Raw);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 

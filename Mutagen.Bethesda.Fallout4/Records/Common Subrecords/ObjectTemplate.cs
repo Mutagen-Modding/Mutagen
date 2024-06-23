@@ -52,7 +52,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
         }
     }
 
-    public static AObjectModProperty<T> ReadProperty(IReadOnlyMasterReferenceCollection masters, ReadOnlySpan<byte> data)
+    public static AObjectModProperty<T> ReadProperty(SeparatedMasterPackage masters, ReadOnlySpan<byte> data)
     {
         AObjectModProperty<T> ret;
         var type = (ObjectModProperty.ValueType)data[0];
@@ -98,7 +98,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
                 {
                     FunctionType = (ObjectModProperty.FormLinkFunctionType)enumVal,
                 };
-                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
+                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters.Raw));
                 prop.Value = BinaryPrimitives.ReadUInt32LittleEndian(data[16..]);
                 ret = prop;
                 break;
@@ -117,7 +117,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
                 {
                     FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
                 };
-                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
+                prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters.Raw));
                 prop.Value = BinaryPrimitives.ReadSingleLittleEndian(data[16..]);
                 ret = prop;
                 break;
@@ -254,7 +254,7 @@ partial class ObjectTemplateBinaryOverlay<T>
             _recordData.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
             _package,
             itemLength: 4,
-            getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
         _postKeywordLoc = _obtsLoc!.Value + 16 + (4 * _keywordCount!.Value);
         var includeLen = checked((int)(7 * _includeCount));
         Includes = BinaryOverlayList.FactoryByStartIndex(

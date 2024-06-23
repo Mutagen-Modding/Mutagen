@@ -35,7 +35,7 @@ partial class APlacedTrapBinaryCreateTranslation
         {
             throw new ArgumentException("Unexpected length");
         }
-        var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, frame.MetaData.MasterReferences!);
+        var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, frame.MetaData.MasterReferences.Raw);
         switch (item)
         {
             case IPlacedArrow arrow:
@@ -116,7 +116,7 @@ partial class APlacedTrapBinaryOverlay
         {
             throw new ArgumentException("Unexpected length");
         }
-        var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, _package.MetaData.MasterReferences!);
+        var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, _package.MetaData.MasterReferences.Raw);
         switch (this)
         {
             case PlacedArrowBinaryOverlay arrow:

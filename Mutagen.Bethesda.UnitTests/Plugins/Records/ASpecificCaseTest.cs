@@ -34,14 +34,16 @@ public abstract class ASpecificCaseTest<TSetter, TGetter>
     [Fact]
     public void Overlay()
     {
+        var masters = SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(
+                Path.ModKey));
         var item = LoquiBinaryOverlayTranslation<TGetter>.Create(
             TestDataPathing.GetOverlayStream(Path, Release),
             new BinaryOverlayFactoryPackage(
                 new ParsingMeta(
                     GameConstants.Get(Release),
                     Path.ModKey,
-                    new MasterReferenceCollection(
-                        Path.ModKey))),
+                    masters)),
             default);
         TestItem(item);
     }

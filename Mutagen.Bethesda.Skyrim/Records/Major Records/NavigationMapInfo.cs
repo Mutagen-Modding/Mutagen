@@ -25,20 +25,20 @@ partial class NavigationMapInfoBinaryCreateTranslation
     public static ANavigationMapInfoParent GetParent<TStream>(TStream frame)
         where TStream : IMutagenReadStream
     {
-        var workspaceFk = FormKeyBinaryTranslation.Instance.Parse(frame.GetSpan(4), frame.MetaData.MasterReferences);
+        var workspaceFk = FormKeyBinaryTranslation.Instance.Parse(frame.GetSpan(4), frame.MetaData.MasterReferences.Raw);
         if (workspaceFk.IsNull)
         {
             return new NavigationMapInfoCellParent()
             {
                 Unused = frame.ReadInt32(),
-                ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<ICellGetter>()
+                ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences.Raw).ToLink<ICellGetter>()
             };
         }
         else
         {
             return new NavigationMapInfoWorldParent()
             {
-                ParentWorldspace = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<IWorldspaceGetter>(),
+                ParentWorldspace = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences.Raw).ToLink<IWorldspaceGetter>(),
                 ParentWorldspaceCoord = new P2Int16(
                     frame.ReadInt16(),
                     frame.ReadInt16())
@@ -83,13 +83,9 @@ partial class NavigationMapInfoBinaryOverlay
         }
     }
 
-    public IFormLinkGetter<ICellGetter> ParentCell
-    {
-        get
-        {
-            return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))));
-        }
-    }
+    public IFormLinkGetter<ICellGetter> ParentCell =>
+        FormLinkBinaryTranslation.Instance.OverlayFactory<ICellGetter>(_package,
+            _structData.Span.Slice(IslandEndingPos + 0x8, 0x4));
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
     {

@@ -154,7 +154,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID.ID), ((ILoquiObject)this).Registration.ClassType, edid: null);
+                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences.Raw, majorMeta.FormID.ID), ((ILoquiObject)this).Registration.ClassType, edid: null);
             }
         }
     }

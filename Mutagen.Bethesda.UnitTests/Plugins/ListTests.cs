@@ -35,7 +35,7 @@ public class ListTests
             leveledItem.WriteToBinary(writer);
         }
 
-        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, fileSystem: fileSystem))
+        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, loadOrder: null, fileSystem: fileSystem))
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
@@ -63,7 +63,7 @@ public class ListTests
             leveledItem.WriteToBinary(writer);
         }
 
-        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, fileSystem: fileSystem))
+        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, loadOrder: null, fileSystem: fileSystem))
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);

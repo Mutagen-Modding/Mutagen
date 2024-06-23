@@ -117,7 +117,7 @@ partial class FootstepSetBinaryOverlay
                 _package,
                 itemLength: 4,
                 count: checked((uint)counts[index]),
-                getter: (s, p) => new FormLink<IFootstepGetter>(FormKeyBinaryTranslation.Instance.Parse(s, p.MetaData.MasterReferences!)));
+                getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFootstepGetter>(p, s));
             stream.Position += 4 * counts[index];
             return ret;
         }

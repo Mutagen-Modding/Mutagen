@@ -73,7 +73,7 @@ public class WriteOptionsTests
         reimportNpc.Race.FormKey.Should().Be(reimportRace.FormKey);
         
         // Check OnDisk FormIDs
-        using var stream = new MutagenBinaryReadStream(existingModPath, mod.GameRelease, fileSystem: fileSystem);
+        using var stream = new MutagenBinaryReadStream(existingModPath, mod.GameRelease, loadOrder: null, fileSystem: fileSystem);
         stream.ReadModHeaderFrame();
         while (stream.TryReadGroup(out var group))
         {

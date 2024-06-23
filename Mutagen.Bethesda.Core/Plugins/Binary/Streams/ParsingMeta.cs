@@ -1,6 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -20,7 +22,7 @@ public sealed class ParsingMeta
     /// <summary>
     /// Masters to reference while reading
     /// </summary>
-    public IReadOnlyMasterReferenceCollection MasterReferences { get; set; }
+    public SeparatedMasterPackage MasterReferences { get; set; }
 
     /// <summary>
     /// Optional RecordInfoCache to reference while reading
@@ -61,7 +63,7 @@ public sealed class ParsingMeta
     internal ParsingMeta(
         GameConstants constants,
         ModKey modKey,
-        IReadOnlyMasterReferenceCollection masterReferences)
+        SeparatedMasterPackage masterReferences)
     {
         Constants = constants;
         ModKey = modKey;
@@ -122,20 +124,37 @@ public sealed class ParsingMeta
         Parallel = readParameters.Parallel;
     }
 
-    public static ParsingMeta Factory(BinaryReadParameters param, GameRelease release, ModPath modPath)
+    public static ParsingMeta Factory(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModPath modPath)
     {
         var rawMasters = MasterReferenceCollection.FromPath(modPath, release, param.FileSystem);
-        var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, rawMasters);
+        var masters = SeparatedMasterPackage.Factory(release, modPath, rawMasters, param.LoadOrder);
+        var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
         meta.Absorb(param);
         return meta;
     }
 
-    public static ParsingMeta Factory(GameRelease release, ModPath path)
+    public static ParsingMeta Factory(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModKey modKey,
+        Stream stream)
     {
-        var constants = GameConstants.Get(release);
-        return new ParsingMeta(
-            constants,
-            path.ModKey,
-            MasterReferenceCollection.FromPath(path, release));
+        var rawMasters = MasterReferenceCollection.FromStream(stream, modKey, release);
+        var masters = SeparatedMasterPackage.Factory(release, modKey, rawMasters, param.LoadOrder);
+        var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
+        meta.Absorb(param);
+        return meta;
     }
+
+    // public static ParsingMeta Factory(GameRelease release, ModPath path)
+    // {
+    //     var constants = GameConstants.Get(release);
+    //     return new ParsingMeta(
+    //         constants,
+    //         path.ModKey,
+    //         MasterReferenceCollection.FromPath(path, release));
+    // }
 }

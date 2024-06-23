@@ -19,7 +19,7 @@ public class FormLinkOrIndexTranslationGeneration : FormLinkBinaryTranslationGen
         Accessor packageAccessor)
     {
         FormLinkType linkType = typeGen as FormLinkType;
-        return $"{linkType.DirectTypeName(getter: true, internalInterface: true)}.Factory(this, FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})), BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}))";
+        return $"{linkType.DirectTypeName(getter: true, internalInterface: true)}.Factory(this, FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}.Raw, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})), BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}))";
     }
 
     public override async Task GenerateCopyIn(

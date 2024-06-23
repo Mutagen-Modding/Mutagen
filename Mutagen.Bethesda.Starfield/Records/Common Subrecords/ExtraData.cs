@@ -49,7 +49,7 @@ partial class ExtraDataBinaryCreateTranslation
 
     public static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
     {
-        item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences!);
+        item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences.Raw);
     }
 }
 
@@ -84,5 +84,5 @@ partial class ExtraDataBinaryOverlay
     public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
     #endregion
     
-    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_structData.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
+    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_structData.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences.Raw);
 }

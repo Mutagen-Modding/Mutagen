@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Translations.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Masters.DI;
@@ -29,6 +30,20 @@ public sealed class FormKeyBinaryTranslation
         return FormKey.Factory(masterReferences, id);
     }
 
+    public FormKey Parse(
+        SubrecordFrame frame,
+        IReadOnlyMasterReferenceCollection masterReferences,
+        bool maxIsNone = false)
+    {
+        var id = frame.AsUInt32();
+        if (maxIsNone && id == uint.MaxValue)
+        {
+            return FormKey.None;
+        }
+
+        return FormKey.Factory(masterReferences, id);
+    }
+
     public bool Parse<TReader>(
         TReader reader,
         out FormKey item,
@@ -37,7 +52,7 @@ public sealed class FormKeyBinaryTranslation
     {
         item = Parse(
             reader.ReadSpan(4),
-            reader.MetaData.MasterReferences!,
+            reader.MetaData.MasterReferences.Raw,
             maxIsNone: maxIsNone);
         return true;
     }
@@ -47,7 +62,7 @@ public sealed class FormKeyBinaryTranslation
     {
         return Parse(
             reader.ReadSpan(4),
-            reader.MetaData.MasterReferences!);
+            reader.MetaData.MasterReferences.Raw);
     }
 
     public void Write(

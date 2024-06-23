@@ -6103,8 +6103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
-                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6142,8 +6141,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
-                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6176,12 +6174,11 @@ namespace Mutagen.Bethesda.Skyrim
             try
             {
                 param ??= BinaryReadParameters.Default;
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = param.Parallel;
-                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -6206,12 +6203,11 @@ namespace Mutagen.Bethesda.Skyrim
             try
             {
                 param ??= BinaryReadParameters.Default;
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = param.Parallel;
-                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -6244,8 +6240,9 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryReadParameters? param = null)
         {
             param ??= BinaryReadParameters.Default;
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), modKey, stream);
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease(), throwOnUnknownSubrecord: param.ThrowOnUnknownSubrecord),
+                stream: new MutagenBinaryReadStream(stream, meta),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
@@ -7073,8 +7070,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: param.FileSystem));
-                    frame.MetaData.MasterReferences = MasterReferenceCollection.FromPath(path, gameRelease, fileSystem: param.FileSystem);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -7109,12 +7105,11 @@ namespace Mutagen.Bethesda.Skyrim
             try
             {
                 param ??= BinaryReadParameters.Default;
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = param.Parallel;
-                    frame.MetaData.ThrowOnUnknown = param.ThrowOnUnknownSubrecord;
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -23560,8 +23555,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: param.FileSystem));
-            meta.MasterReferences = MasterReferenceCollection.FromPath(path, release.ToGameRelease(), fileSystem: param.FileSystem);
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta,
