@@ -1803,11 +1803,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledCreatureEntryGetter>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<INpcRecordGetter> Template => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcRecordGetter>(_TemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcRecordGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcRecordGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

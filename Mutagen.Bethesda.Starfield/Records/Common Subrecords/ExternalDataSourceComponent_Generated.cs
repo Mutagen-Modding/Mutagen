@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ExternalBaseTemplate
         private int? _ExternalBaseTemplateLocation;
-        public IFormLinkNullableGetter<IExternalBaseTemplateGetter> ExternalBaseTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IExternalBaseTemplateGetter>(_ExternalBaseTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IExternalBaseTemplateGetter> ExternalBaseTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExternalBaseTemplateGetter>(_package, _recordData, _ExternalBaseTemplateLocation);
         #endregion
         public IReadOnlyList<IExternalDataSourceGetter> Sources { get; private set; } = Array.Empty<IExternalDataSourceGetter>();
         public IReadOnlyList<String>? EXASs { get; private set; }

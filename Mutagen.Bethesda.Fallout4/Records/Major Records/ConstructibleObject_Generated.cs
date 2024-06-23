@@ -2817,11 +2817,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PickUpSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PutDownSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         public IReadOnlyList<IConstructibleObjectComponentGetter>? Components { get; private set; }
         #region Description
@@ -2831,11 +2831,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IConstructibleObjectTargetGetter>(_CreatedObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IConstructibleObjectTargetGetter>(_package, _recordData, _CreatedObjectLocation);
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_WorkbenchKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         #region NAM1
         private int? _NAM1Location;
@@ -2851,7 +2851,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MenuArtObject
         private int? _MenuArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_MenuArtObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _MenuArtObjectLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
         public IReadOnlyList<IConstructibleCreatedObjectCountGetter>? CreatedObjectCounts { get; private set; }

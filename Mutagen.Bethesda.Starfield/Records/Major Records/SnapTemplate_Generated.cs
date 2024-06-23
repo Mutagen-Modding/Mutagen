@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _ParentLocation);
         #endregion
         public IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; private set; } = Array.Empty<ISnapNodeEntryGetter>();
         public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = Array.Empty<ISnapParentNodeEntryGetter>();

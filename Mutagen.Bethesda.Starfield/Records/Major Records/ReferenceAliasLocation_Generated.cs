@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

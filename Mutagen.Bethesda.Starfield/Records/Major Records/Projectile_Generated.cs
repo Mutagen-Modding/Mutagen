@@ -5324,7 +5324,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CurveTable
         private int? _CurveTableLocation;
-        public IFormLinkNullableGetter<ICurveTableGetter> CurveTable => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurveTableGetter>(_CurveTableLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICurveTableGetter> CurveTable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurveTableGetter>(_package, _recordData, _CurveTableLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

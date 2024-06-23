@@ -2834,7 +2834,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_PreviewTransformLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2856,19 +2856,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalGetter>(_NativeTerminalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_OpenSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _OpenSoundLocation);
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_CloseSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _CloseSoundLocation);
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_LoopSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _LoopSoundLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;

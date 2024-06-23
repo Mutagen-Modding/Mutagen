@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_MaterialTypeLocation, _package, _recordData);
+        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _MaterialTypeLocation);
         #endregion
         private RangeInt32? _HNAMLocation;
         #region HavokFriction

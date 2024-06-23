@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Restriction
         private int? _RestrictionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Restriction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_RestrictionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Restriction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _RestrictionLocation);
         #endregion
         #region PerkIcon
         private int? _PerkIconLocation;
@@ -2633,7 +2633,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Training
         private int? _TrainingLocation;
-        public IFormLinkNullableGetter<IPerkGetter> Training => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPerkGetter>(_TrainingLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPerkGetter> Training => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _TrainingLocation);
         #endregion
         public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = Array.Empty<IPerkRankGetter>();
         public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = Array.Empty<IFormLinkGetter<IPerkGetter>>();

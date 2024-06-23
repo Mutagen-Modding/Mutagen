@@ -2668,11 +2668,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ApplicableItemList
         private int? _ApplicableItemListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_ApplicableItemListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ApplicableItemListLocation);
         #endregion
         #region LegendaryTemplateList
         private int? _LegendaryTemplateListLocation;
-        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILegendaryItemGetter>(_LegendaryTemplateListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILegendaryItemGetter>(_package, _recordData, _LegendaryTemplateListLocation);
         #endregion
         public IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; private set; }
         public IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; private set; }

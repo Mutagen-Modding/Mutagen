@@ -3298,11 +3298,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PickUpSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PutDownSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -3341,7 +3341,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
-        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_InventoryArtLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _InventoryArtLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;

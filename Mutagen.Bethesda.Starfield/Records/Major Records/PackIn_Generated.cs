@@ -3846,11 +3846,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapBehaviorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -3867,7 +3867,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Cell
         private int? _CellLocation;
-        public IFormLinkNullableGetter<ICellGetter> Cell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_CellLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICellGetter> Cell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CellLocation);
         #endregion
         #region Version
         private int? _VersionLocation;
@@ -3883,7 +3883,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalMenuGetter>(_NativeTerminalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }

@@ -4900,7 +4900,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_MenuDisplayObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _MenuDisplayObjectLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }

@@ -2775,7 +2775,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region EffectSequence
         private int? _EffectSequenceLocation;
-        public IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEffectSequenceGetter>(_EffectSequenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectSequenceGetter>(_package, _recordData, _EffectSequenceLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region DNAMFloat1

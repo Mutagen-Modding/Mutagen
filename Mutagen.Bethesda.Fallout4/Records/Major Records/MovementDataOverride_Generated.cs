@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_MovementTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _MovementTypeLocation);
         #endregion
         public IMovementDataGetter? MovementData { get; private set; }
         partial void CustomFactoryEnd(

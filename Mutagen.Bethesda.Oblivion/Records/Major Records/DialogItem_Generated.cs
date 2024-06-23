@@ -2674,15 +2674,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region PreviousItem
         private int? _PreviousItemLocation;
-        public IFormLinkNullableGetter<IDialogItemGetter> PreviousItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogItemGetter>(_PreviousItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogItemGetter> PreviousItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogItemGetter>(_package, _recordData, _PreviousItemLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();

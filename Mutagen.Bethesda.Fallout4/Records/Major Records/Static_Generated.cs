@@ -2902,11 +2902,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_PreviewTransformLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region ForcedLocRefType
         private int? _ForcedLocRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_ForcedLocRefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _ForcedLocRefTypeLocation);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }

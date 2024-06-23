@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_OwnerQuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _OwnerQuestLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;

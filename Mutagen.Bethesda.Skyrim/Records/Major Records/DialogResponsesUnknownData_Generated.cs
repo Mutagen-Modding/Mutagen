@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISkyrimMajorRecordGetter>(_QNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISkyrimMajorRecordGetter>(_package, _recordData, _QNAMLocation);
         #endregion
         #region NEXT
         private int? _NEXTLocation;

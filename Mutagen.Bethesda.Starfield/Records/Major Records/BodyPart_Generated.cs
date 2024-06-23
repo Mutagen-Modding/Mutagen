@@ -2579,11 +2579,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region GoreEffectsBloodImpactMaterialType
         private int? _GoreEffectsBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_GoreEffectsBloodImpactMaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _GoreEffectsBloodImpactMaterialTypeLocation);
         #endregion
         #region OnCrippleBloodImpactMaterialType
         private int? _OnCrippleBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_OnCrippleBloodImpactMaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _OnCrippleBloodImpactMaterialTypeLocation);
         #endregion
         #region TwistVariablePrefix
         private int? _TwistVariablePrefixLocation;

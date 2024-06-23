@@ -106,20 +106,4 @@ public sealed class FormKeyBinaryTranslation
         if (item.FormKeyNullable == null) return;
         Write(writer, item.ToStandardizedIdentifier(), header);
     }
-
-    internal IFormLinkNullableGetter<TMajor> OverlayNullableHelper<TMajor>(
-        int? location,
-        BinaryOverlayFactoryPackage package,
-        ReadOnlyMemorySlice<byte> recordData,
-        bool maxIsNull = false)
-        where TMajor : class, IMajorRecordGetter
-    {
-        return location.HasValue ? 
-            new FormLinkNullable<TMajor>(
-                FormKey.Factory(
-                    package.MetaData.MasterReferences,
-                    BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(recordData, location.Value, package.MetaData.Constants)),
-                    maxIsNull: maxIsNull)) : 
-            FormLinkNullable<TMajor>.Null;
-    }
 }

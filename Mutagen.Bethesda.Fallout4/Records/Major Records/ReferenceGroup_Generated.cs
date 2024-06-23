@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_ReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         #region PNAM
         private int? _PNAMLocation;

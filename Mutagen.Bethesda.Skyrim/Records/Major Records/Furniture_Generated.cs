@@ -3129,7 +3129,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_InteractionKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InteractionKeywordLocation);
         #endregion
         #region Flags2
         public partial ParseResult Flags2CustomParse(
@@ -3143,7 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AssociatedSpell
         private int? _AssociatedSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISpellGetter>(_AssociatedSpellLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _AssociatedSpellLocation);
         #endregion
         #region DisabledMarkers
         public partial ParseResult DisabledMarkersCustomParse(

@@ -2118,7 +2118,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region SurfacePatternStyle
         private int? _SurfacePatternStyleLocation;
-        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfacePatternStyleGetter>(_SurfacePatternStyleLocation, _package, _recordData);
+        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
         #region SurfaceBlocks
         private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);

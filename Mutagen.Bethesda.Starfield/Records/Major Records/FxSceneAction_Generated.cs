@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region REPL
         private int? _REPLLocation;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> REPL => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceAdapterGetter>(_REPLLocation, _package, _recordData);
+        public IFormLinkGetter<IImageSpaceAdapterGetter> REPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _REPLLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region BIPL
         private int? _BIPLLocation;
-        public IFormLinkGetter<IPlacedObjectGetter> BIPL => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_BIPLLocation, _package, _recordData);
+        public IFormLinkGetter<IPlacedObjectGetter> BIPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _BIPLLocation);
         #endregion
         #region LVLO
         private int? _LVLOLocation;

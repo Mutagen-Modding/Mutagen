@@ -3707,11 +3707,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_PreviewTransformLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAnimationSoundTagSetGetter>(_AnimationSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAnimationSoundTagSetGetter>(_package, _recordData, _AnimationSoundLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3734,11 +3734,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalGetter>(_NativeTerminalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         #region ForcedLocRefType
         private int? _ForcedLocRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_ForcedLocRefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _ForcedLocRefTypeLocation);
         #endregion
         #region MarkerColor
         private int? _MarkerColorLocation;
@@ -3746,15 +3746,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_LoopingSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _LoopingSoundLocation);
         #endregion
         #region ActivationSound
         private int? _ActivationSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_ActivationSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _ActivationSoundLocation);
         #endregion
         #region WaterType
         private int? _WaterTypeLocation;
-        public IFormLinkNullableGetter<IWaterGetter> WaterType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> WaterType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterTypeLocation);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
@@ -3766,7 +3766,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_InteractionKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InteractionKeywordLocation);
         #endregion
         #region RadioReceiver
         private RangeInt32? _RadioReceiverLocation;

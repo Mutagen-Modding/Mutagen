@@ -2780,11 +2780,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_MenuDisplayObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _MenuDisplayObjectLocation);
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_EquipmentTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipmentTypeLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;

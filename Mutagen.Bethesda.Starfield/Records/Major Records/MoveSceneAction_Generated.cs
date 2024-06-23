@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region REPL
         private int? _REPLLocation;
-        public IFormLinkGetter<IPlacedGetter> REPL => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedGetter>(_REPLLocation, _package, _recordData);
+        public IFormLinkGetter<IPlacedGetter> REPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _REPLLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;

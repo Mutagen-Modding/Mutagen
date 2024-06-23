@@ -2470,7 +2470,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWorldspaceGetter>(_WorldspaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
         public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
         #region RegionAreaLogic

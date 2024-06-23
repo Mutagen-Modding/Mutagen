@@ -2602,7 +2602,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IModelGetter? Model { get; private set; }
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceAdapterGetter>(_ImageSpaceModifierLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceModifierLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region Limit

@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_DefaultFaceTextureLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _DefaultFaceTextureLocation);
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = Array.Empty<ITintAssetsGetter>();
         public IModelGetter? Model { get; private set; }

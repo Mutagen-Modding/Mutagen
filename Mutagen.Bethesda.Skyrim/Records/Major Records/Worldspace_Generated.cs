@@ -5653,28 +5653,28 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region InteriorLighting
         private int? _InteriorLightingLocation;
-        public IFormLinkNullableGetter<ILightingTemplateGetter> InteriorLighting => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILightingTemplateGetter>(_InteriorLightingLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILightingTemplateGetter> InteriorLighting => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightingTemplateGetter>(_package, _recordData, _InteriorLightingLocation);
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEncounterZoneGetter>(_EncounterZoneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         public IWorldspaceParentGetter? Parent { get; private set; }
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClimateGetter>(_ClimateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region LodWater
         private int? _LodWaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> LodWater => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_LodWaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> LodWater => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _LodWaterLocation);
         #endregion
         #region LodWaterHeight
         private int? _LodWaterHeightLocation;
@@ -5728,7 +5728,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;

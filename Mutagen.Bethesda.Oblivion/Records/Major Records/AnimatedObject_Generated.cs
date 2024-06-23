@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region IdleAnimation
         private int? _IdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_IdleAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleAnimationLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

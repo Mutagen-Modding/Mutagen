@@ -7067,7 +7067,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<IPlaceableObjectGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlaceableObjectGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlaceableObjectGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region BoundHalfExtents
         private int? _BoundHalfExtentsLocation;
@@ -7110,7 +7110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEmittanceGetter>(_EmittanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region LightData
         private RangeInt32? _LightDataLocation;
@@ -7126,11 +7126,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TeleportMessageBox
         private int? _TeleportMessageBoxLocation;
-        public IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_TeleportMessageBoxLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportMessageBoxLocation);
         #endregion
         #region MultiboundReference
         private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_MultiboundReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiboundReferenceLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -7150,7 +7150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region XCZR
         private int? _XCZRLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_XCZRLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _XCZRLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
@@ -7158,7 +7158,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region XCZC
         private int? _XCZCLocation;
-        public IFormLinkNullableGetter<ICellGetter> XCZC => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_XCZCLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICellGetter> XCZC => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _XCZCLocation);
         #endregion
         #region Scale
         private int? _ScaleLocation;
@@ -7166,12 +7166,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SpawnContainer
         private int? _SpawnContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_SpawnContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _SpawnContainerLocation);
         #endregion
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LeveledItemBaseObject
         private int? _LeveledItemBaseObjectLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_LeveledItemBaseObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _LeveledItemBaseObjectLocation);
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
@@ -7179,7 +7179,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_PersistentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region CollisionLayer
         private int? _CollisionLayerLocation;
@@ -7191,7 +7191,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEncounterZoneGetter>(_EncounterZoneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
@@ -7204,7 +7204,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IOwnerGetter> Owner => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOwnerGetter>(_OwnerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOwnerGetter>(_package, _recordData, _OwnerLocation);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -7220,7 +7220,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationRecordGetter>(_LocationReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -7247,7 +7247,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<IPlacedThingGetter> AttachRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedThingGetter>(_AttachRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedThingGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedThingGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         #region DistantLodData
         private int? _DistantLodDataLocation;

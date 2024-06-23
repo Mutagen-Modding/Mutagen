@@ -1472,13 +1472,13 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         public ISoundReferenceGetter? WED1 { get; private set; }
         #region DialogueSubtype
         private int? _DialogueSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_DialogueSubtypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _DialogueSubtypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

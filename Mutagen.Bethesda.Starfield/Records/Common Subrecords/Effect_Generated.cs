@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMagicEffectGetter>(_BaseEffectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMagicEffectGetter>(_package, _recordData, _BaseEffectLocation);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -1837,15 +1837,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Magnitude
         private int? _MagnitudeLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Magnitude => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_MagnitudeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Magnitude => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _MagnitudeLocation);
         #endregion
         #region Area
         private int? _AreaLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Area => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_AreaLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Area => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _AreaLocation);
         #endregion
         #region Duration
         private int? _DurationLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Duration => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_DurationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Duration => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _DurationLocation);
         #endregion
         #region MAGF
         private int? _MAGFLocation;

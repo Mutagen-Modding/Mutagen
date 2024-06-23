@@ -2027,15 +2027,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region PrimaryDescriptor
         private int? _PrimaryDescriptorLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PrimaryDescriptor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PrimaryDescriptorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PrimaryDescriptor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PrimaryDescriptorLocation);
         #endregion
         #region ExteriorTail
         private int? _ExteriorTailLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> ExteriorTail => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_ExteriorTailLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> ExteriorTail => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _ExteriorTailLocation);
         #endregion
         #region VatsDescriptor
         private int? _VatsDescriptorLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> VatsDescriptor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_VatsDescriptorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> VatsDescriptor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _VatsDescriptorLocation);
         #endregion
         #region VatsThreshold
         private int? _VatsThresholdLocation;

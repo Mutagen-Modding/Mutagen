@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMagicEffectGetter>(_BaseEffectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMagicEffectGetter>(_package, _recordData, _BaseEffectLocation);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

@@ -3437,11 +3437,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SharedDialog
         private int? _SharedDialogLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_SharedDialogLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _SharedDialogLocation);
         #endregion
         #region DialogGroup
         private int? _DialogGroupLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_DialogGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _DialogGroupLocation);
         #endregion
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
@@ -3451,11 +3451,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public IFormLinkNullableGetter<INpcGetter> Speaker => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_SpeakerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> Speaker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _SpeakerLocation);
         #endregion
         #region StartScene
         private int? _StartSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_StartSceneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _StartSceneLocation);
         #endregion
         #region INTV
         private int? _INTVLocation;
@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ResetGlobal
         private int? _ResetGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> ResetGlobal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_ResetGlobalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> ResetGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ResetGlobalLocation);
         #endregion
         #region SubtitlePriority
         private int? _SubtitlePriorityLocation;
@@ -3484,15 +3484,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NAM8
         private int? _NAM8Location;
-        public IFormLinkNullableGetter<IAffinityEventGetter> NAM8 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAffinityEventGetter>(_NAM8Location, _package, _recordData);
+        public IFormLinkNullableGetter<IAffinityEventGetter> NAM8 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _NAM8Location);
         #endregion
         #region Perk
         private int? _PerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> Perk => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPerkGetter>(_PerkLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _PerkLocation);
         #endregion
         #region SpeechChallenge
         private int? _SpeechChallengeLocation;
-        public IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISpeechChallengeGetter>(_SpeechChallengeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpeechChallengeGetter>(_package, _recordData, _SpeechChallengeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

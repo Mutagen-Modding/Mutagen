@@ -3930,7 +3930,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FeaturedItemMessage
         private int? _FeaturedItemMessageLocation;
-        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_FeaturedItemMessageLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _FeaturedItemMessageLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region Value
@@ -3983,11 +3983,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
-        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_InventoryArtLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> InventoryArt => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _InventoryArtLocation);
         #endregion
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Scene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_SceneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> Scene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SceneLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

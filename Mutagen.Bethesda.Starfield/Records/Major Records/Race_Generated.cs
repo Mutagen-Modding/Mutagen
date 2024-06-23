@@ -6877,7 +6877,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArmorGetter>(_SkinLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
@@ -6890,7 +6890,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBodyPartDataGetter>(_BodyPartDataLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         private RangeInt32? _DAT2Location;
         #region Height
@@ -7040,7 +7040,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AimAssistPose
         private int? _AimAssistPoseLocation;
-        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAimAssistPoseGetter>(_AimAssistPoseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAimAssistPoseGetter>(_package, _recordData, _AimAssistPoseLocation);
         #endregion
         #region NAM3
         public partial ParseResult NAM3CustomParse(
@@ -7050,7 +7050,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImpactMaterialType
         private int? _ImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_ImpactMaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _ImpactMaterialTypeLocation);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         public ISoundReferenceGetter? WED1 { get; private set; }
@@ -7062,19 +7062,19 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWeaponGetter>(_UnarmedWeaponLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _UnarmedWeaponLocation);
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultLocation);
         #endregion
         #region BaseMovementSwimDefault
         private int? _BaseMovementSwimDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementSwimDefaultLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementSwimDefaultLocation);
         #endregion
         #region BaseMovementFlyDefault
         private int? _BaseMovementFlyDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementFlyDefaultLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementFlyDefaultLocation);
         #endregion
         #region ChargenAndSkintones
         private IGenderedItemGetter<IChargenAndSkintonesGetter?>? _ChargenAndSkintonesOverlay;
@@ -7082,11 +7082,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_ArmorRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _ArmorRaceLocation);
         #endregion
         #region SubgraphTemplateRace
         private int? _SubgraphTemplateRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_SubgraphTemplateRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphTemplateRaceLocation);
         #endregion
         public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
@@ -7099,7 +7099,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_DialogueQuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _DialogueQuestLocation);
         #endregion
         #region HeadPartsAndBoneModifiers
         private IGenderedItemGetter<IHeadPartsAndBoneModifiersGetter?>? _HeadPartsAndBoneModifiersOverlay;

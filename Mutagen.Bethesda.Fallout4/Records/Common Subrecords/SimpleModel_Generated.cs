@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialSwapGetter>(_MaterialSwapLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialSwapGetter>(_package, _recordData, _MaterialSwapLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

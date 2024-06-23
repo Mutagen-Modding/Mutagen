@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_ImpactDataSetLocation, _package, _recordData);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _ImpactDataSetLocation);
         #endregion
         #region Tag
         private int? _TagLocation;

@@ -1228,11 +1228,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         #region RefType
         private int? _RefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_RefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _RefTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

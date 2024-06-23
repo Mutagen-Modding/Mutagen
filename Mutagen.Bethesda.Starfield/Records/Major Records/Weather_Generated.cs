@@ -7487,11 +7487,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IShaderParticleGeometryGetter>(_PrecipitationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IShaderParticleGeometryGetter>(_package, _recordData, _PrecipitationLocation);
         #endregion
         #region CameraEffect
         private int? _CameraEffectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_CameraEffectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _CameraEffectLocation);
         #endregion
         #region CLDC
         private int? _CLDCLocation;
@@ -7882,7 +7882,7 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILensFlareGetter>(_SunGlareLensFlareLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _SunGlareLensFlareLocation);
         #endregion
         #region Magic
         private RangeInt32? _MagicLocation;

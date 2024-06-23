@@ -2564,13 +2564,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_WorkbenchKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         public IReadOnlyList<IResearchProjectResourceGetter>? Resources { get; private set; }
         public IReadOnlyList<IResearchProjectRequiredPerkGetter>? RequiredPerks { get; private set; }
         #region IconSource
         private int? _IconSourceLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_IconSourceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _IconSourceLocation);
         #endregion
         #region NNAM
         private int? _NNAMLocation;
@@ -2586,7 +2586,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CategoryKeyword
         private int? _CategoryKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_CategoryKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _CategoryKeywordLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = Array.Empty<IFormLinkGetter<IResearchProjectGetter>>();
         partial void CustomFactoryEnd(

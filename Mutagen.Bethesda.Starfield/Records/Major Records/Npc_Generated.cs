@@ -10322,7 +10322,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         private RangeInt32? _ACBSLocation;
@@ -10359,23 +10359,23 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_DeathItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Voice
         private int? _VoiceLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IVoiceTypeGetter>(_VoiceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceLocation);
         #endregion
         #region DefaultTemplate
         private int? _DefaultTemplateLocation;
-        public IFormLinkNullableGetter<INpcTemplateTargetGetter> DefaultTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcTemplateTargetGetter>(_DefaultTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcTemplateTargetGetter> DefaultTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcTemplateTargetGetter>(_package, _recordData, _DefaultTemplateLocation);
         #endregion
         #region LegendaryTemplate
         private int? _LegendaryTemplateLocation;
-        public IFormLinkNullableGetter<INpcTemplateTargetGetter> LegendaryTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcTemplateTargetGetter>(_LegendaryTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcTemplateTargetGetter> LegendaryTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcTemplateTargetGetter>(_package, _recordData, _LegendaryTemplateLocation);
         #endregion
         #region LegendaryChance
         private int? _LegendaryChanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> LegendaryChance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_LegendaryChanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> LegendaryChance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _LegendaryChanceLocation);
         #endregion
         #region TemplateActors
         private RangeInt32? _TemplateActorsLocation;
@@ -10383,31 +10383,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkGetter<IRaceGetter> Race => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_RaceLocation, _package, _recordData);
+        public IFormLinkGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArmorGetter>(_SkinLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_AttackRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_SpectatorOverridePackageListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SpectatorOverridePackageListLocation);
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_CombatOverridePackageListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _CombatOverridePackageListLocation);
         #endregion
         public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalMenuGetter>(_NativeTerminalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;
@@ -10460,7 +10460,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectTemplateGetter<Npc.Property>>? ObjectTemplates { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public IFormLinkNullableGetter<IClassGetter> Class => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClassGetter>(_ClassLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClassGetter> Class => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClassGetter>(_package, _recordData, _ClassLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -10519,7 +10519,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICombatStyleGetter>(_CombatStyleLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region NAM5
         private int? _NAM5Location;
@@ -10540,35 +10540,35 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<INpcSoundGetter>? Sounds { get; private set; }
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_InheritsSoundsFromLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _InheritsSoundsFromLocation);
         #endregion
         #region CompanionInfoQuest
         private int? _CompanionInfoQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> CompanionInfoQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_CompanionInfoQuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> CompanionInfoQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _CompanionInfoQuestLocation);
         #endregion
         #region CompanionInfoDialogue
         private int? _CompanionInfoDialogueLocation;
-        public IFormLinkNullableGetter<IDialogBranchGetter> CompanionInfoDialogue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogBranchGetter>(_CompanionInfoDialogueLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogBranchGetter> CompanionInfoDialogue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogBranchGetter>(_package, _recordData, _CompanionInfoDialogueLocation);
         #endregion
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOutfitGetter>(_DefaultOutfitLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOutfitGetter>(_package, _recordData, _DefaultOutfitLocation);
         #endregion
         #region SpaceOutfit
         private int? _SpaceOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> SpaceOutfit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOutfitGetter>(_SpaceOutfitLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOutfitGetter> SpaceOutfit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOutfitGetter>(_package, _recordData, _SpaceOutfitLocation);
         #endregion
         #region DefaultPackageList
         private int? _DefaultPackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_DefaultPackageListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _DefaultPackageListLocation);
         #endregion
         #region CrimeFaction
         private int? _CrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_CrimeFactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _CrimeFactionLocation);
         #endregion
         #region FormationFaction
         private int? _FormationFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> FormationFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_FormationFactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> FormationFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FormationFactionLocation);
         #endregion
         public IReadOnlyList<INpcTintGetter>? Tints { get; private set; }
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }

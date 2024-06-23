@@ -2951,15 +2951,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Branch
         private int? _BranchLocation;
-        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogBranchGetter>(_BranchLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogBranchGetter>(_package, _recordData, _BranchLocation);
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region TopicFlags

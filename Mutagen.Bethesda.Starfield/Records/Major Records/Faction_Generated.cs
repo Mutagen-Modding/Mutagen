@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -3013,7 +3013,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_SharedCrimeFactionListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SharedCrimeFactionListLocation);
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
@@ -3021,11 +3021,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_VendorBuySellListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _VendorBuySellListLocation);
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_MerchantContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MerchantContainerLocation);
         #endregion
         #region PRIS
         private int? _PRISLocation;
@@ -3038,7 +3038,7 @@ namespace Mutagen.Bethesda.Starfield
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeOrListGetter> VoiceType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IVoiceTypeOrListGetter>(_VoiceTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IVoiceTypeOrListGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeOrListGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
         #region HERD
         private int? _HERDLocation;

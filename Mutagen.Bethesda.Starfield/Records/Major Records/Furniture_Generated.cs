@@ -5244,11 +5244,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapBehaviorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -5330,7 +5330,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FurnitureTemplate
         private int? _FurnitureTemplateLocation;
-        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFurnitureGetter>(_FurnitureTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFurnitureGetter>(_package, _recordData, _FurnitureTemplateLocation);
         #endregion
         public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = Array.Empty<IFurnitureMarkerEntryPointsGetter>();
         #region MarkerModel

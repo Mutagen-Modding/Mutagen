@@ -2635,15 +2635,15 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? WED1 { get; private set; }
         #region AmbientSet
         private int? _AmbientSetLocation;
-        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAmbienceSetGetter>(_AmbientSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbientSetLocation);
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReverbParametersGetter>(_EnvironmentTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReverbParametersGetter>(_package, _recordData, _EnvironmentTypeLocation);
         #endregion
         #region AEAR
         private int? _AEARLocation;

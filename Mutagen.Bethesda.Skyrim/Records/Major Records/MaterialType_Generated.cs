@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HavokImpactDataSet
         private int? _HavokImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_HavokImpactDataSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _HavokImpactDataSetLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

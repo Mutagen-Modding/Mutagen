@@ -3140,7 +3140,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceAdapterGetter>(_ImageSpaceModifierLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceModifierLocation);
         #endregion
         #region Animation
         private int? _AnimationLocation;

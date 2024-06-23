@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SurfacePatternStyle
         private int? _SurfacePatternStyleLocation;
-        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfacePatternStyleGetter>(_SurfacePatternStyleLocation, _package, _recordData);
+        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
         public IReadOnlyList<ISurfacePatternConfigItemGetter> Items { get; private set; } = Array.Empty<ISurfacePatternConfigItemGetter>();
         #region DNAM

@@ -6438,15 +6438,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_ParentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _ParentLocationLocation);
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_UnreportedCrimeFactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _UnreportedCrimeFactionLocation);
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
-        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedSimpleGetter>(_WorldLocationMarkerRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedSimpleGetter>(_package, _recordData, _WorldLocationMarkerRefLocation);
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;

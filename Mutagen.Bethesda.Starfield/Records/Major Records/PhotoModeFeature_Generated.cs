@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceGetter>(_ImageSpaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceGetter>(_package, _recordData, _ImageSpaceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

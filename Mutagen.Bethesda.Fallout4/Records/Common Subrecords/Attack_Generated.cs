@@ -1428,11 +1428,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region WeaponSlot
         private int? _WeaponSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> WeaponSlot => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_WeaponSlotLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> WeaponSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _WeaponSlotLocation);
         #endregion
         #region RequiredSlot
         private int? _RequiredSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> RequiredSlot => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_RequiredSlotLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> RequiredSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _RequiredSlotLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;

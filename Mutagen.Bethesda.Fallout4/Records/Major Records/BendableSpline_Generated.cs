@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Texture
         private int? _TextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> Texture => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_TextureLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> Texture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

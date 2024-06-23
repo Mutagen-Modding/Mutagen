@@ -3461,7 +3461,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_RaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region DNAMData
@@ -3486,15 +3486,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
-        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFootstepSetGetter>(_FootstepSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFootstepSetGetter>(_package, _recordData, _FootstepSoundLocation);
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_ArtObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _ArtObjectLocation);
         #endregion
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBodyPartDataGetter>(_BodyPartDataLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         #region TintType
         private int? _TintTypeLocation;

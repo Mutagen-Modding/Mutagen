@@ -5065,11 +5065,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region QuestCompletionXp
         private int? _QuestCompletionXpLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> QuestCompletionXp => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_QuestCompletionXpLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> QuestCompletionXp => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _QuestCompletionXpLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region Filter
@@ -5104,7 +5104,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region QuestGroup
         private int? _QuestGroupLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestGroupLocation);
         #endregion
         #region SwfFile
         private int? _SwfFileLocation;

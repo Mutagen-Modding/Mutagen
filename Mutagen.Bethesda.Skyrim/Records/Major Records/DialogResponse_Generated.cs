@@ -1891,11 +1891,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_SpeakerIdleAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _SpeakerIdleAnimationLocation);
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_ListenerIdleAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _ListenerIdleAnimationLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

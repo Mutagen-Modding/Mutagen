@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOblivionMajorRecordGetter>(_ReferenceLocation, _package, _recordData);
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOblivionMajorRecordGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

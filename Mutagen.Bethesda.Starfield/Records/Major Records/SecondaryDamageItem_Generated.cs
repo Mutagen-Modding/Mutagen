@@ -1152,11 +1152,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region DamageType
         private int? _DamageTypeLocation;
-        public IFormLinkGetter<IDamageTypeGetter> DamageType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDamageTypeGetter>(_DamageTypeLocation, _package, _recordData);
+        public IFormLinkGetter<IDamageTypeGetter> DamageType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDamageTypeGetter>(_package, _recordData, _DamageTypeLocation);
         #endregion
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_ActorValueLocation, _package, _recordData);
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

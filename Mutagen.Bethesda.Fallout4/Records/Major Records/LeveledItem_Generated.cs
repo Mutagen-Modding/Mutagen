@@ -2319,13 +2319,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_GlobalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
         #region EpicLootChance
         private int? _EpicLootChanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> EpicLootChance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_EpicLootChanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> EpicLootChance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _EpicLootChanceLocation);
         #endregion
         #region OverrideName
         private int? _OverrideNameLocation;

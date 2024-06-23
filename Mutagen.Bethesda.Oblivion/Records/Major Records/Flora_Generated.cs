@@ -1813,11 +1813,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullableGetter<IIngredientGetter> Ingredient => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIngredientGetter>(_IngredientLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIngredientGetter> Ingredient => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIngredientGetter>(_package, _recordData, _IngredientLocation);
         #endregion
         #region SeasonalIngredientProduction
         private RangeInt32? _SeasonalIngredientProductionLocation;

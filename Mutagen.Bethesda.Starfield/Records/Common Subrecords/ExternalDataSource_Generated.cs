@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Source
         private int? _SourceLocation;
-        public IFormLinkGetter<IExternalBaseTemplateGetter> Source => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IExternalBaseTemplateGetter>(_SourceLocation, _package, _recordData);
+        public IFormLinkGetter<IExternalBaseTemplateGetter> Source => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExternalBaseTemplateGetter>(_package, _recordData, _SourceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

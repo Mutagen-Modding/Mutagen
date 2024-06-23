@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Idle
         private int? _IdleLocation;
-        public IFormLinkGetter<IIdleAnimationGetter> Idle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_IdleLocation, _package, _recordData);
+        public IFormLinkGetter<IIdleAnimationGetter> Idle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleLocation);
         #endregion
         #region Topics
         partial void TopicsCustomParse(
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

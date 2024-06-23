@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Resource
         private int? _ResourceLocation;
-        public IFormLinkGetter<IResourceGetter> Resource => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IResourceGetter>(_ResourceLocation, _package, _recordData);
+        public IFormLinkGetter<IResourceGetter> Resource => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceGetter>(_package, _recordData, _ResourceLocation);
         #endregion
         #region Floats
         private int? _FloatsLocation;

@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticTargetGetter>(_ONAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticTargetGetter>(_package, _recordData, _ONAMLocation);
         #endregion
         #region NNAM
         private int? _NNAMLocation;

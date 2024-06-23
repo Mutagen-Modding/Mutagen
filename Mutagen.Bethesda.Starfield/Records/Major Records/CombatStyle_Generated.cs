@@ -6216,7 +6216,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TNAM
         private int? _TNAMLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> TNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICombatStyleGetter>(_TNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICombatStyleGetter> TNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _TNAMLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICombatStyleGetter>>? UNAM { get; private set; }
         partial void CustomFactoryEnd(

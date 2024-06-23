@@ -3347,7 +3347,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region UseGlobal
         private int? _UseGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_UseGlobalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }

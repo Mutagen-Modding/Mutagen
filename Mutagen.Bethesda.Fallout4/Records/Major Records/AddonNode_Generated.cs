@@ -1955,11 +1955,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_SoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region Light
         private int? _LightLocation;
-        public IFormLinkNullableGetter<ILightGetter> Light => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILightGetter>(_LightLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightGetter>(_package, _recordData, _LightLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region MasterParticleSystemCap

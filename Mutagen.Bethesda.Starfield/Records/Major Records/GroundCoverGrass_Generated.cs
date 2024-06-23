@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Grass
         private int? _GrassLocation;
-        public IFormLinkNullableGetter<IGrassGetter> Grass => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGrassGetter>(_GrassLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGrassGetter> Grass => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGrassGetter>(_package, _recordData, _GrassLocation);
         #endregion
         #region DNAM
         private int? _DNAMLocation;

@@ -4332,7 +4332,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkGetter<INpcGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkGetter<INpcGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
@@ -4340,7 +4340,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEmittanceGetter>(_EmittanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region Radius
         private int? _RadiusLocation;
@@ -4349,15 +4349,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReferenceGroupGetter>(_ReferenceGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         #region SourcePackIn
         private int? _SourcePackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_SourcePackInLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _SourcePackInLocation);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_PersistentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
@@ -4380,11 +4380,11 @@ namespace Mutagen.Bethesda.Starfield
         public IOwnershipGetter? Ownership { get; private set; }
         #region EncounterLocation
         private int? _EncounterLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_EncounterLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayerGetter>(_LayerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
         #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;

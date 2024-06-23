@@ -3924,16 +3924,16 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IItemGetter>(_DeathItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_RaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = Array.Empty<IItemEntryGetter>();
         #region AIData
@@ -3944,7 +3944,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public IFormLinkNullableGetter<IClassGetter> Class => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClassGetter>(_ClassLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClassGetter> Class => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClassGetter>(_package, _recordData, _ClassLocation);
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
@@ -3952,7 +3952,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hair
         private int? _HairLocation;
-        public IFormLinkNullableGetter<IHairGetter> Hair => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IHairGetter>(_HairLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IHairGetter> Hair => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHairGetter>(_package, _recordData, _HairLocation);
         #endregion
         #region HairLength
         private int? _HairLengthLocation;
@@ -3965,7 +3965,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICombatStyleGetter>(_CombatStyleLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region FaceGenGeometrySymmetric
         private int? _FaceGenGeometrySymmetricLocation;

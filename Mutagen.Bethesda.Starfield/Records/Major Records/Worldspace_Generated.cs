@@ -6382,24 +6382,24 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region EncounterLocation
         private int? _EncounterLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_EncounterLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region Biome
         private int? _BiomeLocation;
-        public IFormLinkNullableGetter<IBiomeGetter> Biome => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBiomeGetter>(_BiomeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IBiomeGetter> Biome => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBiomeGetter>(_package, _recordData, _BiomeLocation);
         #endregion
         public IWorldspaceParentGetter? Parent { get; private set; }
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClimateGetter>(_ClimateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region NAM7
         private int? _NAM7Location;
@@ -6407,7 +6407,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LodWater
         private int? _LodWaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> LodWater => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_LodWaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> LodWater => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _LodWaterLocation);
         #endregion
         #region LodWaterHeight
         private int? _LodWaterHeightLocation;
@@ -6460,11 +6460,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region AmbienceSet
         private int? _AmbienceSetLocation;
-        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAmbienceSetGetter>(_AmbienceSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbienceSetLocation);
         #endregion
         #region EnvironmentMap
         private int? _EnvironmentMapLocation;

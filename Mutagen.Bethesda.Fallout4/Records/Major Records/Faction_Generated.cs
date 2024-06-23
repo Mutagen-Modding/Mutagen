@@ -3078,27 +3078,27 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_ExteriorJailMarkerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _ExteriorJailMarkerLocation);
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_FollowerWaitMarkerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _FollowerWaitMarkerLocation);
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_StolenGoodsContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _StolenGoodsContainerLocation);
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_PlayerInventoryContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _PlayerInventoryContainerLocation);
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_SharedCrimeFactionListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SharedCrimeFactionListLocation);
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOutfitGetter>(_JailOutfitLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOutfitGetter>(_package, _recordData, _JailOutfitLocation);
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
@@ -3107,11 +3107,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_VendorBuySellListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _VendorBuySellListLocation);
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_MerchantContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MerchantContainerLocation);
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;

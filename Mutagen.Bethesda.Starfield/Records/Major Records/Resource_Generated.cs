@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? CraftingSound { get; private set; }
         #region List
         private int? _ListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> List => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_ListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> List => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ListLocation);
         #endregion
         #region Rarity
         private int? _RarityLocation;
@@ -2612,15 +2612,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_ActorValueLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
         #region Produce
         private int? _ProduceLocation;
-        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IResourceTargetGetter>(_ProduceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceTargetGetter>(_package, _recordData, _ProduceLocation);
         #endregion
         #region Interval
         private int? _IntervalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Interval => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_IntervalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Interval => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _IntervalLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

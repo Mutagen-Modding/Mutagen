@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region RefType
         private int? _RefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_RefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _RefTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2602,15 +2602,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_TextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_ValidRacesLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ValidRacesLocation);
         #endregion
         #region MNAM
         private int? _MNAMLocation;
-        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMorphableObjectGetter>(_MNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _MNAMLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

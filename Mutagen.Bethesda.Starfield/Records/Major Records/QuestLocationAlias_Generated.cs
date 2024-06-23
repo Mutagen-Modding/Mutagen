@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_SpecificLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _SpecificLocationLocation);
         #endregion
         public IReferenceAliasLocationGetter? ReferenceAliasLocation { get; private set; }
         public IExternalAliasLocationGetter? ExternalAliasLocation { get; private set; }
@@ -2519,11 +2519,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LocationTypeKeyword
         private int? _LocationTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> LocationTypeKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_LocationTypeKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> LocationTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _LocationTypeKeywordLocation);
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> DisplayName => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_DisplayNameLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMessageGetter> DisplayName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _DisplayNameLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

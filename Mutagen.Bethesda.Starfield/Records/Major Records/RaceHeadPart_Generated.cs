@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Part
         private int? _PartLocation;
-        public IFormLinkNullableGetter<IHeadPartGetter> Part => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IHeadPartGetter>(_PartLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IHeadPartGetter> Part => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHeadPartGetter>(_package, _recordData, _PartLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -3804,11 +3804,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateGetter>(_SnapBehaviorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -3816,7 +3816,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DefaultLayer
         private int? _DefaultLayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayerGetter>(_DefaultLayerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _DefaultLayerLocation);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Transforms2

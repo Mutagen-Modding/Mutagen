@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CraftingSound
         private int? _CraftingSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_CraftingSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _CraftingSoundLocation);
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
@@ -1906,11 +1906,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ScrapItem
         private int? _ScrapItemLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMiscItemGetter>(_ScrapItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMiscItemGetter>(_package, _recordData, _ScrapItemLocation);
         #endregion
         #region ModScrapScalar
         private int? _ModScrapScalarLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_ModScrapScalarLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ModScrapScalarLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

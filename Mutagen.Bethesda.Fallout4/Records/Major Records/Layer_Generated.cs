@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayerGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILayerGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _ParentLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

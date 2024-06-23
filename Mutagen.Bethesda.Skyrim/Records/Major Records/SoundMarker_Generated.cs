@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_SoundDescriptorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundDescriptorLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

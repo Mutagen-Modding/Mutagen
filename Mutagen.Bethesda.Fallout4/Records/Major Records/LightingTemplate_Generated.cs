@@ -3399,7 +3399,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         #region GodRays
         private int? _GodRaysLocation;
-        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGodRaysGetter>(_GodRaysLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGodRaysGetter>(_package, _recordData, _GodRaysLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

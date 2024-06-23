@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Submenu
         private int? _SubmenuLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> Submenu => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalGetter>(_SubmenuLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalGetter> Submenu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _SubmenuLocation);
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;

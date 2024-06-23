@@ -8465,7 +8465,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<IPlaceableObjectGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlaceableObjectGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlaceableObjectGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region BoundHalfExtents
         private int? _BoundHalfExtentsLocation;
@@ -8503,7 +8503,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEmittanceGetter>(_EmittanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
@@ -8520,11 +8520,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region TeleportLocName
         private int? _TeleportLocNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> TeleportLocName => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_TeleportLocNameLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMessageGetter> TeleportLocName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportLocNameLocation);
         #endregion
         #region MultiboundReference
         private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_MultiboundReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiboundReferenceLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -8536,7 +8536,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AcousticRestriction
         private int? _AcousticRestrictionLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> AcousticRestriction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_AcousticRestrictionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> AcousticRestriction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _AcousticRestrictionLocation);
         #endregion
         #region IsActivationPoint
         private int? _IsActivationPointLocation;
@@ -8552,15 +8552,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayerGetter>(_LayerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialSwapGetter>(_MaterialSwapLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialSwapGetter>(_package, _recordData, _MaterialSwapLocation);
         #endregion
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReferenceGroupGetter>(_ReferenceGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         #region Radio
         private RangeInt32? _RadioLocation;
@@ -8576,12 +8576,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SpawnContainer
         private int? _SpawnContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_SpawnContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _SpawnContainerLocation);
         #endregion
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LeveledItemBaseObject
         private int? _LeveledItemBaseObjectLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_LeveledItemBaseObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _LeveledItemBaseObjectLocation);
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
@@ -8589,7 +8589,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_PersistentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region CollisionLayer
         private int? _CollisionLayerLocation;
@@ -8601,7 +8601,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEncounterZoneGetter>(_EncounterZoneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
@@ -8609,11 +8609,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationRecordGetter>(_LocationReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region LocationRefType
         private int? _LocationRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> LocationRefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_LocationRefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> LocationRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _LocationRefTypeLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox
@@ -8658,7 +8658,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IPlacedObjectMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_AttachRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<ISplineLinkGetter>();
         #region PowerGridConnections
@@ -8675,7 +8675,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CurrentZoneReference
         private int? _CurrentZoneReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> CurrentZoneReference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_CurrentZoneReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> CurrentZoneReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _CurrentZoneReferenceLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
@@ -8683,7 +8683,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CurrentZoneCell
         private int? _CurrentZoneCellLocation;
-        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_CurrentZoneCellLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CurrentZoneCellLocation);
         #endregion
         #region Scale
         private int? _ScaleLocation;

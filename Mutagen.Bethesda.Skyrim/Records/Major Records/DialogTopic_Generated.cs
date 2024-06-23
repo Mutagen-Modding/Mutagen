@@ -2935,11 +2935,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Branch
         private int? _BranchLocation;
-        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogBranchGetter>(_BranchLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogBranchGetter>(_package, _recordData, _BranchLocation);
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region TopicFlags

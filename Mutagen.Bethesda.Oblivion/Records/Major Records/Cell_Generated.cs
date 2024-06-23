@@ -4726,15 +4726,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClimateGetter>(_ClimateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Owner => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_OwnerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _OwnerLocation);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -4742,7 +4742,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_GlobalVariableLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalVariableLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

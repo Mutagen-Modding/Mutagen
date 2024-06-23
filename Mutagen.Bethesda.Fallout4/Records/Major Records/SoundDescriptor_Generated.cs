@@ -2673,16 +2673,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Category
         private int? _CategoryLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundCategoryGetter>(_CategoryLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _CategoryLocation);
         #endregion
         #region AlternateSoundFor
         private int? _AlternateSoundForLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AlternateSoundForLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AlternateSoundForLocation);
         #endregion
         public IReadOnlyList<String> SoundFiles { get; private set; } = Array.Empty<String>();
         #region OutputModel
         private int? _OutputModelLocation;
-        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundOutputModelGetter>(_OutputModelLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _OutputModelLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoopAndRumble

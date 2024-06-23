@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Item
         private int? _ItemLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> Item => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_ItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILeveledItemGetter> Item => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ItemLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

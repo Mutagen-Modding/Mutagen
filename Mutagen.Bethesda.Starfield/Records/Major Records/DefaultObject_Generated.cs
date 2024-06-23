@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_ObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2858,15 +2858,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_LoopingSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _LoopingSoundLocation);
         #endregion
         #region ActivationSound
         private int? _ActivationSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_ActivationSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _ActivationSoundLocation);
         #endregion
         #region WaterType
         private int? _WaterTypeLocation;
-        public IFormLinkNullableGetter<IWaterGetter> WaterType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> WaterType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterTypeLocation);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
@@ -2878,7 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_InteractionKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InteractionKeywordLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

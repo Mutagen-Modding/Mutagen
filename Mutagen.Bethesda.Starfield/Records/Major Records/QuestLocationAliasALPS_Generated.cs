@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region PcmTypeKeyword
         private int? _PcmTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PcmTypeKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_PcmTypeKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> PcmTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PcmTypeKeywordLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

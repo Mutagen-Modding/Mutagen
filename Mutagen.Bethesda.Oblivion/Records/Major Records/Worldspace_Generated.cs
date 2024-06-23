@@ -3959,15 +3959,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWorldspaceGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IClimateGetter>(_ClimateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region Icon
         private int? _IconLocation;

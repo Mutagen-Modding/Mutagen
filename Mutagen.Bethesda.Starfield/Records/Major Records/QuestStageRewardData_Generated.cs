@@ -1542,11 +1542,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region XpAwarded
         private int? _XpAwardedLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> XpAwarded => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_XpAwardedLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> XpAwarded => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _XpAwardedLocation);
         #endregion
         #region BonusCredits
         private int? _BonusCreditsLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> BonusCredits => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_BonusCreditsLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> BonusCredits => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BonusCreditsLocation);
         #endregion
         public IReadOnlyList<IQuestStageRewardGetter> Rewards { get; private set; } = Array.Empty<IQuestStageRewardGetter>();
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();

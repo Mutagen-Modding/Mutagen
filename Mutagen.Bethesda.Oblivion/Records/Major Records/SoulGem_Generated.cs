@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

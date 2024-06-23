@@ -2532,11 +2532,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CountCurve
         private int? _CountCurveLocation;
-        public IFormLinkNullableGetter<ICurveTableGetter> CountCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurveTableGetter>(_CountCurveLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICurveTableGetter> CountCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurveTableGetter>(_package, _recordData, _CountCurveLocation);
         #endregion
         #region DistributionCurve
         private int? _DistributionCurveLocation;
-        public IFormLinkNullableGetter<ICurveTableGetter> DistributionCurve => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICurveTableGetter>(_DistributionCurveLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICurveTableGetter> DistributionCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurveTableGetter>(_package, _recordData, _DistributionCurveLocation);
         #endregion
         #region NAM5
         private int? _NAM5Location;

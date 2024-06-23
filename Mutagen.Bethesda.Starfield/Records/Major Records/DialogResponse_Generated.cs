@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BNAM
         private int? _BNAMLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> BNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_BNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> BNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _BNAMLocation);
         #endregion
         #region STRV
         private int? _STRVLocation;
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> VCLR => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_VCLRLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> VCLR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _VCLRLocation);
         #endregion
         #region FLMV
         private int? _FLMVLocation;

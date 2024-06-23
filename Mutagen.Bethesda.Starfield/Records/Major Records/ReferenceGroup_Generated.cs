@@ -2093,15 +2093,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_ReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         #region PackIn
         private int? _PackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> PackIn => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_PackInLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPackInGetter> PackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _PackInLocation);
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_LNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _LNAMLocation);
         #endregion
         public IReadOnlyList<UInt32>? MNAM { get; private set; }
         partial void CustomFactoryEnd(

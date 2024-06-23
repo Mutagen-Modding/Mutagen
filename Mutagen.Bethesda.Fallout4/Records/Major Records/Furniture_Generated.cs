@@ -4800,7 +4800,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_PreviewTransformLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -4823,11 +4823,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalGetter>(_NativeTerminalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         #region ForcedLocRefType
         private int? _ForcedLocRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationReferenceTypeGetter>(_ForcedLocRefTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _ForcedLocRefTypeLocation);
         #endregion
         #region PNAM
         private int? _PNAMLocation;
@@ -4835,7 +4835,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region DrinkingWater
         private int? _DrinkingWaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> DrinkingWater => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_DrinkingWaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> DrinkingWater => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _DrinkingWaterLocation);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
@@ -4879,7 +4879,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AssociatedForm
         private int? _AssociatedFormLocation;
-        public IFormLinkNullableGetter<IFurnitureAssociationGetter> AssociatedForm => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFurnitureAssociationGetter>(_AssociatedFormLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFurnitureAssociationGetter> AssociatedForm => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFurnitureAssociationGetter>(_package, _recordData, _AssociatedFormLocation);
         #endregion
         #region EnabledEntryPoints
         partial void EnabledEntryPointsCustomParse(

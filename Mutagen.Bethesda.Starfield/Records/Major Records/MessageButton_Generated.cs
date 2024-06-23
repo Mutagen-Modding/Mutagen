@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> Reference => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_ReferenceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

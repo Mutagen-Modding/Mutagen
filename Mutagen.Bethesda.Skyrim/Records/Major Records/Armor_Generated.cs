@@ -3669,7 +3669,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEffectRecordGetter>(_ObjectEffectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectRecordGetter>(_package, _recordData, _ObjectEffectLocation);
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -3690,11 +3690,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PickUpSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PutDownSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         #region RagdollConstraintTemplate
         private int? _RagdollConstraintTemplateLocation;
@@ -3702,19 +3702,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_EquipmentTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipmentTypeLocation);
         #endregion
         #region BashImpactDataSet
         private int? _BashImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> BashImpactDataSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_BashImpactDataSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImpactDataSetGetter> BashImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _BashImpactDataSetLocation);
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_AlternateBlockMaterialLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _AlternateBlockMaterialLocation);
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_RaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -3742,7 +3742,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TemplateArmor
         private int? _TemplateArmorLocation;
-        public IFormLinkNullableGetter<IArmorGetter> TemplateArmor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArmorGetter>(_TemplateArmorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArmorGetter> TemplateArmor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _TemplateArmorLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

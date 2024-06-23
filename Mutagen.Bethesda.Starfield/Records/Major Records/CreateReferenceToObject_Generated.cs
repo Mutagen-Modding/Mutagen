@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_ObjectLocation, _package, _recordData);
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         private RangeInt32? _ALCALocation;
         #region AliasID

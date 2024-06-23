@@ -2069,11 +2069,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticObjectGetter>(_LoadingScreenNifLocation, _package, _recordData);
+        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticObjectGetter>(_package, _recordData, _LoadingScreenNifLocation);
         #endregion
         #region Transform
         private int? _TransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> Transform => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITransformGetter>(_TransformLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITransformGetter> Transform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _TransformLocation);
         #endregion
         public ILoadScreenRotationGetter? Rotation { get; private set; }
         public ILoadScreenZoomGetter? Zoom { get; private set; }

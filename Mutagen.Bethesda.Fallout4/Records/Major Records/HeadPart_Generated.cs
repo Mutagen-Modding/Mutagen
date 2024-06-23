@@ -2562,15 +2562,15 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = Array.Empty<IPartGetter>();
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_TextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region Color
         private int? _ColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IColorRecordGetter>(_ColorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _ColorLocation);
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFormListGetter>(_ValidRacesLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ValidRacesLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

@@ -4653,7 +4653,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;
@@ -4674,7 +4674,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Template => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_TemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         #region BOLV
         private int? _BOLVLocation;
@@ -4694,7 +4694,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SCPP
         private int? _SCPPLocation;
-        public IFormLinkNullableGetter<ISceneGetter> SCPP => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_SCPPLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> SCPP => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SCPPLocation);
         #endregion
         #region DEVT
         private int? _DEVTLocation;

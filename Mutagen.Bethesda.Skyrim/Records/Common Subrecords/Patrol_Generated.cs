@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Idle
         private int? _IdleLocation;
-        public IFormLinkGetter<IIdleAnimationGetter> Idle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_IdleLocation, _package, _recordData);
+        public IFormLinkGetter<IIdleAnimationGetter> Idle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleLocation);
         #endregion
         #region SCHR
         private int? _SCHRLocation;

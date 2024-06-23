@@ -3895,15 +3895,15 @@ namespace Mutagen.Bethesda.Starfield
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICombatStyleGetter>(_CombatStyleLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_OwnerQuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _OwnerQuestLocation);
         #endregion
         #region AnimationFlavor
         private int? _AnimationFlavorLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_AnimationFlavorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimationFlavorLocation);
         #endregion
         #region PackageTemplate
         partial void PackageTemplateCustomParse(

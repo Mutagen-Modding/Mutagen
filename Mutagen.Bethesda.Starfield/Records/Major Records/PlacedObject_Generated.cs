@@ -9488,11 +9488,11 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Base
         private int? _BaseLocation;
-        public IFormLinkGetter<IPlaceableObjectGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlaceableObjectGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkGetter<IPlaceableObjectGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region XMSP
         private int? _XMSPLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> XMSP => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_XMSPLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> XMSP => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _XMSPLocation);
         #endregion
         #region XTRV
         private RangeInt32? _XTRVLocation;
@@ -9525,7 +9525,7 @@ namespace Mutagen.Bethesda.Starfield
         public IPlacedObjectDebugTextGetter? DebugText { get; private set; }
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEmittanceGetter>(_EmittanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region Radius
         private int? _RadiusLocation;
@@ -9545,7 +9545,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CurrentZoneCell
         private int? _CurrentZoneCellLocation;
-        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_CurrentZoneCellLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CurrentZoneCellLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
@@ -9559,25 +9559,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TeleportName
         private int? _TeleportNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> TeleportName => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMessageGetter>(_TeleportNameLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMessageGetter> TeleportName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportNameLocation);
         #endregion
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReferenceGroupGetter>(_ReferenceGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps { get; private set; }
         #region XPCK
         private int? _XPCKLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> XPCK => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReferenceGroupGetter>(_XPCKLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReferenceGroupGetter> XPCK => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _XPCKLocation);
         #endregion
         #region SourcePackIn
         private int? _SourcePackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_SourcePackInLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _SourcePackInLocation);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_PersistentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region ProjectedDecal
         private RangeInt32? _ProjectedDecalLocation;
@@ -9639,11 +9639,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILayerGetter>(_LayerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region XTRI
         private int? _XTRILocation;
@@ -9661,7 +9661,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterZone => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_EncounterZoneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region GeometryDirtinessScale
         private int? _GeometryDirtinessScaleLocation;
@@ -9694,7 +9694,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILinkedReferenceGetter>(_AttachRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         #region RagdollBipedRotation
         private int? _RagdollBipedRotationLocation;
@@ -9706,7 +9706,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TimeOfDay
         private int? _TimeOfDayLocation;
-        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITimeOfDayRecordGetter>(_TimeOfDayLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _TimeOfDayLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;

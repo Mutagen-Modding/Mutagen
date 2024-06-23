@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkGetter<IQuestGetter> Quest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_QuestLocation, _package, _recordData);
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region Category
         private int? _CategoryLocation;
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region StartingTopic
         private int? _StartingTopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> StartingTopic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_StartingTopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> StartingTopic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _StartingTopicLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

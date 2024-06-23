@@ -1695,15 +1695,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AmbientSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AmbientSoundLocation);
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
-        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRegionGetter>(_UseSoundFromRegionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRegionGetter>(_package, _recordData, _UseSoundFromRegionLocation);
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IReverbParametersGetter>(_EnvironmentTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReverbParametersGetter>(_package, _recordData, _EnvironmentTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

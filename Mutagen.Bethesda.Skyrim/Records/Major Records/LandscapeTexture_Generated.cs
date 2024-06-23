@@ -1931,11 +1931,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_TextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_MaterialTypeLocation, _package, _recordData);
+        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _MaterialTypeLocation);
         #endregion
         private RangeInt32? _HNAMLocation;
         #region HavokFriction

@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ReflectionParent
         private int? _ReflectionParentLocation;
-        public IFormLinkNullableGetter<IWeatherSettingGetter> ReflectionParent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWeatherSettingGetter>(_ReflectionParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWeatherSettingGetter> ReflectionParent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeatherSettingGetter>(_package, _recordData, _ReflectionParentLocation);
         #endregion
         #region ReflectionDiff
         private int? _ReflectionDiffLocation;

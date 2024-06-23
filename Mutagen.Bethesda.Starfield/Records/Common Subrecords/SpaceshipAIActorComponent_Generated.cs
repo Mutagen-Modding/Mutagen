@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SpaceshipAIActor
         private int? _SpaceshipAIActorLocation;
-        public IFormLinkNullableGetter<INpcGetter> SpaceshipAIActor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_SpaceshipAIActorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> SpaceshipAIActor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _SpaceshipAIActorLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

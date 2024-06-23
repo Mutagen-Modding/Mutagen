@@ -5374,19 +5374,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_ParentLocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _ParentLocationLocation);
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_UnreportedCrimeFactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _UnreportedCrimeFactionLocation);
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
-        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedSimpleGetter>(_WorldLocationMarkerRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedSimpleGetter>(_package, _recordData, _WorldLocationMarkerRefLocation);
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
@@ -5394,7 +5394,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_HorseMarkerRefLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _HorseMarkerRefLocation);
         #endregion
         #region Color
         private int? _ColorLocation;

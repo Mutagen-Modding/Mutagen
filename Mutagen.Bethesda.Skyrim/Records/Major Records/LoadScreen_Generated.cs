@@ -2277,7 +2277,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_LoadingScreenNifLocation, _package, _recordData);
+        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _LoadingScreenNifLocation);
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;

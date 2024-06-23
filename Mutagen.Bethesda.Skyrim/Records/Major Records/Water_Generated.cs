@@ -5716,19 +5716,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> Material => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_MaterialLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Material => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _MaterialLocation);
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_OpenSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _OpenSoundLocation);
         #endregion
         #region Spell
         private int? _SpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> Spell => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISpellGetter>(_SpellLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _SpellLocation);
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceGetter>(_ImageSpaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceGetter>(_package, _recordData, _ImageSpaceLocation);
         #endregion
         #region DamagePerSecond
         private int? _DamagePerSecondLocation;

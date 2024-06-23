@@ -2104,11 +2104,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<ICreatureGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICreatureGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICreatureGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICreatureGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Owner => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_OwnerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _OwnerLocation);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_GlobalVariableLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalVariableLocation);
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;

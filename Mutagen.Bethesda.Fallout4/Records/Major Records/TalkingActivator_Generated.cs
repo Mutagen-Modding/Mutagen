@@ -2553,7 +2553,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundMarkerGetter>(_LoopingSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundMarkerGetter>(_package, _recordData, _LoopingSoundLocation);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -2561,7 +2561,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IVoiceTypeGetter>(_VoiceTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

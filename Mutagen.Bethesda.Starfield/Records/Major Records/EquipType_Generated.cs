@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ConditionActorValue
         private int? _ConditionActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_ConditionActorValueLocation, _package, _recordData, maxIsNull: true);
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ConditionActorValueLocation, maxIsNull: true);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

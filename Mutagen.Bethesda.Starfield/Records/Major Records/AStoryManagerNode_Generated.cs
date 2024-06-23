@@ -1665,11 +1665,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAStoryManagerNodeGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAStoryManagerNodeGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region PreviousSibling
         private int? _PreviousSiblingLocation;
-        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAStoryManagerNodeGetter>(_PreviousSiblingLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAStoryManagerNodeGetter>(_package, _recordData, _PreviousSiblingLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

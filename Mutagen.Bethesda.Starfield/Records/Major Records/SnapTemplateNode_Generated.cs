@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<Single> SnapAngles { get; private set; } = Array.Empty<Single>();
         #region ArtObject
         private int? _ArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_ArtObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _ArtObjectLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

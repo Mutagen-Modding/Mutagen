@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IVoiceTypeGetter>(_VoiceTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

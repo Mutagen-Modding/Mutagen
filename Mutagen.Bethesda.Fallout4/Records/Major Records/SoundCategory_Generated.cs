@@ -1982,11 +1982,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundCategoryGetter>(_ParentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region MenuSlider
         private int? _MenuSliderLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundCategoryGetter>(_MenuSliderLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _MenuSliderLocation);
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;

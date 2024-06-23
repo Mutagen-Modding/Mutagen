@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Light
         private int? _LightLocation;
-        public IFormLinkNullableGetter<ILightGetter> Light => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILightGetter>(_LightLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightGetter>(_package, _recordData, _LightLocation);
         #endregion
         #region PSDF
         private int? _PSDFLocation;

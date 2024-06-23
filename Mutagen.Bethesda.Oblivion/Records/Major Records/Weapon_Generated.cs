@@ -1958,11 +1958,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEnchantmentGetter>(_EnchantmentLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEnchantmentGetter>(_package, _recordData, _EnchantmentLocation);
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

@@ -3280,19 +3280,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region PreviousDialog
         private int? _PreviousDialogLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_PreviousDialogLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _PreviousDialogLocation);
         #endregion
         #region SharedDialog
         private int? _SharedDialogLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_SharedDialogLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _SharedDialogLocation);
         #endregion
         #region DialogGroup
         private int? _DialogGroupLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_DialogGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _DialogGroupLocation);
         #endregion
         #region OverrideFileName
         private int? _OverrideFileNameLocation;
@@ -3306,11 +3306,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public IFormLinkNullableGetter<INpcGetter> Speaker => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_SpeakerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> Speaker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _SpeakerLocation);
         #endregion
         #region StartScene
         private int? _StartSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_StartSceneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _StartSceneLocation);
         #endregion
         #region INTV
         private int? _INTVLocation;
@@ -3322,7 +3322,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AudioOutputOverride
         private int? _AudioOutputOverrideLocation;
-        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundOutputModelGetter>(_AudioOutputOverrideLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _AudioOutputOverrideLocation);
         #endregion
         #region GreetDistance
         private int? _GreetDistanceLocation;
@@ -3342,7 +3342,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ResetGlobal
         private int? _ResetGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> ResetGlobal => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_ResetGlobalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> ResetGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ResetGlobalLocation);
         #endregion
         #region SubtitlePriority
         private int? _SubtitlePriorityLocation;

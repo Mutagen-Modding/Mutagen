@@ -4021,7 +4021,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Menu
         private int? _MenuLocation;
-        public IFormLinkNullableGetter<ITerminalMenuGetter> Menu => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITerminalMenuGetter>(_MenuLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITerminalMenuGetter> Menu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _MenuLocation);
         #endregion
         #region Background
         private int? _BackgroundLocation;
@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FurnitureTemplate
         private int? _FurnitureTemplateLocation;
-        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFurnitureGetter>(_FurnitureTemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFurnitureGetter>(_package, _recordData, _FurnitureTemplateLocation);
         #endregion
         #region FNPR
         private int? _FNPRLocation;

@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = Array.Empty<IContainerItemGetter>();
         #region Data
@@ -2083,11 +2083,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> OpenSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundGetter>(_OpenSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundGetter> OpenSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _OpenSoundLocation);
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> CloseSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundGetter>(_CloseSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundGetter> CloseSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _CloseSoundLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

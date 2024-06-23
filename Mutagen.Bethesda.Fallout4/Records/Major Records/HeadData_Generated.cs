@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_DefaultFaceTextureLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _DefaultFaceTextureLocation);
         #endregion
         public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<ITintGroupGetter>();
         public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();

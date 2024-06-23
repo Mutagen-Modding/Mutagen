@@ -2622,27 +2622,27 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_TextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_SecondaryTextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _SecondaryTextureSetLocation);
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound1 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundGetter>(_Sound1Location, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundGetter> Sound1 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _Sound1Location);
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound2 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundGetter>(_Sound2Location, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundGetter> Sound2 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _Sound2Location);
         #endregion
         #region FootstepExplosion
         private int? _FootstepExplosionLocation;
-        public IFormLinkNullableGetter<IExplosionGetter> FootstepExplosion => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IExplosionGetter>(_FootstepExplosionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IExplosionGetter> FootstepExplosion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExplosionGetter>(_package, _recordData, _FootstepExplosionLocation);
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public IFormLinkNullableGetter<IHazardGetter> Hazard => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IHazardGetter>(_HazardLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IHazardGetter> Hazard => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHazardGetter>(_package, _recordData, _HazardLocation);
         #endregion
         #region FootstepParticleMaxDist
         private int? _FootstepParticleMaxDistLocation;

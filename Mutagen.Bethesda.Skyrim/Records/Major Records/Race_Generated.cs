@@ -8297,7 +8297,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArmorGetter>(_SkinLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
@@ -8565,7 +8565,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_AttackRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
@@ -8576,7 +8576,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBodyPartDataGetter>(_BodyPartDataLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
@@ -8590,23 +8590,23 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_MaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _MaterialTypeLocation);
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_ImpactDataSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _ImpactDataSetLocation);
         #endregion
         #region DecapitationFX
         private int? _DecapitationFXLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_DecapitationFXLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _DecapitationFXLocation);
         #endregion
         #region OpenLootSound
         private int? _OpenLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_OpenLootSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _OpenLootSoundLocation);
         #endregion
         #region CloseLootSound
         private int? _CloseLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_CloseLootSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _CloseLootSoundLocation);
         #endregion
         public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<IRaceMovementTypeGetter>();
         #region EquipmentFlags
@@ -8616,7 +8616,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IEquipTypeGetter>>();
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_UnarmedEquipSlotLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _UnarmedEquipSlotLocation);
         #endregion
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
@@ -8632,27 +8632,27 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultWalkLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultWalkLocation);
         #endregion
         #region BaseMovementDefaultRun
         private int? _BaseMovementDefaultRunLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultRunLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultRunLocation);
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultSwimLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultSwimLocation);
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultFlyLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultFlyLocation);
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultSneakLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultSneakLocation);
         #endregion
         #region BaseMovementDefaultSprint
         private int? _BaseMovementDefaultSprintLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMovementTypeGetter>(_BaseMovementDefaultSprintLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultSprintLocation);
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
@@ -8660,11 +8660,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_MorphRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _MorphRaceLocation);
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRaceGetter>(_ArmorRaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _ArmorRaceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

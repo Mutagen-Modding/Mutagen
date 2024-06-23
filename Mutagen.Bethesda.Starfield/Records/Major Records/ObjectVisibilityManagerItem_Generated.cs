@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> Object => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_ObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         public IReadOnlyList<IObjectBoundsFloatGetter>? ObjectBounds { get; private set; }
         partial void CustomFactoryEnd(

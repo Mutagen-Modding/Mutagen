@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Perk
         private int? _PerkLocation;
-        public IFormLinkGetter<IPerkGetter> Perk => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPerkGetter>(_PerkLocation, _package, _recordData);
+        public IFormLinkGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _PerkLocation);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_AssociatedSkillLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _AssociatedSkillLocation);
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = Array.Empty<UInt32>();
         #region Index

@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SurfaceBlock
         private int? _SurfaceBlockLocation;
-        public IFormLinkNullableGetter<ISurfaceBlockGetter> SurfaceBlock => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISurfaceBlockGetter>(_SurfaceBlockLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISurfaceBlockGetter> SurfaceBlock => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceBlockGetter>(_package, _recordData, _SurfaceBlockLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

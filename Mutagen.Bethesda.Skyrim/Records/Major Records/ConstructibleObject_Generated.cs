@@ -1960,11 +1960,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullableGetter<IConstructibleGetter> CreatedObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IConstructibleGetter>(_CreatedObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IConstructibleGetter> CreatedObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IConstructibleGetter>(_package, _recordData, _CreatedObjectLocation);
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_WorkbenchKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         #region CreatedObjectCount
         private int? _CreatedObjectCountLocation;

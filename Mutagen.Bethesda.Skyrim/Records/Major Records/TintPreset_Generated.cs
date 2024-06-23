@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Color
         private int? _ColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IColorRecordGetter>(_ColorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _ColorLocation);
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

@@ -2323,7 +2323,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Unknown => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_UnknownLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> Unknown => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _UnknownLocation);
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(

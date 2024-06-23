@@ -2802,11 +2802,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateBehaviorGetter>(_SnapBehaviorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateBehaviorGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public IFormLinkNullableGetter<IMaterialPathGetter> Material => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialPathGetter>(_MaterialLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialPathGetter> Material => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialPathGetter>(_package, _recordData, _MaterialLocation);
         #endregion
         private RangeInt32? _DATALocation;
         public ProjectedDecal.DATADataType DATADataTypeState { get; private set; }

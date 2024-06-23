@@ -3341,7 +3341,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
         #region LooseMod
         private int? _LooseModLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMiscItemGetter>(_LooseModLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMiscItemGetter>(_package, _recordData, _LooseModLocation);
         #endregion
         #region Priority
         private int? _PriorityLocation;

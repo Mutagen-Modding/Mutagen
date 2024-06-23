@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_GlobalLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IModelGetter? Model { get; private set; }

@@ -1155,11 +1155,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Actor
         private int? _ActorLocation;
-        public IFormLinkNullableGetter<INpcGetter> Actor => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_ActorLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> Actor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _ActorLocation);
         #endregion
         #region Reaction
         private int? _ReactionLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Reaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_ReactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Reaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ReactionLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

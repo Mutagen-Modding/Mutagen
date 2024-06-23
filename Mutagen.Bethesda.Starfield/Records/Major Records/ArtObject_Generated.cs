@@ -2776,7 +2776,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region EffectShader
         private int? _EffectShaderLocation;
-        public IFormLinkNullableGetter<IEffectShaderGetter> EffectShader => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEffectShaderGetter>(_EffectShaderLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEffectShaderGetter> EffectShader => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectShaderGetter>(_package, _recordData, _EffectShaderLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2130,11 +2130,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_SpeakerIdleAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _SpeakerIdleAnimationLocation);
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_ListenerIdleAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _ListenerIdleAnimationLocation);
         #endregion
         #region InterruptPercentageTNAM
         public partial ParseResult InterruptPercentageTNAMCustomParse(
@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICameraPathGetter>(_CameraPathLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICameraPathGetter>(_package, _recordData, _CameraPathLocation);
         #endregion
         #region StopOnSceneEnd
         private int? _StopOnSceneEndLocation;

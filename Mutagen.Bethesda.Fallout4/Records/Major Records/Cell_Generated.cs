@@ -6566,7 +6566,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InPreVisFileOf
         private int? _InPreVisFileOfLocation;
-        public IFormLinkNullableGetter<ICellGetter> InPreVisFileOf => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICellGetter>(_InPreVisFileOfLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICellGetter> InPreVisFileOf => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _InPreVisFileOfLocation);
         #endregion
         #region PreCombinedFilesTimestamp
         private int? _PreCombinedFilesTimestampLocation;
@@ -6598,7 +6598,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LightingTemplate
         private int? _LightingTemplateLocation;
-        public IFormLinkGetter<ILightingTemplateGetter> LightingTemplate => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILightingTemplateGetter>(_LightingTemplateLocation, _package, _recordData);
+        public IFormLinkGetter<ILightingTemplateGetter> LightingTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightingTemplateGetter>(_package, _recordData, _LightingTemplateLocation);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
@@ -6607,7 +6607,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -6619,7 +6619,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWaterGetter>(_WaterLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region FactionRank
@@ -6628,7 +6628,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LockList
         private int? _LockListLocation;
-        public IFormLinkNullableGetter<ILockListGetter> LockList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILockListGetter>(_LockListLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILockListGetter> LockList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILockListGetter>(_package, _recordData, _LockListLocation);
         #endregion
         #region ExteriorLod
         private RangeInt32? _ExteriorLodLocation;
@@ -6640,27 +6640,27 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;
-        public IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IRegionGetter>(_SkyAndWeatherFromRegionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRegionGetter>(_package, _recordData, _SkyAndWeatherFromRegionLocation);
         #endregion
         #region AcousticSpace
         private int? _AcousticSpaceLocation;
-        public IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IAcousticSpaceGetter>(_AcousticSpaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAcousticSpaceGetter>(_package, _recordData, _AcousticSpaceLocation);
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEncounterZoneGetter>(_EncounterZoneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMusicTypeGetter>(_MusicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImageSpaceGetter>(_ImageSpaceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceGetter>(_package, _recordData, _ImageSpaceLocation);
         #endregion
         #region GodRays
         private int? _GodRaysLocation;
-        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGodRaysGetter>(_GodRaysLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGodRaysGetter>(_package, _recordData, _GodRaysLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; private set; }
         #region CombinedMeshLogic

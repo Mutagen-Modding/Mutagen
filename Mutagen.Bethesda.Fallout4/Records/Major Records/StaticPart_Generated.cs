@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Static
         private int? _StaticLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> Static => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticTargetGetter>(_StaticLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticTargetGetter> Static => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticTargetGetter>(_package, _recordData, _StaticLocation);
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(

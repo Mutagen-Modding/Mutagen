@@ -2408,7 +2408,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaterialPath
         private int? _MaterialPathLocation;
-        public IFormLinkNullableGetter<IMaterialPathGetter> MaterialPath => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialPathGetter>(_MaterialPathLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialPathGetter> MaterialPath => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialPathGetter>(_package, _recordData, _MaterialPathLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

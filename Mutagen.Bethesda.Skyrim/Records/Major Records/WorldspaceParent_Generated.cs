@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkGetter<IWorldspaceGetter> Worldspace => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWorldspaceGetter>(_WorldspaceLocation, _package, _recordData);
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;

@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region NpcAnimation
         private int? _NpcAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IIdleAnimationGetter>(_NpcAnimationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _NpcAnimationLocation);
         #endregion
         #region STRV
         private int? _STRVLocation;
@@ -2330,15 +2330,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public IFormLinkGetter<IKeywordGetter> VCLR => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_VCLRLocation, _package, _recordData);
+        public IFormLinkGetter<IKeywordGetter> VCLR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _VCLRLocation);
         #endregion
         #region FLMV
         private int? _FLMVLocation;
-        public IFormLinkGetter<IKeywordGetter> FLMV => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_FLMVLocation, _package, _recordData);
+        public IFormLinkGetter<IKeywordGetter> FLMV => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _FLMVLocation);
         #endregion
         #region FLAV
         private int? _FLAVLocation;
-        public IFormLinkGetter<IKeywordGetter> FLAV => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_FLAVLocation, _package, _recordData);
+        public IFormLinkGetter<IKeywordGetter> FLAV => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _FLAVLocation);
         #endregion
         #region QUAL
         private int? _QUALLocation;
@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region ATAC
         private int? _ATACLocation;
-        public IFormLinkGetter<IActionRecordGetter> ATAC => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActionRecordGetter>(_ATACLocation, _package, _recordData);
+        public IFormLinkGetter<IActionRecordGetter> ATAC => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActionRecordGetter>(_package, _recordData, _ATACLocation);
         #endregion
         #region PLRL
         private int? _PLRLLocation;

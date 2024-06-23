@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Head
         private int? _HeadLocation;
-        public IFormLinkNullableGetter<IHeadPartGetter> Head => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IHeadPartGetter>(_HeadLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IHeadPartGetter> Head => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHeadPartGetter>(_package, _recordData, _HeadLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

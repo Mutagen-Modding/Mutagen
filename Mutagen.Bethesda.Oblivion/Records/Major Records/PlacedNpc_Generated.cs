@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<INpcGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -2218,11 +2218,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_MerchantContainerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MerchantContainerLocation);
         #endregion
         #region Horse
         private int? _HorseLocation;
-        public IFormLinkNullableGetter<IPlacedCreatureGetter> Horse => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedCreatureGetter>(_HorseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedCreatureGetter> Horse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedCreatureGetter>(_package, _recordData, _HorseLocation);
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;

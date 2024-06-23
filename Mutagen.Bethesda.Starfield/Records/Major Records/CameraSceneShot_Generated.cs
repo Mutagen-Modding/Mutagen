@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region CameraShot
         private int? _CameraShotLocation;
-        public IFormLinkNullableGetter<ICameraShotGetter> CameraShot => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICameraShotGetter>(_CameraShotLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICameraShotGetter> CameraShot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICameraShotGetter>(_package, _recordData, _CameraShotLocation);
         #endregion
         #region ALLA
         private int? _ALLALocation;
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region REPL
         private int? _REPLLocation;
-        public IFormLinkGetter<IPlacedGetter> REPL => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedGetter>(_REPLLocation, _package, _recordData);
+        public IFormLinkGetter<IPlacedGetter> REPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _REPLLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;

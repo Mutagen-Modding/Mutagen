@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundGetter>(_SoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region Chance
         private int? _ChanceLocation;

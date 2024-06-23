@@ -1444,11 +1444,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region GNAM
         private int? _GNAMLocation;
-        public IFormLinkNullableGetter<IPackInGetter> GNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_GNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPackInGetter> GNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _GNAMLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> HNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedObjectGetter>(_HNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _HNAMLocation);
         #endregion
         #region INAM
         private int? _INAMLocation;
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region JNAM
         private int? _JNAMLocation;
-        public IFormLinkNullableGetter<IPackInGetter> JNAM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPackInGetter>(_JNAMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPackInGetter> JNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _JNAMLocation);
         #endregion
         #region LNAM
         private int? _LNAMLocation;

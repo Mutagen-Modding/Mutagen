@@ -4464,7 +4464,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IIconsGetter? Icons { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEffectRecordGetter>(_ObjectEffectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectRecordGetter>(_package, _recordData, _ObjectEffectLocation);
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -4473,23 +4473,23 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_EquipmentTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipmentTypeLocation);
         #endregion
         #region BlockBashImpact
         private int? _BlockBashImpactLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_BlockBashImpactLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _BlockBashImpactLocation);
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_AlternateBlockMaterialLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _AlternateBlockMaterialLocation);
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PickUpSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PutDownSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -4506,39 +4506,39 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IImpactDataSetGetter>(_ImpactDataSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _ImpactDataSetLocation);
         #endregion
         #region FirstPersonModel
         private int? _FirstPersonModelLocation;
-        public IFormLinkNullableGetter<IStaticGetter> FirstPersonModel => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStaticGetter>(_FirstPersonModelLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IStaticGetter> FirstPersonModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _FirstPersonModelLocation);
         #endregion
         #region AttackSound
         private int? _AttackSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AttackSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AttackSoundLocation);
         #endregion
         #region AttackSound2D
         private int? _AttackSound2DLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound2D => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AttackSound2DLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound2D => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AttackSound2DLocation);
         #endregion
         #region AttackLoopSound
         private int? _AttackLoopSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackLoopSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AttackLoopSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackLoopSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AttackLoopSoundLocation);
         #endregion
         #region AttackFailSound
         private int? _AttackFailSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackFailSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_AttackFailSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackFailSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AttackFailSoundLocation);
         #endregion
         #region IdleSound
         private int? _IdleSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> IdleSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_IdleSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> IdleSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _IdleSoundLocation);
         #endregion
         #region EquipSound
         private int? _EquipSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> EquipSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_EquipSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> EquipSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _EquipSoundLocation);
         #endregion
         #region UnequipSound
         private int? _UnequipSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> UnequipSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_UnequipSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> UnequipSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _UnequipSoundLocation);
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
@@ -4558,7 +4558,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> Template => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IWeaponGetter>(_TemplateLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IWeaponGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

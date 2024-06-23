@@ -3234,11 +3234,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_SoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region Lens
         private int? _LensLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> Lens => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILensFlareGetter>(_LensLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILensFlareGetter> Lens => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _LensLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

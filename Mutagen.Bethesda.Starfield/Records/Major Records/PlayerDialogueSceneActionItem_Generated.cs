@@ -1518,19 +1518,19 @@ namespace Mutagen.Bethesda.Starfield
 
         #region PlayerChoice
         private int? _PlayerChoiceLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerChoice => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_PlayerChoiceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerChoice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerChoiceLocation);
         #endregion
         #region PPST
         private int? _PPSTLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PPST => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_PPSTLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> PPST => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PPSTLocation);
         #endregion
         #region PNST
         private int? _PNSTLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PNST => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_PNSTLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> PNST => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PNSTLocation);
         #endregion
         #region StartScene
         private int? _StartSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_StartSceneLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _StartSceneLocation);
         #endregion
         #region PhaseIndex
         private int? _PhaseIndexLocation;
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NpcResponse
         private int? _NpcResponseLocation;
-        public IFormLinkGetter<IDialogTopicGetter> NpcResponse => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_NpcResponseLocation, _package, _recordData);
+        public IFormLinkGetter<IDialogTopicGetter> NpcResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcResponseLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

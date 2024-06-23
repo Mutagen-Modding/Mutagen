@@ -3120,7 +3120,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Lens
         private int? _LensLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> Lens => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILensFlareGetter>(_LensLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILensFlareGetter> Lens => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _LensLocation);
         #endregion
         #region FLBD
         private int? _FLBDLocation;

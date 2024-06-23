@@ -3504,14 +3504,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_WorkbenchKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; private set; }
         public IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; private set; }
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IConstructibleObjectTargetGetter>(_CreatedObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IConstructibleObjectTargetGetter>(_package, _recordData, _CreatedObjectLocation);
         #endregion
         #region AmountProduced
         private int? _AmountProducedLocation;
@@ -3538,11 +3538,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MenuArtObject
         private int? _MenuArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_MenuArtObjectLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _MenuArtObjectLocation);
         #endregion
         #region BuildLimit
         private int? _BuildLimitLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> BuildLimit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_BuildLimitLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> BuildLimit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BuildLimitLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
         #region RECF

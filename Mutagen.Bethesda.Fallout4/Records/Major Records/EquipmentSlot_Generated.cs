@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Slot
         private int? _SlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> Slot => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IEquipTypeGetter>(_SlotLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IEquipTypeGetter> Slot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _SlotLocation);
         #endregion
         #region Node
         private int? _NodeLocation;

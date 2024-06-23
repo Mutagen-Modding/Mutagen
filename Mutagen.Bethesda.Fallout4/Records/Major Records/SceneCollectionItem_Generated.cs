@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkGetter<ISceneGetter> Scene => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISceneGetter>(_SceneLocation, _package, _recordData);
+        public IFormLinkGetter<ISceneGetter> Scene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SceneLocation);
         #endregion
         #region XNAM
         private int? _XNAMLocation;

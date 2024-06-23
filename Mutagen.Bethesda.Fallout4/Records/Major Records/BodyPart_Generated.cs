@@ -4357,23 +4357,23 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region GoreEffectsDismemberBloodArt
         private int? _GoreEffectsDismemberBloodArtLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> GoreEffectsDismemberBloodArt => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IArtObjectGetter>(_GoreEffectsDismemberBloodArtLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IArtObjectGetter> GoreEffectsDismemberBloodArt => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _GoreEffectsDismemberBloodArtLocation);
         #endregion
         #region GoreEffectsBloodImpactMaterialType
         private int? _GoreEffectsBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_GoreEffectsBloodImpactMaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _GoreEffectsBloodImpactMaterialTypeLocation);
         #endregion
         #region OnCrippleBloodImpactMaterialType
         private int? _OnCrippleBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IMaterialTypeGetter>(_OnCrippleBloodImpactMaterialTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _OnCrippleBloodImpactMaterialTypeLocation);
         #endregion
         #region MeatCapTextureSet
         private int? _MeatCapTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_MeatCapTextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _MeatCapTextureSetLocation);
         #endregion
         #region CollarTextureSet
         private int? _CollarTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ITextureSetGetter>(_CollarTextureSetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _CollarTextureSetLocation);
         #endregion
         #region TwistVariablePrefix
         private int? _TwistVariablePrefixLocation;

@@ -2054,23 +2054,23 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IActorValueInformationGetter>(_ActorValueLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
         #region Size
         private int? _SizeLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Size => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_SizeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Size => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _SizeLocation);
         #endregion
         #region Distance
         private int? _DistanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Distance => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_DistanceLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Distance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _DistanceLocation);
         #endregion
         #region Cooldown
         private int? _CooldownLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_CooldownLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _CooldownLocation);
         #endregion
         #region Faction
         private int? _FactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Faction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IFactionGetter>(_FactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FactionLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

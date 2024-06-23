@@ -3099,11 +3099,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region PreviousDialog
         private int? _PreviousDialogLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_PreviousDialogLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _PreviousDialogLocation);
         #endregion
         #region FavorLevel
         private int? _FavorLevelLocation;
@@ -3112,7 +3112,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = Array.Empty<IFormLinkGetter<IDialogGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
-        public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogResponsesGetter>(_ResponseDataLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _ResponseDataLocation);
         #endregion
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
@@ -3123,15 +3123,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public IFormLinkNullableGetter<INpcGetter> Speaker => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<INpcGetter>(_SpeakerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<INpcGetter> Speaker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _SpeakerLocation);
         #endregion
         #region WalkAwayTopic
         private int? _WalkAwayTopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> WalkAwayTopic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_WalkAwayTopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> WalkAwayTopic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _WalkAwayTopicLocation);
         #endregion
         #region AudioOutputOverride
         private int? _AudioOutputOverrideLocation;
-        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundOutputModelGetter>(_AudioOutputOverrideLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _AudioOutputOverrideLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

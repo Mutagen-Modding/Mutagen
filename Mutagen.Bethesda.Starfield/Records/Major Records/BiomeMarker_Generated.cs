@@ -2918,15 +2918,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region MarkerType
         private int? _MarkerTypeLocation;
-        public IFormLinkGetter<IKeywordGetter> MarkerType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_MarkerTypeLocation, _package, _recordData);
+        public IFormLinkGetter<IKeywordGetter> MarkerType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _MarkerTypeLocation);
         #endregion
         #region FloraList
         private int? _FloraListLocation;
-        public IFormLinkGetter<ILeveledItemGetter> FloraList => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILeveledItemGetter>(_FloraListLocation, _package, _recordData);
+        public IFormLinkGetter<ILeveledItemGetter> FloraList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _FloraListLocation);
         #endregion
         #region LNA2
         private int? _LNA2Location;
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> LNA2 => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IStarfieldMajorRecordGetter>(_LNA2Location, _package, _recordData);
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> LNA2 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _LNA2Location);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

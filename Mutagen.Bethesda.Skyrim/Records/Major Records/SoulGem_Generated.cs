@@ -2809,11 +2809,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PickUpSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoundDescriptorGetter>(_PutDownSoundLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -2840,7 +2840,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedTo
         private int? _LinkedToLocation;
-        public IFormLinkNullableGetter<ISoulGemGetter> LinkedTo => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoulGemGetter>(_LinkedToLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoulGemGetter> LinkedTo => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoulGemGetter>(_package, _recordData, _LinkedToLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

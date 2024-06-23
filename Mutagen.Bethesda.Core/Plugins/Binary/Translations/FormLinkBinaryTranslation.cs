@@ -217,4 +217,20 @@ public sealed class FormLinkBinaryTranslation
     {
         return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s)));
     }
+
+    internal IFormLinkNullableGetter<TMajor> NullableRecordOverlayFactory<TMajor>(
+        BinaryOverlayFactoryPackage package,
+        ReadOnlyMemorySlice<byte> recordData,
+        int? location,
+        bool maxIsNull = false)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return location.HasValue ? 
+            new FormLinkNullable<TMajor>(
+                FormKey.Factory(
+                    package.MetaData.MasterReferences,
+                    BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(recordData, location.Value, package.MetaData.Constants)),
+                    maxIsNull: maxIsNull)) : 
+            FormLinkNullable<TMajor>.Null;
+    }
 }

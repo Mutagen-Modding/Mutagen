@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IDialogTopicGetter>(_TopicLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region LoopingMax
         private int? _LoopingMaxLocation;
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DialogueSubtype
         private int? _DialogueSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_DialogueSubtypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _DialogueSubtypeLocation);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         partial void CustomFactoryEnd(

@@ -3333,7 +3333,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOblivionMajorRecordGetter>(_BaseLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOblivionMajorRecordGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -3353,7 +3353,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IOwnerGetter> Owner => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOwnerGetter>(_OwnerLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOwnerGetter>(_package, _recordData, _OwnerLocation);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -3361,7 +3361,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_GlobalVariableLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalVariableLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -3369,7 +3369,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Target
         private int? _TargetLocation;
-        public IFormLinkNullableGetter<IPlacedGetter> Target => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPlacedGetter>(_TargetLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPlacedGetter> Target => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _TargetLocation);
         #endregion
         #region SpeedTreeSeed
         private int? _SpeedTreeSeedLocation;
@@ -3393,7 +3393,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region XRTM
         private int? _XRTMLocation;
-        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IOblivionMajorRecordGetter>(_XRTMLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOblivionMajorRecordGetter>(_package, _recordData, _XRTMLocation);
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
@@ -3422,7 +3422,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISoulGemGetter>(_ContainedSoulLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoulGemGetter>(_package, _recordData, _ContainedSoulLocation);
         #endregion
         public ILocationGetter? Location { get; private set; }
         partial void CustomFactoryEnd(

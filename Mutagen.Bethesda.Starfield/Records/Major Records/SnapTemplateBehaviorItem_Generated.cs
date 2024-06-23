@@ -1498,16 +1498,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BaseObject
         private int? _BaseObjectLocation;
-        public IFormLinkGetter<IBaseObjectGetter> BaseObject => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IBaseObjectGetter>(_BaseObjectLocation, _package, _recordData);
+        public IFormLinkGetter<IBaseObjectGetter> BaseObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBaseObjectGetter>(_package, _recordData, _BaseObjectLocation);
         #endregion
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region SnapTemplateNode
         private int? _SnapTemplateNodeLocation;
-        public IFormLinkGetter<ISnapTemplateNodeGetter> SnapTemplateNode => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ISnapTemplateNodeGetter>(_SnapTemplateNodeLocation, _package, _recordData);
+        public IFormLinkGetter<ISnapTemplateNodeGetter> SnapTemplateNode => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateNodeGetter>(_package, _recordData, _SnapTemplateNodeLocation);
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkGetter<IKeywordGetter> Keyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_KeywordLocation, _package, _recordData);
+        public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

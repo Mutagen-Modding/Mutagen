@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> NextPerk => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IPerkGetter>(_NextPerkLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _NextPerkLocation);
         #endregion
         #region Effects
         partial void EffectsCustomParse(

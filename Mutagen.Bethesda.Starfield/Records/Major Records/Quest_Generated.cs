@@ -6289,11 +6289,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestType
         private int? _QuestTypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestType => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestTypeLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> QuestType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestTypeLocation);
         #endregion
         #region QuestFaction
         private int? _QuestFactionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestFactionLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestFactionLocation);
         #endregion
         #region Event
         private int? _EventLocation;
@@ -6301,15 +6301,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ILocationGetter>(_LocationLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region QuestTimeLimit
         private int? _QuestTimeLimitLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IGlobalGetter>(_QuestTimeLimitLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _QuestTimeLimitLocation);
         #endregion
         #region SourceQuest
         private int? _SourceQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IQuestGetter>(_SourceQuestLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _SourceQuestLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region Filter
@@ -6344,11 +6344,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestGroup
         private int? _QuestGroupLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_QuestGroupLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestGroupLocation);
         #endregion
         #region MissionTypeKeyword
         private int? _MissionTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IKeywordGetter>(_MissionTypeKeywordLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _MissionTypeKeywordLocation);
         #endregion
         #region MissionBoardDescription
         private int? _MissionBoardDescriptionLocation;

@@ -3999,11 +3999,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IItemGetter>(_DeathItemLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<IScriptGetter>(_ScriptLocation, _package, _recordData);
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
@@ -4021,7 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICombatStyleGetter>(_CombatStyleLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
@@ -4045,7 +4045,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
-        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => FormKeyBinaryTranslation.Instance.OverlayNullableHelper<ICreatureGetter>(_InheritsSoundFromLocation, _package, _recordData);
+        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICreatureGetter>(_package, _recordData, _InheritsSoundFromLocation);
         #endregion
         public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = Array.Empty<ICreatureSoundGetter>();
         partial void CustomFactoryEnd(
