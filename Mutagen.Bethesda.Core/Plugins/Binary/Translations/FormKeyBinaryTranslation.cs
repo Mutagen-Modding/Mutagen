@@ -16,7 +16,7 @@ public sealed class FormKeyBinaryTranslation
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,
-        ISeparatedMasterPackage masterReferences,
+        IReadOnlySeparatedMasterPackage masterReferences,
         bool maxIsNone = false)
     {
         var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
@@ -30,7 +30,7 @@ public sealed class FormKeyBinaryTranslation
 
     public FormKey Parse(
         SubrecordFrame frame,
-        ISeparatedMasterPackage masterReferences,
+        IReadOnlySeparatedMasterPackage masterReferences,
         bool maxIsNone = false)
     {
         var id = frame.AsUInt32();

@@ -77,7 +77,7 @@ public sealed class RecordLocator
     public static RecordLocatorResults GetLocations(
         ModPath filePath,
         GameConstants constants,
-        ISeparatedMasterPackage masters,
+        IReadOnlySeparatedMasterPackage masters,
         RecordInterest? interest = null,
         IFileSystem? fileSystem = null)
     {

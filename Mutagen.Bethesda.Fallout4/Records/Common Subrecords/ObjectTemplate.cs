@@ -52,7 +52,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
         }
     }
 
-    public static AObjectModProperty<T> ReadProperty(ISeparatedMasterPackage masters, ReadOnlySpan<byte> data)
+    public static AObjectModProperty<T> ReadProperty(IReadOnlySeparatedMasterPackage masters, ReadOnlySpan<byte> data)
     {
         AObjectModProperty<T> ret;
         var type = (ObjectModProperty.ValueType)data[0];

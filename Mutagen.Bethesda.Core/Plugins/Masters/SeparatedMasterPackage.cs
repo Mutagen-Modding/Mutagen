@@ -10,18 +10,15 @@ namespace Mutagen.Bethesda.Plugins.Masters;
 
 public record MasterStyleIndex(ModIndex Index, MasterStyle Style);
 
-public interface ISeparatedMasterPackage
+public interface IReadOnlySeparatedMasterPackage
 {
     ModKey CurrentMod { get; }
     IReadOnlyMasterReferenceCollection Raw { get; }
     bool TryLookupModKey(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index);
     ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex);
-    internal ILoadOrderGetter<ModKey> Normal { get; }
-    internal ILoadOrderGetter<ModKey>? Light { get; }
-    internal ILoadOrderGetter<ModKey>? Medium { get; }
 }
 
-public class SeparatedMasterPackage : ISeparatedMasterPackage
+public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 {
     public ILoadOrderGetter<ModKey> Normal { get; private set; } = null!;
     public ILoadOrderGetter<ModKey>? Light { get; private set; }
@@ -31,9 +28,13 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
 
     private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
-    internal static readonly ISeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
+    internal static readonly IReadOnlySeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
+
+    internal SeparatedMasterPackage()
+    {
+    }
     
-    public static ISeparatedMasterPackage Factory(
+    public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModKey currentModKey,
         IReadOnlyMasterReferenceCollection masters, 
@@ -50,7 +51,7 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
         }
     }
     
-    public static ISeparatedMasterPackage Factory(
+    public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModPath modPath,
         ILoadOrderGetter<IModFlagsGetter>? loadOrder,
@@ -60,21 +61,53 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
         return Factory(release, modPath.ModKey, masters, loadOrder);
     }
 
-    internal static ISeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
+    internal class NotSeparatedMasterPackage : IReadOnlySeparatedMasterPackage
+    {
+        public ModKey CurrentMod { get; }
+        public IReadOnlyMasterReferenceCollection Raw { get; }
+
+        public ILoadOrderGetter<ModKey> Normal { get; }
+        public ILoadOrderGetter<ModKey>? Light => null;
+        public ILoadOrderGetter<ModKey>? Medium => null;
+
+        internal IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
+
+        public NotSeparatedMasterPackage(
+            ModKey currentMod,
+            IReadOnlyMasterReferenceCollection masters,
+            LoadOrder<ModKey> normal)
+        {
+            CurrentMod = currentMod;
+            Raw = masters;
+            Normal = normal;
+        }
+    
+        public bool TryLookupModKey(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index)
+        {
+            return _lookup.TryGetValue(modKey, out index);
+        }
+
+        public ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex)
+        {
+            return Normal;
+        }
+    }
+    
+    internal static IReadOnlySeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
     {
         var normal = new List<ModKey>(masters.Masters.Select((x => x.Master)));
         normal.Add(masters.CurrentMod);
-        var ret = new SeparatedMasterPackage()
-        {
-            Normal = new LoadOrder<ModKey>(normal, disposeItems: false),
-            Raw = masters,
-            CurrentMod = masters.CurrentMod,
-        };
-        ret.SetupLookup();
+        var ret = new NotSeparatedMasterPackage(
+            masters.CurrentMod,
+            masters,
+            new LoadOrder<ModKey>(normal, disposeItems: false));
+        var lookup = new Dictionary<ModKey, MasterStyleIndex>();
+        FillLookup(ret.Normal, lookup, MasterStyle.Normal);
+        ret._lookup = lookup;
         return ret;
     }
     
-    internal static ISeparatedMasterPackage Separate(
+    internal static IReadOnlySeparatedMasterPackage Separate(
         ModKey currentModKey,
         IReadOnlyMasterReferenceCollection masters, 
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
@@ -135,12 +168,24 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
             Raw = masters,
             CurrentMod = masters.CurrentMod,
         };
-        ret.SetupLookup();
+        var lookup = new Dictionary<ModKey, MasterStyleIndex>();
+        FillLookup(ret.Normal, lookup, MasterStyle.Normal);
+        
+        if (ret.Light != null)
+        {
+            FillLookup(ret.Light, lookup, MasterStyle.Light);
+        }
+
+        if (ret.Medium != null)
+        {
+            FillLookup(ret.Medium, lookup, MasterStyle.Medium);
+        }
+        ret._lookup = lookup;
         return ret;
 
     }
 
-    public static ISeparatedMasterPackage FromConstants(GameConstants constants, ModPath path, IFileSystem? fileSystem = null)
+    public static IReadOnlySeparatedMasterPackage FromConstants(GameConstants constants, ModPath path, IFileSystem? fileSystem = null)
     {
         if (constants.SeparateMasterLoadOrders)
         {
@@ -150,26 +195,8 @@ public class SeparatedMasterPackage : ISeparatedMasterPackage
 
         return NotSeparate(MasterReferenceCollection.FromPath(path, constants.Release, fileSystem: fileSystem));
     }
-    
-    private void SetupLookup()
-    {
-        var lookup = new Dictionary<ModKey, MasterStyleIndex>();
-        FillLookup(Normal, lookup, MasterStyle.Normal);
-        
-        if (Light != null)
-        {
-            FillLookup(Light, lookup, MasterStyle.Light);
-        }
 
-        if (Medium != null)
-        {
-            FillLookup(Medium, lookup, MasterStyle.Medium);
-        }
-
-        _lookup = lookup;
-    }
-
-    private void FillLookup(
+    internal static void FillLookup(
         ILoadOrderGetter<ModKey> masters,
         Dictionary<ModKey, MasterStyleIndex> dict,
         MasterStyle style)

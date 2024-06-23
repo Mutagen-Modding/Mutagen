@@ -32,7 +32,7 @@ internal static class BinaryOverlayArrayHelper
     public static ReadOnlyMemorySlice<IFormLinkGetter<TMajorGetter>> FormLinkSliceFromFixedSize<TMajorGetter>(
         ReadOnlyMemorySlice<byte> mem,
         int amount,
-        ISeparatedMasterPackage masterReferences)
+        IReadOnlySeparatedMasterPackage masterReferences)
         where TMajorGetter : class, IMajorRecordGetter
     {
         var intSpan = mem.Span.Slice(0, amount * 4).AsUInt32Span();

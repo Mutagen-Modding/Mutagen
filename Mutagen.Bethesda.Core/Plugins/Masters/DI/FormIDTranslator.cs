@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
 internal static class FormIDTranslator
 {
-    public static FormKey GetFormKey(ISeparatedMasterPackage masterReferences, uint idWithModID)
+    public static FormKey GetFormKey(IReadOnlySeparatedMasterPackage masterReferences, uint idWithModID)
     {
         var modID = ModIndex.GetModIndexFromUInt(idWithModID);
 
@@ -31,7 +31,7 @@ internal static class FormIDTranslator
     }
     
     public static FormID GetFormID(
-        ISeparatedMasterPackage masters,
+        IReadOnlySeparatedMasterPackage masters,
         IFormLinkIdentifier key)
     {
         if (!masters.TryLookupModKey(key.FormKey.ModKey, out var index))

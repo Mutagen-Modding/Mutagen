@@ -27,7 +27,7 @@ public abstract class Processor
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
     private readonly Dictionary<long, uint> _lengthTracker = new();
     protected byte _numMasters;
-    public ISeparatedMasterPackage Masters;
+    public IReadOnlySeparatedMasterPackage Masters;
     protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;

@@ -31,9 +31,6 @@ public class SeparatedMasterPackageTests
         });
 
         var package = SeparatedMasterPackage.NotSeparate(masterColl);
-        package.Normal.Should().NotBeNull();
-        package.Light.Should().BeNull();
-        package.Medium.Should().BeNull();
 
         package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);
@@ -97,9 +94,6 @@ public class SeparatedMasterPackageTests
         lo.Add(orig);
 
         var package = SeparatedMasterPackage.Separate(orig.ModKey, masterColl, lo);
-        package.Normal.Should().NotBeNull();
-        package.Light.Should().NotBeNull();
-        package.Medium.Should().NotBeNull();
 
         package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);

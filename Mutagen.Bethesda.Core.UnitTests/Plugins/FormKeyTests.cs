@@ -125,7 +125,7 @@ public class FormKeyTests
     #region BinaryTranslation
     public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-    public ISeparatedMasterPackage TypicalMasters() =>
+    public IReadOnlySeparatedMasterPackage TypicalMasters() =>
         SeparatedMasterPackage.NotSeparate(
             new MasterReferenceCollection(
                 TestConstants.PluginModKey,

@@ -17,7 +17,7 @@ public partial class ExtraData
 
 partial class ExtraDataBinaryCreateTranslation
 {
-    public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, ISeparatedMasterPackage masters)
+    public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, IReadOnlySeparatedMasterPackage masters)
     {
         FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
         FormKey formKey = FormKey.Factory(masters, form.Raw);
