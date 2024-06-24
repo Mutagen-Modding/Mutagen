@@ -5,7 +5,6 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing.AutoData;
-using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
@@ -13,7 +12,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
 public class FormIdTranslatorTests
 {
     [Theory, MutagenAutoData]
-    internal void TypicalMasters(
+    internal void GetFormIDTypicalMasters(
         ModKey originating,
         ModKey modKeyA,
         ModKey modKeyB,
@@ -42,15 +41,15 @@ public class FormIdTranslatorTests
                     123));
         
         FormIDTranslator.GetFormID(masterPackage,
-            new FormLinkInformation(
-                new FormKey(modKeyB, 456), recordType))
+                new FormLinkInformation(
+                    new FormKey(modKeyB, 456), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(1),
                     456));
         FormIDTranslator.GetFormID(masterPackage,
-            new FormLinkInformation(
-                new FormKey(originating, 789), recordType))
+                new FormLinkInformation(
+                    new FormKey(originating, 789), recordType))
             .Should().Be(
                 new FormID(
                     new ModIndex(2),
@@ -58,7 +57,35 @@ public class FormIdTranslatorTests
     }
     
     [Theory, MutagenAutoData]
-    internal void NoMasters(
+    internal void GetFormKeyTypicalMasters(
+        ModKey originating,
+        ModKey modKeyA,
+        ModKey modKeyB,
+        Type recordType)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        coll.SetTo(new []
+        {
+            new MasterReference()
+            {
+                Master = modKeyA
+            },
+            new MasterReference()
+            {
+                Master = modKeyB
+            },
+        });
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
+        FormIDTranslator.GetFormKey(masterPackage, 0x00123456)
+            .Should().Be(new FormKey(modKeyA, 0x123456));
+        FormIDTranslator.GetFormKey(masterPackage, 0x01123456)
+            .Should().Be(new FormKey(modKeyB, 0x123456));
+        FormIDTranslator.GetFormKey(masterPackage, 0x02123456)
+            .Should().Be(new FormKey(originating, 0x123456));
+    }
+    
+    [Theory, MutagenAutoData]
+    internal void GetFormIDNoMasters(
         ModKey originating,
         Type recordType)
     {
@@ -66,8 +93,8 @@ public class FormIdTranslatorTests
         var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
 
         FormIDTranslator.GetFormID(
-            masterPackage,
-            new FormLinkInformation(
+                masterPackage,
+                new FormLinkInformation(
                     new FormKey(originating, 789), recordType))
             .Should().Be(
                 new FormID(
@@ -76,7 +103,21 @@ public class FormIdTranslatorTests
     }
     
     [Theory, MutagenAutoData]
-    internal void TypicalSeparateMasters(
+    internal void GetFormKeyNoMasters(
+        ModKey originating,
+        Type recordType)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
+
+        FormIDTranslator.GetFormKey(
+                masterPackage,
+                0x00123456)
+            .Should().Be(new FormKey(originating, 0x123456));
+    }
+    
+    [Theory, MutagenAutoData]
+    internal void GetFormIDTypicalSeparateMasters(
         ModKey originating,
         ModKey modA,
         ModKey modB,
@@ -174,6 +215,72 @@ public class FormIdTranslatorTests
                 new FormID(
                     new ModIndex(0xFD),
                     0x011234));
+    }
+    
+    [Theory, MutagenAutoData]
+    internal void GetFormKeyTypicalSeparateMasters(
+        ModKey originating,
+        ModKey modA,
+        ModKey modB,
+        ModKey lightA,
+        ModKey lightB,
+        ModKey mediumA,
+        ModKey mediumB,
+        Type recordType)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        coll.SetTo(new []
+        {
+            new MasterReference()
+            {
+                Master = modA
+            },
+            new MasterReference()
+            {
+                Master = lightA
+            },
+            new MasterReference()
+            {
+                Master = mediumA
+            },
+            new MasterReference()
+            {
+                Master = modB
+            },
+            new MasterReference()
+            {
+                Master = lightB
+            },
+            new MasterReference()
+            {
+                Master = mediumB
+            },
+        });
+        var lo = new LoadOrder<IModFlagsGetter>();
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
+
+        FormIDTranslator.GetFormKey(masterPackage, 0x00123456)
+            .Should().Be(new FormKey(modA, 0x123456));
+        FormIDTranslator.GetFormKey(masterPackage, 0xFE000123)
+            .Should().Be(new FormKey(lightA, 0x123));
+        FormIDTranslator.GetFormKey(masterPackage, 0xFD001234)
+            .Should().Be(new FormKey(mediumA, 0x1234));
+        FormIDTranslator.GetFormKey(masterPackage, 0x01123456)
+            .Should().Be(new FormKey(modB, 0x123456));
+        FormIDTranslator.GetFormKey(masterPackage, 0xFE001123)
+            .Should().Be(new FormKey(lightB, 0x123));
+        FormIDTranslator.GetFormKey(masterPackage, 0xFD011234)
+            .Should().Be(new FormKey(mediumB, 0x1234));
+        FormIDTranslator.GetFormKey(masterPackage, 0x02123456)
+            .Should().Be(new FormKey(originating, 0x123456));
     }
     
     [Theory, MutagenAutoData]

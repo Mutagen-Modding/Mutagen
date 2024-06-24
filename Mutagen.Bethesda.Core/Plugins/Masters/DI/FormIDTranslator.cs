@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
@@ -7,27 +6,7 @@ internal static class FormIDTranslator
 {
     public static FormKey GetFormKey(IReadOnlySeparatedMasterPackage masterReferences, uint idWithModID)
     {
-        var modID = ModIndex.GetModIndexFromUInt(idWithModID);
-
-        ILoadOrderGetter<ModKey> loadOrder = masterReferences.GetLoadOrder(modID);
-
-        if (modID.ID >= loadOrder.Count)
-        {
-            return new FormKey(
-                masterReferences.CurrentMod,
-                idWithModID);
-        }
-
-        var justId = idWithModID & 0xFFFFFF;
-        if (modID.ID == 0 && justId == 0)
-        {
-            return FormKey.Null;
-        }
-
-        var master = loadOrder[modID.ID];
-        return new FormKey(
-            master,
-            idWithModID);
+        return masterReferences.GetFormKey(idWithModID);
     }
     
     public static FormID GetFormID(

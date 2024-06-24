@@ -70,7 +70,8 @@ public sealed class RecordLocator
             new ParsingMeta(
                 release, 
                 filePath.ModKey,
-                SeparatedMasterPackage.Factory(release, filePath, loadOrder, fileSystem)));
+                SeparatedMasterPackage.Factory(release, filePath, loadOrder, fileSystem)),
+            fileSystem: fileSystem);
         return GetLocations(stream, interest);
     }
 
@@ -86,7 +87,8 @@ public sealed class RecordLocator
             new ParsingMeta(
                 constants, 
                 filePath.ModKey,
-                masters));
+                masters),
+            fileSystem: fileSystem);
         return GetLocations(stream, interest);
     }
 

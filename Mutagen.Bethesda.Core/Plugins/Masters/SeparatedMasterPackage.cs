@@ -15,14 +15,14 @@ public interface IReadOnlySeparatedMasterPackage
     ModKey CurrentMod { get; }
     IReadOnlyMasterReferenceCollection Raw { get; }
     bool TryLookupModKey(ModKey modKey, [MaybeNullWhen(false)] out MasterStyleIndex index);
-    ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex);
+    FormKey GetFormKey(uint idWithModID);
 }
 
 public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 {
     public ILoadOrderGetter<ModKey> Normal { get; private set; } = null!;
-    public ILoadOrderGetter<ModKey>? Light { get; private set; }
-    public ILoadOrderGetter<ModKey>? Medium { get; private set; }
+    public ILoadOrderGetter<ModKey> Light { get; private set; } = null!;
+    public ILoadOrderGetter<ModKey> Medium { get; private set; } = null!;
     public ModKey CurrentMod { get; private set; }
     public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
@@ -67,8 +67,6 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         public IReadOnlyMasterReferenceCollection Raw { get; }
 
         public ILoadOrderGetter<ModKey> Normal { get; }
-        public ILoadOrderGetter<ModKey>? Light => null;
-        public ILoadOrderGetter<ModKey>? Medium => null;
 
         internal IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
@@ -87,9 +85,28 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             return _lookup.TryGetValue(modKey, out index);
         }
 
-        public ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex)
+        public FormKey GetFormKey(uint idWithModID)
         {
-            return Normal;
+            var loadOrder = Normal;
+            var modID = ModIndex.GetModIndexFromUInt(idWithModID);
+            
+            if (modID.ID >= loadOrder.Count)
+            {
+                return new FormKey(
+                    CurrentMod,
+                    idWithModID);
+            }
+
+            var justId = idWithModID & 0xFFFFFF;
+            if (modID.ID == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
+            var master = loadOrder[modID.ID];
+            return new FormKey(
+                master,
+                idWithModID);
         }
     }
     
@@ -170,16 +187,8 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         };
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
         FillLookup(ret.Normal, lookup, MasterStyle.Normal);
-        
-        if (ret.Light != null)
-        {
-            FillLookup(ret.Light, lookup, MasterStyle.Light);
-        }
-
-        if (ret.Medium != null)
-        {
-            FillLookup(ret.Medium, lookup, MasterStyle.Medium);
-        }
+        FillLookup(ret.Light, lookup, MasterStyle.Light);
+        FillLookup(ret.Medium, lookup, MasterStyle.Medium);
         ret._lookup = lookup;
         return ret;
 
@@ -213,20 +222,73 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     {
         return _lookup.TryGetValue(modKey, out index);
     }
-    
-    public ILoadOrderGetter<ModKey> GetLoadOrder(ModIndex modIndex)
+
+    public FormKey GetFormKey(uint idWithModID)
     {
-        if (modIndex == ModIndex.LightMaster)
+        var modID = ModIndex.GetModIndexFromUInt(idWithModID);
+
+        if (modID == ModIndex.LightMaster)
         {
-            return Light ?? Normal;
+            LightMasterFormID lightFormId = new LightMasterFormID(idWithModID);
+            if (lightFormId.ModIndex >= Light.Count)
+            {
+                return new FormKey(
+                    CurrentMod,
+                    lightFormId.ID);
+            }
+            
+            var justId = idWithModID & LightMasterFormID.Max;
+            if (lightFormId.ModIndex == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
+            var master = Light[checked((int)lightFormId.ModIndex)];
+            return new FormKey(
+                master,
+                lightFormId.ID);
         }
-        else if (modIndex == ModIndex.MediumMaster)
+        else if (modID == ModIndex.MediumMaster)
         {
-            return Medium ?? Normal;
+            MediumMasterFormID mediumFormId = new MediumMasterFormID(idWithModID);
+            if (mediumFormId.ModIndex >= Medium.Count)
+            {
+                return new FormKey(
+                    CurrentMod,
+                    mediumFormId.ID);
+            }
+            
+            var justId = idWithModID & 0xFFFFFF;
+            if (mediumFormId.ModIndex == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
+            var master = Medium[mediumFormId.ModIndex];
+            return new FormKey(
+                master,
+                mediumFormId.ID);
         }
         else
         {
-            return Normal;
+            FormID formID = new FormID(idWithModID);
+            if (formID.ModIndex.ID >= Normal.Count)
+            {
+                return new FormKey(
+                    CurrentMod,
+                    formID.ID);
+            }
+
+            var justId = idWithModID & 0xFFFFFF;
+            if (formID.ModIndex.ID == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
+            var master = Normal[formID.ModIndex.ID];
+            return new FormKey(
+                master,
+                formID.ID);
         }
     }
 }
