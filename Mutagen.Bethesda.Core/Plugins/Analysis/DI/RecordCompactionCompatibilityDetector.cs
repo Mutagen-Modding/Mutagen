@@ -26,14 +26,14 @@ public class RecordCompactionCompatibilityDetector
     {
         if (!mod.CanBeLightMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
-        return new RangeUInt32(lowerRange, LightMasterFormID.Max);
+        return new RangeUInt32(lowerRange, FormID.LightIdMask);
     }
 
     public RangeUInt32? GetMediumMasterRange(IModGetter mod)
     {
         if (!mod.CanBeMediumMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
-        return new RangeUInt32(lowerRange, MediumMasterFormID.Max);
+        return new RangeUInt32(lowerRange, FormID.MediumIdMask);
     }
 
     public RangeUInt32? GetRange(IModGetter mod)

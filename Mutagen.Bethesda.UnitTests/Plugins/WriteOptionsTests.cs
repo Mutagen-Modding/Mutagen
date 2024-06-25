@@ -81,22 +81,22 @@ public class WriteOptionsTests
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(1);
-                recs[0].FormID.ID.Should().Be(reimportNpc.FormKey.ID);
-                recs[0].FormID.ModIndex.ID.Should().Be(1);
+                recs[0].FormID.FullId.Should().Be(reimportNpc.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.Should().Be(1);
             }
             else if (group.ContainedRecordType == RecordTypes.WEAP)
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(1);
-                recs[0].FormID.ID.Should().Be(reimportWeapon.FormKey.ID);
-                recs[0].FormID.ModIndex.ID.Should().Be(0);
+                recs[0].FormID.FullId.Should().Be(reimportWeapon.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.Should().Be(0);
             }
             else if (group.ContainedRecordType == RecordTypes.RACE)
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(1);
-                recs[0].FormID.ID.Should().Be(reimportRace.FormKey.ID);
-                recs[0].FormID.ModIndex.ID.Should().Be(1);
+                recs[0].FormID.FullId.Should().Be(reimportRace.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.Should().Be(1);
             }
             else
             {

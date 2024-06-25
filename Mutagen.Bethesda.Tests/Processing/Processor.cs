@@ -12,10 +12,7 @@ using System.Reactive.Subjects;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
-using System.Linq;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -264,7 +261,7 @@ public abstract class Processor
 
     private bool CheckIsFormIDOverflow(FormID formID)
     {
-        if (formID.ModIndex.ID <= _numMasters) return false;
+        if (formID.FullMasterIndex <= _numMasters) return false;
         return true;
     }
 
@@ -281,7 +278,7 @@ public abstract class Processor
     public FormID ProcessFormIDOverflow(FormID formId)
     {
         if (!CheckIsFormIDOverflow(formId)) return formId;
-        return new FormID(new ModIndex(_numMasters), formId.ID);
+        return FormID.Factory(MasterStyle.Full, _numMasters, formId.FullId);
     }
 
     public bool ProcessFormIDOverflow(SubrecordPinFrame pin, long offsetLoc, ref int loc)

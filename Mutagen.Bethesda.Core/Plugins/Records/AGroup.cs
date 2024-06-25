@@ -288,17 +288,17 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
         var finalPos = stream.Position + groupMeta.TotalLength;
         stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
         // Parse MajorRecord locations
-        FormID? lastParsed = default;
+        FormKey? lastParsed = default;
         while (stream.Position < finalPos)
         {
             VariableHeader varMeta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory);
             if (varMeta.TryGetAsGroup(out var groupHeader))
             {
-                var formId = FormID.Factory(groupHeader.ContainedRecordTypeData, stream.MetaData.MasterReferences.Raw);
-                if (formId != lastParsed)
+                var formId = FormID.Factory(groupHeader.ContainedRecordTypeData.UInt32());
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, formId);
+                if (formKey != lastParsed)
                 {
                     // Orphaned subgroup
-                    var formKey = FormKey.Factory(package.MetaData.MasterReferences, formId);
                     try
                     {
                         locationDict.Add(formKey, checked((int)(stream.Position - offset)));
@@ -328,7 +328,7 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                     throw new RecordCollisionException(formKey, typeof(T));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
-                lastParsed = majorMeta.FormID;
+                lastParsed = formKey;
             }
         }
 

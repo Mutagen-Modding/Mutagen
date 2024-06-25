@@ -1,19 +1,19 @@
-﻿using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
 internal static class FormIDTranslator
 {
-    public static FormKey GetFormKey(IReadOnlySeparatedMasterPackage masterReferences, uint idWithModID)
+    public static FormKey GetFormKey(IReadOnlySeparatedMasterPackage masterReferences, FormID formId)
     {
-        return masterReferences.GetFormKey(idWithModID);
+        return masterReferences.GetFormKey(formId);
     }
     
     public static FormID GetFormID(
         IReadOnlySeparatedMasterPackage masters,
         IFormLinkIdentifier key)
     {
-        if (!masters.TryLookupModKey(key.FormKey.ModKey, out var index))
+        if (!masters.TryLookupModKey(key.FormKey.ModKey, out var style, out var index))
         {
             if (key.FormKey == FormKey.Null)
             {
@@ -27,24 +27,6 @@ internal static class FormIDTranslator
                     .ToArray());
         }
 
-        switch (index.Style)
-        {
-            case MasterStyle.Full:
-                return new FormID(
-                    index.Index,
-                    key.FormKey.ID);
-            case MasterStyle.Light:
-            {
-                var light = new LightMasterFormID(index.Index.ID, key.FormKey.ID);
-                return new FormID(light.Raw);
-            }
-            case MasterStyle.Medium:
-            {
-                var medium = new MediumMasterFormID(index.Index.ID, key.FormKey.ID);
-                return new FormID(medium.Raw);
-            }
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        return FormID.Factory(style, index, key.FormKey.ID);
     }
 }

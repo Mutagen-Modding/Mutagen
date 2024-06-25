@@ -6,9 +6,8 @@ using Mutagen.Bethesda.Plugins.Masters;
 namespace Mutagen.Bethesda.Plugins;
 
 /// <summary>
-/// A struct representing a FormID as it exists on disk:
-///   - The ID of a record (6 bytes)
-///   - The Mod Index the ID associated with, relative to the container Mod's master header list.
+/// A struct representing a FormID.  It wraps a raw uint, and exposes sections of it depending on if
+/// it's a normal, light, or medium FormID.
 ///
 /// Note:
 /// FormID should be used sparingly, as it's prone to Mod indexing errors if mishandled.
@@ -16,12 +15,19 @@ namespace Mutagen.Bethesda.Plugins;
 /// </summary>
 public readonly struct FormID : IEquatable<FormID>
 {
-    public const uint Max = 0xFFFFFF;
-    
     /// <summary>
     /// A static readonly singleton that represents a null FormID (all zeros).
     /// </summary>
-    public static readonly FormID Null = new FormID();
+    public static readonly FormID Null = new(0);
+    
+    public const uint LightMasterMarker = 0xFE;
+    public const uint MediumMasterMarker = 0xFD;
+    internal const uint LightMasterMarkerShifted = 0xFE000000;
+    internal const uint MediumMasterMarkerShifted = 0xFD000000;
+    
+    public const uint FullIdMask =   0x00FFFFFF;
+    public const uint MediumIdMask = 0x0000FFFF;
+    public const uint LightIdMask =  0x00000FFF;
         
     /// <summary>
     /// The raw uint as it would be stored on disk with both the ID and Mod index.
@@ -29,31 +35,44 @@ public readonly struct FormID : IEquatable<FormID>
     public readonly uint Raw;
         
     /// <summary>
-    /// The ModIndex bytes of the FormID
+    /// The ID bytes of a FormID.
+    /// Exposed as a uint, but will only ever have values filling the last 6 bytes.
     /// </summary>
-    public ModIndex ModIndex => ModIndex.GetModIndexFromUInt(Raw);
-        
+    public uint FullId => Raw & FullIdMask;
+    
     /// <summary>
     /// The ID bytes of a FormID.
-    /// Exposed as a uint, but will only ever have values filling the first 6 bytes.
+    /// Exposed as a uint, but will only ever have values filling the last 4 bytes.
     /// </summary>
-    public uint ID => Raw & 0x00FFFFFF;
-
+    public uint MediumId => Raw & MediumIdMask;
+    
     /// <summary>
-    /// Constructor taking a Mod index and ID as separate parameters
+    /// The ID bytes of a FormID.
+    /// Exposed as a uint, but will only ever have values filling the last 3 bytes.
     /// </summary>
-    /// <param name="modID">Mod index to use</param>
-    /// <param name="id">Record ID to use.  Must be less than 0x00FFFFFF.</param>
-    /// <exception cref="ArgumentException">ID needs to contain no data in upper two bytes, or it will throw.</exception>
-    public FormID(ModIndex modID, uint id)
-    {
-        if ((id & 0xFF000000) != 0)
-        {
-            throw new ArgumentException("Data present in Mod index bytes of id");
-        }
-        Raw = (uint)(modID.ID << 24);
-        Raw += Raw + id & 0x00FFFFFF;
-    }
+    public uint LightId => Raw & LightIdMask;
+    
+    public const uint FullMasterIndexMask =   0xFF000000;
+    public const uint MediumMasterIndexMask = 0x00FF0000;
+    public const uint LightMasterIndexMask =  0x00FFF000;
+    public const byte FullMasterIndexShift = 24;
+    public const byte MediumMasterIndexShift = 16;
+    public const byte LightMasterIndexShift = 12;
+        
+    /// <summary>
+    /// The Master Index bytes of a Full FormID: 0xFF000000
+    /// </summary>
+    public uint FullMasterIndex => (Raw & FullMasterIndexMask) >> FullMasterIndexShift;
+    
+    /// <summary>
+    /// The Master Index bytes of a Medium FormID: 0x00FF0000
+    /// </summary>
+    public uint MediumMasterIndex => (Raw & MediumMasterIndexMask) >> MediumMasterIndexShift;
+    
+    /// <summary>
+    /// The Master Index bytes of a Light FormID: 0x00FFF000
+    /// </summary>
+    public uint LightMasterIndex => (Raw & LightMasterIndexMask) >> LightMasterIndexShift;
 
     /// <summary>
     /// Constructor taking a Mod index and ID as a single uint, as it would be stored on-disk.
@@ -134,19 +153,7 @@ public readonly struct FormID : IEquatable<FormID>
     {
         return Factory(BinaryPrimitives.ReadUInt32LittleEndian(bytes));
     }
-
-    /// <summary>
-    /// Convert an array to a FormID, with protection against ModKey overflow
-    /// </summary>
-    /// <param name="bytes">Input byte array</param>
-    /// <param name="masters">Master list to reference to handle overflow</param>
-    /// <returns>Converted FormID</returns>
-    /// <exception cref="ArgumentException">Thrown if array size less than 4</exception>
-    public static FormID Factory(ReadOnlySpan<byte> bytes, IReadOnlyMasterReferenceCollection masters)
-    {
-        return Factory(BinaryPrimitives.ReadUInt32LittleEndian(bytes), masters);
-    }
-
+    
     /// <summary>
     /// Wrap a uint with a FormID
     /// </summary>
@@ -157,17 +164,38 @@ public readonly struct FormID : IEquatable<FormID>
         return new FormID(idWithModIndex);
     }
 
-    /// <summary>
-    /// Wrap a uint with a FormID, with protection against ModKey overflow
-    /// </summary>
-    /// <param name="idWithModIndex">Mod index and Record ID to use</param>
-    /// <param name="masters">Master list to reference to handle overflow</param>
-    /// <returns>Converted FormID</returns>
-    public static FormID Factory(uint idWithModIndex, IReadOnlyMasterReferenceCollection masters)
+    public static FormID Factory(MasterStyle style, uint masterIndex, uint id)
     {
-        var ret = new FormID(idWithModIndex);
-        if (ret.ModIndex.ID <= masters.Masters.Count) return ret;
-        return new FormID(new ModIndex(checked((byte)masters.Masters.Count)), ret.ID);
+        byte shift;
+        uint mask;
+        uint upperValue;
+        
+        switch (style)
+        {
+            case MasterStyle.Full:
+                shift = FullMasterIndexShift;
+                mask = FullIdMask;
+                upperValue = 0;
+                break;
+            case MasterStyle.Medium:
+                shift = MediumMasterIndexShift;
+                mask = MediumIdMask;
+                upperValue = MediumMasterMarkerShifted;
+                break;
+            case MasterStyle.Light:
+                shift = LightMasterIndexShift;
+                mask = LightIdMask;
+                upperValue = LightMasterMarkerShifted;
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
+        var raw = masterIndex << shift;
+        id &= mask;
+        raw += id;
+        raw += upperValue;
+        return new FormID(raw);
     }
 
     /// <summary>
@@ -180,31 +208,91 @@ public readonly struct FormID : IEquatable<FormID>
     }
 
     /// <summary>
-    /// Converts to a hex string: FFFFFFFF
-    /// </summary>
-    /// <returns>Hex string</returns>
-    public string ToHex()
-    {
-        return $"{ModIndex}{IDString()}";
-    }
-
-    /// <summary>
-    /// Converts to a hex string: FFFFFFFF
+    /// Converts to a hex string
     /// </summary>
     /// <returns>Hex string</returns>
     public override string ToString()
     {
-        return $"({ModIndex}){IDString()}";
+        return Raw.ToString("X");
     }
 
     /// <summary>
-    /// Converts to a hex string containing only the ID section: FFFFFF
+    /// Converts to a hex string containing only the ID section
     /// </summary>
     /// <returns>Hex string</returns>
-    public string IDString()
+    public string IdString(MasterStyle style)
     {
-        return ID.ToString("X6");
+        switch (style)
+        {
+            case MasterStyle.Full:
+                return FullId.ToString("X6");
+            case MasterStyle.Light:
+                return LightId.ToString("X3");
+            case MasterStyle.Medium:
+                return MediumId.ToString("X4");
+            default:
+                throw new ArgumentOutOfRangeException(nameof(style), style, null);
+        }
     }
+
+    /// <summary>
+    /// Interprets the Id with the given master style
+    /// </summary>
+    /// <param name="style">Master style to interpret with</param>
+    /// <returns>Id number without master index bytes</returns>
+    public uint Id(MasterStyle style)
+    {
+        switch (style)
+        {
+            case MasterStyle.Full:
+                return FullId;
+            case MasterStyle.Light:
+                return LightId;
+            case MasterStyle.Medium:
+                return MediumId;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(style), style, null);
+        }
+    }
+
+    /// <summary>
+    /// Gets the Maximum mask for the given style
+    /// </summary>
+    /// <param name="style">Master style to get</param>
+    /// <returns>Mask to apply to retrieve the id portion of the value</returns>
+    public static uint IdMask(MasterStyle style) => style switch
+    {
+        MasterStyle.Light => LightIdMask,
+        MasterStyle.Medium => MediumIdMask,
+        MasterStyle.Full => FullIdMask,
+        _ => throw new NotImplementedException()
+    };
+
+    /// <summary>
+    /// Gets the Master Index shift for the given style
+    /// </summary>
+    /// <param name="style">Master style to get</param>
+    /// <returns>shift to apply to retrieve the master index</returns>
+    public static uint MasterIndexShift(MasterStyle style) => style switch
+    {
+        MasterStyle.Light => LightMasterIndexShift,
+        MasterStyle.Medium => MediumMasterIndexShift,
+        MasterStyle.Full => FullMasterIndexShift,
+        _ => throw new NotImplementedException()
+    };
+
+    /// <summary>
+    /// Gets the Master Index for the given style
+    /// </summary>
+    /// <param name="style">Master style to get</param>
+    /// <returns>Master index of the FormID given the style</returns>
+    public uint MasterIndex(MasterStyle style) => style switch
+    {
+        MasterStyle.Light => LightMasterIndex,
+        MasterStyle.Medium => MediumMasterIndex,
+        MasterStyle.Full => FullMasterIndex,
+        _ => throw new NotImplementedException()
+    };
 
     /// <summary>
     /// Default equality operator
@@ -244,75 +332,5 @@ public readonly struct FormID : IEquatable<FormID>
     public static bool operator !=(FormID a, FormID b)
     {
         return !(a == b);
-    }
-}
-
-internal readonly struct LightMasterFormID
-{
-    public readonly uint Raw;
-    public const uint Max = 0xFFF;
-    public uint ID => Raw & 0xFFF;
-    public uint ModIndex => (Raw & 0x00FFF000) >> 12;
-    
-    public LightMasterFormID(uint modID, uint id)
-    {
-        if ((id & 0xFFFFF000) != 0)
-        {
-            throw new ArgumentException("Data present in Mod index bytes of id");
-        }
-        if ((modID & 0xFFFFF000) != 0)
-        {
-            throw new ArgumentException("ModID was bigger than allowed");
-        }
-        Raw = (uint)(modID << 12);
-        Raw += Raw + id & Max;
-        Raw += 0xFE000000;
-    }
-    
-    public LightMasterFormID(uint idWithModIndex)
-    {
-        if ((idWithModIndex & 0xFF000000) != 0xFE000000)
-        {
-            throw new ArgumentException("ID with mod index must start with FE for Light FormIDs");
-        }
-        Raw = idWithModIndex;
-    }
-
-    public byte[] ToBytes()
-    {
-        return BitConverter.GetBytes(Raw);
-    }
-}
-
-internal readonly struct MediumMasterFormID
-{
-    public readonly uint Raw;
-    public const uint Max = 0xFFFF;
-    public uint ID => Raw & 0xFFFF;
-    public byte ModIndex => (byte)((Raw & 0x00FF0000) >> 16);
-    
-    public MediumMasterFormID(byte modID, uint id)
-    {
-        if ((id & 0xFFFF0000) != 0)
-        {
-            throw new ArgumentException("Data present in Mod index bytes of id");
-        }
-        Raw = (uint)(modID << 16);
-        Raw += Raw + id & Max;
-        Raw += 0xFD000000;
-    }
-    
-    public MediumMasterFormID(uint idWithModIndex)
-    {
-        if ((idWithModIndex & 0xFF000000) != 0xFD000000)
-        {
-            throw new ArgumentException("ID with mod index must start with FD for Medium FormIDs");
-        }
-        Raw = idWithModIndex;
-    }
-
-    public byte[] ToBytes()
-    {
-        return BitConverter.GetBytes(Raw);
     }
 }

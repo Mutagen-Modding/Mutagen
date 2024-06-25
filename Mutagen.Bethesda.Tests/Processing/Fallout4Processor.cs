@@ -228,7 +228,7 @@ public class Fallout4Processor : Processor
         {
             ProcessFormIDOverflows(frame, fileOffset);
         }
-        if (majorFrame.FormID.ID == 0x3D62A
+        if (majorFrame.FormID.FullId == 0x3D62A
             && majorFrame.TryFindSubrecord(RecordTypes.COCT, out frame))
         {
             var bytes = new byte[4];

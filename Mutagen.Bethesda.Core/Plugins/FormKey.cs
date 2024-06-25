@@ -76,7 +76,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <returns>Converted FormKey</returns>
     internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId)
     {
-        return FormIDTranslator.GetFormKey(masterReferences, formId.Raw);
+        return FormIDTranslator.GetFormKey(masterReferences, formId);
     }
 
     /// <summary>

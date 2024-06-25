@@ -26,7 +26,7 @@ public interface IReadOnlyMasterReferenceCollection
     /// <summary>
     /// Attempts to look up index associated with a given ModKey
     /// </summary>
-    bool TryGetIndex(ModKey modKey, out ModIndex index);
+    bool TryGetIndex(ModKey modKey, out uint index);
 }
 
 public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
@@ -44,7 +44,7 @@ public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
 /// </summary>
 public sealed class MasterReferenceCollection : IMasterReferenceCollection
 {
-    private readonly Dictionary<ModKey, ModIndex> _masterIndices = new();
+    private readonly Dictionary<ModKey, uint> _masterIndices = new();
         
     /// <summary>
     /// A static singleton that is an empty registry containing no masters
@@ -87,7 +87,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         Masters = masters.ToList();
         _masterIndices.Clear();
 
-        byte index = 0;
+        uint index = 0;
         foreach (var master in Masters)
         {
             var modKey = master.Master;
@@ -102,17 +102,17 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
             // Don't care about duplicates too much, just skip
             if (!_masterIndices.ContainsKey(modKey))
             {
-                _masterIndices[modKey] = new ModIndex(index);
+                _masterIndices[modKey] = index;
             }
             index++;
         }
 
         // Add current mod
-        _masterIndices[CurrentMod] = new ModIndex(index);
+        _masterIndices[CurrentMod] = index;
     }
 
     /// <inheritdoc />
-    public bool TryGetIndex(ModKey modKey, out ModIndex index)
+    public bool TryGetIndex(ModKey modKey, out uint index)
     {
         return _masterIndices.TryGetValue(modKey, out index);
     }
