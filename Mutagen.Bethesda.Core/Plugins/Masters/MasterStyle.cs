@@ -2,7 +2,7 @@
 
 public enum MasterStyle
 {
-    Normal,
+    Full,
     Light,
     Medium
 }

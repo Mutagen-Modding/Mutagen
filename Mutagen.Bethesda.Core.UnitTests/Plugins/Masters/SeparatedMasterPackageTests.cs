@@ -33,13 +33,13 @@ public class SeparatedMasterPackageTests
 
         package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);
-        origResult.Style.Should().Be(MasterStyle.Normal);
+        origResult.Style.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(modA, out var aResult).Should().BeTrue();
         aResult!.Index.ID.Should().Be(0);
-        aResult.Style.Should().Be(MasterStyle.Normal);
+        aResult.Style.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(modB, out var bResult).Should().BeTrue();
         bResult!.Index.ID.Should().Be(1);
-        bResult.Style.Should().Be(MasterStyle.Normal);
+        bResult.Style.Should().Be(MasterStyle.Full);
     }
     
     [Theory, MutagenAutoData]
@@ -107,12 +107,12 @@ public class SeparatedMasterPackageTests
             }
         });
 
-        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         var lo = new LoadOrder<IModFlagsGetter>();
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
@@ -121,13 +121,13 @@ public class SeparatedMasterPackageTests
 
         package.TryLookupModKey(originating, out var origResult).Should().BeTrue();
         origResult!.Index.ID.Should().Be(2);
-        origResult.Style.Should().Be(MasterStyle.Normal);
+        origResult.Style.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(modA, out var aResult).Should().BeTrue();
         aResult!.Index.ID.Should().Be(0);
-        aResult.Style.Should().Be(MasterStyle.Normal);
+        aResult.Style.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(modB, out var bResult).Should().BeTrue();
         bResult!.Index.ID.Should().Be(1);
-        bResult.Style.Should().Be(MasterStyle.Normal);
+        bResult.Style.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(lightA, out var lightAResult).Should().BeTrue();
         lightAResult!.Index.ID.Should().Be(0);
         lightAResult.Style.Should().Be(MasterStyle.Light);
@@ -181,12 +181,12 @@ public class SeparatedMasterPackageTests
             }
         });
 
-        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         var lo = new LoadOrder<IModFlagsGetter>();
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);

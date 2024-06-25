@@ -29,7 +29,7 @@ internal static class FormIDTranslator
 
         switch (index.Style)
         {
-            case MasterStyle.Normal:
+            case MasterStyle.Full:
                 return new FormID(
                     index.Index,
                     key.FormKey.ID);

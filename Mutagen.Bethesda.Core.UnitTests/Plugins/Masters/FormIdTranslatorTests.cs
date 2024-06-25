@@ -156,11 +156,11 @@ public class FormIdTranslatorTests
             },
         });
         var lo = new LoadOrder<IModFlagsGetter>();
-        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
@@ -257,11 +257,11 @@ public class FormIdTranslatorTests
             },
         });
         var lo = new LoadOrder<IModFlagsGetter>();
-        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Normal);
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
-        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
@@ -304,7 +304,7 @@ public class FormIdTranslatorTests
         });
         var lo = new LoadOrder<IModFlagsGetter>();
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Light);
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
@@ -353,7 +353,7 @@ public class FormIdTranslatorTests
         });
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Medium);
         var lo = new LoadOrder<IModFlagsGetter>();
-        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Normal));
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);

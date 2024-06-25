@@ -119,7 +119,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             masters,
             new LoadOrder<ModKey>(normal, disposeItems: false));
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
-        FillLookup(ret.Normal, lookup, MasterStyle.Normal);
+        FillLookup(ret.Normal, lookup, MasterStyle.Full);
         ret._lookup = lookup;
         return ret;
     }
@@ -186,7 +186,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             CurrentMod = masters.CurrentMod,
         };
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
-        FillLookup(ret.Normal, lookup, MasterStyle.Normal);
+        FillLookup(ret.Normal, lookup, MasterStyle.Full);
         FillLookup(ret.Light, lookup, MasterStyle.Light);
         FillLookup(ret.Medium, lookup, MasterStyle.Medium);
         ret._lookup = lookup;

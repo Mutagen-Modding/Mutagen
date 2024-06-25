@@ -15,7 +15,7 @@ internal static class MastersTestUtil
         modGetter.CanBeMediumMaster.Returns(true);
         switch (style)
         {
-            case MasterStyle.Normal:
+            case MasterStyle.Full:
                 modGetter.IsLightMaster.Returns(false);
                 modGetter.IsMediumMaster.Returns(false);
                 break;
