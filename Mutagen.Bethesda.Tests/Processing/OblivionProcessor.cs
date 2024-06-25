@@ -288,7 +288,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
         CleanEmptyCellGroups(
             stream,
             formKey,
@@ -301,7 +301,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
         CleanEmptyDialogGroups(
             stream,
             formKey,

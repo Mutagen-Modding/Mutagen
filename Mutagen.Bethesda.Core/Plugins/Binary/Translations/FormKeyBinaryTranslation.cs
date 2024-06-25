@@ -25,7 +25,7 @@ public sealed class FormKeyBinaryTranslation
             return FormKey.None;
         }
 
-        return FormKey.Factory(masterReferences, id);
+        return FormKey.Factory(masterReferences, new FormID(id));
     }
 
     public FormKey Parse(
@@ -39,7 +39,7 @@ public sealed class FormKeyBinaryTranslation
             return FormKey.None;
         }
 
-        return FormKey.Factory(masterReferences, id);
+        return FormKey.Factory(masterReferences, new FormID(id));
     }
 
     public bool Parse<TReader>(

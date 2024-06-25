@@ -194,7 +194,9 @@ partial class WorldspaceBinaryOverlay
             if (stream.Complete) return;
             if (!stream.TryGetGroupHeader(out var groupMeta) || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-            if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+            if (this.FormKey != FormKey.Factory(
+                    _package.MetaData.MasterReferences,
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData))))
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }

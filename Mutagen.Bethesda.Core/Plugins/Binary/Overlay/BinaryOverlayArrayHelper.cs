@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -39,7 +38,8 @@ internal static class BinaryOverlayArrayHelper
         var ret = new IFormLinkGetter<TMajorGetter>[intSpan.Length];
         for (int i = 0; i < intSpan.Length; i++)
         {
-            ret[i] = new FormLink<TMajorGetter>(FormKey.Factory(masterReferences, intSpan[i]));
+            var raw = intSpan[i];
+            ret[i] = new FormLink<TMajorGetter>(FormKey.Factory(masterReferences, new FormID(raw)));
         }
         return ret;
     }

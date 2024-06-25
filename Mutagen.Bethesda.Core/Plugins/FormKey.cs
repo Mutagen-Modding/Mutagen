@@ -69,30 +69,30 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     }
 
     /// <summary>
-    /// Constructs a FormKey from a list of masters and the raw uint
+    /// Constructs a FormKey from a list of masters and the FormID
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
-    /// <param name="idWithModID">Mod index and Record ID to use</param>
-    /// <returns>Converted FormID</returns>
-    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, uint idWithModID)
+    /// <param name="formId">FormID to convert</param>
+    /// <returns>Converted FormKey</returns>
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId)
     {
-        return FormIDTranslator.GetFormKey(masterReferences, idWithModID);
+        return FormIDTranslator.GetFormKey(masterReferences, formId.Raw);
     }
 
     /// <summary>
-    /// Constructs a FormKey from a list of masters and the raw uint
+    /// Constructs a FormKey from a list of masters and the FormID
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
-    /// <param name="idWithModID">Mod index and Record ID to use</param>
+    /// <param name="formId">FormID to convert</param>
     /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
-    /// <returns>Converted FormID</returns>
-    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, uint idWithModID, bool maxIsNull)
+    /// <returns>Converted FormKey</returns>
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool maxIsNull)
     {
-        if (maxIsNull && idWithModID == uint.MaxValue)
+        if (maxIsNull && formId.Raw == uint.MaxValue)
         {
             return FormKey.None;
         }
-        return Factory(masterReferences, idWithModID);
+        return Factory(masterReferences, formId);
     }
 
     private static bool IsDelim(char c) => c is ':' or '_';

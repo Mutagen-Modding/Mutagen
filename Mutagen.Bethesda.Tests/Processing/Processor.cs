@@ -243,7 +243,7 @@ public abstract class Processor
         long fileOffset)
     {
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID);
         ProcessStringTermination(
             edidFrame,
             fileOffset + majorFrame.HeaderLength + edidFrame.Location,
@@ -420,7 +420,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, frame.FormID);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -437,7 +437,7 @@ public abstract class Processor
     {
         Instructions.SetRemove(RangeInt64.FromLength(refLoc, majorFrame.TotalLength));
         
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID);
         ModifyParentGroupLengths(-majorFrame.TotalLength, formKey);
     }
 
@@ -448,7 +448,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, frame.FormID);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 

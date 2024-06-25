@@ -192,7 +192,7 @@ public sealed class RecordLocator
             if (IsInterested(targetRec))
             {
                 var pos = reader.Position;
-                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences, majorRecordMeta.FormID.Raw);
+                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences, majorRecordMeta.FormID);
 
                 _locs.Add(
                     formKey: currentFormKey,
@@ -298,7 +298,7 @@ public sealed class RecordLocator
                     }
                 }
 
-                var formKey = FormKey.Factory(reader.MetaData.MasterReferences, majorMeta.FormID.Raw);
+                var formKey = FormKey.Factory(reader.MetaData.MasterReferences, majorMeta.FormID);
                 var len = majorMeta.TotalLength;
                 yield return (
                     formKey,

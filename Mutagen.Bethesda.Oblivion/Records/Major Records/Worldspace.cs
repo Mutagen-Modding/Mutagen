@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -135,7 +136,9 @@ partial class WorldspaceBinaryOverlay
             var groupMeta = stream.GetGroupHeader();
             if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-            if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(_package.MetaData.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+            if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(
+                    _package.MetaData.MasterReferences, 
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData))))
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
