@@ -6688,10 +6688,10 @@ namespace Mutagen.Bethesda.Fallout4
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, gameRelease, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6726,10 +6726,10 @@ namespace Mutagen.Bethesda.Fallout4
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, gameRelease, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -7368,7 +7368,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);
             using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 Fallout4ModCommon.WriteParallel(
@@ -7679,10 +7679,10 @@ namespace Mutagen.Bethesda.Fallout4
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, gameRelease, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -24411,7 +24411,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);
             var bundle = new WritingBundle(item.Fallout4Release.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
@@ -25189,11 +25189,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta,
-                fileSystem: param.FileSystem);
+                metaData: meta);
             try
             {
                 if (stream.Remaining < 12)

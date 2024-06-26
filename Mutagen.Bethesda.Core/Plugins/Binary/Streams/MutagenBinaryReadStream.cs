@@ -26,14 +26,12 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     /// <param name="metaData">Bundle of all related metadata for parsing</param>
     /// <param name="bufferSize">Size of internal buffer</param>
     /// <param name="offsetReference">Optional offset reference position to use</param>
-    /// <param name="fileSystem">FileSystem to read from</param>
     public MutagenBinaryReadStream(
         FilePath path,
         ParsingMeta metaData,
         int bufferSize = 4096,
-        long offsetReference = 0,
-        IFileSystem? fileSystem = null)
-        : base(fileSystem.GetOrDefault().File.OpenRead(path.Path), bufferSize)
+        long offsetReference = 0)
+        : base(metaData.FileSystem.File.OpenRead(path.Path), bufferSize)
     {
         _path = path;
         MetaData = metaData;

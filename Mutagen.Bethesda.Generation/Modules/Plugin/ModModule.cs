@@ -505,7 +505,7 @@ public class ModModule : GenerationModule
             }
             if (obj.GetObjectData().UsesStringFiles)
             {
-                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());");
+                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);");
             }
             sb.AppendLine("using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())

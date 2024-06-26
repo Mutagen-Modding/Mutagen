@@ -3252,10 +3252,10 @@ namespace Mutagen.Bethesda.Oblivion
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -3278,10 +3278,10 @@ namespace Mutagen.Bethesda.Oblivion
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
                         importMask: importMask,
                         frame: frame);
@@ -4060,10 +4060,10 @@ namespace Mutagen.Bethesda.Oblivion
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
                 var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
-                using (var reader = new MutagenBinaryReadStream(path, meta, fileSystem: fileSystem))
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
@@ -12387,11 +12387,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta, fileSystem: param.FileSystem));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta,
-                fileSystem: param.FileSystem);
+                metaData: meta);
             try
             {
                 return OblivionModFactory(

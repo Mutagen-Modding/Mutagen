@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -6,6 +7,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
@@ -59,6 +61,8 @@ public sealed class ParsingMeta
     public Language TranslatedTargetLanguage { get; set; } = Language.English;
 
     public bool ThrowOnUnknown { get; set; }
+
+    public IFileSystem FileSystem { get; set; } = IFileSystemExt.DefaultFilesystem;
 
     internal ParsingMeta(
         GameConstants constants,
@@ -122,6 +126,7 @@ public sealed class ParsingMeta
         }
         ThrowOnUnknown = readParameters.ThrowOnUnknownSubrecord;
         Parallel = readParameters.Parallel;
+        FileSystem = readParameters.FileSystem.GetOrDefault();
     }
 
     public static ParsingMeta Factory(

@@ -561,15 +561,19 @@ internal static class PluginUtilityTranslation
         IModGetter mod,
         BinaryWriteParameters writeParameters,
         string path,
-        ModKey modKey,
-        IFileSystem? fileSystem)
+        ModKey modKey)
     {
         if (writeParameters.StringsWriter != null) return writeParameters;
         if (!mod.UsingLocalization) return writeParameters;
         
         return writeParameters with
         {
-            StringsWriter = new StringsWriter(mod.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem)
+            StringsWriter = new StringsWriter(
+                release: mod.GameRelease, 
+                modKey: modKey, 
+                writeDirectory: Path.Combine(Path.GetDirectoryName(path)!, "Strings"),
+                encodingProvider: MutagenEncoding.Default,
+                fileSystem: writeParameters.FileSystem.GetOrDefault())
         };
     }
 }

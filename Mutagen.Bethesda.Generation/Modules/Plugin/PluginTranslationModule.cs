@@ -388,7 +388,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey, param.FileSystem.GetOrDefault());");
+            sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
         using (var prop = sb.PropertyCtor())
@@ -448,11 +448,11 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine("param ??= BinaryReadParameters.Default;");
             sb.AppendLine("var fileSystem = param.FileSystem.GetOrDefault();");
             sb.AppendLine($"var meta = ParsingMeta.Factory(param, {gameReleaseStr}, path);");
-            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, meta, fileSystem: fileSystem))");
+            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, meta))");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta, fileSystem: param.FileSystem));");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta));");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     sb.AppendLine("if (reader.Remaining < 12)");
@@ -2593,13 +2593,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         sb.AppendLine("param ??= BinaryReadParameters.Default;");
                         sb.AppendLine($"var meta = {nameof(ParsingMeta)}.Factory(param, {gameReleaseStr}, path);");
-                        sb.AppendLine($"meta.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta, fileSystem: param.FileSystem));");
+                        sb.AppendLine($"meta.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta));");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {
                             args.Add($"path: path.{nameof(ModPath.Path)}");
                             args.Add($"metaData: meta");
-                            args.Add("fileSystem: param.FileSystem");
                         }
                         sb.AppendLine("try");
                         using (sb.CurlyBrace())
