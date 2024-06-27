@@ -4442,12 +4442,6 @@
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\StarfieldGroup_Generated.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>

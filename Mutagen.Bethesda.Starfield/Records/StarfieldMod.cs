@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -36,6 +37,8 @@ public partial class StarfieldMod : AMod
         set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Half, value);
     }
 
+    public override bool ListsOverriddenForms => true;
+
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
@@ -53,6 +56,9 @@ public partial class StarfieldMod : AMod
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
             constants: GameConstants.Get(release.ToGameRelease()));
     }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 internal partial class StarfieldModBinaryOverlay
@@ -67,6 +73,9 @@ internal partial class StarfieldModBinaryOverlay
     public bool IsLightMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
     public bool CanBeMediumMaster => true;
     public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Half);
+    public bool ListsOverriddenForms => true;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 partial class StarfieldModSetterCommon

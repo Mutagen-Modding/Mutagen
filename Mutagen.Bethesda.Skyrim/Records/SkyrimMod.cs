@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +22,8 @@ public partial class SkyrimMod : AMod
             forceUseLowerFormIDRanges);
 
     public override bool CanBeLightMaster => true;
+
+    public override bool ListsOverriddenForms => true;
 
     public override bool IsLightMaster
     {
@@ -58,6 +61,9 @@ public partial class SkyrimMod : AMod
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
             constants: GameConstants.Get(release.ToGameRelease()));
     }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 internal partial class SkyrimModBinaryOverlay
@@ -73,6 +79,9 @@ internal partial class SkyrimModBinaryOverlay
     
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => true;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 partial class SkyrimModSetterCommon

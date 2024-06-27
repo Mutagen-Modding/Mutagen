@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -30,6 +31,10 @@ public partial class OblivionMod : AMod
         get => false;
         set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
     }
+
+    public override bool ListsOverriddenForms => false;
+    
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 
     internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
@@ -105,6 +110,8 @@ internal partial class OblivionModBinaryOverlay
     public bool IsLightMaster => false;
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => false;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 }
 
 partial class OblivionModCommon

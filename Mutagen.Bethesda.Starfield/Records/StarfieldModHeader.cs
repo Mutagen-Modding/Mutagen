@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Starfield;
 
@@ -41,6 +42,19 @@ public partial class StarfieldModHeader
     }
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
+    {
+        if (formKeys == null)
+        {
+            this.OverriddenForms = null;
+        }
+        else
+        {
+            this.OverriddenForms ??= new();
+            this.OverriddenForms.SetTo(formKeys.Select(f => f.ToLink<IStarfieldMajorRecordGetter>()));
+        }
+    }
 }
 
 public partial interface IStarfieldModHeader : IModHeaderCommon

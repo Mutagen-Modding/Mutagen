@@ -27,6 +27,7 @@ public class TestMod : ITestMod, IDisposable
     public GameRelease GameRelease { get; }
 
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
@@ -38,6 +39,7 @@ public class TestMod : ITestMod, IDisposable
     public bool IsLightMaster { get; set; }
     public bool CanBeMediumMaster { get; }
     public bool IsMediumMaster { get; set; }
+    public bool ListsOverriddenForms { get; }
 
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
@@ -193,6 +195,11 @@ public class TestMod : ITestMod, IDisposable
     }
 
     public TAlloc SetAllocator<TAlloc>(TAlloc allocator) where TAlloc : IFormKeyAllocator
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
     {
         throw new NotImplementedException();
     }

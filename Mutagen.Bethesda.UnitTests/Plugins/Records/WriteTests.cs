@@ -98,6 +98,7 @@ public class WriteTests
                 new BinaryWriteParameters()
                 {
                     ModKey = ModKeyOption.NoCheck,
+                    OverriddenFormsOption = OverriddenFormsOption.NoCheck,
                     MastersListContent = MastersListContentOption.NoCheck,
                 }));
     }
@@ -119,6 +120,7 @@ public class WriteTests
                         new BinaryWriteParameters()
                         {
                             ModKey = ModKeyOption.NoCheck,
+                            OverriddenFormsOption = OverriddenFormsOption.NoCheck,
                             MastersListContent = MastersListContentOption.NoCheck,
                         });
                 }

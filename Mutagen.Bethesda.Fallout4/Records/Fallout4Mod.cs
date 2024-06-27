@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -29,7 +30,9 @@ public partial class Fallout4Mod : AMod
         get => false;
         set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
     }
-    
+
+    public override bool ListsOverriddenForms => true;
+
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
@@ -44,6 +47,9 @@ public partial class Fallout4Mod : AMod
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
             constants: GameConstants.Get(release.ToGameRelease()));
     }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -59,6 +65,9 @@ internal partial class Fallout4ModBinaryOverlay
 
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => true;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 }
 
 partial class Fallout4ModCommon

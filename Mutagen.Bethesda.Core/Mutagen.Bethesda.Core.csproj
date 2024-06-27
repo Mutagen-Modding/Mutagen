@@ -208,6 +208,7 @@
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
+        <Compile Include="Plugins\Binary\Parameters\OverriddenFormsOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\ParallelWriteParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
         <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentRepeatedRule.cs" />

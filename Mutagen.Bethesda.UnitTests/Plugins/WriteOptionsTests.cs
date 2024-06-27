@@ -288,4 +288,58 @@ public class WriteOptionsTests
             FileSystem = fileSystem
         });
     }
+
+    [Theory, MutagenAutoData]
+    public void OverriddenFormsNoCheck(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod2 = new StarfieldMod(TestConstants.PluginModKey2, StarfieldRelease.Starfield);
+        var masterNpc = mod2.Npcs.AddNew();
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield);
+        mod.Npcs.GetOrAddAsOverride(masterNpc);
+        mod.ModHeader.OverriddenForms ??= new();
+        var fk = new FormKey(TestConstants.PluginModKey2, 0x123456);
+        mod.ModHeader.OverriddenForms.Add(fk);
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            OverriddenFormsOption = OverriddenFormsOption.NoCheck,
+            FileSystem = fileSystem
+        });
+
+        using var reimport = StarfieldMod.CreateFromBinaryOverlay(existingModPath, StarfieldRelease.Starfield, new BinaryReadParameters()
+        {
+            FileSystem = fileSystem,
+        });
+        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
+        reimport.ModHeader.OverriddenForms!.Select(x => x.FormKey).Should().Equal(fk);
+    }
+
+    [Theory, MutagenAutoData]
+    public void OverriddenFormsIterate(
+        IFileSystem fileSystem,
+        ModPath existingModPath)
+    {
+        StarfieldMod mod2 = new StarfieldMod(TestConstants.PluginModKey2, StarfieldRelease.Starfield);
+        var masterNpc = mod2.Npcs.AddNew();
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield);
+        mod.Npcs.GetOrAddAsOverride(masterNpc);
+        mod.ModHeader.OverriddenForms ??= new();
+        var fk = new FormKey(TestConstants.PluginModKey2, 0x123456);
+        mod.ModHeader.OverriddenForms.Add(fk);
+        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
+        {
+            ModKey = ModKeyOption.NoCheck,
+            OverriddenFormsOption = OverriddenFormsOption.Iterate,
+            FileSystem = fileSystem
+        });
+
+        using var reimport = StarfieldMod.CreateFromBinaryOverlay(existingModPath, StarfieldRelease.Starfield, new BinaryReadParameters()
+        {
+            FileSystem = fileSystem,
+        });
+        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
+        reimport.ModHeader.OverriddenForms!.Select(x => x.FormKey).Should().Equal(masterNpc.FormKey);
+    }
 }

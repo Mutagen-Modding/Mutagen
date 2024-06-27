@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -39,6 +40,19 @@ public partial class Fallout4ModHeader
     }
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
+    {
+        if (formKeys == null)
+        {
+            this.OverriddenForms = null;
+        }
+        else
+        {
+            this.OverriddenForms ??= new();
+            this.OverriddenForms.SetTo(formKeys.Select(f => f.ToLink<IFallout4MajorRecordGetter>()));
+        }
+    }
 }
 
 public partial interface IFallout4ModHeader : IModHeaderCommon

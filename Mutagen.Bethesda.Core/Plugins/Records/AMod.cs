@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
 using System.Diagnostics;
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -21,9 +20,6 @@ public abstract class AMod : IMod
     public abstract GameRelease GameRelease { get; }
 
     private IFormKeyAllocator _allocator;
-
-    /// <inheritdoc />
-    public abstract uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 
     protected AMod()
     {
@@ -45,6 +41,7 @@ public abstract class AMod : IMod
     IEnumerable<IFormLinkGetter> IFormLinkContainerGetter.EnumerateFormLinks() => throw new NotImplementedException();
     void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
+    public abstract IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
     uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     uint IModGetter.NextFormID { get => throw new NotImplementedException(); }
@@ -57,6 +54,7 @@ public abstract class AMod : IMod
     public abstract bool CanBeMediumMaster { get; }
     public abstract bool IsMediumMaster { get; set; }
     bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();
+    public abstract bool ListsOverriddenForms { get; }
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
@@ -110,4 +108,7 @@ public abstract class AMod : IMod
         _allocator = allocator;
         return allocator;
     }
+
+    /// <inheritdoc />
+    public abstract uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 }

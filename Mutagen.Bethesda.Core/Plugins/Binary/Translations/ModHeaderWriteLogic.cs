@@ -28,6 +28,7 @@ internal sealed class ModHeaderWriteLogic
     private uint _higherFormIDRange;
     private GameConstants _constants;
     private readonly IModGetter _mod;
+    private readonly HashSet<FormKey> _overriddenForms = new();
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters param,
@@ -74,6 +75,7 @@ internal sealed class ModHeaderWriteLogic
         AddLightFormLimit(modHeader);
         AddCompressionCheck();
         AddDisallowedLowerFormIDs();
+        RegisterOverriddenFormsFishing();
     }
 
     private void RunProcessors(IModGetter mod)
@@ -153,6 +155,8 @@ internal sealed class ModHeaderWriteLogic
         {
             throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
         }
+
+        SetOverriddenForms(modHeader);
     }
 
     #region Master Content Sync Logic
@@ -411,6 +415,41 @@ internal sealed class ModHeaderWriteLogic
                     throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
                 }
                 _modKeys[placeholder.ModKey.Value] = null;
+                break;
+        }
+    }
+
+    #endregion
+
+    #region OverriddenForms
+
+    private void RegisterOverriddenFormsFishing()
+    {
+        if (!_mod.ListsOverriddenForms) return;
+        switch (_params.OverriddenFormsOption)
+        {
+            case OverriddenFormsOption.NoCheck:
+                break;
+            case OverriddenFormsOption.Iterate:
+                _recordIterationActions.Add(maj =>
+                {
+                    if (maj.FormKey.ModKey == _modKey) return;
+                    _overriddenForms.Add(maj.FormKey);
+                });
+                break;
+        }
+    }
+
+    private void SetOverriddenForms(
+        IModHeaderCommon modHeader)
+    {
+        if (!_mod.ListsOverriddenForms) return;
+        switch (_params.OverriddenFormsOption)
+        {
+            case OverriddenFormsOption.NoCheck:
+                break;
+            case OverriddenFormsOption.Iterate:
+                modHeader.SetOverriddenForms(_overriddenForms);
                 break;
         }
     }

@@ -1,7 +1,6 @@
 using Loqui;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
-using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records;
@@ -37,6 +36,11 @@ public interface IModFlagsGetter : IModKeyed
     /// Whether a mod has Half Master flag enabled
     /// </summary>
     bool IsMediumMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod lists overridden forms in its header
+    /// </summary>
+    bool ListsOverriddenForms { get; }
 }
 
 /// <summary>
@@ -59,6 +63,18 @@ public interface IModGetter :
     /// </summary>
     /// <returns>Read only list of master reference getters</returns>
     IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
+    
+    /// <summary>
+    /// Read only list of listed overridden forms.<br />
+    /// Note this is only the listed overridden forms in the mod header, and may
+    /// deviate from the reality of contained records
+    /// </summary>
+    IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
+    
+    /// <summary>
+    /// The next FormID to be allocated
+    /// </summary>
+    uint NextFormID { get; }
 
     /// <summary>
     /// Returns the top-level Group getter object associated with the given Major Record Type.
@@ -125,10 +141,13 @@ public interface IModGetter :
     void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
 
     /// <summary>
-    /// The next FormID to be allocated
+    /// Retrieves the recommended lowest starting FormID, based on current mod header flags. <br />
+    /// Note that this might be lower than the currently contained records, as it is just reporting
+    /// what the starting lowest ID should be.
     /// </summary>
-    uint NextFormID { get; }
-
+    /// <param name="forceUseLowerFormIDRanges">Whether to force using the lower FormID ranges.
+    /// Default of null refers to the mod header flags</param>
+    /// <returns>Lowest suggested FormID given current mod header flags</returns>
     uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 }
 
