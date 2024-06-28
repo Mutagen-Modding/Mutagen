@@ -107,6 +107,13 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     /// <inheritdoc />
     public void Add(TMajor record) => InternalCache.Add(record);
 
+    /// <inheritdoc />
+    public TMajor AddReturn(TMajor record)
+    {
+        InternalCache.Add(record);
+        return record;
+    }
+
     private TMajor ConfirmCorrectType(IMajorRecord record, string paramName)
     {
         if (record == null) throw new ArgumentNullException(paramName);
