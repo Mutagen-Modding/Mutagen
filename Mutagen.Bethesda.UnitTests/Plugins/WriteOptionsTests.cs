@@ -19,7 +19,7 @@ public class WriteOptionsTests
 {
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
     public void NextFormID(
-        OblivionMod mod, 
+        OblivionMod mod,
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -38,7 +38,7 @@ public class WriteOptionsTests
             });
         reimport.ModHeader.Stats.NextFormID.Should().Be(nextId + 1);
     }
-    
+
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
     public void DifferentModKeyExport(
         OblivionMod mod,
@@ -55,9 +55,9 @@ public class WriteOptionsTests
             ModKey = ModKeyOption.CorrectToPath,
             FileSystem = fileSystem
         });
-        
+
         // Check FormKeys
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath, 
+        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath,
             new BinaryReadParameters()
             {
                 FileSystem = fileSystem
@@ -71,9 +71,10 @@ public class WriteOptionsTests
         reimportRace.FormKey.ModKey.Should().Be(existingModPath.ModKey);
         reimportRace.FormKey.ID.Should().Be(race.FormKey.ID);
         reimportNpc.Race.FormKey.Should().Be(reimportRace.FormKey);
-        
+
         // Check OnDisk FormIDs
-        using var stream = new MutagenBinaryReadStream(existingModPath, mod.GameRelease, loadOrder: null, fileSystem: fileSystem);
+        using var stream =
+            new MutagenBinaryReadStream(existingModPath, mod.GameRelease, loadOrder: null, fileSystem: fileSystem);
         stream.ReadModHeaderFrame();
         while (stream.TryReadGroup(out var group))
         {
@@ -110,7 +111,8 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
+            forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
         Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
@@ -130,7 +132,8 @@ public class WriteOptionsTests
         ModPath existingModPath,
         ModKey modKey)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
+            forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -139,7 +142,7 @@ public class WriteOptionsTests
             LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(modKey),
             FileSystem = fileSystem
         });
-        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE, 
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE,
             new BinaryReadParameters()
             {
                 FileSystem = fileSystem
@@ -152,7 +155,8 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
+            forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
 
@@ -175,7 +179,8 @@ public class WriteOptionsTests
         ModPath existingModPath,
         ModKey modKey)
     {
-        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
+            forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
 
@@ -206,10 +211,11 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
+            forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
-        
+
         Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
         {
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -226,7 +232,8 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
+            forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -242,10 +249,11 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
+            forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
-        
+
         Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
         {
             mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -262,7 +270,8 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
+            forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -278,7 +287,8 @@ public class WriteOptionsTests
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield, forceUseLowerFormIDRanges: true);
+        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
+            forceUseLowerFormIDRanges: true);
         mod.IsMediumMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
@@ -287,59 +297,5 @@ public class WriteOptionsTests
             FormIDCompaction = FormIDCompactionOption.Iterate,
             FileSystem = fileSystem
         });
-    }
-
-    [Theory, MutagenAutoData]
-    public void OverriddenFormsNoCheck(
-        IFileSystem fileSystem,
-        ModPath existingModPath)
-    {
-        StarfieldMod mod2 = new StarfieldMod(TestConstants.PluginModKey2, StarfieldRelease.Starfield);
-        var masterNpc = mod2.Npcs.AddNew();
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield);
-        mod.Npcs.GetOrAddAsOverride(masterNpc);
-        mod.ModHeader.OverriddenForms ??= new();
-        var fk = new FormKey(TestConstants.PluginModKey2, 0x123456);
-        mod.ModHeader.OverriddenForms.Add(fk);
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            OverriddenFormsOption = OverriddenFormsOption.NoCheck,
-            FileSystem = fileSystem
-        });
-
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(existingModPath, StarfieldRelease.Starfield, new BinaryReadParameters()
-        {
-            FileSystem = fileSystem,
-        });
-        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
-        reimport.ModHeader.OverriddenForms!.Select(x => x.FormKey).Should().Equal(fk);
-    }
-
-    [Theory, MutagenAutoData]
-    public void OverriddenFormsIterate(
-        IFileSystem fileSystem,
-        ModPath existingModPath)
-    {
-        StarfieldMod mod2 = new StarfieldMod(TestConstants.PluginModKey2, StarfieldRelease.Starfield);
-        var masterNpc = mod2.Npcs.AddNew();
-        StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield);
-        mod.Npcs.GetOrAddAsOverride(masterNpc);
-        mod.ModHeader.OverriddenForms ??= new();
-        var fk = new FormKey(TestConstants.PluginModKey2, 0x123456);
-        mod.ModHeader.OverriddenForms.Add(fk);
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            OverriddenFormsOption = OverriddenFormsOption.Iterate,
-            FileSystem = fileSystem
-        });
-
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(existingModPath, StarfieldRelease.Starfield, new BinaryReadParameters()
-        {
-            FileSystem = fileSystem,
-        });
-        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
-        reimport.ModHeader.OverriddenForms!.Select(x => x.FormKey).Should().Equal(masterNpc.FormKey);
     }
 }

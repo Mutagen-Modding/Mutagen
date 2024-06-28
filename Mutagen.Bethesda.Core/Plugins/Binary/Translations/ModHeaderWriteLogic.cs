@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
@@ -14,6 +15,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 internal sealed class ModHeaderWriteLogic
 {
     private readonly List<Action<IMajorRecordGetter>> _recordIterationActions = new();
+    private readonly List<Action<IModContext<IMajorRecordGetter>>> _recordContextIterationActions = new();
     private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();
     private readonly BinaryWriteParameters _params;
 
@@ -82,26 +84,51 @@ internal sealed class ModHeaderWriteLogic
     {
         // Do any major record iteration work
         if (_recordIterationActions.Count > 0
-            || _formLinkIterationActions.Count > 0)
+            || _formLinkIterationActions.Count > 0
+            || _recordContextIterationActions.Count > 0)
         {
-            foreach (var maj in mod.EnumerateMajorRecords())
+            if (_recordContextIterationActions.Count > 0)
             {
-                foreach (var majAction in _recordIterationActions)
+                foreach (var context in mod.EnumerateMajorRecordSimpleContexts())
                 {
-                    majAction(maj);
-                }
-
-                if (_formLinkIterationActions.Count > 0)
-                {
-                    foreach (var linkInfo in maj.EnumerateFormLinks())
-                    {
-                        foreach (var formLinkAction in _formLinkIterationActions)
-                        {
-                            formLinkAction(maj.FormKey, linkInfo);
-                        }
-                    }
+                    RunProcessorsOnModContexts(context);
                 }
             }
+            else
+            {
+                foreach (var maj in mod.EnumerateMajorRecords())
+                {
+                    RunProcessorsOnMajorRecord(maj);
+                }
+            }
+        }
+    }
+
+    private void RunProcessorsOnMajorRecord(IMajorRecordGetter maj)
+    {
+        foreach (var majAction in _recordIterationActions)
+        {
+            majAction(maj);
+        }
+
+        if (_formLinkIterationActions.Count > 0)
+        {
+            foreach (var linkInfo in maj.EnumerateFormLinks())
+            {
+                foreach (var formLinkAction in _formLinkIterationActions)
+                {
+                    formLinkAction(maj.FormKey, linkInfo);
+                }
+            }
+        }
+    }
+
+    private void RunProcessorsOnModContexts(IModContext<IMajorRecordGetter> context)
+    {
+        RunProcessorsOnMajorRecord(context.Record);
+        foreach (var majAction in _recordContextIterationActions)
+        {
+            majAction(context);
         }
     }
 
@@ -431,10 +458,12 @@ internal sealed class ModHeaderWriteLogic
             case OverriddenFormsOption.NoCheck:
                 break;
             case OverriddenFormsOption.Iterate:
-                _recordIterationActions.Add(maj =>
+                _recordContextIterationActions.Add(context =>
                 {
-                    if (maj.FormKey.ModKey == _modKey) return;
-                    _overriddenForms.Add(maj.FormKey);
+                    if (context.Record.FormKey.ModKey == _modKey) return;
+                    if (context.Parent?.Record is not IMajorRecordGetter parentMaj) return;
+                    if (parentMaj.Registration.Name == "Worldspace") return;
+                    _overriddenForms.Add(context.Record.FormKey);
                 });
                 break;
         }
