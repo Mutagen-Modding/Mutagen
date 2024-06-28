@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -46,6 +47,7 @@ public class TestDataPathing
     public static string CountMissing = "Files/Core/CountMissing.esp";
     public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
     public static string SmallOblivionMod = "Plugins/Binary/Headers/SmallOblivionMod.esp";
+    public static string StarfieldUnknownCondition = "Files/Starfield/UnknownCondition.esp";
 
     public static byte[] GetBytes(FilePath path)
     {
@@ -73,5 +75,17 @@ public class TestDataPathing
                 GameConstants.Get(release),
                 path.ModKey,
                 masters));
+    }
+
+    public static MutagenWriter GetWriter(ModPath path, GameRelease release, IFileSystem fileSystem)
+    {
+        var masters = new MasterReferenceCollection(path.ModKey);
+        var separated = SeparatedMasterPackage.NotSeparate(masters);
+        var writingBundle = new WritingBundle(GameConstants.Get(release))
+        {
+            MasterReferences = masters,
+            SeparatedMasterPackage = separated
+        };
+        return new MutagenWriter(path, writingBundle, fileSystem: fileSystem);
     }
 }

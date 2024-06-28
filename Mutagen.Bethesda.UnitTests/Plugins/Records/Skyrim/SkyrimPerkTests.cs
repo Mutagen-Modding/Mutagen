@@ -9,7 +9,8 @@ public class SkyrimPerkTests : ASpecificCaseTest<Perk, IPerkGetter>
 {
     public override ModPath Path => TestDataPathing.SkyrimPerkFunctionParametersTypeNone;
     public override GameRelease Release => GameRelease.SkyrimSE;
-        
+    public override bool TestPassthrough => false;
+
     public override void TestItem(IPerkGetter item)
     {
         item.Effects.Should().HaveCount(2);

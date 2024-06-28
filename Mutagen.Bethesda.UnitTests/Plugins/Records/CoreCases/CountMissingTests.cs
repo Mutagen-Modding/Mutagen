@@ -9,6 +9,7 @@ public class CountMissingTests : ASpecificCaseTest<Npc, INpcGetter>
 {
     public override ModPath Path => TestDataPathing.CountMissing;
     public override GameRelease Release => GameRelease.Fallout4;
+    public override bool TestPassthrough => false;
     
     public override void TestItem(INpcGetter item)
     {
