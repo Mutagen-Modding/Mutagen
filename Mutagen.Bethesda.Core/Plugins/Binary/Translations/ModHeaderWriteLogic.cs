@@ -478,7 +478,14 @@ internal sealed class ModHeaderWriteLogic
             case OverriddenFormsOption.NoCheck:
                 break;
             case OverriddenFormsOption.Iterate:
-                modHeader.SetOverriddenForms(_overriddenForms);
+                if (_overriddenForms.Count == 0)
+                {
+                    modHeader.SetOverriddenForms(null);
+                }
+                else
+                {
+                    modHeader.SetOverriddenForms(_overriddenForms);
+                }
                 break;
         }
     }
