@@ -484,7 +484,9 @@ internal sealed class ModHeaderWriteLogic
                 }
                 else
                 {
-                    modHeader.SetOverriddenForms(_overriddenForms);
+                    modHeader.SetOverriddenForms(
+                        _overriddenForms.OrderBy(x => x.ModKey.FileName.String)
+                            .ThenBy(x => x.ID));
                 }
                 break;
         }

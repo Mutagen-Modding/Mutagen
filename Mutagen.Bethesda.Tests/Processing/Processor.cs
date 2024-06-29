@@ -9,9 +9,13 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using System.Buffers.Binary;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
@@ -161,6 +165,7 @@ public abstract class Processor
         }
 
         yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
+        yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
     }
 
     protected virtual void AddDynamicProcessorInstructions()
@@ -771,6 +776,36 @@ public abstract class Processor
                 majorFrame.ContentLength));
             ProcessLengths(majorFrame, -checked((int)majorFrame.ContentLength), loc.Value.Location.Min);
         }
+    }
+
+    public void OrderOverridenForms(Func<IMutagenReadStream> streamGetter)
+    {
+        using var stream = streamGetter();
+        var header = stream.ReadModHeaderFrame();
+        var onam = RecordSpanExtensions.TryFindSubrecord(header.Content, Meta, RecordTypes.ONAM);
+        if (onam == null) return;
+        var masters = MasterReferenceCollection.FromStream(streamGetter());
+        var separatedMasters = SeparatedMasterPackage.NotSeparate(masters);
+        var uints = onam.Value.Content.Span.AsUInt32Span();
+        var fks = new List<FormKey>();
+        foreach (var x in uints)
+        {
+            fks.Add(FormKey.Factory(separatedMasters, new FormID(x)));
+        }
+
+        var orderedFormIds = fks
+            .OrderBy(x => x.ModKey.FileName.String)
+            .ThenBy(x => x.ID)
+            .Select(fk =>
+            {
+                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>());
+            })
+            .Select(x => x.Raw)
+            .ToArray();
+        var bytes = MemoryMarshal.Cast<uint, byte>(orderedFormIds.AsSpan());
+        Instructions.SetSubstitution(
+            header.HeaderLength + onam.Value.Location + onam.Value.HeaderLength,
+            bytes.ToArray());
     }
 
     public int FixMissingCounters(
