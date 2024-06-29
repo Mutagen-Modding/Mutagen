@@ -109,7 +109,7 @@ public sealed record BinaryWriteParameters
     /// <summary>
     /// Logic to use to ensure a mod overridden forms list is accurate
     /// </summary>
-    public OverriddenFormsOption OverriddenFormsOption { get; init; } = OverriddenFormsOption.Iterate;
+    public OverriddenFormsOption OverriddenFormsOption { get; init; } = OverriddenFormsOption.NoCheck;
 
     /// <summary>
     /// Aligns a mod's ModKey to a path's implied ModKey.
