@@ -461,6 +461,7 @@ internal sealed class ModHeaderWriteLogic
                 _recordContextIterationActions.Add(context =>
                 {
                     if (context.Record.FormKey.ModKey == _modKey) return;
+                    if (Enums.HasFlag(context.Record.MajorRecordFlagsRaw, Constants.Persistent)) return;
                     if (context.Parent?.Record is not IMajorRecordGetter parentMaj) return;
                     if (parentMaj.Registration.Name == "Worldspace") return;
                     _overriddenForms.Add(context.Record.FormKey);

@@ -18,4 +18,5 @@ internal static class Constants
     public const int DeletedFlag = 0x0000_0020;
     public const int InitiallyDisabled = 0x0000_0800;
     public const int Ignored = 0x0000_1000;
+    public const int Persistent = 0x0000_0400;
 }
