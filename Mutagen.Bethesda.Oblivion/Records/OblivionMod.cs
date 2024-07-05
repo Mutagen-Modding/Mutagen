@@ -97,6 +97,81 @@ public partial class OblivionMod : AMod
         count += (uint)this.DialogTopics.RecordCache.Count;
         setter(count);
     }
+
+    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
+    {
+        public static readonly BuilderInstantiator Instance = new();
+        
+        public IOblivionMod Mutable(BinaryReadMutableBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return OblivionMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return OblivionMod.CreateFromBinary(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IOblivionModDisposableGetter Readonly(BinaryReadBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return OblivionMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return OblivionMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public static BinaryReadBuilderSourceStreamFactoryChoice<IOblivionMod, IOblivionModDisposableGetter, GroupMask> 
+        Create => new(
+        GameRelease.Oblivion, 
+        BuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: true);
 }
 
 internal partial class OblivionModBinaryOverlay

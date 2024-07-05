@@ -50,6 +50,85 @@ public partial class Fallout4Mod : AMod
 
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+
+    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask>
+    {
+        public static readonly BuilderInstantiator Instance = new();
+        
+        public IFallout4Mod Mutable(BinaryReadMutableBuilder<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return Fallout4Mod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return Fallout4Mod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IFallout4ModDisposableGetter Readonly(BinaryReadBuilder<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return Fallout4Mod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return Fallout4Mod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+    
+    public static BinaryReadBuilderSourceStreamFactoryChoice<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> 
+        Create(Fallout4Release release) => new( 
+        release.ToGameRelease(), 
+        BuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: false);
 }
 
 internal partial class Fallout4ModBinaryOverlay

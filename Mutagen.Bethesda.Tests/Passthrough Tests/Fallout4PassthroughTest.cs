@@ -456,27 +456,25 @@ public class Fallout4PassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-            new ModPath(ModKey, path),
-            Fallout4Release.Fallout4,
-            new BinaryReadParameters()
-            {
-                StringsParam = stringsParams,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return Fallout4Mod.Create(GameRelease.ToFallout4Release())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout4Mod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            Fallout4Release.Fallout4,
-            new BinaryReadParameters()
-            {
-                Parallel = Settings.ParallelProcessingSteps,
-                StringsParam = stringsParams,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return Fallout4Mod.Create(GameRelease.ToFallout4Release())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

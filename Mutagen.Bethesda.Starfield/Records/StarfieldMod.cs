@@ -59,6 +59,85 @@ public partial class StarfieldMod : AMod
 
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+    
+    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask>
+    {
+        public static readonly BuilderInstantiator Instance = new();
+        
+        public IStarfieldMod Mutable(BinaryReadMutableBuilder<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return StarfieldMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return StarfieldMod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IStarfieldModDisposableGetter Readonly(BinaryReadBuilder<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return StarfieldMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return StarfieldMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public static BinaryReadBuilderSeparatedSourceChoice<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> 
+        Create(StarfieldRelease release) => new(
+            release.ToGameRelease(), 
+            BuilderInstantiator.Instance,
+            needsRecordTypeInfoCacheReader: true);
 }
 
 internal partial class StarfieldModBinaryOverlay

@@ -22,23 +22,25 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionModBinaryOverlay.OblivionModFactory(new ModPath(ModKey, FilePath.Path),
-            new BinaryReadParameters()
-            {
-                StringsParam = stringsParams,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return OblivionMod.Create
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .ThrowIfUnknownSubrecord()
+            .WithStringsParameters(stringsParams)
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            new BinaryReadParameters()
-            {
-                Parallel = Settings.ParallelProcessingSteps,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return OblivionMod.Create
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .Mutable()
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

@@ -64,6 +64,85 @@ public partial class SkyrimMod : AMod
 
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+
+    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask>
+    {
+        public static readonly BuilderInstantiator Instance = new();
+        
+        public ISkyrimMod Mutable(BinaryReadMutableBuilder<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return SkyrimMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return SkyrimMod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public ISkyrimModDisposableGetter Readonly(BinaryReadBuilder<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return SkyrimMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return SkyrimMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+    
+    public static BinaryReadBuilderSourceStreamFactoryChoice<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> 
+        Create(SkyrimRelease release) => new( 
+        release.ToGameRelease(), 
+        BuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: false);
 }
 
 internal partial class SkyrimModBinaryOverlay

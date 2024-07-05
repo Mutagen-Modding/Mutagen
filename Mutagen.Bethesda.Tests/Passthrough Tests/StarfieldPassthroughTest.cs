@@ -21,27 +21,27 @@ public class StarfieldPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldModBinaryOverlay.StarfieldModFactory(
-            new ModPath(ModKey, path),
-            StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                StringsParam = stringsParams,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithNoLoadOrder()
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                Parallel = Settings.ParallelProcessingSteps,
-                StringsParam = stringsParams,
-                ThrowOnUnknownSubrecord = Settings.ThrowOnUnknown
-            });
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithNoLoadOrder()
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
