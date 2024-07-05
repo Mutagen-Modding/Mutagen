@@ -66,9 +66,7 @@ public class ModModule : GenerationModule
         sb.AppendLine($"IGroup<T>? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}<T>() => this.{nameof(IMod.TryGetTopLevelGroup)}<T>();");
         sb.AppendLine($"IGroup? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}(Type type) => this.{nameof(IMod.TryGetTopLevelGroup)}(type);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
-        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param, parallelParam: parallelWriteParams);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
-        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);");
         sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
 
         // Localization enabled member
@@ -462,67 +460,6 @@ public class ModModule : GenerationModule
             }
         }
         sb.AppendLine();
-
-        using (var args = sb.Function(
-                   $"public static void WriteToBinaryParallel"))
-        {
-            args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"Stream stream");
-            args.Add($"{nameof(BinaryWriteParameters)}? param = null");
-            args.Add($"{nameof(ParallelWriteParameters)}? parallelParam = null");
-        }
-        using (sb.CurlyBrace())
-        {
-            using (var args = sb.Call(
-                       $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
-            {
-                args.AddPassArg("item");
-                args.AddPassArg("stream");
-                args.Add($"parallelParam: parallelParam ?? {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)}");
-                args.Add($"param: param ?? {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)}");
-                args.Add("modKey: item.ModKey");
-            }
-        }
-        sb.AppendLine();
-
-        using (var args = sb.Function(
-                   $"public static void WriteToBinaryParallel"))
-        {
-            args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"string path");
-            args.Add($"{nameof(BinaryWriteParameters)}? param = null");
-            args.Add($"{nameof(ParallelWriteParameters)}? parallelParam = null");
-        }
-        using (sb.CurlyBrace())
-        {
-            sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
-            sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
-            using (var args = sb.Call(
-                       $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
-            {
-                args.Add("mod: item");
-                args.AddPassArg("path");
-            }
-            if (obj.GetObjectData().UsesStringFiles)
-            {
-                sb.AppendLine("param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);");
-            }
-            sb.AppendLine("using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
-            using (sb.CurlyBrace())
-            {
-                using (var args = sb.Call(
-                           $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
-                {
-                    args.AddPassArg("item");
-                    args.AddPassArg("stream");
-                    args.AddPassArg("parallelParam");
-                    args.Add($"param: param");
-                    args.AddPassArg("modKey");
-                }
-            }
-            sb.AppendLine("param.StringsWriter?.Dispose();");
-        }
-        sb.AppendLine();
     }
 
     public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)
@@ -598,32 +535,12 @@ public class ModModule : GenerationModule
                    "public static void WriteParallel"))
         {
             args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"Stream stream");
+            args.Add($"{nameof(MutagenWriter)} writer");
             args.Add($"{nameof(BinaryWriteParameters)} param");
-            args.Add($"{nameof(ParallelWriteParameters)} parallelParam");
             args.Add($"ModKey modKey");
         }
         using (sb.CurlyBrace())
         {
-            string gameConstantsStr;
-            if (objData.GameReleaseOptions == null)
-            {
-                gameConstantsStr = $"{nameof(GameConstants)}.{obj.GetObjectData().GameCategory}";
-            }
-            else
-            {
-                sb.AppendLine($"var gameConstants = {nameof(GameConstants)}.Get(item.{ReleaseEnumName(obj)}.ToGameRelease());");
-                gameConstantsStr = $"gameConstants";
-            }
-            sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
-            using (sb.CurlyBrace(appendSemiColon: true))
-            {
-                sb.AppendLine("StringsWriter = param.StringsWriter,");
-                sb.AppendLine("TargetLanguageOverride = param.TargetLanguageOverride,");
-                sb.AppendLine($"Encodings = param.Encodings ?? {gameConstantsStr}.Encodings,");
-            }
-
-            sb.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
             using (var args = sb.Call(
                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
             {
@@ -661,20 +578,20 @@ public class ModModule : GenerationModule
                     && groupTarget.CustomBinaryEnd == CustomEnd.Off 
                     && groupTarget.Subgroups.Count == 0)
                 {
-                    sb.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
+                    sb.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, writer.MetaData, param.Parallel));");
                 }
                 else
                 {
-                    sb.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
+                    sb.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, {i}, outputStreams, writer.MetaData, param.Parallel));");
                 }
                 i++;
             }
-            sb.AppendLine("Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());");
+            sb.AppendLine("Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());");
             using (var args = sb.Call(
                        $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
             {
                 args.Add("outputStreams.NotNull()");
-                args.Add("stream");
+                args.Add("writer.BaseStream");
             }
         }
         sb.AppendLine();

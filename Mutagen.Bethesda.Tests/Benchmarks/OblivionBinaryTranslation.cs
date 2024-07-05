@@ -20,6 +20,14 @@ public class OblivionBinaryTranslation
     public static BinaryWriteParameters WriteParametersNoCheck = new()
     {
         MastersListContent = MastersListContentOption.NoCheck,
+        Parallel = new ParallelWriteParameters()
+        {
+            MaxDegreeOfParallelism = 1
+        },
+    };
+    public static BinaryWriteParameters WriteParametersNoCheckParallel = new()
+    {
+        MastersListContent = MastersListContentOption.NoCheck,
     };
 
     [GlobalSetup]
@@ -76,7 +84,7 @@ public class OblivionBinaryTranslation
     public void CreateAndWriteBinaryOverlayParallelToDisk()
     {
         var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
-        mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
+        mod.WriteToBinary(BinaryPath, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
@@ -84,7 +92,7 @@ public class OblivionBinaryTranslation
     {
         var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         DataOutput.Position = 0;
-        mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
+        mod.WriteToBinary(DataOutput, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
@@ -103,13 +111,13 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void WriteBinaryParallelToDisk()
     {
-        Mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
+        Mod.WriteToBinary(BinaryPath, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
     public void WriteBinaryParallelToMemory()
     {
         DataOutput.Position = 0;
-        Mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
+        Mod.WriteToBinary(DataOutput, WriteParametersNoCheckParallel);
     }
 }

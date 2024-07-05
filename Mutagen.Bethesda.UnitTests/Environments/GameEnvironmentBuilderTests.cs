@@ -33,7 +33,7 @@ public class GameEnvironmentBuilderTests
         modKeys.ForEach(m =>
         {
             var mod = new SkyrimMod(m, SkyrimRelease.SkyrimSE);
-            mod.WriteToBinaryParallel(Path.Combine(dataDirectoryProvider.Path, m.FileName), new BinaryWriteParameters()
+            mod.WriteToBinary(Path.Combine(dataDirectoryProvider.Path, m.FileName), new BinaryWriteParameters()
             {
                 FileSystem = fs
             });

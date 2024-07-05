@@ -2790,9 +2790,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
@@ -3727,43 +3725,6 @@ namespace Mutagen.Bethesda.Oblivion
             return (IGroup?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
-        }
-
-        public static void WriteToBinaryParallel(
-            this IOblivionModGetter item,
-            Stream stream,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null)
-        {
-            OblivionModCommon.WriteParallel(
-                item: item,
-                stream: stream,
-                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
-                param: param ?? BinaryWriteParameters.Default,
-                modKey: item.ModKey);
-        }
-
-        public static void WriteToBinaryParallel(
-            this IOblivionModGetter item,
-            string path,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null)
-        {
-            param ??= BinaryWriteParameters.Default;
-            parallelParam ??= ParallelWriteParameters.Default;
-            var modKey = param.RunMasterMatch(
-                mod: item,
-                path: path);
-            using (var stream = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
-            {
-                OblivionModCommon.WriteParallel(
-                    item: item,
-                    stream: stream,
-                    parallelParam: parallelParam,
-                    param: param,
-                    modKey: modKey);
-            }
-            param.StringsWriter?.Dispose();
         }
 
         [DebuggerStepThrough]
@@ -6309,18 +6270,10 @@ namespace Mutagen.Bethesda.Oblivion
         
         public static void WriteParallel(
             IOblivionModGetter item,
-            Stream stream,
+            MutagenWriter writer,
             BinaryWriteParameters param,
-            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var bundle = new WritingBundle(GameConstants.Oblivion)
-            {
-                StringsWriter = param.StringsWriter,
-                TargetLanguageOverride = param.TargetLanguageOverride,
-                Encodings = param.Encodings ?? GameConstants.Oblivion.Encodings,
-            };
-            var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
@@ -6329,66 +6282,66 @@ namespace Mutagen.Bethesda.Oblivion
                 modKey: modKey);
             Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Globals, 1, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Classes, 2, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Factions, 3, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, 4, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, 5, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Races, 6, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Sounds, 7, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Skills, 8, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 9, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Scripts, 10, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LandTextures, 11, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Enchantments, 12, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Spells, 13, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Birthsigns, 14, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Activators, 15, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, 16, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Armors, 17, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Books, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Clothes, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Containers, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Doors, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Lights, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Statics, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Trees, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Flora, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Creatures, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Keys, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Potions, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Subspaces, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SigilStones, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Climates, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Regions, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Quests, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AIPackages, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 52, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 53, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 54, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 55, outputStreams, bundle, parallelParam));
-            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 1, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 2, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 3, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, 4, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, 5, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Races, 6, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Sounds, 7, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Skills, 8, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 9, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Scripts, 10, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LandTextures, 11, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Enchantments, 12, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Spells, 13, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Birthsigns, 14, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Activators, 15, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, 16, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Armors, 17, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Books, 18, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Clothes, 19, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Containers, 20, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Doors, 21, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, 22, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Lights, 23, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, 24, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Statics, 25, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 26, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Trees, 27, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Flora, 28, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 29, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 30, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 31, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 32, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Creatures, 33, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, 34, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, 35, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Keys, 36, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Potions, 37, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Subspaces, 38, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SigilStones, 39, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 40, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 41, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 42, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 43, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 44, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 45, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 46, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 47, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 48, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AIPackages, 49, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 50, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 51, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 52, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 53, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 54, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 55, outputStreams, writer.MetaData, param.Parallel));
+            Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
-                stream);
+                writer.BaseStream);
         }
         
         public static void WriteGroupParallel<T>(
@@ -11091,6 +11044,16 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask? importMask = null,
             BinaryWriteParameters? param = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            if (param.Parallel.MaxDegreeOfParallelism != 1)
+            {
+                OblivionModCommon.WriteParallel(
+                    item: item,
+                    writer: writer,
+                    param: param,
+                    modKey: modKey);
+                return;
+            }
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
@@ -12050,9 +12013,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, parallelParam: parallelWriteParams);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;

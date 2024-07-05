@@ -1930,7 +1930,9 @@
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetTargetHeightConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ConditionDatas\UnknownConditionData.cs" />
+    <Compile Include="Records\Common Subrecords\ConditionDatas\UnknownConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ContainerEntry_Generated.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
     </Compile>

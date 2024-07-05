@@ -174,7 +174,7 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinaryParallel(modPath, new BinaryWriteParameters()
+        mod.WriteToBinary(modPath, new BinaryWriteParameters()
         {
             FileSystem = fileSystem
         });
@@ -472,7 +472,7 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinaryParallel(modPath, new BinaryWriteParameters()
+        mod.WriteToBinary(modPath, new BinaryWriteParameters()
         {
             FileSystem = fileSystem
         });

@@ -61,9 +61,7 @@ public abstract class AMod : IMod
     IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => throw new NotImplementedException();
-    void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => throw new NotImplementedException();
-    void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();

@@ -2320,9 +2320,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"IGroupGetter<T>? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}<T>() => this.{nameof(IModGetter.TryGetTopLevelGroup)}<T>();");
                 sb.AppendLine($"IGroupGetter? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.TryGetTopLevelGroup)}(type);");
                 sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
-                sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, parallelParam: parallelWriteParams);");
                 sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
-                sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);");
                 sb.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
@@ -3285,6 +3283,20 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (obj.GetObjectType() == ObjectType.Mod)
             {
+                sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
+                sb.AppendLine($"if (param.Parallel.{nameof(ParallelWriteParameters.MaxDegreeOfParallelism)} != 1)");
+                using (sb.CurlyBrace())
+                {
+                    using (var args = sb.Call(
+                               $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.WriteParallel"))
+                    {
+                        args.AddPassArg("item");
+                        args.Add($"writer: {writerNameToUse}");
+                        args.AddPassArg("param");
+                        args.AddPassArg("modKey");
+                    }
+                    sb.AppendLine("return;");
+                }
                 using (var args = sb.Call(
                            $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                 {

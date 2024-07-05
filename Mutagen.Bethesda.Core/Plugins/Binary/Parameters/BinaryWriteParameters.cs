@@ -95,11 +95,11 @@ public sealed record BinaryWriteParameters
     /// Load order.  Required for games with Separated Load Order lists per master type
     /// </summary>
     public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
-    
+
     /// <summary>
     /// Whether to use multithreading when possible
     /// </summary>
-    public bool Parallel { get; init; } = true;
+    public ParallelWriteParameters Parallel { get; init; } = new();
     
     /// <summary>
     /// FileSystem to write to

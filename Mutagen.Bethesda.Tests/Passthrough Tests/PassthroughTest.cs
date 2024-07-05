@@ -11,7 +11,7 @@ using Noggog.Streams.Binary;
 using System.Reactive.Subjects;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
+using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment; 
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -351,7 +351,10 @@ public abstract class PassthroughTest
 
                         var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncoding.Default) : null);
                         var outputPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_NormalImport_ParallelExport");
-                        mod.WriteToBinaryParallel(outputPath, writeParam, parallelWriteParameters: new ParallelWriteParameters() { MaxDegreeOfParallelism = 1 });
+                        mod.WriteToBinary(outputPath, writeParam with
+                        {
+                            Parallel = new ParallelWriteParameters() { MaxDegreeOfParallelism = 1 }
+                        });
                         GC.Collect();
 
                         using var stream = new MutagenBinaryReadStream(processedPath, GameRelease, LoadOrder);
@@ -558,6 +561,10 @@ public abstract class PassthroughTest
             MasterFlag = MasterFlagOption.NoCheck,
             MastersListOrdering = AMastersListOrderingOption.ByMasters(masterRefs),
             StringsWriter = stringsWriter,
+            Parallel = new ParallelWriteParameters()
+            {
+                MaxDegreeOfParallelism = 1
+            }
         };
     }
 
