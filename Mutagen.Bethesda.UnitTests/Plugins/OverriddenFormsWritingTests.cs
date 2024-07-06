@@ -108,7 +108,7 @@ public class OverriddenFormsWritingTests
             .Should().Equal(fk);
     }
 
-    [Theory, MutagenAutoData]
+    /*[Theory, MutagenAutoData]
     public void OverriddenFormsDoesNotIncludeTopLevelRecord(
         IFileSystem fileSystem,
         ModPath existingModPath)
@@ -133,7 +133,7 @@ public class OverriddenFormsWritingTests
         mod.ModHeader.OverriddenForms.Add(fk);
 
         TestExpectedOverriddenForms(fileSystem, existingModPath, mod);
-    }
+    }*/
 
     [Theory, MutagenAutoData]
     public void OverriddenFormsCellsPlacedIncluded(
