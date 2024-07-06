@@ -59,11 +59,6 @@ public sealed record BinaryWriteParameters
     public FormIDCompactionOption FormIDCompaction { get; init; } = FormIDCompactionOption.Iterate;
 
     /// <summary>
-    /// Logic to use to ensure a mod's master flag matches the specified ModKey
-    /// </summary>
-    public MasterFlagOption MasterFlag { get; init; } = MasterFlagOption.ChangeToMatchModKey;
-
-    /// <summary>
     /// Optional StringsWriter override, for mods that are able to localize.
     /// </summary>
     public StringsWriter? StringsWriter { get; init; }

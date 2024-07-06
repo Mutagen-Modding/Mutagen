@@ -558,7 +558,6 @@ public abstract class PassthroughTest
             RecordCount = RecordCountOption.NoCheck,
             NextFormID = NextFormIDOption.NoCheck,
             FormIDUniqueness = FormIDUniquenessOption.NoCheck,
-            MasterFlag = MasterFlagOption.NoCheck,
             MastersListOrdering = AMastersListOrderingOption.ByMasters(masterRefs),
             StringsWriter = stringsWriter,
             Parallel = new ParallelWriteParameters()

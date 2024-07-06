@@ -10,32 +10,6 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 public class MasterSyncTests
 {
     #region MasterFlagSync
-    [Fact]
-    public void MasterFlagSync_Correct()
-    {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
-        var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
-        var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
-        masterMod.WriteToBinary(masterPath,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.ThrowIfMisaligned,
-                MastersListContent = MastersListContentOption.NoCheck,
-            });
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-        Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
-        var childMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
-        var childPath = Path.Combine(folder.Dir.Path, "Test.esp");
-        childMod.WriteToBinary(childPath,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.ThrowIfMisaligned,
-                MastersListContent = MastersListContentOption.NoCheck,
-            });
-        using var reimport2 = OblivionMod.CreateFromBinaryOverlay(childPath);
-        Assert.False(reimport2.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
-    }
 
     [Fact]
     public void MasterFlagSync_MasterThrow()

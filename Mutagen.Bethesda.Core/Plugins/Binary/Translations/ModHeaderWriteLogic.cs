@@ -68,7 +68,6 @@ internal sealed class ModHeaderWriteLogic
         IModGetter mod, 
         IModHeaderCommon modHeader)
     {
-        ModifyMasterFlags(modHeader);
         AddMasterCollectionActions(mod);
         AddRecordCount();
         AddNextFormIDActions();
@@ -336,39 +335,6 @@ internal sealed class ModHeaderWriteLogic
                 return;
             default:
                 throw new NotImplementedException();
-        }
-    }
-    #endregion
-
-    #region Master Flags
-    public void ModifyMasterFlags(IModHeaderCommon header)
-    {
-        switch (_params.MasterFlag)
-        {
-            case MasterFlagOption.NoCheck:
-                break;
-            case MasterFlagOption.ChangeToMatchModKey:
-                header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), _modKey.Type == ModType.Master);
-                if (_modKey.Type != ModType.Plugin)
-                {
-                    header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), true);
-                }
-                break;
-            case MasterFlagOption.ExceptionOnMismatch:
-                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, _category.GetMasterFlagIndex()))
-                {
-                    throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
-                }
-
-                var lightIndex = _category.GetLightFlagIndex();
-                if (lightIndex.HasValue && (_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, lightIndex.Value))
-                {
-                    throw new ArgumentException($"Light flag did not match ModKey type. ({_modKey})");
-                }
-                
-                break;
-            default:
-                break;
         }
     }
     #endregion
