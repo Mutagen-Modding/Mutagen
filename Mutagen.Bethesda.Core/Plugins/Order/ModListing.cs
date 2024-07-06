@@ -135,7 +135,7 @@ public sealed record ModListing<TMod> : IModListing<TMod>
 /// The generic variant also includes an optional Mod object that may or may not exist.
 /// </summary>
 public interface IModListingGetter<out TMod> : IModListingGetter, IDisposable
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <summary>
     /// Mod object
