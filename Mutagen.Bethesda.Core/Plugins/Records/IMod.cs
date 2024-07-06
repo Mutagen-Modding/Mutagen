@@ -2,6 +2,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
@@ -129,6 +130,8 @@ public interface IModGetter :
     /// Default of null refers to the mod header flags</param>
     /// <returns>Lowest suggested FormID given current mod header flags</returns>
     uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
+    
+    IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite { get; }
 }
 
 /// <summary>

@@ -229,6 +229,7 @@
         </Compile>
         <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\BinaryReadBuilder.cs" />
+        <Compile Include="Plugins\Binary\Translations\BinaryWriteBuilder.cs" />
         <Compile Include="Plugins\Binary\Translations\FormLinkOrIndexBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\GuidBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />

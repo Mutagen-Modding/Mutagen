@@ -57,11 +57,11 @@ public class SeparatedMastersTesting
         });
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
-        originating.WriteToBinary(modPath, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem,
-            LoadOrder = lo
-        });
+        originating.BeginWrite
+            .WithLoadOrder(lo)
+            .ToPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Write();
 
         var locs = RecordLocator.GetLocations(modPath, GameRelease.SkyrimSE,
             loadOrder: lo,
@@ -164,11 +164,11 @@ public class SeparatedMastersTesting
         });
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
-        originating.WriteToBinary(modPath, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem,
-            LoadOrder = lo
-        });
+        originating.BeginWrite
+            .WithLoadOrder(lo)
+            .ToPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Write();
 
         var locs = RecordLocator.GetLocations(modPath, GameRelease.Starfield,
             loadOrder: lo,

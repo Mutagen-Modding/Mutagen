@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins;
 public class WriteOptionsTests
 {
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
-    public void NextFormID(
+    public async Task NextFormID(
         OblivionMod mod,
         IFileSystem fileSystem,
         ModPath existingModPath)
@@ -26,21 +26,21 @@ public class WriteOptionsTests
         var nextId = mod.ModHeader.Stats.NextFormID;
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(nextId);
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            FileSystem = fileSystem
-        });
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+        using var reimport = OblivionMod.Create
+            .FromPath(existingModPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         reimport.ModHeader.Stats.NextFormID.Should().Be(nextId + 1);
     }
 
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
-    public void DifferentModKeyExport(
+    public async Task DifferentModKeyExport(
         OblivionMod mod,
         Mutagen.Bethesda.Oblivion.Npc npc,
         Mutagen.Bethesda.Oblivion.Race race,
@@ -50,18 +50,18 @@ public class WriteOptionsTests
         var weap = mod.Weapons.AddNew(FormKey.Factory("123456:Skyrim.esm"));
         mod.ModKey.Should().NotBe(existingModPath.ModKey);
         npc.Race.SetTo(race);
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.CorrectToPath,
-            FileSystem = fileSystem
-        });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .WithModKeySync(ModKeyOption.CorrectToPath)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
 
         // Check FormKeys
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(existingModPath,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        using var reimport = OblivionMod.Create
+            .FromPath(existingModPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         var reimportWeapon = reimport.Weapons.First();
         reimportWeapon.FormKey.Should().Be(weap.FormKey);
         var reimportNpc = reimport.Npcs.First();
@@ -107,7 +107,7 @@ public class WriteOptionsTests
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
-    public void DisallowedLowerRangeFormIDThrows(
+    public async Task DisallowedLowerRangeFormIDThrows(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -115,19 +115,20 @@ public class WriteOptionsTests
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
-        Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
+        await Assert.ThrowsAsync<LowerFormKeyRangeDisallowedException>(async () =>
         {
-            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.Throw,
-                FileSystem = fileSystem
-            });
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(existingModPath)
+                .NoModKeySync()
+                .ThrowIfLowerRangeDisallowed()
+                .WithFileSystem(fileSystem)
+                .WriteAsync();
         });
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
-    public void DisallowedLowerRangeFormIDPlaceholderModKey(
+    public async Task DisallowedLowerRangeFormIDPlaceholderModKey(
         IFileSystem fileSystem,
         ModPath existingModPath,
         ModKey modKey)
@@ -136,22 +137,22 @@ public class WriteOptionsTests
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(1);
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(modKey),
-            FileSystem = fileSystem
-        });
-        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .WithPlaceholderMasterIfLowerRangeDisallowed(modKey)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+        using var reimport = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(existingModPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
-    public void DisallowedLowerRangeFormIDPlaceholderLoadOrderEmptyThrows(
+    public async Task DisallowedLowerRangeFormIDPlaceholderLoadOrderEmptyThrows(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -162,19 +163,20 @@ public class WriteOptionsTests
 
         var lo = new LoadOrder<ModListing>();
 
-        Assert.Throws<LowerFormKeyRangeDisallowedException>(() =>
+        await Assert.ThrowsAsync<LowerFormKeyRangeDisallowedException>(async () =>
         {
-            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo),
-                FileSystem = fileSystem
-            });
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(existingModPath)
+                .NoModKeySync()
+                .WithPlaceholderMasterIfLowerRangeDisallowed(lo)
+                .WithFileSystem(fileSystem)
+                .WriteAsync();
         });
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
-    public void DisallowedLowerRangeFormIDPlaceholderLoadOrder(
+    public async Task DisallowedLowerRangeFormIDPlaceholderLoadOrder(
         IFileSystem fileSystem,
         ModPath existingModPath,
         ModKey modKey)
@@ -192,22 +194,22 @@ public class WriteOptionsTests
             }
         };
 
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo),
-            FileSystem = fileSystem
-        });
-        using var reimport = SkyrimMod.CreateFromBinaryOverlay(existingModPath, SkyrimRelease.SkyrimSE,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .WithPlaceholderMasterIfLowerRangeDisallowed(lo)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+        using var reimport = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(existingModPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
     }
 
     [Theory, MutagenAutoData]
-    public void LightMasterFormIDCompactionThrows(
+    public async Task LightMasterFormIDCompactionThrows(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -216,19 +218,20 @@ public class WriteOptionsTests
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
 
-        Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
+        await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
         {
-            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                FormIDCompaction = FormIDCompactionOption.Iterate,
-                FileSystem = fileSystem
-            });
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(existingModPath)
+                .NoModKeySync()
+                .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
+                .WithFileSystem(fileSystem)
+                .WriteAsync();
         });
     }
 
     [Theory, MutagenAutoData]
-    public void LightMasterFormIDCompactionNoCheck(
+    public async Task LightMasterFormIDCompactionNoCheck(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -236,16 +239,17 @@ public class WriteOptionsTests
             forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.NoCheck,
-            FileSystem = fileSystem
-        });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .NoFormIDCompactnessCheck()
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
     }
 
     [Theory, MutagenAutoData]
-    public void MediumMasterFormIDCompactionThrows(
+    public async Task MediumMasterFormIDCompactionThrows(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -254,19 +258,20 @@ public class WriteOptionsTests
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
 
-        Assert.Throws<FormIDCompactionOutOfBoundsException>(() =>
+        await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
         {
-            mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                FormIDCompaction = FormIDCompactionOption.Iterate,
-                FileSystem = fileSystem
-            });
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(existingModPath)
+                .NoModKeySync()
+                .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
+                .WithFileSystem(fileSystem)
+                .WriteAsync();
         });
     }
 
     [Theory, MutagenAutoData]
-    public void MediumMasterFormIDCompactionNoCheck(
+    public async Task MediumMasterFormIDCompactionNoCheck(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -274,16 +279,17 @@ public class WriteOptionsTests
             forceUseLowerFormIDRanges: true);
         mod.IsLightMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.NoCheck,
-            FileSystem = fileSystem
-        });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .NoFormIDCompactnessCheck()
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
     }
 
     [Theory, MutagenAutoData]
-    public void MediumMasterFormIDCompactionCheck(
+    public async Task MediumMasterFormIDCompactionCheck(
         IFileSystem fileSystem,
         ModPath existingModPath)
     {
@@ -291,11 +297,12 @@ public class WriteOptionsTests
             forceUseLowerFormIDRanges: true);
         mod.IsMediumMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
-        mod.WriteToBinary(existingModPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            FormIDCompaction = FormIDCompactionOption.Iterate,
-            FileSystem = fileSystem
-        });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(existingModPath)
+            .NoModKeySync()
+            .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
     }
 }

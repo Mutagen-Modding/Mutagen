@@ -98,9 +98,9 @@ public partial class OblivionMod : AMod
         setter(count);
     }
 
-    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
+    internal class OblivionCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
     {
-        public static readonly BuilderInstantiator Instance = new();
+        public static readonly OblivionCreateBuilderInstantiator Instance = new();
         
         public IOblivionMod Mutable(BinaryReadMutableBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
         {
@@ -170,8 +170,43 @@ public partial class OblivionMod : AMod
     public static BinaryReadBuilderSourceStreamFactoryChoice<IOblivionMod, IOblivionModDisposableGetter, GroupMask> 
         Create => new(
         GameRelease.Oblivion, 
-        BuilderInstantiator.Instance,
+        OblivionCreateBuilderInstantiator.Instance,
         needsRecordTypeInfoCacheReader: true);
+
+    internal class OblivionWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IOblivionModGetter>
+    {
+        public static readonly OblivionWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter> 
+        BeginWrite => new(
+        this, 
+        OblivionWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IOblivionModGetter> WriteBuilder => new(OblivionWriteBuilderInstantiator.Instance);
 }
 
 internal partial class OblivionModBinaryOverlay
@@ -187,6 +222,11 @@ internal partial class OblivionModBinaryOverlay
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => false;
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter>(
+        this, 
+        OblivionMod.OblivionWriteBuilderInstantiator.Instance);
 }
 
 partial class OblivionModCommon

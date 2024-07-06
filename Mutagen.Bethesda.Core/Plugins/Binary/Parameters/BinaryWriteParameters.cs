@@ -64,8 +64,8 @@ public sealed record BinaryWriteParameters
     public StringsWriter? StringsWriter { get; init; }
         
     /// <summary>
-    /// If not localizable mod that has localization off, which language to output as the embedded strings.
-    /// If left null, each individual TranslatedString" will use its current TargetLanguage
+    /// If writing a localizable mod that has localization off, which language to output as the embedded strings.
+    /// If left null, each individual TranslatedString will use its current TargetLanguage
     /// </summary>
     public Language? TargetLanguageOverride { get; init; }
 

@@ -20,10 +20,11 @@ public class ModImporterTests
         ModImporter<ISkyrimModGetter> sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import(path);
         import.Should().BeOfType<SkyrimModBinaryOverlay>();
     }
@@ -37,10 +38,11 @@ public class ModImporterTests
         ModImporter<ISkyrimMod> sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import(path);
         import.Should().BeOfType<SkyrimMod>();
     }
@@ -54,10 +56,11 @@ public class ModImporterTests
         ModImporter<SkyrimMod> sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import(path);
         import.Should().BeOfType<SkyrimMod>();
     }
@@ -71,10 +74,11 @@ public class ModImporterTests
         ModImporter sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import<ISkyrimModGetter>(path);
         import.Should().BeOfType<SkyrimModBinaryOverlay>();
     }
@@ -88,10 +92,11 @@ public class ModImporterTests
         ModImporter sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import<ISkyrimMod>(path);
         import.Should().BeOfType<SkyrimMod>();
     }
@@ -105,10 +110,11 @@ public class ModImporterTests
         ModImporter sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import<SkyrimMod>(path);
         import.Should().BeOfType<SkyrimMod>();
     }
@@ -122,10 +128,11 @@ public class ModImporterTests
         ModImporter sut)
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.WriteToBinary(path, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
         var import = sut.Import(path);
         import.Should().BeOfType<SkyrimModBinaryOverlay>();
     }

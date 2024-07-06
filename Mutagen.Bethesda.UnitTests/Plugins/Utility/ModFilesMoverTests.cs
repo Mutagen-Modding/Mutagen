@@ -174,10 +174,11 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinary(modPath, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeFalse();
@@ -472,10 +473,11 @@ public class ModFilesMoverTests
     {
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
-        mod.WriteToBinary(modPath, new BinaryWriteParameters()
-        {
-            FileSystem = fileSystem
-        });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.CopyModTo(modPath, existingDirectoryPath2);
         fileSystem.File.Exists(modPath).Should().BeTrue();

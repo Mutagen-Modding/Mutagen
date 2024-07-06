@@ -51,9 +51,9 @@ public partial class Fallout4Mod : AMod
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask>
+    internal class Fallout4CreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask>
     {
-        public static readonly BuilderInstantiator Instance = new();
+        public static readonly Fallout4CreateBuilderInstantiator Instance = new();
         
         public IFallout4Mod Mutable(BinaryReadMutableBuilder<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> builder)
         {
@@ -127,8 +127,43 @@ public partial class Fallout4Mod : AMod
     public static BinaryReadBuilderSourceStreamFactoryChoice<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> 
         Create(Fallout4Release release) => new( 
         release.ToGameRelease(), 
-        BuilderInstantiator.Instance,
+        Fallout4CreateBuilderInstantiator.Instance,
         needsRecordTypeInfoCacheReader: false);
+    
+    internal class Fallout4WriteBuilderInstantiator : IBinaryWriteBuilderWriter<IFallout4ModGetter>
+    {
+        public static readonly Fallout4WriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IFallout4ModGetter mod, BinaryWriteBuilderParams<IFallout4ModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IFallout4ModGetter mod, BinaryWriteBuilderParams<IFallout4ModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter> 
+        BeginWrite => new(
+        this, 
+        Fallout4WriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder => new(Fallout4WriteBuilderInstantiator.Instance);
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -147,6 +182,11 @@ internal partial class Fallout4ModBinaryOverlay
     public bool ListsOverriddenForms => true;
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter>(
+        this, 
+        Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 }
 
 partial class Fallout4ModCommon

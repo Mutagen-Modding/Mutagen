@@ -60,9 +60,9 @@ public partial class StarfieldMod : AMod
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
     
-    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask>
+    internal class StarfieldCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask>
     {
-        public static readonly BuilderInstantiator Instance = new();
+        public static readonly StarfieldCreateBuilderInstantiator Instance = new();
         
         public IStarfieldMod Mutable(BinaryReadMutableBuilder<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> builder)
         {
@@ -136,8 +136,43 @@ public partial class StarfieldMod : AMod
     public static BinaryReadBuilderSeparatedSourceChoice<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> 
         Create(StarfieldRelease release) => new(
             release.ToGameRelease(), 
-            BuilderInstantiator.Instance,
+            StarfieldCreateBuilderInstantiator.Instance,
             needsRecordTypeInfoCacheReader: true);
+    
+    internal class StarfieldWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IStarfieldModGetter>
+    {
+        public static readonly StarfieldWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IStarfieldModGetter mod, BinaryWriteBuilderParams<IStarfieldModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IStarfieldModGetter mod, BinaryWriteBuilderParams<IStarfieldModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter> 
+        BeginWrite => new(
+        this, 
+        StarfieldWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder => new(StarfieldWriteBuilderInstantiator.Instance);
 }
 
 internal partial class StarfieldModBinaryOverlay
@@ -155,6 +190,11 @@ internal partial class StarfieldModBinaryOverlay
     public bool ListsOverriddenForms => true;
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter>(
+        this, 
+        StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
 }
 
 partial class StarfieldModSetterCommon

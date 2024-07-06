@@ -23,12 +23,11 @@ public abstract class MutableOverlayTests : ALinkingTests
     {
         var tempFile = new TempFile(extraDirectoryPaths: TestPathing.TempFolderPath);
         var path = new ModPath(mod.ModKey, tempFile.File.Path);
-        mod.WriteToBinary(
-            path,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-            });
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .NoModKeySync()
+            .Write();
         var overlay = SkyrimMod.CreateFromBinaryOverlay(path, SkyrimRelease.SkyrimLE);
         getter = overlay;
         return Disposable.Create(() =>

@@ -4,6 +4,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -32,6 +33,7 @@ public class TestMod : ITestMod, IDisposable
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
+    public IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite => throw new NotImplementedException();
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }

@@ -65,9 +65,9 @@ public partial class SkyrimMod : AMod
     public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    internal class BuilderInstantiator : IBinaryReadBuilderInstantiator<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask>
+    internal class SkyrimCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask>
     {
-        public static readonly BuilderInstantiator Instance = new();
+        public static readonly SkyrimCreateBuilderInstantiator Instance = new();
         
         public ISkyrimMod Mutable(BinaryReadMutableBuilder<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> builder)
         {
@@ -141,8 +141,43 @@ public partial class SkyrimMod : AMod
     public static BinaryReadBuilderSourceStreamFactoryChoice<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> 
         Create(SkyrimRelease release) => new( 
         release.ToGameRelease(), 
-        BuilderInstantiator.Instance,
+        SkyrimCreateBuilderInstantiator.Instance,
         needsRecordTypeInfoCacheReader: false);
+    
+    internal class SkyrimWriteBuilderInstantiator : IBinaryWriteBuilderWriter<ISkyrimModGetter>
+    {
+        public static readonly SkyrimWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<ISkyrimModGetter> 
+        BeginWrite => new(
+        this, 
+        SkyrimWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<ISkyrimModGetter> WriteBuilder => new(SkyrimWriteBuilderInstantiator.Instance);
 }
 
 internal partial class SkyrimModBinaryOverlay
@@ -161,6 +196,11 @@ internal partial class SkyrimModBinaryOverlay
     public bool ListsOverriddenForms => true;
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<ISkyrimModGetter>(
+        this, 
+        SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
 }
 
 partial class SkyrimModSetterCommon

@@ -54,10 +54,14 @@ public class GameEnvironmentBuilder : ISpecimenBuilder
         loWriter.Write(pluginPath.Path, modKeys.Select((x, i) => new LoadOrderListing(x, i % 2 == 0)));
 
         var mods = modKeys.Select(x => ModInstantiator.Activator(x, _release)).ToArray();
-        mods.ForEach(m => m.WriteToBinary(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName), new BinaryWriteParameters()
+        mods.ForEach(m =>
         {
-            FileSystem = fs
-        }));
+            m.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName))
+                .WithFileSystem(fs)
+                .Write();
+        });
 
         var resolver = new Func<Type, object?>(t =>
         {
