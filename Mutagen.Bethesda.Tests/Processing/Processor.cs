@@ -165,7 +165,7 @@ public abstract class Processor
         }
 
         yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
-        yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
+        // yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
     }
 
     protected virtual void AddDynamicProcessorInstructions()
