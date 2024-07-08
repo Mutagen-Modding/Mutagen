@@ -162,6 +162,7 @@
   </Object>
   <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
     <Fields>
+      <FormLink name="Race" refName="Race" recordType="SADD" />
       <List name="ActorKeywords">
         <FormLink recordType="SAKD" refName="Keyword" />
       </List>

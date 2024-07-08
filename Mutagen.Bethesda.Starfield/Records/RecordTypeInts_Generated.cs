@@ -796,6 +796,7 @@ public partial class RecordTypeInts
     public const int RSMH = 0x484D5352;
     public const int RSPJ = 0x4A505352;
     public const int RVSH = 0x48535652;
+    public const int SADD = 0x44444153;
     public const int SAIA = 0x41494153;
     public const int SAKD = 0x444B4153;
     public const int SAPT = 0x54504153;

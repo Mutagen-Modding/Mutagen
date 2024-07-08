@@ -798,6 +798,7 @@ public partial class RecordTypes
     public static readonly RecordType RSMH = new(0x484D5352);
     public static readonly RecordType RSPJ = new(0x4A505352);
     public static readonly RecordType RVSH = new(0x48535652);
+    public static readonly RecordType SADD = new(0x44444153);
     public static readonly RecordType SAIA = new(0x41494153);
     public static readonly RecordType SAKD = new(0x444B4153);
     public static readonly RecordType SAPT = new(0x54504153);

@@ -3778,6 +3778,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.RPRF,
                 RecordTypes.RNAM,
                 RecordTypes.SRAC,
+                RecordTypes.SADD,
                 RecordTypes.SAKD,
                 RecordTypes.SGNM,
                 RecordTypes.SAPT,
@@ -6725,6 +6726,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:
@@ -7538,6 +7540,7 @@ namespace Mutagen.Bethesda.Starfield
                     _SubgraphTemplateRaceLocation = (stream.Position - offset);
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:
