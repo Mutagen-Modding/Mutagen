@@ -1,11 +1,9 @@
 using Noggog;
-using System.IO.Abstractions;
 using System.Linq.Expressions;
 using DynamicData;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.Loqui;
-using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
