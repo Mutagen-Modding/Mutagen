@@ -51,6 +51,7 @@
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="BiomeMarkers" refName="BiomeMarker" />
+      <Group name="Notes" refName="Note" />
       <Group name="Projectiles" refName="Projectile" />
       <Group name="Hazards" refName="Hazard" />
       <Group name="BendableSplines" refName="BendableSpline" />

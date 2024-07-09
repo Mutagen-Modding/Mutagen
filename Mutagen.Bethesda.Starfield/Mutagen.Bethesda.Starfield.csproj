@@ -2294,6 +2294,9 @@
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Note.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -6623,6 +6626,21 @@
     </Compile>
     <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
       <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Note_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANoteData_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteVoice_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteProgram_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

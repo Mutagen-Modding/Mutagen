@@ -628,6 +628,7 @@ public partial class RecordTypeInts
     public const int NNAM = 0x4D414E4E;
     public const int NOCM = 0x4D434F4E;
     public const int NONE = 0x454E4F4E;
+    public const int NOTE = 0x45544F4E;
     public const int NPAC = 0x4341504E;
     public const int NPC_ = 0x5F43504E;
     public const int NPRK = 0x4B52504E;

@@ -630,6 +630,7 @@ public partial class RecordTypes
     public static readonly RecordType NNAM = new(0x4D414E4E);
     public static readonly RecordType NOCM = new(0x4D434F4E);
     public static readonly RecordType NONE = new(0x454E4F4E);
+    public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPAC = new(0x4341504E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType NPRK = new(0x4B52504E);

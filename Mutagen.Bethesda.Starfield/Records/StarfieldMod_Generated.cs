@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Starfield
             _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _IdleMarkers_Object = new StarfieldGroup<IdleMarker>(this);
             _BiomeMarkers_Object = new StarfieldGroup<BiomeMarker>(this);
+            _Notes_Object = new StarfieldGroup<Note>(this);
             _Projectiles_Object = new StarfieldGroup<Projectile>(this);
             _Hazards_Object = new StarfieldGroup<Hazard>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
@@ -580,6 +581,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<BiomeMarker> BiomeMarkers => _BiomeMarkers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IBiomeMarkerGetter> IStarfieldModGetter.BiomeMarkers => _BiomeMarkers_Object;
+        #endregion
+        #region Notes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Note> _Notes_Object;
+        public StarfieldGroup<Note> Notes => _Notes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<INoteGetter> IStarfieldModGetter.Notes => _Notes_Object;
         #endregion
         #region Projectiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1544,6 +1552,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.IdleMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Notes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Projectiles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Hazards = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1721,6 +1730,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Ingestibles,
                 TItem IdleMarkers,
                 TItem BiomeMarkers,
+                TItem Notes,
                 TItem Projectiles,
                 TItem Hazards,
                 TItem BendableSplines,
@@ -1896,6 +1906,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Ingestibles, new StarfieldGroup.Mask<TItem>(Ingestibles));
                 this.IdleMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(IdleMarkers, new StarfieldGroup.Mask<TItem>(IdleMarkers));
                 this.BiomeMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeMarkers, new StarfieldGroup.Mask<TItem>(BiomeMarkers));
+                this.Notes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Notes, new StarfieldGroup.Mask<TItem>(Notes));
                 this.Projectiles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Projectiles, new StarfieldGroup.Mask<TItem>(Projectiles));
                 this.Hazards = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Hazards, new StarfieldGroup.Mask<TItem>(Hazards));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
@@ -2081,6 +2092,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeMarkers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Notes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Projectiles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Hazards { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
@@ -2267,6 +2279,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.BiomeMarkers, rhs.BiomeMarkers)) return false;
+                if (!object.Equals(this.Notes, rhs.Notes)) return false;
                 if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
@@ -2446,6 +2459,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Ingestibles);
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.BiomeMarkers);
+                hash.Add(this.Notes);
                 hash.Add(this.Projectiles);
                 hash.Add(this.Hazards);
                 hash.Add(this.BendableSplines);
@@ -2823,6 +2837,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.BiomeMarkers.Overall)) return false;
                     if (this.BiomeMarkers.Specific != null && !this.BiomeMarkers.Specific.All(eval)) return false;
+                }
+                if (Notes != null)
+                {
+                    if (!eval(this.Notes.Overall)) return false;
+                    if (this.Notes.Specific != null && !this.Notes.Specific.All(eval)) return false;
                 }
                 if (Projectiles != null)
                 {
@@ -3701,6 +3720,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.BiomeMarkers.Overall)) return true;
                     if (this.BiomeMarkers.Specific != null && this.BiomeMarkers.Specific.Any(eval)) return true;
                 }
+                if (Notes != null)
+                {
+                    if (eval(this.Notes.Overall)) return true;
+                    if (this.Notes.Specific != null && this.Notes.Specific.Any(eval)) return true;
+                }
                 if (Projectiles != null)
                 {
                     if (eval(this.Projectiles.Overall)) return true;
@@ -4389,6 +4413,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.BiomeMarkers = this.BiomeMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeMarkers.Overall), this.BiomeMarkers.Specific?.Translate(eval));
+                obj.Notes = this.Notes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Notes.Overall), this.Notes.Specific?.Translate(eval));
                 obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
                 obj.Hazards = this.Hazards == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
@@ -4727,6 +4752,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.BiomeMarkers?.Overall ?? true)
                     {
                         BiomeMarkers?.Print(sb);
+                    }
+                    if (printMask?.Notes?.Overall ?? true)
+                    {
+                        Notes?.Print(sb);
                     }
                     if (printMask?.Projectiles?.Overall ?? true)
                     {
@@ -5301,6 +5330,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>? BiomeMarkers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Note.ErrorMask>?>? Notes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Hazard.ErrorMask>?>? Hazards;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
@@ -5532,6 +5562,8 @@ namespace Mutagen.Bethesda.Starfield
                         return IdleMarkers;
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         return BiomeMarkers;
+                    case StarfieldMod_FieldIndex.Notes:
+                        return Notes;
                     case StarfieldMod_FieldIndex.Projectiles:
                         return Projectiles;
                     case StarfieldMod_FieldIndex.Hazards:
@@ -5938,6 +5970,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         this.BiomeMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Notes:
+                        this.Notes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Note.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Projectiles:
                         this.Projectiles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>(ex, null);
@@ -6471,6 +6506,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         this.BiomeMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Notes:
+                        this.Notes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Note.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Projectiles:
                         this.Projectiles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>?)obj;
                         break;
@@ -6903,6 +6941,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Ingestibles != null) return true;
                 if (IdleMarkers != null) return true;
                 if (BiomeMarkers != null) return true;
+                if (Notes != null) return true;
                 if (Projectiles != null) return true;
                 if (Hazards != null) return true;
                 if (BendableSplines != null) return true;
@@ -7102,6 +7141,7 @@ namespace Mutagen.Bethesda.Starfield
                 Ingestibles?.Print(sb);
                 IdleMarkers?.Print(sb);
                 BiomeMarkers?.Print(sb);
+                Notes?.Print(sb);
                 Projectiles?.Print(sb);
                 Hazards?.Print(sb);
                 BendableSplines?.Print(sb);
@@ -7284,6 +7324,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.BiomeMarkers = this.BiomeMarkers.Combine(rhs.BiomeMarkers, (l, r) => l.Combine(r));
+                ret.Notes = this.Notes.Combine(rhs.Notes, (l, r) => l.Combine(r));
                 ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
@@ -7481,6 +7522,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public StarfieldGroup.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public StarfieldGroup.TranslationMask<BiomeMarker.TranslationMask>? BiomeMarkers;
+            public StarfieldGroup.TranslationMask<Note.TranslationMask>? Notes;
             public StarfieldGroup.TranslationMask<Projectile.TranslationMask>? Projectiles;
             public StarfieldGroup.TranslationMask<Hazard.TranslationMask>? Hazards;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
@@ -7679,6 +7721,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((BiomeMarkers != null ? BiomeMarkers.OnOverall : DefaultOn, BiomeMarkers?.GetCrystal()));
+                ret.Add((Notes != null ? Notes.OnOverall : DefaultOn, Notes?.GetCrystal()));
                 ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
                 ret.Add((Hazards != null ? Hazards.OnOverall : DefaultOn, Hazards?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
@@ -7907,6 +7950,7 @@ namespace Mutagen.Bethesda.Starfield
             _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _IdleMarkers_Object = new StarfieldGroup<IdleMarker>(this);
             _BiomeMarkers_Object = new StarfieldGroup<BiomeMarker>(this);
+            _Notes_Object = new StarfieldGroup<Note>(this);
             _Projectiles_Object = new StarfieldGroup<Projectile>(this);
             _Hazards_Object = new StarfieldGroup<Hazard>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
@@ -8228,6 +8272,10 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.BiomeMarkers ?? true)
             {
                 this.BiomeMarkers.RecordCache.Set(rhsMod.BiomeMarkers.RecordCache.Items);
+            }
+            if (mask?.Notes ?? true)
+            {
+                this.Notes.RecordCache.Set(rhsMod.Notes.RecordCache.Items);
             }
             if (mask?.Projectiles ?? true)
             {
@@ -8790,6 +8838,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Notes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
             count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
@@ -9236,6 +9285,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Ingestible> Ingestibles { get; }
         new StarfieldGroup<IdleMarker> IdleMarkers { get; }
         new StarfieldGroup<BiomeMarker> BiomeMarkers { get; }
+        new StarfieldGroup<Note> Notes { get; }
         new StarfieldGroup<Projectile> Projectiles { get; }
         new StarfieldGroup<Hazard> Hazards { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
@@ -9429,6 +9479,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IIngestibleGetter> Ingestibles { get; }
         IStarfieldGroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IStarfieldGroupGetter<IBiomeMarkerGetter> BiomeMarkers { get; }
+        IStarfieldGroupGetter<INoteGetter> Notes { get; }
         IStarfieldGroupGetter<IProjectileGetter> Projectiles { get; }
         IStarfieldGroupGetter<IHazardGetter> Hazards { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
@@ -10153,131 +10204,132 @@ namespace Mutagen.Bethesda.Starfield
         Ingestibles = 46,
         IdleMarkers = 47,
         BiomeMarkers = 48,
-        Projectiles = 49,
-        Hazards = 50,
-        BendableSplines = 51,
-        Terminals = 52,
-        LeveledItems = 53,
-        GenericBaseFormTemplates = 54,
-        GenericBaseForms = 55,
-        LeveledBaseForms = 56,
-        Weathers = 57,
-        WeatherSettings = 58,
-        Climates = 59,
-        ShaderParticleGeometries = 60,
-        Regions = 61,
-        NavigationMeshInfoMaps = 62,
-        Cells = 63,
-        Worldspaces = 64,
-        Quests = 65,
-        IdleAnimations = 66,
-        Packages = 67,
-        CombatStyles = 68,
-        LoadScreens = 69,
-        AnimatedObjects = 70,
-        Waters = 71,
-        EffectShaders = 72,
-        Explosions = 73,
-        Debris = 74,
-        ImageSpaces = 75,
-        ImageSpaceAdapters = 76,
-        FormLists = 77,
-        Perks = 78,
-        BodyParts = 79,
-        AddonNodes = 80,
-        ActorValueInformation = 81,
-        CameraShots = 82,
-        CameraPaths = 83,
-        VoiceTypes = 84,
-        MaterialTypes = 85,
-        Impacts = 86,
-        ImpactDataSets = 87,
-        ArmorAddons = 88,
-        Locations = 89,
-        Messages = 90,
-        DefaultObjectManagers = 91,
-        DefaultObjects = 92,
-        LightingTemplates = 93,
-        MusicTypes = 94,
-        Footsteps = 95,
-        FootstepSets = 96,
-        StoryManagerBranchNodes = 97,
-        StoryManagerQuestNodes = 98,
-        StoryManagerEventNodes = 99,
-        MusicTracks = 100,
-        EquipTypes = 101,
-        Outfits = 102,
-        ArtObjects = 103,
-        MovementTypes = 104,
-        CollisionLayers = 105,
-        Colors = 106,
-        ReverbParameters = 107,
-        ReferenceGroups = 108,
-        AimModels = 109,
-        AimAssistModels = 110,
-        MeleeAimAssistModels = 111,
-        Layers = 112,
-        ConstructibleObjects = 113,
-        ObjectModifications = 114,
-        Zooms = 115,
-        InstanceNamingRules = 116,
-        SoundKeywordMappings = 117,
-        AttractionRules = 118,
-        AnimationSoundTagSets = 119,
-        Resources = 120,
-        Biomes = 121,
-        NavigationMeshObstacleCoverManagers = 122,
-        LensFlares = 123,
-        ObjectVisibilityManagers = 124,
-        SnapTemplateNodes = 125,
-        SnapTemplates = 126,
-        GroundCovers = 127,
-        MorphableObjects = 128,
-        Traversals = 129,
-        ResourceGenerationData = 130,
-        BiomeSwaps = 131,
-        Atmospheres = 132,
-        LeveledSpaceCells = 133,
-        SpeechChallenges = 134,
-        AimAssistPoses = 135,
-        VolumetricLightings = 136,
-        SurfaceBlocks = 137,
-        SurfacePatternConfigs = 138,
-        SurfacePatterns = 139,
-        SurfaceTrees = 140,
-        PlanetContentManagerTrees = 141,
-        BoneModifiers = 142,
-        SnapTemplateBehaviors = 143,
-        Planets = 144,
-        ConditionRecords = 145,
-        PlanetContentManagerBranchNodes = 146,
-        PlanetContentManagerContentNodes = 147,
-        Stars = 148,
-        WWiseEventDatas = 149,
-        ResearchProjects = 150,
-        AimOpticalSightMarkers = 151,
-        AmbienceSets = 152,
-        WeaponBarrelModels = 153,
-        SurfacePatternStyles = 154,
-        LayeredMaterialSwaps = 155,
-        ForceDatas = 156,
-        TerminalMenus = 157,
-        EffectSequences = 158,
-        SecondaryDamageLists = 159,
-        MaterialPaths = 160,
-        Clouds = 161,
-        FogVolumes = 162,
-        WWiseKeywordMappings = 163,
-        LegendaryItems = 164,
-        ParticleSystemDefineCollisions = 165,
-        SunPresets = 166,
-        PhotoModeFeatures = 167,
-        GameplayOptions = 168,
-        GameplayOptionsGroups = 169,
-        TimeOfDays = 170,
-        ActorValueModulations = 171,
-        Challenges = 172,
-        FacialExpressions = 173,
+        Notes = 49,
+        Projectiles = 50,
+        Hazards = 51,
+        BendableSplines = 52,
+        Terminals = 53,
+        LeveledItems = 54,
+        GenericBaseFormTemplates = 55,
+        GenericBaseForms = 56,
+        LeveledBaseForms = 57,
+        Weathers = 58,
+        WeatherSettings = 59,
+        Climates = 60,
+        ShaderParticleGeometries = 61,
+        Regions = 62,
+        NavigationMeshInfoMaps = 63,
+        Cells = 64,
+        Worldspaces = 65,
+        Quests = 66,
+        IdleAnimations = 67,
+        Packages = 68,
+        CombatStyles = 69,
+        LoadScreens = 70,
+        AnimatedObjects = 71,
+        Waters = 72,
+        EffectShaders = 73,
+        Explosions = 74,
+        Debris = 75,
+        ImageSpaces = 76,
+        ImageSpaceAdapters = 77,
+        FormLists = 78,
+        Perks = 79,
+        BodyParts = 80,
+        AddonNodes = 81,
+        ActorValueInformation = 82,
+        CameraShots = 83,
+        CameraPaths = 84,
+        VoiceTypes = 85,
+        MaterialTypes = 86,
+        Impacts = 87,
+        ImpactDataSets = 88,
+        ArmorAddons = 89,
+        Locations = 90,
+        Messages = 91,
+        DefaultObjectManagers = 92,
+        DefaultObjects = 93,
+        LightingTemplates = 94,
+        MusicTypes = 95,
+        Footsteps = 96,
+        FootstepSets = 97,
+        StoryManagerBranchNodes = 98,
+        StoryManagerQuestNodes = 99,
+        StoryManagerEventNodes = 100,
+        MusicTracks = 101,
+        EquipTypes = 102,
+        Outfits = 103,
+        ArtObjects = 104,
+        MovementTypes = 105,
+        CollisionLayers = 106,
+        Colors = 107,
+        ReverbParameters = 108,
+        ReferenceGroups = 109,
+        AimModels = 110,
+        AimAssistModels = 111,
+        MeleeAimAssistModels = 112,
+        Layers = 113,
+        ConstructibleObjects = 114,
+        ObjectModifications = 115,
+        Zooms = 116,
+        InstanceNamingRules = 117,
+        SoundKeywordMappings = 118,
+        AttractionRules = 119,
+        AnimationSoundTagSets = 120,
+        Resources = 121,
+        Biomes = 122,
+        NavigationMeshObstacleCoverManagers = 123,
+        LensFlares = 124,
+        ObjectVisibilityManagers = 125,
+        SnapTemplateNodes = 126,
+        SnapTemplates = 127,
+        GroundCovers = 128,
+        MorphableObjects = 129,
+        Traversals = 130,
+        ResourceGenerationData = 131,
+        BiomeSwaps = 132,
+        Atmospheres = 133,
+        LeveledSpaceCells = 134,
+        SpeechChallenges = 135,
+        AimAssistPoses = 136,
+        VolumetricLightings = 137,
+        SurfaceBlocks = 138,
+        SurfacePatternConfigs = 139,
+        SurfacePatterns = 140,
+        SurfaceTrees = 141,
+        PlanetContentManagerTrees = 142,
+        BoneModifiers = 143,
+        SnapTemplateBehaviors = 144,
+        Planets = 145,
+        ConditionRecords = 146,
+        PlanetContentManagerBranchNodes = 147,
+        PlanetContentManagerContentNodes = 148,
+        Stars = 149,
+        WWiseEventDatas = 150,
+        ResearchProjects = 151,
+        AimOpticalSightMarkers = 152,
+        AmbienceSets = 153,
+        WeaponBarrelModels = 154,
+        SurfacePatternStyles = 155,
+        LayeredMaterialSwaps = 156,
+        ForceDatas = 157,
+        TerminalMenus = 158,
+        EffectSequences = 159,
+        SecondaryDamageLists = 160,
+        MaterialPaths = 161,
+        Clouds = 162,
+        FogVolumes = 163,
+        WWiseKeywordMappings = 164,
+        LegendaryItems = 165,
+        ParticleSystemDefineCollisions = 166,
+        SunPresets = 167,
+        PhotoModeFeatures = 168,
+        GameplayOptions = 169,
+        GameplayOptionsGroups = 170,
+        TimeOfDays = 171,
+        ActorValueModulations = 172,
+        Challenges = 173,
+        FacialExpressions = 174,
     }
     #endregion
 
@@ -10288,9 +10340,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 174;
+        public const ushort AdditionalFieldCount = 175;
 
-        public const ushort FieldCount = 174;
+        public const ushort FieldCount = 175;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10405,6 +10457,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Ingestibles.Clear();
             item.IdleMarkers.Clear();
             item.BiomeMarkers.Clear();
+            item.Notes.Clear();
             item.Projectiles.Clear();
             item.Hazards.Clear();
             item.BendableSplines.Clear();
@@ -10575,6 +10628,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.RemapLinks(mapping);
             obj.IdleMarkers.RemapLinks(mapping);
             obj.BiomeMarkers.RemapLinks(mapping);
+            obj.Notes.RemapLinks(mapping);
             obj.Projectiles.RemapLinks(mapping);
             obj.Hazards.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
@@ -10754,6 +10808,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.Remove(keys);
             obj.IdleMarkers.Remove(keys);
             obj.BiomeMarkers.Remove(keys);
+            obj.Notes.Remove(keys);
             obj.Projectiles.Remove(keys);
             obj.Hazards.Remove(keys);
             obj.BendableSplines.Remove(keys);
@@ -11299,6 +11354,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     obj.BiomeMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    obj.Notes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12983,6 +13046,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Notes is IAssetLinkContainer NoteslinkCont)
+            {
+                foreach (var item in NoteslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Projectiles is IAssetLinkContainer ProjectileslinkCont)
             {
                 foreach (var item in ProjectileslinkCont.EnumerateListedAssetLinks())
@@ -13335,6 +13405,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.IdleMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BiomeMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Notes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Projectiles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Hazards.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -13474,6 +13545,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.BiomeMarkers = MaskItemExt.Factory(item.BiomeMarkers.GetEqualsMask(rhs.BiomeMarkers, include), include);
+            ret.Notes = MaskItemExt.Factory(item.Notes.GetEqualsMask(rhs.Notes, include), include);
             ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
             ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
@@ -13838,6 +13910,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.BiomeMarkers?.Overall ?? true)
             {
                 item.BiomeMarkers?.Print(sb, "BiomeMarkers");
+            }
+            if (printMask?.Notes?.Overall ?? true)
+            {
+                item.Notes?.Print(sb, "Notes");
             }
             if (printMask?.Projectiles?.Overall ?? true)
             {
@@ -14739,6 +14815,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsBiomeMarkers, rhsBiomeMarkers)) return false;
                 }
                 else if (!isBiomeMarkersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Notes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Notes, rhs.Notes, out var lhsNotes, out var rhsNotes, out var isNotesEqual))
+                {
+                    if (!object.Equals(lhsNotes, rhsNotes)) return false;
+                }
+                else if (!isNotesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Projectiles) ?? true))
             {
@@ -15795,6 +15879,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Ingestibles);
             hash.Add(item.IdleMarkers);
             hash.Add(item.BiomeMarkers);
+            hash.Add(item.Notes);
             hash.Add(item.Projectiles);
             hash.Add(item.Hazards);
             hash.Add(item.BendableSplines);
@@ -16178,6 +16263,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     return obj.BiomeMarkers;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    return obj.Notes;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
@@ -16819,7 +16909,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[173];
+            Stream[] outputStreams = new Stream[174];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -16869,131 +16959,132 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 45, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 46, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.BiomeMarkers, 47, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, 48, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, 49, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 50, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Terminals, 51, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 52, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GenericBaseFormTemplates, 53, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 54, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LeveledBaseForms, 55, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 56, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WeatherSettings, 57, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Climates, 58, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 59, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Regions, 60, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 61, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 62, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 63, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteQuestsParallel(item.Quests, 64, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 65, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 66, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 67, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 68, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 69, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 70, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 71, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, 72, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 73, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 74, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 75, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 76, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 77, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, 78, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 79, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 80, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, 81, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 82, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 83, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 84, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, 85, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 86, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 87, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 88, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Messages, 89, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 90, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 91, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 92, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 93, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, 94, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, 95, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 96, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 97, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 98, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, 99, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 100, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 101, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ArtObjects, 102, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MovementTypes, 103, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 104, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Colors, 105, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 106, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ReferenceGroups, 107, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 108, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 109, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MeleeAimAssistModels, 110, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 111, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 112, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 113, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Zooms, 114, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 115, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 116, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 117, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 118, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 119, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Biomes, 120, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleCoverManagers, 121, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LensFlares, 122, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 123, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateNodes, 124, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 125, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GroundCovers, 126, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MorphableObjects, 127, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Traversals, 128, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ResourceGenerationData, 129, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 130, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Atmospheres, 131, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpaceCells, 132, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SpeechChallenges, 133, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistPoses, 134, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 135, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceBlocks, 136, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 137, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 138, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 139, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 140, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BoneModifiers, 141, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 142, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 143, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 144, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerBranchNodes, 145, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerContentNodes, 146, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Stars, 147, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 148, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 149, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 150, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 151, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WeaponBarrelModels, 152, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 153, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 154, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ForceDatas, 155, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 156, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.EffectSequences, 157, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SecondaryDamageLists, 158, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MaterialPaths, 159, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Clouds, 160, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 161, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 162, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 163, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 164, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SunPresets, 165, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PhotoModeFeatures, 166, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GameplayOptions, 167, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GameplayOptionsGroups, 168, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.TimeOfDays, 169, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 170, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Challenges, 171, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 172, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Notes, 48, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 49, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, 50, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 51, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Terminals, 52, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 53, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GenericBaseFormTemplates, 54, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 55, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledBaseForms, 56, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 57, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WeatherSettings, 58, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 59, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 60, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 61, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 62, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 63, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 64, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteQuestsParallel(item.Quests, 65, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 66, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 67, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 68, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 69, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 70, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 71, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 72, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, 73, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 74, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 75, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 76, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 77, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 78, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, 79, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 80, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 81, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, 82, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 83, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 84, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 85, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, 86, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 87, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 88, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 89, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Messages, 90, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 91, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 92, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 93, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 94, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, 95, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, 96, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 97, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 98, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 99, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, 100, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 101, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 102, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, 103, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, 104, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 105, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Colors, 106, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 107, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ReferenceGroups, 108, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 109, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 110, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MeleeAimAssistModels, 111, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 112, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 113, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 114, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Zooms, 115, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 116, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 117, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 118, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 119, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 120, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Biomes, 121, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleCoverManagers, 122, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LensFlares, 123, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 124, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateNodes, 125, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 126, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GroundCovers, 127, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MorphableObjects, 128, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Traversals, 129, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ResourceGenerationData, 130, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 131, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Atmospheres, 132, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpaceCells, 133, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SpeechChallenges, 134, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistPoses, 135, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 136, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceBlocks, 137, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 138, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 139, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 140, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 141, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BoneModifiers, 142, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 143, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 144, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 145, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerBranchNodes, 146, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerContentNodes, 147, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Stars, 148, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 149, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 150, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 151, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 152, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WeaponBarrelModels, 153, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 154, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 155, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ForceDatas, 156, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 157, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectSequences, 158, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SecondaryDamageLists, 159, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MaterialPaths, 160, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Clouds, 161, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 162, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 163, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 164, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 165, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SunPresets, 166, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PhotoModeFeatures, 167, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GameplayOptions, 168, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GameplayOptionsGroups, 169, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TimeOfDays, 170, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 171, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Challenges, 172, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 173, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -17210,6 +17301,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.BiomeMarkers.EnumerateFormLinks())
             {
                 yield return item;
+            }
+            if (obj.Notes is IFormLinkContainerGetter NoteslinkCont)
+            {
+                foreach (var item in NoteslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Projectiles.EnumerateFormLinks())
             {
@@ -17817,6 +17915,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BiomeMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Notes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18783,6 +18885,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     foreach (var item in obj.BiomeMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    foreach (var item in obj.Notes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20457,6 +20568,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.BiomeMarkers,
                 groupGetter: (m) => m.BiomeMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Note, INoteGetter>(
+                srcGroup: obj.Notes,
+                type: typeof(INoteGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Notes,
+                groupGetter: (m) => m.Notes))
             {
                 yield return item;
             }
@@ -22308,6 +22428,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.BiomeMarkers,
                         groupGetter: (m) => m.BiomeMarkers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Note, INoteGetter>(
+                        srcGroup: obj.Notes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Notes,
+                        groupGetter: (m) => m.Notes))
                     {
                         yield return item;
                     }
@@ -24512,6 +24646,13 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                 }
+                if (obj.Notes is IAssetLinkContainerGetter NoteslinkCont)
+                {
+                    foreach (var item in NoteslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
                 if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
                 {
                     foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -25788,6 +25929,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.BiomeMarkers,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.BiomeMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Notes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Notes);
+                try
+                {
+                    item.Notes.DeepCopyIn(
+                        rhs: rhs.Notes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Notes));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -28437,6 +28598,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Ingestibles;
         public bool IdleMarkers;
         public bool BiomeMarkers;
+        public bool Notes;
         public bool Projectiles;
         public bool Hazards;
         public bool BendableSplines;
@@ -28615,6 +28777,7 @@ namespace Mutagen.Bethesda.Starfield
             Ingestibles = defaultValue;
             IdleMarkers = defaultValue;
             BiomeMarkers = defaultValue;
+            Notes = defaultValue;
             Projectiles = defaultValue;
             Hazards = defaultValue;
             BendableSplines = defaultValue;
@@ -29323,6 +29486,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BiomeMarkersItem).BinaryWriteTranslator).Write<IBiomeMarkerGetter>(
                         item: BiomeMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Notes ?? true)
+            {
+                var NotesItem = item.Notes;
+                if (NotesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)NotesItem).BinaryWriteTranslator).Write<INoteGetter>(
+                        item: NotesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -31443,6 +31617,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.BiomeMarkers;
+                }
+                case RecordTypeInts.NOTE:
+                {
+                    if (importMask?.Notes ?? true)
+                    {
+                        item.Notes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Notes;
                 }
                 case RecordTypeInts.PROJ:
                 {
@@ -33599,6 +33787,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IBiomeMarkerGetter>? _BiomeMarkers => _BiomeMarkersLocations != null ? StarfieldGroupBinaryOverlay<IBiomeMarkerGetter>.StarfieldGroupFactory(_stream, _BiomeMarkersLocations, _package) : default;
         public IStarfieldGroupGetter<IBiomeMarkerGetter> BiomeMarkers => _BiomeMarkers ?? new StarfieldGroup<BiomeMarker>(this);
         #endregion
+        #region Notes
+        private List<RangeInt64>? _NotesLocations;
+        private IStarfieldGroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? StarfieldGroupBinaryOverlay<INoteGetter>.StarfieldGroupFactory(_stream, _NotesLocations, _package) : default;
+        public IStarfieldGroupGetter<INoteGetter> Notes => _Notes ?? new StarfieldGroup<Note>(this);
+        #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
         private IStarfieldGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? StarfieldGroupBinaryOverlay<IProjectileGetter>.StarfieldGroupFactory(_stream, _ProjectilesLocations, _package) : default;
@@ -34594,6 +34787,12 @@ namespace Mutagen.Bethesda.Starfield
                     _BiomeMarkersLocations ??= new();
                     _BiomeMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.BiomeMarkers;
+                }
+                case RecordTypeInts.NOTE:
+                {
+                    _NotesLocations ??= new();
+                    _NotesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Notes;
                 }
                 case RecordTypeInts.PROJ:
                 {
