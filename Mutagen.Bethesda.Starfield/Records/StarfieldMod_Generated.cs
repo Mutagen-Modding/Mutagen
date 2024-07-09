@@ -13221,6 +13221,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Layers is IAssetLinkContainer LayerslinkCont)
+            {
+                foreach (var item in LayerslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
             {
                 foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
@@ -13431,6 +13438,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ReferenceGroups.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Layers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplateNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -24803,6 +24811,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
                 {
                     foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Layers is IAssetLinkContainerGetter LayerslinkCont)
+                {
+                    foreach (var item in LayerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
