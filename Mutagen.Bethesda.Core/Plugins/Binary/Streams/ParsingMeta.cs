@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -134,7 +135,8 @@ public sealed class ParsingMeta
         GameRelease release,
         ModPath modPath)
     {
-        var rawMasters = MasterReferenceCollection.FromPath(modPath, release, param.FileSystem);
+        var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: param.FileSystem);
+        var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
         var masters = SeparatedMasterPackage.Factory(release, modPath, rawMasters, param.LoadOrder);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
         meta.Absorb(param);
@@ -147,7 +149,8 @@ public sealed class ParsingMeta
         ModKey modKey,
         Stream stream)
     {
-        var rawMasters = MasterReferenceCollection.FromStream(stream, modKey, release);
+        var header = ModHeaderFrame.FromStream(stream, modKey, release);
+        var rawMasters = MasterReferenceCollection.FromModHeader(modKey, header);
         stream.Position = 0;
         var masters = SeparatedMasterPackage.Factory(release, modKey, rawMasters, param.LoadOrder);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);

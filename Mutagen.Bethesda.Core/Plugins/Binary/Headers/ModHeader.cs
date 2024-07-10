@@ -190,4 +190,18 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
                 masterReferences: null!));
         return stream.ReadModHeaderFrame(readSafe: readSafe);
     }
+
+    public static ModHeaderFrame FromStream(
+        Stream stream,
+        ModKey modKey,
+        GameRelease release, 
+        bool readSafe = true)
+    {
+        using var mutStream = new MutagenBinaryReadStream(stream, 
+            new ParsingMeta(
+                release, 
+                modKey,
+                masterReferences: null!));
+        return mutStream.ReadModHeaderFrame(readSafe: readSafe);
+    }
 }
