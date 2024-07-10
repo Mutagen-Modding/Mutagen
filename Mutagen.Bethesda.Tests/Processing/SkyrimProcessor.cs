@@ -190,7 +190,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyCellGroups(
             stream,
             formKey,
@@ -229,7 +229,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyDialogGroups(
             stream,
             formKey,

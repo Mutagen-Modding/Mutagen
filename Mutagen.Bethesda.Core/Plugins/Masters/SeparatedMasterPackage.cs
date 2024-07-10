@@ -12,8 +12,8 @@ public interface IReadOnlySeparatedMasterPackage
 {
     ModKey CurrentMod { get; }
     IReadOnlyMasterReferenceCollection Raw { get; }
-    bool TryLookupModKey(ModKey modKey, out MasterStyle style, out uint index);
-    FormKey GetFormKey(FormID formId);
+    bool TryLookupModKey(ModKey modKey, bool reference, out MasterStyle style, out uint index);
+    FormKey GetFormKey(FormID formId, bool reference);
 }
 
 public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
@@ -82,7 +82,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             Normal = normal;
         }
     
-        public bool TryLookupModKey(ModKey modKey, out MasterStyle style, out uint index)
+        public bool TryLookupModKey(ModKey modKey, bool reference, out MasterStyle style, out uint index)
         {
             if (_lookup.TryGetValue(modKey, out var x))
             {
@@ -96,7 +96,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             return false;
         }
 
-        public FormKey GetFormKey(FormID formId)
+        public FormKey GetFormKey(FormID formId, bool reference)
         {
             var loadOrder = Normal;
             var modID = formId.FullMasterIndex;
@@ -230,7 +230,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         }
     }
 
-    public bool TryLookupModKey(ModKey modKey, out MasterStyle style, out uint index)
+    public bool TryLookupModKey(ModKey modKey, bool reference, out MasterStyle style, out uint index)
     {
         if (_lookup.TryGetValue(modKey, out var x))
         {
@@ -281,7 +281,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         }
     }
 
-    public FormKey GetFormKey(FormID formId)
+    public FormKey GetFormKey(FormID formId, bool reference)
     {
         ExtractFormIdInfo(
             formId,

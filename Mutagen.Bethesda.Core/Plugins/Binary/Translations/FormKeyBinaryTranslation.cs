@@ -17,7 +17,8 @@ public sealed class FormKeyBinaryTranslation
     public FormKey Parse(
         ReadOnlySpan<byte> span,
         IReadOnlySeparatedMasterPackage masterReferences,
-        bool maxIsNone = false)
+        bool maxIsNone = false,
+        bool reference = true)
     {
         var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
         if (maxIsNone && id == uint.MaxValue)
@@ -25,13 +26,14 @@ public sealed class FormKeyBinaryTranslation
             return FormKey.None;
         }
 
-        return FormKey.Factory(masterReferences, new FormID(id));
+        return FormKey.Factory(masterReferences, new FormID(id), reference);
     }
 
     public FormKey Parse(
         SubrecordFrame frame,
         IReadOnlySeparatedMasterPackage masterReferences,
-        bool maxIsNone = false)
+        bool maxIsNone = false,
+        bool reference = true)
     {
         var id = frame.AsUInt32();
         if (maxIsNone && id == uint.MaxValue)
@@ -39,7 +41,7 @@ public sealed class FormKeyBinaryTranslation
             return FormKey.None;
         }
 
-        return FormKey.Factory(masterReferences, new FormID(id));
+        return FormKey.Factory(masterReferences, new FormID(id), reference: reference);
     }
 
     public bool Parse<TReader>(
@@ -55,7 +57,7 @@ public sealed class FormKeyBinaryTranslation
         return true;
     }
 
-    public FormKey Parse<TReader>(TReader reader)
+    public FormKey Parse<TReader>(TReader reader, bool reference = true)
         where TReader : IMutagenReadStream
     {
         return Parse(
@@ -66,7 +68,8 @@ public sealed class FormKeyBinaryTranslation
     public void Write(
         MutagenWriter writer,
         IFormLinkIdentifier item,
-        bool nullable = false)
+        bool nullable = false,
+        bool reference = true)
     {
         if (item.FormKey == FormKey.None)
         {
@@ -83,7 +86,8 @@ public sealed class FormKeyBinaryTranslation
 
         var formID = FormIDTranslator.GetFormID(
             writer.MetaData.SeparatedMasterPackage!, 
-            item);
+            item,
+            reference: reference);
 
         UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
             writer: writer,

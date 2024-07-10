@@ -245,7 +245,7 @@ public abstract class Processor
         long fileOffset)
     {
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ProcessStringTermination(
             edidFrame,
             fileOffset + majorFrame.HeaderLength + edidFrame.Location,
@@ -422,7 +422,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID);
+        var formKey = FormKey.Factory(Masters, frame.FormID, reference: false);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -439,7 +439,7 @@ public abstract class Processor
     {
         Instructions.SetRemove(RangeInt64.FromLength(refLoc, majorFrame.TotalLength));
         
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ModifyParentGroupLengths(-majorFrame.TotalLength, formKey);
     }
 
@@ -450,7 +450,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID);
+        var formKey = FormKey.Factory(Masters, frame.FormID, reference: false);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -790,7 +790,7 @@ public abstract class Processor
         var fks = new List<FormKey>();
         foreach (var x in uints)
         {
-            fks.Add(FormKey.Factory(separatedMasters, new FormID(x)));
+            fks.Add(FormKey.Factory(separatedMasters, new FormID(x), reference: true));
         }
 
         var orderedFormIds = fks
@@ -798,7 +798,7 @@ public abstract class Processor
             .ThenBy(x => x.ID)
             .Select(fk =>
             {
-                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>());
+                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>(), reference: true);
             })
             .Select(x => x.Raw)
             .ToArray();

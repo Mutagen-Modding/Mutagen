@@ -25,7 +25,8 @@ partial class DialogTopicBinaryCreateTranslation
                 obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 if (FormKey.Factory(
                         frame.MetaData.MasterReferences, 
-                        new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData))) != obj.FormKey)
+                        new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                        reference: true) != obj.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
@@ -101,7 +102,8 @@ partial class DialogTopicBinaryOverlay
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
             var formKey = FormKey.Factory(
                 _package.MetaData.MasterReferences, 
-                new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)));
+                new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                reference: true);
             if (formKey != this.FormKey)
             {
                 throw new ArgumentException("Dialog children group did not match the FormID of the parent.");

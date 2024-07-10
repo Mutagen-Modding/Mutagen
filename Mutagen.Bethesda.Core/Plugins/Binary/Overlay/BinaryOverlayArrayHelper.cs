@@ -39,7 +39,7 @@ internal static class BinaryOverlayArrayHelper
         for (int i = 0; i < intSpan.Length; i++)
         {
             var raw = intSpan[i];
-            ret[i] = new FormLink<TMajorGetter>(FormKey.Factory(masterReferences, new FormID(raw)));
+            ret[i] = new FormLink<TMajorGetter>(FormKey.Factory(masterReferences, new FormID(raw), reference: true));
         }
         return ret;
     }

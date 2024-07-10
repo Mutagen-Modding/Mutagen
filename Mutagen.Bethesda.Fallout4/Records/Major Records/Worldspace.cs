@@ -196,7 +196,8 @@ partial class WorldspaceBinaryOverlay
 
             if (this.FormKey != FormKey.Factory(
                     _package.MetaData.MasterReferences,
-                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData))))
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                    reference: true))
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }

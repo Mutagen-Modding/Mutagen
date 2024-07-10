@@ -1218,10 +1218,12 @@ partial class FunctionConditionDataBinaryCreateTranslation
         item.ParameterTwoNumber = frame.ReadInt32();
         item.ParameterOneRecord.FormKey = FormKey.Factory(
             frame.MetaData.MasterReferences, 
-            new FormID((uint)item.ParameterOneNumber));
+            new FormID((uint)item.ParameterOneNumber),
+            reference: true);
         item.ParameterTwoRecord.FormKey = FormKey.Factory(
             frame.MetaData.MasterReferences,
-            new FormID((uint)item.ParameterTwoNumber));
+            new FormID((uint)item.ParameterTwoNumber),
+            reference: true);
         GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
     }
 }

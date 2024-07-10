@@ -73,10 +73,11 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
     /// <param name="formId">FormID to convert</param>
+    /// <param name="reference">Whether the FormID is a reference.  If false, it is part of a records header</param>
     /// <returns>Converted FormKey</returns>
-    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId)
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool reference)
     {
-        return FormIDTranslator.GetFormKey(masterReferences, formId);
+        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: reference);
     }
 
     /// <summary>
@@ -84,15 +85,16 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
     /// <param name="formId">FormID to convert</param>
+    /// <param name="reference">Whether the FormID is a reference.  If false, it is part of a records header</param>
     /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
     /// <returns>Converted FormKey</returns>
-    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool maxIsNull)
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool reference, bool maxIsNull)
     {
         if (maxIsNull && formId.Raw == uint.MaxValue)
         {
             return FormKey.None;
         }
-        return Factory(masterReferences, formId);
+        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: true);
     }
 
     private static bool IsDelim(char c) => c is ':' or '_';

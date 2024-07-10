@@ -302,7 +302,7 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
             if (varMeta.TryGetAsGroup(out var groupHeader))
             {
                 var formId = FormID.Factory(groupHeader.ContainedRecordTypeData.UInt32());
-                var formKey = FormKey.Factory(package.MetaData.MasterReferences, formId);
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, formId, reference: false);
                 if (formKey != lastParsed)
                 {
                     // Orphaned subgroup
@@ -325,7 +325,7 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                 {
                     throw new MalformedDataException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                 }
-                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID);
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
                 try
                 {
                     locationDict.Add(formKey, checked((int)(stream.Position - offset)));

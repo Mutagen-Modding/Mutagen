@@ -20,7 +20,7 @@ partial class ExtraDataBinaryCreateTranslation
     public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, IReadOnlySeparatedMasterPackage masters)
     {
         FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
-        FormKey formKey = FormKey.Factory(masters, form);
+        FormKey formKey = FormKey.Factory(masters, form, reference: true);
         if (cache.IsOfRecordType<Npc>(formKey))
         {
             return new NpcOwner()

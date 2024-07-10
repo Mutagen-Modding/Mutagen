@@ -218,7 +218,7 @@ public sealed class FormLinkBinaryTranslation
     {
         if (!s.HasValue) return new FormLink<TMajorGetter>();
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s.Value));
-        return new FormLink<TMajorGetter>(FormKey.Factory(meta.MasterReferences, formId, maxIsNull: maxIsNull));
+        return new FormLink<TMajorGetter>(FormKey.Factory(meta.MasterReferences, formId, reference: true, maxIsNull: maxIsNull));
     }
 
     internal IFormLinkNullable<TMajorGetter> FactoryNullable<TMajorGetter>(ParsingMeta meta, SubrecordFrame frame, bool isSet = true, bool maxIsNull = false)
@@ -232,21 +232,21 @@ public sealed class FormLinkBinaryTranslation
     {
         if (!s.HasValue) return new FormLinkNullable<TMajorGetter>();
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s.Value));
-        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(meta.MasterReferences, formId, maxIsNull: maxIsNull));
+        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(meta.MasterReferences, formId, reference: true, maxIsNull: maxIsNull));
     }
 
     internal IFormLinkGetter<TMajorGetter> OverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlySpan<byte> s)
         where TMajorGetter : class, IMajorRecordGetter
     {
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s));
-        return new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, maxIsNull: false));
+        return new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, reference: true, maxIsNull: false));
     }
 
     internal IFormLinkGetter<TMajorGetter> OverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlySpan<byte> s, bool isSet, bool maxIsNull = false)
         where TMajorGetter : class, IMajorRecordGetter
     {
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s));
-        return isSet ? new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, maxIsNull: maxIsNull)) : FormLinkGetter<TMajorGetter>.Null;
+        return isSet ? new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, reference: true, maxIsNull: maxIsNull)) : FormLinkGetter<TMajorGetter>.Null;
     }
 
     internal IFormLinkGetter<TMajorGetter> OverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlyMemorySlice<byte>? s, bool maxIsNull = false)
@@ -254,14 +254,14 @@ public sealed class FormLinkBinaryTranslation
     {
         if (!s.HasValue) return FormLinkGetter<TMajorGetter>.Null;
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s.Value));
-        return new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, maxIsNull: maxIsNull));
+        return new FormLink<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, reference: true, maxIsNull: maxIsNull));
     }
 
     internal IFormLinkNullableGetter<TMajorGetter> NullableOverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlySpan<byte> s)
         where TMajorGetter : class, IMajorRecordGetter
     {
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(s));
-        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId));
+        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, reference: true));
     }
 
     internal IFormLinkNullableGetter<TMajorGetter> NullableOverlayFactory<TMajorGetter>(BinaryOverlayFactoryPackage p, ReadOnlyMemorySlice<byte> s, int? loc)
@@ -269,7 +269,7 @@ public sealed class FormLinkBinaryTranslation
     {
         if (!loc.HasValue) return FormLinkNullableGetter<TMajorGetter>.Null;
         var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(s, loc.Value, p.MetaData.Constants)));
-        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId));
+        return new FormLinkNullable<TMajorGetter>(FormKey.Factory(p.MetaData.MasterReferences, formId, reference: true));
     }
 
     internal IFormLinkNullableGetter<TMajor> NullableRecordOverlayFactory<TMajor>(
@@ -286,6 +286,7 @@ public sealed class FormLinkBinaryTranslation
             FormKey.Factory(
                 package.MetaData.MasterReferences,
                 formId,
+                reference: true,
                 maxIsNull: maxIsNull));
     }
 }

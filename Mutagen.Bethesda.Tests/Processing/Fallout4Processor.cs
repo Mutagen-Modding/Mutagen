@@ -443,7 +443,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyCellGroups(
             stream,
             formKey,
@@ -474,7 +474,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyDialogGroups(
             stream,
             formKey,
@@ -939,7 +939,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
 
         if (majorFrame.TryFindSubrecord(RecordTypes.ANAM, out var anamRec))
         {
