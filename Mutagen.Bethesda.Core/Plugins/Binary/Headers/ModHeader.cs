@@ -4,6 +4,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
@@ -67,9 +68,14 @@ public readonly struct ModHeader
     /// <summary>
     /// The integer representing a Mod Header's flags enum.
     /// Since each game has its own flag Enum, this field is offered as an int that should
-    /// be casted to the appropriate enum for use.
+    /// be cast to the appropriate enum for use.
     /// </summary>
     public int Flags => BinaryPrimitives.ReadInt32LittleEndian(Span.Slice(8, 4));
+
+    /// <summary>
+    /// Returns the style of master listed from the header, based on flags
+    /// </summary>
+    public MasterStyle MasterStyle => MasterStyleConstruction.ConstructFromFlags(Flags, Meta);
 }
 
 /// <summary>
@@ -159,9 +165,15 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// <summary>
     /// The integer representing a Mod Header's flags enum.
     /// Since each game has its own flag Enum, this field is offered as an int that should
-    /// be casted to the appropriate enum for use.
+    /// be cast to the appropriate enum for use.
     /// </summary>
     public int Flags => _header.Flags;
+
+    /// <summary>
+    /// Returns the style of master listed from the header, based on flags
+    /// </summary>
+    public MasterStyle MasterStyle => _header.MasterStyle;
+
     #endregion
 
     public static ModHeaderFrame FromPath(

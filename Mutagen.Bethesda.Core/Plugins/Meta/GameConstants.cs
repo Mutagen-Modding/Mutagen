@@ -65,7 +65,9 @@ public sealed record GameConstants
     public bool UsesStrings => StringsLanguageFormat != null;
     
     public bool SeparateMasterLoadOrders { get; init; }
-    
+    public int? LightMasterFlag { get; }
+    public int? MediumMasterFlag { get; }
+
     public GameConstants(
         GameRelease release,
         sbyte modHeaderLength,
@@ -83,7 +85,9 @@ public sealed record GameConstants
         string iniName,
         uint defaultHighRangeFormId, 
         float? useLowerRangeFormIdVersion,
-        bool separateMasterLoadOrders)
+        bool separateMasterLoadOrders,
+        int? lightMasterFlag,
+        int? mediumMasterFlag)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -102,6 +106,8 @@ public sealed record GameConstants
         DefaultHighRangeFormID = defaultHighRangeFormId;
         UseLowerRangeFormIDVersion = useLowerRangeFormIdVersion;
         SeparateMasterLoadOrders = separateMasterLoadOrders;
+        LightMasterFlag = lightMasterFlag;
+        MediumMasterFlag = mediumMasterFlag;
     }
 
     /// <summary> 
@@ -166,6 +172,8 @@ public sealed record GameConstants
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
         separateMasterLoadOrders: false,
+        lightMasterFlag: null,
+        mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
@@ -237,6 +245,8 @@ public sealed record GameConstants
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
         separateMasterLoadOrders: false,
+        lightMasterFlag: 0x0000_0200,
+        mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants EnderalLE = SkyrimLE with
@@ -359,6 +369,8 @@ public sealed record GameConstants
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
         separateMasterLoadOrders: false,
+        lightMasterFlag: 0x0000_0200,
+        mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants Fallout4VR = Fallout4 with
@@ -444,6 +456,8 @@ public sealed record GameConstants
         myDocumentsString: null,
         iniName: "Starfield",
         separateMasterLoadOrders: true,
+        lightMasterFlag: 0x0000_0100,
+        mediumMasterFlag: 0x0000_0400,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 

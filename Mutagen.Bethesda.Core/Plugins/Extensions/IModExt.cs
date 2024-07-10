@@ -1,4 +1,6 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
+﻿using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda;
 
@@ -72,5 +74,20 @@ public static class IModExt
     public static IGroup GetTopLevelGroup(this IMod mod, Type type)
     {
         return mod.TryGetTopLevelGroup(type) ?? throw new ArgumentException($"Unknown major record type: {type}");
+    }
+
+    public static MasterStyle GetMasterStyle(this IModFlagsGetter mod)
+    {
+        bool light = mod.CanBeLightMaster && mod.IsLightMaster;
+        bool medium = mod.CanBeMediumMaster && mod.IsMediumMaster;
+        
+        if (light && medium)
+        {
+            throw new ModHeaderMalformedException(mod.ModKey, "Mod was both a light and medium master");
+        }
+
+        if (light) return MasterStyle.Light;
+        if (medium) return MasterStyle.Medium;
+        return MasterStyle.Full;
     }
 }
