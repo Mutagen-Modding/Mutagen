@@ -157,6 +157,7 @@ internal sealed class ModHeaderWriteLogic
         writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Factory(
             mod.GameRelease,
             mod.ModKey,
+            mod.GetMasterStyle(),
             writer.MetaData.MasterReferences,
             loadOrder);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));

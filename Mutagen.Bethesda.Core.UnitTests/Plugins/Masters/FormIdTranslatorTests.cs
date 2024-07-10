@@ -156,7 +156,7 @@ public class FormIdTranslatorTests
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
-        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
 
         FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -243,7 +243,7 @@ public class FormIdTranslatorTests
         lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
-        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
 
         FormIDTranslator.GetFormKey(masterPackage, new FormID(0x00123456))
             .Should().Be(new FormKey(modA, 0x123456));
@@ -285,7 +285,7 @@ public class FormIdTranslatorTests
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
         lo.Add(orig);
-        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Light, coll, lo);
 
         FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(
@@ -328,7 +328,7 @@ public class FormIdTranslatorTests
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(orig);
-        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, coll, lo);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Medium, coll, lo);
 
         FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(

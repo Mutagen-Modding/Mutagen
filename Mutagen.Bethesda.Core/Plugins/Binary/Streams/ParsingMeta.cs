@@ -137,7 +137,7 @@ public sealed class ParsingMeta
     {
         var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: param.FileSystem);
         var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
-        var masters = SeparatedMasterPackage.Factory(release, modPath, rawMasters, param.LoadOrder);
+        var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.LoadOrder);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
         meta.Absorb(param);
         return meta;
@@ -152,18 +152,9 @@ public sealed class ParsingMeta
         var header = ModHeaderFrame.FromStream(stream, modKey, release);
         var rawMasters = MasterReferenceCollection.FromModHeader(modKey, header);
         stream.Position = 0;
-        var masters = SeparatedMasterPackage.Factory(release, modKey, rawMasters, param.LoadOrder);
+        var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.LoadOrder);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
         meta.Absorb(param);
         return meta;
     }
-
-    // public static ParsingMeta Factory(GameRelease release, ModPath path)
-    // {
-    //     var constants = GameConstants.Get(release);
-    //     return new ParsingMeta(
-    //         constants,
-    //         path.ModKey,
-    //         MasterReferenceCollection.FromPath(path, release));
-    // }
 }

@@ -1,5 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
@@ -37,13 +37,14 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModKey currentModKey,
+        MasterStyle style,
         IReadOnlyMasterReferenceCollection masters, 
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         var constants = GameConstants.Get(release);
         if (constants.SeparateMasterLoadOrders)
         {
-            return SeparatedMasterPackage.Separate(currentModKey, masters, loadOrder);
+            return SeparatedMasterPackage.Separate(currentModKey, style, masters, loadOrder);
         }
         else
         {
@@ -57,8 +58,9 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ILoadOrderGetter<IModFlagsGetter>? loadOrder,
         IFileSystem? fileSystem = null)
     {
-        var masters = MasterReferenceCollection.FromPath(modPath, release, fileSystem: fileSystem);
-        return Factory(release, modPath.ModKey, masters, loadOrder);
+        var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: fileSystem);
+        var masters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
+        return Factory(release, modPath.ModKey, header.MasterStyle, masters, loadOrder);
     }
 
     internal class NotSeparatedMasterPackage : IReadOnlySeparatedMasterPackage
@@ -135,6 +137,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     
     internal static IReadOnlySeparatedMasterPackage Separate(
         ModKey currentModKey,
+        MasterStyle style,
         IReadOnlyMasterReferenceCollection masters, 
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {

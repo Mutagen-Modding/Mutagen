@@ -117,7 +117,7 @@ public class SeparatedMasterPackageTests
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
 
-        var package = SeparatedMasterPackage.Separate(orig.ModKey, masterColl, lo);
+        var package = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, masterColl, lo);
 
         package.TryLookupModKey(originating, out var origStyle, out var origIndex).Should().BeTrue();
         origIndex.Should().Be(2);
@@ -191,7 +191,7 @@ public class SeparatedMasterPackageTests
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
 
-        var package = SeparatedMasterPackage.Separate(orig.ModKey, masterColl, lo);
+        var package = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, masterColl, lo);
 
         package.GetFormKey(new FormID(0x00123456)).Should().Be(new FormKey(modA, 0x123456));
         package.GetFormKey(new FormID(0xFE000123)).Should().Be(new FormKey(lightA, 0x123));
