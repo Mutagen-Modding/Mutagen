@@ -2,6 +2,8 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
+using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
@@ -161,4 +163,19 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// </summary>
     public int Flags => _header.Flags;
     #endregion
+
+    public static ModHeaderFrame FromPath(
+        ModPath path, 
+        GameRelease release, 
+        bool readSafe = true,
+        IFileSystem? fileSystem = null)
+    {
+        var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
+        using var stream = new MutagenBinaryReadStream(fs, 
+            new ParsingMeta(
+                release, 
+                path.ModKey,
+                masterReferences: null!));
+        return stream.ReadModHeaderFrame(readSafe: readSafe);
+    }
 }

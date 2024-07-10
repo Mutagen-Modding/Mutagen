@@ -2,6 +2,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 
@@ -119,13 +121,9 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
-        var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
-        using var stream = new MutagenBinaryReadStream(fs, 
-            new ParsingMeta(
-                release, 
-                path.ModKey,
-                masterReferences: null!));
-        return FromStream(stream);
+        var header = ModHeaderFrame.FromPath(path: path, release: release, readSafe: true,
+            fileSystem: fileSystem);
+        return FromModHeader(path.ModKey, header);
     }
 
     public static MasterReferenceCollection FromStream(Stream stream, ModKey modKey, GameRelease release, bool disposeStream = true)
@@ -142,16 +140,27 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     public static MasterReferenceCollection FromStream<TStream>(TStream stream)
         where TStream : IMutagenReadStream
     {
-        var mutaFrame = new MutagenFrame(stream);
         var header = stream.ReadModHeaderFrame(readSafe: true);
+        return FromModHeader(stream.MetaData.ModKey, header);
+    }
+
+    public static MasterReferenceCollection FromModHeader(
+        ModKey modKey,
+        ModHeaderFrame header)
+    {
+        var package = new BinaryOverlayFactoryPackage(
+            new ParsingMeta(header.Meta, modKey, masterReferences: null!));
         return new MasterReferenceCollection(
-            stream.MetaData.ModKey,
+            modKey,
             header
                 .Masters()
                 .Select(mastPin =>
                 {
-                    stream.Position = mastPin.Location;
-                    return MasterReference.CreateFromBinary(mutaFrame);
+                    return MasterReferenceBinaryOverlay.MasterReferenceFactory(
+                            mastPin.HeaderAndContentData,
+                            package)
+                        // In case not read safe
+                        .DeepCopy();
                 }));
     }
 }
