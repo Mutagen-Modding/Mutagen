@@ -110,10 +110,10 @@ public class SeparatedMasterPackageTests
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         var lo = new LoadOrder<IModFlagsGetter>();
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
 
@@ -130,10 +130,10 @@ public class SeparatedMasterPackageTests
         bStyle.Should().Be(MasterStyle.Full);
         package.TryLookupModKey(lightA, reference: true, out var lightAStyle, out var lightAIndex).Should().BeTrue();
         lightAIndex.Should().Be(0);
-        lightAStyle.Should().Be(MasterStyle.Light);
+        lightAStyle.Should().Be(MasterStyle.Small);
         package.TryLookupModKey(lightB, reference: true, out var lightBStyle, out var lightBIndex).Should().BeTrue();
         lightBIndex.Should().Be(1);
-        lightBStyle.Should().Be(MasterStyle.Light);
+        lightBStyle.Should().Be(MasterStyle.Small);
         package.TryLookupModKey(mediumA, reference: true, out var mediumAStyle, out var mediumAIndex).Should().BeTrue();
         mediumAIndex.Should().Be(0);
         mediumAStyle.Should().Be(MasterStyle.Medium);
@@ -184,10 +184,10 @@ public class SeparatedMasterPackageTests
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         var lo = new LoadOrder<IModFlagsGetter>();
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
 

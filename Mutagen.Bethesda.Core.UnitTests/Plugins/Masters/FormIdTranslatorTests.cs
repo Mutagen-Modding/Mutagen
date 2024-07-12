@@ -190,10 +190,10 @@ public class FormIdTranslatorTests
         var lo = new LoadOrder<IModFlagsGetter>();
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
@@ -284,10 +284,10 @@ public class FormIdTranslatorTests
         var lo = new LoadOrder<IModFlagsGetter>();
         var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
         lo.Add(MastersTestUtil.GetFlags(modB, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightB, MasterStyle.Small));
         lo.Add(MastersTestUtil.GetFlags(mediumB, MasterStyle.Medium));
         lo.Add(orig);
         var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
@@ -356,11 +356,11 @@ public class FormIdTranslatorTests
             },
         });
         var lo = new LoadOrder<IModFlagsGetter>();
-        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Light);
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Small);
         lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
-        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Light));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
         lo.Add(orig);
-        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Light, coll, lo);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Small, coll, lo);
 
         FormIDTranslator.GetFormID(masterPackage,
                 new FormLinkInformation(

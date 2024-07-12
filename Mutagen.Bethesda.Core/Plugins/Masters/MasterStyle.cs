@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Masters;
 public enum MasterStyle
 {
     Full,
-    Light,
+    Small,
     Medium
 }
 
@@ -15,17 +15,17 @@ internal static class MasterStyleConstruction
 {
     public static MasterStyle ConstructFromFlags(int flags, GameConstants constants)
     {
-        bool light = constants.SmallMasterFlag.HasValue && Enums.HasFlag(flags, constants.SmallMasterFlag.Value);
+        bool small = constants.SmallMasterFlag.HasValue && Enums.HasFlag(flags, constants.SmallMasterFlag.Value);
         bool medium = constants.MediumMasterFlag.HasValue && Enums.HasFlag(flags, constants.MediumMasterFlag.Value);
         
-        if (light && medium)
+        if (small && medium)
         {
             throw new ModHeaderMalformedException(
                 Enumerable.Empty<ModKey>(),
                 "Mod was both a light and medium master");
         }
 
-        if (light) return MasterStyle.Light;
+        if (small) return MasterStyle.Small;
         if (medium) return MasterStyle.Medium;
         return MasterStyle.Full;
     }

@@ -19,7 +19,7 @@ internal static class MastersTestUtil
                 modGetter.IsSmallMaster.Returns(false);
                 modGetter.IsMediumMaster.Returns(false);
                 break;
-            case MasterStyle.Light:
+            case MasterStyle.Small:
                 modGetter.IsSmallMaster.Returns(true);
                 modGetter.IsMediumMaster.Returns(false);
                 break;

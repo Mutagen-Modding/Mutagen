@@ -78,15 +78,15 @@ public static class IModExt
 
     public static MasterStyle GetMasterStyle(this IModFlagsGetter mod)
     {
-        bool light = mod.CanBeSmallMaster && mod.IsSmallMaster;
+        bool small = mod.CanBeSmallMaster && mod.IsSmallMaster;
         bool medium = mod.CanBeMediumMaster && mod.IsMediumMaster;
         
-        if (light && medium)
+        if (small && medium)
         {
             throw new ModHeaderMalformedException(mod.ModKey, "Mod was both a light and medium master");
         }
 
-        if (light) return MasterStyle.Light;
+        if (small) return MasterStyle.Small;
         if (medium) return MasterStyle.Medium;
         return MasterStyle.Full;
     }

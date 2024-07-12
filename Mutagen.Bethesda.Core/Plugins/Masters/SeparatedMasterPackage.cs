@@ -199,7 +199,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         };
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
         FillLookup(ret.Full, lookup, MasterStyle.Full);
-        FillLookup(ret.Light, lookup, MasterStyle.Light);
+        FillLookup(ret.Light, lookup, MasterStyle.Small);
         FillLookup(ret.Medium, lookup, MasterStyle.Medium);
         ret._lookup = lookup;
         return ret;
@@ -258,7 +258,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             {
                 index = formId.LightMasterIndex;
                 id = formId.LightId;
-                style = MasterStyle.Light;
+                style = MasterStyle.Small;
                 loadOrder = Light;
                 break;
             }

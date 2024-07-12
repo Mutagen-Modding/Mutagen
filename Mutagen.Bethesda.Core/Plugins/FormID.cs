@@ -182,7 +182,7 @@ public readonly struct FormID : IEquatable<FormID>
                 mask = MediumIdMask;
                 upperValue = MediumMasterMarkerShifted;
                 break;
-            case MasterStyle.Light:
+            case MasterStyle.Small:
                 shift = LightMasterIndexShift;
                 mask = SmallIdMask;
                 upperValue = SmallMasterMarkerShifted;
@@ -226,7 +226,7 @@ public readonly struct FormID : IEquatable<FormID>
         {
             case MasterStyle.Full:
                 return FullId.ToString("X6");
-            case MasterStyle.Light:
+            case MasterStyle.Small:
                 return LightId.ToString("X3");
             case MasterStyle.Medium:
                 return MediumId.ToString("X4");
@@ -246,7 +246,7 @@ public readonly struct FormID : IEquatable<FormID>
         {
             case MasterStyle.Full:
                 return FullId;
-            case MasterStyle.Light:
+            case MasterStyle.Small:
                 return LightId;
             case MasterStyle.Medium:
                 return MediumId;
@@ -262,7 +262,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// <returns>Mask to apply to retrieve the id portion of the value</returns>
     public static uint IdMask(MasterStyle style) => style switch
     {
-        MasterStyle.Light => SmallIdMask,
+        MasterStyle.Small => SmallIdMask,
         MasterStyle.Medium => MediumIdMask,
         MasterStyle.Full => FullIdMask,
         _ => throw new NotImplementedException()
@@ -275,7 +275,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// <returns>shift to apply to retrieve the master index</returns>
     public static uint MasterIndexShift(MasterStyle style) => style switch
     {
-        MasterStyle.Light => LightMasterIndexShift,
+        MasterStyle.Small => LightMasterIndexShift,
         MasterStyle.Medium => MediumMasterIndexShift,
         MasterStyle.Full => FullMasterIndexShift,
         _ => throw new NotImplementedException()
@@ -288,7 +288,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// <returns>Master index of the FormID given the style</returns>
     public uint MasterIndex(MasterStyle style) => style switch
     {
-        MasterStyle.Light => LightMasterIndex,
+        MasterStyle.Small => LightMasterIndex,
         MasterStyle.Medium => MediumMasterIndex,
         MasterStyle.Full => FullMasterIndex,
         _ => throw new NotImplementedException()
