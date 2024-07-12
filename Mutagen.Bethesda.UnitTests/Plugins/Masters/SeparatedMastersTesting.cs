@@ -156,10 +156,10 @@ public class SeparatedMastersTesting
         var lo = new LoadOrder<IModFlagsGetter>(new[]
         {
             MastersTestUtil.GetFlags(modAKey, MasterStyle.Full),
-            MastersTestUtil.GetFlags(lightAKey, MasterStyle.Light),
+            MastersTestUtil.GetFlags(lightAKey, MasterStyle.Small),
             MastersTestUtil.GetFlags(mediumAKey, MasterStyle.Medium),
             MastersTestUtil.GetFlags(modBKey, MasterStyle.Full),
-            MastersTestUtil.GetFlags(lightBKey, MasterStyle.Light),
+            MastersTestUtil.GetFlags(lightBKey, MasterStyle.Small),
             MastersTestUtil.GetFlags(mediumBKey, MasterStyle.Medium),
         });
 
@@ -200,10 +200,10 @@ public class SeparatedMastersTesting
                 .Should().Be(FormID.Factory(MasterStyle.Full, 1, modBAim.FormKey.ID).Raw);
             var lightModANpcFrame = ReadFrame(stream, locs, lightModANpc.FormKey);
             lightModANpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Light, 0, lightModANpc.FormKey.ID).Raw);
+                .Should().Be(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID).Raw);
             var lightModBAimFrame = ReadFrame(stream, locs, lightModBAim.FormKey);
             lightModBAimFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Light, 1, lightModBAim.FormKey.ID).Raw);
+                .Should().Be(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID).Raw);
             var mediumModANpcFrame = ReadFrame(stream, locs, mediumModANpc.FormKey);
             mediumModANpcFrame.FormID.Raw
                 .Should().Be(FormID.Factory(MasterStyle.Medium, 0, mediumModANpc.FormKey.ID).Raw);
@@ -230,13 +230,13 @@ public class SeparatedMastersTesting
                 .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingLightNpc.FormKey.ID).Raw);
             var lightNpcCscr = origLightNpcFrame.FindSubrecord(RecordTypes.CSCR);
             lightNpcCscr.AsFormID()
-                .Should().Be(FormID.Factory(MasterStyle.Light, 0, lightModANpc.FormKey.ID));
+                .Should().Be(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID));
             var origLightWeaponFrame = ReadFrame(stream, locs, originatingLightWeapon.FormKey);
             origLightWeaponFrame.FormID.Raw
                 .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingLightWeapon.FormKey.ID).Raw);
             var lightWeaponWaim = origLightWeaponFrame.FindSubrecord(waim);
             new FormID(BinaryPrimitives.ReadUInt32LittleEndian(lightWeaponWaim.Content.Slice(8)))
-                .Should().Be(FormID.Factory(MasterStyle.Light, 1, lightModBAim.FormKey.ID));
+                .Should().Be(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID));
             
             var origMediumNpcFrame = ReadFrame(stream, locs, originatingMediumNpc.FormKey);
             origMediumNpcFrame.FormID.Raw
