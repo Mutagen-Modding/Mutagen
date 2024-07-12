@@ -264,9 +264,28 @@ public abstract class Processor
             _numMasters);
     }
 
+    private bool IsStarfieldMaster(ModKey modKey)
+    {
+        switch (modKey.FileName.String)
+        {
+            case "OldMars.esm":
+            case "Constellation.esm":
+            case "SFBG003.esm":
+            case "SFBG006.esm":
+            case "SFBG007.esm":
+            case "SFBG008.esm":
+                return true;
+        }
+
+        return false;
+    }
+
     private bool CheckIsFormIDOverflow(FormID formID)
     {
         if (formID.FullMasterIndex <= _numMasters) return false;
+        if (IsStarfieldMaster(ModKey)) return true;
+        if (formID.FullMasterIndex == FormID.LightMasterMarker && Meta.LightMasterFlag != null) return false; 
+        if (formID.FullMasterIndex == FormID.MediumMasterMarker && Meta.MediumMasterFlag != null) return false; 
         return true;
     }
 
