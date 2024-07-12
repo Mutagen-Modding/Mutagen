@@ -21,14 +21,14 @@ public partial class SkyrimMod : AMod
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
 
-    public override bool CanBeLightMaster => true;
+    public override bool CanBeSmallMaster => true;
 
     public override bool ListsOverriddenForms => true;
 
-    public override bool IsLightMaster
+    public override bool IsSmallMaster
     {
-        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
-        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Light, value);
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Small);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Small, value);
     }
     public override bool CanBeMediumMaster => false;
     public override bool IsMediumMaster
@@ -188,8 +188,8 @@ internal partial class SkyrimModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
-    public bool CanBeLightMaster => true;
-    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Light);
+    public bool CanBeSmallMaster => true;
+    public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Small);
     
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;

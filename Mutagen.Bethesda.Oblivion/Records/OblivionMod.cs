@@ -19,8 +19,8 @@ public partial class OblivionMod : AMod
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
-    public override bool CanBeLightMaster => false;
-    public override bool IsLightMaster
+    public override bool CanBeSmallMaster => false;
+    public override bool IsSmallMaster
     {
         get => false;
         set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
@@ -216,8 +216,8 @@ internal partial class OblivionModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
-    public bool CanBeLightMaster => false;
-    public bool IsLightMaster => false;
+    public bool CanBeSmallMaster => false;
+    public bool IsSmallMaster => false;
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => false;

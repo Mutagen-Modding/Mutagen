@@ -19,14 +19,14 @@ public interface IModFlagsGetter : IModKeyed
     bool UsingLocalization { get; }
     
     /// <summary>
-    /// Whether a mod supports Light Master features
+    /// Whether a mod supports Small Master features
     /// </summary>
-    bool CanBeLightMaster { get; }
+    bool CanBeSmallMaster { get; }
 
     /// <summary>
-    /// Whether a mod has Light Master flag enabled
+    /// Whether a mod has Small Master flag enabled
     /// </summary>
-    bool IsLightMaster { get; }
+    bool IsSmallMaster { get; }
     
     /// <summary>
     /// Whether a mod supports Half Master features
@@ -183,9 +183,9 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     new bool UsingLocalization { get; set; }
 
     /// <summary>
-    /// Whether a mod has Light Master flag enabled
+    /// Whether a mod has Small Master flag enabled
     /// </summary>
-    new bool IsLightMaster { get; set; }
+    new bool IsSmallMaster { get; set; }
 
     /// <summary>
     /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.

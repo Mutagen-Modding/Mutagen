@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
 public class RecordCompactionCompatibilityDetector
 {
-    public bool IsLightMasterCompatible(IModGetter mod)
+    public bool IsSmallMasterCompatible(IModGetter mod)
     {
-        var range = GetLightMasterRange(mod);
+        var range = GetSmallMasterRange(mod);
         if (range == null) return false;
 
         return IsCompatible(mod, range.Value);
@@ -22,11 +22,11 @@ public class RecordCompactionCompatibilityDetector
         return IsCompatible(mod, range.Value);
     }
 
-    public RangeUInt32? GetLightMasterRange(IModGetter mod)
+    public RangeUInt32? GetSmallMasterRange(IModGetter mod)
     {
-        if (!mod.CanBeLightMaster) return null;
+        if (!mod.CanBeSmallMaster) return null;
         var lowerRange = mod.GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: null);
-        return new RangeUInt32(lowerRange, FormID.LightIdMask);
+        return new RangeUInt32(lowerRange, FormID.SmallIdMask);
     }
 
     public RangeUInt32? GetMediumMasterRange(IModGetter mod)
@@ -42,9 +42,9 @@ public class RecordCompactionCompatibilityDetector
         {
             return GetMediumMasterRange(mod);
         }
-        if (mod.IsLightMaster)
+        if (mod.IsSmallMaster)
         {
-            return GetLightMasterRange(mod);
+            return GetSmallMasterRange(mod);
         }
 
         return null;
@@ -86,7 +86,7 @@ public class RecordCompactionCompatibilityDetector
         if (!range.IsInRange(rec.FormKey.ID))
         {
             throw new FormIDCompactionOutOfBoundsException(
-                light: mod.IsLightMaster,
+                small: mod.IsSmallMaster,
                 Medium: mod.IsMediumMaster,
                 range: range,
                 outOfBounds: rec

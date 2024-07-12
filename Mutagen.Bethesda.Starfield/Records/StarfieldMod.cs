@@ -21,9 +21,9 @@ public partial class StarfieldMod : AMod
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
 
-    public override bool CanBeLightMaster => true;
+    public override bool CanBeSmallMaster => true;
 
-    public override bool IsLightMaster
+    public override bool IsSmallMaster
     {
         get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
         set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
@@ -183,8 +183,8 @@ internal partial class StarfieldModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
-    public bool CanBeLightMaster => true;
-    public bool IsLightMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+    public bool CanBeSmallMaster => true;
+    public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
     public bool CanBeMediumMaster => true;
     public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Medium);
     public bool ListsOverriddenForms => true;

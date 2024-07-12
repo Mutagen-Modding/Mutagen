@@ -215,7 +215,7 @@ public class WriteOptionsTests
     {
         StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
             forceUseLowerFormIDRanges: true);
-        mod.IsLightMaster = true;
+        mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
 
         await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
@@ -237,7 +237,7 @@ public class WriteOptionsTests
     {
         StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
             forceUseLowerFormIDRanges: true);
-        mod.IsLightMaster = true;
+        mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         await mod.BeginWrite
             .WithNoLoadOrder()
@@ -255,7 +255,7 @@ public class WriteOptionsTests
     {
         StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
             forceUseLowerFormIDRanges: true);
-        mod.IsLightMaster = true;
+        mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
 
         await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
@@ -277,7 +277,7 @@ public class WriteOptionsTests
     {
         StarfieldMod mod = new StarfieldMod(TestConstants.PluginModKey, StarfieldRelease.Starfield,
             forceUseLowerFormIDRanges: true);
-        mod.IsLightMaster = true;
+        mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
         await mod.BeginWrite
             .WithNoLoadOrder()

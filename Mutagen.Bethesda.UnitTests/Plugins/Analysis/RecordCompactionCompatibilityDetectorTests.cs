@@ -18,7 +18,7 @@ public class RecordCompactionCompatibilityDetectorTests
         OblivionMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeFalse();
         sut.IsMediumMasterCompatible(mod)
             .Should().BeFalse();
@@ -29,7 +29,7 @@ public class RecordCompactionCompatibilityDetectorTests
         SkyrimMod mod,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -48,7 +48,7 @@ public class RecordCompactionCompatibilityDetectorTests
         Npc n,
         RecordCompactionCompatibilityDetector sut)
     {
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -60,7 +60,7 @@ public class RecordCompactionCompatibilityDetectorTests
         Npc n = new Npc(new FormKey(mod.ModKey, 0x500), SkyrimRelease.SkyrimSE);
         mod.Npcs.Add(n);
         mod.ModHeader.Stats.Version = 1.60f;
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeFalse();
     }
     
@@ -70,7 +70,7 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0x801), SkyrimRelease.SkyrimSE));
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeTrue();
     }
     
@@ -90,7 +90,7 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0xFFFF), SkyrimRelease.SkyrimSE));
-        sut.IsLightMasterCompatible(mod)
+        sut.IsSmallMasterCompatible(mod)
             .Should().BeFalse();
     }
     

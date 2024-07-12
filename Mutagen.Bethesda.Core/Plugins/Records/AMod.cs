@@ -49,9 +49,9 @@ public abstract class AMod : IMod
     public abstract bool CanUseLocalization { get; }
     public abstract bool UsingLocalization { get; set; }
     bool IModFlagsGetter.UsingLocalization => throw new NotImplementedException();
-    public abstract bool CanBeLightMaster { get; }
-    public abstract bool IsLightMaster { get; set; }
-    bool IModFlagsGetter.IsLightMaster => throw new NotImplementedException();
+    public abstract bool CanBeSmallMaster { get; }
+    public abstract bool IsSmallMaster { get; set; }
+    bool IModFlagsGetter.IsSmallMaster => throw new NotImplementedException();
     public abstract bool CanBeMediumMaster { get; }
     public abstract bool IsMediumMaster { get; set; }
     bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();

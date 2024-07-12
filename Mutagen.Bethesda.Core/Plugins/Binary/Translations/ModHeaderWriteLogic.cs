@@ -73,7 +73,7 @@ internal sealed class ModHeaderWriteLogic
         AddNextFormIDActions();
         AddFormIDUniqueness();
         AddFormIDCompactionLogic();
-        AddLightFormLimit(modHeader);
+        AddSmallFormLimit(modHeader);
         AddCompressionCheck();
         AddDisallowedLowerFormIDs();
         RegisterOverriddenFormsFishing();
@@ -175,12 +175,12 @@ internal sealed class ModHeaderWriteLogic
             modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.GetDefaultInitialNextFormID(forceLowerBound);
         }
 
-        var lightIndex = _category.GetLightFlagIndex();
+        var lightIndex = _constants.SmallMasterFlag;
         if (lightIndex.HasValue 
             && Enums.HasFlag(modHeader.RawFlags, lightIndex.Value)
-            && _uniqueRecordsFromMod > Constants.LightMasterLimit)
+            && _uniqueRecordsFromMod > Constants.SmallMasterLimit)
         {
-            throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
+            throw new ArgumentException($"Small Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.SmallMasterLimit}");
         }
 
         SetOverriddenForms(modHeader);
@@ -340,10 +340,10 @@ internal sealed class ModHeaderWriteLogic
     }
     #endregion
 
-    #region Light Master Form Limit
-    private void AddLightFormLimit(IModHeaderCommon header)
+    #region Small Master Form Limit
+    private void AddSmallFormLimit(IModHeaderCommon header)
     {
-        var lightIndex = _category.GetLightFlagIndex();
+        var lightIndex = _constants.SmallMasterFlag;
         if (!lightIndex.HasValue || !Enums.HasFlag(header.RawFlags, lightIndex.Value)) return;
         _recordIterationActions.Add(maj =>
         {

@@ -78,7 +78,7 @@ public static class IModExt
 
     public static MasterStyle GetMasterStyle(this IModFlagsGetter mod)
     {
-        bool light = mod.CanBeLightMaster && mod.IsLightMaster;
+        bool light = mod.CanBeSmallMaster && mod.IsSmallMaster;
         bool medium = mod.CanBeMediumMaster && mod.IsMediumMaster;
         
         if (light && medium)

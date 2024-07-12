@@ -15,7 +15,7 @@ public partial class Fallout4ModHeader
     {
         Master = 0x0000_0001,
         Localized = 0x0000_0080,
-        Light = 0x0000_0200,
+        Small = 0x0000_0200,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

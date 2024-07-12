@@ -20,14 +20,14 @@ public readonly struct FormID : IEquatable<FormID>
     /// </summary>
     public static readonly FormID Null = new(0);
     
-    public const uint LightMasterMarker = 0xFE;
+    public const uint SmallMasterMarker = 0xFE;
     public const uint MediumMasterMarker = 0xFD;
-    internal const uint LightMasterMarkerShifted = 0xFE000000;
+    internal const uint SmallMasterMarkerShifted = 0xFE000000;
     internal const uint MediumMasterMarkerShifted = 0xFD000000;
     
     public const uint FullIdMask =   0x00FFFFFF;
     public const uint MediumIdMask = 0x0000FFFF;
-    public const uint LightIdMask =  0x00000FFF;
+    public const uint SmallIdMask =  0x00000FFF;
         
     /// <summary>
     /// The raw uint as it would be stored on disk with both the ID and Mod index.
@@ -50,7 +50,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// The ID bytes of a FormID.
     /// Exposed as a uint, but will only ever have values filling the last 3 bytes.
     /// </summary>
-    public uint LightId => Raw & LightIdMask;
+    public uint LightId => Raw & SmallIdMask;
     
     public const uint FullMasterIndexMask =   0xFF000000;
     public const uint MediumMasterIndexMask = 0x00FF0000;
@@ -184,8 +184,8 @@ public readonly struct FormID : IEquatable<FormID>
                 break;
             case MasterStyle.Light:
                 shift = LightMasterIndexShift;
-                mask = LightIdMask;
-                upperValue = LightMasterMarkerShifted;
+                mask = SmallIdMask;
+                upperValue = SmallMasterMarkerShifted;
                 break;
             default:
                 throw new NotImplementedException();
@@ -262,7 +262,7 @@ public readonly struct FormID : IEquatable<FormID>
     /// <returns>Mask to apply to retrieve the id portion of the value</returns>
     public static uint IdMask(MasterStyle style) => style switch
     {
-        MasterStyle.Light => LightIdMask,
+        MasterStyle.Light => SmallIdMask,
         MasterStyle.Medium => MediumIdMask,
         MasterStyle.Full => FullIdMask,
         _ => throw new NotImplementedException()

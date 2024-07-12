@@ -46,17 +46,4 @@ public static class GameReleaseKernelExt
     {
         return 0x0000_0080;
     }
-    
-    public static int? GetLightFlagIndex(this GameCategory release)
-    {
-        switch (release)
-        {
-            case GameCategory.Starfield:
-                return 0x0000_0100;
-            case GameCategory.Oblivion:
-                return null;
-            default:
-                return 0x0000_0200;
-        }
-    }
 }

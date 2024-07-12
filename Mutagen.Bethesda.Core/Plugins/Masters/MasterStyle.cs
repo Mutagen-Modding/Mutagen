@@ -15,7 +15,7 @@ internal static class MasterStyleConstruction
 {
     public static MasterStyle ConstructFromFlags(int flags, GameConstants constants)
     {
-        bool light = constants.LightMasterFlag.HasValue && Enums.HasFlag(flags, constants.LightMasterFlag.Value);
+        bool light = constants.SmallMasterFlag.HasValue && Enums.HasFlag(flags, constants.SmallMasterFlag.Value);
         bool medium = constants.MediumMasterFlag.HasValue && Enums.HasFlag(flags, constants.MediumMasterFlag.Value);
         
         if (light && medium)

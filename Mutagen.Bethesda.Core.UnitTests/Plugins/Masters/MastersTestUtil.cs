@@ -11,20 +11,20 @@ internal static class MastersTestUtil
     {
         var modGetter = Substitute.For<IModFlagsGetter>();
         modGetter.ModKey.Returns(modKey);
-        modGetter.CanBeLightMaster.Returns(true);
+        modGetter.CanBeSmallMaster.Returns(true);
         modGetter.CanBeMediumMaster.Returns(true);
         switch (style)
         {
             case MasterStyle.Full:
-                modGetter.IsLightMaster.Returns(false);
+                modGetter.IsSmallMaster.Returns(false);
                 modGetter.IsMediumMaster.Returns(false);
                 break;
             case MasterStyle.Light:
-                modGetter.IsLightMaster.Returns(true);
+                modGetter.IsSmallMaster.Returns(true);
                 modGetter.IsMediumMaster.Returns(false);
                 break;
             case MasterStyle.Medium:
-                modGetter.IsLightMaster.Returns(false);
+                modGetter.IsSmallMaster.Returns(false);
                 modGetter.IsMediumMaster.Returns(true);
                 break;
             default:

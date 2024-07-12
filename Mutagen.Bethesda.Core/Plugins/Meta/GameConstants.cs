@@ -65,7 +65,7 @@ public sealed record GameConstants
     public bool UsesStrings => StringsLanguageFormat != null;
     
     public bool SeparateMasterLoadOrders { get; init; }
-    public int? LightMasterFlag { get; }
+    public int? SmallMasterFlag { get; }
     public int? MediumMasterFlag { get; }
 
     public GameConstants(
@@ -86,7 +86,7 @@ public sealed record GameConstants
         uint defaultHighRangeFormId, 
         float? useLowerRangeFormIdVersion,
         bool separateMasterLoadOrders,
-        int? lightMasterFlag,
+        int? smallMasterFlag,
         int? mediumMasterFlag)
     {
         Release = release;
@@ -106,7 +106,7 @@ public sealed record GameConstants
         DefaultHighRangeFormID = defaultHighRangeFormId;
         UseLowerRangeFormIDVersion = useLowerRangeFormIdVersion;
         SeparateMasterLoadOrders = separateMasterLoadOrders;
-        LightMasterFlag = lightMasterFlag;
+        SmallMasterFlag = smallMasterFlag;
         MediumMasterFlag = mediumMasterFlag;
     }
 
@@ -172,7 +172,7 @@ public sealed record GameConstants
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
         separateMasterLoadOrders: false,
-        lightMasterFlag: null,
+        smallMasterFlag: null,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
@@ -245,7 +245,7 @@ public sealed record GameConstants
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
         separateMasterLoadOrders: false,
-        lightMasterFlag: 0x0000_0200,
+        smallMasterFlag: 0x0000_0200,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
@@ -369,7 +369,7 @@ public sealed record GameConstants
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
         separateMasterLoadOrders: false,
-        lightMasterFlag: 0x0000_0200,
+        smallMasterFlag: 0x0000_0200,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
@@ -456,7 +456,7 @@ public sealed record GameConstants
         myDocumentsString: null,
         iniName: "Starfield",
         separateMasterLoadOrders: true,
-        lightMasterFlag: 0x0000_0100,
+        smallMasterFlag: 0x0000_0100,
         mediumMasterFlag: 0x0000_0400,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 

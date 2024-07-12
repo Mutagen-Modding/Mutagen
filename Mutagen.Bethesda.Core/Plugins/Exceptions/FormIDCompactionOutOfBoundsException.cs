@@ -5,15 +5,15 @@ namespace Mutagen.Bethesda.Plugins.Exceptions;
 
 public class FormIDCompactionOutOfBoundsException : Exception
 {
-    public bool LightMaster { get; }
+    public bool SmallMaster { get; }
     public bool MediumMaster { get; }
     public RangeUInt32 Range { get; }
     public FormLinkInformation OutOfBoundsRecord { get; }
 
-    public FormIDCompactionOutOfBoundsException(bool light, bool Medium, RangeUInt32 range, IFormLinkIdentifier outOfBounds)
+    public FormIDCompactionOutOfBoundsException(bool small, bool Medium, RangeUInt32 range, IFormLinkIdentifier outOfBounds)
         : base("Record was out of bounds for the given record compaction settings")
     {
-        LightMaster = light;
+        SmallMaster = small;
         MediumMaster = Medium;
         Range = range;
         OutOfBoundsRecord = FormLinkInformation.Factory(outOfBounds);
@@ -22,12 +22,12 @@ public class FormIDCompactionOutOfBoundsException : Exception
     public override string ToString()
     {
         string style = "Unknown";
-        if (LightMaster && MediumMaster)
+        if (SmallMaster && MediumMaster)
         {
         }
-        else if (LightMaster)
+        else if (SmallMaster)
         {
-            style = "Light Master";
+            style = "Small Master";
         }
         else
         {

@@ -151,7 +151,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             {
                 medium.Add(modKey);
             }
-            else if (mod.IsLightMaster)
+            else if (mod.IsSmallMaster)
             {
                 light.Add(modKey);
             }
@@ -171,7 +171,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                         "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
                 }
 
-                if (mod.IsLightMaster && mod.IsMediumMaster)
+                if (mod.IsSmallMaster && mod.IsMediumMaster)
                 {
                     throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
                 }
@@ -254,7 +254,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         var fullMasterIndex = formId.FullMasterIndex;
         switch (fullMasterIndex)
         {
-            case FormID.LightMasterMarker:
+            case FormID.SmallMasterMarker:
             {
                 index = formId.LightMasterIndex;
                 id = formId.LightId;
