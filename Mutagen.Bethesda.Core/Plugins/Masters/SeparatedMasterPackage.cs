@@ -149,15 +149,33 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         {
             if (mod.IsMediumMaster)
             {
-                medium.Add(modKey);
+                AddToListViaStyle(MasterStyle.Medium, modKey);
             }
             else if (mod.IsSmallMaster)
             {
-                light.Add(modKey);
+                AddToListViaStyle(MasterStyle.Small, modKey);
             }
             else
             {
-                normal.Add(modKey);
+                AddToListViaStyle(MasterStyle.Full, modKey);
+            }
+        }
+        
+        void AddToListViaStyle(MasterStyle style, ModKey modKey)
+        {
+            switch (style)
+            {
+                case MasterStyle.Full:
+                    normal.Add(modKey);
+                    break;
+                case MasterStyle.Small:
+                    light.Add(modKey);
+                    break;
+                case MasterStyle.Medium:
+                    medium.Add(modKey);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(style), style, null);
             }
         }
 
