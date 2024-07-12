@@ -109,7 +109,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Flags
-        public Cell.Flag Flags { get; set; } = default(Cell.Flag);
+        public Cell.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Cell.Flag? ICellGetter.Flags => this.Flags;
         #endregion
         #region Grid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,14 +147,14 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? ICellGetter.MHDT => this.MHDT;
         #endregion
         #region LightingTemplate
-        private readonly IFormLink<ILightingTemplateGetter> _LightingTemplate = new FormLink<ILightingTemplateGetter>();
-        public IFormLink<ILightingTemplateGetter> LightingTemplate
+        private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
+        public IFormLinkNullable<ILightingTemplateGetter> LightingTemplate
         {
             get => _LightingTemplate;
             set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
+        IFormLinkNullableGetter<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region WaterHeight
         public Single? WaterHeight { get; set; }
@@ -2744,11 +2746,11 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new Cell.Flag Flags { get; set; }
+        new Cell.Flag? Flags { get; set; }
         new CellGrid? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
         new MemorySlice<Byte>? MHDT { get; set; }
-        new IFormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
+        new IFormLinkNullable<ILightingTemplateGetter> LightingTemplate { get; set; }
         new Single? WaterHeight { get; set; }
         new Single? XILS { get; set; }
         new IFormLinkNullable<INpcGetter> XCLR { get; set; }
@@ -2823,11 +2825,11 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        Cell.Flag Flags { get; }
+        Cell.Flag? Flags { get; }
         ICellGridGetter? Grid { get; }
         ICellLightingGetter? Lighting { get; }
         ReadOnlyMemorySlice<Byte>? MHDT { get; }
-        IFormLinkGetter<ILightingTemplateGetter> LightingTemplate { get; }
+        IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate { get; }
         Single? WaterHeight { get; }
         Single? XILS { get; }
         IFormLinkNullableGetter<INpcGetter> XCLR { get; }
@@ -3460,7 +3462,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.Name = default;
-            item.Flags = default(Cell.Flag);
+            item.Flags = default;
             item.Grid = null;
             item.Lighting = null;
             item.MHDT = default;
@@ -4138,9 +4140,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.Grid?.Overall ?? true)
                 && item.Grid is {} GridItem)
@@ -4159,7 +4162,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (printMask?.LightingTemplate ?? true)
             {
-                sb.AppendItem(item.LightingTemplate.FormKey, "LightingTemplate");
+                sb.AppendItem(item.LightingTemplate.FormKeyNullable, "LightingTemplate");
             }
             if ((printMask?.WaterHeight ?? true)
                 && item.WaterHeight is {} WaterHeightItem)
@@ -4663,7 +4666,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.Flags);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             if (item.Grid is {} Griditem)
             {
                 hash.Add(Griditem);
@@ -4780,7 +4786,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            yield return FormLinkInformation.Factory(obj.LightingTemplate);
+            if (FormLinkInformation.TryFactory(obj.LightingTemplate, out var LightingTemplateInfo))
+            {
+                yield return LightingTemplateInfo;
+            }
             if (FormLinkInformation.TryFactory(obj.XCLR, out var XCLRInfo))
             {
                 yield return XCLRInfo;
@@ -5677,7 +5686,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate.SetTo(rhs.LightingTemplate.FormKey);
+                item.LightingTemplate.SetTo(rhs.LightingTemplate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
@@ -6231,7 +6240,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
@@ -6254,7 +6263,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.MHDT,
                 header: translationParams.ConvertToCustom(RecordTypes.MHDT));
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LightingTemplate,
                 header: translationParams.ConvertToCustom(RecordTypes.LTMP));
@@ -6844,7 +6853,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag);
+        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag?);
         #endregion
         #region Grid
         private RangeInt32? _GridLocation;
@@ -6860,7 +6869,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LightingTemplate
         private int? _LightingTemplateLocation;
-        public IFormLinkGetter<ILightingTemplateGetter> LightingTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightingTemplateGetter>(_package, _recordData, _LightingTemplateLocation);
+        public IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightingTemplateGetter>(_package, _recordData, _LightingTemplateLocation);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;

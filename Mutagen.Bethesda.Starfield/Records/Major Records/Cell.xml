@@ -22,11 +22,11 @@
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Enum name="Flags" enumName="Cell.Flag" byteLength="4" nullable="False" recordType="DATA" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="4" recordType="DATA" />
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <ByteArray name="MHDT" recordType="MHDT" unknown="true" />
-      <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
+      <FormLink name="LightingTemplate" refName="LightingTemplate" recordType="LTMP" />
       <Float name="WaterHeight" recordType="XCLW" />
       <Float name="XILS" recordType="XILS" unknown="true" />
       <FormLink name="XCLR" refName="Npc" recordType="XCLR" unknown="true" />
