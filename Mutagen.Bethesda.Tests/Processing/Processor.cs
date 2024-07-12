@@ -283,7 +283,7 @@ public abstract class Processor
     private bool CheckIsFormIDOverflow(FormID formID)
     {
         if (formID.FullMasterIndex <= _numMasters) return false;
-        if (IsStarfieldMaster(ModKey)) return true;
+        // if (IsStarfieldMaster(ModKey)) return true;
         if (formID.FullMasterIndex == FormID.SmallMasterMarker && Meta.SmallMasterFlag != null) return false; 
         if (formID.FullMasterIndex == FormID.MediumMasterMarker && Meta.MediumMasterFlag != null) return false; 
         return true;

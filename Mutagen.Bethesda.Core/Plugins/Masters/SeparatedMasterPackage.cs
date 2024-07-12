@@ -28,17 +28,29 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
     private IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
-    internal static readonly IReadOnlySeparatedMasterPackage EmptyNull = NotSeparate(new MasterReferenceCollection(ModKey.Null));
+    internal static readonly IReadOnlySeparatedMasterPackage EmptyNull =
+        NotSeparate(new MasterReferenceCollection(ModKey.Null));
+
+    // Hack until this is better understood
+    private static HashSet<ModKey> _starfieldMasters = new()
+    {
+        "OldMars.esm", 
+        "Constellation.esm", 
+        "SFBGS003.esm", 
+        "SFBGS006.esm", 
+        "SFBGS007.esm", 
+        "SFBGS008.esm"
+    };
 
     internal SeparatedMasterPackage()
     {
     }
-    
+
     public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModKey currentModKey,
         MasterStyle style,
-        IReadOnlyMasterReferenceCollection masters, 
+        IReadOnlyMasterReferenceCollection masters,
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         var constants = GameConstants.Get(release);
@@ -51,7 +63,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             return SeparatedMasterPackage.NotSeparate(masters);
         }
     }
-    
+
     public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModPath modPath,
@@ -81,7 +93,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             Raw = masters;
             Normal = normal;
         }
-    
+
         public bool TryLookupModKey(ModKey modKey, bool reference, out MasterStyle style, out uint index)
         {
             if (_lookup.TryGetValue(modKey, out var x))
@@ -100,7 +112,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         {
             var loadOrder = Normal;
             var modID = formId.FullMasterIndex;
-            
+
             if (modID >= loadOrder.Count)
             {
                 return new FormKey(
@@ -120,7 +132,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 id);
         }
     }
-    
+
     internal static IReadOnlySeparatedMasterPackage NotSeparate(IReadOnlyMasterReferenceCollection masters)
     {
         var normal = new List<ModKey>(masters.Masters.Select((x => x.Master)));
@@ -134,17 +146,17 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ret._lookup = lookup;
         return ret;
     }
-    
+
     internal static IReadOnlySeparatedMasterPackage Separate(
         ModKey currentModKey,
         MasterStyle style,
-        IReadOnlyMasterReferenceCollection masters, 
+        IReadOnlyMasterReferenceCollection masters,
         ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
         var light = new List<ModKey>();
-        
+
         void AddToList(IModFlagsGetter mod, ModKey modKey)
         {
             if (mod.IsMediumMaster)
@@ -160,7 +172,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 AddToListViaStyle(MasterStyle.Full, modKey);
             }
         }
-        
+
         void AddToListViaStyle(MasterStyle style, ModKey modKey)
         {
             switch (style)
@@ -191,7 +203,8 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
                 if (mod.IsSmallMaster && mod.IsMediumMaster)
                 {
-                    throw new ModHeaderMalformedException(mod.ModKey, "Mod had both Light and Medium master flags enabled");
+                    throw new ModHeaderMalformedException(mod.ModKey,
+                        "Mod had both Light and Medium master flags enabled");
                 }
 
                 AddToList(mod, master.Master);
@@ -205,7 +218,14 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             }
         }
 
-        normal.Add(currentModKey);
+        if (_starfieldMasters.Contains(currentModKey))
+        {
+            AddToListViaStyle(style, currentModKey);
+        }
+        else
+        {
+            normal.Add(currentModKey);
+        }
 
         var ret = new SeparatedMasterPackage()
         {
@@ -221,10 +241,10 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         FillLookup(ret.Medium, lookup, MasterStyle.Medium);
         ret._lookup = lookup;
         return ret;
-
     }
 
-    public static IReadOnlySeparatedMasterPackage FromConstants(GameConstants constants, ModPath path, IFileSystem? fileSystem = null)
+    public static IReadOnlySeparatedMasterPackage FromConstants(GameConstants constants, ModPath path,
+        IFileSystem? fileSystem = null)
     {
         if (constants.SeparateMasterLoadOrders)
         {
@@ -243,7 +263,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         byte index = 0;
         foreach (var modKey in masters.ListedOrder)
         {
-            dict.Set(modKey, new (index, style));
+            dict.Set(modKey, new(index, style));
             index++;
         }
     }
@@ -265,7 +285,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     private void ExtractFormIdInfo(
         FormID formId,
         out MasterStyle style,
-        out uint index, 
+        out uint index,
         out uint id,
         out ILoadOrderGetter<ModKey> loadOrder)
     {
@@ -307,7 +327,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             out var index,
             out var id,
             out var loadOrder);
-        
+
         if (index == 0 && id == 0)
         {
             return FormKey.Null;
@@ -319,7 +339,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 CurrentMod,
                 id);
         }
-        
+
         var master = loadOrder[checked((int)index)];
         return new FormKey(
             master,
