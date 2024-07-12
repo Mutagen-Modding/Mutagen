@@ -874,6 +874,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             LocationCellUnique_Registration.Instance,
             LocationCellUniqueReference_Registration.Instance,
             LocationCoordinate_Registration.Instance,
+            LocationFaction_Registration.Instance,
             LocationFallback_Registration.Instance,
             LocationHasKeywordConditionData_Registration.Instance,
             LocationHasPlayerOwnedWorkshopConditionData_Registration.Instance,

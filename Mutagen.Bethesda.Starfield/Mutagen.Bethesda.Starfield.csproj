@@ -6642,5 +6642,8 @@
     <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
       <DependentUpon>Note.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

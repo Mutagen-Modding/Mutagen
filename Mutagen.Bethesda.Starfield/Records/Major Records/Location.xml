@@ -47,14 +47,7 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties2" refName="ObjectProperty" recordType="PRPS" />
-      <Data>
-        <Fields>
-          <FormLink name="Faction" refName="Faction" />
-          <Int8 name="UnknownDATA" />
-          <Int8 name="SystemLevel" />
-          <Int16 name="UnknownDATA2" />
-        </Fields>
-      </Data>
+      <RefDirect name="Faction" refName="LocationFaction" />
       <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
       <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
       <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
@@ -66,6 +59,14 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <Int32 name="StarID" recordType="XNAM" />
       <Int32 name="PlanetID" recordType="YNAM" />
+    </Fields>
+  </Object>
+  <Object name="LocationFaction" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <FormLink name="Faction" refName="Faction" />
+      <Int8 name="UnknownDATA" />
+      <Int8 name="SystemLevel" />
+      <Int16 name="UnknownDATA2" />
     </Fields>
   </Object>
   <Object name="LocationReference" objType="Subrecord">
