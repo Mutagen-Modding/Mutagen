@@ -270,10 +270,10 @@ public abstract class Processor
         {
             case "OldMars.esm":
             case "Constellation.esm":
-            case "SFBG003.esm":
-            case "SFBG006.esm":
-            case "SFBG007.esm":
-            case "SFBG008.esm":
+            case "SFBGS003.esm":
+            case "SFBGS006.esm":
+            case "SFBGS007.esm":
+            case "SFBGS008.esm":
                 return true;
         }
 
