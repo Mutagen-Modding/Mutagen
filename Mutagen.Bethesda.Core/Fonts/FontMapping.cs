@@ -1,3 +1,3 @@
 ﻿namespace Mutagen.Bethesda.Fonts;
 
-public record struct FontMapping(string FontId, string FontWeight);
+public readonly record struct FontMapping(string FontId, string FontWeight);
