@@ -90,6 +90,9 @@ public class AssetLinkGetter<TAssetType> : IEquatable<AssetLinkGetter<TAssetType
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLinkGetter<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLinkGetter<TAssetType>?(AssetPath? path) => path == null ? null : new(path.Value.RawPath);
 }
 
 /// <summary>
@@ -202,4 +205,7 @@ public class AssetLink<TAssetType> :
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLink<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLink<TAssetType>?(AssetPath? path) => path == null ? null : new(path.Value.RawPath);
 }
