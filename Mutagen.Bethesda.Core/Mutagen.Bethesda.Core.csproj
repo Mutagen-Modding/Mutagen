@@ -75,6 +75,7 @@
         <Compile Include="Assets\AssetPath.cs" />
         <Compile Include="Assets\AssetTypeLocator.cs" />
         <Compile Include="Assets\DI\ArchiveAssetProvider.cs" />
+        <Compile Include="Assets\DI\AssetProviderMixIn.cs" />
         <Compile Include="Assets\DI\DataDirectoryAssetProvider.cs" />
         <Compile Include="Assets\DI\GameAssetProvider.cs" />
         <Compile Include="Assets\DI\IAssetProvider.cs" />
