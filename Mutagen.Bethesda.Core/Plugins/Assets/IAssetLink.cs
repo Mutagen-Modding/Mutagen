@@ -5,6 +5,11 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 public interface IAssetLinkGetter
 {
     /// <summary>
+    /// Asset path
+    /// </summary>
+    AssetPath AssetPath { get; }
+
+    /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
     string RawPath { get; }

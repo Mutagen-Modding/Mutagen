@@ -6,69 +6,13 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Assets;
 
-public static class AssetLink
-{
-    public static readonly string NullPath = string.Empty;
-    public static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
-    public static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
-    public const string DataDirectory = "Data";
-    public static readonly string DataPrefix = DataDirectory + Path.DirectorySeparatorChar;
-    public static readonly string DataPrefixAlt = DataDirectory + Path.AltDirectorySeparatorChar;
-    public static readonly string DataInfix = Path.DirectorySeparatorChar + DataDirectory + Path.DirectorySeparatorChar;
-    public static readonly string DataInfixAlt = Path.AltDirectorySeparatorChar + DataDirectory + Path.AltDirectorySeparatorChar;
-    public static readonly int DataPrefixLength = DataDirectory.Length + 1;
-
-    public static string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
-    {
-        Span<char> mySpan = stackalloc char[inputPath.Length];
-        inputPath.CopyTo(mySpan);
-        IFileSystemExt.CleanDirectorySeparators(mySpan);
-        
-        ReadOnlySpan<char> path = mySpan;
-        
-        // Reduce all absolute paths to the path under data directory
-        if (path.Contains(Path.VolumeSeparatorChar))
-        {
-            var dataDirectoryIndex = path.IndexOf(DataInfix, PathComparison);
-            if (dataDirectoryIndex != -1)
-            {
-                path = path[(dataDirectoryIndex + DataInfix.Length)..];
-            }
-            else
-            {
-                dataDirectoryIndex = path.IndexOf(DataInfixAlt, PathComparison);
-                if (dataDirectoryIndex != -1)
-                {
-                    path = path[(dataDirectoryIndex + DataInfixAlt.Length)..];
-                }
-            }
-        }
-
-        path = path
-            .TrimStart(Path.DirectorySeparatorChar)
-            .TrimStart(Path.AltDirectorySeparatorChar);
-
-        // Can be replaced with a version of TrimStart that takes the string comparison into account
-        if (path.StartsWith(DataPrefix, PathComparison))
-        {
-            path = path[DataPrefixLength..];
-        }
-        else if (path.StartsWith(DataPrefixAlt, PathComparison))
-        {
-            path = path[DataPrefixLength..];
-        }
-
-        return path.ToString();
-    }
-}
-
 /// <summary>
 /// Asset referenced by a record
 /// </summary>
-public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter<TAssetType>
+public class AssetLinkGetter<TAssetType> : IEquatable<AssetLinkGetter<TAssetType>>, IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter<TAssetType>
     where TAssetType : class, IAssetType
 {
-    protected string _rawPath;
+    protected AssetPath _assetPath;
     protected static readonly IAssetType AssetInstance;
     public static readonly AssetLinkGetter<TAssetType> Null = new();
 
@@ -83,79 +27,36 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public AssetLinkGetter()
     {
-        _rawPath = AssetLink.NullPath;
+        _assetPath = AssetPath.NullPath;
     }
 
     public AssetLinkGetter(string rawPath)
     {
-        _rawPath = rawPath;
+        _assetPath = rawPath;
     }
 
-    public string RawPath => _rawPath;
+    public AssetPath AssetPath => _assetPath;
 
-    public string DataRelativePath => ConvertToDataRelativePath(RawPath);
+    public string RawPath => _assetPath.RawPath;
+
+    public string DataRelativePath => _assetPath.DataRelativePath;
 
     public string Extension => Path.GetExtension(RawPath);
 
     public IAssetType Type => AssetInstance;
 
-    public static string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
-    {
-        Span<char> mySpan = stackalloc char[inputPath.Length];
-        inputPath.CopyTo(mySpan);
-        IFileSystemExt.CleanDirectorySeparators(mySpan);
-        
-        ReadOnlySpan<char> path = mySpan;
-        
-        // Reduce all absolute paths to the path under data directory
-        if (path.Contains(Path.VolumeSeparatorChar))
-        {
-            var dataDirectoryIndex = path.IndexOf(AssetLink.DataInfix, AssetLink.PathComparison);
-            if (dataDirectoryIndex != -1)
-            {
-                path = path[(dataDirectoryIndex + AssetLink.DataInfix.Length)..];
-            }
-            else
-            {
-                dataDirectoryIndex = path.IndexOf(AssetLink.DataInfixAlt, AssetLink.PathComparison);
-                if (dataDirectoryIndex != -1)
-                {
-                    path = path[(dataDirectoryIndex + AssetLink.DataInfixAlt.Length)..];
-                }
-            }
-        }
-
-        path = path
-            .TrimStart(Path.DirectorySeparatorChar)
-            .TrimStart(Path.AltDirectorySeparatorChar);
-
-        // Can be replaced with a version of TrimStart that takes the string comparison into account
-        if (path.StartsWith(AssetLink.DataPrefix, AssetLink.PathComparison))
-        {
-            path = path[AssetLink.DataPrefixLength..];
-        }
-        else if (path.StartsWith(AssetLink.DataPrefixAlt, AssetLink.PathComparison))
-        {
-            path = path[AssetLink.DataPrefixLength..];
-        }
-
-        return path.StartsWith(AssetInstance.BaseFolder, AssetLink.PathComparison) 
-            ? path.ToString() 
-            : Path.Combine(AssetInstance.BaseFolder, path.ToString());
-    }
-
     public override string ToString()
     {
-        return DataRelativePath;
+        return AssetPath.ToString();
     }
 
-    public override bool Equals(object? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not IAssetLinkGetter<TAssetType> rhs) return false;
 
-        return AssetLink.PathComparer.Equals(DataRelativePath, rhs.DataRelativePath);
+        return AssetPath.Equals(rhs.AssetPath);
     }
 
     public virtual bool Equals(AssetLinkGetter<TAssetType>? other)
@@ -163,12 +64,12 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return AssetLink.PathComparer.Equals(DataRelativePath, other.DataRelativePath);
+        return AssetPath.Equals(other.AssetPath);
     }
 
     public override int GetHashCode()
     {
-        return AssetLink.PathComparer.GetHashCode(DataRelativePath);
+        return AssetPath.GetHashCode();
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
@@ -176,10 +77,10 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
 
-        return AssetLink.PathComparer.Compare(DataRelativePath, other.DataRelativePath);
+        return AssetPath.CompareTo(other.AssetPath);
     }
     
-    public bool IsNull => RawPath == AssetLink.NullPath;
+    public bool IsNull => AssetPath.IsNull;
 
     [return: NotNullIfNotNull("asset")]
     public static implicit operator string? (AssetLinkGetter<TAssetType>? asset) => asset?.RawPath;
@@ -196,13 +97,14 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 /// </summary>
 public class AssetLink<TAssetType> : 
     AssetLinkGetter<TAssetType>, 
+    IEquatable<AssetLink<TAssetType>>,
     IComparable<AssetLink<TAssetType>>,
     IAssetLink<AssetLink<TAssetType>, TAssetType>,
     IAssetLink<TAssetType>
     where TAssetType : class, IAssetType
 {
     public AssetLink()
-        : base(AssetLink.NullPath)
+        : base(AssetPath.NullPath)
     {
     }
     
@@ -219,10 +121,10 @@ public class AssetLink<TAssetType> :
             return true;
         }
         
-        if (path.StartsWith(AssetInstance.BaseFolder, AssetLink.PathComparison))
+        if (path.StartsWith(AssetInstance.BaseFolder, AssetPath.PathComparison))
         {
-            _rawPath = path[AssetInstance.BaseFolder.Length..];
-            _rawPath = _rawPath
+            _assetPath = path[AssetInstance.BaseFolder.Length..];
+            _assetPath = _assetPath.RawPath
                 .TrimStart(Path.DirectorySeparatorChar)
                 .TrimStart(Path.AltDirectorySeparatorChar);
             return true;
@@ -241,8 +143,8 @@ public class AssetLink<TAssetType> :
 
     public new string RawPath
     {
-        get => _rawPath;
-        set => _rawPath = value;
+        get => _assetPath.RawPath;
+        set => _assetPath = value;
     }
 
     public AssetLink<TAssetType> ShallowClone()
@@ -252,28 +154,28 @@ public class AssetLink<TAssetType> :
 
     public void SetToNull()
     {
-        _rawPath = AssetLink.NullPath;
+        _assetPath = AssetPath.NullPath;
     }
 
     public override string ToString()
     {
-        return DataRelativePath;
+        return AssetPath.ToString();
     }
 
     public override int GetHashCode()
     {
         return HashCode.Combine(
                 typeof(TAssetType).GetHashCode(),
-                AssetLink.PathComparer.GetHashCode(DataRelativePath));
+                _assetPath.GetHashCode());
     }
 
-    public override bool Equals(object? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        if (other is not IAssetLinkGetter<TAssetType> rhs) return false;
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not IAssetLinkGetter<TAssetType> rhs) return false;
 
-        return AssetLink.PathComparer.Equals(DataRelativePath, rhs.DataRelativePath);
+        return AssetPath.Equals(rhs.AssetPath);
     }
 
     public virtual bool Equals(AssetLink<TAssetType>? other)
@@ -281,7 +183,7 @@ public class AssetLink<TAssetType> :
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return AssetLink.PathComparer.Equals(RawPath, other.RawPath);
+        return _assetPath.Equals(other._assetPath);
     }
 
     public int CompareTo(AssetLink<TAssetType>? other)
@@ -289,7 +191,7 @@ public class AssetLink<TAssetType> :
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
 
-        return AssetLink.PathComparer.Compare(DataRelativePath, other.DataRelativePath);
+        return _assetPath.CompareTo(other._assetPath);
     }
 
     [return: NotNullIfNotNull("asset")]
