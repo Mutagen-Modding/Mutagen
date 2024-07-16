@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -133,7 +133,8 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         loadOrder.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
         });
