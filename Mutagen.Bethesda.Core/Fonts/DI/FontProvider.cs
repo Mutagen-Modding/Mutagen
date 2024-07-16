@@ -1,12 +1,12 @@
-﻿using Mutagen.Bethesda.Strings;
-using Noggog;
+﻿using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Strings;
 namespace Mutagen.Bethesda.Fonts.DI;
 
 public interface IFontProvider {
 	/// <summary>
 	/// Gets the data relative file paths of the font libraries
 	/// </summary>
-	IReadOnlyList<FilePath> FontLibraries { get; }
+	IReadOnlyList<AssetPath> FontLibraries { get; }
 
 	/// <summary>
 	/// Gets the font mappings
@@ -28,12 +28,12 @@ public interface IFontProvider {
 }
 
 public class FontProvider : IFontProvider {
-	private readonly List<FilePath> _fontLibraries = new();
+	private readonly List<AssetPath> _fontLibraries = new();
 	private readonly Dictionary<string, FontMapping> _fontMappings = new();
 	private char[] _validNameChars = Array.Empty<char>();
 	private char[] _validBookChars = Array.Empty<char>();
 
-	public IReadOnlyList<FilePath> FontLibraries => _fontLibraries;
+	public IReadOnlyList<AssetPath> FontLibraries => _fontLibraries;
 	public IReadOnlyDictionary<string, FontMapping> FontMappings => _fontMappings;
 	public IReadOnlyList<char> ValidNameChars => _validNameChars;
 	public IReadOnlyList<char> ValidBookChars => _validBookChars;

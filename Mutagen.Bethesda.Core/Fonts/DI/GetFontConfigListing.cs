@@ -2,6 +2,7 @@
 using IniParser;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Inis.DI;
 using Noggog;
 namespace Mutagen.Bethesda.Fonts.DI;
@@ -9,24 +10,24 @@ namespace Mutagen.Bethesda.Fonts.DI;
 public interface IGetFontConfigListing
 {
 	/// <summary>
-	/// Queries the related ini file and looks for the font configuration file
+	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
-	/// <returns>The file path of the font configuration file</returns>
-	FilePath? Get();
+	/// <returns>The file path of the font configuration asset</returns>
+	AssetPath? Get();
 
 	/// <summary>
-	/// Queries the related ini file and looks for the font configuration file
+	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
 	/// <param name="path">Path to the file containing INI data</param>
-	/// <returns>The file path of the font configuration file</returns>
-	FilePath? Get(FilePath path);
+	/// <returns>The file path of the font configuration asset</returns>
+	AssetPath? Get(FilePath path);
 
 	/// <summary>
-	/// Queries the related ini file and looks for the font configuration file
+	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
 	/// <param name="iniStream">Stream containing INI data</param>
-	/// <returns>The file path of the font configuration file</returns>
-	FilePath? Get(Stream iniStream);
+	/// <returns>The file path of the font configuration asset</returns>
+	AssetPath? Get(Stream iniStream);
 }
 
 public sealed class GetFontConfigListing : IGetFontConfigListing
@@ -53,13 +54,13 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 	}
 
 	/// <inheritdoc />
-	public FilePath? Get()
+	public AssetPath? Get()
 	{
 		return Get(_iniPathProvider.Path);
 	}
 
 	/// <inheritdoc />
-	public FilePath? Get(FilePath path)
+	public AssetPath? Get(FilePath path)
 	{
 		if (!_fileSystem.File.Exists(path)) return null;
 
@@ -68,7 +69,7 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 	}
 
 	/// <inheritdoc />
-	public FilePath? Get(Stream iniStream)
+	public AssetPath? Get(Stream iniStream)
 	{
 		// Release exists as parameter, in case future games need different handling
 		Console.WriteLine("GetFontConfigListing.Get");
@@ -85,6 +86,6 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 		Console.WriteLine("GetFontConfigListing.Get5");
 		Console.WriteLine("GetFontConfigListing.Get6" + configFile);
 
-		return new FilePath(configFile);
+		return configFile;
 	}
 }
