@@ -1,4 +1,4 @@
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -552,7 +552,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool useLowerRange);
+    IFileBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool? useLowerRange);
 
     /// <summary>
     /// Turns off logic to check for FormID uniqueness.
@@ -598,7 +598,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle encodingBundle);
+    IFileBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle? encodingBundle);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -899,7 +899,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool useLowerRange)
+    public FileBinaryModdedWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
     {
         return this with
         {
@@ -912,7 +912,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool? useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
 
     /// <summary>
     /// Turns off logic to check for FormID uniqueness.
@@ -1027,7 +1027,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle encodingBundle)
+    public FileBinaryModdedWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
     {
         return this with
         {
@@ -1040,7 +1040,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle encodingBundle) => WithEmbeddedEncodings(encodingBundle);
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle? encodingBundle) => WithEmbeddedEncodings(encodingBundle);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -1442,7 +1442,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool useLowerRange)
+    public FileBinaryWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
     {
         return this with
         {
@@ -1563,7 +1563,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle encodingBundle)
+    public FileBinaryWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
     {
         return this with
         {
