@@ -12,10 +12,28 @@ public readonly struct AssetPath : IEquatable<AssetPath>, IComparable<AssetPath>
     public static readonly string DataInfixAlt = Path.AltDirectorySeparatorChar + DataDirectory + Path.AltDirectorySeparatorChar;
     public static readonly int DataPrefixLength = DataDirectory.Length + 1;
 
+    /// <summary>
+    /// Raw path pointing to the asset
+    /// </summary>
     public string RawPath { get; }
 
+    /// <summary>
+    /// Raw path relative to the game's data directory, as it is commonly known in the Bethesda modding community.
+    /// <example>
+    /// <code>
+    /// Example:
+    ///     C:\Skyrim\Data\Meshes\Clutter\MyMesh.nif => Meshes\Clutter\MyMesh.nif
+    ///     \Data\Meshes\Clutter\MyMesh.nif          => Meshes\Clutter\MyMesh.nif
+    ///     Data\Meshes\Clutter\MyMesh.nif           => Meshes\Clutter\MyMesh.nif
+    ///     Clutter\MyMesh.nif                       => Meshes\Clutter\MyMesh.nif
+    /// </code>
+    /// </example>
+    /// </summary>
     public string DataRelativePath => ConvertToDataRelativePath(RawPath);
 
+    /// <summary>
+    /// Extension of the asset
+    /// </summary>
     public string Extension => Path.GetExtension(RawPath);
 
     public bool IsNull => RawPath == NullPath;
