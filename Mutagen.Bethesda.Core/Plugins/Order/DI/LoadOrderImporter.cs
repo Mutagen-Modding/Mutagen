@@ -1,7 +1,9 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Strings;
@@ -102,17 +104,20 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
 public sealed class LoadOrderImporter : ILoadOrderImporter
 {
     private readonly IFileSystem _fileSystem;
+    private readonly IGameReleaseContext _gameRelease;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
     public IModImporter Importer { get; }
 
     public LoadOrderImporter(
         IFileSystem fileSystem,
+        IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider loadOrderListingsProvider,
         IModImporter importer)
     {
         _fileSystem = fileSystem;
+        _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
         LoadOrderListingsProvider = loadOrderListingsProvider;
         Importer = importer;
@@ -122,6 +127,21 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<IModGetter> Mod, bool Enabled)[loList.Count];
+        param ??= BinaryReadParameters.Default;
+        if (param.LoadOrder == null)
+        {
+            param = param with
+            {
+                LoadOrder = new LoadOrder<IModFlagsGetter>(loList
+                    .Select(listing =>
+                    {
+                        var modPath = new ModPath(listing.ModKey,
+                            _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
+                        using var mod = ModInstantiator.ImportGetter(modPath, _gameRelease.Release);
+                        return new ModFlags(mod);
+                    }))
+            };
+        }
         try
         {
             Parallel.ForEach(loList, (listing, _, modIndex) =>

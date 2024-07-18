@@ -493,6 +493,7 @@ public sealed record GameEnvironmentBuilder
 
         var loGetter = new LoadOrderImporter(
             fs,
+            Release,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter(
