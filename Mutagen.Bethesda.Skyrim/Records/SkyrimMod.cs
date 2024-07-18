@@ -24,6 +24,12 @@ public partial class SkyrimMod : AMod
     public override bool CanBeSmallMaster => true;
 
     public override bool ListsOverriddenForms => true;
+    
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Master, value);
+    }
 
     public override bool IsSmallMaster
     {
@@ -188,6 +194,7 @@ internal partial class SkyrimModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Master);
     public bool CanBeSmallMaster => true;
     public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Small);
     

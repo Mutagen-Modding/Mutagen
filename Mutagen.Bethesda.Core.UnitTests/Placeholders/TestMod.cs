@@ -37,6 +37,7 @@ public class TestMod : ITestMod, IDisposable
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }
+    public bool IsMaster { get; set; }
     public bool CanBeSmallMaster { get; }
     public bool IsSmallMaster { get; set; }
     public bool CanBeMediumMaster { get; }

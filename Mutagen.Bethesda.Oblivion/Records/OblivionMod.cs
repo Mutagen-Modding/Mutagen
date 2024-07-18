@@ -19,6 +19,12 @@ public partial class OblivionMod : AMod
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(OblivionModHeader.HeaderFlag.Master, value);
+    }
+    
     public override bool CanBeSmallMaster => false;
     public override bool IsSmallMaster
     {
@@ -216,6 +222,7 @@ internal partial class OblivionModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master);
     public bool CanBeSmallMaster => false;
     public bool IsSmallMaster => false;
     public bool CanBeMediumMaster => false;

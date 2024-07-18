@@ -188,6 +188,16 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     new bool IsSmallMaster { get; set; }
 
     /// <summary>
+    /// Whether a mod has Medium Master flag enabled
+    /// </summary>
+    new bool IsMediumMaster { get; set; }
+
+    /// <summary>
+    /// Whether a mod has Master flag enabled
+    /// </summary>
+    new bool IsMaster { get; set; }
+
+    /// <summary>
     /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.
     /// </summary>
     /// <param name="allocator">Allocator to use</param>

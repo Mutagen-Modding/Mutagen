@@ -17,6 +17,12 @@ public partial class Fallout4Mod : AMod
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormIDStatic(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
     
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Master, value);
+    }
+    
     public override bool CanBeSmallMaster => true;
 
     public override bool IsSmallMaster
@@ -174,6 +180,7 @@ internal partial class Fallout4ModBinaryOverlay
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
     
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Master);
     public bool CanBeSmallMaster => true;
     public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Small);
 
