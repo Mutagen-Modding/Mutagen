@@ -528,6 +528,7 @@
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Plugins\Records\Mapping\RecordTypeLookup.cs" />
+        <Compile Include="Plugins\Records\ModFlags.cs" />
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
