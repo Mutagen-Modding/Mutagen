@@ -58,6 +58,10 @@ public class AssetTypeTests
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("XTextures", "Armor", "Iron", "IronGauntlets.dds")).Should().BeNull();
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Textures", "Armor", "Iron", "IronGauntlets.abc")).Should().BeNull();
 
+        AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Interface", "map.swf")).Should().BeOfType<SkyrimInterfaceAssetType>();
+        AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("XInterface", "map.swf")).Should().BeNull();
+        AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Interface", "map.swv")).Should().BeNull();
+
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Sound", "FX", "IronGauntlets.wav")).Should().BeOfType<SkyrimSoundAssetType>();
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("XSound", "FX", "IronGauntlets.wav")).Should().BeNull();
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Sound", "FX", "IronGauntlets.abc")).Should().BeNull();

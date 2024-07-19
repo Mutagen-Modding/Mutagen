@@ -48,6 +48,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         ModKey = modKey;
     }
 
+    // todo integrate IAssetProvider
     public static StringsFolderLookupOverlay TypicalFactory(
         GameRelease release, 
         ModKey modKey, 

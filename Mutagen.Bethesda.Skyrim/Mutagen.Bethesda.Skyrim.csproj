@@ -21,6 +21,7 @@
     <Compile Include="Assets\SkyrimBehaviorAssetType.cs" />
     <Compile Include="Assets\SkyrimBodyTextureAssetType.cs" />
     <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
+    <Compile Include="Assets\SkyrimInterfaceAssetType.cs" />
     <Compile Include="Assets\SkyrimModelAssetType.cs" />
     <Compile Include="Assets\SkyrimMusicAssetType.cs" />
     <Compile Include="Assets\SkyrimScriptCompiledAssetType.cs">

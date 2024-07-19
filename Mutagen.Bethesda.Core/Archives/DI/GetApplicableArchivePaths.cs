@@ -22,6 +22,14 @@ public interface IGetApplicableArchivePaths
     IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true);
 
     /// <summary>
+    /// Enumerates all Archives
+    /// </summary>
+    /// <param name="modOrdering">Archive ordering overload based on a mod order.  Empty enumerable means no ordering.</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
+    /// <returns></returns>
+    IEnumerable<FilePath> Get(IEnumerable<ModKey>? modOrdering, bool returnEmptyIfMissing = true);
+
+    /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
     /// This call is intended to return Archives related to one specific mod.<br/>
     /// NOTE:  It is currently a bit experimental
@@ -79,25 +87,30 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityArchiveOrderComparer(null), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityArchiveOrderComparer(archiveOrdering), returnEmptyIfMissing);
+    }
+
+    public IEnumerable<FilePath> Get(IEnumerable<ModKey>? modOrdering, bool returnEmptyIfMissing = true)
+    {
+        return GetInternal(default, GetPriorityModOrderComparer(modOrdering), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(null), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityArchiveOrderComparer(null), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityArchiveOrderComparer(archiveOrdering), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
@@ -136,20 +149,71 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         return ret;
     }
 
-    private IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName>? listedArchiveOrdering)
+    private IComparer<FileName>? GetPriorityArchiveOrderComparer(IEnumerable<FileName>? listedArchiveOrdering)
     {
-        listedArchiveOrdering ??= _iniListings.Get();
-        var archiveOrderingList = listedArchiveOrdering.ToList();
-        if (archiveOrderingList.Count == 0) return null;
-        archiveOrderingList.Reverse();
+        if (listedArchiveOrdering is null)
+        {
+            // If no ordering is specified, use the ini file as basis
+            // All archives not listed in the ini file will be prioritized
+            listedArchiveOrdering = _iniListings.Get();
+            var archiveOrderingList = listedArchiveOrdering.ToList();
+            if (archiveOrderingList.Count == 0) return null;
+            archiveOrderingList.Reverse();
+            return Comparer<FileName>.Create((a, b) =>
+            {
+                var indexA = archiveOrderingList.IndexOf(a);
+                var indexB = archiveOrderingList.IndexOf(b);
+                if (indexA == -1 && indexB == -1) return 0;
+                if (indexA == -1) return -1;
+                if (indexB == -1) return 1;
+                return indexA - indexB;
+            });
+        }
+        else
+        {
+            // If ordering is specified, use that
+            // All archives not listed in the ordering will be deprioritized
+            var archiveOrderingList = listedArchiveOrdering.ToList();
+            if (archiveOrderingList.Count == 0) return null;
+            archiveOrderingList.Reverse();
+            return Comparer<FileName>.Create((a, b) =>
+            {
+                var indexA = archiveOrderingList.IndexOf(a);
+                var indexB = archiveOrderingList.IndexOf(b);
+                if (indexA == -1 && indexB == -1) return 0;
+                if (indexA == -1) return 1;
+                if (indexB == -1) return -1;
+                return indexA - indexB;
+            });
+        }
+    }
+
+    private IComparer<FileName>? GetPriorityModOrderComparer(IEnumerable<ModKey>? listedModOrdering)
+    {
+        if (listedModOrdering is null) return null;
+
+        var iniListedArchives = _iniListings.Get().ToList();
+        var modOrderingList = listedModOrdering.ToList();
+
         return Comparer<FileName>.Create((a, b) =>
         {
-            var indexA = archiveOrderingList.IndexOf(a);
-            var indexB = archiveOrderingList.IndexOf(b);
-            if (indexA == -1 && indexB == -1) return 0;
-            if (indexA == -1) return 1;
-            if (indexB == -1) return -1;
-            return indexA - indexB;
+            var iniIndexOfA = iniListedArchives.IndexOf(a);
+            var iniIndexOfB = iniListedArchives.IndexOf(b);
+
+            // Handle if any of the archives are listed in the ini file
+            if (iniIndexOfA != -1 || iniIndexOfB != -1) {
+                if (iniIndexOfA == -1) return 1;
+                if (iniIndexOfB == -1) return -1;
+                return iniIndexOfA - iniIndexOfB;
+            }
+
+            // If neither are listed in the ini file, use the mod ordering
+            var modIndexA = modOrderingList.FindIndex(modKey => _applicability.IsApplicable(modKey, a));
+            var modIndexB = modOrderingList.FindIndex(modKey => _applicability.IsApplicable(modKey, b));
+            if (modIndexA == -1 && modIndexB == -1) return 0;
+            if (modIndexA == -1) return 1;
+            if (modIndexB == -1) return -1;
+            return modIndexA - modIndexB;
         });
     }
 }
