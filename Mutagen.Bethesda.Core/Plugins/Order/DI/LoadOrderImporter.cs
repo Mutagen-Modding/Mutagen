@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -13,7 +14,7 @@ public interface ILoadOrderImporter
     /// <summary>
     /// Returns a load order filled with mods constructed
     /// </summary>
-    ILoadOrder<IModListing<IModGetter>> Import(StringsReadParameters? stringsParam = null);
+    ILoadOrder<IModListing<IModGetter>> Import(BinaryReadParameters? param = null);
 }
     
 public interface ILoadOrderImporter<TMod>
@@ -22,7 +23,7 @@ public interface ILoadOrderImporter<TMod>
     /// <summary>
     /// Returns a load order filled with mods constructed
     /// </summary>
-    ILoadOrder<IModListing<TMod>> Import(StringsReadParameters? stringsParam = null);
+    ILoadOrder<IModListing<TMod>> Import(BinaryReadParameters? param = null);
 }
 
 public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
@@ -45,7 +46,7 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
         Importer = importer;
     }
         
-    public ILoadOrder<IModListing<TMod>> Import(StringsReadParameters? stringsParam = null)
+    public ILoadOrder<IModListing<TMod>> Import(BinaryReadParameters? param = null)
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
@@ -61,7 +62,7 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
                         return;
                     }
-                    var mod = Importer.Import(modPath, stringsParam: stringsParam);
+                    var mod = Importer.Import(modPath, param: param);
                     results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
                 }
                 catch (Exception ex)
@@ -117,7 +118,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
         Importer = importer;
     }
         
-    public ILoadOrder<IModListing<IModGetter>> Import(StringsReadParameters? stringsParam = null)
+    public ILoadOrder<IModListing<IModGetter>> Import(BinaryReadParameters? param = null)
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<IModGetter> Mod, bool Enabled)[loList.Count];
@@ -133,7 +134,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<IModGetter>.Failure, listing.Enabled);
                         return;
                     }
-                    var mod = Importer.Import(modPath, stringsParam);
+                    var mod = Importer.Import(modPath, param);
                     results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<IModGetter>.Succeed(mod), listing.Enabled);
                 }
                 catch (Exception ex)

@@ -60,6 +60,8 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.SFPT, ProcessSurfacePatterns);
         AddDynamicProcessing(RecordTypes.SFTR, ProcessSurfaceTree);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
+        AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
+        AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -72,12 +74,7 @@ public class StarfieldProcessor : Processor
 
     public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords => new KeyValuePair<RecordType, FormKey>[]
     {
-        new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
-        new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
+        new(RecordTypes.GBFM, FormKey.Factory("2B3DDB:Starfield.esm")),
     };
 
     private void ProcessStaticCollections(
@@ -120,6 +117,7 @@ public class StarfieldProcessor : Processor
     {
         return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
         {
+            { (Constants.Starfield, StringsSource.Normal), new() { 0x71B7 } }
         };
     }
 
@@ -189,6 +187,9 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "CHAL", "FULL" },
                     new RecordType[] { "DOOR", "FULL", "ONAM", "CNAM" },
                     new RecordType[] { "FXPD", "FULL" },
+                    new RecordType[] { "GBFM", "FULL" },
+                    new RecordType[] { "GPOG", "NNAM" },
+                    new RecordType[] { "GPOF", "RESN", "VOVS", "NNAM", "DNAM" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -272,6 +273,26 @@ public class StarfieldProcessor : Processor
     {
         ProcessComponents(majorFrame, fileOffset);
         ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+        ProcessFEIndices(majorFrame, fileOffset);
+    }
+
+    private void ProcessFEIndices(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessMajorRecordFormIDOverflow(majorFrame, fileOffset);
+
+        foreach (var subRec in majorFrame.EnumerateSubrecords())
+        {
+            var loc = 0;
+            if (subRec.ContentLength != 4
+                || subRec.Content[2] != 0
+                || subRec.Content[3] != 0xFE)
+            {
+                continue;
+            }
+            ProcessFormIDOverflow(subRec, fileOffset);
+        }
     }
 
     private void ProcessComponents(
@@ -559,6 +580,13 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+
         ZeroXOWNBool(stream, majorFrame, fileOffset);
         // ProcessXTV2(majorFrame, fileOffset);
     }
@@ -616,12 +644,21 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(RecordTypes.LCEP, out var rec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.LCEP, out var lcep))
         {
             int loc = 0;
-            while (loc < rec.ContentLength)
+            while (loc < lcep.ContentLength)
             {
-                ProcessBool(rec, offsetLoc: fileOffset, loc + 8, 4, 1);
+                ProcessBool(lcep, offsetLoc: fileOffset, loc + 8, 4, 1);
+                loc += 12;
+            }
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.ACEP, out var acep))
+        {
+            int loc = 0;
+            while (loc < acep.ContentLength)
+            {
+                ProcessBool(acep, offsetLoc: fileOffset, loc + 8, 4, 1);
                 loc += 12;
             }
         }
@@ -990,7 +1027,7 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyDialogGroups(
             stream,
             formKey,
@@ -1002,7 +1039,7 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
 
         if (majorFrame.TryFindSubrecord(RecordTypes.ANAM, out var anamRec))
         {
@@ -1310,6 +1347,43 @@ public class StarfieldProcessor : Processor
                 majorFrame,
                 -range.Width,
                 fileOffset);
+        }
+    }
+
+    private void ProcessLeveledItems(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.LLKC, out var llkc))
+        {
+            ProcessFormIDOverflow(llkc, fileOffset);
+        }
+    }
+
+    private readonly string[] OMODRecords = new[]
+    {
+        "WKEY",
+        "AKEY"
+    };
+
+    private void ProcessOMOD(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
+        {
+            var str = BinaryStringUtility.ToZString(data.Content, MutagenEncoding._1252);
+            foreach (var target in OMODRecords)
+            {
+                var strLoc = 0;
+                while (true)
+                {
+                    var index = str.Substring(strLoc).IndexOf(target);
+                    if (index == -1) break;
+                    strLoc += index + 4;
+                    ProcessFormIDOverflow(data, fileOffset, ref strLoc);
+                }
+            }
         }
     }
 }

@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IHolotapeGetter> Holotape => new FormLink<IHolotapeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IHolotapeGetter> Holotape => FormLinkBinaryTranslation.Instance.OverlayFactory<IHolotapeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

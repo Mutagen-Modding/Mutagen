@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -102,6 +101,17 @@ namespace Mutagen.Bethesda.Starfield
         public Single? ODTY { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IFurnitureGetter.ODTY => this.ODTY;
+        #endregion
+        #region PTTA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PTTA? _PTTA;
+        public PTTA? PTTA
+        {
+            get => _PTTA;
+            set => _PTTA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPTTAGetter? IFurnitureGetter.PTTA => this.PTTA;
         #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -447,6 +457,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
@@ -489,6 +500,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem PTTA,
                 TItem ObjectPlacementDefaults,
                 TItem Transforms,
                 TItem SnapTemplate,
@@ -530,6 +542,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
@@ -573,6 +586,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
@@ -618,6 +632,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.PTTA, rhs.PTTA)) return false;
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
@@ -655,6 +670,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.PTTA);
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.Transforms);
                 hash.Add(this.SnapTemplate);
@@ -705,6 +721,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (PTTA != null)
+                {
+                    if (!eval(this.PTTA.Overall)) return false;
+                    if (this.PTTA.Specific != null && !this.PTTA.Specific.All(eval)) return false;
+                }
                 if (ObjectPlacementDefaults != null)
                 {
                     if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
@@ -848,6 +869,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (PTTA != null)
+                {
+                    if (eval(this.PTTA.Overall)) return true;
+                    if (this.PTTA.Specific != null && this.PTTA.Specific.Any(eval)) return true;
+                }
                 if (ObjectPlacementDefaults != null)
                 {
                     if (eval(this.ObjectPlacementDefaults.Overall)) return true;
@@ -990,6 +1016,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
                 obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
@@ -1144,6 +1171,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.PTTA?.Overall ?? true)
+                    {
+                        PTTA?.Print(sb);
                     }
                     if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
@@ -1384,6 +1415,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
@@ -1427,6 +1459,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Furniture_FieldIndex.ODTY:
                         return ODTY;
+                    case Furniture_FieldIndex.PTTA:
+                        return PTTA;
                     case Furniture_FieldIndex.ObjectPlacementDefaults:
                         return ObjectPlacementDefaults;
                     case Furniture_FieldIndex.Transforms:
@@ -1503,6 +1537,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Furniture_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case Furniture_FieldIndex.PTTA:
+                        this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case Furniture_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
@@ -1611,6 +1648,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case Furniture_FieldIndex.PTTA:
+                        this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
+                        break;
                     case Furniture_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
                         break;
@@ -1710,6 +1750,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (PTTA != null) return true;
                 if (ObjectPlacementDefaults != null) return true;
                 if (Transforms != null) return true;
                 if (SnapTemplate != null) return true;
@@ -1770,6 +1811,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
+                PTTA?.Print(sb);
                 ObjectPlacementDefaults?.Print(sb);
                 Transforms?.Print(sb);
                 {
@@ -1967,6 +2009,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.PTTA = this.PTTA.Combine(rhs.PTTA, (l, r) => l.Combine(r));
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
@@ -2021,6 +2064,7 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public PTTA.TranslationMask? PTTA;
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
@@ -2088,6 +2132,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((PTTA != null ? PTTA.OnOverall : DefaultOn, PTTA?.GetCrystal()));
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((SnapTemplate, null));
@@ -2299,6 +2344,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new PTTA? PTTA { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
@@ -2385,6 +2431,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        IPTTAGetter? PTTA { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
@@ -2612,35 +2659,36 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         ODTY = 9,
-        ObjectPlacementDefaults = 10,
-        Transforms = 11,
-        SnapTemplate = 12,
-        SnapBehavior = 13,
-        XALG = 14,
-        Components = 15,
-        Name = 16,
-        Model = 17,
-        Destructible = 18,
-        Description = 19,
-        Keywords = 20,
-        Properties = 21,
-        ForcedLocations = 22,
-        PNAM = 23,
-        ActivateTextOverride = 24,
-        LoopingSound = 25,
-        Flags = 26,
-        JNAM = 27,
-        INAM = 28,
-        MarkerFlags = 29,
-        GNAM = 30,
-        BenchType = 31,
-        UsesSkill = 32,
-        FurnitureTemplate = 33,
-        MarkerEntryPoints = 34,
-        MarkerModel = 35,
-        MarkerParameters = 36,
-        MarkerFiles = 37,
-        WBDTDataTypeState = 38,
+        PTTA = 10,
+        ObjectPlacementDefaults = 11,
+        Transforms = 12,
+        SnapTemplate = 13,
+        SnapBehavior = 14,
+        XALG = 15,
+        Components = 16,
+        Name = 17,
+        Model = 18,
+        Destructible = 19,
+        Description = 20,
+        Keywords = 21,
+        Properties = 22,
+        ForcedLocations = 23,
+        PNAM = 24,
+        ActivateTextOverride = 25,
+        LoopingSound = 26,
+        Flags = 27,
+        JNAM = 28,
+        INAM = 29,
+        MarkerFlags = 30,
+        GNAM = 31,
+        BenchType = 32,
+        UsesSkill = 33,
+        FurnitureTemplate = 34,
+        MarkerEntryPoints = 35,
+        MarkerModel = 36,
+        MarkerParameters = 37,
+        MarkerFiles = 38,
+        WBDTDataTypeState = 39,
     }
     #endregion
 
@@ -2651,9 +2699,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Furniture.Mask<>);
 
@@ -2692,6 +2740,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.PTTA,
                 RecordTypes.OPDS,
                 RecordTypes.PTT2,
                 RecordTypes.SNTP,
@@ -2703,6 +2752,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2778,6 +2829,7 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.PTTA = null;
             item.ObjectPlacementDefaults = null;
             item.Transforms = null;
             item.SnapTemplate.Clear();
@@ -2825,6 +2877,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.PTTA?.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
             obj.SnapTemplate.Relink(mapping);
             obj.SnapBehavior.Relink(mapping);
@@ -2951,6 +3004,11 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.PTTA = EqualsMaskHelper.EqualsHelper(
+                item.PTTA,
+                rhs.PTTA,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPlacementDefaults,
                 rhs.ObjectPlacementDefaults,
@@ -3083,6 +3141,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.PTTA?.Overall ?? true)
+                && item.PTTA is {} PTTAItem)
+            {
+                PTTAItem?.Print(sb, "PTTA");
             }
             if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
                 && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
@@ -3361,6 +3424,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PTTA) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PTTA, rhs.PTTA, out var lhsPTTA, out var rhsPTTA, out var isPTTAEqual))
+                {
+                    if (!((PTTACommon)((IPTTAGetter)lhsPTTA).CommonInstance()!).Equals(lhsPTTA, rhsPTTA, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.PTTA))) return false;
+                }
+                else if (!isPTTAEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
@@ -3534,6 +3605,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ODTYitem);
             }
+            if (item.PTTA is {} PTTAitem)
+            {
+                hash.Add(PTTAitem);
+            }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
                 hash.Add(ObjectPlacementDefaultsitem);
@@ -3643,6 +3718,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PTTA is {} PTTAItems)
+            {
+                foreach (var item in PTTAItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3876,6 +3958,32 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.PTTA) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.PTTA);
+                try
+                {
+                    if(rhs.PTTA is {} rhsPTTA)
+                    {
+                        item.PTTA = rhsPTTA.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Furniture_FieldIndex.PTTA));
+                    }
+                    else
+                    {
+                        item.PTTA = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
@@ -4483,6 +4591,13 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.PTTA is {} PTTAItem)
+            {
+                ((PTTABinaryWriteTranslation)((IBinaryItem)PTTAItem).BinaryWriteTranslator).Write(
+                    item: PTTAItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
                 ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
@@ -4793,6 +4908,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Furniture_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.PTTA:
+                {
+                    item.PTTA = Mutagen.Bethesda.Starfield.PTTA.CreateFromBinary(frame: frame);
+                    return (int)Furniture_FieldIndex.PTTA;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
@@ -4843,6 +4963,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -5108,6 +5230,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region PTTA
+        private RangeInt32? _PTTALocation;
+        public IPTTAGetter? PTTA => _PTTALocation.HasValue ? PTTABinaryOverlay.PTTAFactory(_recordData.Slice(_PTTALocation!.Value.Min), _package) : default;
+        #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
         public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
@@ -5118,11 +5244,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => _SnapTemplateLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => _SnapBehaviorLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapBehaviorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -5204,7 +5330,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FurnitureTemplate
         private int? _FurnitureTemplateLocation;
-        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => _FurnitureTemplateLocation.HasValue ? new FormLinkNullable<IFurnitureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FurnitureTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFurnitureGetter>.Null;
+        public IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFurnitureGetter>(_package, _recordData, _FurnitureTemplateLocation);
         #endregion
         public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = Array.Empty<IFurnitureMarkerEntryPointsGetter>();
         #region MarkerModel
@@ -5302,6 +5428,11 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)Furniture_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.PTTA:
+                {
+                    _PTTALocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Furniture_FieldIndex.PTTA;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -5344,6 +5475,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -5381,31 +5514,27 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Furniture_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Furniture_FieldIndex.Properties;
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)Furniture_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.PNAM:
@@ -5489,25 +5618,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MarkerParameters = BinaryOverlayList.FactoryByStartIndex<IFurnitureMarkerParametersGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MarkerParameters = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFurnitureMarkerParametersGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => FurnitureMarkerParametersBinaryOverlay.FurnitureMarkerParametersFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Furniture_FieldIndex.MarkerParameters;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MarkerFiles = BinaryOverlayList.FactoryByLazyParse<IFurnitureMarkerFileGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MarkerFiles = BinaryOverlayList.FactoryByLazyParseWithTrigger<IFurnitureMarkerFileGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => FurnitureMarkerFileBinaryOverlay.FurnitureMarkerFileFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Furniture_FieldIndex.MarkerFiles;
                 }
                 case RecordTypeInts.XXXX:

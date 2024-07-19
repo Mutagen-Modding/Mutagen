@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IActivatorGetter> Activator => new FormLink<IActivatorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IActivatorGetter> Activator => FormLinkBinaryTranslation.Instance.OverlayFactory<IActivatorGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public P3Float Vector => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
         #region Traversals
         public IReadOnlyList<ITraversalReferenceGetter> Traversals { get; private set; } = null!;

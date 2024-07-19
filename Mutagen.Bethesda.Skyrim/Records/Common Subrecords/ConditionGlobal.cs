@@ -1,5 +1,4 @@
-﻿using System.Buffers.Binary;
-using Mutagen.Bethesda.Plugins;
+﻿using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -7,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 internal partial class ConditionGlobalBinaryOverlay
 {
-    public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4))));
+    public IFormLinkGetter<IGlobalGetter> ComparisonValue => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IGlobalGetter>(_package, _structData.Slice(4));
 }
 
 partial class ConditionGlobalBinaryCreateTranslation

@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Head
         private int? _HeadLocation;
-        public IFormLinkNullableGetter<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
+        public IFormLinkNullableGetter<IHeadPartGetter> Head => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHeadPartGetter>(_package, _recordData, _HeadLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -3187,7 +3186,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IRaceGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IRaceGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -3195,7 +3194,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHair = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IHairGetter>>(
+                    item.DefaultHair = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IHairGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHair;
@@ -3221,7 +3220,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.ATTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RaceStats = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<RaceStats>(
+                    item.RaceStats = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<RaceStats>(
                         frame: frame,
                         transl: RaceStats.TryCreateFromBinary);
                     return (int)Race_FieldIndex.RaceStats;
@@ -3368,8 +3367,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_VoicesLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IRaceGetter>>(
-                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -3382,8 +3381,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_DefaultHairLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IHairGetter>>(
-                    new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -3509,7 +3508,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -3592,26 +3591,22 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IHairGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Hairs = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IHairGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IHairGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(p, s));
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEyeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.FGGS:

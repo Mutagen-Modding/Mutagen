@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -96,6 +95,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region GNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _GNAM;
+        public MemorySlice<Byte>? GNAM
+        {
+            get => this._GNAM;
+            set => this._GNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ISurfacePatternGetter.GNAM => this.GNAM;
+        #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? _Worldspaces;
@@ -138,6 +148,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.SurfacePatternStyle = initialValue;
                 this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.GNAM = initialValue;
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -152,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem SurfacePatternStyle,
                 TItem SurfaceBlocks,
+                TItem GNAM,
                 TItem Worldspaces)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -165,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.SurfacePatternStyle = SurfacePatternStyle;
                 this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(SurfaceBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.GNAM = GNAM;
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Worldspaces, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -180,6 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem SurfacePatternStyle;
             public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? SurfaceBlocks;
+            public TItem GNAM;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Worldspaces;
             #endregion
 
@@ -197,6 +211,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.SurfacePatternStyle, rhs.SurfacePatternStyle)) return false;
                 if (!object.Equals(this.SurfaceBlocks, rhs.SurfaceBlocks)) return false;
+                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 return true;
             }
@@ -206,6 +221,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Components);
                 hash.Add(this.SurfacePatternStyle);
                 hash.Add(this.SurfaceBlocks);
+                hash.Add(this.GNAM);
                 hash.Add(this.Worldspaces);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -241,6 +257,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.GNAM)) return false;
                 if (this.Worldspaces != null)
                 {
                     if (!eval(this.Worldspaces.Overall)) return false;
@@ -284,6 +301,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.GNAM)) return true;
                 if (this.Worldspaces != null)
                 {
                     if (eval(this.Worldspaces.Overall)) return true;
@@ -340,6 +358,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.GNAM = eval(this.GNAM);
                 if (Worldspaces != null)
                 {
                     obj.Worldspaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -416,6 +435,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.GNAM ?? true)
+                    {
+                        sb.AppendItem(GNAM, "GNAM");
+                    }
                     if ((printMask?.Worldspaces?.Overall ?? true)
                         && Worldspaces is {} WorldspacesItem)
                     {
@@ -451,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? SurfacePatternStyle;
             public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? SurfaceBlocks;
+            public Exception? GNAM;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Worldspaces;
             #endregion
 
@@ -466,6 +490,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SurfacePatternStyle;
                     case SurfacePattern_FieldIndex.SurfaceBlocks:
                         return SurfaceBlocks;
+                    case SurfacePattern_FieldIndex.GNAM:
+                        return GNAM;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         return Worldspaces;
                     default:
@@ -486,6 +512,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case SurfacePattern_FieldIndex.SurfaceBlocks:
                         this.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.GNAM:
+                        this.GNAM = ex;
                         break;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         this.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -510,6 +539,9 @@ namespace Mutagen.Bethesda.Starfield
                     case SurfacePattern_FieldIndex.SurfaceBlocks:
                         this.SurfaceBlocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
+                    case SurfacePattern_FieldIndex.GNAM:
+                        this.GNAM = (Exception?)obj;
+                        break;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         this.Worldspaces = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -525,6 +557,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Components != null) return true;
                 if (SurfacePatternStyle != null) return true;
                 if (SurfaceBlocks != null) return true;
+                if (GNAM != null) return true;
                 if (Worldspaces != null) return true;
                 return false;
             }
@@ -593,6 +626,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(GNAM, "GNAM");
+                }
                 if (Worldspaces is {} WorldspacesItem)
                 {
                     sb.AppendLine("Worldspaces =>");
@@ -624,6 +660,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.SurfacePatternStyle = this.SurfacePatternStyle.Combine(rhs.SurfacePatternStyle);
                 ret.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Overall, rhs.SurfaceBlocks?.Overall), Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Specific, rhs.SurfaceBlocks?.Specific));
+                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
                 return ret;
             }
@@ -650,6 +687,7 @@ namespace Mutagen.Bethesda.Starfield
             public AComponent.TranslationMask? Components;
             public bool SurfacePatternStyle;
             public bool SurfaceBlocks;
+            public bool GNAM;
             public bool Worldspaces;
             #endregion
 
@@ -661,6 +699,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.SurfacePatternStyle = defaultOn;
                 this.SurfaceBlocks = defaultOn;
+                this.GNAM = defaultOn;
                 this.Worldspaces = defaultOn;
             }
 
@@ -672,6 +711,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((SurfacePatternStyle, null));
                 ret.Add((SurfaceBlocks, null));
+                ret.Add((GNAM, null));
                 ret.Add((Worldspaces, null));
             }
 
@@ -828,6 +868,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<AComponent> Components { get; }
         new IFormLink<ISurfacePatternStyleGetter> SurfacePatternStyle { get; set; }
         new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
+        new MemorySlice<Byte>? GNAM { get; set; }
         new ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; set; }
     }
 
@@ -851,6 +892,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle { get; }
         IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
+        ReadOnlyMemorySlice<Byte>? GNAM { get; }
         IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; }
 
     }
@@ -1031,7 +1073,8 @@ namespace Mutagen.Bethesda.Starfield
         Components = 7,
         SurfacePatternStyle = 8,
         SurfaceBlocks = 9,
-        Worldspaces = 10,
+        GNAM = 10,
+        Worldspaces = 11,
     }
     #endregion
 
@@ -1042,9 +1085,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SurfacePattern.Mask<>);
 
@@ -1080,7 +1123,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.CNAM,
-                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.GNAM,
                 RecordTypes.DNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1129,6 +1173,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.SurfacePatternStyle.Clear();
             item.SurfaceBlocks.SetAllTo(FormLink<ISurfaceBlockGetter>.Null);
+            item.GNAM = default;
             item.Worldspaces = null;
             base.Clear(item);
         }
@@ -1251,6 +1296,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.SurfaceBlocks,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
                 rhs.Worldspaces,
                 (l, r) => object.Equals(l, r),
@@ -1337,6 +1383,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.GNAM ?? true)
+                && item.GNAM is {} GNAMItem)
+            {
+                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+            }
             if ((printMask?.Worldspaces?.Overall ?? true)
                 && item.Worldspaces is {} WorldspacesItem)
             {
@@ -1414,6 +1465,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SurfaceBlocks.SequenceEqualNullable(rhs.SurfaceBlocks)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.GNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
             {
                 if (!lhs.Worldspaces.SequenceEqualNullable(rhs.Worldspaces)) return false;
@@ -1449,6 +1504,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Components);
             hash.Add(item.SurfacePatternStyle);
             hash.Add(item.SurfaceBlocks);
+            if (item.GNAM is {} GNAMItem)
+            {
+                hash.Add(GNAMItem);
+            }
             hash.Add(item.Worldspaces);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1633,6 +1692,17 @@ namespace Mutagen.Bethesda.Starfield
                 finally
                 {
                     errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.GNAM) ?? true))
+            {
+                if(rhs.GNAM is {} GNAMrhs)
+                {
+                    item.GNAM = GNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.GNAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
@@ -1837,13 +1907,17 @@ namespace Mutagen.Bethesda.Starfield
             Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SurfaceBlocks,
-                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfaceBlockGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.GNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IWorldspaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Worldspaces,
@@ -1955,7 +2029,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.SurfacePatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
                 }
-                case RecordTypeInts.BNAM:
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SurfaceBlocks.SetTo(
@@ -1964,6 +2038,12 @@ namespace Mutagen.Bethesda.Starfield
                             size: SurfacePattern.SurfaceBlocksFixedSize,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SurfacePattern_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2038,11 +2118,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region SurfacePatternStyle
         private int? _SurfacePatternStyleLocation;
-        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => _SurfacePatternStyleLocation.HasValue ? new FormLink<ISurfacePatternStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternStyleLocation.Value, _package.MetaData.Constants)))) : FormLink<ISurfacePatternStyleGetter>.Null;
+        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
         #region SurfaceBlocks
         private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);
         public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; private set; } = _SurfaceBlocksEmpty;
+        #endregion
+        #region GNAM
+        private int? _GNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; private set; }
         partial void CustomFactoryEnd(
@@ -2128,7 +2212,7 @@ namespace Mutagen.Bethesda.Starfield
                     _SurfacePatternStyleLocation = (stream.Position - offset);
                     return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
                 }
-                case RecordTypeInts.BNAM:
+                case RecordTypeInts.FNAM:
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     this.SurfaceBlocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
@@ -2136,19 +2220,22 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         itemLength: 4,
                         size: SurfacePattern.SurfaceBlocksFixedSize,
-                        getter: (s, p) => new FormLink<ISurfaceBlockGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfaceBlockGetter>(p, s));
                     return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _GNAMLocation = (stream.Position - offset);
+                    return (int)SurfacePattern_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IWorldspaceGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IWorldspaceGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IWorldspaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(p, s));
                     return (int)SurfacePattern_FieldIndex.Worldspaces;
                 }
                 default:

@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -455,19 +456,25 @@ public class Fallout4PassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-            new ModPath(ModKey, path),
-            Fallout4Release.Fallout4,
-            stringsParams);
+        return Fallout4Mod.Create(GameRelease.ToFallout4Release())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout4Mod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            Fallout4Release.Fallout4,
-            parallel: Settings.ParallelProcessingSteps, 
-            stringsParam: stringsParams);
+        return Fallout4Mod.Create(GameRelease.ToFallout4Release())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

@@ -9,9 +9,7 @@ using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.DI;
 using Noggog;
-using Noggog.Testing.AutoFixture;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
@@ -53,7 +51,14 @@ public class GameEnvironmentBuilder : ISpecimenBuilder
         loWriter.Write(pluginPath.Path, modKeys.Select((x, i) => new LoadOrderListing(x, i % 2 == 0)));
 
         var mods = modKeys.Select(x => ModInstantiator.Activator(x, _release)).ToArray();
-        mods.ForEach(m => m.WriteToBinary(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName), fileSystem: fs));
+        mods.ForEach(m =>
+        {
+            m.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName))
+                .WithFileSystem(fs)
+                .Write();
+        });
 
         var resolver = new Func<Type, object?>(t =>
         {

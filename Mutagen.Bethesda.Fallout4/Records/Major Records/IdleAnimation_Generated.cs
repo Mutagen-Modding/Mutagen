@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2352,14 +2351,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleRelationGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IIdleRelationGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IIdleRelationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleRelationGetter>(p, s));
                     return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:

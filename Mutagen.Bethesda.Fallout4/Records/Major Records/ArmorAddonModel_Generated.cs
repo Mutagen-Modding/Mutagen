@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AddonModel
         private int? _AddonModelLocation;
-        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => _AddonModelLocation.HasValue ? new FormLinkNullable<IArmorAddonGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorAddonGetter>.Null;
+        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorAddonGetter>(_package, _recordData, _AddonModelLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

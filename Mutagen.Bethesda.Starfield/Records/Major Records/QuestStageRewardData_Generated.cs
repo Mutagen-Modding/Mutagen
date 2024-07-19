@@ -1542,11 +1542,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region XpAwarded
         private int? _XpAwardedLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> XpAwarded => _XpAwardedLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XpAwardedLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> XpAwarded => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _XpAwardedLocation);
         #endregion
         #region BonusCredits
         private int? _BonusCreditsLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> BonusCredits => _BonusCreditsLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BonusCreditsLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> BonusCredits => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BonusCreditsLocation);
         #endregion
         public IReadOnlyList<IQuestStageRewardGetter> Rewards { get; private set; } = Array.Empty<IQuestStageRewardGetter>();
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();

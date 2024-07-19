@@ -2,6 +2,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 
@@ -21,16 +23,12 @@ public interface IReadOnlyMasterReferenceCollection
     /// <summary>
     /// ModKey that should be considered to be the current mod
     /// </summary>
-    public ModKey CurrentMod { get; }
+    ModKey CurrentMod { get; }
 
     /// <summary>
-    /// Converts a FormKey to a FormID representation, with its mod index calibrated
-    /// against the contents of the registrar.
+    /// Attempts to look up index associated with a given ModKey
     /// </summary>
-    /// <param name="key">FormKey to convert</param>
-    /// <returns>FormID calibrated to registrar contents</returns>
-    /// <exception cref="ArgumentException">If FormKey's ModKey is not present in registrar</exception>
-    FormID GetFormID(FormKey key);
+    bool TryGetIndex(ModKey modKey, out uint index);
 }
 
 public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
@@ -48,7 +46,7 @@ public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
 /// </summary>
 public sealed class MasterReferenceCollection : IMasterReferenceCollection
 {
-    private readonly Dictionary<ModKey, ModIndex> _masterIndices = new();
+    private readonly Dictionary<ModKey, uint> _masterIndices = new();
         
     /// <summary>
     /// A static singleton that is an empty registry containing no masters
@@ -91,7 +89,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         Masters = masters.ToList();
         _masterIndices.Clear();
 
-        byte index = 0;
+        uint index = 0;
         foreach (var master in Masters)
         {
             var modKey = master.Master;
@@ -106,70 +104,63 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
             // Don't care about duplicates too much, just skip
             if (!_masterIndices.ContainsKey(modKey))
             {
-                _masterIndices[modKey] = new ModIndex(index);
+                _masterIndices[modKey] = index;
             }
             index++;
         }
 
         // Add current mod
-        _masterIndices[CurrentMod] = new ModIndex(index);
+        _masterIndices[CurrentMod] = index;
     }
 
     /// <inheritdoc />
-    public FormID GetFormID(FormKey key)
+    public bool TryGetIndex(ModKey modKey, out uint index)
     {
-        if (_masterIndices.TryGetValue(key.ModKey, out var index))
-        {
-            return new FormID(
-                index,
-                key.ID);
-        }
-        if (key == FormKey.Null)
-        {
-            return FormID.Null;
-        }
-        throw new UnmappableFormIDException(
-            key, 
-            _masterIndices
-                .OrderBy(kv => kv.Value.ID)
-                .Select(x => x.Key)
-                .ToArray());
+        return _masterIndices.TryGetValue(modKey, out index);
     }
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
-        var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
-        using var stream = new MutagenBinaryReadStream(fs, new ParsingBundle(release, masterReferences: null!)
-        {
-            ModKey = path.ModKey
-        });
-        return FromStream(stream);
+        var header = ModHeaderFrame.FromPath(path: path, release: release, readSafe: true,
+            fileSystem: fileSystem);
+        return FromModHeader(path.ModKey, header);
     }
 
     public static MasterReferenceCollection FromStream(Stream stream, ModKey modKey, GameRelease release, bool disposeStream = true)
     {
         using var interf = new MutagenInterfaceReadStream(
             new BinaryReadStream(stream, dispose: disposeStream), 
-            new ParsingBundle(release, masterReferences: null!)
-            {
-                ModKey = modKey
-            });
+            new ParsingMeta(
+                release, 
+                modKey,
+                masterReferences: null!));
         return FromStream(interf);
     }
 
     public static MasterReferenceCollection FromStream<TStream>(TStream stream)
         where TStream : IMutagenReadStream
     {
-        var mutaFrame = new MutagenFrame(stream);
         var header = stream.ReadModHeaderFrame(readSafe: true);
+        return FromModHeader(stream.MetaData.ModKey, header);
+    }
+
+    public static MasterReferenceCollection FromModHeader(
+        ModKey modKey,
+        ModHeaderFrame header)
+    {
+        var package = new BinaryOverlayFactoryPackage(
+            new ParsingMeta(header.Meta, modKey, masterReferences: null!));
         return new MasterReferenceCollection(
-            stream.MetaData.ModKey,
+            modKey,
             header
                 .Masters()
                 .Select(mastPin =>
                 {
-                    stream.Position = mastPin.Location;
-                    return MasterReference.CreateFromBinary(mutaFrame);
+                    return MasterReferenceBinaryOverlay.MasterReferenceFactory(
+                            mastPin.HeaderAndContentData,
+                            package)
+                        // In case not read safe
+                        .DeepCopy();
                 }));
     }
 }

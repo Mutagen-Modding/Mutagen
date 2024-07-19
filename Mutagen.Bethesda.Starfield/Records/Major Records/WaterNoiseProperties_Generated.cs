@@ -56,6 +56,11 @@ namespace Mutagen.Bethesda.Starfield
         #region WindSpeed
         public Single WindSpeed { get; set; } = default(Single);
         #endregion
+        #region Texture
+        public String? Texture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterNoisePropertiesGetter.Texture => this.Texture;
+        #endregion
 
         #region To String
 
@@ -97,14 +102,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.WindDirection = initialValue;
                 this.WindSpeed = initialValue;
+                this.Texture = initialValue;
             }
 
             public Mask(
                 TItem WindDirection,
-                TItem WindSpeed)
+                TItem WindSpeed,
+                TItem Texture)
             {
                 this.WindDirection = WindDirection;
                 this.WindSpeed = WindSpeed;
+                this.Texture = Texture;
             }
 
             #pragma warning disable CS8618
@@ -118,6 +126,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem WindDirection;
             public TItem WindSpeed;
+            public TItem Texture;
             #endregion
 
             #region Equals
@@ -132,6 +141,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.WindDirection, rhs.WindDirection)) return false;
                 if (!object.Equals(this.WindSpeed, rhs.WindSpeed)) return false;
+                if (!object.Equals(this.Texture, rhs.Texture)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -139,6 +149,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.WindDirection);
                 hash.Add(this.WindSpeed);
+                hash.Add(this.Texture);
                 return hash.ToHashCode();
             }
 
@@ -149,6 +160,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!eval(this.WindDirection)) return false;
                 if (!eval(this.WindSpeed)) return false;
+                if (!eval(this.Texture)) return false;
                 return true;
             }
             #endregion
@@ -158,6 +170,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (eval(this.WindDirection)) return true;
                 if (eval(this.WindSpeed)) return true;
+                if (eval(this.Texture)) return true;
                 return false;
             }
             #endregion
@@ -174,6 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 obj.WindDirection = eval(this.WindDirection);
                 obj.WindSpeed = eval(this.WindSpeed);
+                obj.Texture = eval(this.Texture);
             }
             #endregion
 
@@ -199,6 +213,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.WindSpeed ?? true)
                     {
                         sb.AppendItem(WindSpeed, "WindSpeed");
+                    }
+                    if (printMask?.Texture ?? true)
+                    {
+                        sb.AppendItem(Texture, "Texture");
                     }
                 }
             }
@@ -226,6 +244,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? WindDirection;
             public Exception? WindSpeed;
+            public Exception? Texture;
             #endregion
 
             #region IErrorMask
@@ -238,6 +257,8 @@ namespace Mutagen.Bethesda.Starfield
                         return WindDirection;
                     case WaterNoiseProperties_FieldIndex.WindSpeed:
                         return WindSpeed;
+                    case WaterNoiseProperties_FieldIndex.Texture:
+                        return Texture;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -253,6 +274,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case WaterNoiseProperties_FieldIndex.WindSpeed:
                         this.WindSpeed = ex;
+                        break;
+                    case WaterNoiseProperties_FieldIndex.Texture:
+                        this.Texture = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -270,6 +294,9 @@ namespace Mutagen.Bethesda.Starfield
                     case WaterNoiseProperties_FieldIndex.WindSpeed:
                         this.WindSpeed = (Exception?)obj;
                         break;
+                    case WaterNoiseProperties_FieldIndex.Texture:
+                        this.Texture = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -280,6 +307,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (WindDirection != null) return true;
                 if (WindSpeed != null) return true;
+                if (Texture != null) return true;
                 return false;
             }
             #endregion
@@ -311,6 +339,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(WindSpeed, "WindSpeed");
                 }
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
             }
             #endregion
 
@@ -321,6 +352,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
                 ret.WindSpeed = this.WindSpeed.Combine(rhs.WindSpeed);
+                ret.Texture = this.Texture.Combine(rhs.Texture);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -346,6 +378,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool WindDirection;
             public bool WindSpeed;
+            public bool Texture;
             #endregion
 
             #region Ctors
@@ -357,6 +390,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.WindDirection = defaultOn;
                 this.WindSpeed = defaultOn;
+                this.Texture = defaultOn;
             }
 
             #endregion
@@ -374,6 +408,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((WindDirection, null));
                 ret.Add((WindSpeed, null));
+                ret.Add((Texture, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -448,6 +483,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         new Single WindDirection { get; set; }
         new Single WindSpeed { get; set; }
+        new String? Texture { get; set; }
     }
 
     public partial interface IWaterNoisePropertiesGetter :
@@ -464,6 +500,7 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => WaterNoiseProperties_Registration.Instance;
         Single WindDirection { get; }
         Single WindSpeed { get; }
+        String? Texture { get; }
 
     }
 
@@ -635,6 +672,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         WindDirection = 0,
         WindSpeed = 1,
+        Texture = 2,
     }
     #endregion
 
@@ -645,9 +683,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(WaterNoiseProperties.Mask<>);
 
@@ -715,6 +753,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.WindDirection = default(Single);
             item.WindSpeed = default(Single);
+            item.Texture = default;
         }
         
         #region Mutagen
@@ -766,6 +805,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
             ret.WindSpeed = item.WindSpeed.EqualsWithin(rhs.WindSpeed);
+            ret.Texture = string.Equals(item.Texture, rhs.Texture);
         }
         
         public string Print(
@@ -818,6 +858,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
+            if ((printMask?.Texture ?? true)
+                && item.Texture is {} TextureItem)
+            {
+                sb.AppendItem(TextureItem, "Texture");
+            }
         }
         
         #region Equals and Hash
@@ -835,6 +880,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.WindSpeed.EqualsWithin(rhs.WindSpeed)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
+            {
+                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+            }
             return true;
         }
         
@@ -843,6 +892,10 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.WindDirection);
             hash.Add(item.WindSpeed);
+            if (item.Texture is {} Textureitem)
+            {
+                hash.Add(Textureitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -882,6 +935,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.WindSpeed) ?? true))
             {
                 item.WindSpeed = rhs.WindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
+            {
+                item.Texture = rhs.Texture;
             }
         }
         

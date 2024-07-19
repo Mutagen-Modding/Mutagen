@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Slot
         private int? _SlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> Slot => _SlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> Slot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _SlotLocation);
         #endregion
         #region Node
         private int? _NodeLocation;

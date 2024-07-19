@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -496,6 +495,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -839,6 +840,20 @@ namespace Mutagen.Bethesda.Plugins.Records
             ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IMajorRecordInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1553,7 +1568,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             writer.Write(item.MajorRecordFlagsRaw);
             FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FormKey);
+                item: item,
+                reference: false);
             writer.Write(item.VersionControl);
         }
 
@@ -1618,7 +1634,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             MutagenFrame frame)
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
-            item.FormKey = FormKeyBinaryTranslation.Instance.Parse(reader: frame);
+            item.FormKey = FormKeyBinaryTranslation.Instance.Parse(
+                reader: frame,
+                reference: false);
             item.VersionControl = frame.ReadUInt32();
         }
 
@@ -1643,6 +1661,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
+                    if (frame.MetaData.ThrowOnUnknown)
+                    {
+                        throw new SubrecordException(
+                            subRecord: nextRecordType,
+                            formKey: item.FormKey,
+                            majorRecordType: item.Registration.ClassType,
+                            modKey: frame.MetaData.ModKey,
+                            edid: item.EditorID,
+                            message: "Unexpected subrecord");
+                    }
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
                     return default(int?);
             }
@@ -1720,7 +1748,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences, reference: false);
         public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
@@ -1761,6 +1789,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
+                    if (_package.MetaData.ThrowOnUnknown)
+                    {
+                        throw new SubrecordException(
+                            subRecord: type,
+                            formKey: FormKey,
+                            majorRecordType: ((ILoquiObject)this).Registration.ClassType,
+                            modKey: _package.MetaData.ModKey,
+                            edid: EditorID,
+                            message: "Unexpected subrecord");
+                    }
                     return default(int?);
             }
         }

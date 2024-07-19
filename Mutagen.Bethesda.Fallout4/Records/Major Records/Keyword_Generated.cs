@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1863,7 +1862,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;
-        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAttractionRuleGetter>(_package, _recordData, _AttractionRuleLocation);
         #endregion
         #region Name
         private int? _NameLocation;

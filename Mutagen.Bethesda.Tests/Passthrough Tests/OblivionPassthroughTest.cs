@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
@@ -21,14 +22,25 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionModBinaryOverlay.OblivionModFactory(new ModPath(ModKey, FilePath.Path));
+        return OblivionMod.Create
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .ThrowIfUnknownSubrecord()
+            .WithStringsParameters(stringsParams)
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            parallel: Settings.ParallelProcessingSteps);
+        return OblivionMod.Create
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .Mutable()
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

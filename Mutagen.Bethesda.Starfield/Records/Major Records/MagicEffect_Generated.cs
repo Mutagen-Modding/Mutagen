@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -349,6 +348,17 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IMagicEffectGetter.Unknown => this.Unknown;
         #endregion
+        #region Unknown2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown2 = new byte[6];
+        public MemorySlice<Byte> Unknown2
+        {
+            get => _Unknown2;
+            set => this._Unknown2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IMagicEffectGetter.Unknown2 => this.Unknown2;
+        #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<MagicEffectSound> _Sounds = new ExtendedList<MagicEffectSound>();
@@ -381,6 +391,9 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IConditionGetter> IMagicEffectGetter.Conditions => _Conditions;
         #endregion
 
+        #endregion
+        #region DATADataTypeState
+        public MagicEffect.DATADataType DATADataTypeState { get; set; } = default(MagicEffect.DATADataType);
         #endregion
 
         #region To String
@@ -439,9 +452,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnkownInt3 = initialValue;
                 this.Flags = initialValue;
                 this.Unknown = initialValue;
+                this.Unknown2 = initialValue;
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -484,9 +499,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem UnkownInt3,
                 TItem Flags,
                 TItem Unknown,
+                TItem Unknown2,
                 TItem Sounds,
                 TItem Description,
-                TItem Conditions)
+                TItem Conditions,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -528,9 +545,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnkownInt3 = UnkownInt3;
                 this.Flags = Flags;
                 this.Unknown = Unknown;
+                this.Unknown2 = Unknown2;
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -574,9 +593,11 @@ namespace Mutagen.Bethesda.Starfield
             public TItem UnkownInt3;
             public TItem Flags;
             public TItem Unknown;
+            public TItem Unknown2;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -622,9 +643,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.UnkownInt3, rhs.UnkownInt3)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -662,9 +685,11 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.UnkownInt3);
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown);
+                hash.Add(this.Unknown2);
                 hash.Add(this.Sounds);
                 hash.Add(this.Description);
                 hash.Add(this.Conditions);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -725,6 +750,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.UnkownInt3)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unknown2)) return false;
                 if (this.Sounds != null)
                 {
                     if (!eval(this.Sounds.Overall)) return false;
@@ -750,6 +776,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -808,6 +835,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.UnkownInt3)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unknown)) return true;
+                if (eval(this.Unknown2)) return true;
                 if (this.Sounds != null)
                 {
                     if (eval(this.Sounds.Overall)) return true;
@@ -833,6 +861,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -893,6 +922,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.UnkownInt3 = eval(this.UnkownInt3);
                 obj.Flags = eval(this.Flags);
                 obj.Unknown = eval(this.Unknown);
+                obj.Unknown2 = eval(this.Unknown2);
                 if (Sounds != null)
                 {
                     obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MagicEffectSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, MagicEffectSound.Mask<R>?>>());
@@ -924,6 +954,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1087,6 +1118,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
@@ -1128,6 +1163,10 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
             }
@@ -1172,9 +1211,11 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? UnkownInt3;
             public Exception? Flags;
             public Exception? Unknown;
+            public Exception? Unknown2;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1247,12 +1288,16 @@ namespace Mutagen.Bethesda.Starfield
                         return Flags;
                     case MagicEffect_FieldIndex.Unknown:
                         return Unknown;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        return Unknown2;
                     case MagicEffect_FieldIndex.Sounds:
                         return Sounds;
                     case MagicEffect_FieldIndex.Description:
                         return Description;
                     case MagicEffect_FieldIndex.Conditions:
                         return Conditions;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1359,6 +1404,9 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ex, null);
                         break;
@@ -1367,6 +1415,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1475,6 +1526,9 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>)obj;
                         break;
@@ -1483,6 +1537,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1525,9 +1582,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (UnkownInt3 != null) return true;
                 if (Flags != null) return true;
                 if (Unknown != null) return true;
+                if (Unknown2 != null) return true;
                 if (Sounds != null) return true;
                 if (Description != null) return true;
                 if (Conditions != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1663,6 +1722,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
                 if (Sounds is {} SoundsItem)
                 {
                     sb.AppendLine("Sounds =>");
@@ -1701,6 +1763,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                 }
             }
             #endregion
@@ -1742,9 +1807,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.UnkownInt3 = this.UnkownInt3.Combine(rhs.UnkownInt3);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1799,9 +1866,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool UnkownInt3;
             public bool Flags;
             public bool Unknown;
+            public bool Unknown2;
             public MagicEffectSound.TranslationMask? Sounds;
             public bool Description;
             public Condition.TranslationMask? Conditions;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1840,7 +1909,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnkownInt3 = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown = defaultOn;
+                this.Unknown2 = defaultOn;
                 this.Description = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1880,9 +1951,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((UnkownInt3, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown, null));
+                ret.Add((Unknown2, null));
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1946,6 +2019,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IMagicEffect);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2077,9 +2155,11 @@ namespace Mutagen.Bethesda.Starfield
         new UInt32 UnkownInt3 { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
+        new MemorySlice<Byte> Unknown2 { get; set; }
         new ExtendedList<MagicEffectSound> Sounds { get; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
+        new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -2152,9 +2232,11 @@ namespace Mutagen.Bethesda.Starfield
         UInt32 UnkownInt3 { get; }
         MagicEffect.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
+        ReadOnlyMemorySlice<Byte> Unknown2 { get; }
         IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
+        MagicEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2363,9 +2445,11 @@ namespace Mutagen.Bethesda.Starfield
         UnkownInt3 = 36,
         Flags = 37,
         Unknown = 38,
-        Sounds = 39,
-        Description = 40,
-        Conditions = 41,
+        Unknown2 = 39,
+        Sounds = 40,
+        Description = 41,
+        Conditions = 42,
+        DATADataTypeState = 43,
     }
     #endregion
 
@@ -2376,9 +2460,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 35;
+        public const ushort AdditionalFieldCount = 37;
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2499,9 +2583,11 @@ namespace Mutagen.Bethesda.Starfield
             item.UnkownInt3 = default(UInt32);
             item.Flags = default(MagicEffect.Flag);
             item.Unknown = new byte[22];
+            item.Unknown2 = new byte[6];
             item.Sounds.Clear();
             item.Description = default;
             item.Conditions.Clear();
+            item.DATADataTypeState = default(MagicEffect.DATADataType);
             base.Clear(item);
         }
         
@@ -2647,6 +2733,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.UnkownInt3 = item.UnkownInt3 == rhs.UnkownInt3;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2656,6 +2743,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2846,6 +2934,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+            }
             if (printMask?.Sounds?.Overall ?? true)
             {
                 sb.AppendLine("Sounds =>");
@@ -2878,6 +2970,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -3065,6 +3161,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
                 if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
@@ -3076,6 +3176,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -3143,12 +3247,14 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.UnkownInt3);
             hash.Add(item.Flags);
             hash.Add(item.Unknown);
+            hash.Add(item.Unknown2);
             hash.Add(item.Sounds);
             if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Conditions);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3489,6 +3595,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2.ToArray();
+            }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Sounds);
@@ -3540,6 +3650,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -3689,6 +3803,15 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IMagicEffectGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IMagicEffectGetter item,
             MutagenWriter writer,
@@ -3812,6 +3935,12 @@ namespace Mutagen.Bethesda.Starfield
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown);
+                if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+                {
+                    ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.Unknown2);
+                }
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMagicEffectSoundGetter>.Instance.Write(
                 writer: writer,
@@ -3880,7 +4009,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3940,6 +4069,15 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MGEF;
+        public static void FillBinaryStructs(
+            IMagicEffectInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
@@ -4053,7 +4191,13 @@ namespace Mutagen.Bethesda.Starfield
                         reader: dataFrame,
                         length: 8);
                     item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(22));
-                    return (int)MagicEffect_FieldIndex.Unknown;
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= MagicEffect.DATADataType.Break0;
+                        return (int)MagicEffect_FieldIndex.Unknown;
+                    }
+                    item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(6));
+                    return (int)MagicEffect_FieldIndex.Unknown2;
                 }
                 case RecordTypeInts.ESSH:
                 {
@@ -4179,6 +4323,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
+        public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region AssociatedItem
         private int _AssociatedItemLocation => _DATALocation!.Value.Min;
         private bool _AssociatedItem_IsSet => _DATALocation.HasValue;
@@ -4189,87 +4334,87 @@ namespace Mutagen.Bethesda.Starfield
         #region ActorValue1
         private int _ActorValue1Location => _DATALocation!.Value.Min + 0x4;
         private bool _ActorValue1_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue1 => _ActorValue1_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ActorValue1Location, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue1 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue1Location, 0x4), isSet: _ActorValue1_IsSet);
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value.Min + 0x8;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_CastingArtLocation, 0x4), isSet: _CastingArt_IsSet);
         #endregion
         #region MovementType
         private int _MovementTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MovementType_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IMovementTypeGetter> MovementType => _MovementType_IsSet ? new FormLink<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MovementTypeLocation, 0x4)))) : FormLink<IMovementTypeGetter>.Null;
+        public IFormLinkGetter<IMovementTypeGetter> MovementType => FormLinkBinaryTranslation.Instance.OverlayFactory<IMovementTypeGetter>(_package, _recordData.Span.Slice(_MovementTypeLocation, 0x4), isSet: _MovementType_IsSet);
         #endregion
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value.Min + 0x10;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_HitShaderLocation, 0x4), isSet: _HitShader_IsSet);
         #endregion
         #region EnchantShader
         private int _EnchantShaderLocation => _DATALocation!.Value.Min + 0x14;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EnchantShaderLocation, 0x4), isSet: _EnchantShader_IsSet);
         #endregion
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x18;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_EnchantArtLocation, 0x4), isSet: _EnchantArt_IsSet);
         #endregion
         #region EquipAbility
         private int _EquipAbilityLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> EquipAbility => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_EquipAbilityLocation, 0x4), isSet: _EquipAbility_IsSet);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x20;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0x24;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_HitEffectArtLocation, 0x4), isSet: _HitEffectArt_IsSet);
         #endregion
         #region ImageSpaceModifier
         private int _ImageSpaceModifierLocation => _DATALocation!.Value.Min + 0x28;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4), isSet: _ImageSpaceModifier_IsSet);
         #endregion
         #region ImpactData
         private int _ImpactDataLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataLocation, 0x4), isSet: _ImpactData_IsSet);
         #endregion
         #region CastingLight
         private int _CastingLightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> CastingLight => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_CastingLightLocation, 0x4), isSet: _CastingLight_IsSet);
         #endregion
         #region PerkToApply
         private int _PerkToApplyLocation => _DATALocation!.Value.Min + 0x34;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> PerkToApply => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_PerkToApplyLocation, 0x4), isSet: _PerkToApply_IsSet);
         #endregion
         #region ActorValue2
         private int _ActorValue2Location => _DATALocation!.Value.Min + 0x38;
         private bool _ActorValue2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue2 => _ActorValue2_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ActorValue2Location, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue2 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue2Location, 0x4), isSet: _ActorValue2_IsSet);
         #endregion
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet);
         #endregion
         #region ResistValue
         private int _ResistValueLocation => _DATALocation!.Value.Min + 0x40;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => _ResistValue_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ResistValueLocation, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistValueLocation, 0x4), isSet: _ResistValue_IsSet);
         #endregion
         #region ActorValue3
         private int _ActorValue3Location => _DATALocation!.Value.Min + 0x44;
         private bool _ActorValue3_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => _ActorValue3_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ActorValue3Location, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue3Location, 0x4), isSet: _ActorValue3_IsSet);
         #endregion
         #region UnkownFloat1
         private int _UnkownFloat1Location => _DATALocation!.Value.Min + 0x48;
@@ -4330,6 +4475,11 @@ namespace Mutagen.Bethesda.Starfield
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x72;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 22).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DATALocation!.Value.Min + 0x88;
+        private bool _Unknown2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 6).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         public IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; private set; } = Array.Empty<IMagicEffectSoundGetter>();
         #region Description
@@ -4431,13 +4581,18 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)MagicEffect_FieldIndex.Unknown;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x88)
+                    {
+                        this.DATADataTypeState |= MagicEffect.DATADataType.Break0;
+                    }
+                    return (int)MagicEffect_FieldIndex.Unknown2;
                 }
                 case RecordTypeInts.ESSH:
                 {

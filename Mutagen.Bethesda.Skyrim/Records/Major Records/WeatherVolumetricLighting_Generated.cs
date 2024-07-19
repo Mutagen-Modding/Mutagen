@@ -1258,10 +1258,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IVolumetricLightingGetter> Sunrise => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Day => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Sunset => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Night => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IVolumetricLightingGetter> Sunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IVolumetricLightingGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IVolumetricLightingGetter> Day => FormLinkBinaryTranslation.Instance.OverlayFactory<IVolumetricLightingGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IVolumetricLightingGetter> Sunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IVolumetricLightingGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IVolumetricLightingGetter> Night => FormLinkBinaryTranslation.Instance.OverlayFactory<IVolumetricLightingGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

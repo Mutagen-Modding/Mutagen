@@ -1,10 +1,9 @@
 using Noggog;
-using System.IO.Abstractions;
 using System.Linq.Expressions;
 using DynamicData;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.Loqui;
-using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -13,7 +12,10 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// </summary>
     public static class ModInstantiator
     {
-        record Delegates(ModInstantiator<IModDisposeGetter>.ImporterDelegate Importer, ModInstantiator<IMod>.ActivatorDelegate Activator);
+        record Delegates(
+            ModInstantiator<IModDisposeGetter>.ImporterDelegate ImportGetter, 
+            ModInstantiator<IMod>.ImporterDelegate ImportSetter, 
+            ModInstantiator<IMod>.ActivatorDelegate Activator);
         
         private static Dictionary<GameCategory, Delegates> _dict = new();
 
@@ -29,14 +31,26 @@ namespace Mutagen.Bethesda.Plugins.Records
                 if (modRegistration == null) continue;
                 _dict[modRegistration.GameCategory] = new Delegates(
                     ModInstantiatorReflection.GetOverlay<IModDisposeGetter>(modRegistration),
+                    ModInstantiatorReflection.GetImporter<IMod>(modRegistration),
                     ModInstantiatorReflection.GetActivator<IMod>(modRegistration));
 
             }
         }
 
-        public static IModDisposeGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        [Obsolete("Use ImportGetter")]
+        public static IModDisposeGetter Importer(ModPath path, GameRelease release, BinaryReadParameters? param = null)
         {
-            return _dict[release.ToCategory()].Importer(path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].ImportGetter(path, release, param);
+        }
+
+        public static IModDisposeGetter ImportGetter(ModPath path, GameRelease release, BinaryReadParameters? param = null)
+        {
+            return _dict[release.ToCategory()].ImportGetter(path, release, param);
+        }
+
+        public static IMod ImportSetter(ModPath path, GameRelease release, BinaryReadParameters? param = null)
+        {
+            return _dict[release.ToCategory()].ImportSetter(path, release, param);
         }
 
         public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
@@ -55,7 +69,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         where TMod : IModGetter
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
-        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null);
+        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -79,7 +93,14 @@ namespace Mutagen.Bethesda.Plugins.Records
                 throw new ArgumentException();
             }
             Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
-            Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+            if (typeof(TMod).InheritsFrom(typeof(IMod)))
+            {
+                Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+            }
+            else
+            {
+                Importer = ModInstantiatorReflection.GetOverlay<TMod>(regis);
+            }
         }
     }
 
@@ -123,58 +144,37 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static ModInstantiator<TMod>.ImporterDelegate GetImporter<TMod>(ILoquiRegistration regis)
             where TMod : IModGetter
         {
-            if (regis.ClassType == typeof(TMod)
-                || regis.SetterType == typeof(TMod))
+            var methodInfo = regis.ClassType.GetMethods()
+                .Where(m => m.Name == "CreateFromBinary")
+                .Where(c => c.GetParameters().Length >= 3)
+                .Where(c => c.GetParameters()[0].ParameterType == typeof(ModPath))
+                .First();
+            var paramInfo = methodInfo.GetParameters();
+            var paramExprs = paramInfo.Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray();
+            MethodCallExpression callExp = Expression.Call(methodInfo, paramExprs);
+            var funcType =
+                Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(typeof(TMod)).ToArray());
+            LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
+            var deleg = lambda.Compile();
+            var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
+            var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
+            var paramIndex = paramInfo.Select(x => x.Name).IndexOf("param");
+            return (ModPath modPath, GameRelease release, BinaryReadParameters? param) =>
             {
-                var methodInfo = regis.ClassType.GetMethods()
-                    .Where(m => m.Name == "CreateFromBinary")
-                    .Where(c => c.GetParameters().Length >= 3)
-                    .Where(c => c.GetParameters()[0].ParameterType == typeof(ModPath))
-                    .First();
-                var paramInfo = methodInfo.GetParameters();
-                var paramExprs = paramInfo.Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray();
-                MethodCallExpression callExp = Expression.Call(methodInfo, paramExprs);
-                var funcType =
-                    Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(typeof(TMod)).ToArray());
-                LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
-                var deleg = lambda.Compile();
-                var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
-                var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
-                var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
-                var parallelIndex = paramInfo.Select(x => x.Name).IndexOf("parallel");
-                return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                    StringsReadParameters? stringsParam) =>
+                var args = new object?[paramInfo.Length];
+                args[0] = modPath;
+                if (releaseIndex != -1)
                 {
-                    var args = new object?[paramInfo.Length];
-                    args[0] = modPath;
-                    if (releaseIndex != -1)
-                    {
-                        args[releaseIndex] = release;
-                    }
+                    args[releaseIndex] = release;
+                }
 
-                    if (stringsParamIndex != -1)
-                    {
-                        args[stringsParamIndex] = stringsParam;
-                    }
-
-                    args[parallelIndex] = true;
-                    args[fileSystemIndex] = fileSystem;
-                    return (TMod)deleg.DynamicInvoke(args)!;
-                };
-            }
-            else if (regis.GetterType == typeof(TMod))
-            {
-                var overlayGet = GetOverlay<TMod>(regis);
-                return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                    StringsReadParameters? stringsParam) =>
+                if (paramIndex != -1)
                 {
-                    return overlayGet(modPath, release, fileSystem, stringsParam);
-                };
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+                    args[paramIndex] = param;
+                }
+
+                return (TMod)deleg.DynamicInvoke(args)!;
+            };
         }
 
         public static ModInstantiator<TMod>.ImporterDelegate GetOverlay<TMod>(ILoquiRegistration regis)
@@ -193,10 +193,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
             var deleg = lambda.Compile();
             var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
-            var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
-            var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
-            return (ModPath modPath, GameRelease release, IFileSystem? fileSystem,
-                StringsReadParameters? stringsParam) =>
+            var paramIndex = paramInfo.Select(x => x.Name).IndexOf("param");
+            return (ModPath modPath, GameRelease release, BinaryReadParameters? param) =>
             {
                 var args = new object?[paramInfo.Length];
                 args[0] = modPath;
@@ -205,12 +203,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                     args[releaseIndex] = release;
                 }
 
-                if (stringsParamIndex != -1)
-                {
-                    args[stringsParamIndex] = stringsParam;
-                }
-
-                args[fileSystemIndex] = fileSystem;
+                args[paramIndex] = param;
                 return (TMod)deleg.DynamicInvoke(args)!;
             };
         }

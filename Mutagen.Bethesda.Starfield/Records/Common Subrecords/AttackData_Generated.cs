@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Single DamageMult => _structData.Slice(0x0, 0x4).Float();
         public Single Chance => _structData.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         public Single AttackAngle => _structData.Slice(0x10, 0x4).Float();
         public Single StrikeAngle => _structData.Slice(0x14, 0x4).Float();

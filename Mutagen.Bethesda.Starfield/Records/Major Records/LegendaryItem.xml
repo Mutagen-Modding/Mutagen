@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="Model" refName="Model" />
       <ByteArray name="DATA" recordType="DATA" unknown="true" />
       <FormLink name="ApplicableItemList" refName="LeveledItem" recordType="ANAM" />

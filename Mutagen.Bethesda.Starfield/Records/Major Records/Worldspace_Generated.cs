@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2225,6 +2224,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -2658,6 +2659,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         public static void Remove(
             this IWorldspaceInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
             HashSet<FormKey> keys)
         {
             ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
@@ -2959,11 +2974,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MHDT,
                 RecordTypes.LTMP,
                 RecordTypes.XILS,
+                RecordTypes.XCLR,
                 RecordTypes.XCLA,
                 RecordTypes.XCLD,
                 RecordTypes.XWCN,
                 RecordTypes.XCCM,
                 RecordTypes.XOWN,
+                RecordTypes.XTRV,
                 RecordTypes.XCWT,
                 RecordTypes.XCWM,
                 RecordTypes.XBPS,
@@ -2981,13 +2998,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.VMAD,
                 RecordTypes.NVNM,
                 RecordTypes.NNAM,
+                RecordTypes.XPCS,
                 RecordTypes.ACHR,
                 RecordTypes.REFR,
                 RecordTypes.NAME,
                 RecordTypes.XEMI,
                 RecordTypes.XRGD,
                 RecordTypes.XRFG,
-                RecordTypes.XPCS,
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLYR,
@@ -3350,6 +3367,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "OrbitalDataComponent":
                 case "IOrbitalDataComponentGetter":
                 case "IOrbitalDataComponent":
+                case "CityMapsUsageComponent":
+                case "ICityMapsUsageComponentGetter":
+                case "ICityMapsUsageComponent":
                     break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":
@@ -6362,24 +6382,24 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region EncounterLocation
         private int? _EncounterLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => _EncounterLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region Biome
         private int? _BiomeLocation;
-        public IFormLinkNullableGetter<IBiomeGetter> Biome => _BiomeLocation.HasValue ? new FormLinkNullable<IBiomeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBiomeGetter>.Null;
+        public IFormLinkNullableGetter<IBiomeGetter> Biome => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBiomeGetter>(_package, _recordData, _BiomeLocation);
         #endregion
         public IWorldspaceParentGetter? Parent { get; private set; }
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region NAM7
         private int? _NAM7Location;
@@ -6387,7 +6407,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LodWater
         private int? _LodWaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> LodWater => _LodWaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodWaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> LodWater => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _LodWaterLocation);
         #endregion
         #region LodWaterHeight
         private int? _LodWaterHeightLocation;
@@ -6440,11 +6460,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         #region AmbienceSet
         private int? _AmbienceSetLocation;
-        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => _AmbienceSetLocation.HasValue ? new FormLinkNullable<IAmbienceSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmbienceSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAmbienceSetGetter>.Null;
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbienceSetLocation);
         #endregion
         #region EnvironmentMap
         private int? _EnvironmentMapLocation;
@@ -6708,7 +6728,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.LandscapeTextures = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandscapeTextureGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -6719,26 +6739,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCLW:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.XCLWs = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.XCLWs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)Worldspace_FieldIndex.XCLWs;
                 }
                 case RecordTypeInts.WHGT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.WHGTs = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.WHGTs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)Worldspace_FieldIndex.WHGTs;
                 }
                 case RecordTypeInts.HNAM:

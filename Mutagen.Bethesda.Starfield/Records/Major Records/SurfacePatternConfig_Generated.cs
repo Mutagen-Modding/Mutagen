@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1671,7 +1670,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SurfacePatternStyle
         private int? _SurfacePatternStyleLocation;
-        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => _SurfacePatternStyleLocation.HasValue ? new FormLink<ISurfacePatternStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternStyleLocation.Value, _package.MetaData.Constants)))) : FormLink<ISurfacePatternStyleGetter>.Null;
+        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
         public IReadOnlyList<ISurfacePatternConfigItemGetter> Items { get; private set; } = Array.Empty<ISurfacePatternConfigItemGetter>();
         #region DNAM

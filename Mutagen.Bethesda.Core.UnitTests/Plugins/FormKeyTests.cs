@@ -125,24 +125,25 @@ public class FormKeyTests
     #region BinaryTranslation
     public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-    public IReadOnlyMasterReferenceCollection TypicalMasters() =>
-        new MasterReferenceCollection(
-            TestConstants.PluginModKey,
-            new List<IMasterReferenceGetter>()
-            {
-                new MasterReference()
+    public IReadOnlySeparatedMasterPackage TypicalMasters() =>
+        SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(
+                TestConstants.PluginModKey,
+                new List<IMasterReferenceGetter>()
                 {
-                    Master = new ModKey("Master1", ModType.Master)
-                },
-                new MasterReference()
-                {
-                    Master = TargetModKey()
-                },
-                new MasterReference()
-                {
-                    Master = new ModKey("Master3", type: ModType.Master)
-                },
-            });
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master1", ModType.Master)
+                    },
+                    new MasterReference()
+                    {
+                        Master = TargetModKey()
+                    },
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master3", type: ModType.Master)
+                    },
+                }));
 
     [Fact]
     public void BinaryTranslation_Typical()

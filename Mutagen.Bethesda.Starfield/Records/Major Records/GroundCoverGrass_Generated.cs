@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Grass
         private int? _GrassLocation;
-        public IFormLinkNullableGetter<IGrassGetter> Grass => _GrassLocation.HasValue ? new FormLinkNullable<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GrassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGrassGetter>.Null;
+        public IFormLinkNullableGetter<IGrassGetter> Grass => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGrassGetter>(_package, _recordData, _GrassLocation);
         #endregion
         #region DNAM
         private int? _DNAMLocation;

@@ -22,6 +22,6 @@ public class ModKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         Accessor dataAccessor,
         Accessor packageAccessor)
     {
-        return $"{nameof(ModKey)}.{nameof(ModKey.FromNameAndExtension)}({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}, {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}))";
+        return $"{nameof(ModKey)}.{nameof(ModKey.FromNameAndExtension)}({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}, {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)}))";
     }
 }

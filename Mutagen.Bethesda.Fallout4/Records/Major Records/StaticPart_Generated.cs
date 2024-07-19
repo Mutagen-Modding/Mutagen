@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Static
         private int? _StaticLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> Static => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticTargetGetter>(_package, _recordData, _StaticLocation);
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(
@@ -1349,14 +1349,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Placements, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Placements = BinaryOverlayList.FactoryByStartIndex<IStaticPlacementGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Placements = BinaryOverlayList.FactoryByStartIndexWithTrigger<IStaticPlacementGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => StaticPlacementBinaryOverlay.StaticPlacementFactory(s, p));
-                    stream.Position += subLen;
                     return (int)StaticPart_FieldIndex.Placements;
                 }
                 default:

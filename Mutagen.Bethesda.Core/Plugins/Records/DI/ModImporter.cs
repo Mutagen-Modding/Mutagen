@@ -1,21 +1,21 @@
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records.DI;
 
 public interface IModImporter
 {
-    TMod Import<TMod>(ModPath modPath, StringsReadParameters? stringsParam = null)
+    TMod Import<TMod>(ModPath modPath, BinaryReadParameters? param = null)
         where TMod : IModGetter;
 
-    IModGetter Import(ModPath modPath, StringsReadParameters? stringsParam = null);
+    IModGetter Import(ModPath modPath, BinaryReadParameters? param = null);
 }
     
 public interface IModImporter<TMod>
     where TMod : IModGetter
 {
-    TMod Import(ModPath modPath, StringsReadParameters? stringsParam = null);
+    TMod Import(ModPath modPath, BinaryReadParameters? param = null);
 }
 
 public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
@@ -31,15 +31,29 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
         _gameRelease = gameRelease;
     }
 
-    public TMod Import<TMod>(ModPath modPath, StringsReadParameters? stringsParam = null)
+    public TMod Import<TMod>(ModPath modPath, BinaryReadParameters? param = null)
         where TMod : IModGetter
     {
-        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, _fileSystem, stringsParam);
+        if (param == null)
+        {
+            param = BinaryReadParameters.Default with
+            {
+                FileSystem = _fileSystem
+            };
+        }
+        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 
-    public IModGetter Import(ModPath modPath,StringsReadParameters? stringsParam = null)
+    public IModGetter Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        return ModInstantiator.Importer(modPath, _gameRelease.Release, _fileSystem, stringsParam);
+        if (param == null)
+        {
+            param = BinaryReadParameters.Default with
+            {
+                FileSystem = _fileSystem
+            };
+        }
+        return ModInstantiator.ImportGetter(modPath, _gameRelease.Release, param);
     }
 }
 
@@ -57,29 +71,36 @@ public sealed class ModImporter<TMod> : IModImporter<TMod>
         _gameRelease = gameRelease;
     }
 
-    public TMod Import(ModPath modPath, StringsReadParameters? stringsParam = null)
+    public TMod Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, _fileSystem, stringsParam);
+        if (param == null)
+        {
+            param = BinaryReadParameters.Default with
+            {
+                FileSystem = _fileSystem
+            };
+        }
+        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 }
 
 public sealed class ModImporterWrapper<TMod> : IModImporter<TMod>
     where TMod : IModGetter
 {
-    private readonly Func<ModPath, StringsReadParameters?, TMod> _factory;
+    private readonly Func<ModPath, BinaryReadParameters?, TMod> _factory;
 
     public ModImporterWrapper(Func<ModPath, TMod> factory)
     {
         _factory = (p, _) => factory(p);
     }
 
-    public ModImporterWrapper(Func<ModPath, StringsReadParameters?, TMod> factory)
+    public ModImporterWrapper(Func<ModPath, BinaryReadParameters?, TMod> factory)
     {
         _factory = factory;
     }
 
-    public TMod Import(ModPath modPath, StringsReadParameters? stringsParam = null)
+    public TMod Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        return _factory(modPath, stringsParam);
+        return _factory(modPath, param);
     }
 }

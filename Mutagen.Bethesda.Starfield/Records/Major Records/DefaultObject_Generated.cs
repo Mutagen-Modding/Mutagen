@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1495,7 +1494,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLinkNullable<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStarfieldMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

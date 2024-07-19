@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Planet
         private int _PlanetLocation => _DATALocation!.Value.Min;
         private bool _Planet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IPlanetGetter> Planet => _Planet_IsSet ? new FormLink<IPlanetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PlanetLocation, 0x4)))) : FormLink<IPlanetGetter>.Null;
+        public IFormLinkGetter<IPlanetGetter> Planet => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlanetGetter>(_package, _recordData.Span.Slice(_PlanetLocation, 0x4), isSet: _Planet_IsSet);
         #endregion
         #region Longitude
         private int _LongitudeLocation => _DATALocation!.Value.Min + 0x4;

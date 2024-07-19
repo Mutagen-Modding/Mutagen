@@ -15,7 +15,7 @@ internal sealed class GenderedItemBinaryTranslation
         Female = 1,
     }
     
-    public static GenderedItem<TItem> Parse<TItem>(
+    public static GenderedItem<TItem> ParseRequired<TItem>(
         MutagenFrame frame,
         BinarySubParseDelegate<MutagenFrame, TItem> transl)
     {
@@ -30,7 +30,7 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem>(male, female);
     }
     
-    public static GenderedItem<TItem> Parse<TItem>(
+    public static GenderedItem<TItem> ParseRequired<TItem>(
         MutagenFrame frame,
         RecordType genderEnumRecord,
         RecordType contentMarker,
@@ -110,7 +110,7 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem?>(male, female);
     }
 
-    public static GenderedItem<TItem> Parse<TItem>(
+    public static GenderedItem<TItem> ParseRequired<TItem>(
         MutagenFrame frame,
         BinaryMasterParseDelegate<TItem> transl,
         RecordTypeConverter? recordTypeConverter = null)
@@ -181,7 +181,7 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem?>(male, female);
     }
 
-    public static GenderedItem<TItem> Parse<TItem>(
+    public static GenderedItem<TItem> ParseRequired<TItem>(
         MutagenFrame frame,
         RecordType maleMarker,
         RecordType femaleMarker,

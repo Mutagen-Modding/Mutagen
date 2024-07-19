@@ -31,7 +31,7 @@ public class OblivionXmlTranslation
 
         // Setup folders and paths
         ModKey = new ModKey("Oblivion", ModType.Master);
-        TempFolder = TempFolder.Factory(deleteAfter: true);
+        TempFolder = TempFolder.Factory();
         DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
         XmlFolder = new DirectoryPath(Path.Combine(TempFolder.Dir.Path, "Folder"));
         XmlFolder.Create();
@@ -88,7 +88,7 @@ public class OblivionXmlCleanWriteTranslation
 
         // Setup folders and paths
         ModKey = new ModKey("Oblivion", ModType.Master);
-        TempFolder = TempFolder.Factory(deleteAfter: true);
+        TempFolder = TempFolder.Factory();
         DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
         BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
         OneTimeXmlFolder = new DirectoryPath(Path.Combine(TempFolder.Dir.Path, "OneTimeFolder"));

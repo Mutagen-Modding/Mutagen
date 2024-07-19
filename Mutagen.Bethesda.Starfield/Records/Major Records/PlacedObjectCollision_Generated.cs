@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public UInt32 CollisionLayer => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialTypeGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

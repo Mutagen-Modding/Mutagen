@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -83,6 +82,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IProjectedDecalGetter.ODTY => this.ODTY;
         #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IProjectedDecalGetter.ODRT => this.ODRT;
+        #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ObjectPlacementDefaults? _ObjectPlacementDefaults;
@@ -118,6 +122,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITransformsGetter? IProjectedDecalGetter.Transforms => this.Transforms;
+        #endregion
+        #region PTTA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PTTA? _PTTA;
+        public PTTA? PTTA
+        {
+            get => _PTTA;
+            set => _PTTA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPTTAGetter? IProjectedDecalGetter.PTTA => this.PTTA;
         #endregion
         #region SnapBehavior
         private readonly IFormLinkNullable<ISnapTemplateBehaviorGetter> _SnapBehavior = new FormLinkNullable<ISnapTemplateBehaviorGetter>();
@@ -155,7 +170,20 @@ namespace Mutagen.Bethesda.Starfield
         public Single UnknownData5 { get; set; } = default(Single);
         #endregion
         #region UnknownData6
-        public Single UnknownData6 { get; set; } = default(Single);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _UnknownData6;
+        public Single UnknownData6
+        {
+            get => this._UnknownData6;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._UnknownData6 = value;
+            }
+        }
+        #endregion
+        #region DATADataTypeState
+        public ProjectedDecal.DATADataType DATADataTypeState { get; set; } = default(ProjectedDecal.DATADataType);
         #endregion
 
         #region To String
@@ -184,9 +212,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
                 this.SnapBehavior = initialValue;
                 this.Material = initialValue;
                 this.UnknownData1 = initialValue;
@@ -195,6 +225,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownData4 = initialValue;
                 this.UnknownData5 = initialValue;
                 this.UnknownData6 = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -207,9 +238,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem ObjectPlacementDefaults,
                 TItem Components,
                 TItem Transforms,
+                TItem PTTA,
                 TItem SnapBehavior,
                 TItem Material,
                 TItem UnknownData1,
@@ -217,7 +250,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem UnknownData3,
                 TItem UnknownData4,
                 TItem UnknownData5,
-                TItem UnknownData6)
+                TItem UnknownData6,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -229,9 +263,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
                 this.SnapBehavior = SnapBehavior;
                 this.Material = Material;
                 this.UnknownData1 = UnknownData1;
@@ -240,6 +276,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownData4 = UnknownData4;
                 this.UnknownData5 = UnknownData5;
                 this.UnknownData6 = UnknownData6;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -253,9 +290,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
             public TItem SnapBehavior;
             public TItem Material;
             public TItem UnknownData1;
@@ -264,6 +303,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem UnknownData4;
             public TItem UnknownData5;
             public TItem UnknownData6;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -279,9 +319,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.PTTA, rhs.PTTA)) return false;
                 if (!object.Equals(this.SnapBehavior, rhs.SnapBehavior)) return false;
                 if (!object.Equals(this.Material, rhs.Material)) return false;
                 if (!object.Equals(this.UnknownData1, rhs.UnknownData1)) return false;
@@ -290,6 +332,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.UnknownData4, rhs.UnknownData4)) return false;
                 if (!object.Equals(this.UnknownData5, rhs.UnknownData5)) return false;
                 if (!object.Equals(this.UnknownData6, rhs.UnknownData6)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -297,9 +340,11 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.Components);
                 hash.Add(this.Transforms);
+                hash.Add(this.PTTA);
                 hash.Add(this.SnapBehavior);
                 hash.Add(this.Material);
                 hash.Add(this.UnknownData1);
@@ -308,6 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.UnknownData4);
                 hash.Add(this.UnknownData5);
                 hash.Add(this.UnknownData6);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -324,6 +370,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
@@ -346,6 +393,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Transforms.Overall)) return false;
                     if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
+                if (PTTA != null)
+                {
+                    if (!eval(this.PTTA.Overall)) return false;
+                    if (this.PTTA.Specific != null && !this.PTTA.Specific.All(eval)) return false;
+                }
                 if (!eval(this.SnapBehavior)) return false;
                 if (!eval(this.Material)) return false;
                 if (!eval(this.UnknownData1)) return false;
@@ -354,6 +406,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.UnknownData4)) return false;
                 if (!eval(this.UnknownData5)) return false;
                 if (!eval(this.UnknownData6)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -368,6 +421,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (eval(this.ObjectPlacementDefaults.Overall)) return true;
@@ -390,6 +444,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Transforms.Overall)) return true;
                     if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
                 }
+                if (PTTA != null)
+                {
+                    if (eval(this.PTTA.Overall)) return true;
+                    if (this.PTTA.Specific != null && this.PTTA.Specific.Any(eval)) return true;
+                }
                 if (eval(this.SnapBehavior)) return true;
                 if (eval(this.Material)) return true;
                 if (eval(this.UnknownData1)) return true;
@@ -398,6 +457,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.UnknownData4)) return true;
                 if (eval(this.UnknownData5)) return true;
                 if (eval(this.UnknownData6)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -415,6 +475,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 if (Components != null)
                 {
@@ -432,6 +493,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
                 obj.SnapBehavior = eval(this.SnapBehavior);
                 obj.Material = eval(this.Material);
                 obj.UnknownData1 = eval(this.UnknownData1);
@@ -440,6 +502,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.UnknownData4 = eval(this.UnknownData4);
                 obj.UnknownData5 = eval(this.UnknownData5);
                 obj.UnknownData6 = eval(this.UnknownData6);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -465,6 +528,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
@@ -492,6 +559,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Transforms?.Overall ?? true)
                     {
                         Transforms?.Print(sb);
+                    }
+                    if (printMask?.PTTA?.Overall ?? true)
+                    {
+                        PTTA?.Print(sb);
                     }
                     if (printMask?.SnapBehavior ?? true)
                     {
@@ -525,6 +596,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(UnknownData6, "UnknownData6");
                     }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -538,9 +613,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
             public Exception? SnapBehavior;
             public Exception? Material;
             public Exception? UnknownData1;
@@ -549,6 +626,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? UnknownData4;
             public Exception? UnknownData5;
             public Exception? UnknownData6;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -561,12 +639,16 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case ProjectedDecal_FieldIndex.ODTY:
                         return ODTY;
+                    case ProjectedDecal_FieldIndex.ODRT:
+                        return ODRT;
                     case ProjectedDecal_FieldIndex.ObjectPlacementDefaults:
                         return ObjectPlacementDefaults;
                     case ProjectedDecal_FieldIndex.Components:
                         return Components;
                     case ProjectedDecal_FieldIndex.Transforms:
                         return Transforms;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        return PTTA;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         return SnapBehavior;
                     case ProjectedDecal_FieldIndex.Material:
@@ -583,6 +665,8 @@ namespace Mutagen.Bethesda.Starfield
                         return UnknownData5;
                     case ProjectedDecal_FieldIndex.UnknownData6:
                         return UnknownData6;
+                    case ProjectedDecal_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -599,6 +683,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ProjectedDecal_FieldIndex.ODTY:
                         this.ODTY = ex;
                         break;
+                    case ProjectedDecal_FieldIndex.ODRT:
+                        this.ODRT = ex;
+                        break;
                     case ProjectedDecal_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
                         break;
@@ -607,6 +694,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ProjectedDecal_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         this.SnapBehavior = ex;
@@ -632,6 +722,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ProjectedDecal_FieldIndex.UnknownData6:
                         this.UnknownData6 = ex;
                         break;
+                    case ProjectedDecal_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -649,6 +742,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ProjectedDecal_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case ProjectedDecal_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case ProjectedDecal_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
                         break;
@@ -657,6 +753,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ProjectedDecal_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case ProjectedDecal_FieldIndex.PTTA:
+                        this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
                         break;
                     case ProjectedDecal_FieldIndex.SnapBehavior:
                         this.SnapBehavior = (Exception?)obj;
@@ -682,6 +781,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ProjectedDecal_FieldIndex.UnknownData6:
                         this.UnknownData6 = (Exception?)obj;
                         break;
+                    case ProjectedDecal_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -693,9 +795,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (ObjectPlacementDefaults != null) return true;
                 if (Components != null) return true;
                 if (Transforms != null) return true;
+                if (PTTA != null) return true;
                 if (SnapBehavior != null) return true;
                 if (Material != null) return true;
                 if (UnknownData1 != null) return true;
@@ -704,6 +808,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (UnknownData4 != null) return true;
                 if (UnknownData5 != null) return true;
                 if (UnknownData6 != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -734,6 +839,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
+                }
                 ObjectPlacementDefaults?.Print(sb);
                 if (Components is {} ComponentsItem)
                 {
@@ -754,6 +862,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 Transforms?.Print(sb);
+                PTTA?.Print(sb);
                 {
                     sb.AppendItem(SnapBehavior, "SnapBehavior");
                 }
@@ -778,6 +887,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(UnknownData6, "UnknownData6");
                 }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -788,9 +900,11 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.PTTA = this.PTTA.Combine(rhs.PTTA, (l, r) => l.Combine(r));
                 ret.SnapBehavior = this.SnapBehavior.Combine(rhs.SnapBehavior);
                 ret.Material = this.Material.Combine(rhs.Material);
                 ret.UnknownData1 = this.UnknownData1.Combine(rhs.UnknownData1);
@@ -799,6 +913,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.UnknownData4 = this.UnknownData4.Combine(rhs.UnknownData4);
                 ret.UnknownData5 = this.UnknownData5.Combine(rhs.UnknownData5);
                 ret.UnknownData6 = this.UnknownData6.Combine(rhs.UnknownData6);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -823,9 +938,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public AComponent.TranslationMask? Components;
             public Transforms.TranslationMask? Transforms;
+            public PTTA.TranslationMask? PTTA;
             public bool SnapBehavior;
             public bool Material;
             public bool UnknownData1;
@@ -834,6 +951,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool UnknownData4;
             public bool UnknownData5;
             public bool UnknownData6;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -843,6 +961,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.SnapBehavior = defaultOn;
                 this.Material = defaultOn;
                 this.UnknownData1 = defaultOn;
@@ -851,6 +970,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownData4 = defaultOn;
                 this.UnknownData5 = defaultOn;
                 this.UnknownData6 = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -860,9 +980,11 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((PTTA != null ? PTTA.OnOverall : DefaultOn, PTTA?.GetCrystal()));
                 ret.Add((SnapBehavior, null));
                 ret.Add((Material, null));
                 ret.Add((UnknownData1, null));
@@ -871,6 +993,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((UnknownData4, null));
                 ret.Add((UnknownData5, null));
                 ret.Add((UnknownData6, null));
+                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -934,6 +1057,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IProjectedDecal);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ProjectedDecalCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ProjectedDecalSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ProjectedDecalSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1031,9 +1159,11 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new Transforms? Transforms { get; set; }
+        new PTTA? PTTA { get; set; }
         new IFormLinkNullable<ISnapTemplateBehaviorGetter> SnapBehavior { get; set; }
         new IFormLinkNullable<IMaterialPathGetter> Material { get; set; }
         new Single UnknownData1 { get; set; }
@@ -1042,6 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single UnknownData4 { get; set; }
         new Single UnknownData5 { get; set; }
         new Single UnknownData6 { get; set; }
+        new ProjectedDecal.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IProjectedDecalInternal :
@@ -1071,9 +1202,11 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         ITransformsGetter? Transforms { get; }
+        IPTTAGetter? PTTA { get; }
         IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior { get; }
         IFormLinkNullableGetter<IMaterialPathGetter> Material { get; }
         Single UnknownData1 { get; }
@@ -1082,6 +1215,7 @@ namespace Mutagen.Bethesda.Starfield
         Single UnknownData4 { get; }
         Single UnknownData5 { get; }
         Single UnknownData6 { get; }
+        ProjectedDecal.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1260,17 +1394,20 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        ObjectPlacementDefaults = 9,
-        Components = 10,
-        Transforms = 11,
-        SnapBehavior = 12,
-        Material = 13,
-        UnknownData1 = 14,
-        UnknownData2 = 15,
-        UnknownData3 = 16,
-        UnknownData4 = 17,
-        UnknownData5 = 18,
-        UnknownData6 = 19,
+        ODRT = 9,
+        ObjectPlacementDefaults = 10,
+        Components = 11,
+        Transforms = 12,
+        PTTA = 13,
+        SnapBehavior = 14,
+        Material = 15,
+        UnknownData1 = 16,
+        UnknownData2 = 17,
+        UnknownData3 = 18,
+        UnknownData4 = 19,
+        UnknownData5 = 20,
+        UnknownData6 = 21,
+        DATADataTypeState = 22,
     }
     #endregion
 
@@ -1281,9 +1418,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(ProjectedDecal.Mask<>);
 
@@ -1318,10 +1455,12 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PDCL,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.OPDS,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.PTT2,
+                RecordTypes.PTTA,
                 RecordTypes.SNBH,
                 RecordTypes.DODT,
                 RecordTypes.DATA);
@@ -1371,9 +1510,11 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.ObjectPlacementDefaults = null;
             item.Components.Clear();
             item.Transforms = null;
+            item.PTTA = null;
             item.SnapBehavior.Clear();
             item.Material.Clear();
             item.UnknownData1 = default(Single);
@@ -1382,6 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
             item.UnknownData4 = default(Single);
             item.UnknownData5 = default(Single);
             item.UnknownData6 = default(Single);
+            item.DATADataTypeState = default(ProjectedDecal.DATADataType);
             base.Clear(item);
         }
         
@@ -1401,6 +1543,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
+            obj.PTTA?.RemapLinks(mapping);
             obj.SnapBehavior.Relink(mapping);
             obj.Material.Relink(mapping);
         }
@@ -1496,6 +1639,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPlacementDefaults,
                 rhs.ObjectPlacementDefaults,
@@ -1510,6 +1654,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Transforms,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.PTTA = EqualsMaskHelper.EqualsHelper(
+                item.PTTA,
+                rhs.PTTA,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.SnapBehavior = item.SnapBehavior.Equals(rhs.SnapBehavior);
             ret.Material = item.Material.Equals(rhs.Material);
             ret.UnknownData1 = item.UnknownData1.EqualsWithin(rhs.UnknownData1);
@@ -1518,6 +1667,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.UnknownData4 = item.UnknownData4.EqualsWithin(rhs.UnknownData4);
             ret.UnknownData5 = item.UnknownData5.EqualsWithin(rhs.UnknownData5);
             ret.UnknownData6 = item.UnknownData6.EqualsWithin(rhs.UnknownData6);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1576,6 +1726,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ODTYItem, "ODTY");
             }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
+            }
             if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
                 && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
@@ -1599,6 +1754,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Transforms is {} TransformsItem)
             {
                 TransformsItem?.Print(sb, "Transforms");
+            }
+            if ((printMask?.PTTA?.Overall ?? true)
+                && item.PTTA is {} PTTAItem)
+            {
+                PTTAItem?.Print(sb, "PTTA");
             }
             if (printMask?.SnapBehavior ?? true)
             {
@@ -1631,6 +1791,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.UnknownData6 ?? true)
             {
                 sb.AppendItem(item.UnknownData6, "UnknownData6");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1694,6 +1858,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
@@ -1713,6 +1881,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)ProjectedDecal_FieldIndex.Transforms))) return false;
                 }
                 else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.PTTA) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PTTA, rhs.PTTA, out var lhsPTTA, out var rhsPTTA, out var isPTTAEqual))
+                {
+                    if (!((PTTACommon)((IPTTAGetter)lhsPTTA).CommonInstance()!).Equals(lhsPTTA, rhsPTTA, equalsMask?.GetSubCrystal((int)ProjectedDecal_FieldIndex.PTTA))) return false;
+                }
+                else if (!isPTTAEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.SnapBehavior) ?? true))
             {
@@ -1745,6 +1921,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.UnknownData6) ?? true))
             {
                 if (!lhs.UnknownData6.EqualsWithin(rhs.UnknownData6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1779,6 +1959,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ODTYitem);
             }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
+            }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
                 hash.Add(ObjectPlacementDefaultsitem);
@@ -1788,6 +1972,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Transformsitem);
             }
+            if (item.PTTA is {} PTTAitem)
+            {
+                hash.Add(PTTAitem);
+            }
             hash.Add(item.SnapBehavior);
             hash.Add(item.Material);
             hash.Add(item.UnknownData1);
@@ -1796,6 +1984,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.UnknownData4);
             hash.Add(item.UnknownData5);
             hash.Add(item.UnknownData6);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1833,6 +2022,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Transforms is {} TransformsItems)
             {
                 foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PTTA is {} PTTAItems)
+            {
+                foreach (var item in PTTAItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1962,6 +2158,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ODTY = rhs.ODTY;
             }
+            if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
+            }
             if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
                 errorMask?.PushIndex((int)ProjectedDecal_FieldIndex.ObjectPlacementDefaults);
@@ -2038,6 +2238,32 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.PTTA) ?? true))
+            {
+                errorMask?.PushIndex((int)ProjectedDecal_FieldIndex.PTTA);
+                try
+                {
+                    if(rhs.PTTA is {} rhsPTTA)
+                    {
+                        item.PTTA = rhsPTTA.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ProjectedDecal_FieldIndex.PTTA));
+                    }
+                    else
+                    {
+                        item.PTTA = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.SnapBehavior) ?? true))
             {
                 item.SnapBehavior.SetTo(rhs.SnapBehavior.FormKeyNullable);
@@ -2069,6 +2295,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.UnknownData6) ?? true))
             {
                 item.UnknownData6 = rhs.UnknownData6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2218,6 +2448,15 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ProjectedDecalBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IProjectedDecalGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IProjectedDecalGetter item,
             MutagenWriter writer,
@@ -2236,6 +2475,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
                 ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
@@ -2258,6 +2501,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
                     item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.PTTA is {} PTTAItem)
+            {
+                ((PTTABinaryWriteTranslation)((IBinaryItem)PTTAItem).BinaryWriteTranslator).Write(
+                    item: PTTAItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -2286,9 +2536,12 @@ namespace Mutagen.Bethesda.Starfield
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.UnknownData5);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.UnknownData6);
+                if (!item.DATADataTypeState.HasFlag(ProjectedDecal.DATADataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.UnknownData6);
+                }
             }
         }
 
@@ -2303,7 +2556,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2363,6 +2616,15 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ProjectedDecalBinaryCreateTranslation Instance = new ProjectedDecalBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PDCL;
+        public static void FillBinaryStructs(
+            IProjectedDecalInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IProjectedDecalInternal item,
             MutagenFrame frame,
@@ -2386,6 +2648,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ProjectedDecal_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ProjectedDecal_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
@@ -2405,6 +2673,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
                     return (int)ProjectedDecal_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.PTTA:
+                {
+                    item.PTTA = Mutagen.Bethesda.Starfield.PTTA.CreateFromBinary(frame: frame);
+                    return (int)ProjectedDecal_FieldIndex.PTTA;
                 }
                 case RecordTypeInts.SNBH:
                 {
@@ -2432,6 +2705,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.UnknownData4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.UnknownData5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ProjectedDecal.DATADataType.Break0;
+                        return (int)ProjectedDecal_FieldIndex.UnknownData5;
+                    }
                     if (dataFrame.Remaining < 4) return null;
                     item.UnknownData6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)ProjectedDecal_FieldIndex.UnknownData6;
@@ -2505,6 +2783,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
         public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
@@ -2514,15 +2796,20 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
         #endregion
+        #region PTTA
+        private RangeInt32? _PTTALocation;
+        public IPTTAGetter? PTTA => _PTTALocation.HasValue ? PTTABinaryOverlay.PTTAFactory(_recordData.Slice(_PTTALocation!.Value.Min), _package) : default;
+        #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => _SnapBehaviorLocation.HasValue ? new FormLinkNullable<ISnapTemplateBehaviorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapBehaviorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateBehaviorGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateBehaviorGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateBehaviorGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public IFormLinkNullableGetter<IMaterialPathGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialPathGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialPathGetter> Material => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialPathGetter>(_package, _recordData, _MaterialLocation);
         #endregion
         private RangeInt32? _DATALocation;
+        public ProjectedDecal.DATADataType DATADataTypeState { get; private set; }
         #region UnknownData1
         private int _UnknownData1Location => _DATALocation!.Value.Min;
         private bool _UnknownData1_IsSet => _DATALocation.HasValue;
@@ -2550,7 +2837,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region UnknownData6
         private int _UnknownData6Location => _DATALocation!.Value.Min + 0x14;
-        private bool _UnknownData6_IsSet => _DATALocation.HasValue;
+        private bool _UnknownData6_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ProjectedDecal.DATADataType.Break0);
         public Single UnknownData6 => _UnknownData6_IsSet ? _recordData.Slice(_UnknownData6Location, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
@@ -2632,6 +2919,11 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)ProjectedDecal_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)ProjectedDecal_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -2651,6 +2943,11 @@ namespace Mutagen.Bethesda.Starfield
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ProjectedDecal_FieldIndex.Transforms;
                 }
+                case RecordTypeInts.PTTA:
+                {
+                    _PTTALocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)ProjectedDecal_FieldIndex.PTTA;
+                }
                 case RecordTypeInts.SNBH:
                 {
                     _SnapBehaviorLocation = (stream.Position - offset);
@@ -2664,6 +2961,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x14)
+                    {
+                        this.DATADataTypeState |= ProjectedDecal.DATADataType.Break0;
+                    }
                     return (int)ProjectedDecal_FieldIndex.UnknownData6;
                 }
                 default:

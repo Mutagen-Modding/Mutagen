@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2592,7 +2591,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? CraftingSound { get; private set; }
         #region List
         private int? _ListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> List => _ListLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> List => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ListLocation);
         #endregion
         #region Rarity
         private int? _RarityLocation;
@@ -2613,15 +2612,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => _ActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
         #region Produce
         private int? _ProduceLocation;
-        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => _ProduceLocation.HasValue ? new FormLinkNullable<IResourceTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ProduceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IResourceTargetGetter>.Null;
+        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceTargetGetter>(_package, _recordData, _ProduceLocation);
         #endregion
         #region Interval
         private int? _IntervalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Interval => _IntervalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntervalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Interval => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _IntervalLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2707,7 +2706,7 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Resource_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CUSH:
@@ -2734,7 +2733,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.NextRarities = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IResourceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IResourceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IResourceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

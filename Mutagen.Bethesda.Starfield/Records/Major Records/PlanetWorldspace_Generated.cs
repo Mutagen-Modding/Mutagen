@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Double Longitude => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x0, 0x8));
         public Double Latitude => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x8, 0x8));
-        public IFormLinkGetter<IPlanetGetter> Planet => new FormLink<IPlanetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public IFormLinkGetter<IPlanetGetter> Planet => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlanetGetter>(_package, _structData.Span.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

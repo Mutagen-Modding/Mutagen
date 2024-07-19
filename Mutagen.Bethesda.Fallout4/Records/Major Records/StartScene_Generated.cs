@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Scene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SceneLocation);
         #endregion
         #region PhaseIndex
         private int? _PhaseIndexLocation;

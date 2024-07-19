@@ -142,7 +142,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         }
         if (data.HasTrigger && !subData.HasTrigger)
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
         sb.AppendLine($"{itemAccessor} = {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}({nodeAccessor}.ReadBytes({await gen.ExpectedLength(objGen, arr.SubTypeGeneration)} * {arr.FixedSize}), {arr.FixedSize}).ToArray();");
     }

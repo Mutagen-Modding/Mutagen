@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.RecordTypeMapping;
+namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 public static class RecordTypeLookup
 {

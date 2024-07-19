@@ -147,6 +147,7 @@
         <Compile Include="Installs\RegistryGameSource.cs" />
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
+        <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -206,16 +207,17 @@
         <Compile Include="Plugins\Binary\Parameters\ALowerRangeDisallowedHandlerOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
+        <Compile Include="Plugins\Binary\Parameters\BinaryReadParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
+        <Compile Include="Plugins\Binary\Parameters\FormIDCompactionOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\LightLimitOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\MasterFlagOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingEnumOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
+        <Compile Include="Plugins\Binary\Parameters\OverriddenFormsOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\ParallelWriteParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
         <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentRepeatedRule.cs" />
@@ -236,6 +238,8 @@
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
+        <Compile Include="Plugins\Binary\Translations\BinaryReadBuilder.cs" />
+        <Compile Include="Plugins\Binary\Translations\BinaryWriteBuilder.cs" />
         <Compile Include="Plugins\Binary\Translations\FormLinkOrIndexBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\GuidBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
@@ -265,6 +269,7 @@
         <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
         <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
         <Compile Include="Plugins\Exceptions\FloatStoredAsIntegerOverflowException.cs" />
+        <Compile Include="Plugins\Exceptions\FormIDCompactionOutOfBoundsException.cs" />
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
@@ -308,11 +313,18 @@
         <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
         <Compile Include="Plugins\Internals\RecordCollection.cs" />
         <Compile Include="Plugins\Internals\RecordTriggerSpecs.cs" />
+        <Compile Include="Plugins\IO\DI\AssociatedFilesLocator.cs" />
+        <Compile Include="Plugins\IO\DI\ModFilesMover.cs" />
+        <Compile Include="Plugins\IO\AssociatedModFileCategory.cs" />
+        <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
+        <Compile Include="Plugins\Masters\DI\FormIDTranslator.cs" />
         <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Masters\MasterStyle.cs" />
+        <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -495,6 +507,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\AssociatedRecordTypesAttribute.cs" />
         <Compile Include="Plugins\Records\Mapping\GetterTypeMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\InheritingInterfaceMapping.cs">
@@ -524,10 +537,9 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
-        <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -639,7 +651,7 @@
         <Compile Include="Plugins\Binary\Headers\SubrecordHeader.cs" />
         <Compile Include="Plugins\Binary\Headers\VariableHeader.cs" />
         <Compile Include="Plugins\Binary\Streams\WritingBundle.cs" />
-        <Compile Include="Plugins\Binary\Streams\ParsingBundle.cs" />
+        <Compile Include="Plugins\Binary\Streams\ParsingMeta.cs" />
         <Compile Include="Strings\IStringsLookup.cs" />
         <Compile Include="Strings\ITranslatedString.cs" />
         <Compile Include="Strings\IStringsFolderLookup.cs" />
@@ -650,7 +662,6 @@
         <Compile Include="Strings\TranslatedString.cs" />
         <Compile Include="Plugins\FormID.cs" />
         <Compile Include="Plugins\FormKey.cs" />
-        <Compile Include="Plugins\ModIndex.cs" />
         <Compile Include="Plugins\RecordType.cs" />
         <Compile Include="InternalsPermissions.cs" />
         <Compile Include="Plugins\Records\IFormVersionGetter.cs" />

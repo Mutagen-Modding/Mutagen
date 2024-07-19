@@ -47,6 +47,7 @@ public abstract class SizeOverflowTests
         using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
         {
             writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             worldspace.WriteToBinary(writer);
         }
 
@@ -68,6 +69,7 @@ public abstract class SizeOverflowTests
         using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
         {
             writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             worldspace.WriteToBinary(writer);
         }
 
@@ -81,9 +83,13 @@ public class SizeOverflowTestsDirect : SizeOverflowTests
 {
     protected override IWorldspaceGetter Get(IFileSystem fileSystem, ModPath path)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(
+                "Skyrim.esm"));
         using var reader = new MutagenBinaryReadStream(fileSystem.File.OpenRead(path),
-            new ParsingBundle(GameConstants.SkyrimSE, 
-                new MasterReferenceCollection("Skyrim.esm")));
+            new ParsingMeta(GameConstants.SkyrimSE, 
+                Constants.Skyrim,
+                masters));
         return Worldspace.CreateFromBinary(new MutagenFrame(reader));
     }
 }
@@ -96,8 +102,9 @@ public class SizeOverflowTestsOverlay : SizeOverflowTests
         return WorldspaceBinaryOverlay.WorldspaceFactory(
             bytes,
             new BinaryOverlayFactoryPackage(
-                new ParsingBundle(
+                new ParsingMeta(
                     GameConstants.SkyrimSE,
+                    path.ModKey,
                     null!)));
     }
 }

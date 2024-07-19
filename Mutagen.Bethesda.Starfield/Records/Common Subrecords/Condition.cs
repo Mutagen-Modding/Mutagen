@@ -1148,6 +1148,12 @@ partial class ConditionBinaryCreateTranslation
     public static ConditionData CreateDataFromBinary(MutagenFrame frame, ushort functionIndex)
     {
         var ret = CreateDataFromBinaryInternal(frame, functionIndex);
+        if (ret == null)
+        {
+            var unknown = UnknownConditionData.CreateFromBinary(frame);
+            unknown.Function = (Function)functionIndex;
+            ret = unknown;
+        }
         FillEndingParams(frame, ret);
         return ret;
     }
@@ -1164,7 +1170,7 @@ partial class ConditionBinaryCreateTranslation
         item.Unknown3 = frame.ReadInt32();
     }
 
-    public static ConditionData CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
+    public static ConditionData? CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
     {
         switch (functionIndex)
         {
@@ -2383,7 +2389,7 @@ partial class ConditionBinaryCreateTranslation
             case 960:
                 return EPIsResistanceActorValueConditionData.CreateFromBinary(frame);
             default:
-                return UnknownConditionData.CreateFromBinary(frame);
+                return null;
         }
     }
 
@@ -2534,13 +2540,12 @@ abstract partial class ConditionBinaryOverlay
         if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
         {
             data = GetEventDataConditionData.CreateFromBinary(mutagenFrame);
+            ConditionBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
         }
         else
         {
-            data = ConditionBinaryCreateTranslation.CreateDataFromBinaryInternal(mutagenFrame, functionIndex);
+            data = ConditionBinaryCreateTranslation.CreateDataFromBinary(mutagenFrame, functionIndex);
         }
-
-        ConditionBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
 
         ret.Data = data;
 

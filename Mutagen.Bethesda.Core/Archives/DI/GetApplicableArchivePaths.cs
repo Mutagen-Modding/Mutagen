@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
@@ -87,13 +87,13 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityArchiveOrderComparer(null), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(null, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return GetInternal(default(ModKey?), GetPriorityArchiveOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     public IEnumerable<FilePath> Get(IEnumerable<ModKey>? modOrdering, bool returnEmptyIfMissing = true)
@@ -104,13 +104,13 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityArchiveOrderComparer(null), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityOrderComparer(null, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
     {
-        return Get(modKey, GetPriorityArchiveOrderComparer(archiveOrdering), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityOrderComparer(archiveOrdering, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
     /// <inheritdoc />
@@ -134,7 +134,15 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
         if (modKey != null)
         {
-            var iniListedArchives = _iniListings.Get().ToHashSet();
+            IReadOnlyCollection<FileName> iniListedArchives;
+            if (returnEmptyIfMissing)
+            {
+                iniListedArchives = (IReadOnlyCollection<FileName>?)_iniListings.TryGet()?.ToHashSet() ?? Array.Empty<FileName>();
+            }
+            else
+            {
+                iniListedArchives = _iniListings.Get().ToHashSet();
+            }
             ret = ret
                 .Where(archive =>
                 {
@@ -149,52 +157,37 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         return ret;
     }
 
-    private IComparer<FileName>? GetPriorityArchiveOrderComparer(IEnumerable<FileName>? listedArchiveOrdering)
+
+    private IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName>? listedArchiveOrdering, bool emptyIfMissing)
     {
-        if (listedArchiveOrdering is null)
+        if (emptyIfMissing)
         {
-            // If no ordering is specified, use the ini file as basis
-            // All archives not listed in the ini file will be prioritized
-            listedArchiveOrdering = _iniListings.Get();
-            var archiveOrderingList = listedArchiveOrdering.ToList();
-            if (archiveOrderingList.Count == 0) return null;
-            archiveOrderingList.Reverse();
-            return Comparer<FileName>.Create((a, b) =>
-            {
-                var indexA = archiveOrderingList.IndexOf(a);
-                var indexB = archiveOrderingList.IndexOf(b);
-                if (indexA == -1 && indexB == -1) return 0;
-                if (indexA == -1) return -1;
-                if (indexB == -1) return 1;
-                return indexA - indexB;
-            });
+            listedArchiveOrdering ??= _iniListings.TryGet() ?? Enumerable.Empty<FileName>();
         }
         else
         {
-            // If ordering is specified, use that
-            // All archives not listed in the ordering will be deprioritized
-            var archiveOrderingList = listedArchiveOrdering.ToList();
-            if (archiveOrderingList.Count == 0) return null;
-            archiveOrderingList.Reverse();
-            return Comparer<FileName>.Create((a, b) =>
-            {
-                var indexA = archiveOrderingList.IndexOf(a);
-                var indexB = archiveOrderingList.IndexOf(b);
-                if (indexA == -1 && indexB == -1) return 0;
-                if (indexA == -1) return 1;
-                if (indexB == -1) return -1;
-                return indexA - indexB;
-            });
+            listedArchiveOrdering ??= _iniListings.Get();
         }
+        var archiveOrderingList = listedArchiveOrdering.ToList();
+        if (archiveOrderingList.Count == 0) return null;
+        archiveOrderingList.Reverse();
+        return Comparer<FileName>.Create((a, b) =>
+        {
+            var indexA = archiveOrderingList.IndexOf(a);
+            var indexB = archiveOrderingList.IndexOf(b);
+            if (indexA == -1 && indexB == -1) return 0;
+            if (indexA == -1) return 1;
+            if (indexB == -1) return -1;
+            return indexA - indexB;
+        });
     }
-
+    
     private IComparer<FileName>? GetPriorityModOrderComparer(IEnumerable<ModKey>? listedModOrdering)
     {
         if (listedModOrdering is null) return null;
 
         var iniListedArchives = _iniListings.Get().ToList();
         var modOrderingList = listedModOrdering.ToList();
-
         return Comparer<FileName>.Create((a, b) =>
         {
             var iniIndexOfA = iniListedArchives.IndexOf(a);

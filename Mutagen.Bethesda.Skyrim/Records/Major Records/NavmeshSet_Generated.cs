@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

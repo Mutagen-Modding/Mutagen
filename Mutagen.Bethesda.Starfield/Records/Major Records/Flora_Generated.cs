@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2362,6 +2361,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -4127,8 +4128,6 @@ namespace Mutagen.Bethesda.Starfield
                 items: item.ObjectTemplates,
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
-                endMarker: RecordTypes.STOP,
-                alwaysWriteEndMarker: true,
                 transl: (MutagenWriter subWriter, IObjectTemplateGetter<AObjectModification.NoneProperty> subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4137,6 +4136,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActionKeyword,
@@ -4305,6 +4305,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4414,6 +4416,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: ObjectTemplate<AObjectModification.NoneProperty>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>();
                     return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -4585,7 +4592,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHarvestTargetGetter>(_package, _recordData, _IngredientLocation);
         #endregion
         public ISoundReferenceGetter? PFHS { get; private set; }
         #region Production
@@ -4596,7 +4603,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; private set; }
         #region ActionKeyword
         private int? _ActionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => _ActionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _ActionKeywordLocation);
         #endregion
         #region BNAM
         private int? _BNAMLocation;
@@ -4612,15 +4619,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaxGlobal
         private int? _MaxGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> MaxGlobal => _MaxGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> MaxGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _MaxGlobalLocation);
         #endregion
         #region MinGlobal
         private int? _MinGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> MinGlobal => _MinGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> MinGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _MinGlobalLocation);
         #endregion
         #region Explosion
         private int? _ExplosionLocation;
-        public IFormLinkNullableGetter<IExplosionGetter> Explosion => _ExplosionLocation.HasValue ? new FormLinkNullable<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExplosionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExplosionGetter>.Null;
+        public IFormLinkNullableGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExplosionGetter>(_package, _recordData, _ExplosionLocation);
         #endregion
         public ISoundReferenceGetter? FHLS { get; private set; }
         partial void CustomFactoryEnd(
@@ -4734,6 +4741,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4766,19 +4775,17 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Flora_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Flora_FieldIndex.Properties;
                 }
                 case RecordTypeInts.PNAM:
@@ -4822,14 +4829,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.APPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Flora_FieldIndex.AttachParentSlots;
                 }
                 case RecordTypeInts.OBTE:
@@ -4844,6 +4849,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<AObjectModification.NoneProperty>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.STOP:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {

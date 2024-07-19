@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Texture
         private int? _TextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> Texture => _TextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> Texture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureLocation);
         #endregion
         #region UnknownMPPF
         private int? _UnknownMPPFLocation;

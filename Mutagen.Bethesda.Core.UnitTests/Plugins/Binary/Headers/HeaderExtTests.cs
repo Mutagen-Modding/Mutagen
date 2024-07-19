@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing;
@@ -113,7 +114,12 @@ public class HeaderExtTests
     private MutagenBinaryReadStream GetModStream()
     {
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.SmallOblivionMod);
-        return new MutagenBinaryReadStream(new MemoryStream(b), ModKey.FromNameAndExtension("SmallOblivionMod.esp"), GameRelease.Oblivion);
+        return new MutagenBinaryReadStream(
+            new MemoryStream(b),
+            new ParsingMeta(
+                GameConstants.Get(GameRelease.Oblivion),
+                ModKey.FromNameAndExtension("SmallOblivionMod.esp"),
+                SeparatedMasterPackage.EmptyNull));
     }
 
     [Fact]
@@ -204,8 +210,7 @@ public class HeaderExtTests
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(1);
                 recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.ID.Should().Be(0x000D62);
-                recs[0].FormID.ModIndex.ID.Should().Be(1);
+                recs[0].FormID.Raw.Should().Be(0x01000D62);
             }
             else if (group.ContainedRecordType == RecordTypes.WEAP)
             {
@@ -213,11 +218,9 @@ public class HeaderExtTests
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(2);
                 recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.ID.Should().Be(0x123456);
-                recs[0].FormID.ModIndex.ID.Should().Be(0);
+                recs[0].FormID.Raw.Should().Be(0x00123456);
                 recs[1].Location.Should().Be(0x28);
-                recs[1].FormID.ID.Should().Be(0x123457);
-                recs[1].FormID.ModIndex.ID.Should().Be(0);
+                recs[1].FormID.Raw.Should().Be(0x00123457);
             }
             else if (group.ContainedRecordType == RecordTypes.RACE)
             {
@@ -225,8 +228,7 @@ public class HeaderExtTests
                 var recs = group.EnumerateMajorRecords().ToArray();
                 recs.Length.Should().Be(1);
                 recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.ID.Should().Be(0x000D63);
-                recs[0].FormID.ModIndex.ID.Should().Be(1);
+                recs[0].FormID.Raw.Should().Be(0x01000D63);
             }
             else
             {

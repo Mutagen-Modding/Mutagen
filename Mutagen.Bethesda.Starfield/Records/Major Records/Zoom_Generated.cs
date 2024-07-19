@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1870,7 +1869,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ImagespaceModifier
         private int _ImagespaceModifierLocation => _ZNAMLocation!.Value.Min;
         private bool _ImagespaceModifier_IsSet => _ZNAMLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImagespaceModifierLocation, 0x4), isSet: _ImagespaceModifier_IsSet);
         #endregion
         #region CameraOffset
         private int _CameraOffsetLocation => _ZNAMLocation!.Value.Min + 0x4;

@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> Record => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> Record => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x5, 0x4));
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x9, 0x4));
         public ObjectModProperty.FormLinkFunctionType FunctionType => (ObjectModProperty.FormLinkFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xD, 0x4));
         partial void CustomFactoryEnd(

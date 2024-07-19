@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -20,19 +21,27 @@ public class StarfieldPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldModBinaryOverlay.StarfieldModFactory(
-            new ModPath(ModKey, path),
-            StarfieldRelease.Starfield,
-            stringsParams);
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithNoLoadOrder()
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            StarfieldRelease.Starfield,
-            parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams);
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithNoLoadOrder()
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -56,6 +65,9 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.DLBR,
             RecordTypes.DIAL,
             RecordTypes.SCEN);
+        ret.SetGroupAlignment(
+            (int)GroupTypeEnum.CellTemporaryChildren,
+            RecordTypes.NAVM);
         
         ret.StartMarkers.Add(RecordTypes.REFR, new[]
         {
@@ -131,6 +143,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             
             RecordTypes.XBPO,
             RecordTypes.XLYR,
+            RecordTypes.XLRL,
             RecordTypes.XLRD,
             AlignmentRepeatedRule.Basic(RecordTypes.XLKR),
             RecordTypes.XLKT,

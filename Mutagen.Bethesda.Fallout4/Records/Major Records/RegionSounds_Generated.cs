@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         #region LodDisplayDistanceMultiplier
@@ -1556,14 +1556,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RDSA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IRegionSoundGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionSoundGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.RLDM:

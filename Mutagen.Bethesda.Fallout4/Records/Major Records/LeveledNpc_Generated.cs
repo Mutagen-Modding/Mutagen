@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2304,7 +2303,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
@@ -2420,14 +2419,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFilterKeywordChanceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LeveledNpc_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.MODL:

@@ -4,9 +4,11 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Transforms" refName="Transforms" />
+      <RefDirect name="PTTA" refName="PTTA" unknown="true" />
       <FormLink name="SnapBehavior" refName="SnapTemplateBehavior" recordType="SNBH" />
       <FormLink name="Material" refName="MaterialPath" recordType="DODT" />
       <Data>
@@ -16,6 +18,7 @@
           <Float name="UnknownData3" />
           <Float name="UnknownData4" />
           <Float name="UnknownData5" />
+          <Break />
           <Float name="UnknownData6" />
         </Fields>
       </Data>

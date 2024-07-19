@@ -24,103 +24,107 @@ public class WriteTests
     }
 
     [Fact]
-    public void BasicWrite()
+    public async Task BasicWrite()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var weap = mod.Weapons.AddNew();
-        mod.WriteToBinary(
-            tmp.File.Path,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                MastersListContent = MastersListContentOption.NoCheck
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .NoMastersListContentCheck()
+            .SingleThread()
+            .WriteAsync();
     }
 
     [Fact]
-    public void BasicParallelWrite()
+    public async Task BasicParallelWrite()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var weap = mod.Weapons.AddNew();
-        mod.WriteToBinaryParallel(
-            tmp.File.Path,
-            new BinaryWriteParameters()
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .NoMastersListContentCheck()
+            .WriteAsync();
+    }
+
+    [Fact]
+    public async Task ParallelWrite_MasterFlagSync_Throw()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
+        var weap = mod.Weapons.AddNew();
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(tmp.File.Path)
+                .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
+                .NoMastersListContentCheck()
+                .WriteAsync();
+        });
+    }
+
+    [Fact]
+    public async Task Write_MasterFlagSync_Throw()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
+        var weap = mod.Weapons.AddNew();
+        await Assert.ThrowsAsync<ArgumentException>(
+            async () =>
             {
-                ModKey = ModKeyOption.NoCheck,
-                MastersListContent = MastersListContentOption.NoCheck
+                await mod.BeginWrite
+                    .WithNoLoadOrder()
+                    .ToPath(tmp.File.Path)
+                    .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
+                    .NoMastersListContentCheck()
+                    .WriteAsync();
             });
     }
 
     [Fact]
-    public void ParallelWrite_MasterFlagSync_Throw()
-    {
-        using var tmp = GetFile();
-        var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
-        var weap = mod.Weapons.AddNew();
-        Assert.Throws<ArgumentException>(
-            () => mod.WriteToBinaryParallel(
-                tmp.File.Path,
-                new BinaryWriteParameters()
-                {
-                    ModKey = ModKeyOption.ThrowIfMisaligned,
-                    MastersListContent = MastersListContentOption.NoCheck,
-                }));
-    }
-
-    [Fact]
-    public void Write_MasterFlagSync_Throw()
-    {
-        using var tmp = GetFile();
-        var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
-        var weap = mod.Weapons.AddNew();
-        Assert.Throws<ArgumentException>(
-            () => mod.WriteToBinaryParallel(
-                tmp.File.Path,
-                new BinaryWriteParameters()
-                {
-                    ModKey = ModKeyOption.ThrowIfMisaligned,
-                    MastersListContent = MastersListContentOption.NoCheck,
-                }));
-    }
-
-    [Fact]
-    public void ParallelWrite_MasterListSync_Throw()
+    public async Task ParallelWrite_MasterListSync_Throw()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-        Assert.Throws<AggregateException>(
-            () => mod.WriteToBinaryParallel(
-                tmp.File.Path,
-                new BinaryWriteParameters()
-                {
-                    ModKey = ModKeyOption.NoCheck,
-                    MastersListContent = MastersListContentOption.NoCheck,
-                }));
+        await Assert.ThrowsAsync<AggregateException>(
+            async () =>
+            {
+                await mod.BeginWrite
+                    .WithNoLoadOrder()
+                    .ToPath(tmp.File.Path)
+                    .NoModKeySync()
+                    .NoMastersListContentCheck()
+                    .WriteAsync();
+            });
     }
 
     [Fact]
-    public void Write_MasterListSync_Throw()
+    public async Task Write_MasterListSync_Throw()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-        Assert.Throws<RecordException>(
-            () =>
+        await Assert.ThrowsAsync<RecordException>(
+            async () =>
             {
                 try
                 {
-                    mod.WriteToBinary(
-                        tmp.File.Path,
-                        new BinaryWriteParameters()
-                        {
-                            ModKey = ModKeyOption.NoCheck,
-                            MastersListContent = MastersListContentOption.NoCheck,
-                        });
+                    await mod.BeginWrite
+                        .WithNoLoadOrder()
+                        .ToPath(tmp.File.Path)
+                        .NoModKeySync()
+                        .NoMastersListContentCheck()
+                        .SingleThread()
+                        .WriteAsync();
                 }
                 catch (RecordException ex)
                 {
@@ -131,39 +135,37 @@ public class WriteTests
     }
 
     [Fact]
-    public void ParallelWrite_MasterListSync()
+    public async Task ParallelWrite_MasterListSync()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-        mod.WriteToBinaryParallel(
-            tmp.File.Path,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                MastersListContent = MastersListContentOption.Iterate,
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .WriteAsync();
     }
 
     [Fact]
-    public void Write_MasterListSync()
+    public async Task Write_MasterListSync()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-        mod.WriteToBinary(
-            tmp.File.Path,
-            new BinaryWriteParameters()
-            {
-                ModKey = ModKeyOption.NoCheck,
-                MastersListContent = MastersListContentOption.Iterate,
-            });
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate)
+            .SingleThread()
+            .WriteAsync();
     }
 
     [Fact]
-    public void Write_ModNotOnLoadOrder()
+    public async Task Write_ModNotOnLoadOrder()
     {
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
@@ -171,48 +173,51 @@ public class WriteTests
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:SomeOtherMod.esp"), SkyrimRelease.SkyrimLE));
-        Assert.Throws<MissingModException>(() =>
+        await Assert.ThrowsAsync<MissingModException>(async () =>
         {
-            mod.WriteToBinary(
-                tmp.File,
-                new BinaryWriteParameters()
-                {
-                    ModKey = ModKeyOption.NoCheck,
-                    MastersListContent = MastersListContentOption.Iterate,
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(
-                        Constants.Skyrim.AsEnumerable())
-                });
+            await mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(tmp.File)
+                .NoModKeySync()
+                .WithMastersListContent(MastersListContentOption.Iterate)
+                .WithMastersListOrdering(Constants.Skyrim.AsEnumerable())
+                .WriteAsync();
         });
     }
 
     [Fact]
-    public void WriteWithCounterLists()
+    public async Task WriteWithCounterLists()
     {
-        var param = new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            MastersListContent = MastersListContentOption.Iterate,
-        };
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var armor = mod.Armors.AddNew();
-        mod.WriteToBinaryParallel(tmp.File.Path, param);
+        var writer = SkyrimMod.WriteBuilder
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate);
+        await writer.WriteAsync(mod);
         armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
-        mod.WriteToBinaryParallel(tmp.File.Path, param);
+        await writer.WriteAsync(mod);
         armor.Keywords.Add(FormKey.Null);
-        mod.WriteToBinaryParallel(tmp.File.Path, param);
+        await writer.WriteAsync(mod);
         for (int i = 0; i < 20000; i++)
         {
             armor.Keywords.Add(FormKey.Null);
         }
         Assert.Throws<AggregateException>(() =>
         {
-            mod.WriteToBinaryParallel(tmp.File.Path, param);
+            mod.BeginWrite
+                .WithNoLoadOrder()
+                .ToPath(tmp.File.Path)
+                .NoModKeySync()
+                .WithMastersListContent(MastersListContentOption.Iterate)
+                .Write();
         });
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
-    public void WriteWithDifferentModKeyWithStrings(
+    public async Task WriteWithDifferentModKeyWithStrings(
         IFileSystem fileSystem,
         SkyrimMod mod,
         Npc npc,
@@ -222,10 +227,12 @@ public class WriteTests
         npc.Name = npcName;
         mod.UsingLocalization = true;
         mod.ModKey.Should().NotBe(modPath.ModKey);
-        mod.WriteToBinary(modPath, new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.CorrectToPath
-        }, fileSystem: fileSystem);
+        await mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(modPath)
+            .WithModKeySync(ModKeyOption.CorrectToPath)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
         var stringsPath = Path.Combine(modPath.Path.Directory, "Strings");
         fileSystem.Directory.Exists(stringsPath).Should().BeTrue();
         fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.STRINGS"));

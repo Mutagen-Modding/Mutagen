@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte Rank => _structData.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

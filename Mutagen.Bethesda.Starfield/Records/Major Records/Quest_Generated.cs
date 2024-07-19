@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -291,6 +290,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.QuestGroup => this.QuestGroup;
         #endregion
+        #region SwfFile
+        public String? SwfFile { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.SwfFile => this.SwfFile;
+        #endregion
         #region MissionTypeKeyword
         private readonly IFormLinkNullable<IKeywordGetter> _MissionTypeKeyword = new FormLinkNullable<IKeywordGetter>();
         public IFormLinkNullable<IKeywordGetter> MissionTypeKeyword
@@ -438,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
                 this.QuestGroup = initialValue;
+                this.SwfFile = initialValue;
                 this.MissionTypeKeyword = initialValue;
                 this.MissionBoardDescription = initialValue;
                 this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
@@ -477,6 +482,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Objectives,
                 TItem Aliases,
                 TItem QuestGroup,
+                TItem SwfFile,
                 TItem MissionTypeKeyword,
                 TItem MissionBoardDescription,
                 TItem MissionBoardInfoPanels,
@@ -515,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
                 this.QuestGroup = QuestGroup;
+                this.SwfFile = SwfFile;
                 this.MissionTypeKeyword = MissionTypeKeyword;
                 this.MissionBoardDescription = MissionBoardDescription;
                 this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(MissionBoardInfoPanels, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
@@ -555,6 +562,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>? Aliases;
             public TItem QuestGroup;
+            public TItem SwfFile;
             public TItem MissionTypeKeyword;
             public TItem MissionBoardDescription;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>? MissionBoardInfoPanels;
@@ -597,6 +605,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
                 if (!object.Equals(this.QuestGroup, rhs.QuestGroup)) return false;
+                if (!object.Equals(this.SwfFile, rhs.SwfFile)) return false;
                 if (!object.Equals(this.MissionTypeKeyword, rhs.MissionTypeKeyword)) return false;
                 if (!object.Equals(this.MissionBoardDescription, rhs.MissionBoardDescription)) return false;
                 if (!object.Equals(this.MissionBoardInfoPanels, rhs.MissionBoardInfoPanels)) return false;
@@ -631,6 +640,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Objectives);
                 hash.Add(this.Aliases);
                 hash.Add(this.QuestGroup);
+                hash.Add(this.SwfFile);
                 hash.Add(this.MissionTypeKeyword);
                 hash.Add(this.MissionBoardDescription);
                 hash.Add(this.MissionBoardInfoPanels);
@@ -754,6 +764,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.QuestGroup)) return false;
+                if (!eval(this.SwfFile)) return false;
                 if (!eval(this.MissionTypeKeyword)) return false;
                 if (!eval(this.MissionBoardDescription)) return false;
                 if (this.MissionBoardInfoPanels != null)
@@ -929,6 +940,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.QuestGroup)) return true;
+                if (eval(this.SwfFile)) return true;
                 if (eval(this.MissionTypeKeyword)) return true;
                 if (eval(this.MissionBoardDescription)) return true;
                 if (this.MissionBoardInfoPanels != null)
@@ -1124,6 +1136,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.QuestGroup = eval(this.QuestGroup);
+                obj.SwfFile = eval(this.SwfFile);
                 obj.MissionTypeKeyword = eval(this.MissionTypeKeyword);
                 obj.MissionBoardDescription = eval(this.MissionBoardDescription);
                 if (MissionBoardInfoPanels != null)
@@ -1404,6 +1417,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(QuestGroup, "QuestGroup");
                     }
+                    if (printMask?.SwfFile ?? true)
+                    {
+                        sb.AppendItem(SwfFile, "SwfFile");
+                    }
                     if (printMask?.MissionTypeKeyword ?? true)
                     {
                         sb.AppendItem(MissionTypeKeyword, "MissionTypeKeyword");
@@ -1551,6 +1568,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>? Aliases;
             public Exception? QuestGroup;
+            public Exception? SwfFile;
             public Exception? MissionTypeKeyword;
             public Exception? MissionBoardDescription;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>? MissionBoardInfoPanels;
@@ -1607,6 +1625,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Aliases;
                     case Quest_FieldIndex.QuestGroup:
                         return QuestGroup;
+                    case Quest_FieldIndex.SwfFile:
+                        return SwfFile;
                     case Quest_FieldIndex.MissionTypeKeyword:
                         return MissionTypeKeyword;
                     case Quest_FieldIndex.MissionBoardDescription:
@@ -1693,6 +1713,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Quest_FieldIndex.QuestGroup:
                         this.QuestGroup = ex;
+                        break;
+                    case Quest_FieldIndex.SwfFile:
+                        this.SwfFile = ex;
                         break;
                     case Quest_FieldIndex.MissionTypeKeyword:
                         this.MissionTypeKeyword = ex;
@@ -1792,6 +1815,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Quest_FieldIndex.QuestGroup:
                         this.QuestGroup = (Exception?)obj;
                         break;
+                    case Quest_FieldIndex.SwfFile:
+                        this.SwfFile = (Exception?)obj;
+                        break;
                     case Quest_FieldIndex.MissionTypeKeyword:
                         this.MissionTypeKeyword = (Exception?)obj;
                         break;
@@ -1850,6 +1876,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Objectives != null) return true;
                 if (Aliases != null) return true;
                 if (QuestGroup != null) return true;
+                if (SwfFile != null) return true;
                 if (MissionTypeKeyword != null) return true;
                 if (MissionBoardDescription != null) return true;
                 if (MissionBoardInfoPanels != null) return true;
@@ -2047,6 +2074,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(QuestGroup, "QuestGroup");
                 }
                 {
+                    sb.AppendItem(SwfFile, "SwfFile");
+                }
+                {
                     sb.AppendItem(MissionTypeKeyword, "MissionTypeKeyword");
                 }
                 {
@@ -2180,6 +2210,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 ret.QuestGroup = this.QuestGroup.Combine(rhs.QuestGroup);
+                ret.SwfFile = this.SwfFile.Combine(rhs.SwfFile);
                 ret.MissionTypeKeyword = this.MissionTypeKeyword.Combine(rhs.MissionTypeKeyword);
                 ret.MissionBoardDescription = this.MissionBoardDescription.Combine(rhs.MissionBoardDescription);
                 ret.MissionBoardInfoPanels = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MissionBoardInfoPanels?.Overall, rhs.MissionBoardInfoPanels?.Overall), Noggog.ExceptionExt.Combine(this.MissionBoardInfoPanels?.Specific, rhs.MissionBoardInfoPanels?.Specific));
@@ -2231,6 +2262,7 @@ namespace Mutagen.Bethesda.Starfield
             public QuestObjective.TranslationMask? Objectives;
             public AQuestAlias.TranslationMask? Aliases;
             public bool QuestGroup;
+            public bool SwfFile;
             public bool MissionTypeKeyword;
             public bool MissionBoardDescription;
             public QuestMissionBoardPanel.TranslationMask? MissionBoardInfoPanels;
@@ -2260,6 +2292,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Filter = defaultOn;
                 this.Summary = defaultOn;
                 this.QuestGroup = defaultOn;
+                this.SwfFile = defaultOn;
                 this.MissionTypeKeyword = defaultOn;
                 this.MissionBoardDescription = defaultOn;
                 this.Keywords = defaultOn;
@@ -2292,6 +2325,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
                 ret.Add((QuestGroup, null));
+                ret.Add((SwfFile, null));
                 ret.Add((MissionTypeKeyword, null));
                 ret.Add((MissionBoardDescription, null));
                 ret.Add((MissionBoardInfoPanels == null ? DefaultOn : !MissionBoardInfoPanels.GetCrystal().CopyNothing, MissionBoardInfoPanels?.GetCrystal()));
@@ -2388,6 +2422,8 @@ namespace Mutagen.Bethesda.Starfield
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -2521,6 +2557,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<QuestObjective> Objectives { get; }
         new ExtendedList<AQuestAlias>? Aliases { get; set; }
         new IFormLinkNullable<IKeywordGetter> QuestGroup { get; set; }
+        new String? SwfFile { get; set; }
         new IFormLinkNullable<IKeywordGetter> MissionTypeKeyword { get; set; }
         new TranslatedString? MissionBoardDescription { get; set; }
         new ExtendedList<QuestMissionBoardPanel> MissionBoardInfoPanels { get; }
@@ -2593,6 +2630,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
         IReadOnlyList<IAQuestAliasGetter>? Aliases { get; }
         IFormLinkNullableGetter<IKeywordGetter> QuestGroup { get; }
+        String? SwfFile { get; }
         IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword { get; }
         ITranslatedStringGetter? MissionBoardDescription { get; }
         IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; }
@@ -2820,6 +2858,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         public static void Remove(
             this IQuestInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IQuestInternal obj,
             HashSet<FormKey> keys)
         {
             ((QuestSetterCommon)((IQuestGetter)obj).CommonSetterInstance()!).Remove(
@@ -3019,16 +3071,17 @@ namespace Mutagen.Bethesda.Starfield
         Objectives = 23,
         Aliases = 24,
         QuestGroup = 25,
-        MissionTypeKeyword = 26,
-        MissionBoardDescription = 27,
-        MissionBoardInfoPanels = 28,
-        Keywords = 29,
-        ScriptComment = 30,
-        Timestamp = 31,
-        Unknown = 32,
-        DialogBranches = 33,
-        DialogTopics = 34,
-        Scenes = 35,
+        SwfFile = 26,
+        MissionTypeKeyword = 27,
+        MissionBoardDescription = 28,
+        MissionBoardInfoPanels = 29,
+        Keywords = 30,
+        ScriptComment = 31,
+        Timestamp = 32,
+        Unknown = 33,
+        DialogBranches = 34,
+        DialogTopics = 35,
+        Scenes = 36,
     }
     #endregion
 
@@ -3039,9 +3092,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -3115,6 +3168,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ALCS,
                 RecordTypes.ALMI,
                 RecordTypes.GNAM,
+                RecordTypes.SNAM,
                 RecordTypes.QMTY,
                 RecordTypes.QMSU,
                 RecordTypes.QMDT,
@@ -3126,7 +3180,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DLBR,
                 RecordTypes.QNAM,
                 RecordTypes.TNAM,
-                RecordTypes.SNAM,
                 RecordTypes.DIAL,
                 RecordTypes.PNAM,
                 RecordTypes.BNAM,
@@ -3252,6 +3305,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Objectives.Clear();
             item.Aliases = null;
             item.QuestGroup.Clear();
+            item.SwfFile = default;
             item.MissionTypeKeyword.Clear();
             item.MissionBoardDescription = default;
             item.MissionBoardInfoPanels.Clear();
@@ -3538,6 +3592,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "OrbitalDataComponent":
                 case "IOrbitalDataComponentGetter":
                 case "IOrbitalDataComponent":
+                case "CityMapsUsageComponent":
+                case "ICityMapsUsageComponentGetter":
+                case "ICityMapsUsageComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":
@@ -3763,6 +3820,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.QuestGroup = item.QuestGroup.Equals(rhs.QuestGroup);
+            ret.SwfFile = string.Equals(item.SwfFile, rhs.SwfFile);
             ret.MissionTypeKeyword = item.MissionTypeKeyword.Equals(rhs.MissionTypeKeyword);
             ret.MissionBoardDescription = object.Equals(item.MissionBoardDescription, rhs.MissionBoardDescription);
             ret.MissionBoardInfoPanels = item.MissionBoardInfoPanels.CollectionEqualsHelper(
@@ -3991,6 +4049,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.QuestGroup.FormKeyNullable, "QuestGroup");
             }
+            if ((printMask?.SwfFile ?? true)
+                && item.SwfFile is {} SwfFileItem)
+            {
+                sb.AppendItem(SwfFileItem, "SwfFile");
+            }
             if (printMask?.MissionTypeKeyword ?? true)
             {
                 sb.AppendItem(item.MissionTypeKeyword.FormKeyNullable, "MissionTypeKeyword");
@@ -4218,6 +4281,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.QuestGroup.Equals(rhs.QuestGroup)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
+            {
+                if (!string.Equals(lhs.SwfFile, rhs.SwfFile)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionTypeKeyword) ?? true))
             {
                 if (!lhs.MissionTypeKeyword.Equals(rhs.MissionTypeKeyword)) return false;
@@ -4323,6 +4390,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Objectives);
             hash.Add(item.Aliases);
             hash.Add(item.QuestGroup);
+            if (item.SwfFile is {} SwfFileitem)
+            {
+                hash.Add(SwfFileitem);
+            }
             hash.Add(item.MissionTypeKeyword);
             if (item.MissionBoardDescription is {} MissionBoardDescriptionitem)
             {
@@ -5366,6 +5437,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.QuestGroup.SetTo(rhs.QuestGroup.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
+            {
+                item.SwfFile = rhs.SwfFile;
+            }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionTypeKeyword) ?? true))
             {
                 item.MissionTypeKeyword.SetTo(rhs.MissionTypeKeyword.FormKeyNullable);
@@ -5785,6 +5860,11 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.QuestGroup,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SwfFile,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
+                binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MissionTypeKeyword,
@@ -6107,6 +6187,14 @@ namespace Mutagen.Bethesda.Starfield
                     item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SwfFile = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.SwfFile;
+                }
                 case RecordTypeInts.QMTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -6271,11 +6359,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestType
         private int? _QuestTypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestType => _QuestTypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestTypeLocation);
         #endregion
         #region QuestFaction
         private int? _QuestFactionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => _QuestFactionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestFactionLocation);
         #endregion
         #region Event
         private int? _EventLocation;
@@ -6283,15 +6371,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Location
         private int? _LocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region QuestTimeLimit
         private int? _QuestTimeLimitLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => _QuestTimeLimitLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTimeLimitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _QuestTimeLimitLocation);
         #endregion
         #region SourceQuest
         private int? _SourceQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => _SourceQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _SourceQuestLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region Filter
@@ -6326,11 +6414,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QuestGroup
         private int? _QuestGroupLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => _QuestGroupLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _QuestGroupLocation);
+        #endregion
+        #region SwfFile
+        private int? _SwfFileLocation;
+        public String? SwfFile => _SwfFileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MissionTypeKeyword
         private int? _MissionTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => _MissionTypeKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionTypeKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _MissionTypeKeywordLocation);
         #endregion
         #region MissionBoardDescription
         private int? _MissionBoardDescriptionLocation;
@@ -6483,7 +6575,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.TextDisplayGlobals = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IGlobalGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IGlobalGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGlobalGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -6553,6 +6645,11 @@ namespace Mutagen.Bethesda.Starfield
                     _QuestGroupLocation = (stream.Position - offset);
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
+                case RecordTypeInts.SNAM:
+                {
+                    _SwfFileLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.SwfFile;
+                }
                 case RecordTypeInts.QMTY:
                 {
                     _MissionTypeKeywordLocation = (stream.Position - offset);
@@ -6584,7 +6681,7 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Quest_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.SCCM:

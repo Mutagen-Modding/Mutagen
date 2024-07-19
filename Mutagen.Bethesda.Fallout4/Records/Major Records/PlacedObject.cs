@@ -230,17 +230,11 @@ partial class PlacedObjectBinaryWriteTranslation
             writer.Write(flags);
             writer.Write(unknown2);
         }
-        if (lightingTemplate.FormKeyNullable != null)
-        {
-            FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKeyNullable.Value, RecordTypes.LNAM);
-        }
-        if (imageSpace.FormKeyNullable != null)
-        {
-            FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKeyNullable.Value, RecordTypes.INAM);
-        }
+        FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate, RecordTypes.LNAM);
+        FormKeyBinaryTranslation.Instance.Write(writer, imageSpace, RecordTypes.INAM);
         foreach (var room in linkedRooms)
         {
-            FormKeyBinaryTranslation.Instance.Write(writer, room.FormKey, RecordTypes.XLRM);
+            FormKeyBinaryTranslation.Instance.Write(writer, room, RecordTypes.XLRM);
         }
     }
 }
@@ -254,10 +248,10 @@ partial class PlacedObjectBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
 
     int? _lightingTemplateLoc;
-    public IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightingTemplateGetter>.Null;
+    public IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightingTemplateGetter>(_package, _recordData, _lightingTemplateLoc);
 
     int? _imageSpaceLoc;
-    public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
+    public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceGetter>(_package, _recordData, _imageSpaceLoc);
 
     public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
@@ -285,7 +279,7 @@ partial class PlacedObjectBinaryOverlay
                     LinkedRooms = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlacedObjectGetter>>(
                         stream.RemainingMemory,
                         _package,
-                        (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

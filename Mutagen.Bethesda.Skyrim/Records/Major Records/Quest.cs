@@ -1,10 +1,8 @@
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 
@@ -86,13 +84,6 @@ partial class QuestBinaryCreateTranslation
         ConditionBinaryCreateTranslation.FillConditionsList(item.EventConditions, frame);
         return null;
     }
-
-    public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
-    {
-        // Skip
-        frame.ReadSubrecord();
-        return null;
-    }
 }
 
 partial class QuestBinaryWriteTranslation
@@ -106,22 +97,6 @@ partial class QuestBinaryWriteTranslation
     {
         using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
         ConditionBinaryWriteTranslation.WriteConditionsList(item.EventConditions, writer);
-    }
-
-    public static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
-    {
-        var aliases = item.Aliases;
-        using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))
-        {
-            if (aliases.Count == 0)
-            {
-                writer.Write(0);
-            }
-            else
-            {
-                writer.Write(aliases.Select(x => x.ID).Max() + 1);
-            }
-        }
     }
 }
 
@@ -145,12 +120,6 @@ partial class QuestBinaryOverlay
         }
         EventConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
 
-        return null;
-    }
-
-    public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-    {
-        stream.ReadSubrecord();
         return null;
     }
 }

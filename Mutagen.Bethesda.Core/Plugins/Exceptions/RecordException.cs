@@ -76,12 +76,10 @@ public class RecordException : Exception
             {
                 rec.ModKey = modKey;
             }
-            if (rec.EditorID == null && edid != null)
+
+            if (rec.EditorID == null && rec.FormKey == null)
             {
                 rec.EditorID = edid;
-            }
-            if (rec.FormKey == null && formKey != null)
-            {
                 rec.FormKey = formKey;
             }
             if (rec.RecordType == null && recordType != null)

@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IItemGetter> Item => FormLinkBinaryTranslation.Instance.OverlayFactory<IItemGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32? Count => _structData.Length >= 8 ? BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4)) : default(Int32?);
         partial void CustomFactoryEnd(
             OverlayStream stream,

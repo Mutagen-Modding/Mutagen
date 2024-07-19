@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -7,33 +8,43 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
-    private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID(
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public override bool CanBeSmallMaster => false;
+    public override bool IsSmallMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
+    }
+    public override bool CanBeMediumMaster => false;
+    public override bool IsMediumMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion,
+    public override bool ListsOverriddenForms => false;
+    
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: GameRelease.Oblivion,
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: DefaultInitialNextFormID);
+            constants: GameConstants.Get(GameRelease.Oblivion));
     }
 
     partial void GetCustomRecordCount(Action<uint> setter)
@@ -86,14 +97,136 @@ public partial class OblivionMod : AMod
         count += (uint)this.DialogTopics.RecordCache.Count;
         setter(count);
     }
+
+    internal class OblivionCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
+    {
+        public static readonly OblivionCreateBuilderInstantiator Instance = new();
+        
+        public IOblivionMod Mutable(BinaryReadMutableBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return OblivionMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return OblivionMod.CreateFromBinary(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IOblivionModDisposableGetter Readonly(BinaryReadBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return OblivionMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return OblivionMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public static BinaryReadBuilderSourceStreamFactoryChoice<IOblivionMod, IOblivionModDisposableGetter, GroupMask> 
+        Create => new(
+        GameRelease.Oblivion, 
+        OblivionCreateBuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: true);
+
+    internal class OblivionWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IOblivionModGetter>
+    {
+        public static readonly OblivionWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter> 
+        BeginWrite => new(
+        this, 
+        OblivionWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IOblivionModGetter> WriteBuilder => new(OblivionWriteBuilderInstantiator.Instance);
 }
 
 internal partial class OblivionModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        OblivionMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        OblivionMod.GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool CanBeSmallMaster => false;
+    public bool IsSmallMaster => false;
+    public bool CanBeMediumMaster => false;
+    public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => false;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter>(
+        this, 
+        OblivionMod.OblivionWriteBuilderInstantiator.Instance);
 }
 
 partial class OblivionModCommon
@@ -251,7 +384,7 @@ partial class OblivionModCommon
             worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             road?.WriteToBinary(worldGroupWriter);

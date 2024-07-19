@@ -58,7 +58,7 @@
           <Interface>IPlacedThing</Interface>
         </FormLink>
       </List>
-      <CustomLogic name="CombinedMeshLogic" recordType="XCRI" />
+      <CustomLogic name="CombinedMeshLogic" recordType="XCRI" overflowRecordType="XXXX" />
       <List name="CombinedMeshes" binary="NoGeneration">
         <UInt32 />
       </List>

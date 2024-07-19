@@ -11,7 +11,7 @@
   </Object>
   <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <Enum name="Function" enumName="Condition.Function" byteLength="2"/>
+      <Enum name="Function" enumName="Condition.Function" byteLength="2" binary="NoGeneration"/>
       <Int32 name="ParameterOne"/>
       <Int32 name="ParameterTwo"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>

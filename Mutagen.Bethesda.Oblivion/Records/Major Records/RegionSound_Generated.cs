@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Single Chance => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(

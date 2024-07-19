@@ -2865,7 +2865,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)), maxIsNull: true)) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Emotion => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet, maxIsNull: true);
         #endregion
         #region WEMFile
         private int _WEMFileLocation => _TRDALocation!.Value.Min + 0x4;
@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BNAM
         private int? _BNAMLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> BNAM => _BNAMLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> BNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _BNAMLocation);
         #endregion
         #region STRV
         private int? _STRVLocation;
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> VCLR => _VCLRLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> VCLR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _VCLRLocation);
         #endregion
         #region FLMV
         private int? _FLMVLocation;

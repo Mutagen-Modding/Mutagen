@@ -6,6 +6,7 @@ namespace Mutagen.Bethesda.Inis.DI;
 public interface IIniPathProvider
 {
     FilePath Path { get; }
+    FilePath? TryGetPath();
 }
 
 public sealed class IniPathProvider : IIniPathProvider
@@ -22,6 +23,17 @@ public sealed class IniPathProvider : IIniPathProvider
         _releaseContext = releaseContext;
         _lookup = lookup;
     }
+    
+    public FilePath? TryGetPath()
+    {
+        return _lookup.TryGet(_releaseContext.Release);
+    }
 }
 
-public record IniPathInjection(FilePath Path) : IIniPathProvider;
+public record IniPathInjection(FilePath Path) : IIniPathProvider
+{
+    public FilePath? TryGetPath()
+    {
+        return Path;
+    }
+}

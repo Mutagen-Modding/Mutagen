@@ -96,7 +96,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         var data = typeGen.GetFieldData();  
         if (data.HasTrigger)  
         {  
-            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");  
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");  
         }  
   
         List<string> extraArgs = new List<string>();  
@@ -227,7 +227,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     if (data.HasTrigger  
                         || (gendered?.MaleMarker.HasValue ?? false))  
                     {  
-                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
                     else
                     {
@@ -239,18 +239,18 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     if (data.HasTrigger  
                         || (gendered?.MaleMarker.HasValue ?? false))  
                     {  
-                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
                     else  
                     {  
-                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
                 }
                 case StringBinaryType.PrependLength:
                 case StringBinaryType.PrependLengthWithNullIfContent: 
-                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 case StringBinaryType.PrependLengthUShort:  
-                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 default:  
                     throw new NotImplementedException();  
             }  
@@ -277,7 +277,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;");  
                 break;  
             case StringBinaryType.NullTerminate:  
-                sb.AppendLine($"ret.{AccessorTransform(typeGen, typeGen.Name)} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});");  
+                sb.AppendLine($"ret.{AccessorTransform(typeGen, typeGen.Name)} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)});");  
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{AccessorTransform(typeGen, typeGen.Name)}.Length + 1" : "5")};");  
                 break;  
             default:  

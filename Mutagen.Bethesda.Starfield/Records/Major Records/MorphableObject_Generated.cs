@@ -7,19 +7,22 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -54,6 +57,24 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IMorphableObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
         #region TMPP
         public String? TMPP { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -100,6 +121,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.TMPP = initialValue;
                 this.TCMP = initialValue;
                 this.MOBC = initialValue;
@@ -113,6 +135,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem Model,
                 TItem TMPP,
                 TItem TCMP,
                 TItem MOBC)
@@ -125,6 +148,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.TMPP = TMPP;
                 this.TCMP = TCMP;
                 this.MOBC = MOBC;
@@ -139,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem TMPP;
             public TItem TCMP;
             public TItem MOBC;
@@ -155,6 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.TMPP, rhs.TMPP)) return false;
                 if (!object.Equals(this.TCMP, rhs.TCMP)) return false;
                 if (!object.Equals(this.MOBC, rhs.MOBC)) return false;
@@ -163,6 +189,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
                 hash.Add(this.TMPP);
                 hash.Add(this.TCMP);
                 hash.Add(this.MOBC);
@@ -176,6 +203,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 if (!eval(this.TMPP)) return false;
                 if (!eval(this.TCMP)) return false;
                 if (!eval(this.MOBC)) return false;
@@ -187,6 +219,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 if (eval(this.TMPP)) return true;
                 if (eval(this.TCMP)) return true;
                 if (eval(this.MOBC)) return true;
@@ -205,6 +242,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.TMPP = eval(this.TMPP);
                 obj.TCMP = eval(this.TCMP);
                 obj.MOBC = eval(this.MOBC);
@@ -226,6 +264,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MorphableObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
                     if (printMask?.TMPP ?? true)
                     {
                         sb.AppendItem(TMPP, "TMPP");
@@ -249,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? TMPP;
             public Exception? TCMP;
             public Exception? MOBC;
@@ -260,6 +303,8 @@ namespace Mutagen.Bethesda.Starfield
                 MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MorphableObject_FieldIndex.Model:
+                        return Model;
                     case MorphableObject_FieldIndex.TMPP:
                         return TMPP;
                     case MorphableObject_FieldIndex.TCMP:
@@ -276,6 +321,9 @@ namespace Mutagen.Bethesda.Starfield
                 MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MorphableObject_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
                     case MorphableObject_FieldIndex.TMPP:
                         this.TMPP = ex;
                         break;
@@ -296,6 +344,9 @@ namespace Mutagen.Bethesda.Starfield
                 MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MorphableObject_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
                     case MorphableObject_FieldIndex.TMPP:
                         this.TMPP = (Exception?)obj;
                         break;
@@ -314,6 +365,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
                 if (TMPP != null) return true;
                 if (TCMP != null) return true;
                 if (MOBC != null) return true;
@@ -343,6 +395,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Model?.Print(sb);
                 {
                     sb.AppendItem(TMPP, "TMPP");
                 }
@@ -360,6 +413,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.TMPP = this.TMPP.Combine(rhs.TMPP);
                 ret.TCMP = this.TCMP.Combine(rhs.TCMP);
                 ret.MOBC = this.MOBC.Combine(rhs.MOBC);
@@ -385,6 +439,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public Model.TranslationMask? Model;
             public bool TMPP;
             public bool TCMP;
             public bool MOBC;
@@ -406,6 +461,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((TMPP, null));
                 ret.Add((TCMP, null));
                 ret.Add((MOBC, null));
@@ -421,6 +477,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MorphableObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MorphableObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MorphableObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public MorphableObject(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -470,6 +528,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IMorphableObject);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MorphableObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MorphableObjectSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MorphableObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MorphableObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -549,10 +611,17 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMorphableObject :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMorphableObjectInternal>,
+        IModeled,
         IMorphableObjectGetter,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
         new String? TMPP { get; set; }
         new String? TCMP { get; set; }
         new MemorySlice<Byte>? MOBC { get; set; }
@@ -568,11 +637,20 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.MRPH)]
     public partial interface IMorphableObjectGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMorphableObjectGetter>,
-        IMapsToGetter<IMorphableObjectGetter>
+        IMapsToGetter<IMorphableObjectGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => MorphableObject_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
         String? TMPP { get; }
         String? TCMP { get; }
         ReadOnlyMemorySlice<Byte>? MOBC { get; }
@@ -752,9 +830,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        TMPP = 7,
-        TCMP = 8,
-        MOBC = 9,
+        Model = 7,
+        TMPP = 8,
+        TCMP = 9,
+        MOBC = 10,
     }
     #endregion
 
@@ -765,9 +844,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(MorphableObject.Mask<>);
 
@@ -800,6 +879,15 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.MRPH);
             var all = RecordCollection.Factory(
                 RecordTypes.MRPH,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
                 RecordTypes.TMPP,
                 RecordTypes.TCMP,
                 RecordTypes.MOBC);
@@ -847,6 +935,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMorphableObjectInternal item)
         {
             ClearPartial();
+            item.Model = null;
             item.TMPP = default;
             item.TCMP = default;
             item.MOBC = default;
@@ -867,6 +956,33 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMorphableObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMorphableObject obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMorphableObject obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -934,6 +1050,11 @@ namespace Mutagen.Bethesda.Starfield
             MorphableObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.TMPP = string.Equals(item.TMPP, rhs.TMPP);
             ret.TCMP = string.Equals(item.TCMP, rhs.TCMP);
             ret.MOBC = MemorySliceExt.SequenceEqual(item.MOBC, rhs.MOBC);
@@ -986,6 +1107,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
             if ((printMask?.TMPP ?? true)
                 && item.TMPP is {} TMPPItem)
             {
@@ -1051,6 +1177,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MorphableObject_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MorphableObject_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MorphableObject_FieldIndex.TMPP) ?? true))
             {
                 if (!string.Equals(lhs.TMPP, rhs.TMPP)) return false;
@@ -1091,6 +1225,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMorphableObjectGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
             if (item.TMPP is {} TMPPitem)
             {
                 hash.Add(TMPPitem);
@@ -1131,6 +1269,32 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMorphableObjectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1206,6 +1370,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MorphableObject_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)MorphableObject_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MorphableObject_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)MorphableObject_FieldIndex.TMPP) ?? true))
             {
                 item.TMPP = rhs.TMPP;
@@ -1382,6 +1572,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TMPP,
@@ -1481,6 +1678,21 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MorphableObject_FieldIndex.Model;
+                }
                 case RecordTypeInts.TMPP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1547,6 +1759,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MorphableObjectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MorphableObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MorphableObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1561,6 +1775,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMorphableObject);
 
 
+        public IModelGetter? Model { get; private set; }
         #region TMPP
         private int? _TMPPLocation;
         public String? TMPP => _TMPPLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TMPPLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1642,6 +1857,22 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MorphableObject_FieldIndex.Model;
+                }
                 case RecordTypeInts.TMPP:
                 {
                     _TMPPLocation = (stream.Position - offset);

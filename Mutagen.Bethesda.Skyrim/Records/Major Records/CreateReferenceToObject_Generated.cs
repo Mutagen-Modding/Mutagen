@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISkyrimMajorRecordGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         private RangeInt32? _ALCALocation;
         #region AliasID

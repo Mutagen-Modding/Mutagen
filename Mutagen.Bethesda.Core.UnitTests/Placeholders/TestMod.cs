@@ -4,6 +4,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -27,13 +28,20 @@ public class TestMod : ITestMod, IDisposable
     public GameRelease GameRelease { get; }
 
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
+    public IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite => throw new NotImplementedException();
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }
+    public bool CanBeSmallMaster { get; }
+    public bool IsSmallMaster { get; set; }
+    public bool CanBeMediumMaster { get; }
+    public bool IsMediumMaster { get; set; }
+    public bool ListsOverriddenForms { get; }
 
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
@@ -68,6 +76,11 @@ public class TestMod : ITestMod, IDisposable
     }
 
     public void Remove(HashSet<FormKey> formKeys)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Remove(IEnumerable<IFormLinkIdentifier> formLinks)
     {
         throw new NotImplementedException();
     }
@@ -163,12 +176,12 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    public void WriteToBinary(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null)
+    public void WriteToBinary(FilePath path, BinaryWriteParameters? param = null)
     {
         throw new NotImplementedException();
     }
 
-    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null)
+    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
     {
         throw new NotImplementedException();
     }
@@ -184,6 +197,11 @@ public class TestMod : ITestMod, IDisposable
     }
 
     public TAlloc SetAllocator<TAlloc>(TAlloc allocator) where TAlloc : IFormKeyAllocator
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
     {
         throw new NotImplementedException();
     }

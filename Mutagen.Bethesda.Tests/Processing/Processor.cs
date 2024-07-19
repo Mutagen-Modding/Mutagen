@@ -9,12 +9,14 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using System.Buffers.Binary;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Plugins.Masters.DI;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -26,8 +28,8 @@ public abstract class Processor
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
     private readonly Dictionary<long, uint> _lengthTracker = new();
     protected byte _numMasters;
-    public IMasterReferenceCollection Masters;
-    protected ParsingBundle Bundle;
+    public IReadOnlySeparatedMasterPackage Masters;
+    protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
@@ -63,10 +65,11 @@ public abstract class Processor
         string previousPath)
     {
         SourcePath = sourcePath;
-        Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease); 
-        Bundle = new ParsingBundle(GameRelease, Masters);
-        _numMasters = checked((byte)Masters.Masters.Count);
-        _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, previousPath), GameRelease);
+        Masters = SeparatedMasterPackage.NotSeparate(MasterReferenceCollection.FromPath(SourcePath, GameRelease)); 
+        Bundle = new ParsingMeta(GameRelease, ModKey, Masters);
+        _numMasters = checked((byte)Masters.Raw.Masters.Count);
+        var modPath = new ModPath(ModKey, previousPath);
+        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, loadOrder: null));
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))
         {
             lock (_lengthTracker)
@@ -162,6 +165,7 @@ public abstract class Processor
         }
 
         yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
+        // yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
     }
 
     protected virtual void AddDynamicProcessorInstructions()
@@ -241,7 +245,7 @@ public abstract class Processor
         long fileOffset)
     {
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ProcessStringTermination(
             edidFrame,
             fileOffset + majorFrame.HeaderLength + edidFrame.Location,
@@ -253,17 +257,42 @@ public abstract class Processor
         long fileOffset)
     {
         var formID = majorFrame.FormID;
-        if (formID.ModIndex.ID <= _numMasters) return;
+        if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
         Instructions.SetSubstitution(
             fileOffset + Meta.MajorConstants.FormIDLocationOffset + 3,
-            0);
+            _numMasters);
+    }
+
+    private bool IsStarfieldMaster(ModKey modKey)
+    {
+        switch (modKey.FileName.String)
+        {
+            case "OldMars.esm":
+            case "Constellation.esm":
+            case "SFBGS003.esm":
+            case "SFBGS006.esm":
+            case "SFBGS007.esm":
+            case "SFBGS008.esm":
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool CheckIsFormIDOverflow(FormID formID)
+    {
+        if (formID.FullMasterIndex <= _numMasters) return false;
+        // if (IsStarfieldMaster(ModKey)) return true;
+        if (formID.FullMasterIndex == FormID.SmallMasterMarker && Meta.SmallMasterFlag != null) return false; 
+        if (formID.FullMasterIndex == FormID.MediumMasterMarker && Meta.MediumMasterFlag != null) return false; 
+        return true;
     }
 
     public void ProcessFormIDOverflow(ReadOnlySpan<byte> span, ref long offsetLoc)
     {
         var formID = new FormID(span.UInt32());
-        if (formID.ModIndex.ID <= _numMasters) return;
+        if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
         Instructions.SetSubstitution(
             offsetLoc + 3,
@@ -272,8 +301,8 @@ public abstract class Processor
 
     public FormID ProcessFormIDOverflow(FormID formId)
     {
-        if (formId.ModIndex.ID <= _numMasters) return formId;
-        return new FormID(new ModIndex(_numMasters), formId.ID);
+        if (!CheckIsFormIDOverflow(formId)) return formId;
+        return FormID.Factory(MasterStyle.Full, _numMasters, formId.FullId);
     }
 
     public bool ProcessFormIDOverflow(SubrecordPinFrame pin, long offsetLoc, ref int loc)
@@ -412,7 +441,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, frame.FormID, reference: false);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -429,7 +458,7 @@ public abstract class Processor
     {
         Instructions.SetRemove(RangeInt64.FromLength(refLoc, majorFrame.TotalLength));
         
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ModifyParentGroupLengths(-majorFrame.TotalLength, formKey);
     }
 
@@ -440,7 +469,7 @@ public abstract class Processor
         long refLoc)
     {
         if (amount == 0) return;
-        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        var formKey = FormKey.Factory(Masters, frame.FormID, reference: false);
         ModifyParentGroupLengths(amount, formKey);
 
         // Modify Length 
@@ -749,7 +778,7 @@ public abstract class Processor
         {
             stream.Position = loc;
             var groupMeta = stream.ReadGroupHeader();
-            if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
+            if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue; 
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
         }
     }
@@ -766,6 +795,36 @@ public abstract class Processor
                 majorFrame.ContentLength));
             ProcessLengths(majorFrame, -checked((int)majorFrame.ContentLength), loc.Value.Location.Min);
         }
+    }
+
+    public void OrderOverridenForms(Func<IMutagenReadStream> streamGetter)
+    {
+        using var stream = streamGetter();
+        var header = stream.ReadModHeaderFrame();
+        var onam = RecordSpanExtensions.TryFindSubrecord(header.Content, Meta, RecordTypes.ONAM);
+        if (onam == null) return;
+        var masters = MasterReferenceCollection.FromStream(streamGetter());
+        var separatedMasters = SeparatedMasterPackage.NotSeparate(masters);
+        var uints = onam.Value.Content.Span.AsUInt32Span();
+        var fks = new List<FormKey>();
+        foreach (var x in uints)
+        {
+            fks.Add(FormKey.Factory(separatedMasters, new FormID(x), reference: true));
+        }
+
+        var orderedFormIds = fks
+            .OrderBy(x => x.ModKey.FileName.String)
+            .ThenBy(x => x.ID)
+            .Select(fk =>
+            {
+                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>(), reference: true);
+            })
+            .Select(x => x.Raw)
+            .ToArray();
+        var bytes = MemoryMarshal.Cast<uint, byte>(orderedFormIds.AsSpan());
+        Instructions.SetSubstitution(
+            header.HeaderLength + onam.Value.Location + onam.Value.HeaderLength,
+            bytes.ToArray());
     }
 
     public int FixMissingCounters(

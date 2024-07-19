@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> Object => _ObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> Object => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _ObjectLocation);
         #endregion
         public IReadOnlyList<IObjectBoundsFloatGetter>? ObjectBounds { get; private set; }
         partial void CustomFactoryEnd(
@@ -1349,14 +1349,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ObjectBounds = BinaryOverlayList.FactoryByStartIndex<IObjectBoundsFloatGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ObjectBounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectBoundsFloatGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 24,
                         getter: (s, p) => ObjectBoundsFloatBinaryOverlay.ObjectBoundsFloatFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds;
                 }
                 default:

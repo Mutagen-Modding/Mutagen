@@ -2,6 +2,9 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
+using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
@@ -65,9 +68,14 @@ public readonly struct ModHeader
     /// <summary>
     /// The integer representing a Mod Header's flags enum.
     /// Since each game has its own flag Enum, this field is offered as an int that should
-    /// be casted to the appropriate enum for use.
+    /// be cast to the appropriate enum for use.
     /// </summary>
     public int Flags => BinaryPrimitives.ReadInt32LittleEndian(Span.Slice(8, 4));
+
+    /// <summary>
+    /// Returns the style of master listed from the header, based on flags
+    /// </summary>
+    public MasterStyle MasterStyle => MasterStyleConstruction.ConstructFromFlags(Flags, Meta);
 }
 
 /// <summary>
@@ -157,8 +165,43 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// <summary>
     /// The integer representing a Mod Header's flags enum.
     /// Since each game has its own flag Enum, this field is offered as an int that should
-    /// be casted to the appropriate enum for use.
+    /// be cast to the appropriate enum for use.
     /// </summary>
     public int Flags => _header.Flags;
+
+    /// <summary>
+    /// Returns the style of master listed from the header, based on flags
+    /// </summary>
+    public MasterStyle MasterStyle => _header.MasterStyle;
+
     #endregion
+
+    public static ModHeaderFrame FromPath(
+        ModPath path, 
+        GameRelease release, 
+        bool readSafe = true,
+        IFileSystem? fileSystem = null)
+    {
+        var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
+        using var stream = new MutagenBinaryReadStream(fs, 
+            new ParsingMeta(
+                release, 
+                path.ModKey,
+                masterReferences: null!));
+        return stream.ReadModHeaderFrame(readSafe: readSafe);
+    }
+
+    public static ModHeaderFrame FromStream(
+        Stream stream,
+        ModKey modKey,
+        GameRelease release, 
+        bool readSafe = true)
+    {
+        using var mutStream = new MutagenBinaryReadStream(stream, 
+            new ParsingMeta(
+                release, 
+                modKey,
+                masterReferences: null!));
+        return mutStream.ReadModHeaderFrame(readSafe: readSafe);
+    }
 }

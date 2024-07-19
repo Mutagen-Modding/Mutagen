@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SurfaceBlock
         private int? _SurfaceBlockLocation;
-        public IFormLinkNullableGetter<ISurfaceBlockGetter> SurfaceBlock => _SurfaceBlockLocation.HasValue ? new FormLinkNullable<ISurfaceBlockGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceBlockLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceBlockGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceBlockGetter> SurfaceBlock => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceBlockGetter>(_package, _recordData, _SurfaceBlockLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

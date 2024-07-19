@@ -154,7 +154,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID.ID), ((ILoquiObject)this).Registration.ClassType, edid: null);
+                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID, reference: false), ((ILoquiObject)this).Registration.ClassType, edid: null);
             }
         }
     }
@@ -476,7 +476,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
         translationParams = translationParams.ShortCircuit();
         var ret = new List<int>();
@@ -486,6 +487,11 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         {
             var varMeta = stream.GetVariableHeader(subRecords: constants.LengthLength == 2);
             var recType = translationParams.ConvertToStandard(varMeta.RecordType);
+            if (endMarker == recType)
+            {
+                stream.Position += checked((int)varMeta.TotalLength);
+                break;
+            }
             if (triggersAlwaysAreNewRecords)
             {
                 if (trigger.AllRecordTypes.Contains(recType))
@@ -653,9 +659,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
-        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
+        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams, endMarker);
     }
 
     /// <summary>
@@ -673,9 +680,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
-        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
+        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams, endMarker);
     }
 
     public static IReadOnlyList<int> ParseRecordLocations(

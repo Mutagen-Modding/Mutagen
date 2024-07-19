@@ -59,6 +59,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         AssetLinkGetter<StarfieldModelAssetType>? IFirstPersonModelGetter.File => this.File;
         #endregion
+        #region BLMS
+        public Int16? BLMS { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int16? IFirstPersonModelGetter.BLMS => this.BLMS;
+        #endregion
         #region FLLD
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _FLLD;
@@ -79,6 +84,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayeredMaterialSwapGetter> IFirstPersonModelGetter.MaterialSwap => this.MaterialSwap;
+        #endregion
+        #region ColorRemappingIndex
+        public Single? ColorRemappingIndex { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IFirstPersonModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
 
         #region To String
@@ -120,18 +130,24 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.File = initialValue;
+                this.BLMS = initialValue;
                 this.FLLD = initialValue;
                 this.MaterialSwap = initialValue;
+                this.ColorRemappingIndex = initialValue;
             }
 
             public Mask(
                 TItem File,
+                TItem BLMS,
                 TItem FLLD,
-                TItem MaterialSwap)
+                TItem MaterialSwap,
+                TItem ColorRemappingIndex)
             {
                 this.File = File;
+                this.BLMS = BLMS;
                 this.FLLD = FLLD;
                 this.MaterialSwap = MaterialSwap;
+                this.ColorRemappingIndex = ColorRemappingIndex;
             }
 
             #pragma warning disable CS8618
@@ -144,8 +160,10 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem File;
+            public TItem BLMS;
             public TItem FLLD;
             public TItem MaterialSwap;
+            public TItem ColorRemappingIndex;
             #endregion
 
             #region Equals
@@ -159,16 +177,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
+                if (!object.Equals(this.BLMS, rhs.BLMS)) return false;
                 if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
+                if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.File);
+                hash.Add(this.BLMS);
                 hash.Add(this.FLLD);
                 hash.Add(this.MaterialSwap);
+                hash.Add(this.ColorRemappingIndex);
                 return hash.ToHashCode();
             }
 
@@ -178,8 +200,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.File)) return false;
+                if (!eval(this.BLMS)) return false;
                 if (!eval(this.FLLD)) return false;
                 if (!eval(this.MaterialSwap)) return false;
+                if (!eval(this.ColorRemappingIndex)) return false;
                 return true;
             }
             #endregion
@@ -188,8 +212,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.File)) return true;
+                if (eval(this.BLMS)) return true;
                 if (eval(this.FLLD)) return true;
                 if (eval(this.MaterialSwap)) return true;
+                if (eval(this.ColorRemappingIndex)) return true;
                 return false;
             }
             #endregion
@@ -205,8 +231,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.File = eval(this.File);
+                obj.BLMS = eval(this.BLMS);
                 obj.FLLD = eval(this.FLLD);
                 obj.MaterialSwap = eval(this.MaterialSwap);
+                obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
             }
             #endregion
 
@@ -229,6 +257,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(File, "File");
                     }
+                    if (printMask?.BLMS ?? true)
+                    {
+                        sb.AppendItem(BLMS, "BLMS");
+                    }
                     if (printMask?.FLLD ?? true)
                     {
                         sb.AppendItem(FLLD, "FLLD");
@@ -236,6 +268,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.MaterialSwap ?? true)
                     {
                         sb.AppendItem(MaterialSwap, "MaterialSwap");
+                    }
+                    if (printMask?.ColorRemappingIndex ?? true)
+                    {
+                        sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                     }
                 }
             }
@@ -262,8 +298,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? File;
+            public Exception? BLMS;
             public Exception? FLLD;
             public Exception? MaterialSwap;
+            public Exception? ColorRemappingIndex;
             #endregion
 
             #region IErrorMask
@@ -274,10 +312,14 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case FirstPersonModel_FieldIndex.File:
                         return File;
+                    case FirstPersonModel_FieldIndex.BLMS:
+                        return BLMS;
                     case FirstPersonModel_FieldIndex.FLLD:
                         return FLLD;
                     case FirstPersonModel_FieldIndex.MaterialSwap:
                         return MaterialSwap;
+                    case FirstPersonModel_FieldIndex.ColorRemappingIndex:
+                        return ColorRemappingIndex;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -291,11 +333,17 @@ namespace Mutagen.Bethesda.Starfield
                     case FirstPersonModel_FieldIndex.File:
                         this.File = ex;
                         break;
+                    case FirstPersonModel_FieldIndex.BLMS:
+                        this.BLMS = ex;
+                        break;
                     case FirstPersonModel_FieldIndex.FLLD:
                         this.FLLD = ex;
                         break;
                     case FirstPersonModel_FieldIndex.MaterialSwap:
                         this.MaterialSwap = ex;
+                        break;
+                    case FirstPersonModel_FieldIndex.ColorRemappingIndex:
+                        this.ColorRemappingIndex = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -310,11 +358,17 @@ namespace Mutagen.Bethesda.Starfield
                     case FirstPersonModel_FieldIndex.File:
                         this.File = (Exception?)obj;
                         break;
+                    case FirstPersonModel_FieldIndex.BLMS:
+                        this.BLMS = (Exception?)obj;
+                        break;
                     case FirstPersonModel_FieldIndex.FLLD:
                         this.FLLD = (Exception?)obj;
                         break;
                     case FirstPersonModel_FieldIndex.MaterialSwap:
                         this.MaterialSwap = (Exception?)obj;
+                        break;
+                    case FirstPersonModel_FieldIndex.ColorRemappingIndex:
+                        this.ColorRemappingIndex = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -325,8 +379,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (File != null) return true;
+                if (BLMS != null) return true;
                 if (FLLD != null) return true;
                 if (MaterialSwap != null) return true;
+                if (ColorRemappingIndex != null) return true;
                 return false;
             }
             #endregion
@@ -356,10 +412,16 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(File, "File");
                 }
                 {
+                    sb.AppendItem(BLMS, "BLMS");
+                }
+                {
                     sb.AppendItem(FLLD, "FLLD");
                 }
                 {
                     sb.AppendItem(MaterialSwap, "MaterialSwap");
+                }
+                {
+                    sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                 }
             }
             #endregion
@@ -370,8 +432,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.File = this.File.Combine(rhs.File);
+                ret.BLMS = this.BLMS.Combine(rhs.BLMS);
                 ret.FLLD = this.FLLD.Combine(rhs.FLLD);
                 ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
+                ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -396,8 +460,10 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool File;
+            public bool BLMS;
             public bool FLLD;
             public bool MaterialSwap;
+            public bool ColorRemappingIndex;
             #endregion
 
             #region Ctors
@@ -408,8 +474,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.File = defaultOn;
+                this.BLMS = defaultOn;
                 this.FLLD = defaultOn;
                 this.MaterialSwap = defaultOn;
+                this.ColorRemappingIndex = defaultOn;
             }
 
             #endregion
@@ -426,8 +494,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((File, null));
+                ret.Add((BLMS, null));
                 ret.Add((FLLD, null));
                 ret.Add((MaterialSwap, null));
+                ret.Add((ColorRemappingIndex, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -512,8 +582,10 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IFirstPersonModel>
     {
         new AssetLink<StarfieldModelAssetType>? File { get; set; }
+        new Int16? BLMS { get; set; }
         new MemorySlice<Byte>? FLLD { get; set; }
         new IFormLinkNullable<ILayeredMaterialSwapGetter> MaterialSwap { get; set; }
+        new Single? ColorRemappingIndex { get; set; }
     }
 
     public partial interface IFirstPersonModelGetter :
@@ -531,8 +603,10 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => FirstPersonModel_Registration.Instance;
         AssetLinkGetter<StarfieldModelAssetType>? File { get; }
+        Int16? BLMS { get; }
         ReadOnlyMemorySlice<Byte>? FLLD { get; }
         IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap { get; }
+        Single? ColorRemappingIndex { get; }
 
     }
 
@@ -703,8 +777,10 @@ namespace Mutagen.Bethesda.Starfield
     internal enum FirstPersonModel_FieldIndex
     {
         File = 0,
-        FLLD = 1,
-        MaterialSwap = 2,
+        BLMS = 1,
+        FLLD = 2,
+        MaterialSwap = 3,
+        ColorRemappingIndex = 4,
     }
     #endregion
 
@@ -715,9 +791,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(FirstPersonModel.Mask<>);
 
@@ -748,8 +824,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.MOD4,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
-                RecordTypes.MO4S);
+                RecordTypes.MO4S,
+                RecordTypes.MO4C);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FirstPersonModelBinaryWriteTranslation);
@@ -793,8 +871,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.File = default;
+            item.BLMS = default;
             item.FLLD = default;
             item.MaterialSwap.Clear();
+            item.ColorRemappingIndex = default;
         }
         
         #region Mutagen
@@ -867,8 +947,10 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.File = object.Equals(item.File, rhs.File);
+            ret.BLMS = item.BLMS == rhs.BLMS;
             ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
             ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
+            ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
         }
         
         public string Print(
@@ -918,6 +1000,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(FileItem, "File");
             }
+            if ((printMask?.BLMS ?? true)
+                && item.BLMS is {} BLMSItem)
+            {
+                sb.AppendItem(BLMSItem, "BLMS");
+            }
             if ((printMask?.FLLD ?? true)
                 && item.FLLD is {} FLLDItem)
             {
@@ -926,6 +1013,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.MaterialSwap ?? true)
             {
                 sb.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
+            }
+            if ((printMask?.ColorRemappingIndex ?? true)
+                && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
+            {
+                sb.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
         }
         
@@ -940,6 +1032,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.File, rhs.File)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.BLMS) ?? true))
+            {
+                if (lhs.BLMS != rhs.BLMS) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.FLLD) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
@@ -947,6 +1043,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.MaterialSwap) ?? true))
             {
                 if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.ColorRemappingIndex) ?? true))
+            {
+                if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
             }
             return true;
         }
@@ -958,11 +1058,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Fileitem);
             }
+            if (item.BLMS is {} BLMSitem)
+            {
+                hash.Add(BLMSitem);
+            }
             if (item.FLLD is {} FLLDItem)
             {
                 hash.Add(FLLDItem);
             }
             hash.Add(item.MaterialSwap);
+            if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
+            {
+                hash.Add(ColorRemappingIndexitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1012,6 +1120,10 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
+            if ((copyMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.BLMS) ?? true))
+            {
+                item.BLMS = rhs.BLMS;
+            }
             if ((copyMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.FLLD) ?? true))
             {
                 if(rhs.FLLD is {} FLLDrhs)
@@ -1026,6 +1138,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.MaterialSwap) ?? true))
             {
                 item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)FirstPersonModel_FieldIndex.ColorRemappingIndex) ?? true))
+            {
+                item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
         }
         
@@ -1129,6 +1245,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.File?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD4),
                 binaryType: StringBinaryType.NullTerminate);
+            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BLMS,
+                header: translationParams.ConvertToCustom(RecordTypes.BLMS));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FLLD,
@@ -1137,6 +1257,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.MaterialSwap,
                 header: translationParams.ConvertToCustom(RecordTypes.MO4S));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ColorRemappingIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.MO4C));
         }
 
         public void Write(
@@ -1186,6 +1310,13 @@ namespace Mutagen.Bethesda.Starfield
                     item.File = AssetLinkBinaryTranslation.Instance.Parse<StarfieldModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)FirstPersonModel_FieldIndex.File;
                 }
+                case RecordTypeInts.BLMS:
+                {
+                    if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.BLMS, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BLMS = frame.ReadInt16();
+                    return (int)FirstPersonModel_FieldIndex.BLMS;
+                }
                 case RecordTypeInts.FLLD:
                 {
                     if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
@@ -1199,6 +1330,13 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)FirstPersonModel_FieldIndex.MaterialSwap;
+                }
+                case RecordTypeInts.MO4C:
+                {
+                    if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)FirstPersonModel_FieldIndex.ColorRemappingIndex;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1274,13 +1412,21 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FileLocation;
         public AssetLinkGetter<StarfieldModelAssetType>? File => _FileLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldModelAssetType>?);
         #endregion
+        #region BLMS
+        private int? _BLMSLocation;
+        public Int16? BLMS => _BLMSLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BLMSLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #endregion
         #region FLLD
         private int? _FLLDLocation;
         public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<ILayeredMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayeredMaterialSwapGetter>.Null;
+        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayeredMaterialSwapGetter>(_package, _recordData, _MaterialSwapLocation);
+        #endregion
+        #region ColorRemappingIndex
+        private int? _ColorRemappingIndexLocation;
+        public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1351,6 +1497,12 @@ namespace Mutagen.Bethesda.Starfield
                     _FileLocation = (stream.Position - offset);
                     return (int)FirstPersonModel_FieldIndex.File;
                 }
+                case RecordTypeInts.BLMS:
+                {
+                    if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.BLMS, translationParams)) return ParseResult.Stop;
+                    _BLMSLocation = (stream.Position - offset);
+                    return (int)FirstPersonModel_FieldIndex.BLMS;
+                }
                 case RecordTypeInts.FLLD:
                 {
                     if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
@@ -1362,6 +1514,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
                     _MaterialSwapLocation = (stream.Position - offset);
                     return (int)FirstPersonModel_FieldIndex.MaterialSwap;
+                }
+                case RecordTypeInts.MO4C:
+                {
+                    if (lastParsed.ShortCircuit((int)FirstPersonModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
+                    _ColorRemappingIndexLocation = (stream.Position - offset);
+                    return (int)FirstPersonModel_FieldIndex.ColorRemappingIndex;
                 }
                 default:
                     return ParseResult.Stop;

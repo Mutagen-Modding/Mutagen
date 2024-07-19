@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Traversal
         private int? _TraversalLocation;
-        public IFormLinkNullableGetter<ITraversalGetter> Traversal => _TraversalLocation.HasValue ? new FormLinkNullable<ITraversalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TraversalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITraversalGetter>.Null;
+        public IFormLinkNullableGetter<ITraversalGetter> Traversal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITraversalGetter>(_package, _recordData, _TraversalLocation);
         #endregion
         public IReadOnlyList<UInt32> NodeIDs { get; private set; } = Array.Empty<UInt32>();
         partial void CustomFactoryEnd(

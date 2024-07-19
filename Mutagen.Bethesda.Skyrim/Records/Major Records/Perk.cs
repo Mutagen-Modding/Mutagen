@@ -44,7 +44,7 @@ partial class PerkBinaryCreateTranslation
                     case Perk.EffectType.Quest:
                         effect = new PerkQuestEffect()
                         {
-                            Quest = new FormLink<IQuestGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
+                            Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, dataFrame.Content),
                             Stage = dataFrame.Content[4],
                             Unknown = dataFrame.Content.Slice(5, 3).ToArray(),
                         };
@@ -61,7 +61,7 @@ partial class PerkBinaryCreateTranslation
                     case Perk.EffectType.Ability:
                         effect = new PerkAbilityEffect()
                         {
-                            Ability = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
+                            Ability = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, dataFrame.Content),
                         };
                         effect.Conditions.SetTo(
                             ListBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -240,7 +240,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointAddLeveledItem()
                                 {
-                                    Item = new FormLink<ILeveledItemGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null)
+                                    Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, epfd)
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddActivateChoice:
@@ -252,7 +252,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointAddActivateChoice()
                                 {
-                                    Spell = new FormLinkNullable<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
+                                    Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, epfd),
                                     ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData) : null,
                                     Flags = new PerkScriptFlag()
                                     {
@@ -271,7 +271,7 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 entryPointEffect = new PerkEntryPointSelectSpell()
                                 {
-                                    Spell = new FormLink<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null),
+                                    Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, epfd),
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectText:
@@ -363,12 +363,12 @@ partial class PerkBinaryWriteTranslation
                 switch (effect)
                 {
                     case PerkQuestEffect quest:
-                        FormKeyBinaryTranslation.Instance.Write(writer, quest.Quest.FormKey);
+                        FormKeyBinaryTranslation.Instance.Write(writer, quest.Quest);
                         writer.Write(quest.Stage);
                         writer.Write(quest.Unknown);
                         break;
                     case PerkAbilityEffect ability:
-                        FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability.FormKey);
+                        FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability);
                         break;
                     case APerkEntryPointEffect entryPt:
                         writer.Write((byte)entryPt.EntryPoint);
@@ -491,25 +491,13 @@ partial class PerkBinaryWriteTranslation
                         }
                         break;
                     case PerkEntryPointAddLeveledItem lev:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(writer, lev.Item.FormKey);
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, lev.Item, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointAddActivateChoice activateChoice:
-                        if (activateChoice.Spell.FormKeyNullable != null)
-                        {
-                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                            {
-                                FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell.FormKeyNullable.Value);
-                            }
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointSelectSpell spell:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell.FormKey);
-                        }
+                        FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell, RecordTypes.EPFD);
                         break;
                     case PerkEntryPointSelectText text:
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))

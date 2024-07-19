@@ -52,9 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region AddonIndex
-        public UInt16? AddonIndex { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IArmorAddonModelGetter.AddonIndex => this.AddonIndex;
+        public UInt16 AddonIndex { get; set; } = default(UInt16);
         #endregion
         #region AddonModel
         private readonly IFormLinkNullable<IArmorAddonGetter> _AddonModel = new FormLinkNullable<IArmorAddonGetter>();
@@ -462,7 +460,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonModel>
     {
-        new UInt16? AddonIndex { get; set; }
+        new UInt16 AddonIndex { get; set; }
         new IFormLinkNullable<IArmorAddonGetter> AddonModel { get; set; }
     }
 
@@ -479,7 +477,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ArmorAddonModel_Registration.Instance;
-        UInt16? AddonIndex { get; }
+        UInt16 AddonIndex { get; }
         IFormLinkNullableGetter<IArmorAddonGetter> AddonModel { get; }
 
     }
@@ -690,13 +688,17 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.INDX);
             var all = RecordCollection.Factory(
                 RecordTypes.INDX,
                 RecordTypes.MODL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonModelBinaryWriteTranslation);
         #region Interface
@@ -738,7 +740,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IArmorAddonModel item)
         {
             ClearPartial();
-            item.AddonIndex = default;
+            item.AddonIndex = default(UInt16);
             item.AddonModel.Clear();
         }
         
@@ -836,10 +838,9 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             ArmorAddonModel.Mask<bool>? printMask = null)
         {
-            if ((printMask?.AddonIndex ?? true)
-                && item.AddonIndex is {} AddonIndexItem)
+            if (printMask?.AddonIndex ?? true)
             {
-                sb.AppendItem(AddonIndexItem, "AddonIndex");
+                sb.AppendItem(item.AddonIndex, "AddonIndex");
             }
             if (printMask?.AddonModel ?? true)
             {
@@ -868,10 +869,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IArmorAddonModelGetter item)
         {
             var hash = new HashCode();
-            if (item.AddonIndex is {} AddonIndexitem)
-            {
-                hash.Add(AddonIndexitem);
-            }
+            hash.Add(item.AddonIndex);
             hash.Add(item.AddonModel);
             return hash.ToHashCode();
         }
@@ -1014,7 +1012,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.AddonIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.INDX));
@@ -1073,7 +1071,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonModel, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AddonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ArmorAddonModel_FieldIndex.AddonModel;
@@ -1149,11 +1146,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region AddonIndex
         private int? _AddonIndexLocation;
-        public UInt16? AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16 AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region AddonModel
         private int? _AddonModelLocation;
-        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => _AddonModelLocation.HasValue ? new FormLinkNullable<IArmorAddonGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorAddonGetter>.Null;
+        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorAddonGetter>(_package, _recordData, _AddonModelLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1226,7 +1223,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonModel, translationParams)) return ParseResult.Stop;
                     _AddonModelLocation = (stream.Position - offset);
                     return (int)ArmorAddonModel_FieldIndex.AddonModel;
                 }

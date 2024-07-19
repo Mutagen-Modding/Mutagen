@@ -3,32 +3,51 @@
   <Object name="Location" recordType="LCTN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
+      <RefList name="AddedPersistLocationReferences" refName="LocationReference" recordType="ACPR" />
+      <RefList name="MasterPersistLocationReferences" refName="LocationReference" recordType="LCPR" />
+      <List name="RemovedPersistLocationReferences" recordType="RCPR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <RefList name="AddedUniqueBaseForms" refName="LocationCellUniqueReference" recordType="ACUR" />
       <RefList name="LocationCellUniqueReferences" refName="LocationCellUniqueReference" recordType="LCUR" />
-      <RefList name="LocationCellUniques" refName="LocationCellUnique" recordType="LCUN" />
-      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" />
-      <List name="LocationCellEncounterCell">
+      <List name="RemovedUniqueBaseForms" recordType="RCUR">
+        <FormLink refName="GenericBaseForm" />
+      </List>
+      <RefList name="AddedUniqueNpcs" refName="LocationCellUnique" recordType="ACUN" />
+      <RefList name="MasterUniqueNpcs" refName="LocationCellUnique" recordType="LCUN" />
+      <List name="RemovedUniqueNpcs" recordType="RCUR">
+        <FormLink refName="Npc" />
+      </List>
+      <RefList name="AddedSpecialReferences" refName="LocationCellStaticReference" recordType="ACSR" />
+      <RefList name="MasterSpecialReferences" refName="LocationCellStaticReference" recordType="LCSR" />
+      <List name="RemovedSpecialReferences" recordType="RCSR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <List name="MasterWorldspaceCells">
         <RefDirect refName="LocationCoordinate" recordType="LCEC" />
       </List>
-      <List name="LocationCellMarkerReference" recordType="LCID">
+      <List name="AddedInitiallyDisabledReferences" recordType="ACID">
         <FormLink>
           <Interface>IPlaced</Interface>
         </FormLink>
       </List>
-      <RefList name="LocationCellEnablePoint" refName="LocationCellEnablePoint" recordType="LCEP" />
+      <List name="MasterInitiallyDisabledReferences" recordType="LCID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <RefList name="AddedEnablePointReferences" refName="LocationCellEnablePoint" recordType="ACEP" />
+      <RefList name="MasterEnablePointReferences" refName="LocationCellEnablePoint" recordType="LCEP" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties2" refName="ObjectProperty" recordType="PRPS" />
-      <Data>
-        <Fields>
-          <FormLink name="Faction" refName="Faction" />
-          <Int8 name="UnknownDATA" />
-          <Int8 name="SystemLevel" />
-          <Int16 name="UnknownDATA2" />
-        </Fields>
-      </Data>
+      <RefDirect name="Faction" refName="LocationFaction" />
       <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
       <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
       <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
@@ -40,6 +59,14 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <Int32 name="StarID" recordType="XNAM" />
       <Int32 name="PlanetID" recordType="YNAM" />
+    </Fields>
+  </Object>
+  <Object name="LocationFaction" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <FormLink name="Faction" refName="Faction" />
+      <Int8 name="UnknownDATA" />
+      <Int8 name="SystemLevel" />
+      <Int16 name="UnknownDATA2" />
     </Fields>
   </Object>
   <Object name="LocationReference" objType="Subrecord">

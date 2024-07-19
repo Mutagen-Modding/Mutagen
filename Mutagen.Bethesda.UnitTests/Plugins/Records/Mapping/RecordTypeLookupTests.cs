@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Xunit;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 
-namespace Mutagen.Bethesda.Tests.Plugins.RecordTypeMapping;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Mapping;
 
 public class RecordTypeLookupTests
 {

@@ -126,8 +126,7 @@ public partial class MajorRecord : IFormLinkContainer
 
 public static class IMajorRecordGetterExt
 {
-    [Obsolete("Major records implement IFormLinkIdentifier which should be used instead")]
-    public static IFormLinkGetter ToFormLinkInformation(this IMajorRecordGetter majorRec)
+    public static FormLinkInformation ToFormLinkInformation(this IMajorRecordGetter majorRec)
     {
         return FormLinkInformation.Factory(majorRec);
     }

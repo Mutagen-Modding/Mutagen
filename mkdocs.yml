@@ -1,7 +1,7 @@
 site_name: Mutagen Documentation
 site_url: https://mutagen-modding.github.io/Mutagen/
 
-repo_name: Mutagen-Modding/Mutagen
+repo_name: Mutagen
 repo_url: https://github.com/Mutagen-Modding/Mutagen
 
 extra:
@@ -69,15 +69,16 @@ nav:
     - Printing: plugins/Printing.md
     - Mod Construction and Importing: plugins/Mod-Construction-and-Importing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
-    - Bethesda Format Abstraction: plugins/Bethesda-Format-Abstraction.md
-    - FormKey Allocation and Persistence: plugins/FormKey-Allocation-and-Persistence.md
-  - Specific Records:
-    - plugins/specific/index.md
-    - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+    - Specific Records:
+      - plugins/specific/index.md
+      - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
     # - Perks:
     # - Magic Effects:
     # - Conditions:
     # - Npcs:
+    - Bethesda Format Abstraction: plugins/Bethesda-Format-Abstraction.md
+    - FormKey Allocation and Persistence: plugins/FormKey-Allocation-and-Persistence.md
+    - Other Utility: plugins/other-utility.md
   - Environment:
     - environment/index.md
     - Environment Construction: environment/Environment-Construction.md

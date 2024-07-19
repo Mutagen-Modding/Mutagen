@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public Int16 TriangleBeforeDoor => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x2, 0x4));
-        public IFormLinkGetter<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x6, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Door => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x6, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

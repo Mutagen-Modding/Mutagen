@@ -333,11 +333,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
         }
         else if (listBinaryType == ListBinaryType.Trigger || (data.HasTrigger && !subData.HasTrigger))
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
@@ -481,9 +481,13 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             throw new NotImplementedException();
                     }
                 }
+                if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+                {
+                    args.Add($"endMarker: RecordTypes.{endMarker}");
+                }
                 if (threading)
                 {
-                    args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
+                    args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Parallel)}");
                 }
                 if (needsRecordConv)
                 {
@@ -811,7 +815,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         var data = list.GetFieldData();
         if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"{streamAccessor}.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
+            sb.AppendLine($"{streamAccessor}.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
         var subData = list.SubTypeGeneration.GetFieldData();
         var subGenTypes = subData.GenerationTypes.ToList();
@@ -907,13 +911,13 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                     switch (loqui.TargetObjectGeneration.GetObjectType())
                                     {
                                         case ObjectType.Subrecord:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                             break;
                                         case ObjectType.Record:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.MajorConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.MajorConstants)}");
                                             break;
                                         case ObjectType.Group:
-                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.GroupConstants)}");
+                                            subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.GroupConstants)}");
                                             break;
                                         case ObjectType.Mod:
                                         default:
@@ -939,7 +943,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.Add($"stream: {streamAccessor}");
-                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: true");
                                 subArgs.Add($"translationParams: {converterAccessor}");
@@ -954,14 +958,14 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         args.Add($"mem: {streamAccessor}.RemainingMemory");
                         args.Add($"package: _package");
-                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(s).Content", "p")}");
+                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.Subrecord(s).Content", "p")}");
                         args.Add(subFg =>
                         {
                             using (var subArgs = subFg.Function(
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.Add($"stream: {streamAccessor}");
-                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
+                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: false");
                                 subArgs.Add($"translationParams: {converterAccessor}");
@@ -971,15 +975,14 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 break;
             case ListBinaryType.Trigger:
-                sb.AppendLine($"var subMeta = {streamAccessor}.ReadSubrecordHeader();");
-                sb.AppendLine($"var subLen = finalPos - {streamAccessor}.Position;");
                 if (expectedLen.HasValue)
                 {
                     using (var args = sb.Call(
-                               $"{retAccessor}BinaryOverlayList.FactoryByStartIndex<{typeName}>"))
+                               $"{retAccessor}BinaryOverlayList.FactoryByStartIndexWithTrigger<{typeName}>"))
                     {
-                        args.Add($"mem: {streamAccessor}.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"stream: {streamAccessor}");
                         args.Add($"package: _package");
+                        args.Add("finalPos: finalPos");
                         args.Add($"itemLength: {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
                         if (subGenTypes.Count <= 1)
                         {
@@ -1021,10 +1024,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 else
                 {
                     using (var args = sb.Call(
-                               $"{retAccessor}BinaryOverlayList.FactoryByLazyParse<{typeName}>"))
+                               $"{retAccessor}BinaryOverlayList.FactoryByLazyParseWithTrigger<{typeName}>"))
                     {
-                        args.Add($"mem: {streamAccessor}.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"stream: {streamAccessor}");
                         args.Add($"package: _package");
+                        args.Add("finalPos: finalPos");
                         if (subGenTypes.Count <= 1)
                         {
                             args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
@@ -1035,7 +1039,6 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                     }
                 }
-                sb.AppendLine($"{streamAccessor}.Position += subLen;");
                 break;
             case ListBinaryType.CounterRecord:
                 var counterLen = (byte)list.CustomData[CounterByteLength];
@@ -1120,13 +1123,17 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
                             args.Add("skipHeader: true");
                         }
+                        if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+                        {
+                            args.Add($"endMarker: RecordTypes.{endMarker}");
+                        }
                     }
                 }
                 break;
             case ListBinaryType.PrependCount:
                 if (data.HasTrigger)
                 {
-                    sb.AppendLine($"{streamAccessor}.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
+                    sb.AppendLine($"{streamAccessor}.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength;");
                 }
                 byte countLen = (byte)list.CustomData[CounterByteLength];
                 switch (countLen)

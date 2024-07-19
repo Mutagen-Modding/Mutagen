@@ -1,19 +1,57 @@
 using Loqui;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
-using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Plugins.Records;
+
+public interface IModFlagsGetter : IModKeyed
+{
+    /// <summary>
+    /// Whether a mod supports localization features
+    /// </summary>
+    bool CanUseLocalization { get; }
+
+    /// <summary>
+    /// Whether a mod has localization enabled
+    /// </summary>
+    bool UsingLocalization { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Small Master features
+    /// </summary>
+    bool CanBeSmallMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Small Master flag enabled
+    /// </summary>
+    bool IsSmallMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod supports Half Master features
+    /// </summary>
+    bool CanBeMediumMaster { get; }
+
+    /// <summary>
+    /// Whether a mod has Half Master flag enabled
+    /// </summary>
+    bool IsMediumMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod lists overridden forms in its header
+    /// </summary>
+    bool ListsOverriddenForms { get; }
+}
 
 /// <summary>
 /// An interface that Mod objects implement to hook into the common getter systems
 /// </summary>
 public interface IModGetter : 
+    IModFlagsGetter,
     IMajorRecordGetterEnumerable,
     IMajorRecordSimpleContextEnumerable,
     IFormLinkContainerGetter, 
-    IModKeyed, 
     IEqualsMask
 {
     /// <summary>
@@ -26,6 +64,18 @@ public interface IModGetter :
     /// </summary>
     /// <returns>Read only list of master reference getters</returns>
     IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
+    
+    /// <summary>
+    /// Read only list of listed overridden forms.<br />
+    /// Note this is only the listed overridden forms in the mod header, and may
+    /// deviate from the reality of contained records
+    /// </summary>
+    IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
+    
+    /// <summary>
+    /// The next FormID to be allocated
+    /// </summary>
+    uint NextFormID { get; }
 
     /// <summary>
     /// Returns the top-level Group getter object associated with the given Major Record Type.
@@ -61,19 +111,7 @@ public interface IModGetter :
     /// </summary>
     /// <param name="path">Path to export to</param>
     /// <param name="param">Optional customization parameters</param>
-    /// <param name="fileSystem">Optional filesystem substitution</param>
-    void WriteToBinary(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null);
-
-    /// <summary>
-    /// Exports to disk in Bethesda binary format.
-    /// Access and iterates through the mod groups in separate threads.  All provided mod objects
-    /// are thread safe to use with this function.
-    /// </summary>
-    /// <param name="path">Path to export to</param>
-    /// <param name="param">Optional customization parameters</param>
-    /// <param name="fileSystem">Optional filesystem substitution</param>
-    /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
-    void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null);
+    void WriteToBinary(FilePath path, BinaryWriteParameters? param = null);
 
     /// <summary>
     /// Exports to disk in Bethesda binary format.
@@ -84,31 +122,16 @@ public interface IModGetter :
     void WriteToBinary(Stream stream, BinaryWriteParameters? param = null);
 
     /// <summary>
-    /// Exports to disk in Bethesda binary format.
-    /// Access and iterates through the mod groups in separate threads.  All provided mod objects
-    /// are thread safe to use with this function.
+    /// Retrieves the recommended lowest starting FormID, based on current mod header flags. <br />
+    /// Note that this might be lower than the currently contained records, as it is just reporting
+    /// what the starting lowest ID should be.
     /// </summary>
-    /// <param name="stream">Path to export to</param>
-    /// <param name="param">Optional customization parameters</param>
-    /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
-    void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
-
-    /// <summary>
-    /// Whether a mod supports localization features
-    /// </summary>
-    bool CanUseLocalization { get; }
-
-    /// <summary>
-    /// Whether a mod has localization enabled
-    /// </summary>
-    bool UsingLocalization { get; }
-
-    /// <summary>
-    /// The next FormID to be allocated
-    /// </summary>
-    uint NextFormID { get; }
-
-    uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
+    /// <param name="forceUseLowerFormIDRanges">Whether to force using the lower FormID ranges.
+    /// Default of null refers to the mod header flags</param>
+    /// <returns>Lowest suggested FormID given current mod header flags</returns>
+    uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
+    
+    IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite { get; }
 }
 
 /// <summary>
@@ -158,6 +181,11 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     /// Whether a mod has localization enabled
     /// </summary>
     new bool UsingLocalization { get; set; }
+
+    /// <summary>
+    /// Whether a mod has Small Master flag enabled
+    /// </summary>
+    new bool IsSmallMaster { get; set; }
 
     /// <summary>
     /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.

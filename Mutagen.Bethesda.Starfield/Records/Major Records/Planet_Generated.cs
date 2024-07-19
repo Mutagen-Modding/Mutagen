@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -3412,7 +3411,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
-        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => _SurfaceTreeLocation.HasValue ? new FormLinkNullable<ISurfaceTreeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceTreeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceTreeGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceTreeGetter>(_package, _recordData, _SurfaceTreeLocation);
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -3561,14 +3560,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 20,
                             getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                        stream.Position += subLen;
                         return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
@@ -3582,14 +3579,12 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 20,
                                     getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                             }
                             case 1:

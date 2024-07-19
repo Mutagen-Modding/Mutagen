@@ -1514,14 +1514,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGodRaysGetter> GodRaySunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayDay => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRaySunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayNight => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRaySunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayDay => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRaySunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayNight => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x10, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IGodRaysGetter>(_package, _structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

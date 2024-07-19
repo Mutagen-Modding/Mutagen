@@ -303,7 +303,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                         using (var args = sb.Call(
                                    "return CustomRecordTypeTrigger"))
                         {
-                            args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
+                            args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
                             args.Add("recordType: nextRecord");
                             args.AddPassArg("translationParams");
                         }

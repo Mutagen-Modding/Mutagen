@@ -99,6 +99,14 @@ public class VersioningModule : GenerationModule
                 throw new ArgumentException("Versioning has non-sensical instructions.");
             }
         }
+        
+        foreach (var vers in node.Elements(XName.Get("RecordTypeVersioning", LoquiGenerator.Namespace)))
+        {
+            data.RecordTypeVersioning ??= new();
+            data.RecordTypeVersioning.Add((
+                vers.GetAttribute<ushort>("formVersion", throwException: true), 
+                vers.GetAttribute("recordType", throwException: true)!));
+        }
     }
 
     public static string GetVersionIfCheck(MutagenFieldData data, Accessor versionAccessor)

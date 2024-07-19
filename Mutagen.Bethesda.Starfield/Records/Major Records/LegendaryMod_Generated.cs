@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public LegendaryItem.StarSlot Slot => (LegendaryItem.StarSlot)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IAObjectModificationGetter> LegendaryModifier => new FormLink<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IAObjectModificationGetter> LegendaryModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IAObjectModificationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

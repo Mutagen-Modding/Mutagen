@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1936,7 +1935,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Content
         private int? _ContentLocation;
-        public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => _ContentLocation.HasValue ? new FormLinkNullable<IPlanetContentTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlanetContentTargetGetter>.Null;
+        public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentTargetGetter>(_package, _recordData, _ContentLocation);
         #endregion
         #region IOVR
         private int? _IOVRLocation;
@@ -2036,14 +2035,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.KWDA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Keywords = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Keywords = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)PlanetContentManagerContentNode_FieldIndex.Keywords;
                 }
                 default:

@@ -50,7 +50,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
         }
     }
 
-    public static AObjectModProperty<T> ReadProperty(IReadOnlyMasterReferenceCollection masters, ReadOnlySpan<byte> data)
+    public static AObjectModProperty<T> ReadProperty(IReadOnlySeparatedMasterPackage masters, ReadOnlySpan<byte> data)
     {
         AObjectModProperty<T> ret;
         var type = (ObjectModProperty.ValueType)data[0];
@@ -249,7 +249,7 @@ partial class ObjectTemplateBinaryOverlay<T>
             _recordData.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
             _package,
             itemLength: 4,
-            getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
         _postKeywordLoc = _obtsLoc!.Value + 16 + (4 * _keywordCount!.Value);
         var includeLen = checked((int)(7 * _includeCount));
         Includes = BinaryOverlayList.FactoryByStartIndex(

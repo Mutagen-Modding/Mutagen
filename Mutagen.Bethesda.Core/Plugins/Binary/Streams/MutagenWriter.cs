@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -43,18 +44,20 @@ public sealed class MutagenWriter : IBinaryWriteStream, IDisposable
 
     public MutagenWriter(
         FilePath path,
-        GameConstants constants)
+        GameConstants constants,
+        IFileSystem? fileSystem = null)
     {
-        BaseStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
+        BaseStream = fileSystem.GetOrDefault().FileStream.New(path.Path, FileMode.Create, FileAccess.Write);
         Writer = new BinaryWriter(BaseStream);
         MetaData = new WritingBundle(constants);
     }
 
     public MutagenWriter(
         FilePath path,
-        WritingBundle meta)
+        WritingBundle meta,
+        IFileSystem? fileSystem = null)
     {
-        BaseStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
+        BaseStream = fileSystem.GetOrDefault().FileStream.New(path.Path, FileMode.Create, FileAccess.Write);
         Writer = new BinaryWriter(BaseStream);
         MetaData = meta;
     }

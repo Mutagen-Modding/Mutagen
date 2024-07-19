@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLink<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLink<ISceneGetter>.Null;
+        public IFormLinkGetter<ISceneGetter> Scene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SceneLocation);
         #endregion
         #region XNAM
         private int? _XNAMLocation;

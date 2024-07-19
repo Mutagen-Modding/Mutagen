@@ -1194,9 +1194,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterDaytime => FormLinkBinaryTranslation.Instance.OverlayFactory<IWaterGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterNighttime => FormLinkBinaryTranslation.Instance.OverlayFactory<IWaterGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater => FormLinkBinaryTranslation.Instance.OverlayFactory<IWaterGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

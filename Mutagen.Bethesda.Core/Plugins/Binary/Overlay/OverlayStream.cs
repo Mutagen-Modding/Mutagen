@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 internal sealed class OverlayStream : IMutagenReadStream
 {
     private readonly BinaryMemoryReadStream _readStream;
-    public ParsingBundle MetaData { get; }
+    public ParsingMeta MetaData { get; }
 
     public ReadOnlyMemorySlice<byte> Data { get; private set; }
     public int Position
@@ -24,7 +24,7 @@ internal sealed class OverlayStream : IMutagenReadStream
 
     public bool IsLittleEndian => _readStream.IsLittleEndian;
 
-    public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingBundle constants)
+    public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingMeta constants)
     {
         Data = data;
         _readStream = BinaryMemoryReadStream.LittleEndian(data);

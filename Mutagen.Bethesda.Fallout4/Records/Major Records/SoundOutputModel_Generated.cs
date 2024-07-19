@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1919,7 +1918,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region EffectChain
         private int? _EffectChainLocation;
-        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => _EffectChainLocation.HasValue ? new FormLinkNullable<IAudioEffectChainGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EffectChainLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAudioEffectChainGetter>.Null;
+        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAudioEffectChainGetter>(_package, _recordData, _EffectChainLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
