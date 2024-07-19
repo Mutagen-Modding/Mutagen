@@ -33,18 +33,26 @@ public readonly struct DataRelativeAssetPath : IEquatable<DataRelativeAssetPath>
         Path = ConvertToDataRelativePath(rawPath);
     }
 
-    private void AssertHasDataDirectory(FilePath filePath)
+    internal static bool HasDataDirectory(string filePath)
     {
-        var dir = filePath.Directory;
+        var dir = System.IO.Path.GetDirectoryName(filePath);
         while (dir != null)
         {
-            if (dir.Value.Name.String.Equals(DataDirectory, PathComparison))
+            var name = System.IO.Path.GetFileName(dir);
+            if (name.Equals(DataDirectory, PathComparison))
             {
-                return;
+                return true;
             }
 
-            dir = dir.Value.Directory;
+            dir = System.IO.Path.GetDirectoryName(dir);
         }
+
+        return false;
+    }
+
+    private static void AssertHasDataDirectory(FilePath filePath)
+    {
+        if (HasDataDirectory(filePath.Path)) return;
 
         throw new AssetPathMisalignedException(filePath.Path, "Absolute path did not have Data folder within it.");
     }

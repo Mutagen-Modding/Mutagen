@@ -59,6 +59,11 @@ public class AssetLinkGetter<TAssetType> :
         }
         else
         {
+            if (!DataRelativeAssetPath.HasDataDirectory(path) 
+                && !HasBaseFolder(path))
+            {
+                path = Path.Combine(AssetInstance.BaseFolder, path);
+            }
             _dataRelativeAssetPath = path;
             AssertHasBaseFolder(_dataRelativeAssetPath.Path);
             _rawPath = ExtractAssertRawPath(_dataRelativeAssetPath);

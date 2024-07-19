@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Noggog;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Assets;
@@ -76,6 +77,16 @@ public class AssetLinkTests
     public void TestEqualsDifferentRawPath()
     {
         var link = new AssetLinkGetter<TestAssetType>(Path.Combine("SomeSubFolder", "SomeModel.nif"));
+        var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        
+        link.Equals(otherLink).Should().BeTrue();
+    }
+    
+    [Fact]
+    public void TestEqualsAbsolutePath()
+    {
+        var filePath = new FilePath(Path.Combine("SomeFolder", "Data", "Meshes", "SomeSubFolder", "SomeModel.nif"));
+        var link = new AssetLinkGetter<TestAssetType>(filePath.Path);
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
         link.Equals(otherLink).Should().BeTrue();

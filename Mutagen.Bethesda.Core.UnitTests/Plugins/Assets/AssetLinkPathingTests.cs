@@ -39,7 +39,7 @@ public class AssetLinkPathingTests
     public void FirstLevelChildRelativePath()
     {
         var link = new AssetLink<TestAssetType>(RawPath);
-        link.DataRelativePath.Should().Be(RawPath);
+        link.DataRelativePath.Should().Be(DataPath);
         link.RawPath.Should().Be(RawPath);
     }
 }
