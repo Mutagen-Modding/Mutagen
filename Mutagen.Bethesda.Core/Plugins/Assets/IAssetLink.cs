@@ -5,11 +5,6 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 public interface IAssetLinkGetter
 {
     /// <summary>
-    /// Asset path
-    /// </summary>
-    AssetPath AssetPath { get; }
-
-    /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
     string RawPath { get; }
@@ -26,7 +21,7 @@ public interface IAssetLinkGetter
     /// </code>
     /// </example>
     /// </summary>
-    string DataRelativePath { get; }
+    DataRelativeAssetPath DataRelativePath { get; }
 
     /// <summary>
     /// Extension of the asset
@@ -76,9 +71,8 @@ public interface IAssetLink : IAssetLinkGetter
 {
     /// <summary>
     /// Set the path to a path that is relative to the game's Data directory
-    /// i.e.: @"Skyrim Special Edition\Data\Meshes\Clutter\Spoon.nif" needs to be @"Meshes\Clutter\Spoon.nif"
     /// </summary>
-    bool TrySetPath(string? path);
+    bool TrySetPath(DataRelativeAssetPath? path);
 
     /// <summary>
     /// Raw path pointing to the asset

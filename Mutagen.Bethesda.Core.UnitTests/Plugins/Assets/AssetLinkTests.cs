@@ -25,7 +25,7 @@ public class AssetLinkTests
             .Should().BeTrue();
         link.TrySetPath(null);
         link.RawPath.Should().Be(string.Empty);
-        link.DataRelativePath.Should().Be("Meshes");
+        link.DataRelativePath.Should().Be(string.Empty);
     }
     
     [Fact]
@@ -56,7 +56,7 @@ public class AssetLinkTests
         link.SetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         link.TrySetPath(null);
         link.RawPath.Should().Be(string.Empty);
-        link.DataRelativePath.Should().Be("Meshes");
+        link.DataRelativePath.Should().Be(string.Empty);
     }
     
     [Fact]
