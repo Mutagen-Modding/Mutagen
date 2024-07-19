@@ -6,7 +6,7 @@ public static class AssetProviderMixIn
 {
     public static bool Exists(this IAssetProvider assetProvider, IAssetLinkGetter assetLink)
     {
-        return assetProvider.Exists(assetLink.AssetPath);
+        return assetProvider.Exists(assetLink.DataRelativePath);
     }
 
     public static bool TryGetStream(
@@ -14,7 +14,7 @@ public static class AssetProviderMixIn
         IAssetLinkGetter assetPath,
         [MaybeNullWhen(false)] out Stream stream)
     {
-        return assetProvider.TryGetStream(assetPath.AssetPath, out stream);
+        return assetProvider.TryGetStream(assetPath.DataRelativePath, out stream);
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ public static class AssetProviderMixIn
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting stream</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
-    public static Stream GetStream(this IAssetProvider assetProvider, AssetPath assetPath)
+    public static Stream GetStream(this IAssetProvider assetProvider, DataRelativeAssetPath assetPath)
     {
         return assetProvider.TryGetStream(assetPath, out var stream)
             ? stream
@@ -32,12 +32,12 @@ public static class AssetProviderMixIn
 
     public static Stream GetStream(this IAssetProvider assetProvider, IAssetLinkGetter assetLink)
     {
-        return assetProvider.GetStream(assetLink.AssetPath);
+        return assetProvider.GetStream(assetLink.DataRelativePath);
     }
 
     public static bool TryGetSize(this IAssetProvider assetProvider, IAssetLinkGetter assetPath, out uint size)
     {
-        return assetProvider.TryGetSize(assetPath.AssetPath, out size);
+        return assetProvider.TryGetSize(assetPath.DataRelativePath, out size);
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public static class AssetProviderMixIn
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting size in bytes</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
-    public static uint GetSize(this IAssetProvider assetProvider, AssetPath assetPath)
+    public static uint GetSize(this IAssetProvider assetProvider, DataRelativeAssetPath assetPath)
     {
         return assetProvider.TryGetSize(assetPath, out var size)
             ? size
@@ -55,6 +55,6 @@ public static class AssetProviderMixIn
 
     public static uint GetSize(this IAssetProvider assetProvider, IAssetLinkGetter assetLink)
     {
-        return assetProvider.GetSize(assetLink.AssetPath);
+        return assetProvider.GetSize(assetLink.DataRelativePath);
     }
 }

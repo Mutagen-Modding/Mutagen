@@ -13,21 +13,21 @@ public interface IGetFontConfigListing
 	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
 	/// <returns>The file path of the font configuration asset</returns>
-	AssetPath? Get();
+	DataRelativeAssetPath? Get();
 
 	/// <summary>
 	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
 	/// <param name="path">Path to the file containing INI data</param>
 	/// <returns>The file path of the font configuration asset</returns>
-	AssetPath? Get(FilePath path);
+	DataRelativeAssetPath? Get(FilePath path);
 
 	/// <summary>
 	/// Queries the related ini file and looks for the font configuration asset
 	/// </summary>
 	/// <param name="iniStream">Stream containing INI data</param>
 	/// <returns>The file path of the font configuration asset</returns>
-	AssetPath? Get(Stream iniStream);
+	DataRelativeAssetPath? Get(Stream iniStream);
 }
 
 public sealed class GetFontConfigListing : IGetFontConfigListing
@@ -54,13 +54,13 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 	}
 
 	/// <inheritdoc />
-	public AssetPath? Get()
+	public DataRelativeAssetPath? Get()
 	{
 		return Get(_iniPathProvider.Path);
 	}
 
 	/// <inheritdoc />
-	public AssetPath? Get(FilePath path)
+	public DataRelativeAssetPath? Get(FilePath path)
 	{
 		if (!_fileSystem.File.Exists(path)) return null;
 
@@ -69,7 +69,7 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 	}
 
 	/// <inheritdoc />
-	public AssetPath? Get(Stream iniStream)
+	public DataRelativeAssetPath? Get(Stream iniStream)
 	{
 		// Release exists as parameter, in case future games need different handling
 		Console.WriteLine("GetFontConfigListing.Get");

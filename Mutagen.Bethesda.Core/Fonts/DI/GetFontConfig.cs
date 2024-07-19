@@ -10,7 +10,7 @@ public interface IGetFontConfig
 	/// </summary>
 	/// <param name="language">The language to get the font configuration file for</param>
 	/// <returns>The file path of the font configuration file</returns>
-	AssetPath GetAssetPath(Language language);
+	DataRelativeAssetPath GetAssetPath(Language language);
 
 	/// <summary>
 	/// Gets the font configuration file as a stream
@@ -33,7 +33,7 @@ public class GetFontConfig : IGetFontConfig
 		_iniListings = iniListings;
 	}
 
-	public AssetPath GetAssetPath(Language language)
+	public DataRelativeAssetPath GetAssetPath(Language language)
 	{
 		var iniFontConfig = _iniListings.Get();
 
@@ -45,14 +45,14 @@ public class GetFontConfig : IGetFontConfig
 
 		// If the ini file doesn't specify a font config, try a language-specific one
 		var isoLanguageString = StringsUtility.GetIsoLanguageString(language);
-		var languageAssetPath = new AssetPath($"Interface/FontConfig_{isoLanguageString}.txt");
+		var languageAssetPath = new DataRelativeAssetPath($"Interface/FontConfig_{isoLanguageString}.txt");
 		if (_assetProvider.Exists(languageAssetPath))
 		{
 			return languageAssetPath;
 		}
 
 		// If the language-specific font config doesn't exist, use the default
-		var defaultAssetPath = new AssetPath("Interface/FontConfig.txt");
+		var defaultAssetPath = new DataRelativeAssetPath("Interface/FontConfig.txt");
 		if (_assetProvider.Exists(defaultAssetPath))
 		{
 			return defaultAssetPath;

@@ -22,17 +22,17 @@ public class ArchiveAssetProvider : IAssetProvider
         _gameReleaseContext = gameReleaseContext;
     }
 
-    public bool Exists(AssetPath assetPath)
+    public bool Exists(DataRelativeAssetPath assetPath)
     {
         return GetArchiveFile(assetPath) is not null;
     }
 
-    public bool TryGetStream(AssetPath assetPath, [MaybeNullWhen(false)] out Stream stream)
+    public bool TryGetStream(DataRelativeAssetPath assetPath, [MaybeNullWhen(false)] out Stream stream)
     {
         return TryGetStream(assetPath, null, out stream);
     }
 
-    public bool TryGetStream(AssetPath assetPath, IEnumerable<ModKey>? modOrdering, [MaybeNullWhen(false)] out Stream stream)
+    public bool TryGetStream(DataRelativeAssetPath assetPath, IEnumerable<ModKey>? modOrdering, [MaybeNullWhen(false)] out Stream stream)
     {
         var archiveFile = GetArchiveFile(assetPath, modOrdering);
         if (archiveFile is null)
@@ -45,12 +45,12 @@ public class ArchiveAssetProvider : IAssetProvider
         return true;
     }
 
-    public bool TryGetSize(AssetPath assetPath, out uint size)
+    public bool TryGetSize(DataRelativeAssetPath assetPath, out uint size)
     {
         return TryGetSize(assetPath, null, out size);
     }
 
-    public bool TryGetSize(AssetPath assetPath, IEnumerable<ModKey>? modOrdering, out uint size)
+    public bool TryGetSize(DataRelativeAssetPath assetPath, IEnumerable<ModKey>? modOrdering, out uint size)
     {
         var archiveFile = GetArchiveFile(assetPath, modOrdering);
         if (archiveFile is null)
@@ -63,12 +63,12 @@ public class ArchiveAssetProvider : IAssetProvider
         return true;
     }
 
-    private IArchiveFile? GetArchiveFile(AssetPath assetPath, IEnumerable<ModKey>? modOrdering = null)
+    private IArchiveFile? GetArchiveFile(DataRelativeAssetPath assetPath, IEnumerable<ModKey>? modOrdering = null)
     {
-        var dataRelativeDirectoryPath = _fileSystem.Path.GetDirectoryName(assetPath.DataRelativePath);
+        var dataRelativeDirectoryPath = _fileSystem.Path.GetDirectoryName(assetPath.Path);
         if (dataRelativeDirectoryPath is null) return null;
 
-        var fileName = _fileSystem.Path.GetFileName(assetPath.RawPath);
+        var fileName = _fileSystem.Path.GetFileName(assetPath.Path);
         var applicableArchivePaths = _getApplicableArchivePaths.Get(modOrdering);
         foreach (var archivePath in applicableArchivePaths)
         {
@@ -78,7 +78,7 @@ public class ArchiveAssetProvider : IAssetProvider
             var archiveFile = archiveFolder.Files.FirstOrDefault(file =>
             {
                 var archiveFileName = _fileSystem.Path.GetFileName(file.Path);
-                return AssetPath.PathComparer.Equals(archiveFileName, fileName);
+                return DataRelativeAssetPath.PathComparer.Equals(archiveFileName, fileName);
             });
             if (archiveFile is null) continue;
 
