@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Assets;
 using Xunit;
 namespace Mutagen.Bethesda.UnitTests.Plugins.Assets; 
 
-public class AssetLinkDataRelativePathTest 
+public class AssetLinkPathingTests 
 {
     static readonly string DataPath = Path.Combine("Meshes" ,"Clutter", "MyMesh.nif");
     static readonly string RawPath = Path.Combine("Clutter", "MyMesh.nif");
