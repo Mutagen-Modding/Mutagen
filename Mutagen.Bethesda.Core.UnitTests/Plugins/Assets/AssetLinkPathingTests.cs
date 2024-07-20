@@ -6,7 +6,6 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Assets;
 public class AssetLinkPathingTests 
 {
     static readonly string DataPath = Path.Combine("Meshes" ,"Clutter", "MyMesh.nif");
-    static readonly string RawPath = Path.Combine("Clutter", "MyMesh.nif");
 
     [Fact]
     public void AbsolutePath()
@@ -14,7 +13,7 @@ public class AssetLinkPathingTests
         var path = "C:\\Skyrim\\Data\\Meshes\\Clutter\\MyMesh.nif";
         var link = new AssetLink<TestAssetType>(path);
         link.DataRelativePath.Should().Be(DataPath);
-        link.RawPath.Should().Be(RawPath);
+        link.GivenPath.Should().Be(path);
     }
 
     [Fact]
@@ -23,7 +22,7 @@ public class AssetLinkPathingTests
         var path = "Data\\Meshes\\Clutter\\MyMesh.nif";
         var link = new AssetLink<TestAssetType>(path);
         link.DataRelativePath.Should().Be(DataPath);
-        link.RawPath.Should().Be(RawPath);
+        link.GivenPath.Should().Be(path);
     }
 
     [Fact]
@@ -32,14 +31,15 @@ public class AssetLinkPathingTests
         var path = "\\Data\\Meshes\\Clutter\\MyMesh.nif";
         var link = new AssetLink<TestAssetType>(path);
         link.DataRelativePath.Should().Be(DataPath);
-        link.RawPath.Should().Be(RawPath);
+        link.GivenPath.Should().Be(path);
     }
 
     [Fact]
     public void FirstLevelChildRelativePath()
     {
-        var link = new AssetLink<TestAssetType>(RawPath);
+        var path = Path.Combine("Clutter", "MyMesh.nif");
+        var link = new AssetLink<TestAssetType>(path);
         link.DataRelativePath.Should().Be(DataPath);
-        link.RawPath.Should().Be(RawPath);
+        link.GivenPath.Should().Be(path);
     }
 }

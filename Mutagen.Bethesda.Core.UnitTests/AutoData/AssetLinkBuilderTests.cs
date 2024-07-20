@@ -27,8 +27,8 @@ public class AssetLinkBuilderTests
         AssetLinkBuilder sut)
     {
         var assetLink = (IAssetLinkGetter)sut.Create(typeof(AssetLink<TestAssetType>), context);
-        assetLink.RawPath.Should().Contain(Path.Combine("Data", TestAssetType.Instance.BaseFolder));
-        Path.GetExtension(assetLink.RawPath).Should().Be(TestAssetType.Instance.FileExtensions.First());
+        assetLink.GivenPath.Should().Contain(Path.Combine("Data", TestAssetType.Instance.BaseFolder));
+        Path.GetExtension(assetLink.GivenPath).Should().Be(TestAssetType.Instance.FileExtensions.First());
     }
 
     [Theory, MutagenAutoData]
@@ -36,7 +36,7 @@ public class AssetLinkBuilderTests
         AssetLink<TestAssetType> link,
         AssetLink<TestAssetType> link2)
     {
-        link.RawPath.Should().NotBe(link2.RawPath);
+        link.GivenPath.Should().NotBe(link2.GivenPath);
     }
 
     [Theory, MutagenAutoData]
@@ -44,6 +44,6 @@ public class AssetLinkBuilderTests
         IFileSystem fileSystem,
         AssetLink<TestAssetType> existingLink)
     {
-        fileSystem.File.Exists(existingLink.RawPath).Should().BeTrue();
+        fileSystem.File.Exists(existingLink.GivenPath).Should().BeTrue();
     }
 }

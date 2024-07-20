@@ -87,14 +87,14 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
             .TrimStart(System.IO.Path.DirectorySeparatorChar)
             .TrimStart(System.IO.Path.AltDirectorySeparatorChar);
 
-        // Can be replaced with a version of TrimStart that takes the string comparison into account
-        if (path.StartsWith(DataPrefix, PathComparison))
+        int index;
+        if ((index = path.IndexOf(DataPrefix, PathComparison)) != -1)
         {
-            path = path[DataPrefixLength..];
+            path = path[(DataPrefixLength + index)..];
         }
-        else if (path.StartsWith(DataPrefixAlt, PathComparison))
+        else if ((index = path.IndexOf(DataPrefixAlt, PathComparison)) != -1)
         {
-            path = path[DataPrefixLength..];
+            path = path[(DataPrefixLength + index)..];
         }
 
         return path.ToString();

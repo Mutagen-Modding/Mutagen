@@ -26,6 +26,15 @@ public class DataRelativePathTests
         link.Path.Should().Be(DataPath);
     }
 
+
+    [Fact]
+    public void DataRelativePathWithPrefix()
+    {
+        var path = "SomeFolder\\Data\\Meshes\\Clutter\\MyMesh.nif";
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
     [Fact]
     public void PrefixedDataRelativePath()
     {
