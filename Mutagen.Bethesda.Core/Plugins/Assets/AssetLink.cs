@@ -15,8 +15,8 @@ public class AssetLinkGetter<TAssetType> :
     IAssetLinkGetter<TAssetType>
     where TAssetType : class, IAssetType
 {
-    protected DataRelativeAssetPath _dataRelativeAssetPath;
-    protected string _rawPath;
+    protected DataRelativePath _dataRelativeAssetPath;
+    protected string _givenPath;
     protected static readonly IAssetType AssetInstance;
     public static readonly AssetLinkGetter<TAssetType> Null = new();
 
@@ -31,64 +31,66 @@ public class AssetLinkGetter<TAssetType> :
 
     public AssetLinkGetter()
     {
-        _dataRelativeAssetPath = DataRelativeAssetPath.NullPath;
-        _rawPath = DataRelativeAssetPath.NullPath;
+        _dataRelativeAssetPath = Bethesda.Assets.DataRelativePath.NullPath;
+        _givenPath = Bethesda.Assets.DataRelativePath.NullPath;
     }
 
-    public AssetLinkGetter(DataRelativeAssetPath dataRelativePath)
+    public AssetLinkGetter(DataRelativePath dataRelativePath)
     {
-        if (dataRelativePath.Path == DataRelativeAssetPath.NullPath)
+        if (dataRelativePath.Path == Bethesda.Assets.DataRelativePath.NullPath)
         {
-            _dataRelativeAssetPath = DataRelativeAssetPath.NullPath;
-            _rawPath = DataRelativeAssetPath.NullPath;
+            _dataRelativeAssetPath = Bethesda.Assets.DataRelativePath.NullPath;
+            _givenPath = Bethesda.Assets.DataRelativePath.NullPath;
         }
         else
         {
             AssertHasBaseFolder(dataRelativePath.Path);
+            _givenPath = dataRelativePath.Path;
             _dataRelativeAssetPath = dataRelativePath;
-            _rawPath = ExtractAssertRawPath(_dataRelativeAssetPath);
         }
     }
 
     public AssetLinkGetter(string path)
     {
-        if (path == DataRelativeAssetPath.NullPath)
+        if (path == Bethesda.Assets.DataRelativePath.NullPath)
         {
-            _dataRelativeAssetPath = DataRelativeAssetPath.NullPath;
-            _rawPath = DataRelativeAssetPath.NullPath;
+            _dataRelativeAssetPath = Bethesda.Assets.DataRelativePath.NullPath;
+            _givenPath = Bethesda.Assets.DataRelativePath.NullPath;
         }
         else
         {
-            if (!DataRelativeAssetPath.HasDataDirectory(path) 
+            _givenPath = path;
+            
+            if (!Bethesda.Assets.DataRelativePath.HasDataDirectory(path) 
                 && !HasBaseFolder(path))
             {
                 path = Path.Combine(AssetInstance.BaseFolder, path);
             }
+
             _dataRelativeAssetPath = path;
             AssertHasBaseFolder(_dataRelativeAssetPath.Path);
-            _rawPath = ExtractAssertRawPath(_dataRelativeAssetPath);
         }
     }
 
     public AssetLinkGetter(FilePath path)
     {
-        if (path.Path == DataRelativeAssetPath.NullPath)
+        if (path.Path == Bethesda.Assets.DataRelativePath.NullPath)
         {
-            _dataRelativeAssetPath = DataRelativeAssetPath.NullPath;
-            _rawPath = DataRelativeAssetPath.NullPath;
+            _dataRelativeAssetPath = Bethesda.Assets.DataRelativePath.NullPath;
+            _givenPath = Bethesda.Assets.DataRelativePath.NullPath;
         }
         else
         {
+            _givenPath = path;
             _dataRelativeAssetPath = path;
             AssertHasBaseFolder(_dataRelativeAssetPath.Path);
-            _rawPath = ExtractAssertRawPath(_dataRelativeAssetPath);
         }
     }
 
     protected static bool HasBaseFolder(string path)
     {
         return path.StartsWith(AssetInstance.BaseFolder,
-            DataRelativeAssetPath.PathComparison);
+            Bethesda.Assets.DataRelativePath.PathComparison);
     }
 
     protected static void AssertHasBaseFolder(string path)
@@ -99,10 +101,10 @@ public class AssetLinkGetter<TAssetType> :
         }
     }
 
-    protected static string ExtractAssertRawPath(DataRelativeAssetPath path)
+    protected static string ExtractAssertBaseFolderSubpath(DataRelativePath path)
     {
         if (!path.Path.StartsWith(AssetInstance.BaseFolder,
-                DataRelativeAssetPath.PathComparison))
+                Bethesda.Assets.DataRelativePath.PathComparison))
         {
             throw new AssetPathMisalignedException(path.Path, AssetInstance);
         }
@@ -110,11 +112,11 @@ public class AssetLinkGetter<TAssetType> :
         return path.Path.Substring(AssetInstance.BaseFolder.Length + 1);
     }
 
-    public string RawPath => _rawPath;
+    public string GivenPath => _givenPath;
 
-    public DataRelativeAssetPath DataRelativePath => _dataRelativeAssetPath.Path;
+    public DataRelativePath DataRelativePath => _dataRelativeAssetPath.Path;
 
-    public string Extension => Path.GetExtension(RawPath);
+    public string Extension => Path.GetExtension(GivenPath);
 
     public IAssetType Type => AssetInstance;
 
@@ -129,7 +131,7 @@ public class AssetLinkGetter<TAssetType> :
         if (ReferenceEquals(this, obj)) return true;
         if (obj is not IAssetLinkGetter<TAssetType> rhs) return false;
 
-        return RawPath.Equals(rhs.RawPath);
+        return DataRelativePath.Equals(rhs.DataRelativePath);
     }
 
     public virtual bool Equals(AssetLinkGetter<TAssetType>? other)
@@ -137,12 +139,12 @@ public class AssetLinkGetter<TAssetType> :
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return RawPath.Equals(other.RawPath);
+        return DataRelativePath.Equals(other.DataRelativePath);
     }
 
     public override int GetHashCode()
     {
-        return RawPath.GetHashCode();
+        return DataRelativePath.GetHashCode();
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
@@ -150,13 +152,13 @@ public class AssetLinkGetter<TAssetType> :
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
 
-        return RawPath.CompareTo(other.RawPath);
+        return DataRelativePath.CompareTo(other.DataRelativePath);
     }
     
     public bool IsNull => DataRelativePath.IsNull;
 
     [return: NotNullIfNotNull("asset")]
-    public static implicit operator string? (AssetLinkGetter<TAssetType>? asset) => asset?.RawPath;
+    public static implicit operator string? (AssetLinkGetter<TAssetType>? asset) => asset?.GivenPath;
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLinkGetter<TAssetType>?(string? path) => path == null ? null : new(path);
@@ -165,7 +167,7 @@ public class AssetLinkGetter<TAssetType> :
     public static implicit operator AssetLinkGetter<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
 
     [return: NotNullIfNotNull("path")]
-    public static implicit operator AssetLinkGetter<TAssetType>?(DataRelativeAssetPath? path) => path == null ? null : new(path.Value);
+    public static implicit operator AssetLinkGetter<TAssetType>?(DataRelativePath? path) => path == null ? null : new(path.Value);
 }
 
 /// <summary>
@@ -180,7 +182,7 @@ public class AssetLink<TAssetType> :
     where TAssetType : class, IAssetType
 {
     public AssetLink()
-        : base(DataRelativeAssetPath.NullPath)
+        : base(DataRelativePath.NullPath)
     {
     }
     
@@ -189,7 +191,7 @@ public class AssetLink<TAssetType> :
     {
     }
 
-    public AssetLink(DataRelativeAssetPath dataRelativePath)
+    public AssetLink(DataRelativePath dataRelativePath)
         : base(dataRelativePath)
     {
     }
@@ -199,7 +201,7 @@ public class AssetLink<TAssetType> :
     {
     }
 
-    public bool TrySetPath(DataRelativeAssetPath? path)
+    public bool TrySetPath(DataRelativePath? path)
     {
         if (path == null)
         {
@@ -207,17 +209,37 @@ public class AssetLink<TAssetType> :
             return true;
         }
         
-        if (path.Value.Path.StartsWith(AssetInstance.BaseFolder, DataRelativeAssetPath.PathComparison))
+        if (path.Value.Path.StartsWith(AssetInstance.BaseFolder, DataRelativePath.PathComparison))
         {
             _dataRelativeAssetPath = path.Value;
-            _rawPath = ExtractAssertRawPath(path.Value);
+            _givenPath = path.Value.Path;
             return true;
         }
         
         return false;
     }
 
-    public void SetPath(DataRelativeAssetPath? path)
+    public bool TrySetPath(string? path)
+    {
+        if (path == null)
+        {
+            SetToNull();
+            return true;
+        }
+
+        DataRelativePath dataRelativePath = path;
+        
+        if (dataRelativePath.Path.StartsWith(AssetInstance.BaseFolder, DataRelativePath.PathComparison))
+        {
+            _dataRelativeAssetPath = dataRelativePath;
+            _givenPath = path;
+            return true;
+        }
+        
+        return false;
+    }
+
+    public void SetPath(DataRelativePath? path)
     {
         if (!TrySetPath(path))
         {
@@ -225,25 +247,33 @@ public class AssetLink<TAssetType> :
         }
     }
 
-    public new string RawPath
+    public void SetPath(string? path)
     {
-        get => _rawPath;
+        if (!TrySetPath(path))
+        {
+            throw new AssetPathMisalignedException(path!, AssetInstance);
+        }
+    }
+
+    public new string GivenPath
+    {
+        get => _givenPath;
         set
         {
-            _rawPath = value;
-            _dataRelativeAssetPath = new DataRelativeAssetPath(value);
+            _givenPath = value;
+            _dataRelativeAssetPath = new DataRelativePath(value);
         }
     }
 
     public AssetLink<TAssetType> ShallowClone()
     {
-        return new AssetLink<TAssetType>(RawPath);
+        return new AssetLink<TAssetType>(GivenPath);
     }
 
     public void SetToNull()
     {
-        _dataRelativeAssetPath = DataRelativeAssetPath.NullPath;
-        _rawPath = DataRelativeAssetPath.NullPath;
+        _dataRelativeAssetPath = DataRelativePath.NullPath;
+        _givenPath = DataRelativePath.NullPath;
     }
 
     public override string ToString()
@@ -284,7 +314,7 @@ public class AssetLink<TAssetType> :
     }
 
     [return: NotNullIfNotNull("asset")]
-    public static implicit operator string?(AssetLink<TAssetType>? asset) => asset?.RawPath!;
+    public static implicit operator string?(AssetLink<TAssetType>? asset) => asset?.GivenPath!;
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLink<TAssetType>?(string? path) => path == null ? null : new(path);
@@ -293,5 +323,5 @@ public class AssetLink<TAssetType> :
     public static implicit operator AssetLink<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
 
     [return: NotNullIfNotNull("path")]
-    public static implicit operator AssetLink<TAssetType>?(DataRelativeAssetPath? path) => path == null ? null : new(path.Value);
+    public static implicit operator AssetLink<TAssetType>?(DataRelativePath? path) => path == null ? null : new(path.Value);
 }

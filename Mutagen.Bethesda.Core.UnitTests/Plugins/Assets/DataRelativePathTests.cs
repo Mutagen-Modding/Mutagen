@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Assets;
 
-public class DataRelativeAssetPathTests 
+public class DataRelativePathTests 
 {
     static readonly string DataPath = Path.Combine("Meshes" ,"Clutter", "MyMesh.nif");
 
@@ -14,7 +14,7 @@ public class DataRelativeAssetPathTests
     public void AbsolutePath()
     {
         var path = "C:\\Skyrim\\Data\\Meshes\\Clutter\\MyMesh.nif";
-        var link = new DataRelativeAssetPath(path);
+        var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
 
@@ -22,7 +22,16 @@ public class DataRelativeAssetPathTests
     public void DataRelativePath()
     {
         var path = "Data\\Meshes\\Clutter\\MyMesh.nif";
-        var link = new DataRelativeAssetPath(path);
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+
+    [Fact]
+    public void DataRelativePathWithPrefix()
+    {
+        var path = "SomeFolder\\Data\\Meshes\\Clutter\\MyMesh.nif";
+        var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
 
@@ -30,7 +39,7 @@ public class DataRelativeAssetPathTests
     public void PrefixedDataRelativePath()
     {
         var path = "\\Data\\Meshes\\Clutter\\MyMesh.nif";
-        var link = new DataRelativeAssetPath(path);
+        var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
 
@@ -38,7 +47,7 @@ public class DataRelativeAssetPathTests
     public void FirstLevelChildRelativePath()
     {
         var path = "Clutter\\MyMesh.nif";
-        var link = new DataRelativeAssetPath(path);
+        var link = new DataRelativePath(path);
         link.Path.Should().Be(path);
     }
 
@@ -47,7 +56,7 @@ public class DataRelativeAssetPathTests
     {
         Assert.Throws<AssetPathMisalignedException>(() =>
         {
-            new DataRelativeAssetPath(
+            new DataRelativePath(
                 "C:\\Skyrim\\NoDataPath\\MyMesh.nif");
         });
     }

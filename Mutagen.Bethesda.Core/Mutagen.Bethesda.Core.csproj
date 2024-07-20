@@ -72,7 +72,7 @@
         <Compile Include="Archives\IArchiveFile.cs" />
         <Compile Include="Archives\IArchiveFolder.cs" />
         <Compile Include="Archives\IArchiveReader.cs" />
-        <Compile Include="Assets\DataRelativeAssetPath.cs" />
+        <Compile Include="Assets\DataRelativePath.cs" />
         <Compile Include="Assets\AssetTypeLocator.cs" />
         <Compile Include="Assets\DI\ArchiveAssetProvider.cs" />
         <Compile Include="Assets\DI\AssetProviderMixIn.cs" />

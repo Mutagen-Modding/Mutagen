@@ -12,10 +12,11 @@ public class AssetLinkTests
     public void TrySetPath()
     {
         var link = new AssetLink<TestAssetType>();
-        link.TrySetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"))
+        var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
+        link.TrySetPath(path)
             .Should().BeTrue();
-        link.RawPath.Should().Be(Path.Combine("SomeSubFolder", "SomeModel.nif"));
-        link.DataRelativePath.Should().Be(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.Should().Be(path);
     }
     
     [Fact]
@@ -25,7 +26,7 @@ public class AssetLinkTests
         link.TrySetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"))
             .Should().BeTrue();
         link.TrySetPath(null);
-        link.RawPath.Should().Be(string.Empty);
+        link.GivenPath.Should().Be(string.Empty);
         link.DataRelativePath.Should().Be(string.Empty);
     }
     
@@ -33,20 +34,32 @@ public class AssetLinkTests
     public void TrySetPathFailed()
     {
         var link = new AssetLink<TestAssetType>();
-        link.TrySetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"))
+        var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
+        link.TrySetPath(path)
             .Should().BeTrue();
         link.TrySetPath(Path.Combine("Other", "SomeSubFolder", "SomeModel.nif"))
             .Should().BeFalse();
-        link.RawPath.Should().Be(Path.Combine("SomeSubFolder", "SomeModel.nif"));
-        link.DataRelativePath.Should().Be(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.Should().Be(path);
     }
     
     [Fact]
-    public void SetPath()
+    public void SetPathDataRelative()
     {
         var link = new AssetLink<TestAssetType>();
-        link.SetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
-        link.RawPath.Should().Be(Path.Combine("SomeSubFolder", "SomeModel.nif"));
+        var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
+        link.SetPath(path);
+        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.Should().Be(path);
+    }
+    
+    [Fact]
+    public void SetPathAbsolute()
+    {
+        var link = new AssetLink<TestAssetType>();
+        var path = Path.Combine("SomeFolder", "Data", "Meshes", "SomeSubFolder", "SomeModel.nif");
+        link.SetPath(path);
+        link.GivenPath.Should().Be(path);
         link.DataRelativePath.Should().Be(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
     }
     
@@ -56,7 +69,7 @@ public class AssetLinkTests
         var link = new AssetLink<TestAssetType>();
         link.SetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         link.TrySetPath(null);
-        link.RawPath.Should().Be(string.Empty);
+        link.GivenPath.Should().Be(string.Empty);
         link.DataRelativePath.Should().Be(string.Empty);
     }
     
@@ -64,13 +77,14 @@ public class AssetLinkTests
     public void SetPathFailed()
     {
         var link = new AssetLink<TestAssetType>();
-        link.SetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
+        link.SetPath(path);
         Assert.Throws<AssetPathMisalignedException>(() =>
         {
             link.SetPath(Path.Combine("Other", "SomeSubFolder", "SomeModel.nif"));
         });
-        link.RawPath.Should().Be(Path.Combine("SomeSubFolder", "SomeModel.nif"));
-        link.DataRelativePath.Should().Be(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.Should().Be(path);
     }
     
     [Fact]
