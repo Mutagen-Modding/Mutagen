@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Assets;
 
-public readonly struct DataRelativeAssetPath : IEquatable<DataRelativeAssetPath>, IComparable<DataRelativeAssetPath> 
+public readonly struct DataRelativePath : IEquatable<DataRelativePath>, IComparable<DataRelativePath> 
 {
     public static readonly string NullPath = string.Empty;
     public static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
@@ -24,7 +24,7 @@ public readonly struct DataRelativeAssetPath : IEquatable<DataRelativeAssetPath>
 
     public bool IsNull => Path == NullPath;
 
-    public DataRelativeAssetPath(string rawPath)
+    public DataRelativePath(string rawPath)
     {
         if (System.IO.Path.IsPathRooted(rawPath))
         {
@@ -112,41 +112,41 @@ public readonly struct DataRelativeAssetPath : IEquatable<DataRelativeAssetPath>
 
     public override bool Equals(object? obj)
     {
-        return obj is DataRelativeAssetPath other && Equals(other);
+        return obj is DataRelativePath other && Equals(other);
     }
 
-    public bool Equals(DataRelativeAssetPath other)
+    public bool Equals(DataRelativePath other)
     {
         return PathComparer.Equals(Path, other.Path);
     }
 
-    public int CompareTo(DataRelativeAssetPath other)
+    public int CompareTo(DataRelativePath other)
     {
         return PathComparer.Compare(Path, other.Path);
     }
 
-    public static bool operator ==(DataRelativeAssetPath lhs, DataRelativeAssetPath rhs)
+    public static bool operator ==(DataRelativePath lhs, DataRelativePath rhs)
     {
         return lhs.Equals(rhs);
     }
 
-    public static bool operator !=(DataRelativeAssetPath lhs, DataRelativeAssetPath rhs)
+    public static bool operator !=(DataRelativePath lhs, DataRelativePath rhs)
     {
         return !lhs.Equals(rhs);
     }
 
-    public static implicit operator DataRelativeAssetPath(FileInfo info)
+    public static implicit operator DataRelativePath(FileInfo info)
     {
         return new FilePath(info.FullName);
     }
 
-    public static implicit operator DataRelativeAssetPath(string path)
+    public static implicit operator DataRelativePath(string path)
     {
-        return new DataRelativeAssetPath(path);
+        return new DataRelativePath(path);
     }
 
-    public static implicit operator DataRelativeAssetPath(FilePath path)
+    public static implicit operator DataRelativePath(FilePath path)
     {
-        return new DataRelativeAssetPath(path);
+        return new DataRelativePath(path);
     }
 }

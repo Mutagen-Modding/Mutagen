@@ -21,7 +21,7 @@ public interface IAssetLinkGetter
     /// </code>
     /// </example>
     /// </summary>
-    DataRelativeAssetPath DataRelativePath { get; }
+    DataRelativePath DataRelativePath { get; }
 
     /// <summary>
     /// Extension of the asset
@@ -72,7 +72,7 @@ public interface IAssetLink : IAssetLinkGetter
     /// <summary>
     /// Set the path to a path that is relative to the game's Data directory
     /// </summary>
-    bool TrySetPath(DataRelativeAssetPath? path);
+    bool TrySetPath(DataRelativePath? path);
 
     /// <summary>
     /// Raw path pointing to the asset
