@@ -137,9 +137,14 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                     {
                         var modPath = new ModPath(listing.ModKey,
                             _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
-                        using var mod = ModInstantiator.ImportGetter(modPath, _gameRelease.Release);
+                        if (!_fileSystem.File.Exists(modPath)) return null;
+                        using var mod = ModInstantiator.ImportGetter(modPath, _gameRelease.Release, new BinaryReadParameters()
+                        {
+                            FileSystem = _fileSystem
+                        });
                         return new ModFlags(mod);
-                    }))
+                    })
+                    .NotNull())
             };
         }
         try
