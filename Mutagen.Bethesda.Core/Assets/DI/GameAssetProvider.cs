@@ -13,18 +13,18 @@ public class GameAssetProvider : IAssetProvider
         _archiveAssetProvider = archiveAssetProvider;
     }
 
-    public bool Exists(DataRelativeAssetPath assetPath) {
+    public bool Exists(DataRelativePath assetPath) {
         return _dataAssetProvider.Exists(assetPath) || _archiveAssetProvider.Exists(assetPath);
     }
 
-    public bool TryGetStream(DataRelativeAssetPath assetPath, [MaybeNullWhen(false)] out Stream stream) {
+    public bool TryGetStream(DataRelativePath assetPath, [MaybeNullWhen(false)] out Stream stream) {
         if (_dataAssetProvider.TryGetStream(assetPath, out stream)) return true;
         if (_archiveAssetProvider.TryGetStream(assetPath, out stream)) return true;
 
         return false;
     }
 
-    public bool TryGetSize(DataRelativeAssetPath assetPath, out uint size) {
+    public bool TryGetSize(DataRelativePath assetPath, out uint size) {
         if (_dataAssetProvider.TryGetSize(assetPath, out size)) return true;
         if (_archiveAssetProvider.TryGetSize(assetPath, out size)) return true;
 

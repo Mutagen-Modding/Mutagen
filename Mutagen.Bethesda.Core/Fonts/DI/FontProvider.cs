@@ -6,7 +6,7 @@ public interface IFontProvider {
 	/// <summary>
 	/// Gets the data relative file paths of the font libraries
 	/// </summary>
-	IReadOnlyList<DataRelativeAssetPath> FontLibraries { get; }
+	IReadOnlyList<DataRelativePath> FontLibraries { get; }
 
 	/// <summary>
 	/// Gets the font mappings
@@ -29,12 +29,12 @@ public interface IFontProvider {
 
 public class FontProvider : IFontProvider 
 {
-	private readonly List<DataRelativeAssetPath> _fontLibraries = new();
+	private readonly List<DataRelativePath> _fontLibraries = new();
 	private readonly Dictionary<string, FontMapping> _fontMappings = new();
 	private char[] _validNameChars = Array.Empty<char>();
 	private char[] _validBookChars = Array.Empty<char>();
 
-	public IReadOnlyList<DataRelativeAssetPath> FontLibraries => _fontLibraries;
+	public IReadOnlyList<DataRelativePath> FontLibraries => _fontLibraries;
 	public IReadOnlyDictionary<string, FontMapping> FontMappings => _fontMappings;
 	public IReadOnlyList<char> ValidNameChars => _validNameChars;
 	public IReadOnlyList<char> ValidBookChars => _validBookChars;

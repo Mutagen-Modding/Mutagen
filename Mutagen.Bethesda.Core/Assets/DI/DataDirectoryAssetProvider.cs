@@ -16,13 +16,13 @@ public class DataDirectoryAssetProvider : IAssetProvider
         _dataDirectoryProvider = dataDirectoryProvider;
     }
 
-    public bool Exists(DataRelativeAssetPath assetPath)
+    public bool Exists(DataRelativePath assetPath)
     {
         var fullPath = _fileSystem.Path.Combine(_dataDirectoryProvider.Path, assetPath.Path);
         return _fileSystem.File.Exists(fullPath);
     }
 
-    public bool TryGetSize(DataRelativeAssetPath assetPath, out uint size)
+    public bool TryGetSize(DataRelativePath assetPath, out uint size)
     {
         var fullPath = _fileSystem.Path.Combine(_dataDirectoryProvider.Path, assetPath.Path);
         if (!_fileSystem.File.Exists(fullPath))
@@ -35,7 +35,7 @@ public class DataDirectoryAssetProvider : IAssetProvider
         return true;
     }
 
-    public bool TryGetStream(DataRelativeAssetPath assetPath, [MaybeNullWhen(false)] out Stream stream)
+    public bool TryGetStream(DataRelativePath assetPath, [MaybeNullWhen(false)] out Stream stream)
     {
         var fullPath = _fileSystem.Path.Combine(_dataDirectoryProvider.Path, assetPath.Path);
         if (_fileSystem.File.Exists(fullPath))

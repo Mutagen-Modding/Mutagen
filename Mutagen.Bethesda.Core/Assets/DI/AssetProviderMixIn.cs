@@ -23,7 +23,7 @@ public static class AssetProviderMixIn
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting stream</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
-    public static Stream GetStream(this IAssetProvider assetProvider, DataRelativeAssetPath assetPath)
+    public static Stream GetStream(this IAssetProvider assetProvider, DataRelativePath assetPath)
     {
         return assetProvider.TryGetStream(assetPath, out var stream)
             ? stream
@@ -46,7 +46,7 @@ public static class AssetProviderMixIn
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting size in bytes</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
-    public static uint GetSize(this IAssetProvider assetProvider, DataRelativeAssetPath assetPath)
+    public static uint GetSize(this IAssetProvider assetProvider, DataRelativePath assetPath)
     {
         return assetProvider.TryGetSize(assetPath, out var size)
             ? size
