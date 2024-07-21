@@ -156,7 +156,8 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 return p with
                 {
                     LoadOrder = loadOrder,
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
         });
@@ -205,7 +206,8 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
         });
@@ -234,7 +236,8 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
         });
@@ -286,7 +289,8 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         loadOrder.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
         });
@@ -307,7 +311,8 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 return p with
                 {
                     LoadOrder = loadOrder,
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
         });
@@ -354,7 +359,8 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
         });
@@ -382,7 +388,8 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.PriorityOrder.ResolveAllModsExist(),
                         disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
         });
