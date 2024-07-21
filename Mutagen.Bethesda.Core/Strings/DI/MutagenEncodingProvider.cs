@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Mutagen.Bethesda.Strings.DI;
 
@@ -169,8 +169,19 @@ public static class MutagenEncoding
 
 internal sealed class MutagenEncodingProvider : IMutagenEncodingProvider
 {
+    private readonly IMutagenEncoding? _encoding;
+
+    public MutagenEncodingProvider()
+    {
+    }
+
+    public MutagenEncodingProvider(IMutagenEncoding encoding)
+    {
+        _encoding = encoding;
+    }
+
     public IMutagenEncoding GetEncoding(GameRelease release, Language language)
     {
-        return MutagenEncoding.GetEncoding(release, language);
+        return _encoding ?? MutagenEncoding.GetEncoding(release, language);
     }
 }

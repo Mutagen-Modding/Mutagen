@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -2144,14 +2143,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICameraPathGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICameraPathGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ICameraPathGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(p, s));
                     return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:
@@ -2167,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Shots = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ICameraShotGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraShotGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

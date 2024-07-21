@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2075,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Weight
         private int? _WeightLocation;

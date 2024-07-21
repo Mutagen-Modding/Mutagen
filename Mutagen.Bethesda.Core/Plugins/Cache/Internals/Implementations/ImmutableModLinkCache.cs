@@ -663,6 +663,37 @@ public sealed class ImmutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryResolve<TMajor>(IFormLinkGetter<TMajor> formLink, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        CheckDisposal();
+        return _cache.TryResolve<TMajor>(formLink.FormKey, out majorRec, target);
+    }
+
+    /// <inheritdoc />
+    public TMajor Resolve<TMajor>(IFormLinkGetter<TMajor> formLink, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        CheckDisposal();
+        return _cache.Resolve<TMajor>(formLink.FormKey, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveSimpleContext<TMajor>(IFormLinkGetter<TMajor> formLink, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return TryResolveSimpleContext<TMajor>(formLink.FormKey, out majorRec, target);
+    }
+
+    /// <inheritdoc />
+    public IModContext<TMajor> ResolveSimpleContext<TMajor>(IFormLinkGetter<TMajor> formLink, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        if (TryResolveSimpleContext<TMajor>(formLink.FormKey, out var commonRec, target)) return commonRec;
+        throw new MissingRecordException(formLink.FormKey, typeof(TMajor));
+    }
+
+    /// <inheritdoc />
     public IReadOnlyList<IModGetter> ListedOrder
     {
         get
@@ -1414,6 +1445,52 @@ public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, T
     public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target)
     {
         return ResolveAllContexts(formKey, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolve<TMajor>(IFormLinkGetter<TMajor> formLink, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        CheckDisposal();
+        return _cache.TryResolve<TMajor>(formLink.FormKey, out majorRec, target);
+    }
+
+    /// <inheritdoc />
+    public TMajor Resolve<TMajor>(IFormLinkGetter<TMajor> formLink, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        CheckDisposal();
+        return _cache.Resolve<TMajor>(formLink.FormKey, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveSimpleContext<TMajor>(IFormLinkGetter<TMajor> formLink, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return TryResolveSimpleContext<TMajor>(formLink.FormKey, out majorRec, target);
+    }
+
+    /// <inheritdoc />
+    public IModContext<TMajor> ResolveSimpleContext<TMajor>(IFormLinkGetter<TMajor> formLink, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveContext(formLink.FormKey, typeof(TMajor), target).AsType<IMajorRecordQueryableGetter, TMajor>();
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveContext<TMajor, TMajorGetter>(IFormLinkGetter<TMajorGetter> formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return TryResolveContext<TMajor, TMajorGetter>(formLink.FormKey, out majorRec, target);
+    }
+
+    /// <inheritdoc />
+    public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(IFormLinkGetter<TMajorGetter> formLink, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return ResolveContext<TMajor, TMajorGetter>(formLink.FormKey, target);
     }
 
     public void Warmup(Type type)

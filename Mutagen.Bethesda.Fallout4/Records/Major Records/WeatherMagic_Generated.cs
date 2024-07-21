@@ -1359,9 +1359,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public WeatherMagic.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ISpellGetter> OnLightningStrikeSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> OnLightningStrikeSpell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single OnLightningStrikeThreshold => _structData.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<ISpellGetter> OnWeatherActivateSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ISpellGetter> OnWeatherActivateSpell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public Single OnWeatherActivateThreshold => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
         public UInt64 Unknown => _structData.Length <= 0x10 ? default : BinaryPrimitives.ReadUInt64LittleEndian(_structData.Slice(0x10, 0x8));
         partial void CustomFactoryEnd(

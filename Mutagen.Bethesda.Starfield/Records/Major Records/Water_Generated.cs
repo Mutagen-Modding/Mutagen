@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -35,7 +34,6 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -142,168 +140,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IWaterGetter.DATA => this.DATA;
         #endregion
-        #region FogDepthAmount
-        public Single FogDepthAmount { get; set; } = default(Single);
-        #endregion
-        #region FogShallowColor
-        public Color FogShallowColor { get; set; } = default(Color);
-        #endregion
-        #region FogDeepColor
-        public Color FogDeepColor { get; set; } = default(Color);
-        #endregion
-        #region FogColorShallowRange
-        public Single FogColorShallowRange { get; set; } = default(Single);
-        #endregion
-        #region FogColorDeepRange
-        public Single FogColorDeepRange { get; set; } = default(Single);
-        #endregion
-        #region FogShallowAlpha
-        public Single FogShallowAlpha { get; set; } = default(Single);
-        #endregion
-        #region FogDeepAlpha
-        public Single FogDeepAlpha { get; set; } = default(Single);
-        #endregion
-        #region FogAlphaShallowRange
-        public Single FogAlphaShallowRange { get; set; } = default(Single);
-        #endregion
-        #region FogAlphaDeepRange
-        public Single FogAlphaDeepRange { get; set; } = default(Single);
-        #endregion
-        #region FogUnderwaterColor
-        public Color FogUnderwaterColor { get; set; } = default(Color);
-        #endregion
-        #region FogUnderwaterAmount
-        public Single FogUnderwaterAmount { get; set; } = default(Single);
-        #endregion
-        #region FogUnderwaterNear
-        public Single FogUnderwaterNear { get; set; } = default(Single);
-        #endregion
-        #region FogUnderwaterFar
-        public Single FogUnderwaterFar { get; set; } = default(Single);
-        #endregion
-        #region PhysicalNormalMagnitude
-        public Single PhysicalNormalMagnitude { get; set; } = default(Single);
-        #endregion
-        #region PhysicalShallowNormalFalloff
-        public Single PhysicalShallowNormalFalloff { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDeepNormalFalloff
-        public Single PhysicalDeepNormalFalloff { get; set; } = default(Single);
-        #endregion
-        #region PhysicalReflectivityAmount
-        public Single PhysicalReflectivityAmount { get; set; } = default(Single);
-        #endregion
-        #region PhysicalFresnelAmount
-        public Single PhysicalFresnelAmount { get; set; } = default(Single);
-        #endregion
-        #region PhysicalSurfaceEffectFalloff
-        public Single PhysicalSurfaceEffectFalloff { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorForce
-        public Single PhysicalDisplacementSimulatorForce { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorVelocity
-        public Single PhysicalDisplacementSimulatorVelocity { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorFalloff
-        public Single PhysicalDisplacementSimulatorFalloff { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorDampener
-        public Single PhysicalDisplacementSimulatorDampener { get; set; } = default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorStartingSize
-        public Single PhysicalDisplacementSimulatorStartingSize { get; set; } = default(Single);
-        #endregion
-        #region PhysicalReflectionColor
-        public Color PhysicalReflectionColor { get; set; } = default(Color);
-        #endregion
-        #region SpecularSunSpecularPower
-        public Single SpecularSunSpecularPower { get; set; } = default(Single);
-        #endregion
-        #region SpecularSunSpecularMagnitude
-        public Single SpecularSunSpecularMagnitude { get; set; } = default(Single);
-        #endregion
-        #region SpecularSunSparklePower
-        public Single SpecularSunSparklePower { get; set; } = default(Single);
-        #endregion
-        #region SpecularSunSparkleMagnitude
-        public Single SpecularSunSparkleMagnitude { get; set; } = default(Single);
-        #endregion
-        #region SpecularInteriorSpecularRadius
-        public Single SpecularInteriorSpecularRadius { get; set; } = default(Single);
-        #endregion
-        #region SpecularInteriorSpecularBrightness
-        public Single SpecularInteriorSpecularBrightness { get; set; } = default(Single);
-        #endregion
-        #region SpecularInteriorSpecularPower
-        public Single SpecularInteriorSpecularPower { get; set; } = default(Single);
-        #endregion
-        #region SiltAmount
+        #region DNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _SiltAmount;
-        public Single SiltAmount
+        protected MemorySlice<Byte>? _DNAM;
+        public MemorySlice<Byte>? DNAM
         {
-            get => this._SiltAmount;
-            set
-            {
-                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
-                this._SiltAmount = value;
-            }
+            get => this._DNAM;
+            set => this._DNAM = value;
         }
-        #endregion
-        #region SiltLightColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _SiltLightColor;
-        public Color SiltLightColor
-        {
-            get => this._SiltLightColor;
-            set
-            {
-                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
-                this._SiltLightColor = value;
-            }
-        }
-        #endregion
-        #region SiltDarkColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _SiltDarkColor;
-        public Color SiltDarkColor
-        {
-            get => this._SiltDarkColor;
-            set
-            {
-                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
-                this._SiltDarkColor = value;
-            }
-        }
-        #endregion
-        #region ScreenSpaceReflections
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Boolean _ScreenSpaceReflections;
-        public Boolean ScreenSpaceReflections
-        {
-            get => this._ScreenSpaceReflections;
-            set
-            {
-                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
-                this._ScreenSpaceReflections = value;
-            }
-        }
-        #endregion
-        #region NoiseLayerOne
-        public WaterNoiseProperties NoiseLayerOne { get; set; } = new WaterNoiseProperties();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerOne => NoiseLayerOne;
-        #endregion
-        #region NoiseLayerTwo
-        public WaterNoiseProperties NoiseLayerTwo { get; set; } = new WaterNoiseProperties();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerTwo => NoiseLayerTwo;
-        #endregion
-        #region NoiseLayerThree
-        public WaterNoiseProperties NoiseLayerThree { get; set; } = new WaterNoiseProperties();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerThree => NoiseLayerThree;
+        ReadOnlyMemorySlice<Byte>? IWaterGetter.DNAM => this.DNAM;
         #endregion
         #region GNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -325,6 +171,31 @@ namespace Mutagen.Bethesda.Starfield
         public P3Float? AngularVelocity { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
+        #endregion
+        #region NAM2
+        public String? NAM2 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NAM2 => this.NAM2;
+        #endregion
+        #region NAM3
+        public String? NAM3 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NAM3 => this.NAM3;
+        #endregion
+        #region NAM4
+        public String? NAM4 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NAM4 => this.NAM4;
+        #endregion
+        #region NAM5
+        public Byte? NAM5 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? IWaterGetter.NAM5 => this.NAM5;
+        #endregion
+        #region NAM6
+        public Byte? NAM6 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? IWaterGetter.NAM6 => this.NAM6;
         #endregion
         #region RiverAbsorptionCurve
         private readonly IFormLinkNullable<ICurve3DGetter> _RiverAbsorptionCurve = new FormLinkNullable<ICurve3DGetter>();
@@ -396,9 +267,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICurve3DGetter> IWaterGetter.YelowMatterCurve => this.YelowMatterCurve;
         #endregion
-        #region DNAMDataTypeState
-        public Water.DNAMDataType DNAMDataTypeState { get; set; } = default(Water.DNAMDataType);
-        #endregion
 
         #region To String
 
@@ -431,48 +299,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.ConsumeSpell = initialValue;
                 this.ContactSpell = initialValue;
                 this.DATA = initialValue;
-                this.FogDepthAmount = initialValue;
-                this.FogShallowColor = initialValue;
-                this.FogDeepColor = initialValue;
-                this.FogColorShallowRange = initialValue;
-                this.FogColorDeepRange = initialValue;
-                this.FogShallowAlpha = initialValue;
-                this.FogDeepAlpha = initialValue;
-                this.FogAlphaShallowRange = initialValue;
-                this.FogAlphaDeepRange = initialValue;
-                this.FogUnderwaterColor = initialValue;
-                this.FogUnderwaterAmount = initialValue;
-                this.FogUnderwaterNear = initialValue;
-                this.FogUnderwaterFar = initialValue;
-                this.PhysicalNormalMagnitude = initialValue;
-                this.PhysicalShallowNormalFalloff = initialValue;
-                this.PhysicalDeepNormalFalloff = initialValue;
-                this.PhysicalReflectivityAmount = initialValue;
-                this.PhysicalFresnelAmount = initialValue;
-                this.PhysicalSurfaceEffectFalloff = initialValue;
-                this.PhysicalDisplacementSimulatorForce = initialValue;
-                this.PhysicalDisplacementSimulatorVelocity = initialValue;
-                this.PhysicalDisplacementSimulatorFalloff = initialValue;
-                this.PhysicalDisplacementSimulatorDampener = initialValue;
-                this.PhysicalDisplacementSimulatorStartingSize = initialValue;
-                this.PhysicalReflectionColor = initialValue;
-                this.SpecularSunSpecularPower = initialValue;
-                this.SpecularSunSpecularMagnitude = initialValue;
-                this.SpecularSunSparklePower = initialValue;
-                this.SpecularSunSparkleMagnitude = initialValue;
-                this.SpecularInteriorSpecularRadius = initialValue;
-                this.SpecularInteriorSpecularBrightness = initialValue;
-                this.SpecularInteriorSpecularPower = initialValue;
-                this.SiltAmount = initialValue;
-                this.SiltLightColor = initialValue;
-                this.SiltDarkColor = initialValue;
-                this.ScreenSpaceReflections = initialValue;
-                this.NoiseLayerOne = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
-                this.NoiseLayerTwo = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
-                this.NoiseLayerThree = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
+                this.DNAM = initialValue;
                 this.GNAM = initialValue;
                 this.LinearVelocity = initialValue;
                 this.AngularVelocity = initialValue;
+                this.NAM2 = initialValue;
+                this.NAM3 = initialValue;
+                this.NAM4 = initialValue;
+                this.NAM5 = initialValue;
+                this.NAM6 = initialValue;
                 this.RiverAbsorptionCurve = initialValue;
                 this.OceanAbsorptionCurve = initialValue;
                 this.RiverScatteringCurve = initialValue;
@@ -480,7 +315,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.PhytoplanktonCurve = initialValue;
                 this.SedimentCurve = initialValue;
                 this.YelowMatterCurve = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -498,56 +332,22 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ConsumeSpell,
                 TItem ContactSpell,
                 TItem DATA,
-                TItem FogDepthAmount,
-                TItem FogShallowColor,
-                TItem FogDeepColor,
-                TItem FogColorShallowRange,
-                TItem FogColorDeepRange,
-                TItem FogShallowAlpha,
-                TItem FogDeepAlpha,
-                TItem FogAlphaShallowRange,
-                TItem FogAlphaDeepRange,
-                TItem FogUnderwaterColor,
-                TItem FogUnderwaterAmount,
-                TItem FogUnderwaterNear,
-                TItem FogUnderwaterFar,
-                TItem PhysicalNormalMagnitude,
-                TItem PhysicalShallowNormalFalloff,
-                TItem PhysicalDeepNormalFalloff,
-                TItem PhysicalReflectivityAmount,
-                TItem PhysicalFresnelAmount,
-                TItem PhysicalSurfaceEffectFalloff,
-                TItem PhysicalDisplacementSimulatorForce,
-                TItem PhysicalDisplacementSimulatorVelocity,
-                TItem PhysicalDisplacementSimulatorFalloff,
-                TItem PhysicalDisplacementSimulatorDampener,
-                TItem PhysicalDisplacementSimulatorStartingSize,
-                TItem PhysicalReflectionColor,
-                TItem SpecularSunSpecularPower,
-                TItem SpecularSunSpecularMagnitude,
-                TItem SpecularSunSparklePower,
-                TItem SpecularSunSparkleMagnitude,
-                TItem SpecularInteriorSpecularRadius,
-                TItem SpecularInteriorSpecularBrightness,
-                TItem SpecularInteriorSpecularPower,
-                TItem SiltAmount,
-                TItem SiltLightColor,
-                TItem SiltDarkColor,
-                TItem ScreenSpaceReflections,
-                TItem NoiseLayerOne,
-                TItem NoiseLayerTwo,
-                TItem NoiseLayerThree,
+                TItem DNAM,
                 TItem GNAM,
                 TItem LinearVelocity,
                 TItem AngularVelocity,
+                TItem NAM2,
+                TItem NAM3,
+                TItem NAM4,
+                TItem NAM5,
+                TItem NAM6,
                 TItem RiverAbsorptionCurve,
                 TItem OceanAbsorptionCurve,
                 TItem RiverScatteringCurve,
                 TItem OceanScatteringCurve,
                 TItem PhytoplanktonCurve,
                 TItem SedimentCurve,
-                TItem YelowMatterCurve,
-                TItem DNAMDataTypeState)
+                TItem YelowMatterCurve)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -564,48 +364,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.ConsumeSpell = ConsumeSpell;
                 this.ContactSpell = ContactSpell;
                 this.DATA = DATA;
-                this.FogDepthAmount = FogDepthAmount;
-                this.FogShallowColor = FogShallowColor;
-                this.FogDeepColor = FogDeepColor;
-                this.FogColorShallowRange = FogColorShallowRange;
-                this.FogColorDeepRange = FogColorDeepRange;
-                this.FogShallowAlpha = FogShallowAlpha;
-                this.FogDeepAlpha = FogDeepAlpha;
-                this.FogAlphaShallowRange = FogAlphaShallowRange;
-                this.FogAlphaDeepRange = FogAlphaDeepRange;
-                this.FogUnderwaterColor = FogUnderwaterColor;
-                this.FogUnderwaterAmount = FogUnderwaterAmount;
-                this.FogUnderwaterNear = FogUnderwaterNear;
-                this.FogUnderwaterFar = FogUnderwaterFar;
-                this.PhysicalNormalMagnitude = PhysicalNormalMagnitude;
-                this.PhysicalShallowNormalFalloff = PhysicalShallowNormalFalloff;
-                this.PhysicalDeepNormalFalloff = PhysicalDeepNormalFalloff;
-                this.PhysicalReflectivityAmount = PhysicalReflectivityAmount;
-                this.PhysicalFresnelAmount = PhysicalFresnelAmount;
-                this.PhysicalSurfaceEffectFalloff = PhysicalSurfaceEffectFalloff;
-                this.PhysicalDisplacementSimulatorForce = PhysicalDisplacementSimulatorForce;
-                this.PhysicalDisplacementSimulatorVelocity = PhysicalDisplacementSimulatorVelocity;
-                this.PhysicalDisplacementSimulatorFalloff = PhysicalDisplacementSimulatorFalloff;
-                this.PhysicalDisplacementSimulatorDampener = PhysicalDisplacementSimulatorDampener;
-                this.PhysicalDisplacementSimulatorStartingSize = PhysicalDisplacementSimulatorStartingSize;
-                this.PhysicalReflectionColor = PhysicalReflectionColor;
-                this.SpecularSunSpecularPower = SpecularSunSpecularPower;
-                this.SpecularSunSpecularMagnitude = SpecularSunSpecularMagnitude;
-                this.SpecularSunSparklePower = SpecularSunSparklePower;
-                this.SpecularSunSparkleMagnitude = SpecularSunSparkleMagnitude;
-                this.SpecularInteriorSpecularRadius = SpecularInteriorSpecularRadius;
-                this.SpecularInteriorSpecularBrightness = SpecularInteriorSpecularBrightness;
-                this.SpecularInteriorSpecularPower = SpecularInteriorSpecularPower;
-                this.SiltAmount = SiltAmount;
-                this.SiltLightColor = SiltLightColor;
-                this.SiltDarkColor = SiltDarkColor;
-                this.ScreenSpaceReflections = ScreenSpaceReflections;
-                this.NoiseLayerOne = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerOne, new WaterNoiseProperties.Mask<TItem>(NoiseLayerOne));
-                this.NoiseLayerTwo = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerTwo, new WaterNoiseProperties.Mask<TItem>(NoiseLayerTwo));
-                this.NoiseLayerThree = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerThree, new WaterNoiseProperties.Mask<TItem>(NoiseLayerThree));
+                this.DNAM = DNAM;
                 this.GNAM = GNAM;
                 this.LinearVelocity = LinearVelocity;
                 this.AngularVelocity = AngularVelocity;
+                this.NAM2 = NAM2;
+                this.NAM3 = NAM3;
+                this.NAM4 = NAM4;
+                this.NAM5 = NAM5;
+                this.NAM6 = NAM6;
                 this.RiverAbsorptionCurve = RiverAbsorptionCurve;
                 this.OceanAbsorptionCurve = OceanAbsorptionCurve;
                 this.RiverScatteringCurve = RiverScatteringCurve;
@@ -613,7 +380,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.PhytoplanktonCurve = PhytoplanktonCurve;
                 this.SedimentCurve = SedimentCurve;
                 this.YelowMatterCurve = YelowMatterCurve;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -632,48 +398,15 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ConsumeSpell;
             public TItem ContactSpell;
             public TItem DATA;
-            public TItem FogDepthAmount;
-            public TItem FogShallowColor;
-            public TItem FogDeepColor;
-            public TItem FogColorShallowRange;
-            public TItem FogColorDeepRange;
-            public TItem FogShallowAlpha;
-            public TItem FogDeepAlpha;
-            public TItem FogAlphaShallowRange;
-            public TItem FogAlphaDeepRange;
-            public TItem FogUnderwaterColor;
-            public TItem FogUnderwaterAmount;
-            public TItem FogUnderwaterNear;
-            public TItem FogUnderwaterFar;
-            public TItem PhysicalNormalMagnitude;
-            public TItem PhysicalShallowNormalFalloff;
-            public TItem PhysicalDeepNormalFalloff;
-            public TItem PhysicalReflectivityAmount;
-            public TItem PhysicalFresnelAmount;
-            public TItem PhysicalSurfaceEffectFalloff;
-            public TItem PhysicalDisplacementSimulatorForce;
-            public TItem PhysicalDisplacementSimulatorVelocity;
-            public TItem PhysicalDisplacementSimulatorFalloff;
-            public TItem PhysicalDisplacementSimulatorDampener;
-            public TItem PhysicalDisplacementSimulatorStartingSize;
-            public TItem PhysicalReflectionColor;
-            public TItem SpecularSunSpecularPower;
-            public TItem SpecularSunSpecularMagnitude;
-            public TItem SpecularSunSparklePower;
-            public TItem SpecularSunSparkleMagnitude;
-            public TItem SpecularInteriorSpecularRadius;
-            public TItem SpecularInteriorSpecularBrightness;
-            public TItem SpecularInteriorSpecularPower;
-            public TItem SiltAmount;
-            public TItem SiltLightColor;
-            public TItem SiltDarkColor;
-            public TItem ScreenSpaceReflections;
-            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerOne { get; set; }
-            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerTwo { get; set; }
-            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerThree { get; set; }
+            public TItem DNAM;
             public TItem GNAM;
             public TItem LinearVelocity;
             public TItem AngularVelocity;
+            public TItem NAM2;
+            public TItem NAM3;
+            public TItem NAM4;
+            public TItem NAM5;
+            public TItem NAM6;
             public TItem RiverAbsorptionCurve;
             public TItem OceanAbsorptionCurve;
             public TItem RiverScatteringCurve;
@@ -681,7 +414,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem PhytoplanktonCurve;
             public TItem SedimentCurve;
             public TItem YelowMatterCurve;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -702,48 +434,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ConsumeSpell, rhs.ConsumeSpell)) return false;
                 if (!object.Equals(this.ContactSpell, rhs.ContactSpell)) return false;
                 if (!object.Equals(this.DATA, rhs.DATA)) return false;
-                if (!object.Equals(this.FogDepthAmount, rhs.FogDepthAmount)) return false;
-                if (!object.Equals(this.FogShallowColor, rhs.FogShallowColor)) return false;
-                if (!object.Equals(this.FogDeepColor, rhs.FogDeepColor)) return false;
-                if (!object.Equals(this.FogColorShallowRange, rhs.FogColorShallowRange)) return false;
-                if (!object.Equals(this.FogColorDeepRange, rhs.FogColorDeepRange)) return false;
-                if (!object.Equals(this.FogShallowAlpha, rhs.FogShallowAlpha)) return false;
-                if (!object.Equals(this.FogDeepAlpha, rhs.FogDeepAlpha)) return false;
-                if (!object.Equals(this.FogAlphaShallowRange, rhs.FogAlphaShallowRange)) return false;
-                if (!object.Equals(this.FogAlphaDeepRange, rhs.FogAlphaDeepRange)) return false;
-                if (!object.Equals(this.FogUnderwaterColor, rhs.FogUnderwaterColor)) return false;
-                if (!object.Equals(this.FogUnderwaterAmount, rhs.FogUnderwaterAmount)) return false;
-                if (!object.Equals(this.FogUnderwaterNear, rhs.FogUnderwaterNear)) return false;
-                if (!object.Equals(this.FogUnderwaterFar, rhs.FogUnderwaterFar)) return false;
-                if (!object.Equals(this.PhysicalNormalMagnitude, rhs.PhysicalNormalMagnitude)) return false;
-                if (!object.Equals(this.PhysicalShallowNormalFalloff, rhs.PhysicalShallowNormalFalloff)) return false;
-                if (!object.Equals(this.PhysicalDeepNormalFalloff, rhs.PhysicalDeepNormalFalloff)) return false;
-                if (!object.Equals(this.PhysicalReflectivityAmount, rhs.PhysicalReflectivityAmount)) return false;
-                if (!object.Equals(this.PhysicalFresnelAmount, rhs.PhysicalFresnelAmount)) return false;
-                if (!object.Equals(this.PhysicalSurfaceEffectFalloff, rhs.PhysicalSurfaceEffectFalloff)) return false;
-                if (!object.Equals(this.PhysicalDisplacementSimulatorForce, rhs.PhysicalDisplacementSimulatorForce)) return false;
-                if (!object.Equals(this.PhysicalDisplacementSimulatorVelocity, rhs.PhysicalDisplacementSimulatorVelocity)) return false;
-                if (!object.Equals(this.PhysicalDisplacementSimulatorFalloff, rhs.PhysicalDisplacementSimulatorFalloff)) return false;
-                if (!object.Equals(this.PhysicalDisplacementSimulatorDampener, rhs.PhysicalDisplacementSimulatorDampener)) return false;
-                if (!object.Equals(this.PhysicalDisplacementSimulatorStartingSize, rhs.PhysicalDisplacementSimulatorStartingSize)) return false;
-                if (!object.Equals(this.PhysicalReflectionColor, rhs.PhysicalReflectionColor)) return false;
-                if (!object.Equals(this.SpecularSunSpecularPower, rhs.SpecularSunSpecularPower)) return false;
-                if (!object.Equals(this.SpecularSunSpecularMagnitude, rhs.SpecularSunSpecularMagnitude)) return false;
-                if (!object.Equals(this.SpecularSunSparklePower, rhs.SpecularSunSparklePower)) return false;
-                if (!object.Equals(this.SpecularSunSparkleMagnitude, rhs.SpecularSunSparkleMagnitude)) return false;
-                if (!object.Equals(this.SpecularInteriorSpecularRadius, rhs.SpecularInteriorSpecularRadius)) return false;
-                if (!object.Equals(this.SpecularInteriorSpecularBrightness, rhs.SpecularInteriorSpecularBrightness)) return false;
-                if (!object.Equals(this.SpecularInteriorSpecularPower, rhs.SpecularInteriorSpecularPower)) return false;
-                if (!object.Equals(this.SiltAmount, rhs.SiltAmount)) return false;
-                if (!object.Equals(this.SiltLightColor, rhs.SiltLightColor)) return false;
-                if (!object.Equals(this.SiltDarkColor, rhs.SiltDarkColor)) return false;
-                if (!object.Equals(this.ScreenSpaceReflections, rhs.ScreenSpaceReflections)) return false;
-                if (!object.Equals(this.NoiseLayerOne, rhs.NoiseLayerOne)) return false;
-                if (!object.Equals(this.NoiseLayerTwo, rhs.NoiseLayerTwo)) return false;
-                if (!object.Equals(this.NoiseLayerThree, rhs.NoiseLayerThree)) return false;
+                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
                 if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
+                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
+                if (!object.Equals(this.NAM4, rhs.NAM4)) return false;
+                if (!object.Equals(this.NAM5, rhs.NAM5)) return false;
+                if (!object.Equals(this.NAM6, rhs.NAM6)) return false;
                 if (!object.Equals(this.RiverAbsorptionCurve, rhs.RiverAbsorptionCurve)) return false;
                 if (!object.Equals(this.OceanAbsorptionCurve, rhs.OceanAbsorptionCurve)) return false;
                 if (!object.Equals(this.RiverScatteringCurve, rhs.RiverScatteringCurve)) return false;
@@ -751,7 +450,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.PhytoplanktonCurve, rhs.PhytoplanktonCurve)) return false;
                 if (!object.Equals(this.SedimentCurve, rhs.SedimentCurve)) return false;
                 if (!object.Equals(this.YelowMatterCurve, rhs.YelowMatterCurve)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -764,48 +462,15 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ConsumeSpell);
                 hash.Add(this.ContactSpell);
                 hash.Add(this.DATA);
-                hash.Add(this.FogDepthAmount);
-                hash.Add(this.FogShallowColor);
-                hash.Add(this.FogDeepColor);
-                hash.Add(this.FogColorShallowRange);
-                hash.Add(this.FogColorDeepRange);
-                hash.Add(this.FogShallowAlpha);
-                hash.Add(this.FogDeepAlpha);
-                hash.Add(this.FogAlphaShallowRange);
-                hash.Add(this.FogAlphaDeepRange);
-                hash.Add(this.FogUnderwaterColor);
-                hash.Add(this.FogUnderwaterAmount);
-                hash.Add(this.FogUnderwaterNear);
-                hash.Add(this.FogUnderwaterFar);
-                hash.Add(this.PhysicalNormalMagnitude);
-                hash.Add(this.PhysicalShallowNormalFalloff);
-                hash.Add(this.PhysicalDeepNormalFalloff);
-                hash.Add(this.PhysicalReflectivityAmount);
-                hash.Add(this.PhysicalFresnelAmount);
-                hash.Add(this.PhysicalSurfaceEffectFalloff);
-                hash.Add(this.PhysicalDisplacementSimulatorForce);
-                hash.Add(this.PhysicalDisplacementSimulatorVelocity);
-                hash.Add(this.PhysicalDisplacementSimulatorFalloff);
-                hash.Add(this.PhysicalDisplacementSimulatorDampener);
-                hash.Add(this.PhysicalDisplacementSimulatorStartingSize);
-                hash.Add(this.PhysicalReflectionColor);
-                hash.Add(this.SpecularSunSpecularPower);
-                hash.Add(this.SpecularSunSpecularMagnitude);
-                hash.Add(this.SpecularSunSparklePower);
-                hash.Add(this.SpecularSunSparkleMagnitude);
-                hash.Add(this.SpecularInteriorSpecularRadius);
-                hash.Add(this.SpecularInteriorSpecularBrightness);
-                hash.Add(this.SpecularInteriorSpecularPower);
-                hash.Add(this.SiltAmount);
-                hash.Add(this.SiltLightColor);
-                hash.Add(this.SiltDarkColor);
-                hash.Add(this.ScreenSpaceReflections);
-                hash.Add(this.NoiseLayerOne);
-                hash.Add(this.NoiseLayerTwo);
-                hash.Add(this.NoiseLayerThree);
+                hash.Add(this.DNAM);
                 hash.Add(this.GNAM);
                 hash.Add(this.LinearVelocity);
                 hash.Add(this.AngularVelocity);
+                hash.Add(this.NAM2);
+                hash.Add(this.NAM3);
+                hash.Add(this.NAM4);
+                hash.Add(this.NAM5);
+                hash.Add(this.NAM6);
                 hash.Add(this.RiverAbsorptionCurve);
                 hash.Add(this.OceanAbsorptionCurve);
                 hash.Add(this.RiverScatteringCurve);
@@ -813,7 +478,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.PhytoplanktonCurve);
                 hash.Add(this.SedimentCurve);
                 hash.Add(this.YelowMatterCurve);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -835,60 +499,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ConsumeSpell)) return false;
                 if (!eval(this.ContactSpell)) return false;
                 if (!eval(this.DATA)) return false;
-                if (!eval(this.FogDepthAmount)) return false;
-                if (!eval(this.FogShallowColor)) return false;
-                if (!eval(this.FogDeepColor)) return false;
-                if (!eval(this.FogColorShallowRange)) return false;
-                if (!eval(this.FogColorDeepRange)) return false;
-                if (!eval(this.FogShallowAlpha)) return false;
-                if (!eval(this.FogDeepAlpha)) return false;
-                if (!eval(this.FogAlphaShallowRange)) return false;
-                if (!eval(this.FogAlphaDeepRange)) return false;
-                if (!eval(this.FogUnderwaterColor)) return false;
-                if (!eval(this.FogUnderwaterAmount)) return false;
-                if (!eval(this.FogUnderwaterNear)) return false;
-                if (!eval(this.FogUnderwaterFar)) return false;
-                if (!eval(this.PhysicalNormalMagnitude)) return false;
-                if (!eval(this.PhysicalShallowNormalFalloff)) return false;
-                if (!eval(this.PhysicalDeepNormalFalloff)) return false;
-                if (!eval(this.PhysicalReflectivityAmount)) return false;
-                if (!eval(this.PhysicalFresnelAmount)) return false;
-                if (!eval(this.PhysicalSurfaceEffectFalloff)) return false;
-                if (!eval(this.PhysicalDisplacementSimulatorForce)) return false;
-                if (!eval(this.PhysicalDisplacementSimulatorVelocity)) return false;
-                if (!eval(this.PhysicalDisplacementSimulatorFalloff)) return false;
-                if (!eval(this.PhysicalDisplacementSimulatorDampener)) return false;
-                if (!eval(this.PhysicalDisplacementSimulatorStartingSize)) return false;
-                if (!eval(this.PhysicalReflectionColor)) return false;
-                if (!eval(this.SpecularSunSpecularPower)) return false;
-                if (!eval(this.SpecularSunSpecularMagnitude)) return false;
-                if (!eval(this.SpecularSunSparklePower)) return false;
-                if (!eval(this.SpecularSunSparkleMagnitude)) return false;
-                if (!eval(this.SpecularInteriorSpecularRadius)) return false;
-                if (!eval(this.SpecularInteriorSpecularBrightness)) return false;
-                if (!eval(this.SpecularInteriorSpecularPower)) return false;
-                if (!eval(this.SiltAmount)) return false;
-                if (!eval(this.SiltLightColor)) return false;
-                if (!eval(this.SiltDarkColor)) return false;
-                if (!eval(this.ScreenSpaceReflections)) return false;
-                if (NoiseLayerOne != null)
-                {
-                    if (!eval(this.NoiseLayerOne.Overall)) return false;
-                    if (this.NoiseLayerOne.Specific != null && !this.NoiseLayerOne.Specific.All(eval)) return false;
-                }
-                if (NoiseLayerTwo != null)
-                {
-                    if (!eval(this.NoiseLayerTwo.Overall)) return false;
-                    if (this.NoiseLayerTwo.Specific != null && !this.NoiseLayerTwo.Specific.All(eval)) return false;
-                }
-                if (NoiseLayerThree != null)
-                {
-                    if (!eval(this.NoiseLayerThree.Overall)) return false;
-                    if (this.NoiseLayerThree.Specific != null && !this.NoiseLayerThree.Specific.All(eval)) return false;
-                }
+                if (!eval(this.DNAM)) return false;
                 if (!eval(this.GNAM)) return false;
                 if (!eval(this.LinearVelocity)) return false;
                 if (!eval(this.AngularVelocity)) return false;
+                if (!eval(this.NAM2)) return false;
+                if (!eval(this.NAM3)) return false;
+                if (!eval(this.NAM4)) return false;
+                if (!eval(this.NAM5)) return false;
+                if (!eval(this.NAM6)) return false;
                 if (!eval(this.RiverAbsorptionCurve)) return false;
                 if (!eval(this.OceanAbsorptionCurve)) return false;
                 if (!eval(this.RiverScatteringCurve)) return false;
@@ -896,7 +515,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.PhytoplanktonCurve)) return false;
                 if (!eval(this.SedimentCurve)) return false;
                 if (!eval(this.YelowMatterCurve)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -916,60 +534,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ConsumeSpell)) return true;
                 if (eval(this.ContactSpell)) return true;
                 if (eval(this.DATA)) return true;
-                if (eval(this.FogDepthAmount)) return true;
-                if (eval(this.FogShallowColor)) return true;
-                if (eval(this.FogDeepColor)) return true;
-                if (eval(this.FogColorShallowRange)) return true;
-                if (eval(this.FogColorDeepRange)) return true;
-                if (eval(this.FogShallowAlpha)) return true;
-                if (eval(this.FogDeepAlpha)) return true;
-                if (eval(this.FogAlphaShallowRange)) return true;
-                if (eval(this.FogAlphaDeepRange)) return true;
-                if (eval(this.FogUnderwaterColor)) return true;
-                if (eval(this.FogUnderwaterAmount)) return true;
-                if (eval(this.FogUnderwaterNear)) return true;
-                if (eval(this.FogUnderwaterFar)) return true;
-                if (eval(this.PhysicalNormalMagnitude)) return true;
-                if (eval(this.PhysicalShallowNormalFalloff)) return true;
-                if (eval(this.PhysicalDeepNormalFalloff)) return true;
-                if (eval(this.PhysicalReflectivityAmount)) return true;
-                if (eval(this.PhysicalFresnelAmount)) return true;
-                if (eval(this.PhysicalSurfaceEffectFalloff)) return true;
-                if (eval(this.PhysicalDisplacementSimulatorForce)) return true;
-                if (eval(this.PhysicalDisplacementSimulatorVelocity)) return true;
-                if (eval(this.PhysicalDisplacementSimulatorFalloff)) return true;
-                if (eval(this.PhysicalDisplacementSimulatorDampener)) return true;
-                if (eval(this.PhysicalDisplacementSimulatorStartingSize)) return true;
-                if (eval(this.PhysicalReflectionColor)) return true;
-                if (eval(this.SpecularSunSpecularPower)) return true;
-                if (eval(this.SpecularSunSpecularMagnitude)) return true;
-                if (eval(this.SpecularSunSparklePower)) return true;
-                if (eval(this.SpecularSunSparkleMagnitude)) return true;
-                if (eval(this.SpecularInteriorSpecularRadius)) return true;
-                if (eval(this.SpecularInteriorSpecularBrightness)) return true;
-                if (eval(this.SpecularInteriorSpecularPower)) return true;
-                if (eval(this.SiltAmount)) return true;
-                if (eval(this.SiltLightColor)) return true;
-                if (eval(this.SiltDarkColor)) return true;
-                if (eval(this.ScreenSpaceReflections)) return true;
-                if (NoiseLayerOne != null)
-                {
-                    if (eval(this.NoiseLayerOne.Overall)) return true;
-                    if (this.NoiseLayerOne.Specific != null && this.NoiseLayerOne.Specific.Any(eval)) return true;
-                }
-                if (NoiseLayerTwo != null)
-                {
-                    if (eval(this.NoiseLayerTwo.Overall)) return true;
-                    if (this.NoiseLayerTwo.Specific != null && this.NoiseLayerTwo.Specific.Any(eval)) return true;
-                }
-                if (NoiseLayerThree != null)
-                {
-                    if (eval(this.NoiseLayerThree.Overall)) return true;
-                    if (this.NoiseLayerThree.Specific != null && this.NoiseLayerThree.Specific.Any(eval)) return true;
-                }
+                if (eval(this.DNAM)) return true;
                 if (eval(this.GNAM)) return true;
                 if (eval(this.LinearVelocity)) return true;
                 if (eval(this.AngularVelocity)) return true;
+                if (eval(this.NAM2)) return true;
+                if (eval(this.NAM3)) return true;
+                if (eval(this.NAM4)) return true;
+                if (eval(this.NAM5)) return true;
+                if (eval(this.NAM6)) return true;
                 if (eval(this.RiverAbsorptionCurve)) return true;
                 if (eval(this.OceanAbsorptionCurve)) return true;
                 if (eval(this.RiverScatteringCurve)) return true;
@@ -977,7 +550,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.PhytoplanktonCurve)) return true;
                 if (eval(this.SedimentCurve)) return true;
                 if (eval(this.YelowMatterCurve)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1000,48 +572,15 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ConsumeSpell = eval(this.ConsumeSpell);
                 obj.ContactSpell = eval(this.ContactSpell);
                 obj.DATA = eval(this.DATA);
-                obj.FogDepthAmount = eval(this.FogDepthAmount);
-                obj.FogShallowColor = eval(this.FogShallowColor);
-                obj.FogDeepColor = eval(this.FogDeepColor);
-                obj.FogColorShallowRange = eval(this.FogColorShallowRange);
-                obj.FogColorDeepRange = eval(this.FogColorDeepRange);
-                obj.FogShallowAlpha = eval(this.FogShallowAlpha);
-                obj.FogDeepAlpha = eval(this.FogDeepAlpha);
-                obj.FogAlphaShallowRange = eval(this.FogAlphaShallowRange);
-                obj.FogAlphaDeepRange = eval(this.FogAlphaDeepRange);
-                obj.FogUnderwaterColor = eval(this.FogUnderwaterColor);
-                obj.FogUnderwaterAmount = eval(this.FogUnderwaterAmount);
-                obj.FogUnderwaterNear = eval(this.FogUnderwaterNear);
-                obj.FogUnderwaterFar = eval(this.FogUnderwaterFar);
-                obj.PhysicalNormalMagnitude = eval(this.PhysicalNormalMagnitude);
-                obj.PhysicalShallowNormalFalloff = eval(this.PhysicalShallowNormalFalloff);
-                obj.PhysicalDeepNormalFalloff = eval(this.PhysicalDeepNormalFalloff);
-                obj.PhysicalReflectivityAmount = eval(this.PhysicalReflectivityAmount);
-                obj.PhysicalFresnelAmount = eval(this.PhysicalFresnelAmount);
-                obj.PhysicalSurfaceEffectFalloff = eval(this.PhysicalSurfaceEffectFalloff);
-                obj.PhysicalDisplacementSimulatorForce = eval(this.PhysicalDisplacementSimulatorForce);
-                obj.PhysicalDisplacementSimulatorVelocity = eval(this.PhysicalDisplacementSimulatorVelocity);
-                obj.PhysicalDisplacementSimulatorFalloff = eval(this.PhysicalDisplacementSimulatorFalloff);
-                obj.PhysicalDisplacementSimulatorDampener = eval(this.PhysicalDisplacementSimulatorDampener);
-                obj.PhysicalDisplacementSimulatorStartingSize = eval(this.PhysicalDisplacementSimulatorStartingSize);
-                obj.PhysicalReflectionColor = eval(this.PhysicalReflectionColor);
-                obj.SpecularSunSpecularPower = eval(this.SpecularSunSpecularPower);
-                obj.SpecularSunSpecularMagnitude = eval(this.SpecularSunSpecularMagnitude);
-                obj.SpecularSunSparklePower = eval(this.SpecularSunSparklePower);
-                obj.SpecularSunSparkleMagnitude = eval(this.SpecularSunSparkleMagnitude);
-                obj.SpecularInteriorSpecularRadius = eval(this.SpecularInteriorSpecularRadius);
-                obj.SpecularInteriorSpecularBrightness = eval(this.SpecularInteriorSpecularBrightness);
-                obj.SpecularInteriorSpecularPower = eval(this.SpecularInteriorSpecularPower);
-                obj.SiltAmount = eval(this.SiltAmount);
-                obj.SiltLightColor = eval(this.SiltLightColor);
-                obj.SiltDarkColor = eval(this.SiltDarkColor);
-                obj.ScreenSpaceReflections = eval(this.ScreenSpaceReflections);
-                obj.NoiseLayerOne = this.NoiseLayerOne == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerOne.Overall), this.NoiseLayerOne.Specific?.Translate(eval));
-                obj.NoiseLayerTwo = this.NoiseLayerTwo == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerTwo.Overall), this.NoiseLayerTwo.Specific?.Translate(eval));
-                obj.NoiseLayerThree = this.NoiseLayerThree == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerThree.Overall), this.NoiseLayerThree.Specific?.Translate(eval));
+                obj.DNAM = eval(this.DNAM);
                 obj.GNAM = eval(this.GNAM);
                 obj.LinearVelocity = eval(this.LinearVelocity);
                 obj.AngularVelocity = eval(this.AngularVelocity);
+                obj.NAM2 = eval(this.NAM2);
+                obj.NAM3 = eval(this.NAM3);
+                obj.NAM4 = eval(this.NAM4);
+                obj.NAM5 = eval(this.NAM5);
+                obj.NAM6 = eval(this.NAM6);
                 obj.RiverAbsorptionCurve = eval(this.RiverAbsorptionCurve);
                 obj.OceanAbsorptionCurve = eval(this.OceanAbsorptionCurve);
                 obj.RiverScatteringCurve = eval(this.RiverScatteringCurve);
@@ -1049,7 +588,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.PhytoplanktonCurve = eval(this.PhytoplanktonCurve);
                 obj.SedimentCurve = eval(this.SedimentCurve);
                 obj.YelowMatterCurve = eval(this.YelowMatterCurve);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -1096,161 +634,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DATA, "DATA");
                     }
-                    if (printMask?.FogDepthAmount ?? true)
+                    if (printMask?.DNAM ?? true)
                     {
-                        sb.AppendItem(FogDepthAmount, "FogDepthAmount");
-                    }
-                    if (printMask?.FogShallowColor ?? true)
-                    {
-                        sb.AppendItem(FogShallowColor, "FogShallowColor");
-                    }
-                    if (printMask?.FogDeepColor ?? true)
-                    {
-                        sb.AppendItem(FogDeepColor, "FogDeepColor");
-                    }
-                    if (printMask?.FogColorShallowRange ?? true)
-                    {
-                        sb.AppendItem(FogColorShallowRange, "FogColorShallowRange");
-                    }
-                    if (printMask?.FogColorDeepRange ?? true)
-                    {
-                        sb.AppendItem(FogColorDeepRange, "FogColorDeepRange");
-                    }
-                    if (printMask?.FogShallowAlpha ?? true)
-                    {
-                        sb.AppendItem(FogShallowAlpha, "FogShallowAlpha");
-                    }
-                    if (printMask?.FogDeepAlpha ?? true)
-                    {
-                        sb.AppendItem(FogDeepAlpha, "FogDeepAlpha");
-                    }
-                    if (printMask?.FogAlphaShallowRange ?? true)
-                    {
-                        sb.AppendItem(FogAlphaShallowRange, "FogAlphaShallowRange");
-                    }
-                    if (printMask?.FogAlphaDeepRange ?? true)
-                    {
-                        sb.AppendItem(FogAlphaDeepRange, "FogAlphaDeepRange");
-                    }
-                    if (printMask?.FogUnderwaterColor ?? true)
-                    {
-                        sb.AppendItem(FogUnderwaterColor, "FogUnderwaterColor");
-                    }
-                    if (printMask?.FogUnderwaterAmount ?? true)
-                    {
-                        sb.AppendItem(FogUnderwaterAmount, "FogUnderwaterAmount");
-                    }
-                    if (printMask?.FogUnderwaterNear ?? true)
-                    {
-                        sb.AppendItem(FogUnderwaterNear, "FogUnderwaterNear");
-                    }
-                    if (printMask?.FogUnderwaterFar ?? true)
-                    {
-                        sb.AppendItem(FogUnderwaterFar, "FogUnderwaterFar");
-                    }
-                    if (printMask?.PhysicalNormalMagnitude ?? true)
-                    {
-                        sb.AppendItem(PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
-                    }
-                    if (printMask?.PhysicalShallowNormalFalloff ?? true)
-                    {
-                        sb.AppendItem(PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
-                    }
-                    if (printMask?.PhysicalDeepNormalFalloff ?? true)
-                    {
-                        sb.AppendItem(PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
-                    }
-                    if (printMask?.PhysicalReflectivityAmount ?? true)
-                    {
-                        sb.AppendItem(PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
-                    }
-                    if (printMask?.PhysicalFresnelAmount ?? true)
-                    {
-                        sb.AppendItem(PhysicalFresnelAmount, "PhysicalFresnelAmount");
-                    }
-                    if (printMask?.PhysicalSurfaceEffectFalloff ?? true)
-                    {
-                        sb.AppendItem(PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
-                    }
-                    if (printMask?.PhysicalDisplacementSimulatorForce ?? true)
-                    {
-                        sb.AppendItem(PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
-                    }
-                    if (printMask?.PhysicalDisplacementSimulatorVelocity ?? true)
-                    {
-                        sb.AppendItem(PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
-                    }
-                    if (printMask?.PhysicalDisplacementSimulatorFalloff ?? true)
-                    {
-                        sb.AppendItem(PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
-                    }
-                    if (printMask?.PhysicalDisplacementSimulatorDampener ?? true)
-                    {
-                        sb.AppendItem(PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
-                    }
-                    if (printMask?.PhysicalDisplacementSimulatorStartingSize ?? true)
-                    {
-                        sb.AppendItem(PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
-                    }
-                    if (printMask?.PhysicalReflectionColor ?? true)
-                    {
-                        sb.AppendItem(PhysicalReflectionColor, "PhysicalReflectionColor");
-                    }
-                    if (printMask?.SpecularSunSpecularPower ?? true)
-                    {
-                        sb.AppendItem(SpecularSunSpecularPower, "SpecularSunSpecularPower");
-                    }
-                    if (printMask?.SpecularSunSpecularMagnitude ?? true)
-                    {
-                        sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
-                    }
-                    if (printMask?.SpecularSunSparklePower ?? true)
-                    {
-                        sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
-                    }
-                    if (printMask?.SpecularSunSparkleMagnitude ?? true)
-                    {
-                        sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
-                    }
-                    if (printMask?.SpecularInteriorSpecularRadius ?? true)
-                    {
-                        sb.AppendItem(SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
-                    }
-                    if (printMask?.SpecularInteriorSpecularBrightness ?? true)
-                    {
-                        sb.AppendItem(SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
-                    }
-                    if (printMask?.SpecularInteriorSpecularPower ?? true)
-                    {
-                        sb.AppendItem(SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
-                    }
-                    if (printMask?.SiltAmount ?? true)
-                    {
-                        sb.AppendItem(SiltAmount, "SiltAmount");
-                    }
-                    if (printMask?.SiltLightColor ?? true)
-                    {
-                        sb.AppendItem(SiltLightColor, "SiltLightColor");
-                    }
-                    if (printMask?.SiltDarkColor ?? true)
-                    {
-                        sb.AppendItem(SiltDarkColor, "SiltDarkColor");
-                    }
-                    if (printMask?.ScreenSpaceReflections ?? true)
-                    {
-                        sb.AppendItem(ScreenSpaceReflections, "ScreenSpaceReflections");
-                    }
-                    if (printMask?.NoiseLayerOne?.Overall ?? true)
-                    {
-                        NoiseLayerOne?.Print(sb);
-                    }
-                    if (printMask?.NoiseLayerTwo?.Overall ?? true)
-                    {
-                        NoiseLayerTwo?.Print(sb);
-                    }
-                    if (printMask?.NoiseLayerThree?.Overall ?? true)
-                    {
-                        NoiseLayerThree?.Print(sb);
+                        sb.AppendItem(DNAM, "DNAM");
                     }
                     if (printMask?.GNAM ?? true)
                     {
@@ -1263,6 +649,26 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.AngularVelocity ?? true)
                     {
                         sb.AppendItem(AngularVelocity, "AngularVelocity");
+                    }
+                    if (printMask?.NAM2 ?? true)
+                    {
+                        sb.AppendItem(NAM2, "NAM2");
+                    }
+                    if (printMask?.NAM3 ?? true)
+                    {
+                        sb.AppendItem(NAM3, "NAM3");
+                    }
+                    if (printMask?.NAM4 ?? true)
+                    {
+                        sb.AppendItem(NAM4, "NAM4");
+                    }
+                    if (printMask?.NAM5 ?? true)
+                    {
+                        sb.AppendItem(NAM5, "NAM5");
+                    }
+                    if (printMask?.NAM6 ?? true)
+                    {
+                        sb.AppendItem(NAM6, "NAM6");
                     }
                     if (printMask?.RiverAbsorptionCurve ?? true)
                     {
@@ -1292,10 +698,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(YelowMatterCurve, "YelowMatterCurve");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1314,48 +716,15 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ConsumeSpell;
             public Exception? ContactSpell;
             public Exception? DATA;
-            public Exception? FogDepthAmount;
-            public Exception? FogShallowColor;
-            public Exception? FogDeepColor;
-            public Exception? FogColorShallowRange;
-            public Exception? FogColorDeepRange;
-            public Exception? FogShallowAlpha;
-            public Exception? FogDeepAlpha;
-            public Exception? FogAlphaShallowRange;
-            public Exception? FogAlphaDeepRange;
-            public Exception? FogUnderwaterColor;
-            public Exception? FogUnderwaterAmount;
-            public Exception? FogUnderwaterNear;
-            public Exception? FogUnderwaterFar;
-            public Exception? PhysicalNormalMagnitude;
-            public Exception? PhysicalShallowNormalFalloff;
-            public Exception? PhysicalDeepNormalFalloff;
-            public Exception? PhysicalReflectivityAmount;
-            public Exception? PhysicalFresnelAmount;
-            public Exception? PhysicalSurfaceEffectFalloff;
-            public Exception? PhysicalDisplacementSimulatorForce;
-            public Exception? PhysicalDisplacementSimulatorVelocity;
-            public Exception? PhysicalDisplacementSimulatorFalloff;
-            public Exception? PhysicalDisplacementSimulatorDampener;
-            public Exception? PhysicalDisplacementSimulatorStartingSize;
-            public Exception? PhysicalReflectionColor;
-            public Exception? SpecularSunSpecularPower;
-            public Exception? SpecularSunSpecularMagnitude;
-            public Exception? SpecularSunSparklePower;
-            public Exception? SpecularSunSparkleMagnitude;
-            public Exception? SpecularInteriorSpecularRadius;
-            public Exception? SpecularInteriorSpecularBrightness;
-            public Exception? SpecularInteriorSpecularPower;
-            public Exception? SiltAmount;
-            public Exception? SiltLightColor;
-            public Exception? SiltDarkColor;
-            public Exception? ScreenSpaceReflections;
-            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerOne;
-            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerTwo;
-            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerThree;
+            public Exception? DNAM;
             public Exception? GNAM;
             public Exception? LinearVelocity;
             public Exception? AngularVelocity;
+            public Exception? NAM2;
+            public Exception? NAM3;
+            public Exception? NAM4;
+            public Exception? NAM5;
+            public Exception? NAM6;
             public Exception? RiverAbsorptionCurve;
             public Exception? OceanAbsorptionCurve;
             public Exception? RiverScatteringCurve;
@@ -1363,7 +732,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? PhytoplanktonCurve;
             public Exception? SedimentCurve;
             public Exception? YelowMatterCurve;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1386,90 +754,24 @@ namespace Mutagen.Bethesda.Starfield
                         return ContactSpell;
                     case Water_FieldIndex.DATA:
                         return DATA;
-                    case Water_FieldIndex.FogDepthAmount:
-                        return FogDepthAmount;
-                    case Water_FieldIndex.FogShallowColor:
-                        return FogShallowColor;
-                    case Water_FieldIndex.FogDeepColor:
-                        return FogDeepColor;
-                    case Water_FieldIndex.FogColorShallowRange:
-                        return FogColorShallowRange;
-                    case Water_FieldIndex.FogColorDeepRange:
-                        return FogColorDeepRange;
-                    case Water_FieldIndex.FogShallowAlpha:
-                        return FogShallowAlpha;
-                    case Water_FieldIndex.FogDeepAlpha:
-                        return FogDeepAlpha;
-                    case Water_FieldIndex.FogAlphaShallowRange:
-                        return FogAlphaShallowRange;
-                    case Water_FieldIndex.FogAlphaDeepRange:
-                        return FogAlphaDeepRange;
-                    case Water_FieldIndex.FogUnderwaterColor:
-                        return FogUnderwaterColor;
-                    case Water_FieldIndex.FogUnderwaterAmount:
-                        return FogUnderwaterAmount;
-                    case Water_FieldIndex.FogUnderwaterNear:
-                        return FogUnderwaterNear;
-                    case Water_FieldIndex.FogUnderwaterFar:
-                        return FogUnderwaterFar;
-                    case Water_FieldIndex.PhysicalNormalMagnitude:
-                        return PhysicalNormalMagnitude;
-                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
-                        return PhysicalShallowNormalFalloff;
-                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
-                        return PhysicalDeepNormalFalloff;
-                    case Water_FieldIndex.PhysicalReflectivityAmount:
-                        return PhysicalReflectivityAmount;
-                    case Water_FieldIndex.PhysicalFresnelAmount:
-                        return PhysicalFresnelAmount;
-                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
-                        return PhysicalSurfaceEffectFalloff;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
-                        return PhysicalDisplacementSimulatorForce;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
-                        return PhysicalDisplacementSimulatorVelocity;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
-                        return PhysicalDisplacementSimulatorFalloff;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
-                        return PhysicalDisplacementSimulatorDampener;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
-                        return PhysicalDisplacementSimulatorStartingSize;
-                    case Water_FieldIndex.PhysicalReflectionColor:
-                        return PhysicalReflectionColor;
-                    case Water_FieldIndex.SpecularSunSpecularPower:
-                        return SpecularSunSpecularPower;
-                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
-                        return SpecularSunSpecularMagnitude;
-                    case Water_FieldIndex.SpecularSunSparklePower:
-                        return SpecularSunSparklePower;
-                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
-                        return SpecularSunSparkleMagnitude;
-                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
-                        return SpecularInteriorSpecularRadius;
-                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
-                        return SpecularInteriorSpecularBrightness;
-                    case Water_FieldIndex.SpecularInteriorSpecularPower:
-                        return SpecularInteriorSpecularPower;
-                    case Water_FieldIndex.SiltAmount:
-                        return SiltAmount;
-                    case Water_FieldIndex.SiltLightColor:
-                        return SiltLightColor;
-                    case Water_FieldIndex.SiltDarkColor:
-                        return SiltDarkColor;
-                    case Water_FieldIndex.ScreenSpaceReflections:
-                        return ScreenSpaceReflections;
-                    case Water_FieldIndex.NoiseLayerOne:
-                        return NoiseLayerOne;
-                    case Water_FieldIndex.NoiseLayerTwo:
-                        return NoiseLayerTwo;
-                    case Water_FieldIndex.NoiseLayerThree:
-                        return NoiseLayerThree;
+                    case Water_FieldIndex.DNAM:
+                        return DNAM;
                     case Water_FieldIndex.GNAM:
                         return GNAM;
                     case Water_FieldIndex.LinearVelocity:
                         return LinearVelocity;
                     case Water_FieldIndex.AngularVelocity:
                         return AngularVelocity;
+                    case Water_FieldIndex.NAM2:
+                        return NAM2;
+                    case Water_FieldIndex.NAM3:
+                        return NAM3;
+                    case Water_FieldIndex.NAM4:
+                        return NAM4;
+                    case Water_FieldIndex.NAM5:
+                        return NAM5;
+                    case Water_FieldIndex.NAM6:
+                        return NAM6;
                     case Water_FieldIndex.RiverAbsorptionCurve:
                         return RiverAbsorptionCurve;
                     case Water_FieldIndex.OceanAbsorptionCurve:
@@ -1484,8 +786,6 @@ namespace Mutagen.Bethesda.Starfield
                         return SedimentCurve;
                     case Water_FieldIndex.YelowMatterCurve:
                         return YelowMatterCurve;
-                    case Water_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1517,122 +817,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Water_FieldIndex.DATA:
                         this.DATA = ex;
                         break;
-                    case Water_FieldIndex.FogDepthAmount:
-                        this.FogDepthAmount = ex;
-                        break;
-                    case Water_FieldIndex.FogShallowColor:
-                        this.FogShallowColor = ex;
-                        break;
-                    case Water_FieldIndex.FogDeepColor:
-                        this.FogDeepColor = ex;
-                        break;
-                    case Water_FieldIndex.FogColorShallowRange:
-                        this.FogColorShallowRange = ex;
-                        break;
-                    case Water_FieldIndex.FogColorDeepRange:
-                        this.FogColorDeepRange = ex;
-                        break;
-                    case Water_FieldIndex.FogShallowAlpha:
-                        this.FogShallowAlpha = ex;
-                        break;
-                    case Water_FieldIndex.FogDeepAlpha:
-                        this.FogDeepAlpha = ex;
-                        break;
-                    case Water_FieldIndex.FogAlphaShallowRange:
-                        this.FogAlphaShallowRange = ex;
-                        break;
-                    case Water_FieldIndex.FogAlphaDeepRange:
-                        this.FogAlphaDeepRange = ex;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterColor:
-                        this.FogUnderwaterColor = ex;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterAmount:
-                        this.FogUnderwaterAmount = ex;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterNear:
-                        this.FogUnderwaterNear = ex;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterFar:
-                        this.FogUnderwaterFar = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalNormalMagnitude:
-                        this.PhysicalNormalMagnitude = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
-                        this.PhysicalShallowNormalFalloff = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
-                        this.PhysicalDeepNormalFalloff = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalReflectivityAmount:
-                        this.PhysicalReflectivityAmount = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalFresnelAmount:
-                        this.PhysicalFresnelAmount = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
-                        this.PhysicalSurfaceEffectFalloff = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
-                        this.PhysicalDisplacementSimulatorForce = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
-                        this.PhysicalDisplacementSimulatorVelocity = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
-                        this.PhysicalDisplacementSimulatorFalloff = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
-                        this.PhysicalDisplacementSimulatorDampener = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
-                        this.PhysicalDisplacementSimulatorStartingSize = ex;
-                        break;
-                    case Water_FieldIndex.PhysicalReflectionColor:
-                        this.PhysicalReflectionColor = ex;
-                        break;
-                    case Water_FieldIndex.SpecularSunSpecularPower:
-                        this.SpecularSunSpecularPower = ex;
-                        break;
-                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
-                        this.SpecularSunSpecularMagnitude = ex;
-                        break;
-                    case Water_FieldIndex.SpecularSunSparklePower:
-                        this.SpecularSunSparklePower = ex;
-                        break;
-                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
-                        this.SpecularSunSparkleMagnitude = ex;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
-                        this.SpecularInteriorSpecularRadius = ex;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
-                        this.SpecularInteriorSpecularBrightness = ex;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularPower:
-                        this.SpecularInteriorSpecularPower = ex;
-                        break;
-                    case Water_FieldIndex.SiltAmount:
-                        this.SiltAmount = ex;
-                        break;
-                    case Water_FieldIndex.SiltLightColor:
-                        this.SiltLightColor = ex;
-                        break;
-                    case Water_FieldIndex.SiltDarkColor:
-                        this.SiltDarkColor = ex;
-                        break;
-                    case Water_FieldIndex.ScreenSpaceReflections:
-                        this.ScreenSpaceReflections = ex;
-                        break;
-                    case Water_FieldIndex.NoiseLayerOne:
-                        this.NoiseLayerOne = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
-                        break;
-                    case Water_FieldIndex.NoiseLayerTwo:
-                        this.NoiseLayerTwo = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
-                        break;
-                    case Water_FieldIndex.NoiseLayerThree:
-                        this.NoiseLayerThree = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
+                    case Water_FieldIndex.DNAM:
+                        this.DNAM = ex;
                         break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = ex;
@@ -1642,6 +828,21 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Water_FieldIndex.AngularVelocity:
                         this.AngularVelocity = ex;
+                        break;
+                    case Water_FieldIndex.NAM2:
+                        this.NAM2 = ex;
+                        break;
+                    case Water_FieldIndex.NAM3:
+                        this.NAM3 = ex;
+                        break;
+                    case Water_FieldIndex.NAM4:
+                        this.NAM4 = ex;
+                        break;
+                    case Water_FieldIndex.NAM5:
+                        this.NAM5 = ex;
+                        break;
+                    case Water_FieldIndex.NAM6:
+                        this.NAM6 = ex;
                         break;
                     case Water_FieldIndex.RiverAbsorptionCurve:
                         this.RiverAbsorptionCurve = ex;
@@ -1663,9 +864,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Water_FieldIndex.YelowMatterCurve:
                         this.YelowMatterCurve = ex;
-                        break;
-                    case Water_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1699,122 +897,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Water_FieldIndex.DATA:
                         this.DATA = (Exception?)obj;
                         break;
-                    case Water_FieldIndex.FogDepthAmount:
-                        this.FogDepthAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogShallowColor:
-                        this.FogShallowColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogDeepColor:
-                        this.FogDeepColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogColorShallowRange:
-                        this.FogColorShallowRange = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogColorDeepRange:
-                        this.FogColorDeepRange = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogShallowAlpha:
-                        this.FogShallowAlpha = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogDeepAlpha:
-                        this.FogDeepAlpha = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogAlphaShallowRange:
-                        this.FogAlphaShallowRange = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogAlphaDeepRange:
-                        this.FogAlphaDeepRange = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterColor:
-                        this.FogUnderwaterColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterAmount:
-                        this.FogUnderwaterAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterNear:
-                        this.FogUnderwaterNear = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogUnderwaterFar:
-                        this.FogUnderwaterFar = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalNormalMagnitude:
-                        this.PhysicalNormalMagnitude = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
-                        this.PhysicalShallowNormalFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
-                        this.PhysicalDeepNormalFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalReflectivityAmount:
-                        this.PhysicalReflectivityAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalFresnelAmount:
-                        this.PhysicalFresnelAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
-                        this.PhysicalSurfaceEffectFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
-                        this.PhysicalDisplacementSimulatorForce = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
-                        this.PhysicalDisplacementSimulatorVelocity = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
-                        this.PhysicalDisplacementSimulatorFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
-                        this.PhysicalDisplacementSimulatorDampener = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
-                        this.PhysicalDisplacementSimulatorStartingSize = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.PhysicalReflectionColor:
-                        this.PhysicalReflectionColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularSunSpecularPower:
-                        this.SpecularSunSpecularPower = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
-                        this.SpecularSunSpecularMagnitude = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularSunSparklePower:
-                        this.SpecularSunSparklePower = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
-                        this.SpecularSunSparkleMagnitude = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
-                        this.SpecularInteriorSpecularRadius = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
-                        this.SpecularInteriorSpecularBrightness = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SpecularInteriorSpecularPower:
-                        this.SpecularInteriorSpecularPower = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SiltAmount:
-                        this.SiltAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SiltLightColor:
-                        this.SiltLightColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SiltDarkColor:
-                        this.SiltDarkColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ScreenSpaceReflections:
-                        this.ScreenSpaceReflections = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.NoiseLayerOne:
-                        this.NoiseLayerOne = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
-                        break;
-                    case Water_FieldIndex.NoiseLayerTwo:
-                        this.NoiseLayerTwo = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
-                        break;
-                    case Water_FieldIndex.NoiseLayerThree:
-                        this.NoiseLayerThree = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
+                    case Water_FieldIndex.DNAM:
+                        this.DNAM = (Exception?)obj;
                         break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = (Exception?)obj;
@@ -1824,6 +908,21 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Water_FieldIndex.AngularVelocity:
                         this.AngularVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NAM2:
+                        this.NAM2 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NAM3:
+                        this.NAM3 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NAM4:
+                        this.NAM4 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NAM5:
+                        this.NAM5 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NAM6:
+                        this.NAM6 = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RiverAbsorptionCurve:
                         this.RiverAbsorptionCurve = (Exception?)obj;
@@ -1846,9 +945,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Water_FieldIndex.YelowMatterCurve:
                         this.YelowMatterCurve = (Exception?)obj;
                         break;
-                    case Water_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1865,48 +961,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (ConsumeSpell != null) return true;
                 if (ContactSpell != null) return true;
                 if (DATA != null) return true;
-                if (FogDepthAmount != null) return true;
-                if (FogShallowColor != null) return true;
-                if (FogDeepColor != null) return true;
-                if (FogColorShallowRange != null) return true;
-                if (FogColorDeepRange != null) return true;
-                if (FogShallowAlpha != null) return true;
-                if (FogDeepAlpha != null) return true;
-                if (FogAlphaShallowRange != null) return true;
-                if (FogAlphaDeepRange != null) return true;
-                if (FogUnderwaterColor != null) return true;
-                if (FogUnderwaterAmount != null) return true;
-                if (FogUnderwaterNear != null) return true;
-                if (FogUnderwaterFar != null) return true;
-                if (PhysicalNormalMagnitude != null) return true;
-                if (PhysicalShallowNormalFalloff != null) return true;
-                if (PhysicalDeepNormalFalloff != null) return true;
-                if (PhysicalReflectivityAmount != null) return true;
-                if (PhysicalFresnelAmount != null) return true;
-                if (PhysicalSurfaceEffectFalloff != null) return true;
-                if (PhysicalDisplacementSimulatorForce != null) return true;
-                if (PhysicalDisplacementSimulatorVelocity != null) return true;
-                if (PhysicalDisplacementSimulatorFalloff != null) return true;
-                if (PhysicalDisplacementSimulatorDampener != null) return true;
-                if (PhysicalDisplacementSimulatorStartingSize != null) return true;
-                if (PhysicalReflectionColor != null) return true;
-                if (SpecularSunSpecularPower != null) return true;
-                if (SpecularSunSpecularMagnitude != null) return true;
-                if (SpecularSunSparklePower != null) return true;
-                if (SpecularSunSparkleMagnitude != null) return true;
-                if (SpecularInteriorSpecularRadius != null) return true;
-                if (SpecularInteriorSpecularBrightness != null) return true;
-                if (SpecularInteriorSpecularPower != null) return true;
-                if (SiltAmount != null) return true;
-                if (SiltLightColor != null) return true;
-                if (SiltDarkColor != null) return true;
-                if (ScreenSpaceReflections != null) return true;
-                if (NoiseLayerOne != null) return true;
-                if (NoiseLayerTwo != null) return true;
-                if (NoiseLayerThree != null) return true;
+                if (DNAM != null) return true;
                 if (GNAM != null) return true;
                 if (LinearVelocity != null) return true;
                 if (AngularVelocity != null) return true;
+                if (NAM2 != null) return true;
+                if (NAM3 != null) return true;
+                if (NAM4 != null) return true;
+                if (NAM5 != null) return true;
+                if (NAM6 != null) return true;
                 if (RiverAbsorptionCurve != null) return true;
                 if (OceanAbsorptionCurve != null) return true;
                 if (RiverScatteringCurve != null) return true;
@@ -1914,7 +977,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (PhytoplanktonCurve != null) return true;
                 if (SedimentCurve != null) return true;
                 if (YelowMatterCurve != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1961,116 +1023,8 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(DATA, "DATA");
                 }
                 {
-                    sb.AppendItem(FogDepthAmount, "FogDepthAmount");
+                    sb.AppendItem(DNAM, "DNAM");
                 }
-                {
-                    sb.AppendItem(FogShallowColor, "FogShallowColor");
-                }
-                {
-                    sb.AppendItem(FogDeepColor, "FogDeepColor");
-                }
-                {
-                    sb.AppendItem(FogColorShallowRange, "FogColorShallowRange");
-                }
-                {
-                    sb.AppendItem(FogColorDeepRange, "FogColorDeepRange");
-                }
-                {
-                    sb.AppendItem(FogShallowAlpha, "FogShallowAlpha");
-                }
-                {
-                    sb.AppendItem(FogDeepAlpha, "FogDeepAlpha");
-                }
-                {
-                    sb.AppendItem(FogAlphaShallowRange, "FogAlphaShallowRange");
-                }
-                {
-                    sb.AppendItem(FogAlphaDeepRange, "FogAlphaDeepRange");
-                }
-                {
-                    sb.AppendItem(FogUnderwaterColor, "FogUnderwaterColor");
-                }
-                {
-                    sb.AppendItem(FogUnderwaterAmount, "FogUnderwaterAmount");
-                }
-                {
-                    sb.AppendItem(FogUnderwaterNear, "FogUnderwaterNear");
-                }
-                {
-                    sb.AppendItem(FogUnderwaterFar, "FogUnderwaterFar");
-                }
-                {
-                    sb.AppendItem(PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
-                }
-                {
-                    sb.AppendItem(PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
-                }
-                {
-                    sb.AppendItem(PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
-                }
-                {
-                    sb.AppendItem(PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
-                }
-                {
-                    sb.AppendItem(PhysicalFresnelAmount, "PhysicalFresnelAmount");
-                }
-                {
-                    sb.AppendItem(PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
-                }
-                {
-                    sb.AppendItem(PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
-                }
-                {
-                    sb.AppendItem(PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
-                }
-                {
-                    sb.AppendItem(PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
-                }
-                {
-                    sb.AppendItem(PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
-                }
-                {
-                    sb.AppendItem(PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
-                }
-                {
-                    sb.AppendItem(PhysicalReflectionColor, "PhysicalReflectionColor");
-                }
-                {
-                    sb.AppendItem(SpecularSunSpecularPower, "SpecularSunSpecularPower");
-                }
-                {
-                    sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
-                }
-                {
-                    sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
-                }
-                {
-                    sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
-                }
-                {
-                    sb.AppendItem(SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
-                }
-                {
-                    sb.AppendItem(SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
-                }
-                {
-                    sb.AppendItem(SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
-                }
-                {
-                    sb.AppendItem(SiltAmount, "SiltAmount");
-                }
-                {
-                    sb.AppendItem(SiltLightColor, "SiltLightColor");
-                }
-                {
-                    sb.AppendItem(SiltDarkColor, "SiltDarkColor");
-                }
-                {
-                    sb.AppendItem(ScreenSpaceReflections, "ScreenSpaceReflections");
-                }
-                NoiseLayerOne?.Print(sb);
-                NoiseLayerTwo?.Print(sb);
-                NoiseLayerThree?.Print(sb);
                 {
                     sb.AppendItem(GNAM, "GNAM");
                 }
@@ -2079,6 +1033,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 {
                     sb.AppendItem(AngularVelocity, "AngularVelocity");
+                }
+                {
+                    sb.AppendItem(NAM2, "NAM2");
+                }
+                {
+                    sb.AppendItem(NAM3, "NAM3");
+                }
+                {
+                    sb.AppendItem(NAM4, "NAM4");
+                }
+                {
+                    sb.AppendItem(NAM5, "NAM5");
+                }
+                {
+                    sb.AppendItem(NAM6, "NAM6");
                 }
                 {
                     sb.AppendItem(RiverAbsorptionCurve, "RiverAbsorptionCurve");
@@ -2101,9 +1070,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(YelowMatterCurve, "YelowMatterCurve");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -2119,48 +1085,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ConsumeSpell = this.ConsumeSpell.Combine(rhs.ConsumeSpell);
                 ret.ContactSpell = this.ContactSpell.Combine(rhs.ContactSpell);
                 ret.DATA = this.DATA.Combine(rhs.DATA);
-                ret.FogDepthAmount = this.FogDepthAmount.Combine(rhs.FogDepthAmount);
-                ret.FogShallowColor = this.FogShallowColor.Combine(rhs.FogShallowColor);
-                ret.FogDeepColor = this.FogDeepColor.Combine(rhs.FogDeepColor);
-                ret.FogColorShallowRange = this.FogColorShallowRange.Combine(rhs.FogColorShallowRange);
-                ret.FogColorDeepRange = this.FogColorDeepRange.Combine(rhs.FogColorDeepRange);
-                ret.FogShallowAlpha = this.FogShallowAlpha.Combine(rhs.FogShallowAlpha);
-                ret.FogDeepAlpha = this.FogDeepAlpha.Combine(rhs.FogDeepAlpha);
-                ret.FogAlphaShallowRange = this.FogAlphaShallowRange.Combine(rhs.FogAlphaShallowRange);
-                ret.FogAlphaDeepRange = this.FogAlphaDeepRange.Combine(rhs.FogAlphaDeepRange);
-                ret.FogUnderwaterColor = this.FogUnderwaterColor.Combine(rhs.FogUnderwaterColor);
-                ret.FogUnderwaterAmount = this.FogUnderwaterAmount.Combine(rhs.FogUnderwaterAmount);
-                ret.FogUnderwaterNear = this.FogUnderwaterNear.Combine(rhs.FogUnderwaterNear);
-                ret.FogUnderwaterFar = this.FogUnderwaterFar.Combine(rhs.FogUnderwaterFar);
-                ret.PhysicalNormalMagnitude = this.PhysicalNormalMagnitude.Combine(rhs.PhysicalNormalMagnitude);
-                ret.PhysicalShallowNormalFalloff = this.PhysicalShallowNormalFalloff.Combine(rhs.PhysicalShallowNormalFalloff);
-                ret.PhysicalDeepNormalFalloff = this.PhysicalDeepNormalFalloff.Combine(rhs.PhysicalDeepNormalFalloff);
-                ret.PhysicalReflectivityAmount = this.PhysicalReflectivityAmount.Combine(rhs.PhysicalReflectivityAmount);
-                ret.PhysicalFresnelAmount = this.PhysicalFresnelAmount.Combine(rhs.PhysicalFresnelAmount);
-                ret.PhysicalSurfaceEffectFalloff = this.PhysicalSurfaceEffectFalloff.Combine(rhs.PhysicalSurfaceEffectFalloff);
-                ret.PhysicalDisplacementSimulatorForce = this.PhysicalDisplacementSimulatorForce.Combine(rhs.PhysicalDisplacementSimulatorForce);
-                ret.PhysicalDisplacementSimulatorVelocity = this.PhysicalDisplacementSimulatorVelocity.Combine(rhs.PhysicalDisplacementSimulatorVelocity);
-                ret.PhysicalDisplacementSimulatorFalloff = this.PhysicalDisplacementSimulatorFalloff.Combine(rhs.PhysicalDisplacementSimulatorFalloff);
-                ret.PhysicalDisplacementSimulatorDampener = this.PhysicalDisplacementSimulatorDampener.Combine(rhs.PhysicalDisplacementSimulatorDampener);
-                ret.PhysicalDisplacementSimulatorStartingSize = this.PhysicalDisplacementSimulatorStartingSize.Combine(rhs.PhysicalDisplacementSimulatorStartingSize);
-                ret.PhysicalReflectionColor = this.PhysicalReflectionColor.Combine(rhs.PhysicalReflectionColor);
-                ret.SpecularSunSpecularPower = this.SpecularSunSpecularPower.Combine(rhs.SpecularSunSpecularPower);
-                ret.SpecularSunSpecularMagnitude = this.SpecularSunSpecularMagnitude.Combine(rhs.SpecularSunSpecularMagnitude);
-                ret.SpecularSunSparklePower = this.SpecularSunSparklePower.Combine(rhs.SpecularSunSparklePower);
-                ret.SpecularSunSparkleMagnitude = this.SpecularSunSparkleMagnitude.Combine(rhs.SpecularSunSparkleMagnitude);
-                ret.SpecularInteriorSpecularRadius = this.SpecularInteriorSpecularRadius.Combine(rhs.SpecularInteriorSpecularRadius);
-                ret.SpecularInteriorSpecularBrightness = this.SpecularInteriorSpecularBrightness.Combine(rhs.SpecularInteriorSpecularBrightness);
-                ret.SpecularInteriorSpecularPower = this.SpecularInteriorSpecularPower.Combine(rhs.SpecularInteriorSpecularPower);
-                ret.SiltAmount = this.SiltAmount.Combine(rhs.SiltAmount);
-                ret.SiltLightColor = this.SiltLightColor.Combine(rhs.SiltLightColor);
-                ret.SiltDarkColor = this.SiltDarkColor.Combine(rhs.SiltDarkColor);
-                ret.ScreenSpaceReflections = this.ScreenSpaceReflections.Combine(rhs.ScreenSpaceReflections);
-                ret.NoiseLayerOne = this.NoiseLayerOne.Combine(rhs.NoiseLayerOne, (l, r) => l.Combine(r));
-                ret.NoiseLayerTwo = this.NoiseLayerTwo.Combine(rhs.NoiseLayerTwo, (l, r) => l.Combine(r));
-                ret.NoiseLayerThree = this.NoiseLayerThree.Combine(rhs.NoiseLayerThree, (l, r) => l.Combine(r));
+                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
                 ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
+                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
+                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
+                ret.NAM4 = this.NAM4.Combine(rhs.NAM4);
+                ret.NAM5 = this.NAM5.Combine(rhs.NAM5);
+                ret.NAM6 = this.NAM6.Combine(rhs.NAM6);
                 ret.RiverAbsorptionCurve = this.RiverAbsorptionCurve.Combine(rhs.RiverAbsorptionCurve);
                 ret.OceanAbsorptionCurve = this.OceanAbsorptionCurve.Combine(rhs.OceanAbsorptionCurve);
                 ret.RiverScatteringCurve = this.RiverScatteringCurve.Combine(rhs.RiverScatteringCurve);
@@ -2168,7 +1101,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.PhytoplanktonCurve = this.PhytoplanktonCurve.Combine(rhs.PhytoplanktonCurve);
                 ret.SedimentCurve = this.SedimentCurve.Combine(rhs.SedimentCurve);
                 ret.YelowMatterCurve = this.YelowMatterCurve.Combine(rhs.YelowMatterCurve);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2198,48 +1130,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool ConsumeSpell;
             public bool ContactSpell;
             public bool DATA;
-            public bool FogDepthAmount;
-            public bool FogShallowColor;
-            public bool FogDeepColor;
-            public bool FogColorShallowRange;
-            public bool FogColorDeepRange;
-            public bool FogShallowAlpha;
-            public bool FogDeepAlpha;
-            public bool FogAlphaShallowRange;
-            public bool FogAlphaDeepRange;
-            public bool FogUnderwaterColor;
-            public bool FogUnderwaterAmount;
-            public bool FogUnderwaterNear;
-            public bool FogUnderwaterFar;
-            public bool PhysicalNormalMagnitude;
-            public bool PhysicalShallowNormalFalloff;
-            public bool PhysicalDeepNormalFalloff;
-            public bool PhysicalReflectivityAmount;
-            public bool PhysicalFresnelAmount;
-            public bool PhysicalSurfaceEffectFalloff;
-            public bool PhysicalDisplacementSimulatorForce;
-            public bool PhysicalDisplacementSimulatorVelocity;
-            public bool PhysicalDisplacementSimulatorFalloff;
-            public bool PhysicalDisplacementSimulatorDampener;
-            public bool PhysicalDisplacementSimulatorStartingSize;
-            public bool PhysicalReflectionColor;
-            public bool SpecularSunSpecularPower;
-            public bool SpecularSunSpecularMagnitude;
-            public bool SpecularSunSparklePower;
-            public bool SpecularSunSparkleMagnitude;
-            public bool SpecularInteriorSpecularRadius;
-            public bool SpecularInteriorSpecularBrightness;
-            public bool SpecularInteriorSpecularPower;
-            public bool SiltAmount;
-            public bool SiltLightColor;
-            public bool SiltDarkColor;
-            public bool ScreenSpaceReflections;
-            public WaterNoiseProperties.TranslationMask? NoiseLayerOne;
-            public WaterNoiseProperties.TranslationMask? NoiseLayerTwo;
-            public WaterNoiseProperties.TranslationMask? NoiseLayerThree;
+            public bool DNAM;
             public bool GNAM;
             public bool LinearVelocity;
             public bool AngularVelocity;
+            public bool NAM2;
+            public bool NAM3;
+            public bool NAM4;
+            public bool NAM5;
+            public bool NAM6;
             public bool RiverAbsorptionCurve;
             public bool OceanAbsorptionCurve;
             public bool RiverScatteringCurve;
@@ -2247,7 +1146,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool PhytoplanktonCurve;
             public bool SedimentCurve;
             public bool YelowMatterCurve;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -2262,45 +1160,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.ConsumeSpell = defaultOn;
                 this.ContactSpell = defaultOn;
                 this.DATA = defaultOn;
-                this.FogDepthAmount = defaultOn;
-                this.FogShallowColor = defaultOn;
-                this.FogDeepColor = defaultOn;
-                this.FogColorShallowRange = defaultOn;
-                this.FogColorDeepRange = defaultOn;
-                this.FogShallowAlpha = defaultOn;
-                this.FogDeepAlpha = defaultOn;
-                this.FogAlphaShallowRange = defaultOn;
-                this.FogAlphaDeepRange = defaultOn;
-                this.FogUnderwaterColor = defaultOn;
-                this.FogUnderwaterAmount = defaultOn;
-                this.FogUnderwaterNear = defaultOn;
-                this.FogUnderwaterFar = defaultOn;
-                this.PhysicalNormalMagnitude = defaultOn;
-                this.PhysicalShallowNormalFalloff = defaultOn;
-                this.PhysicalDeepNormalFalloff = defaultOn;
-                this.PhysicalReflectivityAmount = defaultOn;
-                this.PhysicalFresnelAmount = defaultOn;
-                this.PhysicalSurfaceEffectFalloff = defaultOn;
-                this.PhysicalDisplacementSimulatorForce = defaultOn;
-                this.PhysicalDisplacementSimulatorVelocity = defaultOn;
-                this.PhysicalDisplacementSimulatorFalloff = defaultOn;
-                this.PhysicalDisplacementSimulatorDampener = defaultOn;
-                this.PhysicalDisplacementSimulatorStartingSize = defaultOn;
-                this.PhysicalReflectionColor = defaultOn;
-                this.SpecularSunSpecularPower = defaultOn;
-                this.SpecularSunSpecularMagnitude = defaultOn;
-                this.SpecularSunSparklePower = defaultOn;
-                this.SpecularSunSparkleMagnitude = defaultOn;
-                this.SpecularInteriorSpecularRadius = defaultOn;
-                this.SpecularInteriorSpecularBrightness = defaultOn;
-                this.SpecularInteriorSpecularPower = defaultOn;
-                this.SiltAmount = defaultOn;
-                this.SiltLightColor = defaultOn;
-                this.SiltDarkColor = defaultOn;
-                this.ScreenSpaceReflections = defaultOn;
+                this.DNAM = defaultOn;
                 this.GNAM = defaultOn;
                 this.LinearVelocity = defaultOn;
                 this.AngularVelocity = defaultOn;
+                this.NAM2 = defaultOn;
+                this.NAM3 = defaultOn;
+                this.NAM4 = defaultOn;
+                this.NAM5 = defaultOn;
+                this.NAM6 = defaultOn;
                 this.RiverAbsorptionCurve = defaultOn;
                 this.OceanAbsorptionCurve = defaultOn;
                 this.RiverScatteringCurve = defaultOn;
@@ -2308,7 +1176,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.PhytoplanktonCurve = defaultOn;
                 this.SedimentCurve = defaultOn;
                 this.YelowMatterCurve = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2323,48 +1190,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ConsumeSpell, null));
                 ret.Add((ContactSpell, null));
                 ret.Add((DATA, null));
-                ret.Add((FogDepthAmount, null));
-                ret.Add((FogShallowColor, null));
-                ret.Add((FogDeepColor, null));
-                ret.Add((FogColorShallowRange, null));
-                ret.Add((FogColorDeepRange, null));
-                ret.Add((FogShallowAlpha, null));
-                ret.Add((FogDeepAlpha, null));
-                ret.Add((FogAlphaShallowRange, null));
-                ret.Add((FogAlphaDeepRange, null));
-                ret.Add((FogUnderwaterColor, null));
-                ret.Add((FogUnderwaterAmount, null));
-                ret.Add((FogUnderwaterNear, null));
-                ret.Add((FogUnderwaterFar, null));
-                ret.Add((PhysicalNormalMagnitude, null));
-                ret.Add((PhysicalShallowNormalFalloff, null));
-                ret.Add((PhysicalDeepNormalFalloff, null));
-                ret.Add((PhysicalReflectivityAmount, null));
-                ret.Add((PhysicalFresnelAmount, null));
-                ret.Add((PhysicalSurfaceEffectFalloff, null));
-                ret.Add((PhysicalDisplacementSimulatorForce, null));
-                ret.Add((PhysicalDisplacementSimulatorVelocity, null));
-                ret.Add((PhysicalDisplacementSimulatorFalloff, null));
-                ret.Add((PhysicalDisplacementSimulatorDampener, null));
-                ret.Add((PhysicalDisplacementSimulatorStartingSize, null));
-                ret.Add((PhysicalReflectionColor, null));
-                ret.Add((SpecularSunSpecularPower, null));
-                ret.Add((SpecularSunSpecularMagnitude, null));
-                ret.Add((SpecularSunSparklePower, null));
-                ret.Add((SpecularSunSparkleMagnitude, null));
-                ret.Add((SpecularInteriorSpecularRadius, null));
-                ret.Add((SpecularInteriorSpecularBrightness, null));
-                ret.Add((SpecularInteriorSpecularPower, null));
-                ret.Add((SiltAmount, null));
-                ret.Add((SiltLightColor, null));
-                ret.Add((SiltDarkColor, null));
-                ret.Add((ScreenSpaceReflections, null));
-                ret.Add((NoiseLayerOne != null ? NoiseLayerOne.OnOverall : DefaultOn, NoiseLayerOne?.GetCrystal()));
-                ret.Add((NoiseLayerTwo != null ? NoiseLayerTwo.OnOverall : DefaultOn, NoiseLayerTwo?.GetCrystal()));
-                ret.Add((NoiseLayerThree != null ? NoiseLayerThree.OnOverall : DefaultOn, NoiseLayerThree?.GetCrystal()));
+                ret.Add((DNAM, null));
                 ret.Add((GNAM, null));
                 ret.Add((LinearVelocity, null));
                 ret.Add((AngularVelocity, null));
+                ret.Add((NAM2, null));
+                ret.Add((NAM3, null));
+                ret.Add((NAM4, null));
+                ret.Add((NAM5, null));
+                ret.Add((NAM6, null));
                 ret.Add((RiverAbsorptionCurve, null));
                 ret.Add((OceanAbsorptionCurve, null));
                 ret.Add((RiverScatteringCurve, null));
@@ -2372,7 +1206,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((PhytoplanktonCurve, null));
                 ret.Add((SedimentCurve, null));
                 ret.Add((YelowMatterCurve, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2436,11 +1269,6 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IWater);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-            Break0 = 1
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2540,48 +1368,15 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ISpellGetter> ConsumeSpell { get; set; }
         new IFormLinkNullable<ISpellGetter> ContactSpell { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
-        new Single FogDepthAmount { get; set; }
-        new Color FogShallowColor { get; set; }
-        new Color FogDeepColor { get; set; }
-        new Single FogColorShallowRange { get; set; }
-        new Single FogColorDeepRange { get; set; }
-        new Single FogShallowAlpha { get; set; }
-        new Single FogDeepAlpha { get; set; }
-        new Single FogAlphaShallowRange { get; set; }
-        new Single FogAlphaDeepRange { get; set; }
-        new Color FogUnderwaterColor { get; set; }
-        new Single FogUnderwaterAmount { get; set; }
-        new Single FogUnderwaterNear { get; set; }
-        new Single FogUnderwaterFar { get; set; }
-        new Single PhysicalNormalMagnitude { get; set; }
-        new Single PhysicalShallowNormalFalloff { get; set; }
-        new Single PhysicalDeepNormalFalloff { get; set; }
-        new Single PhysicalReflectivityAmount { get; set; }
-        new Single PhysicalFresnelAmount { get; set; }
-        new Single PhysicalSurfaceEffectFalloff { get; set; }
-        new Single PhysicalDisplacementSimulatorForce { get; set; }
-        new Single PhysicalDisplacementSimulatorVelocity { get; set; }
-        new Single PhysicalDisplacementSimulatorFalloff { get; set; }
-        new Single PhysicalDisplacementSimulatorDampener { get; set; }
-        new Single PhysicalDisplacementSimulatorStartingSize { get; set; }
-        new Color PhysicalReflectionColor { get; set; }
-        new Single SpecularSunSpecularPower { get; set; }
-        new Single SpecularSunSpecularMagnitude { get; set; }
-        new Single SpecularSunSparklePower { get; set; }
-        new Single SpecularSunSparkleMagnitude { get; set; }
-        new Single SpecularInteriorSpecularRadius { get; set; }
-        new Single SpecularInteriorSpecularBrightness { get; set; }
-        new Single SpecularInteriorSpecularPower { get; set; }
-        new Single SiltAmount { get; set; }
-        new Color SiltLightColor { get; set; }
-        new Color SiltDarkColor { get; set; }
-        new Boolean ScreenSpaceReflections { get; set; }
-        new WaterNoiseProperties NoiseLayerOne { get; set; }
-        new WaterNoiseProperties NoiseLayerTwo { get; set; }
-        new WaterNoiseProperties NoiseLayerThree { get; set; }
+        new MemorySlice<Byte>? DNAM { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
         new P3Float? LinearVelocity { get; set; }
         new P3Float? AngularVelocity { get; set; }
+        new String? NAM2 { get; set; }
+        new String? NAM3 { get; set; }
+        new String? NAM4 { get; set; }
+        new Byte? NAM5 { get; set; }
+        new Byte? NAM6 { get; set; }
         new IFormLinkNullable<ICurve3DGetter> RiverAbsorptionCurve { get; set; }
         new IFormLinkNullable<ICurve3DGetter> OceanAbsorptionCurve { get; set; }
         new IFormLinkNullable<ICurve3DGetter> RiverScatteringCurve { get; set; }
@@ -2589,7 +1384,6 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ICurve3DGetter> PhytoplanktonCurve { get; set; }
         new IFormLinkNullable<ICurve3DGetter> SedimentCurve { get; set; }
         new IFormLinkNullable<ICurve3DGetter> YelowMatterCurve { get; set; }
-        new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IWaterInternal :
@@ -2625,48 +1419,15 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ISpellGetter> ConsumeSpell { get; }
         IFormLinkNullableGetter<ISpellGetter> ContactSpell { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
-        Single FogDepthAmount { get; }
-        Color FogShallowColor { get; }
-        Color FogDeepColor { get; }
-        Single FogColorShallowRange { get; }
-        Single FogColorDeepRange { get; }
-        Single FogShallowAlpha { get; }
-        Single FogDeepAlpha { get; }
-        Single FogAlphaShallowRange { get; }
-        Single FogAlphaDeepRange { get; }
-        Color FogUnderwaterColor { get; }
-        Single FogUnderwaterAmount { get; }
-        Single FogUnderwaterNear { get; }
-        Single FogUnderwaterFar { get; }
-        Single PhysicalNormalMagnitude { get; }
-        Single PhysicalShallowNormalFalloff { get; }
-        Single PhysicalDeepNormalFalloff { get; }
-        Single PhysicalReflectivityAmount { get; }
-        Single PhysicalFresnelAmount { get; }
-        Single PhysicalSurfaceEffectFalloff { get; }
-        Single PhysicalDisplacementSimulatorForce { get; }
-        Single PhysicalDisplacementSimulatorVelocity { get; }
-        Single PhysicalDisplacementSimulatorFalloff { get; }
-        Single PhysicalDisplacementSimulatorDampener { get; }
-        Single PhysicalDisplacementSimulatorStartingSize { get; }
-        Color PhysicalReflectionColor { get; }
-        Single SpecularSunSpecularPower { get; }
-        Single SpecularSunSpecularMagnitude { get; }
-        Single SpecularSunSparklePower { get; }
-        Single SpecularSunSparkleMagnitude { get; }
-        Single SpecularInteriorSpecularRadius { get; }
-        Single SpecularInteriorSpecularBrightness { get; }
-        Single SpecularInteriorSpecularPower { get; }
-        Single SiltAmount { get; }
-        Color SiltLightColor { get; }
-        Color SiltDarkColor { get; }
-        Boolean ScreenSpaceReflections { get; }
-        IWaterNoisePropertiesGetter NoiseLayerOne { get; }
-        IWaterNoisePropertiesGetter NoiseLayerTwo { get; }
-        IWaterNoisePropertiesGetter NoiseLayerThree { get; }
+        ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         P3Float? LinearVelocity { get; }
         P3Float? AngularVelocity { get; }
+        String? NAM2 { get; }
+        String? NAM3 { get; }
+        String? NAM4 { get; }
+        Byte? NAM5 { get; }
+        Byte? NAM6 { get; }
         IFormLinkNullableGetter<ICurve3DGetter> RiverAbsorptionCurve { get; }
         IFormLinkNullableGetter<ICurve3DGetter> OceanAbsorptionCurve { get; }
         IFormLinkNullableGetter<ICurve3DGetter> RiverScatteringCurve { get; }
@@ -2674,7 +1435,6 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ICurve3DGetter> PhytoplanktonCurve { get; }
         IFormLinkNullableGetter<ICurve3DGetter> SedimentCurve { get; }
         IFormLinkNullableGetter<ICurve3DGetter> YelowMatterCurve { get; }
-        Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -2858,56 +1618,22 @@ namespace Mutagen.Bethesda.Starfield
         ConsumeSpell = 11,
         ContactSpell = 12,
         DATA = 13,
-        FogDepthAmount = 14,
-        FogShallowColor = 15,
-        FogDeepColor = 16,
-        FogColorShallowRange = 17,
-        FogColorDeepRange = 18,
-        FogShallowAlpha = 19,
-        FogDeepAlpha = 20,
-        FogAlphaShallowRange = 21,
-        FogAlphaDeepRange = 22,
-        FogUnderwaterColor = 23,
-        FogUnderwaterAmount = 24,
-        FogUnderwaterNear = 25,
-        FogUnderwaterFar = 26,
-        PhysicalNormalMagnitude = 27,
-        PhysicalShallowNormalFalloff = 28,
-        PhysicalDeepNormalFalloff = 29,
-        PhysicalReflectivityAmount = 30,
-        PhysicalFresnelAmount = 31,
-        PhysicalSurfaceEffectFalloff = 32,
-        PhysicalDisplacementSimulatorForce = 33,
-        PhysicalDisplacementSimulatorVelocity = 34,
-        PhysicalDisplacementSimulatorFalloff = 35,
-        PhysicalDisplacementSimulatorDampener = 36,
-        PhysicalDisplacementSimulatorStartingSize = 37,
-        PhysicalReflectionColor = 38,
-        SpecularSunSpecularPower = 39,
-        SpecularSunSpecularMagnitude = 40,
-        SpecularSunSparklePower = 41,
-        SpecularSunSparkleMagnitude = 42,
-        SpecularInteriorSpecularRadius = 43,
-        SpecularInteriorSpecularBrightness = 44,
-        SpecularInteriorSpecularPower = 45,
-        SiltAmount = 46,
-        SiltLightColor = 47,
-        SiltDarkColor = 48,
-        ScreenSpaceReflections = 49,
-        NoiseLayerOne = 50,
-        NoiseLayerTwo = 51,
-        NoiseLayerThree = 52,
-        GNAM = 53,
-        LinearVelocity = 54,
-        AngularVelocity = 55,
-        RiverAbsorptionCurve = 56,
-        OceanAbsorptionCurve = 57,
-        RiverScatteringCurve = 58,
-        OceanScatteringCurve = 59,
-        PhytoplanktonCurve = 60,
-        SedimentCurve = 61,
-        YelowMatterCurve = 62,
-        DNAMDataTypeState = 63,
+        DNAM = 14,
+        GNAM = 15,
+        LinearVelocity = 16,
+        AngularVelocity = 17,
+        NAM2 = 18,
+        NAM3 = 19,
+        NAM4 = 20,
+        NAM5 = 21,
+        NAM6 = 22,
+        RiverAbsorptionCurve = 23,
+        OceanAbsorptionCurve = 24,
+        RiverScatteringCurve = 25,
+        OceanScatteringCurve = 26,
+        PhytoplanktonCurve = 27,
+        SedimentCurve = 28,
+        YelowMatterCurve = 29,
     }
     #endregion
 
@@ -2918,9 +1644,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 57;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 64;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -2964,6 +1690,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.GNAM,
                 RecordTypes.NAM0,
                 RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5,
+                RecordTypes.NAM6,
                 RecordTypes.ENAM,
                 RecordTypes.HNAM,
                 RecordTypes.JNAM,
@@ -3022,48 +1753,15 @@ namespace Mutagen.Bethesda.Starfield
             item.ConsumeSpell.Clear();
             item.ContactSpell.Clear();
             item.DATA = default;
-            item.FogDepthAmount = default(Single);
-            item.FogShallowColor = default(Color);
-            item.FogDeepColor = default(Color);
-            item.FogColorShallowRange = default(Single);
-            item.FogColorDeepRange = default(Single);
-            item.FogShallowAlpha = default(Single);
-            item.FogDeepAlpha = default(Single);
-            item.FogAlphaShallowRange = default(Single);
-            item.FogAlphaDeepRange = default(Single);
-            item.FogUnderwaterColor = default(Color);
-            item.FogUnderwaterAmount = default(Single);
-            item.FogUnderwaterNear = default(Single);
-            item.FogUnderwaterFar = default(Single);
-            item.PhysicalNormalMagnitude = default(Single);
-            item.PhysicalShallowNormalFalloff = default(Single);
-            item.PhysicalDeepNormalFalloff = default(Single);
-            item.PhysicalReflectivityAmount = default(Single);
-            item.PhysicalFresnelAmount = default(Single);
-            item.PhysicalSurfaceEffectFalloff = default(Single);
-            item.PhysicalDisplacementSimulatorForce = default(Single);
-            item.PhysicalDisplacementSimulatorVelocity = default(Single);
-            item.PhysicalDisplacementSimulatorFalloff = default(Single);
-            item.PhysicalDisplacementSimulatorDampener = default(Single);
-            item.PhysicalDisplacementSimulatorStartingSize = default(Single);
-            item.PhysicalReflectionColor = default(Color);
-            item.SpecularSunSpecularPower = default(Single);
-            item.SpecularSunSpecularMagnitude = default(Single);
-            item.SpecularSunSparklePower = default(Single);
-            item.SpecularSunSparkleMagnitude = default(Single);
-            item.SpecularInteriorSpecularRadius = default(Single);
-            item.SpecularInteriorSpecularBrightness = default(Single);
-            item.SpecularInteriorSpecularPower = default(Single);
-            item.SiltAmount = default(Single);
-            item.SiltLightColor = default(Color);
-            item.SiltDarkColor = default(Color);
-            item.ScreenSpaceReflections = default(Boolean);
-            item.NoiseLayerOne.Clear();
-            item.NoiseLayerTwo.Clear();
-            item.NoiseLayerThree.Clear();
+            item.DNAM = default;
             item.GNAM = default;
             item.LinearVelocity = default;
             item.AngularVelocity = default;
+            item.NAM2 = default;
+            item.NAM3 = default;
+            item.NAM4 = default;
+            item.NAM5 = default;
+            item.NAM6 = default;
             item.RiverAbsorptionCurve.Clear();
             item.OceanAbsorptionCurve.Clear();
             item.RiverScatteringCurve.Clear();
@@ -3071,7 +1769,6 @@ namespace Mutagen.Bethesda.Starfield
             item.PhytoplanktonCurve.Clear();
             item.SedimentCurve.Clear();
             item.YelowMatterCurve.Clear();
-            item.DNAMDataTypeState = default(Water.DNAMDataType);
             base.Clear(item);
         }
         
@@ -3177,48 +1874,15 @@ namespace Mutagen.Bethesda.Starfield
             ret.ConsumeSpell = item.ConsumeSpell.Equals(rhs.ConsumeSpell);
             ret.ContactSpell = item.ContactSpell.Equals(rhs.ContactSpell);
             ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
-            ret.FogDepthAmount = item.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount);
-            ret.FogShallowColor = item.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor);
-            ret.FogDeepColor = item.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor);
-            ret.FogColorShallowRange = item.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange);
-            ret.FogColorDeepRange = item.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange);
-            ret.FogShallowAlpha = item.FogShallowAlpha.EqualsWithin(rhs.FogShallowAlpha);
-            ret.FogDeepAlpha = item.FogDeepAlpha.EqualsWithin(rhs.FogDeepAlpha);
-            ret.FogAlphaShallowRange = item.FogAlphaShallowRange.EqualsWithin(rhs.FogAlphaShallowRange);
-            ret.FogAlphaDeepRange = item.FogAlphaDeepRange.EqualsWithin(rhs.FogAlphaDeepRange);
-            ret.FogUnderwaterColor = item.FogUnderwaterColor.ColorOnlyEquals(rhs.FogUnderwaterColor);
-            ret.FogUnderwaterAmount = item.FogUnderwaterAmount.EqualsWithin(rhs.FogUnderwaterAmount);
-            ret.FogUnderwaterNear = item.FogUnderwaterNear.EqualsWithin(rhs.FogUnderwaterNear);
-            ret.FogUnderwaterFar = item.FogUnderwaterFar.EqualsWithin(rhs.FogUnderwaterFar);
-            ret.PhysicalNormalMagnitude = item.PhysicalNormalMagnitude.EqualsWithin(rhs.PhysicalNormalMagnitude);
-            ret.PhysicalShallowNormalFalloff = item.PhysicalShallowNormalFalloff.EqualsWithin(rhs.PhysicalShallowNormalFalloff);
-            ret.PhysicalDeepNormalFalloff = item.PhysicalDeepNormalFalloff.EqualsWithin(rhs.PhysicalDeepNormalFalloff);
-            ret.PhysicalReflectivityAmount = item.PhysicalReflectivityAmount.EqualsWithin(rhs.PhysicalReflectivityAmount);
-            ret.PhysicalFresnelAmount = item.PhysicalFresnelAmount.EqualsWithin(rhs.PhysicalFresnelAmount);
-            ret.PhysicalSurfaceEffectFalloff = item.PhysicalSurfaceEffectFalloff.EqualsWithin(rhs.PhysicalSurfaceEffectFalloff);
-            ret.PhysicalDisplacementSimulatorForce = item.PhysicalDisplacementSimulatorForce.EqualsWithin(rhs.PhysicalDisplacementSimulatorForce);
-            ret.PhysicalDisplacementSimulatorVelocity = item.PhysicalDisplacementSimulatorVelocity.EqualsWithin(rhs.PhysicalDisplacementSimulatorVelocity);
-            ret.PhysicalDisplacementSimulatorFalloff = item.PhysicalDisplacementSimulatorFalloff.EqualsWithin(rhs.PhysicalDisplacementSimulatorFalloff);
-            ret.PhysicalDisplacementSimulatorDampener = item.PhysicalDisplacementSimulatorDampener.EqualsWithin(rhs.PhysicalDisplacementSimulatorDampener);
-            ret.PhysicalDisplacementSimulatorStartingSize = item.PhysicalDisplacementSimulatorStartingSize.EqualsWithin(rhs.PhysicalDisplacementSimulatorStartingSize);
-            ret.PhysicalReflectionColor = item.PhysicalReflectionColor.ColorOnlyEquals(rhs.PhysicalReflectionColor);
-            ret.SpecularSunSpecularPower = item.SpecularSunSpecularPower.EqualsWithin(rhs.SpecularSunSpecularPower);
-            ret.SpecularSunSpecularMagnitude = item.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude);
-            ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
-            ret.SpecularSunSparkleMagnitude = item.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude);
-            ret.SpecularInteriorSpecularRadius = item.SpecularInteriorSpecularRadius.EqualsWithin(rhs.SpecularInteriorSpecularRadius);
-            ret.SpecularInteriorSpecularBrightness = item.SpecularInteriorSpecularBrightness.EqualsWithin(rhs.SpecularInteriorSpecularBrightness);
-            ret.SpecularInteriorSpecularPower = item.SpecularInteriorSpecularPower.EqualsWithin(rhs.SpecularInteriorSpecularPower);
-            ret.SiltAmount = item.SiltAmount.EqualsWithin(rhs.SiltAmount);
-            ret.SiltLightColor = item.SiltLightColor.ColorOnlyEquals(rhs.SiltLightColor);
-            ret.SiltDarkColor = item.SiltDarkColor.ColorOnlyEquals(rhs.SiltDarkColor);
-            ret.ScreenSpaceReflections = item.ScreenSpaceReflections == rhs.ScreenSpaceReflections;
-            ret.NoiseLayerOne = MaskItemExt.Factory(item.NoiseLayerOne.GetEqualsMask(rhs.NoiseLayerOne, include), include);
-            ret.NoiseLayerTwo = MaskItemExt.Factory(item.NoiseLayerTwo.GetEqualsMask(rhs.NoiseLayerTwo, include), include);
-            ret.NoiseLayerThree = MaskItemExt.Factory(item.NoiseLayerThree.GetEqualsMask(rhs.NoiseLayerThree, include), include);
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
             ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
+            ret.NAM2 = string.Equals(item.NAM2, rhs.NAM2);
+            ret.NAM3 = string.Equals(item.NAM3, rhs.NAM3);
+            ret.NAM4 = string.Equals(item.NAM4, rhs.NAM4);
+            ret.NAM5 = item.NAM5 == rhs.NAM5;
+            ret.NAM6 = item.NAM6 == rhs.NAM6;
             ret.RiverAbsorptionCurve = item.RiverAbsorptionCurve.Equals(rhs.RiverAbsorptionCurve);
             ret.OceanAbsorptionCurve = item.OceanAbsorptionCurve.Equals(rhs.OceanAbsorptionCurve);
             ret.RiverScatteringCurve = item.RiverScatteringCurve.Equals(rhs.RiverScatteringCurve);
@@ -3226,7 +1890,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.PhytoplanktonCurve = item.PhytoplanktonCurve.Equals(rhs.PhytoplanktonCurve);
             ret.SedimentCurve = item.SedimentCurve.Equals(rhs.SedimentCurve);
             ret.YelowMatterCurve = item.YelowMatterCurve.Equals(rhs.YelowMatterCurve);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3307,161 +1970,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
-            if (printMask?.FogDepthAmount ?? true)
+            if ((printMask?.DNAM ?? true)
+                && item.DNAM is {} DNAMItem)
             {
-                sb.AppendItem(item.FogDepthAmount, "FogDepthAmount");
-            }
-            if (printMask?.FogShallowColor ?? true)
-            {
-                sb.AppendItem(item.FogShallowColor, "FogShallowColor");
-            }
-            if (printMask?.FogDeepColor ?? true)
-            {
-                sb.AppendItem(item.FogDeepColor, "FogDeepColor");
-            }
-            if (printMask?.FogColorShallowRange ?? true)
-            {
-                sb.AppendItem(item.FogColorShallowRange, "FogColorShallowRange");
-            }
-            if (printMask?.FogColorDeepRange ?? true)
-            {
-                sb.AppendItem(item.FogColorDeepRange, "FogColorDeepRange");
-            }
-            if (printMask?.FogShallowAlpha ?? true)
-            {
-                sb.AppendItem(item.FogShallowAlpha, "FogShallowAlpha");
-            }
-            if (printMask?.FogDeepAlpha ?? true)
-            {
-                sb.AppendItem(item.FogDeepAlpha, "FogDeepAlpha");
-            }
-            if (printMask?.FogAlphaShallowRange ?? true)
-            {
-                sb.AppendItem(item.FogAlphaShallowRange, "FogAlphaShallowRange");
-            }
-            if (printMask?.FogAlphaDeepRange ?? true)
-            {
-                sb.AppendItem(item.FogAlphaDeepRange, "FogAlphaDeepRange");
-            }
-            if (printMask?.FogUnderwaterColor ?? true)
-            {
-                sb.AppendItem(item.FogUnderwaterColor, "FogUnderwaterColor");
-            }
-            if (printMask?.FogUnderwaterAmount ?? true)
-            {
-                sb.AppendItem(item.FogUnderwaterAmount, "FogUnderwaterAmount");
-            }
-            if (printMask?.FogUnderwaterNear ?? true)
-            {
-                sb.AppendItem(item.FogUnderwaterNear, "FogUnderwaterNear");
-            }
-            if (printMask?.FogUnderwaterFar ?? true)
-            {
-                sb.AppendItem(item.FogUnderwaterFar, "FogUnderwaterFar");
-            }
-            if (printMask?.PhysicalNormalMagnitude ?? true)
-            {
-                sb.AppendItem(item.PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
-            }
-            if (printMask?.PhysicalShallowNormalFalloff ?? true)
-            {
-                sb.AppendItem(item.PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
-            }
-            if (printMask?.PhysicalDeepNormalFalloff ?? true)
-            {
-                sb.AppendItem(item.PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
-            }
-            if (printMask?.PhysicalReflectivityAmount ?? true)
-            {
-                sb.AppendItem(item.PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
-            }
-            if (printMask?.PhysicalFresnelAmount ?? true)
-            {
-                sb.AppendItem(item.PhysicalFresnelAmount, "PhysicalFresnelAmount");
-            }
-            if (printMask?.PhysicalSurfaceEffectFalloff ?? true)
-            {
-                sb.AppendItem(item.PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
-            }
-            if (printMask?.PhysicalDisplacementSimulatorForce ?? true)
-            {
-                sb.AppendItem(item.PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
-            }
-            if (printMask?.PhysicalDisplacementSimulatorVelocity ?? true)
-            {
-                sb.AppendItem(item.PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
-            }
-            if (printMask?.PhysicalDisplacementSimulatorFalloff ?? true)
-            {
-                sb.AppendItem(item.PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
-            }
-            if (printMask?.PhysicalDisplacementSimulatorDampener ?? true)
-            {
-                sb.AppendItem(item.PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
-            }
-            if (printMask?.PhysicalDisplacementSimulatorStartingSize ?? true)
-            {
-                sb.AppendItem(item.PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
-            }
-            if (printMask?.PhysicalReflectionColor ?? true)
-            {
-                sb.AppendItem(item.PhysicalReflectionColor, "PhysicalReflectionColor");
-            }
-            if (printMask?.SpecularSunSpecularPower ?? true)
-            {
-                sb.AppendItem(item.SpecularSunSpecularPower, "SpecularSunSpecularPower");
-            }
-            if (printMask?.SpecularSunSpecularMagnitude ?? true)
-            {
-                sb.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
-            }
-            if (printMask?.SpecularSunSparklePower ?? true)
-            {
-                sb.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
-            }
-            if (printMask?.SpecularSunSparkleMagnitude ?? true)
-            {
-                sb.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
-            }
-            if (printMask?.SpecularInteriorSpecularRadius ?? true)
-            {
-                sb.AppendItem(item.SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
-            }
-            if (printMask?.SpecularInteriorSpecularBrightness ?? true)
-            {
-                sb.AppendItem(item.SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
-            }
-            if (printMask?.SpecularInteriorSpecularPower ?? true)
-            {
-                sb.AppendItem(item.SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
-            }
-            if (printMask?.SiltAmount ?? true)
-            {
-                sb.AppendItem(item.SiltAmount, "SiltAmount");
-            }
-            if (printMask?.SiltLightColor ?? true)
-            {
-                sb.AppendItem(item.SiltLightColor, "SiltLightColor");
-            }
-            if (printMask?.SiltDarkColor ?? true)
-            {
-                sb.AppendItem(item.SiltDarkColor, "SiltDarkColor");
-            }
-            if (printMask?.ScreenSpaceReflections ?? true)
-            {
-                sb.AppendItem(item.ScreenSpaceReflections, "ScreenSpaceReflections");
-            }
-            if (printMask?.NoiseLayerOne?.Overall ?? true)
-            {
-                item.NoiseLayerOne?.Print(sb, "NoiseLayerOne");
-            }
-            if (printMask?.NoiseLayerTwo?.Overall ?? true)
-            {
-                item.NoiseLayerTwo?.Print(sb, "NoiseLayerTwo");
-            }
-            if (printMask?.NoiseLayerThree?.Overall ?? true)
-            {
-                item.NoiseLayerThree?.Print(sb, "NoiseLayerThree");
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM is {} GNAMItem)
@@ -3477,6 +1989,31 @@ namespace Mutagen.Bethesda.Starfield
                 && item.AngularVelocity is {} AngularVelocityItem)
             {
                 sb.AppendItem(AngularVelocityItem, "AngularVelocity");
+            }
+            if ((printMask?.NAM2 ?? true)
+                && item.NAM2 is {} NAM2Item)
+            {
+                sb.AppendItem(NAM2Item, "NAM2");
+            }
+            if ((printMask?.NAM3 ?? true)
+                && item.NAM3 is {} NAM3Item)
+            {
+                sb.AppendItem(NAM3Item, "NAM3");
+            }
+            if ((printMask?.NAM4 ?? true)
+                && item.NAM4 is {} NAM4Item)
+            {
+                sb.AppendItem(NAM4Item, "NAM4");
+            }
+            if ((printMask?.NAM5 ?? true)
+                && item.NAM5 is {} NAM5Item)
+            {
+                sb.AppendItem(NAM5Item, "NAM5");
+            }
+            if ((printMask?.NAM6 ?? true)
+                && item.NAM6 is {} NAM6Item)
+            {
+                sb.AppendItem(NAM6Item, "NAM6");
             }
             if (printMask?.RiverAbsorptionCurve ?? true)
             {
@@ -3505,10 +2042,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.YelowMatterCurve ?? true)
             {
                 sb.AppendItem(item.YelowMatterCurve.FormKeyNullable, "YelowMatterCurve");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -3592,173 +2125,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.DNAM) ?? true))
             {
-                if (!lhs.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
-            {
-                if (!lhs.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
-            {
-                if (!lhs.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
-            {
-                if (!lhs.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
-            {
-                if (!lhs.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
-            {
-                if (!lhs.FogShallowAlpha.EqualsWithin(rhs.FogShallowAlpha)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
-            {
-                if (!lhs.FogDeepAlpha.EqualsWithin(rhs.FogDeepAlpha)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
-            {
-                if (!lhs.FogAlphaShallowRange.EqualsWithin(rhs.FogAlphaShallowRange)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
-            {
-                if (!lhs.FogAlphaDeepRange.EqualsWithin(rhs.FogAlphaDeepRange)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
-            {
-                if (!lhs.FogUnderwaterColor.ColorOnlyEquals(rhs.FogUnderwaterColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
-            {
-                if (!lhs.FogUnderwaterAmount.EqualsWithin(rhs.FogUnderwaterAmount)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
-            {
-                if (!lhs.FogUnderwaterNear.EqualsWithin(rhs.FogUnderwaterNear)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
-            {
-                if (!lhs.FogUnderwaterFar.EqualsWithin(rhs.FogUnderwaterFar)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
-            {
-                if (!lhs.PhysicalNormalMagnitude.EqualsWithin(rhs.PhysicalNormalMagnitude)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
-            {
-                if (!lhs.PhysicalShallowNormalFalloff.EqualsWithin(rhs.PhysicalShallowNormalFalloff)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
-            {
-                if (!lhs.PhysicalDeepNormalFalloff.EqualsWithin(rhs.PhysicalDeepNormalFalloff)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
-            {
-                if (!lhs.PhysicalReflectivityAmount.EqualsWithin(rhs.PhysicalReflectivityAmount)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
-            {
-                if (!lhs.PhysicalFresnelAmount.EqualsWithin(rhs.PhysicalFresnelAmount)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
-            {
-                if (!lhs.PhysicalSurfaceEffectFalloff.EqualsWithin(rhs.PhysicalSurfaceEffectFalloff)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
-            {
-                if (!lhs.PhysicalDisplacementSimulatorForce.EqualsWithin(rhs.PhysicalDisplacementSimulatorForce)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
-            {
-                if (!lhs.PhysicalDisplacementSimulatorVelocity.EqualsWithin(rhs.PhysicalDisplacementSimulatorVelocity)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
-            {
-                if (!lhs.PhysicalDisplacementSimulatorFalloff.EqualsWithin(rhs.PhysicalDisplacementSimulatorFalloff)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
-            {
-                if (!lhs.PhysicalDisplacementSimulatorDampener.EqualsWithin(rhs.PhysicalDisplacementSimulatorDampener)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
-            {
-                if (!lhs.PhysicalDisplacementSimulatorStartingSize.EqualsWithin(rhs.PhysicalDisplacementSimulatorStartingSize)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
-            {
-                if (!lhs.PhysicalReflectionColor.ColorOnlyEquals(rhs.PhysicalReflectionColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
-            {
-                if (!lhs.SpecularSunSpecularPower.EqualsWithin(rhs.SpecularSunSpecularPower)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
-            {
-                if (!lhs.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
-            {
-                if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
-            {
-                if (!lhs.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
-            {
-                if (!lhs.SpecularInteriorSpecularRadius.EqualsWithin(rhs.SpecularInteriorSpecularRadius)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
-            {
-                if (!lhs.SpecularInteriorSpecularBrightness.EqualsWithin(rhs.SpecularInteriorSpecularBrightness)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
-            {
-                if (!lhs.SpecularInteriorSpecularPower.EqualsWithin(rhs.SpecularInteriorSpecularPower)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
-            {
-                if (!lhs.SiltAmount.EqualsWithin(rhs.SiltAmount)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
-            {
-                if (!lhs.SiltLightColor.ColorOnlyEquals(rhs.SiltLightColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
-            {
-                if (!lhs.SiltDarkColor.ColorOnlyEquals(rhs.SiltDarkColor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
-            {
-                if (lhs.ScreenSpaceReflections != rhs.ScreenSpaceReflections) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerOne, rhs.NoiseLayerOne, out var lhsNoiseLayerOne, out var rhsNoiseLayerOne, out var isNoiseLayerOneEqual))
-                {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerOne).CommonInstance()!).Equals(lhsNoiseLayerOne, rhsNoiseLayerOne, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne))) return false;
-                }
-                else if (!isNoiseLayerOneEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerTwo, rhs.NoiseLayerTwo, out var lhsNoiseLayerTwo, out var rhsNoiseLayerTwo, out var isNoiseLayerTwoEqual))
-                {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerTwo).CommonInstance()!).Equals(lhsNoiseLayerTwo, rhsNoiseLayerTwo, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo))) return false;
-                }
-                else if (!isNoiseLayerTwoEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerThree, rhs.NoiseLayerThree, out var lhsNoiseLayerThree, out var rhsNoiseLayerThree, out var isNoiseLayerThreeEqual))
-                {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerThree).CommonInstance()!).Equals(lhsNoiseLayerThree, rhsNoiseLayerThree, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree))) return false;
-                }
-                else if (!isNoiseLayerThreeEqual) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
@@ -3771,6 +2140,26 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
             {
                 if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NAM2) ?? true))
+            {
+                if (!string.Equals(lhs.NAM2, rhs.NAM2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NAM3) ?? true))
+            {
+                if (!string.Equals(lhs.NAM3, rhs.NAM3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NAM4) ?? true))
+            {
+                if (!string.Equals(lhs.NAM4, rhs.NAM4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NAM5) ?? true))
+            {
+                if (lhs.NAM5 != rhs.NAM5) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NAM6) ?? true))
+            {
+                if (lhs.NAM6 != rhs.NAM6) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.RiverAbsorptionCurve) ?? true))
             {
@@ -3799,10 +2188,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.YelowMatterCurve) ?? true))
             {
                 if (!lhs.YelowMatterCurve.Equals(rhs.YelowMatterCurve)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -3848,45 +2233,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(DATAItem);
             }
-            hash.Add(item.FogDepthAmount);
-            hash.Add(item.FogShallowColor);
-            hash.Add(item.FogDeepColor);
-            hash.Add(item.FogColorShallowRange);
-            hash.Add(item.FogColorDeepRange);
-            hash.Add(item.FogShallowAlpha);
-            hash.Add(item.FogDeepAlpha);
-            hash.Add(item.FogAlphaShallowRange);
-            hash.Add(item.FogAlphaDeepRange);
-            hash.Add(item.FogUnderwaterColor);
-            hash.Add(item.FogUnderwaterAmount);
-            hash.Add(item.FogUnderwaterNear);
-            hash.Add(item.FogUnderwaterFar);
-            hash.Add(item.PhysicalNormalMagnitude);
-            hash.Add(item.PhysicalShallowNormalFalloff);
-            hash.Add(item.PhysicalDeepNormalFalloff);
-            hash.Add(item.PhysicalReflectivityAmount);
-            hash.Add(item.PhysicalFresnelAmount);
-            hash.Add(item.PhysicalSurfaceEffectFalloff);
-            hash.Add(item.PhysicalDisplacementSimulatorForce);
-            hash.Add(item.PhysicalDisplacementSimulatorVelocity);
-            hash.Add(item.PhysicalDisplacementSimulatorFalloff);
-            hash.Add(item.PhysicalDisplacementSimulatorDampener);
-            hash.Add(item.PhysicalDisplacementSimulatorStartingSize);
-            hash.Add(item.PhysicalReflectionColor);
-            hash.Add(item.SpecularSunSpecularPower);
-            hash.Add(item.SpecularSunSpecularMagnitude);
-            hash.Add(item.SpecularSunSparklePower);
-            hash.Add(item.SpecularSunSparkleMagnitude);
-            hash.Add(item.SpecularInteriorSpecularRadius);
-            hash.Add(item.SpecularInteriorSpecularBrightness);
-            hash.Add(item.SpecularInteriorSpecularPower);
-            hash.Add(item.SiltAmount);
-            hash.Add(item.SiltLightColor);
-            hash.Add(item.SiltDarkColor);
-            hash.Add(item.ScreenSpaceReflections);
-            hash.Add(item.NoiseLayerOne);
-            hash.Add(item.NoiseLayerTwo);
-            hash.Add(item.NoiseLayerThree);
+            if (item.DNAM is {} DNAMItem)
+            {
+                hash.Add(DNAMItem);
+            }
             if (item.GNAM is {} GNAMItem)
             {
                 hash.Add(GNAMItem);
@@ -3899,6 +2249,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(AngularVelocityitem);
             }
+            if (item.NAM2 is {} NAM2item)
+            {
+                hash.Add(NAM2item);
+            }
+            if (item.NAM3 is {} NAM3item)
+            {
+                hash.Add(NAM3item);
+            }
+            if (item.NAM4 is {} NAM4item)
+            {
+                hash.Add(NAM4item);
+            }
+            if (item.NAM5 is {} NAM5item)
+            {
+                hash.Add(NAM5item);
+            }
+            if (item.NAM6 is {} NAM6item)
+            {
+                hash.Add(NAM6item);
+            }
             hash.Add(item.RiverAbsorptionCurve);
             hash.Add(item.OceanAbsorptionCurve);
             hash.Add(item.RiverScatteringCurve);
@@ -3906,7 +2276,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.PhytoplanktonCurve);
             hash.Add(item.SedimentCurve);
             hash.Add(item.YelowMatterCurve);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4110,214 +2479,15 @@ namespace Mutagen.Bethesda.Starfield
                     item.DATA = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAM) ?? true))
             {
-                item.FogDepthAmount = rhs.FogDepthAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
-            {
-                item.FogShallowColor = rhs.FogShallowColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
-            {
-                item.FogDeepColor = rhs.FogDeepColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
-            {
-                item.FogColorShallowRange = rhs.FogColorShallowRange;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
-            {
-                item.FogColorDeepRange = rhs.FogColorDeepRange;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
-            {
-                item.FogShallowAlpha = rhs.FogShallowAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
-            {
-                item.FogDeepAlpha = rhs.FogDeepAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
-            {
-                item.FogAlphaShallowRange = rhs.FogAlphaShallowRange;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
-            {
-                item.FogAlphaDeepRange = rhs.FogAlphaDeepRange;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
-            {
-                item.FogUnderwaterColor = rhs.FogUnderwaterColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
-            {
-                item.FogUnderwaterAmount = rhs.FogUnderwaterAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
-            {
-                item.FogUnderwaterNear = rhs.FogUnderwaterNear;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
-            {
-                item.FogUnderwaterFar = rhs.FogUnderwaterFar;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
-            {
-                item.PhysicalNormalMagnitude = rhs.PhysicalNormalMagnitude;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
-            {
-                item.PhysicalShallowNormalFalloff = rhs.PhysicalShallowNormalFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
-            {
-                item.PhysicalDeepNormalFalloff = rhs.PhysicalDeepNormalFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
-            {
-                item.PhysicalReflectivityAmount = rhs.PhysicalReflectivityAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
-            {
-                item.PhysicalFresnelAmount = rhs.PhysicalFresnelAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
-            {
-                item.PhysicalSurfaceEffectFalloff = rhs.PhysicalSurfaceEffectFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
-            {
-                item.PhysicalDisplacementSimulatorForce = rhs.PhysicalDisplacementSimulatorForce;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
-            {
-                item.PhysicalDisplacementSimulatorVelocity = rhs.PhysicalDisplacementSimulatorVelocity;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
-            {
-                item.PhysicalDisplacementSimulatorFalloff = rhs.PhysicalDisplacementSimulatorFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
-            {
-                item.PhysicalDisplacementSimulatorDampener = rhs.PhysicalDisplacementSimulatorDampener;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
-            {
-                item.PhysicalDisplacementSimulatorStartingSize = rhs.PhysicalDisplacementSimulatorStartingSize;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
-            {
-                item.PhysicalReflectionColor = rhs.PhysicalReflectionColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
-            {
-                item.SpecularSunSpecularPower = rhs.SpecularSunSpecularPower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
-            {
-                item.SpecularSunSpecularMagnitude = rhs.SpecularSunSpecularMagnitude;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
-            {
-                item.SpecularSunSparklePower = rhs.SpecularSunSparklePower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
-            {
-                item.SpecularSunSparkleMagnitude = rhs.SpecularSunSparkleMagnitude;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
-            {
-                item.SpecularInteriorSpecularRadius = rhs.SpecularInteriorSpecularRadius;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
-            {
-                item.SpecularInteriorSpecularBrightness = rhs.SpecularInteriorSpecularBrightness;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
-            {
-                item.SpecularInteriorSpecularPower = rhs.SpecularInteriorSpecularPower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
-            {
-                item.SiltAmount = rhs.SiltAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
-            {
-                item.SiltLightColor = rhs.SiltLightColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
-            {
-                item.SiltDarkColor = rhs.SiltDarkColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
-            {
-                item.ScreenSpaceReflections = rhs.ScreenSpaceReflections;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
-            {
-                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOne);
-                try
+                if(rhs.DNAM is {} DNAMrhs)
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
-                    {
-                        item.NoiseLayerOne = rhs.NoiseLayerOne.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne),
-                            errorMask: errorMask);
-                    }
+                    item.DNAM = DNAMrhs.ToArray();
                 }
-                catch (Exception ex)
-                when (errorMask != null)
+                else
                 {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
-            {
-                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwo);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
-                    {
-                        item.NoiseLayerTwo = rhs.NoiseLayerTwo.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
-            {
-                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThree);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
-                    {
-                        item.NoiseLayerThree = rhs.NoiseLayerThree.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    item.DNAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
@@ -4338,6 +2508,26 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
             {
                 item.AngularVelocity = rhs.AngularVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NAM2) ?? true))
+            {
+                item.NAM2 = rhs.NAM2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NAM3) ?? true))
+            {
+                item.NAM3 = rhs.NAM3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NAM4) ?? true))
+            {
+                item.NAM4 = rhs.NAM4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NAM5) ?? true))
+            {
+                item.NAM5 = rhs.NAM5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NAM6) ?? true))
+            {
+                item.NAM6 = rhs.NAM6;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RiverAbsorptionCurve) ?? true))
             {
@@ -4366,10 +2556,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.YelowMatterCurve) ?? true))
             {
                 item.YelowMatterCurve.SetTo(rhs.YelowMatterCurve.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -4519,15 +2705,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly WaterBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IWaterGetter item,
-            MutagenWriter writer)
-        {
-            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IWaterGetter item,
             MutagenWriter writer,
@@ -4574,121 +2751,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.DATA,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
-            {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogDepthAmount);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogShallowColor);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogDeepColor);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogColorShallowRange);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogColorDeepRange);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogShallowAlpha);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogDeepAlpha);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogAlphaShallowRange);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogAlphaDeepRange);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogUnderwaterColor);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogUnderwaterAmount);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogUnderwaterNear);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FogUnderwaterFar);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalNormalMagnitude);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalShallowNormalFalloff);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDeepNormalFalloff);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalReflectivityAmount);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalFresnelAmount);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalSurfaceEffectFalloff);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDisplacementSimulatorForce);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDisplacementSimulatorVelocity);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDisplacementSimulatorFalloff);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDisplacementSimulatorDampener);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalDisplacementSimulatorStartingSize);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PhysicalReflectionColor);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularSunSpecularPower);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularSunSpecularMagnitude);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularSunSparklePower);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularSunSparkleMagnitude);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularInteriorSpecularRadius);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularInteriorSpecularBrightness);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.SpecularInteriorSpecularPower);
-                WaterBinaryWriteTranslation.WriteBinaryNoiseLayerParsing(
-                    writer: writer,
-                    item: item);
-                if (!item.DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0))
-                {
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.SiltAmount);
-                    ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.SiltLightColor);
-                    ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.SiltDarkColor);
-                    writer.Write(item.ScreenSpaceReflections);
-                }
-            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GNAM,
@@ -4701,6 +2767,29 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.AngularVelocity,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM2,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM3,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM4,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4),
+                binaryType: StringBinaryType.NullTerminate);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM5,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM6,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM6));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RiverAbsorptionCurve,
@@ -4731,19 +2820,6 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM));
         }
 
-        public static partial void WriteBinaryNoiseLayerParsingCustom(
-            MutagenWriter writer,
-            IWaterGetter item);
-
-        public static void WriteBinaryNoiseLayerParsing(
-            MutagenWriter writer,
-            IWaterGetter item)
-        {
-            WriteBinaryNoiseLayerParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
@@ -4755,7 +2831,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    WriteEmbedded(
+                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4815,15 +2891,6 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WATR;
-        public static void FillBinaryStructs(
-            IWaterInternal item,
-            MutagenFrame frame)
-        {
-            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWaterInternal item,
             MutagenFrame frame,
@@ -4886,89 +2953,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogDepthAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogShallowColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogDeepColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogColorShallowRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogColorDeepRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogShallowAlpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogDeepAlpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogAlphaShallowRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogAlphaDeepRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogUnderwaterColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogUnderwaterAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogUnderwaterNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.FogUnderwaterFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalNormalMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalShallowNormalFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDeepNormalFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalReflectivityAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalFresnelAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalSurfaceEffectFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDisplacementSimulatorForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDisplacementSimulatorVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDisplacementSimulatorFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDisplacementSimulatorDampener = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalDisplacementSimulatorStartingSize = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.PhysicalReflectionColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularSunSpecularPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularSunSpecularMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularSunSparklePower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularSunSparkleMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularInteriorSpecularRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularInteriorSpecularBrightness = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SpecularInteriorSpecularPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 24) return null;
-                    WaterBinaryCreateTranslation.FillBinaryNoiseLayerParsingCustom(
-                        frame: dataFrame,
-                        item: item);
-                    if (dataFrame.Complete)
-                    {
-                        item.DNAMDataTypeState |= Water.DNAMDataType.Break0;
-                        return (int)Water_FieldIndex.SpecularInteriorSpecularPower;
-                    }
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SiltAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SiltLightColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.SiltDarkColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.ScreenSpaceReflections = dataFrame.ReadBoolean();
-                    return (int)Water_FieldIndex.ScreenSpaceReflections;
+                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -4987,6 +2973,42 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.AngularVelocity;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM2 = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Water_FieldIndex.NAM2;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM3 = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Water_FieldIndex.NAM3;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM4 = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Water_FieldIndex.NAM4;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM5 = frame.ReadUInt8();
+                    return (int)Water_FieldIndex.NAM5;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM6 = frame.ReadUInt8();
+                    return (int)Water_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -5041,10 +3063,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
-
-        public static partial void FillBinaryNoiseLayerParsingCustom(
-            MutagenFrame frame,
-            IWaterInternal item);
 
     }
 
@@ -5116,204 +3134,19 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? WASH { get; private set; }
         #region ConsumeSpell
         private int? _ConsumeSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> ConsumeSpell => _ConsumeSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConsumeSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> ConsumeSpell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _ConsumeSpellLocation);
         #endregion
         #region ContactSpell
         private int? _ContactSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> ContactSpell => _ContactSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContactSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> ContactSpell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _ContactSpellLocation);
         #endregion
         #region DATA
         private int? _DATALocation;
         public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        private RangeInt32? _DNAMLocation;
-        public Water.DNAMDataType DNAMDataTypeState { get; private set; }
-        #region FogDepthAmount
-        private int _FogDepthAmountLocation => _DNAMLocation!.Value.Min;
-        private bool _FogDepthAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogDepthAmount => _FogDepthAmount_IsSet ? _recordData.Slice(_FogDepthAmountLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogShallowColor
-        private int _FogShallowColorLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _FogShallowColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogShallowColor => _FogShallowColor_IsSet ? _recordData.Slice(_FogShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region FogDeepColor
-        private int _FogDeepColorLocation => _DNAMLocation!.Value.Min + 0x8;
-        private bool _FogDeepColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogDeepColor => _FogDeepColor_IsSet ? _recordData.Slice(_FogDeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region FogColorShallowRange
-        private int _FogColorShallowRangeLocation => _DNAMLocation!.Value.Min + 0xC;
-        private bool _FogColorShallowRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogColorShallowRange => _FogColorShallowRange_IsSet ? _recordData.Slice(_FogColorShallowRangeLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogColorDeepRange
-        private int _FogColorDeepRangeLocation => _DNAMLocation!.Value.Min + 0x10;
-        private bool _FogColorDeepRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogColorDeepRange => _FogColorDeepRange_IsSet ? _recordData.Slice(_FogColorDeepRangeLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogShallowAlpha
-        private int _FogShallowAlphaLocation => _DNAMLocation!.Value.Min + 0x14;
-        private bool _FogShallowAlpha_IsSet => _DNAMLocation.HasValue;
-        public Single FogShallowAlpha => _FogShallowAlpha_IsSet ? _recordData.Slice(_FogShallowAlphaLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogDeepAlpha
-        private int _FogDeepAlphaLocation => _DNAMLocation!.Value.Min + 0x18;
-        private bool _FogDeepAlpha_IsSet => _DNAMLocation.HasValue;
-        public Single FogDeepAlpha => _FogDeepAlpha_IsSet ? _recordData.Slice(_FogDeepAlphaLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogAlphaShallowRange
-        private int _FogAlphaShallowRangeLocation => _DNAMLocation!.Value.Min + 0x1C;
-        private bool _FogAlphaShallowRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogAlphaShallowRange => _FogAlphaShallowRange_IsSet ? _recordData.Slice(_FogAlphaShallowRangeLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogAlphaDeepRange
-        private int _FogAlphaDeepRangeLocation => _DNAMLocation!.Value.Min + 0x20;
-        private bool _FogAlphaDeepRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogAlphaDeepRange => _FogAlphaDeepRange_IsSet ? _recordData.Slice(_FogAlphaDeepRangeLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogUnderwaterColor
-        private int _FogUnderwaterColorLocation => _DNAMLocation!.Value.Min + 0x24;
-        private bool _FogUnderwaterColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogUnderwaterColor => _FogUnderwaterColor_IsSet ? _recordData.Slice(_FogUnderwaterColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region FogUnderwaterAmount
-        private int _FogUnderwaterAmountLocation => _DNAMLocation!.Value.Min + 0x28;
-        private bool _FogUnderwaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterAmount => _FogUnderwaterAmount_IsSet ? _recordData.Slice(_FogUnderwaterAmountLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogUnderwaterNear
-        private int _FogUnderwaterNearLocation => _DNAMLocation!.Value.Min + 0x2C;
-        private bool _FogUnderwaterNear_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterNear => _FogUnderwaterNear_IsSet ? _recordData.Slice(_FogUnderwaterNearLocation, 4).Float() : default(Single);
-        #endregion
-        #region FogUnderwaterFar
-        private int _FogUnderwaterFarLocation => _DNAMLocation!.Value.Min + 0x30;
-        private bool _FogUnderwaterFar_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterFar => _FogUnderwaterFar_IsSet ? _recordData.Slice(_FogUnderwaterFarLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalNormalMagnitude
-        private int _PhysicalNormalMagnitudeLocation => _DNAMLocation!.Value.Min + 0x34;
-        private bool _PhysicalNormalMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalNormalMagnitude => _PhysicalNormalMagnitude_IsSet ? _recordData.Slice(_PhysicalNormalMagnitudeLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalShallowNormalFalloff
-        private int _PhysicalShallowNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x38;
-        private bool _PhysicalShallowNormalFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalShallowNormalFalloff => _PhysicalShallowNormalFalloff_IsSet ? _recordData.Slice(_PhysicalShallowNormalFalloffLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDeepNormalFalloff
-        private int _PhysicalDeepNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x3C;
-        private bool _PhysicalDeepNormalFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDeepNormalFalloff => _PhysicalDeepNormalFalloff_IsSet ? _recordData.Slice(_PhysicalDeepNormalFalloffLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalReflectivityAmount
-        private int _PhysicalReflectivityAmountLocation => _DNAMLocation!.Value.Min + 0x40;
-        private bool _PhysicalReflectivityAmount_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalReflectivityAmount => _PhysicalReflectivityAmount_IsSet ? _recordData.Slice(_PhysicalReflectivityAmountLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalFresnelAmount
-        private int _PhysicalFresnelAmountLocation => _DNAMLocation!.Value.Min + 0x44;
-        private bool _PhysicalFresnelAmount_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalFresnelAmount => _PhysicalFresnelAmount_IsSet ? _recordData.Slice(_PhysicalFresnelAmountLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalSurfaceEffectFalloff
-        private int _PhysicalSurfaceEffectFalloffLocation => _DNAMLocation!.Value.Min + 0x48;
-        private bool _PhysicalSurfaceEffectFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalSurfaceEffectFalloff => _PhysicalSurfaceEffectFalloff_IsSet ? _recordData.Slice(_PhysicalSurfaceEffectFalloffLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorForce
-        private int _PhysicalDisplacementSimulatorForceLocation => _DNAMLocation!.Value.Min + 0x4C;
-        private bool _PhysicalDisplacementSimulatorForce_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorForce => _PhysicalDisplacementSimulatorForce_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorForceLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorVelocity
-        private int _PhysicalDisplacementSimulatorVelocityLocation => _DNAMLocation!.Value.Min + 0x50;
-        private bool _PhysicalDisplacementSimulatorVelocity_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorVelocity => _PhysicalDisplacementSimulatorVelocity_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorVelocityLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorFalloff
-        private int _PhysicalDisplacementSimulatorFalloffLocation => _DNAMLocation!.Value.Min + 0x54;
-        private bool _PhysicalDisplacementSimulatorFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorFalloff => _PhysicalDisplacementSimulatorFalloff_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorFalloffLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorDampener
-        private int _PhysicalDisplacementSimulatorDampenerLocation => _DNAMLocation!.Value.Min + 0x58;
-        private bool _PhysicalDisplacementSimulatorDampener_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorDampener => _PhysicalDisplacementSimulatorDampener_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorDampenerLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalDisplacementSimulatorStartingSize
-        private int _PhysicalDisplacementSimulatorStartingSizeLocation => _DNAMLocation!.Value.Min + 0x5C;
-        private bool _PhysicalDisplacementSimulatorStartingSize_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorStartingSize => _PhysicalDisplacementSimulatorStartingSize_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorStartingSizeLocation, 4).Float() : default(Single);
-        #endregion
-        #region PhysicalReflectionColor
-        private int _PhysicalReflectionColorLocation => _DNAMLocation!.Value.Min + 0x60;
-        private bool _PhysicalReflectionColor_IsSet => _DNAMLocation.HasValue;
-        public Color PhysicalReflectionColor => _PhysicalReflectionColor_IsSet ? _recordData.Slice(_PhysicalReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region SpecularSunSpecularPower
-        private int _SpecularSunSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x64;
-        private bool _SpecularSunSpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularPower => _SpecularSunSpecularPower_IsSet ? _recordData.Slice(_SpecularSunSpecularPowerLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularSunSpecularMagnitude
-        private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value.Min + 0x68;
-        private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _recordData.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularSunSparklePower
-        private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value.Min + 0x6C;
-        private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _recordData.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularSunSparkleMagnitude
-        private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value.Min + 0x70;
-        private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _recordData.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularInteriorSpecularRadius
-        private int _SpecularInteriorSpecularRadiusLocation => _DNAMLocation!.Value.Min + 0x74;
-        private bool _SpecularInteriorSpecularRadius_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularRadius => _SpecularInteriorSpecularRadius_IsSet ? _recordData.Slice(_SpecularInteriorSpecularRadiusLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularInteriorSpecularBrightness
-        private int _SpecularInteriorSpecularBrightnessLocation => _DNAMLocation!.Value.Min + 0x78;
-        private bool _SpecularInteriorSpecularBrightness_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularBrightness => _SpecularInteriorSpecularBrightness_IsSet ? _recordData.Slice(_SpecularInteriorSpecularBrightnessLocation, 4).Float() : default(Single);
-        #endregion
-        #region SpecularInteriorSpecularPower
-        private int _SpecularInteriorSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x7C;
-        private bool _SpecularInteriorSpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularPower => _SpecularInteriorSpecularPower_IsSet ? _recordData.Slice(_SpecularInteriorSpecularPowerLocation, 4).Float() : default(Single);
-        #endregion
-        #region NoiseLayerParsing
-        private int _NoiseLayerParsingLocation => _DNAMLocation!.Value.Min + 0x80;
-        private bool _NoiseLayerParsing_IsSet => _DNAMLocation.HasValue;
-        partial void NoiseLayerParsingCustomParse(
-            OverlayStream stream,
-            int offset);
-        #endregion
-        #region SiltAmount
-        private int _SiltAmountLocation => _DNAMLocation!.Value.Min + 0x98;
-        private bool _SiltAmount_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Single SiltAmount => _SiltAmount_IsSet ? _recordData.Slice(_SiltAmountLocation, 4).Float() : default(Single);
-        #endregion
-        #region SiltLightColor
-        private int _SiltLightColorLocation => _DNAMLocation!.Value.Min + 0x9C;
-        private bool _SiltLightColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Color SiltLightColor => _SiltLightColor_IsSet ? _recordData.Slice(_SiltLightColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region SiltDarkColor
-        private int _SiltDarkColorLocation => _DNAMLocation!.Value.Min + 0xA0;
-        private bool _SiltDarkColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Color SiltDarkColor => _SiltDarkColor_IsSet ? _recordData.Slice(_SiltDarkColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
-        #endregion
-        #region ScreenSpaceReflections
-        private int _ScreenSpaceReflectionsLocation => _DNAMLocation!.Value.Min + 0xA4;
-        private bool _ScreenSpaceReflections_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Boolean ScreenSpaceReflections => _ScreenSpaceReflections_IsSet ? _recordData.Slice(_ScreenSpaceReflectionsLocation, 1)[0] >= 1 : default(Boolean);
+        #region DNAM
+        private int? _DNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -5327,33 +3160,53 @@ namespace Mutagen.Bethesda.Starfield
         private int? _AngularVelocityLocation;
         public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
+        #region NAM2
+        private int? _NAM2Location;
+        public String? NAM2 => _NAM2Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region NAM3
+        private int? _NAM3Location;
+        public String? NAM3 => _NAM3Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM3Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region NAM4
+        private int? _NAM4Location;
+        public String? NAM4 => _NAM4Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region NAM5
+        private int? _NAM5Location;
+        public Byte? NAM5 => _NAM5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region NAM6
+        private int? _NAM6Location;
+        public Byte? NAM6 => _NAM6Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM6Location.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
         #region RiverAbsorptionCurve
         private int? _RiverAbsorptionCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> RiverAbsorptionCurve => _RiverAbsorptionCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RiverAbsorptionCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> RiverAbsorptionCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _RiverAbsorptionCurveLocation);
         #endregion
         #region OceanAbsorptionCurve
         private int? _OceanAbsorptionCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> OceanAbsorptionCurve => _OceanAbsorptionCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OceanAbsorptionCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> OceanAbsorptionCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _OceanAbsorptionCurveLocation);
         #endregion
         #region RiverScatteringCurve
         private int? _RiverScatteringCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> RiverScatteringCurve => _RiverScatteringCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RiverScatteringCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> RiverScatteringCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _RiverScatteringCurveLocation);
         #endregion
         #region OceanScatteringCurve
         private int? _OceanScatteringCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> OceanScatteringCurve => _OceanScatteringCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OceanScatteringCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> OceanScatteringCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _OceanScatteringCurveLocation);
         #endregion
         #region PhytoplanktonCurve
         private int? _PhytoplanktonCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> PhytoplanktonCurve => _PhytoplanktonCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhytoplanktonCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> PhytoplanktonCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _PhytoplanktonCurveLocation);
         #endregion
         #region SedimentCurve
         private int? _SedimentCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> SedimentCurve => _SedimentCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SedimentCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> SedimentCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _SedimentCurveLocation);
         #endregion
         #region YelowMatterCurve
         private int? _YelowMatterCurveLocation;
-        public IFormLinkNullableGetter<ICurve3DGetter> YelowMatterCurve => _YelowMatterCurveLocation.HasValue ? new FormLinkNullable<ICurve3DGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _YelowMatterCurveLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICurve3DGetter>.Null;
+        public IFormLinkNullableGetter<ICurve3DGetter> YelowMatterCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurve3DGetter>(_package, _recordData, _YelowMatterCurveLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5465,13 +3318,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x98)
-                    {
-                        this.DNAMDataTypeState |= Water.DNAMDataType.Break0;
-                    }
-                    return (int)Water_FieldIndex.ScreenSpaceReflections;
+                    _DNAMLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -5487,6 +3335,31 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _AngularVelocityLocation = (stream.Position - offset);
                     return (int)Water_FieldIndex.AngularVelocity;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _NAM2Location = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NAM2;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _NAM3Location = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NAM3;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    _NAM4Location = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NAM4;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    _NAM5Location = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NAM5;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    _NAM6Location = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.ENAM:
                 {

@@ -1709,9 +1709,9 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
         public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
-        public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
+        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _structData.Span.Slice(0x18, 0x4));
         public Single ProjectileSpeed => _structData.Slice(0x1C, 0x4).Float();
-        public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _structData.Span.Slice(0x20, 0x4));
         public IMagicEffectSubDataGetter SubData => _structData.Length > 0x24 ? MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams)) : new MagicEffectSubData();
         partial void CustomFactoryEnd(
             OverlayStream stream,

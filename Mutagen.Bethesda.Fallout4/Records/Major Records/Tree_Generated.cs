@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2851,11 +2850,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IModelGetter? Model { get; private set; }
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHarvestTargetGetter>(_package, _recordData, _IngredientLocation);
         #endregion
         #region HarvestSound
         private int? _HarvestSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _HarvestSoundLocation);
         #endregion
         #region Production
         private RangeInt32? _ProductionLocation;

@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> LocationReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Single Radius => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

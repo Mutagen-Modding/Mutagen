@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -111,6 +110,27 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlaceableObjectGetter> IPlacedObjectGetter.Base => this.Base;
+        #endregion
+        #region XMSP
+        private readonly IFormLinkNullable<IStarfieldMajorRecordGetter> _XMSP = new FormLinkNullable<IStarfieldMajorRecordGetter>();
+        public IFormLinkNullable<IStarfieldMajorRecordGetter> XMSP
+        {
+            get => _XMSP;
+            set => _XMSP.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IPlacedObjectGetter.XMSP => this.XMSP;
+        #endregion
+        #region XTRV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XTRV? _XTRV;
+        public XTRV? XTRV
+        {
+            get => _XTRV;
+            set => _XTRV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IXTRVGetter? IPlacedObjectGetter.XTRV => this.XTRV;
         #endregion
         #region VolumeData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -538,6 +558,21 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayerGetter> IPlacedObjectGetter.Layer => this.Layer;
         #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.Location => this.Location;
+        #endregion
+        #region XTRI
+        public UInt32? XTRI { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPlacedObjectGetter.XTRI => this.XTRI;
+        #endregion
         #region LightRoundedness
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PlacedObjectLightRoundedness? _LightRoundedness;
@@ -783,6 +818,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Base = initialValue;
+                this.XMSP = initialValue;
+                this.XTRV = new MaskItem<TItem, XTRV.Mask<TItem>?>(initialValue, new XTRV.Mask<TItem>(initialValue));
                 this.VolumeData = new MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>(initialValue, new PlacedObjectVolumeData.Mask<TItem>(initialValue));
                 this.ShipArrival = new MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>(initialValue, new PlacedObjectShipArrival.Mask<TItem>(initialValue));
                 this.LevelModifier = initialValue;
@@ -827,6 +864,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
                 this.BlueprintPartOrigin = initialValue;
                 this.Layer = initialValue;
+                this.Location = initialValue;
+                this.XTRI = initialValue;
                 this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(initialValue, new PlacedObjectLightRoundedness.Mask<TItem>(initialValue));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = initialValue;
@@ -868,6 +907,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem XALG,
                 TItem Components,
                 TItem Base,
+                TItem XMSP,
+                TItem XTRV,
                 TItem VolumeData,
                 TItem ShipArrival,
                 TItem LevelModifier,
@@ -912,6 +953,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GroupedPackIn,
                 TItem BlueprintPartOrigin,
                 TItem Layer,
+                TItem Location,
+                TItem XTRI,
                 TItem LightRoundedness,
                 TItem LinkedReferences,
                 TItem IsLinkedRefTransient,
@@ -952,6 +995,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Base = Base;
+                this.XMSP = XMSP;
+                this.XTRV = new MaskItem<TItem, XTRV.Mask<TItem>?>(XTRV, new XTRV.Mask<TItem>(XTRV));
                 this.VolumeData = new MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>(VolumeData, new PlacedObjectVolumeData.Mask<TItem>(VolumeData));
                 this.ShipArrival = new MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>(ShipArrival, new PlacedObjectShipArrival.Mask<TItem>(ShipArrival));
                 this.LevelModifier = LevelModifier;
@@ -996,6 +1041,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
                 this.BlueprintPartOrigin = BlueprintPartOrigin;
                 this.Layer = Layer;
+                this.Location = Location;
+                this.XTRI = XTRI;
                 this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(LightRoundedness, new PlacedObjectLightRoundedness.Mask<TItem>(LightRoundedness));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
@@ -1038,6 +1085,8 @@ namespace Mutagen.Bethesda.Starfield
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Base;
+            public TItem XMSP;
+            public MaskItem<TItem, XTRV.Mask<TItem>?>? XTRV { get; set; }
             public MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>? VolumeData { get; set; }
             public MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>? ShipArrival { get; set; }
             public TItem LevelModifier;
@@ -1082,6 +1131,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
             public TItem BlueprintPartOrigin;
             public TItem Layer;
+            public TItem Location;
+            public TItem XTRI;
             public MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>? LightRoundedness { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
             public TItem IsLinkedRefTransient;
@@ -1126,6 +1177,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.XMSP, rhs.XMSP)) return false;
+                if (!object.Equals(this.XTRV, rhs.XTRV)) return false;
                 if (!object.Equals(this.VolumeData, rhs.VolumeData)) return false;
                 if (!object.Equals(this.ShipArrival, rhs.ShipArrival)) return false;
                 if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
@@ -1170,6 +1223,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
                 if (!object.Equals(this.BlueprintPartOrigin, rhs.BlueprintPartOrigin)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.XTRI, rhs.XTRI)) return false;
                 if (!object.Equals(this.LightRoundedness, rhs.LightRoundedness)) return false;
                 if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
                 if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
@@ -1206,6 +1261,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Base);
+                hash.Add(this.XMSP);
+                hash.Add(this.XTRV);
                 hash.Add(this.VolumeData);
                 hash.Add(this.ShipArrival);
                 hash.Add(this.LevelModifier);
@@ -1250,6 +1307,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GroupedPackIn);
                 hash.Add(this.BlueprintPartOrigin);
                 hash.Add(this.Layer);
+                hash.Add(this.Location);
+                hash.Add(this.XTRI);
                 hash.Add(this.LightRoundedness);
                 hash.Add(this.LinkedReferences);
                 hash.Add(this.IsLinkedRefTransient);
@@ -1306,6 +1365,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Base)) return false;
+                if (!eval(this.XMSP)) return false;
+                if (XTRV != null)
+                {
+                    if (!eval(this.XTRV.Overall)) return false;
+                    if (this.XTRV.Specific != null && !this.XTRV.Specific.All(eval)) return false;
+                }
                 if (VolumeData != null)
                 {
                     if (!eval(this.VolumeData.Overall)) return false;
@@ -1481,6 +1546,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.BlueprintPartOrigin)) return false;
                 if (!eval(this.Layer)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.XTRI)) return false;
                 if (LightRoundedness != null)
                 {
                     if (!eval(this.LightRoundedness.Overall)) return false;
@@ -1603,6 +1670,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Base)) return true;
+                if (eval(this.XMSP)) return true;
+                if (XTRV != null)
+                {
+                    if (eval(this.XTRV.Overall)) return true;
+                    if (this.XTRV.Specific != null && this.XTRV.Specific.Any(eval)) return true;
+                }
                 if (VolumeData != null)
                 {
                     if (eval(this.VolumeData.Overall)) return true;
@@ -1778,6 +1851,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.BlueprintPartOrigin)) return true;
                 if (eval(this.Layer)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.XTRI)) return true;
                 if (LightRoundedness != null)
                 {
                     if (eval(this.LightRoundedness.Overall)) return true;
@@ -1906,6 +1981,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Base = eval(this.Base);
+                obj.XMSP = eval(this.XMSP);
+                obj.XTRV = this.XTRV == null ? null : new MaskItem<R, XTRV.Mask<R>?>(eval(this.XTRV.Overall), this.XTRV.Specific?.Translate(eval));
                 obj.VolumeData = this.VolumeData == null ? null : new MaskItem<R, PlacedObjectVolumeData.Mask<R>?>(eval(this.VolumeData.Overall), this.VolumeData.Specific?.Translate(eval));
                 obj.ShipArrival = this.ShipArrival == null ? null : new MaskItem<R, PlacedObjectShipArrival.Mask<R>?>(eval(this.ShipArrival.Overall), this.ShipArrival.Specific?.Translate(eval));
                 obj.LevelModifier = eval(this.LevelModifier);
@@ -2031,6 +2108,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GroupedPackIn = this.GroupedPackIn == null ? null : new MaskItem<R, GroupedPackIn.Mask<R>?>(eval(this.GroupedPackIn.Overall), this.GroupedPackIn.Specific?.Translate(eval));
                 obj.BlueprintPartOrigin = eval(this.BlueprintPartOrigin);
                 obj.Layer = eval(this.Layer);
+                obj.Location = eval(this.Location);
+                obj.XTRI = eval(this.XTRI);
                 obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, PlacedObjectLightRoundedness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
                 if (LinkedReferences != null)
                 {
@@ -2162,6 +2241,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Base ?? true)
                     {
                         sb.AppendItem(Base, "Base");
+                    }
+                    if (printMask?.XMSP ?? true)
+                    {
+                        sb.AppendItem(XMSP, "XMSP");
+                    }
+                    if (printMask?.XTRV?.Overall ?? true)
+                    {
+                        XTRV?.Print(sb);
                     }
                     if (printMask?.VolumeData?.Overall ?? true)
                     {
@@ -2435,6 +2522,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Layer, "Layer");
                     }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.XTRI ?? true)
+                    {
+                        sb.AppendItem(XTRI, "XTRI");
+                    }
                     if (printMask?.LightRoundedness?.Overall ?? true)
                     {
                         LightRoundedness?.Print(sb);
@@ -2618,6 +2713,8 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Base;
+            public Exception? XMSP;
+            public MaskItem<Exception?, XTRV.ErrorMask?>? XTRV;
             public MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>? VolumeData;
             public MaskItem<Exception?, PlacedObjectShipArrival.ErrorMask?>? ShipArrival;
             public Exception? LevelModifier;
@@ -2662,6 +2759,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
             public Exception? BlueprintPartOrigin;
             public Exception? Layer;
+            public Exception? Location;
+            public Exception? XTRI;
             public MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>? LightRoundedness;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
             public Exception? IsLinkedRefTransient;
@@ -2705,6 +2804,10 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case PlacedObject_FieldIndex.Base:
                         return Base;
+                    case PlacedObject_FieldIndex.XMSP:
+                        return XMSP;
+                    case PlacedObject_FieldIndex.XTRV:
+                        return XTRV;
                     case PlacedObject_FieldIndex.VolumeData:
                         return VolumeData;
                     case PlacedObject_FieldIndex.ShipArrival:
@@ -2793,6 +2896,10 @@ namespace Mutagen.Bethesda.Starfield
                         return BlueprintPartOrigin;
                     case PlacedObject_FieldIndex.Layer:
                         return Layer;
+                    case PlacedObject_FieldIndex.Location:
+                        return Location;
+                    case PlacedObject_FieldIndex.XTRI:
+                        return XTRI;
                     case PlacedObject_FieldIndex.LightRoundedness:
                         return LightRoundedness;
                     case PlacedObject_FieldIndex.LinkedReferences:
@@ -2868,6 +2975,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Base:
                         this.Base = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XMSP:
+                        this.XMSP = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XTRV:
+                        this.XTRV = new MaskItem<Exception?, XTRV.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.VolumeData:
                         this.VolumeData = new MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>(ex, null);
@@ -3001,6 +3114,12 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = ex;
                         break;
+                    case PlacedObject_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XTRI:
+                        this.XTRI = ex;
+                        break;
                     case PlacedObject_FieldIndex.LightRoundedness:
                         this.LightRoundedness = new MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>(ex, null);
                         break;
@@ -3104,6 +3223,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Base:
                         this.Base = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XMSP:
+                        this.XMSP = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XTRV:
+                        this.XTRV = (MaskItem<Exception?, XTRV.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.VolumeData:
                         this.VolumeData = (MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>?)obj;
@@ -3237,6 +3362,12 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XTRI:
+                        this.XTRI = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.LightRoundedness:
                         this.LightRoundedness = (MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>?)obj;
                         break;
@@ -3331,6 +3462,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Base != null) return true;
+                if (XMSP != null) return true;
+                if (XTRV != null) return true;
                 if (VolumeData != null) return true;
                 if (ShipArrival != null) return true;
                 if (LevelModifier != null) return true;
@@ -3375,6 +3508,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (GroupedPackIn != null) return true;
                 if (BlueprintPartOrigin != null) return true;
                 if (Layer != null) return true;
+                if (Location != null) return true;
+                if (XTRI != null) return true;
                 if (LightRoundedness != null) return true;
                 if (LinkedReferences != null) return true;
                 if (IsLinkedRefTransient != null) return true;
@@ -3453,6 +3588,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Base, "Base");
                 }
+                {
+                    sb.AppendItem(XMSP, "XMSP");
+                }
+                XTRV?.Print(sb);
                 VolumeData?.Print(sb);
                 ShipArrival?.Print(sb);
                 {
@@ -3647,6 +3786,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Layer, "Layer");
                 }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(XTRI, "XTRI");
+                }
                 LightRoundedness?.Print(sb);
                 if (LinkedReferences is {} LinkedReferencesItem)
                 {
@@ -3788,6 +3933,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Base = this.Base.Combine(rhs.Base);
+                ret.XMSP = this.XMSP.Combine(rhs.XMSP);
+                ret.XTRV = this.XTRV.Combine(rhs.XTRV, (l, r) => l.Combine(r));
                 ret.VolumeData = this.VolumeData.Combine(rhs.VolumeData, (l, r) => l.Combine(r));
                 ret.ShipArrival = this.ShipArrival.Combine(rhs.ShipArrival, (l, r) => l.Combine(r));
                 ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
@@ -3832,6 +3979,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
                 ret.BlueprintPartOrigin = this.BlueprintPartOrigin.Combine(rhs.BlueprintPartOrigin);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.XTRI = this.XTRI.Combine(rhs.XTRI);
                 ret.LightRoundedness = this.LightRoundedness.Combine(rhs.LightRoundedness, (l, r) => l.Combine(r));
                 ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
@@ -3885,6 +4034,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Base;
+            public bool XMSP;
+            public XTRV.TranslationMask? XTRV;
             public PlacedObjectVolumeData.TranslationMask? VolumeData;
             public PlacedObjectShipArrival.TranslationMask? ShipArrival;
             public bool LevelModifier;
@@ -3929,6 +4080,8 @@ namespace Mutagen.Bethesda.Starfield
             public GroupedPackIn.TranslationMask? GroupedPackIn;
             public bool BlueprintPartOrigin;
             public bool Layer;
+            public bool Location;
+            public bool XTRI;
             public PlacedObjectLightRoundedness.TranslationMask? LightRoundedness;
             public LinkedReferences.TranslationMask? LinkedReferences;
             public bool IsLinkedRefTransient;
@@ -3966,6 +4119,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.XALG = defaultOn;
                 this.Base = defaultOn;
+                this.XMSP = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.Action = defaultOn;
                 this.Emittance = defaultOn;
@@ -3990,6 +4144,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightVolumetricData = defaultOn;
                 this.BlueprintPartOrigin = defaultOn;
                 this.Layer = defaultOn;
+                this.Location = defaultOn;
+                this.XTRI = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.GeometryDirtinessScale = defaultOn;
@@ -4018,6 +4174,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Base, null));
+                ret.Add((XMSP, null));
+                ret.Add((XTRV != null ? XTRV.OnOverall : DefaultOn, XTRV?.GetCrystal()));
                 ret.Add((VolumeData != null ? VolumeData.OnOverall : DefaultOn, VolumeData?.GetCrystal()));
                 ret.Add((ShipArrival != null ? ShipArrival.OnOverall : DefaultOn, ShipArrival?.GetCrystal()));
                 ret.Add((LevelModifier, null));
@@ -4062,6 +4220,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
                 ret.Add((BlueprintPartOrigin, null));
                 ret.Add((Layer, null));
+                ret.Add((Location, null));
+                ret.Add((XTRI, null));
                 ret.Add((LightRoundedness != null ? LightRoundedness.OnOverall : DefaultOn, LightRoundedness?.GetCrystal()));
                 ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
                 ret.Add((IsLinkedRefTransient, null));
@@ -4257,6 +4417,8 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new IFormLink<IPlaceableObjectGetter> Base { get; set; }
+        new IFormLinkNullable<IStarfieldMajorRecordGetter> XMSP { get; set; }
+        new XTRV? XTRV { get; set; }
         new PlacedObjectVolumeData? VolumeData { get; set; }
         new PlacedObjectShipArrival? ShipArrival { get; set; }
         new Level? LevelModifier { get; set; }
@@ -4301,6 +4463,8 @@ namespace Mutagen.Bethesda.Starfield
         new GroupedPackIn? GroupedPackIn { get; set; }
         new UInt32? BlueprintPartOrigin { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
+        new UInt32? XTRI { get; set; }
         new PlacedObjectLightRoundedness? LightRoundedness { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Boolean IsLinkedRefTransient { get; set; }
@@ -4366,6 +4530,8 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkGetter<IPlaceableObjectGetter> Base { get; }
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> XMSP { get; }
+        IXTRVGetter? XTRV { get; }
         IPlacedObjectVolumeDataGetter? VolumeData { get; }
         IPlacedObjectShipArrivalGetter? ShipArrival { get; }
         Level? LevelModifier { get; }
@@ -4410,6 +4576,8 @@ namespace Mutagen.Bethesda.Starfield
         IGroupedPackInGetter? GroupedPackIn { get; }
         UInt32? BlueprintPartOrigin { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        UInt32? XTRI { get; }
         IPlacedObjectLightRoundednessGetter? LightRoundedness { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         Boolean IsLinkedRefTransient { get; }
@@ -4617,77 +4785,81 @@ namespace Mutagen.Bethesda.Starfield
         XALG = 8,
         Components = 9,
         Base = 10,
-        VolumeData = 11,
-        ShipArrival = 12,
-        LevelModifier = 13,
-        Action = 14,
-        Primitive = 15,
-        VolumeReflectionProbeOffsetIntensity = 16,
-        DebugText = 17,
-        Emittance = 18,
-        Radius = 19,
-        Lighting = 20,
-        LightBarndoorData = 21,
-        LightArea = 22,
-        CurrentZoneCell = 23,
-        XCZA = 24,
-        Patrol = 25,
-        RagdollData = 26,
-        TeleportDestination = 27,
-        TeleportName = 28,
-        ReferenceGroup = 29,
-        LocationRefTypes = 30,
-        LayeredMaterialSwaps = 31,
-        XPCK = 32,
-        SourcePackIn = 33,
-        PersistentLocation = 34,
-        ProjectedDecal = 35,
-        ProjectedDecalReferences = 36,
-        ConstrainedDecal = 37,
-        IsIgnoredBySandbox = 38,
-        FactionRank = 39,
-        LightGobo = 40,
-        Collision = 41,
-        PowerLinks = 42,
-        Count = 43,
-        XFLG = 44,
-        LightFlicker = 45,
-        MapMarker = 46,
-        LightLayerData = 47,
-        LightStaticShadowMap = 48,
-        LightVolumetricData = 49,
-        Ownership = 50,
-        LightColors = 51,
-        GroupedPackIn = 52,
-        BlueprintPartOrigin = 53,
-        Layer = 54,
-        LightRoundedness = 55,
-        LinkedReferences = 56,
-        IsLinkedRefTransient = 57,
-        SnapLinks = 58,
-        EncounterZone = 59,
-        GeometryDirtinessScale = 60,
-        Lock = 61,
-        Properties = 62,
-        ExternalEmittance = 63,
-        HeadTrackingWeight = 64,
-        BOLV = 65,
-        Spline = 66,
-        XNSE = 67,
-        AttachRef = 68,
-        RagdollBipedRotation = 69,
-        HealthPercent = 70,
-        TimeOfDay = 71,
-        EnableParent = 72,
-        Traversals = 73,
-        NumTraversalFluffBytes = 74,
-        NavigationDoorLink = 75,
-        IsActivationPoint = 76,
-        Scale = 77,
-        OpenByDefault = 78,
-        Position = 79,
-        Rotation = 80,
-        Comments = 81,
+        XMSP = 11,
+        XTRV = 12,
+        VolumeData = 13,
+        ShipArrival = 14,
+        LevelModifier = 15,
+        Action = 16,
+        Primitive = 17,
+        VolumeReflectionProbeOffsetIntensity = 18,
+        DebugText = 19,
+        Emittance = 20,
+        Radius = 21,
+        Lighting = 22,
+        LightBarndoorData = 23,
+        LightArea = 24,
+        CurrentZoneCell = 25,
+        XCZA = 26,
+        Patrol = 27,
+        RagdollData = 28,
+        TeleportDestination = 29,
+        TeleportName = 30,
+        ReferenceGroup = 31,
+        LocationRefTypes = 32,
+        LayeredMaterialSwaps = 33,
+        XPCK = 34,
+        SourcePackIn = 35,
+        PersistentLocation = 36,
+        ProjectedDecal = 37,
+        ProjectedDecalReferences = 38,
+        ConstrainedDecal = 39,
+        IsIgnoredBySandbox = 40,
+        FactionRank = 41,
+        LightGobo = 42,
+        Collision = 43,
+        PowerLinks = 44,
+        Count = 45,
+        XFLG = 46,
+        LightFlicker = 47,
+        MapMarker = 48,
+        LightLayerData = 49,
+        LightStaticShadowMap = 50,
+        LightVolumetricData = 51,
+        Ownership = 52,
+        LightColors = 53,
+        GroupedPackIn = 54,
+        BlueprintPartOrigin = 55,
+        Layer = 56,
+        Location = 57,
+        XTRI = 58,
+        LightRoundedness = 59,
+        LinkedReferences = 60,
+        IsLinkedRefTransient = 61,
+        SnapLinks = 62,
+        EncounterZone = 63,
+        GeometryDirtinessScale = 64,
+        Lock = 65,
+        Properties = 66,
+        ExternalEmittance = 67,
+        HeadTrackingWeight = 68,
+        BOLV = 69,
+        Spline = 70,
+        XNSE = 71,
+        AttachRef = 72,
+        RagdollBipedRotation = 73,
+        HealthPercent = 74,
+        TimeOfDay = 75,
+        EnableParent = 76,
+        Traversals = 77,
+        NumTraversalFluffBytes = 78,
+        NavigationDoorLink = 79,
+        IsActivationPoint = 80,
+        Scale = 81,
+        OpenByDefault = 82,
+        Position = 83,
+        Rotation = 84,
+        Comments = 85,
     }
     #endregion
 
@@ -4698,9 +4870,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 75;
+        public const ushort AdditionalFieldCount = 79;
 
-        public const ushort FieldCount = 82;
+        public const ushort FieldCount = 86;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -4739,6 +4911,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.NAME,
+                RecordTypes.XMSP,
+                RecordTypes.XTRV,
                 RecordTypes.XVL2,
                 RecordTypes.XSAD,
                 RecordTypes.XLCM,
@@ -4784,6 +4958,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XWPK,
                 RecordTypes.XBPO,
                 RecordTypes.XLYR,
+                RecordTypes.XLRL,
+                RecordTypes.XTRI,
                 RecordTypes.XLRD,
                 RecordTypes.XLKR,
                 RecordTypes.XLKT,
@@ -4857,6 +5033,8 @@ namespace Mutagen.Bethesda.Starfield
             item.XALG = default;
             item.Components.Clear();
             item.Base.Clear();
+            item.XMSP.Clear();
+            item.XTRV = null;
             item.VolumeData = null;
             item.ShipArrival = null;
             item.LevelModifier = default;
@@ -4901,6 +5079,8 @@ namespace Mutagen.Bethesda.Starfield
             item.GroupedPackIn = null;
             item.BlueprintPartOrigin = default;
             item.Layer.Clear();
+            item.Location.Clear();
+            item.XTRI = default;
             item.LightRoundedness = null;
             item.LinkedReferences.Clear();
             item.IsLinkedRefTransient = default(Boolean);
@@ -4948,6 +5128,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Base.Relink(mapping);
+            obj.XMSP.Relink(mapping);
+            obj.XTRV?.RemapLinks(mapping);
+            obj.VolumeData?.RemapLinks(mapping);
             obj.Emittance.Relink(mapping);
             obj.CurrentZoneCell.Relink(mapping);
             obj.Patrol?.RemapLinks(mapping);
@@ -4965,6 +5148,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ownership?.RemapLinks(mapping);
             obj.GroupedPackIn?.RemapLinks(mapping);
             obj.Layer.Relink(mapping);
+            obj.Location.Relink(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
             obj.SnapLinks?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
@@ -5077,6 +5261,12 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Base = item.Base.Equals(rhs.Base);
+            ret.XMSP = item.XMSP.Equals(rhs.XMSP);
+            ret.XTRV = EqualsMaskHelper.EqualsHelper(
+                item.XTRV,
+                rhs.XTRV,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.VolumeData = EqualsMaskHelper.EqualsHelper(
                 item.VolumeData,
                 rhs.VolumeData,
@@ -5207,6 +5397,8 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
             ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.Location = item.Location.Equals(rhs.Location);
+            ret.XTRI = item.XTRI == rhs.XTRI;
             ret.LightRoundedness = EqualsMaskHelper.EqualsHelper(
                 item.LightRoundedness,
                 rhs.LightRoundedness,
@@ -5346,6 +5538,15 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Base ?? true)
             {
                 sb.AppendItem(item.Base.FormKey, "Base");
+            }
+            if (printMask?.XMSP ?? true)
+            {
+                sb.AppendItem(item.XMSP.FormKeyNullable, "XMSP");
+            }
+            if ((printMask?.XTRV?.Overall ?? true)
+                && item.XTRV is {} XTRVItem)
+            {
+                XTRVItem?.Print(sb, "XTRV");
             }
             if ((printMask?.VolumeData?.Overall ?? true)
                 && item.VolumeData is {} VolumeDataItem)
@@ -5616,6 +5817,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
             }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
+            }
+            if ((printMask?.XTRI ?? true)
+                && item.XTRI is {} XTRIItem)
+            {
+                sb.AppendItem(XTRIItem, "XTRI");
+            }
             if ((printMask?.LightRoundedness?.Overall ?? true)
                 && item.LightRoundedness is {} LightRoundednessItem)
             {
@@ -5850,6 +6060,18 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
                 if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XMSP) ?? true))
+            {
+                if (!lhs.XMSP.Equals(rhs.XMSP)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRV) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.XTRV, rhs.XTRV, out var lhsXTRV, out var rhsXTRV, out var isXTRVEqual))
+                {
+                    if (!((XTRVCommon)((IXTRVGetter)lhsXTRV).CommonInstance()!).Equals(lhsXTRV, rhsXTRV, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.XTRV))) return false;
+                }
+                else if (!isXTRVEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeData) ?? true))
             {
@@ -6095,6 +6317,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRI) ?? true))
+            {
+                if (lhs.XTRI != rhs.XTRI) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRoundedness) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LightRoundedness, rhs.LightRoundedness, out var lhsLightRoundedness, out var rhsLightRoundedness, out var isLightRoundednessEqual))
@@ -6265,6 +6495,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Components);
             hash.Add(item.Base);
+            hash.Add(item.XMSP);
+            if (item.XTRV is {} XTRVitem)
+            {
+                hash.Add(XTRVitem);
+            }
             if (item.VolumeData is {} VolumeDataitem)
             {
                 hash.Add(VolumeDataitem);
@@ -6396,6 +6631,11 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(BlueprintPartOriginitem);
             }
             hash.Add(item.Layer);
+            hash.Add(item.Location);
+            if (item.XTRI is {} XTRIitem)
+            {
+                hash.Add(XTRIitem);
+            }
             if (item.LightRoundedness is {} LightRoundednessitem)
             {
                 hash.Add(LightRoundednessitem);
@@ -6507,6 +6747,24 @@ namespace Mutagen.Bethesda.Starfield
                 yield return FormLinkInformation.Factory(item);
             }
             yield return FormLinkInformation.Factory(obj.Base);
+            if (FormLinkInformation.TryFactory(obj.XMSP, out var XMSPInfo))
+            {
+                yield return XMSPInfo;
+            }
+            if (obj.XTRV is {} XTRVItems)
+            {
+                foreach (var item in XTRVItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.VolumeData is {} VolumeDataItems)
+            {
+                foreach (var item in VolumeDataItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
                 yield return EmittanceInfo;
@@ -6598,6 +6856,10 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.Layer, out var LayerInfo))
             {
                 yield return LayerInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
             }
             foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -6812,6 +7074,36 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
                 item.Base.SetTo(rhs.Base.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XMSP) ?? true))
+            {
+                item.XMSP.SetTo(rhs.XMSP.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRV) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.XTRV);
+                try
+                {
+                    if(rhs.XTRV is {} rhsXTRV)
+                    {
+                        item.XTRV = rhsXTRV.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.XTRV));
+                    }
+                    else
+                    {
+                        item.XTRV = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeData) ?? true))
             {
@@ -7514,6 +7806,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XTRI) ?? true))
+            {
+                item.XTRI = rhs.XTRI;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRoundedness) ?? true))
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightRoundedness);
@@ -8057,6 +8357,17 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Base,
                 header: translationParams.ConvertToCustom(RecordTypes.NAME));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.XMSP,
+                header: translationParams.ConvertToCustom(RecordTypes.XMSP));
+            if (item.XTRV is {} XTRVItem)
+            {
+                ((XTRVBinaryWriteTranslation)((IBinaryItem)XTRVItem).BinaryWriteTranslator).Write(
+                    item: XTRVItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.VolumeData is {} VolumeDataItem)
             {
                 ((PlacedObjectVolumeDataBinaryWriteTranslation)((IBinaryItem)VolumeDataItem).BinaryWriteTranslator).Write(
@@ -8329,6 +8640,14 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Layer,
                 header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.XLRL));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XTRI,
+                header: translationParams.ConvertToCustom(RecordTypes.XTRI));
             if (item.LightRoundedness is {} LightRoundednessItem)
             {
                 ((PlacedObjectLightRoundednessBinaryWriteTranslation)((IBinaryItem)LightRoundednessItem).BinaryWriteTranslator).Write(
@@ -8611,6 +8930,17 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Base;
+                }
+                case RecordTypeInts.XMSP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XMSP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.XMSP;
+                }
+                case RecordTypeInts.XTRV:
+                {
+                    item.XTRV = Mutagen.Bethesda.Starfield.XTRV.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.XTRV;
                 }
                 case RecordTypeInts.XVL2:
                 {
@@ -8900,6 +9230,18 @@ namespace Mutagen.Bethesda.Starfield
                     item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
+                case RecordTypeInts.XLRL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Location;
+                }
+                case RecordTypeInts.XTRI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XTRI = frame.ReadUInt32();
+                    return (int)PlacedObject_FieldIndex.XTRI;
+                }
                 case RecordTypeInts.XLRD:
                 {
                     item.LightRoundedness = Mutagen.Bethesda.Starfield.PlacedObjectLightRoundedness.CreateFromBinary(frame: frame);
@@ -9146,7 +9488,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Base
         private int? _BaseLocation;
-        public IFormLinkGetter<IPlaceableObjectGetter> Base => _BaseLocation.HasValue ? new FormLink<IPlaceableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLink<IPlaceableObjectGetter>.Null;
+        public IFormLinkGetter<IPlaceableObjectGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _BaseLocation);
+        #endregion
+        #region XMSP
+        private int? _XMSPLocation;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> XMSP => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _XMSPLocation);
+        #endregion
+        #region XTRV
+        private RangeInt32? _XTRVLocation;
+        public IXTRVGetter? XTRV => _XTRVLocation.HasValue ? XTRVBinaryOverlay.XTRVFactory(_recordData.Slice(_XTRVLocation!.Value.Min), _package) : default;
         #endregion
         #region VolumeData
         private RangeInt32? _VolumeDataLocation;
@@ -9175,7 +9525,7 @@ namespace Mutagen.Bethesda.Starfield
         public IPlacedObjectDebugTextGetter? DebugText { get; private set; }
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region Radius
         private int? _RadiusLocation;
@@ -9195,7 +9545,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CurrentZoneCell
         private int? _CurrentZoneCellLocation;
-        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => _CurrentZoneCellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CurrentZoneCellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CurrentZoneCellLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
@@ -9209,25 +9559,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TeleportName
         private int? _TeleportNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> TeleportName => _TeleportNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TeleportNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<IMessageGetter> TeleportName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportNameLocation);
         #endregion
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps { get; private set; }
         #region XPCK
         private int? _XPCKLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> XPCK => _XPCKLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XPCKLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> XPCK => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _XPCKLocation);
         #endregion
         #region SourcePackIn
         private int? _SourcePackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _SourcePackInLocation);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region ProjectedDecal
         private RangeInt32? _ProjectedDecalLocation;
@@ -9289,7 +9639,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
+        #endregion
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
+        #endregion
+        #region XTRI
+        private int? _XTRILocation;
+        public UInt32? XTRI => _XTRILocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XTRILocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region LightRoundedness
         private RangeInt32? _LightRoundednessLocation;
@@ -9303,7 +9661,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region GeometryDirtinessScale
         private int? _GeometryDirtinessScaleLocation;
@@ -9336,7 +9694,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         #region RagdollBipedRotation
         private int? _RagdollBipedRotationLocation;
@@ -9348,7 +9706,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TimeOfDay
         private int? _TimeOfDayLocation;
-        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayRecordGetter>.Null;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _TimeOfDayLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -9491,6 +9849,16 @@ namespace Mutagen.Bethesda.Starfield
                     _BaseLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Base;
                 }
+                case RecordTypeInts.XMSP:
+                {
+                    _XMSPLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XMSP;
+                }
+                case RecordTypeInts.XTRV:
+                {
+                    _XTRVLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.XTRV;
+                }
                 case RecordTypeInts.XVL2:
                 {
                     _VolumeDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -9575,14 +9943,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XTEL:
@@ -9602,26 +9968,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XLMS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LayeredMaterialSwaps = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LayeredMaterialSwaps = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
                     return (int)PlacedObject_FieldIndex.LayeredMaterialSwaps;
                 }
                 case RecordTypeInts.XPCK:
@@ -9646,14 +10008,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XPDO:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ProjectedDecalReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ProjectedDecalReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
                     return (int)PlacedObject_FieldIndex.ProjectedDecalReferences;
                 }
                 case RecordTypeInts.XCDD:
@@ -9776,6 +10136,16 @@ namespace Mutagen.Bethesda.Starfield
                     _LayerLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
+                case RecordTypeInts.XLRL:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Location;
+                }
+                case RecordTypeInts.XTRI:
+                {
+                    _XTRILocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XTRI;
+                }
                 case RecordTypeInts.XLRD:
                 {
                     _LightRoundednessLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -9803,13 +10173,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XSL1:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SnapLinks = BinaryOverlayList.FactoryByLazyParse<ISnapLinkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SnapLinks = BinaryOverlayList.FactoryByLazyParseWithTrigger<ISnapLinkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => SnapLinkBinaryOverlay.SnapLinkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.SnapLinks;
                 }
                 case RecordTypeInts.XEZN:
@@ -9829,14 +10197,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XPPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.Properties;
                 }
                 case RecordTypeInts.XEED:

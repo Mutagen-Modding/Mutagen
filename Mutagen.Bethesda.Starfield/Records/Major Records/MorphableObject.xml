@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MorphableObject" recordType="MRPH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="Model" refName="Model" />
       <String name="TMPP" recordType="TMPP" unknown="true" />
       <String name="TCMP" recordType="TCMP" unknown="true" />
       <ByteArray name="MOBC" recordType="MOBC" unknown="true" />

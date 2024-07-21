@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1267,6 +1266,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2292,6 +2293,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2400,7 +2403,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => _SnapTemplateLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
@@ -2517,6 +2520,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

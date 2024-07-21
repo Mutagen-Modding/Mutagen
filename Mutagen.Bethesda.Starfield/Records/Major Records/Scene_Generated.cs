@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -4654,7 +4653,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;
@@ -4675,7 +4674,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         #region BOLV
         private int? _BOLVLocation;
@@ -4695,7 +4694,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SCPP
         private int? _SCPPLocation;
-        public IFormLinkNullableGetter<ISceneGetter> SCPP => _SCPPLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCPPLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> SCPP => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SCPPLocation);
         #endregion
         #region DEVT
         private int? _DEVTLocation;
@@ -4924,26 +4923,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPMA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPMA = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPMA = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISceneGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ISceneGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISceneGetter>(p, s));
                     return (int)Scene_FieldIndex.SPMA;
                 }
                 case RecordTypeInts.SPEX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPEX = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPEX = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISceneGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ISceneGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISceneGetter>(p, s));
                     return (int)Scene_FieldIndex.SPEX;
                 }
                 case RecordTypeInts.SPRK:
@@ -4973,38 +4968,32 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPKW:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPKW = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPKW = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Scene_FieldIndex.SPKW;
                 }
                 case RecordTypeInts.SPPK:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPPK = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPerkGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPPK = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPerkGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IPerkGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(p, s));
                     return (int)Scene_FieldIndex.SPPK;
                 }
                 case RecordTypeInts.SPKY:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SPKY = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SPKY = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Scene_FieldIndex.SPKY;
                 }
                 case RecordTypeInts.XXXX:

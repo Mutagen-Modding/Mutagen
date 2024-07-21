@@ -25,7 +25,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1027,6 +1026,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -1399,6 +1400,20 @@ namespace Mutagen.Bethesda.Oblivion
             ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -3944,15 +3959,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region Icon
         private int? _IconLocation;

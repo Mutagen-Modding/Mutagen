@@ -12,7 +12,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -20,7 +20,7 @@ public class HeaderVersionHelperTests
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
             .Should().Be(0x800);
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -35,7 +35,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -43,7 +43,7 @@ public class HeaderVersionHelperTests
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
             .Should().Be(1);
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -58,7 +58,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -73,7 +73,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -88,7 +88,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {
@@ -106,7 +106,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {
@@ -123,7 +123,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {

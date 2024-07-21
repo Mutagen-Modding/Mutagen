@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Attributes;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ public class Locators
         Console.WriteLine("Target settings: " + settings.ToString());
         var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
         data = File.ReadAllBytes(dataPath);
-        stream = new MutagenMemoryReadStream(data, new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
+        stream = new MutagenMemoryReadStream(data, new ParsingMeta(GameConstants.Oblivion, ModKey.Null, masterReferences: null!));
     }
 
     [GlobalCleanup]

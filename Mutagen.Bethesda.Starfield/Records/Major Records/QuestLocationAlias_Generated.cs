@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _SpecificLocationLocation);
         #endregion
         public IReferenceAliasLocationGetter? ReferenceAliasLocation { get; private set; }
         public IExternalAliasLocationGetter? ExternalAliasLocation { get; private set; }
@@ -2519,11 +2519,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LocationTypeKeyword
         private int? _LocationTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> LocationTypeKeyword => _LocationTypeKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationTypeKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> LocationTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _LocationTypeKeywordLocation);
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<IMessageGetter> DisplayName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _DisplayNameLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

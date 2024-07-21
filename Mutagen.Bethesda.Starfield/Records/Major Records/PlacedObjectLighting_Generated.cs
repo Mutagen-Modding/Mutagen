@@ -50,6 +50,9 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public PlacedObjectLighting.VersioningBreaks Versioning { get; set; } = default(PlacedObjectLighting.VersioningBreaks);
+        #endregion
         #region Fov90PlusMinus
         public Single Fov90PlusMinus { get; set; } = default(Single);
         #endregion
@@ -113,6 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Fov90PlusMinus = initialValue;
                 this.Fade1PlusMinus = initialValue;
                 this.EndDistanceCap = initialValue;
@@ -124,6 +128,7 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Fov90PlusMinus,
                 TItem Fade1PlusMinus,
                 TItem EndDistanceCap,
@@ -133,6 +138,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Unknown1,
                 TItem Unknown2)
             {
+                this.Versioning = Versioning;
                 this.Fov90PlusMinus = Fov90PlusMinus;
                 this.Fade1PlusMinus = Fade1PlusMinus;
                 this.EndDistanceCap = EndDistanceCap;
@@ -152,6 +158,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Fov90PlusMinus;
             public TItem Fade1PlusMinus;
             public TItem EndDistanceCap;
@@ -172,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Fov90PlusMinus, rhs.Fov90PlusMinus)) return false;
                 if (!object.Equals(this.Fade1PlusMinus, rhs.Fade1PlusMinus)) return false;
                 if (!object.Equals(this.EndDistanceCap, rhs.EndDistanceCap)) return false;
@@ -185,6 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Fov90PlusMinus);
                 hash.Add(this.Fade1PlusMinus);
                 hash.Add(this.EndDistanceCap);
@@ -201,6 +210,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Fov90PlusMinus)) return false;
                 if (!eval(this.Fade1PlusMinus)) return false;
                 if (!eval(this.EndDistanceCap)) return false;
@@ -216,6 +226,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Fov90PlusMinus)) return true;
                 if (eval(this.Fade1PlusMinus)) return true;
                 if (eval(this.EndDistanceCap)) return true;
@@ -238,6 +249,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Fov90PlusMinus = eval(this.Fov90PlusMinus);
                 obj.Fade1PlusMinus = eval(this.Fade1PlusMinus);
                 obj.EndDistanceCap = eval(this.EndDistanceCap);
@@ -264,6 +276,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlacedObjectLighting.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Fov90PlusMinus ?? true)
                     {
                         sb.AppendItem(Fov90PlusMinus, "Fov90PlusMinus");
@@ -320,6 +336,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Fov90PlusMinus;
             public Exception? Fade1PlusMinus;
             public Exception? EndDistanceCap;
@@ -336,6 +353,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectLighting_FieldIndex enu = (PlacedObjectLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObjectLighting_FieldIndex.Versioning:
+                        return Versioning;
                     case PlacedObjectLighting_FieldIndex.Fov90PlusMinus:
                         return Fov90PlusMinus;
                     case PlacedObjectLighting_FieldIndex.Fade1PlusMinus:
@@ -362,6 +381,9 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectLighting_FieldIndex enu = (PlacedObjectLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObjectLighting_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case PlacedObjectLighting_FieldIndex.Fov90PlusMinus:
                         this.Fov90PlusMinus = ex;
                         break;
@@ -396,6 +418,9 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObjectLighting_FieldIndex enu = (PlacedObjectLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObjectLighting_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case PlacedObjectLighting_FieldIndex.Fov90PlusMinus:
                         this.Fov90PlusMinus = (Exception?)obj;
                         break;
@@ -428,6 +453,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Fov90PlusMinus != null) return true;
                 if (Fade1PlusMinus != null) return true;
                 if (EndDistanceCap != null) return true;
@@ -462,6 +488,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(Fov90PlusMinus, "Fov90PlusMinus");
                 }
                 {
@@ -493,6 +522,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Fov90PlusMinus = this.Fov90PlusMinus.Combine(rhs.Fov90PlusMinus);
                 ret.Fade1PlusMinus = this.Fade1PlusMinus.Combine(rhs.Fade1PlusMinus);
                 ret.EndDistanceCap = this.EndDistanceCap.Combine(rhs.EndDistanceCap);
@@ -524,6 +554,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Fov90PlusMinus;
             public bool Fade1PlusMinus;
             public bool EndDistanceCap;
@@ -541,6 +572,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Fov90PlusMinus = defaultOn;
                 this.Fade1PlusMinus = defaultOn;
                 this.EndDistanceCap = defaultOn;
@@ -564,6 +596,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Fov90PlusMinus, null));
                 ret.Add((Fade1PlusMinus, null));
                 ret.Add((EndDistanceCap, null));
@@ -579,6 +612,14 @@ namespace Mutagen.Bethesda.Starfield
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -644,6 +685,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IPlacedObjectLighting>,
         IPlacedObjectLightingGetter
     {
+        new PlacedObjectLighting.VersioningBreaks Versioning { get; set; }
         new Single Fov90PlusMinus { get; set; }
         new Single Fade1PlusMinus { get; set; }
         new Single EndDistanceCap { get; set; }
@@ -666,6 +708,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlacedObjectLighting_Registration.Instance;
+        PlacedObjectLighting.VersioningBreaks Versioning { get; }
         Single Fov90PlusMinus { get; }
         Single Fade1PlusMinus { get; }
         Single EndDistanceCap { get; }
@@ -843,14 +886,15 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum PlacedObjectLighting_FieldIndex
     {
-        Fov90PlusMinus = 0,
-        Fade1PlusMinus = 1,
-        EndDistanceCap = 2,
-        ShadowDepthBias = 3,
-        NearClip = 4,
-        VolumetricIntensity = 5,
-        Unknown1 = 6,
-        Unknown2 = 7,
+        Versioning = 0,
+        Fov90PlusMinus = 1,
+        Fade1PlusMinus = 2,
+        EndDistanceCap = 3,
+        ShadowDepthBias = 4,
+        NearClip = 5,
+        VolumetricIntensity = 6,
+        Unknown1 = 7,
+        Unknown2 = 8,
     }
     #endregion
 
@@ -861,9 +905,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PlacedObjectLighting.Mask<>);
 
@@ -936,6 +980,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectLighting item)
         {
             ClearPartial();
+            item.Versioning = default(PlacedObjectLighting.VersioningBreaks);
             item.Fov90PlusMinus = default(Single);
             item.Fade1PlusMinus = default(Single);
             item.EndDistanceCap = default(Single);
@@ -997,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
             PlacedObjectLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Fov90PlusMinus = item.Fov90PlusMinus.EqualsWithin(rhs.Fov90PlusMinus);
             ret.Fade1PlusMinus = item.Fade1PlusMinus.EqualsWithin(rhs.Fade1PlusMinus);
             ret.EndDistanceCap = item.EndDistanceCap.EqualsWithin(rhs.EndDistanceCap);
@@ -1049,6 +1095,10 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             PlacedObjectLighting.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Fov90PlusMinus ?? true)
             {
                 sb.AppendItem(item.Fov90PlusMinus, "Fov90PlusMinus");
@@ -1090,6 +1140,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fov90PlusMinus) ?? true))
             {
                 if (!lhs.Fov90PlusMinus.EqualsWithin(rhs.Fov90PlusMinus)) return false;
@@ -1128,6 +1182,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlacedObjectLightingGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Fov90PlusMinus);
             hash.Add(item.Fade1PlusMinus);
             hash.Add(item.EndDistanceCap);
@@ -1168,6 +1223,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fov90PlusMinus) ?? true))
             {
                 item.Fov90PlusMinus = rhs.Fov90PlusMinus;
@@ -1196,6 +1255,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown1 = rhs.Unknown1;
             }
+            if (rhs.Versioning.HasFlag(PlacedObjectLighting.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
@@ -1315,7 +1375,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.VolumetricIntensity);
             writer.Write(item.Unknown1);
-            writer.Write(item.Unknown2);
+            if (!item.Versioning.HasFlag(PlacedObjectLighting.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Unknown2);
+            }
         }
 
         public void Write(
@@ -1363,6 +1426,11 @@ namespace Mutagen.Bethesda.Starfield
             item.NearClip = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.VolumetricIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown1 = frame.ReadUInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= PlacedObjectLighting.VersioningBreaks.Break0;
+                return;
+            }
             item.Unknown2 = frame.ReadUInt32();
         }
 
@@ -1429,6 +1497,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public PlacedObjectLighting.VersioningBreaks Versioning { get; private set; }
         public Single Fov90PlusMinus => _structData.Slice(0x0, 0x4).Float();
         public Single Fade1PlusMinus => _structData.Slice(0x4, 0x4).Float();
         public Single EndDistanceCap => _structData.Slice(0x8, 0x4).Float();
@@ -1436,7 +1505,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single NearClip => _structData.Slice(0x10, 0x4).Float();
         public Single VolumetricIntensity => _structData.Slice(0x14, 0x4).Float();
         public UInt32 Unknown1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        public UInt32 Unknown2 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public UInt32 Unknown2 => _structData.Length <= 0x1C ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1468,7 +1537,10 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlacedObjectLightingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x1C)
+            {
+                ret.Versioning |= PlacedObjectLighting.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

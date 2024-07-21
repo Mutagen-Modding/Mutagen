@@ -1595,14 +1595,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DAMC:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Resistances, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IResistanceDestructibleGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResistanceDestructibleGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ResistanceDestructibleBinaryOverlay.ResistanceDestructibleFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSTD:

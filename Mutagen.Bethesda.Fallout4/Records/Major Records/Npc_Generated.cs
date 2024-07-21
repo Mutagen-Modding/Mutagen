@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -9361,6 +9360,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
                             triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.STOP,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Npc.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Npc.Property>>();
@@ -9491,6 +9491,7 @@ namespace Mutagen.Bethesda.Fallout4
                             countLengthLength: 4,
                             countRecord: RecordTypes.CS2H,
                             triggeringRecord: NpcSound_Registration.TriggerSpecs,
+                            endMarker: RecordTypes.CS2E,
                             translationParams: translationParams,
                             transl: NpcSound.TryCreateFromBinary)
                         .CastExtendedList<NpcSound>();
@@ -9691,11 +9692,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAnimationSoundTagSetGetter>(_package, _recordData, _AnimationSoundLocation);
         #endregion
         private RangeInt32? _ACBSLocation;
         #region Flags
@@ -9741,23 +9742,23 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Voice
         private int? _VoiceLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceLocation);
         #endregion
         #region DefaultTemplate
         private int? _DefaultTemplateLocation;
-        public IFormLinkNullableGetter<INpcSpawnGetter> DefaultTemplate => _DefaultTemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        public IFormLinkNullableGetter<INpcSpawnGetter> DefaultTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcSpawnGetter>(_package, _recordData, _DefaultTemplateLocation);
         #endregion
         #region LegendaryTemplate
         private int? _LegendaryTemplateLocation;
-        public IFormLinkNullableGetter<INpcSpawnGetter> LegendaryTemplate => _LegendaryTemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LegendaryTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        public IFormLinkNullableGetter<INpcSpawnGetter> LegendaryTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcSpawnGetter>(_package, _recordData, _LegendaryTemplateLocation);
         #endregion
         #region LegendaryChance
         private int? _LegendaryChanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> LegendaryChance => _LegendaryChanceLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LegendaryChanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> LegendaryChance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _LegendaryChanceLocation);
         #endregion
         #region TemplateActors
         private RangeInt32? _TemplateActorsLocation;
@@ -9765,56 +9766,56 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
+        public IFormLinkGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region FarAwayModel
         private int? _FarAwayModelLocation;
-        public IFormLinkNullableGetter<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> FarAwayModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _FarAwayModelLocation);
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SpectatorOverridePackageListLocation);
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ObserveDeadBodyOverridePackageListLocation);
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _GuardWarnOverridePackageListLocation);
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _CombatOverridePackageListLocation);
         #endregion
         #region FollowerCommandPackageList
         private int? _FollowerCommandPackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> FollowerCommandPackageList => _FollowerCommandPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowerCommandPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> FollowerCommandPackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _FollowerCommandPackageListLocation);
         #endregion
         #region FollowerElevatorPackageList
         private int? _FollowerElevatorPackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> FollowerElevatorPackageList => _FollowerElevatorPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowerElevatorPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> FollowerElevatorPackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _FollowerElevatorPackageListLocation);
         #endregion
         public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region ForcedLocRefType
         private int? _ForcedLocRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => _ForcedLocRefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ForcedLocRefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _ForcedLocRefTypeLocation);
         #endregion
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;
@@ -9882,7 +9883,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectTemplateGetter<Npc.Property>>? ObjectTemplates { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClassGetter>.Null;
+        public IFormLinkNullableGetter<IClassGetter> Class => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClassGetter>(_package, _recordData, _ClassLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -9929,19 +9930,19 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region HairColor
         private int? _HairColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> HairColor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _HairColorLocation);
         #endregion
         #region FacialHairColor
         private int? _FacialHairColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> FacialHairColor => _FacialHairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacialHairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> FacialHairColor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _FacialHairColorLocation);
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region GiftFilter
         private int? _GiftFilterLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GiftFilter => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _GiftFilterLocation);
         #endregion
         #region NAM5
         private int? _NAM5Location;
@@ -9974,31 +9975,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _InheritsSoundsFromLocation);
         #endregion
         #region PowerArmorStand
         private int? _PowerArmorStandLocation;
-        public IFormLinkNullableGetter<IFurnitureGetter> PowerArmorStand => _PowerArmorStandLocation.HasValue ? new FormLinkNullable<IFurnitureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PowerArmorStandLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFurnitureGetter>.Null;
+        public IFormLinkNullableGetter<IFurnitureGetter> PowerArmorStand => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFurnitureGetter>(_package, _recordData, _PowerArmorStandLocation);
         #endregion
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOutfitGetter>(_package, _recordData, _DefaultOutfitLocation);
         #endregion
         #region SleepingOutfit
         private int? _SleepingOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOutfitGetter>(_package, _recordData, _SleepingOutfitLocation);
         #endregion
         #region DefaultPackageList
         private int? _DefaultPackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _DefaultPackageListLocation);
         #endregion
         #region CrimeFaction
         private int? _CrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _CrimeFactionLocation);
         #endregion
         #region HeadTexture
         private int? _HeadTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> HeadTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _HeadTextureLocation);
         #endregion
         #region TextureLighting
         private int? _TextureLightingLocation;
@@ -10180,7 +10181,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.SPCT,
                         trigger: RecordTypes.SPLO,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s));
                     return (int)Npc_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.DEST:
@@ -10267,14 +10268,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Npc_FieldIndex.Properties;
                 }
                 case RecordTypeInts.FTYP:
@@ -10311,7 +10310,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPackageGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -10330,19 +10329,17 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Npc_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.APPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Npc_FieldIndex.AttachParentSlots;
                 }
                 case RecordTypeInts.OBTE:
@@ -10355,7 +10352,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.OBTE,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Npc.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.STOP);
                     return (int)Npc_FieldIndex.ObjectTemplates;
                 }
                 case RecordTypeInts.CNAM:
@@ -10388,7 +10386,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHeadPartGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -10459,7 +10457,8 @@ namespace Mutagen.Bethesda.Fallout4
                         countType: RecordTypes.CS2H,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
+                        skipHeader: false,
+                        endMarker: RecordTypes.CS2E);
                     return (int)Npc_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.CS2F:

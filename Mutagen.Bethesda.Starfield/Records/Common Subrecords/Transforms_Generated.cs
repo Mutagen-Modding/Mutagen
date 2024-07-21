@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public Transforms.VersioningBreaks Versioning { get; set; } = default(Transforms.VersioningBreaks);
+        #endregion
         #region InventoryIcon
         private readonly IFormLink<ITransformGetter> _InventoryIcon = new FormLink<ITransformGetter>();
         public IFormLink<ITransformGetter> InventoryIcon
@@ -170,6 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.InventoryIcon = initialValue;
                 this.Outpost = initialValue;
                 this.Ship = initialValue;
@@ -181,6 +185,7 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
+                TItem Versioning,
                 TItem InventoryIcon,
                 TItem Outpost,
                 TItem Ship,
@@ -190,6 +195,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MainGameUI,
                 TItem Unknown)
             {
+                this.Versioning = Versioning;
                 this.InventoryIcon = InventoryIcon;
                 this.Outpost = Outpost;
                 this.Ship = Ship;
@@ -209,6 +215,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem InventoryIcon;
             public TItem Outpost;
             public TItem Ship;
@@ -229,6 +236,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.InventoryIcon, rhs.InventoryIcon)) return false;
                 if (!object.Equals(this.Outpost, rhs.Outpost)) return false;
                 if (!object.Equals(this.Ship, rhs.Ship)) return false;
@@ -242,6 +250,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.InventoryIcon);
                 hash.Add(this.Outpost);
                 hash.Add(this.Ship);
@@ -258,6 +267,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.InventoryIcon)) return false;
                 if (!eval(this.Outpost)) return false;
                 if (!eval(this.Ship)) return false;
@@ -273,6 +283,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.InventoryIcon)) return true;
                 if (eval(this.Outpost)) return true;
                 if (eval(this.Ship)) return true;
@@ -295,6 +306,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.InventoryIcon = eval(this.InventoryIcon);
                 obj.Outpost = eval(this.Outpost);
                 obj.Ship = eval(this.Ship);
@@ -321,6 +333,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Transforms.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.InventoryIcon ?? true)
                     {
                         sb.AppendItem(InventoryIcon, "InventoryIcon");
@@ -377,6 +393,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? InventoryIcon;
             public Exception? Outpost;
             public Exception? Ship;
@@ -393,6 +410,8 @@ namespace Mutagen.Bethesda.Starfield
                 Transforms_FieldIndex enu = (Transforms_FieldIndex)index;
                 switch (enu)
                 {
+                    case Transforms_FieldIndex.Versioning:
+                        return Versioning;
                     case Transforms_FieldIndex.InventoryIcon:
                         return InventoryIcon;
                     case Transforms_FieldIndex.Outpost:
@@ -419,6 +438,9 @@ namespace Mutagen.Bethesda.Starfield
                 Transforms_FieldIndex enu = (Transforms_FieldIndex)index;
                 switch (enu)
                 {
+                    case Transforms_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case Transforms_FieldIndex.InventoryIcon:
                         this.InventoryIcon = ex;
                         break;
@@ -453,6 +475,9 @@ namespace Mutagen.Bethesda.Starfield
                 Transforms_FieldIndex enu = (Transforms_FieldIndex)index;
                 switch (enu)
                 {
+                    case Transforms_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case Transforms_FieldIndex.InventoryIcon:
                         this.InventoryIcon = (Exception?)obj;
                         break;
@@ -485,6 +510,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (InventoryIcon != null) return true;
                 if (Outpost != null) return true;
                 if (Ship != null) return true;
@@ -519,6 +545,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(InventoryIcon, "InventoryIcon");
                 }
                 {
@@ -550,6 +579,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.InventoryIcon = this.InventoryIcon.Combine(rhs.InventoryIcon);
                 ret.Outpost = this.Outpost.Combine(rhs.Outpost);
                 ret.Ship = this.Ship.Combine(rhs.Ship);
@@ -581,6 +611,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool InventoryIcon;
             public bool Outpost;
             public bool Ship;
@@ -598,6 +629,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.InventoryIcon = defaultOn;
                 this.Outpost = defaultOn;
                 this.Ship = defaultOn;
@@ -621,6 +653,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((InventoryIcon, null));
                 ret.Add((Outpost, null));
                 ret.Add((Ship, null));
@@ -640,6 +673,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TransformsCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TransformsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -707,6 +745,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ITransforms>,
         ITransformsGetter
     {
+        new Transforms.VersioningBreaks Versioning { get; set; }
         new IFormLink<ITransformGetter> InventoryIcon { get; set; }
         new IFormLink<ITransformGetter> Outpost { get; set; }
         new IFormLink<ITransformGetter> Ship { get; set; }
@@ -730,6 +769,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Transforms_Registration.Instance;
+        Transforms.VersioningBreaks Versioning { get; }
         IFormLinkGetter<ITransformGetter> InventoryIcon { get; }
         IFormLinkGetter<ITransformGetter> Outpost { get; }
         IFormLinkGetter<ITransformGetter> Ship { get; }
@@ -907,14 +947,15 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum Transforms_FieldIndex
     {
-        InventoryIcon = 0,
-        Outpost = 1,
-        Ship = 2,
-        Preview = 3,
-        Inventory = 4,
-        Workbench = 5,
-        MainGameUI = 6,
-        Unknown = 7,
+        Versioning = 0,
+        InventoryIcon = 1,
+        Outpost = 2,
+        Ship = 3,
+        Preview = 4,
+        Inventory = 5,
+        Workbench = 6,
+        MainGameUI = 7,
+        Unknown = 8,
     }
     #endregion
 
@@ -925,9 +966,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Transforms.Mask<>);
 
@@ -1000,6 +1041,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITransforms item)
         {
             ClearPartial();
+            item.Versioning = default(Transforms.VersioningBreaks);
             item.InventoryIcon.Clear();
             item.Outpost.Clear();
             item.Ship.Clear();
@@ -1020,6 +1062,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Inventory.Relink(mapping);
             obj.Workbench.Relink(mapping);
             obj.MainGameUI.Relink(mapping);
+            if (obj.Versioning.HasFlag(Transforms.VersioningBreaks.Break0)) return;
             obj.Unknown.Relink(mapping);
         }
         
@@ -1069,6 +1112,7 @@ namespace Mutagen.Bethesda.Starfield
             Transforms.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.InventoryIcon = item.InventoryIcon.Equals(rhs.InventoryIcon);
             ret.Outpost = item.Outpost.Equals(rhs.Outpost);
             ret.Ship = item.Ship.Equals(rhs.Ship);
@@ -1121,6 +1165,10 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             Transforms.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.InventoryIcon ?? true)
             {
                 sb.AppendItem(item.InventoryIcon.FormKey, "InventoryIcon");
@@ -1162,6 +1210,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)Transforms_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Transforms_FieldIndex.InventoryIcon) ?? true))
             {
                 if (!lhs.InventoryIcon.Equals(rhs.InventoryIcon)) return false;
@@ -1200,6 +1252,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ITransformsGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.InventoryIcon);
             hash.Add(item.Outpost);
             hash.Add(item.Ship);
@@ -1229,6 +1282,7 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.Inventory);
             yield return FormLinkInformation.Factory(obj.Workbench);
             yield return FormLinkInformation.Factory(obj.MainGameUI);
+            if (obj.Versioning.HasFlag(Transforms.VersioningBreaks.Break0)) yield break;
             yield return FormLinkInformation.Factory(obj.Unknown);
             yield break;
         }
@@ -1248,6 +1302,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)Transforms_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)Transforms_FieldIndex.InventoryIcon) ?? true))
             {
                 item.InventoryIcon.SetTo(rhs.InventoryIcon.FormKey);
@@ -1276,6 +1334,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MainGameUI.SetTo(rhs.MainGameUI.FormKey);
             }
+            if (rhs.Versioning.HasFlag(Transforms.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)Transforms_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown.SetTo(rhs.Unknown.FormKey);
@@ -1397,9 +1456,12 @@ namespace Mutagen.Bethesda.Starfield
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MainGameUI);
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
+            if (!item.Versioning.HasFlag(Transforms.VersioningBreaks.Break0))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown);
+            }
         }
 
         public void Write(
@@ -1447,6 +1509,11 @@ namespace Mutagen.Bethesda.Starfield
             item.Inventory.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Workbench.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.MainGameUI.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            if (frame.Complete)
+            {
+                item.Versioning |= Transforms.VersioningBreaks.Break0;
+                return;
+            }
             item.Unknown.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1514,14 +1581,15 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ITransformGetter> InventoryIcon => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Outpost => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Ship => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Preview => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Inventory => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Workbench => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<ITransformGetter> MainGameUI => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<ITransformGetter> Unknown => new FormLink<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
+        public Transforms.VersioningBreaks Versioning { get; private set; }
+        public IFormLinkGetter<ITransformGetter> InventoryIcon => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<ITransformGetter> Outpost => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<ITransformGetter> Ship => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<ITransformGetter> Preview => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<ITransformGetter> Inventory => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x10, 0x4));
+        public IFormLinkGetter<ITransformGetter> Workbench => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<ITransformGetter> MainGameUI => FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public IFormLinkGetter<ITransformGetter> Unknown => _structData.Length <= 0x1C ? FormLink<ITransformGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ITransformGetter>(_package, _structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1553,7 +1621,10 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new TransformsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x1C)
+            {
+                ret.Versioning |= Transforms.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

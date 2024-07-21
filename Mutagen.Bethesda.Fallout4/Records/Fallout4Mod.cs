@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -14,38 +14,186 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        Fallout4Release release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Master, value);
+    }
+    
+    public override bool CanBeSmallMaster => true;
 
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
+    public override bool IsSmallMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Small);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Small, value);
+    }
+    public override bool CanBeMediumMaster => false;
+    public override bool IsMediumMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
+
+    public override bool ListsOverriddenForms => true;
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
     
-    public static uint GetDefaultInitialNextFormID(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
+    internal static uint GetDefaultInitialNextFormIDStatic(Fallout4Release release, float headerVersion, bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 1f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+
+    internal class Fallout4CreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask>
+    {
+        public static readonly Fallout4CreateBuilderInstantiator Instance = new();
+        
+        public IFallout4Mod Mutable(BinaryReadMutableBuilder<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return Fallout4Mod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return Fallout4Mod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IFallout4ModDisposableGetter Readonly(BinaryReadBuilder<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return Fallout4Mod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return Fallout4Mod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToFallout4Release(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+    
+    public static BinaryReadBuilderSourceStreamFactoryChoice<IFallout4Mod, IFallout4ModDisposableGetter, GroupMask> 
+        Create(Fallout4Release release) => new( 
+        release.ToGameRelease(), 
+        Fallout4CreateBuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: false);
+    
+    internal class Fallout4WriteBuilderInstantiator : IBinaryWriteBuilderWriter<IFallout4ModGetter>
+    {
+        public static readonly Fallout4WriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IFallout4ModGetter mod, BinaryWriteBuilderParams<IFallout4ModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IFallout4ModGetter mod, BinaryWriteBuilderParams<IFallout4ModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter> 
+        BeginWrite => new(
+        this, 
+        Fallout4WriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder => new(Fallout4WriteBuilderInstantiator.Instance);
 }
 
 internal partial class Fallout4ModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        Fallout4Mod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        Fallout4Mod.GetDefaultInitialNextFormIDStatic(
             this.Fallout4Release,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Master);
+    public bool CanBeSmallMaster => true;
+    public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Small);
+
+    public bool CanBeMediumMaster => false;
+    public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => true;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter>(
+        this, 
+        Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 }
 
 partial class Fallout4ModCommon
@@ -208,7 +356,7 @@ partial class Fallout4ModCommon
             worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);

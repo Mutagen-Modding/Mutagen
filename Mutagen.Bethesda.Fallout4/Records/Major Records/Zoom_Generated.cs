@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1604,7 +1603,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ImagespaceModifier
         private int _ImagespaceModifierLocation => _GNAMLocation!.Value.Min + 0x8;
         private bool _ImagespaceModifier_IsSet => _GNAMLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImagespaceModifierLocation, 0x4), isSet: _ImagespaceModifier_IsSet);
         #endregion
         #region CameraOffset
         private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;

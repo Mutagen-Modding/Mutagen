@@ -5,6 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <ByteArray name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
@@ -12,6 +13,7 @@
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="PTTA" refName="PTTA" unknown="true" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">

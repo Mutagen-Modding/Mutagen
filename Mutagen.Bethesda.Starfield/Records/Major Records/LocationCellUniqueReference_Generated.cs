@@ -1176,9 +1176,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGenericBaseFormGetter> GenericBaseForm => new FormLink<IGenericBaseFormGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IPlacedObjectGetter> Ref => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IGenericBaseFormGetter> GenericBaseForm => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

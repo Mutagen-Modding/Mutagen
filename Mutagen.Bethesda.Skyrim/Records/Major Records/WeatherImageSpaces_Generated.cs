@@ -1258,10 +1258,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IImageSpaceGetter> Sunrise => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IImageSpaceGetter> Day => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IImageSpaceGetter> Sunset => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IImageSpaceGetter> Night => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> Sunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IImageSpaceGetter> Day => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IImageSpaceGetter> Sunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IImageSpaceGetter> Night => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

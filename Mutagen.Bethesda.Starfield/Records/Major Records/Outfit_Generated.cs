@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1611,14 +1610,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.INAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IOutfitTargetGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Items = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IOutfitTargetGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IOutfitTargetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IOutfitTargetGetter>(p, s));
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:

@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1937,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region Data
         partial void DataCustomParse(

@@ -5,6 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -30,6 +31,7 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
+      <RefList name="UnknownModels" refName="Model" />
       <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
       <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
       <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
@@ -60,13 +62,14 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true" >
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
         <Ref>
           <Direct refName="ObjectTemplate">
             <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
           </Direct>
         </Ref>
       </List>
+      <Marker name="STOP" recordType="STOP" />
       <RefDirect name="Voice" refName="ArmorCategoryValue" recordType="AVSG" />
       <RefDirect name="Footstep" refName="ArmorCategoryValue" recordType="AFSG" />
     </Fields>
@@ -84,7 +87,7 @@
   </Object>
   <Object name="ArmorAddonModel" objType="Subrecord">
     <Fields>
-      <UInt16 name="AddonIndex" recordType="INDX" />
+      <UInt16 name="AddonIndex" recordType="INDX" nullable="False" />
       <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
     </Fields>
   </Object>

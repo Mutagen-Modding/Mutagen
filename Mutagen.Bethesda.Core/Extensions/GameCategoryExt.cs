@@ -1,3 +1,7 @@
+using Loqui;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Noggog;
+
 namespace Mutagen.Bethesda;
 
 public static class GameCategoryExt
@@ -77,4 +81,46 @@ public static class GameCategoryExt
         };
     }
 
+    public static ILoquiRegistration ToModRegistration(this GameCategory category)
+    {
+        var ret = TryGetModRegistration(category);
+        if (ret == null)
+        {
+            throw new MissingGameLibsException(category);
+        }
+        return ret;
+    }
+
+    public static ILoquiRegistration? TryGetModRegistration(this GameCategory category)
+    {
+        return ToModRegistrationHelper.Get(category);
+    }
+}
+
+internal static class ToModRegistrationHelper
+{
+    private static readonly Dictionary<GameCategory, ILoquiRegistration?> _registrations = new();
+
+    static ToModRegistrationHelper()
+    {
+        foreach (var category in Enums<GameCategory>.Values)
+        {
+            var modType = Type.GetType(
+                $"Mutagen.Bethesda.{category}.{category}Mod, Mutagen.Bethesda.{category}");
+            if (modType == null) continue;
+            var regisProp = modType.GetProperty("StaticRegistration", 
+                System.Reflection.BindingFlags.Static
+                | System.Reflection.BindingFlags.NonPublic
+                | System.Reflection.BindingFlags.Public);
+            if (regisProp == null) continue;
+            var regis = regisProp.GetValue(null) as ILoquiRegistration;
+            if (regis == null) continue;
+            _registrations[category] = regis;
+        }
+    }
+
+    public static ILoquiRegistration? Get(GameCategory category)
+    {
+        return _registrations.GetOrDefault(category);
+    }
 }

@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.OverlayFactory<IQuestGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt16 Stage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

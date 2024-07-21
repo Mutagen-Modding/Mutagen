@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -3146,15 +3145,15 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region EquipType
         private int? _EquipTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipType => _EquipTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipTypeLocation);
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region Value
@@ -3278,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Ingredient_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:

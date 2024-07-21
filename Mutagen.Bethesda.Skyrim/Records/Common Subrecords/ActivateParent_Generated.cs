@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single Delay => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

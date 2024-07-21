@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2122,7 +2121,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.LandscapeTextures = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandscapeTextureGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

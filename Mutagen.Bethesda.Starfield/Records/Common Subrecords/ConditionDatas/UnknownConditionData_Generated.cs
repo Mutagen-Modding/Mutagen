@@ -1202,10 +1202,6 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Function,
-                length: 2);
             writer.Write(item.ParameterOne);
             writer.Write(item.ParameterTwo);
         }
@@ -1255,9 +1251,6 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Function = EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 2);
             item.ParameterOne = frame.ReadInt32();
             item.ParameterTwo = frame.ReadInt32();
         }

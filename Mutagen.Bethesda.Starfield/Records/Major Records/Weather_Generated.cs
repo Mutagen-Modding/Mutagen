@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -4106,6 +4105,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -7351,6 +7352,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -7484,11 +7487,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IShaderParticleGeometryGetter>(_package, _recordData, _PrecipitationLocation);
         #endregion
         #region CameraEffect
         private int? _CameraEffectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => _CameraEffectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> CameraEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _CameraEffectLocation);
         #endregion
         #region CLDC
         private int? _CLDCLocation;
@@ -7827,42 +7830,42 @@ namespace Mutagen.Bethesda.Starfield
         #region ImageSpaceSunrise
         private int _ImageSpaceSunriseLocation => _IMSPLocation!.Value.Min;
         private bool _ImageSpaceSunrise_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise => _ImageSpaceSunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceSunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunriseLocation, 0x4), isSet: _ImageSpaceSunrise_IsSet);
         #endregion
         #region ImageSpaceDay
         private int _ImageSpaceDayLocation => _IMSPLocation!.Value.Min + 0x4;
         private bool _ImageSpaceDay_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay => _ImageSpaceDay_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceDayLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceDayLocation, 0x4), isSet: _ImageSpaceDay_IsSet);
         #endregion
         #region ImageSpaceSunset
         private int _ImageSpaceSunsetLocation => _IMSPLocation!.Value.Min + 0x8;
         private bool _ImageSpaceSunset_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset => _ImageSpaceSunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceSunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunsetLocation, 0x4), isSet: _ImageSpaceSunset_IsSet);
         #endregion
         #region ImageSpaceNight
         private int _ImageSpaceNightLocation => _IMSPLocation!.Value.Min + 0xC;
         private bool _ImageSpaceNight_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight => _ImageSpaceNight_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceNightLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceNightLocation, 0x4), isSet: _ImageSpaceNight_IsSet);
         #endregion
         #region ImageSpaceEarlySunrise
         private int _ImageSpaceEarlySunriseLocation => _IMSPLocation!.Value.Min + 0x10;
         private bool _ImageSpaceEarlySunrise_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => _ImageSpaceEarlySunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4), isSet: _ImageSpaceEarlySunrise_IsSet);
         #endregion
         #region ImageSpaceLateSunrise
         private int _ImageSpaceLateSunriseLocation => _IMSPLocation!.Value.Min + 0x14;
         private bool _ImageSpaceLateSunrise_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => _ImageSpaceLateSunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4), isSet: _ImageSpaceLateSunrise_IsSet);
         #endregion
         #region ImageSpaceEarlySunset
         private int _ImageSpaceEarlySunsetLocation => _IMSPLocation!.Value.Min + 0x18;
         private bool _ImageSpaceEarlySunset_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => _ImageSpaceEarlySunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4), isSet: _ImageSpaceEarlySunset_IsSet);
         #endregion
         #region ImageSpaceLateSunset
         private int _ImageSpaceLateSunsetLocation => _IMSPLocation!.Value.Min + 0x1C;
         private bool _ImageSpaceLateSunset_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => _ImageSpaceLateSunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4), isSet: _ImageSpaceLateSunset_IsSet);
         #endregion
         #region HNAM
         private int? _HNAMLocation;
@@ -7879,7 +7882,7 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _SunGlareLensFlareLocation);
         #endregion
         #region Magic
         private RangeInt32? _MagicLocation;
@@ -7972,7 +7975,7 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Weather_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LNAM:
@@ -8058,7 +8061,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStaticGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -8088,6 +8091,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

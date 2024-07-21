@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _DefaultFaceTextureLocation);
         #endregion
         public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<ITintGroupGetter>();
         public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -2742,7 +2742,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IColorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IColorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IColorRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -2757,7 +2757,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ITextureSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

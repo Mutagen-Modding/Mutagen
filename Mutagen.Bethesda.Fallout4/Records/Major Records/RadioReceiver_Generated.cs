@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public RadioReceiver.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ISoundOutputModelGetter> SoundModel => new FormLink<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundOutputModelGetter> SoundModel => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundOutputModelGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single Frequency => _structData.Slice(0x4, 0x4).Float();
         public Single Volume => _structData.Slice(0x8, 0x4).Float();
         public Boolean StartsActive => _structData.Slice(0xC, 0x1)[0] >= 1;

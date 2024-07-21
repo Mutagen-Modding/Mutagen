@@ -112,12 +112,12 @@ partial class ArmorAddonCommon
         var name = Path.GetFileNameWithoutExtension(path);
         if (name.Length < 3) return null;
 
-        if (name.EndsWith(oneSuffix))
+        if (name.EndsWith(oneSuffix, StringComparison.Ordinal))
         {
             return ReplaceWeightSuffix(zeroSuffix, path, name);
         }
 
-        if (name.EndsWith(zeroSuffix))
+        if (name.EndsWith(zeroSuffix, StringComparison.Ordinal))
         {
             return ReplaceWeightSuffix(oneSuffix, path, name);
         }

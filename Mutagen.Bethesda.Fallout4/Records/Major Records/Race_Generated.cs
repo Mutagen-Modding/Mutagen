@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -728,6 +727,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
+        #region MorphValuesLastIndex
+        public Int32? MorphValuesLastIndex { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IRaceGetter.MorphValuesLastIndex => this.MorphValuesLastIndex;
+        #endregion
         #region HairColorLookupTexture
         public String? HairColorLookupTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -863,6 +867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IdleChatterTimeMin = initialValue;
                 this.IdleChatterTimeMax = initialValue;
                 this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValuesLastIndex = initialValue;
                 this.HairColorLookupTexture = initialValue;
                 this.HairColorExtendedLookupTexture = initialValue;
                 this.DialogueQuest = initialValue;
@@ -963,6 +968,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem IdleChatterTimeMin,
                 TItem IdleChatterTimeMax,
                 TItem MorphValues,
+                TItem MorphValuesLastIndex,
                 TItem HairColorLookupTexture,
                 TItem HairColorExtendedLookupTexture,
                 TItem DialogueQuest,
@@ -1062,6 +1068,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IdleChatterTimeMin = IdleChatterTimeMin;
                 this.IdleChatterTimeMax = IdleChatterTimeMax;
                 this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(MorphValues, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValuesLastIndex = MorphValuesLastIndex;
                 this.HairColorLookupTexture = HairColorLookupTexture;
                 this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
                 this.DialogueQuest = DialogueQuest;
@@ -1163,6 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem IdleChatterTimeMin;
             public TItem IdleChatterTimeMax;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>? MorphValues;
+            public TItem MorphValuesLastIndex;
             public TItem HairColorLookupTexture;
             public TItem HairColorExtendedLookupTexture;
             public TItem DialogueQuest;
@@ -1266,6 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.IdleChatterTimeMin, rhs.IdleChatterTimeMin)) return false;
                 if (!object.Equals(this.IdleChatterTimeMax, rhs.IdleChatterTimeMax)) return false;
                 if (!object.Equals(this.MorphValues, rhs.MorphValues)) return false;
+                if (!object.Equals(this.MorphValuesLastIndex, rhs.MorphValuesLastIndex)) return false;
                 if (!object.Equals(this.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
                 if (!object.Equals(this.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
                 if (!object.Equals(this.DialogueQuest, rhs.DialogueQuest)) return false;
@@ -1361,6 +1370,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.IdleChatterTimeMin);
                 hash.Add(this.IdleChatterTimeMax);
                 hash.Add(this.MorphValues);
+                hash.Add(this.MorphValuesLastIndex);
                 hash.Add(this.HairColorLookupTexture);
                 hash.Add(this.HairColorExtendedLookupTexture);
                 hash.Add(this.DialogueQuest);
@@ -1601,6 +1611,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (!eval(this.MorphValuesLastIndex)) return false;
                 if (!eval(this.HairColorLookupTexture)) return false;
                 if (!eval(this.HairColorExtendedLookupTexture)) return false;
                 if (!eval(this.DialogueQuest)) return false;
@@ -1839,6 +1850,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (eval(this.MorphValuesLastIndex)) return true;
                 if (eval(this.HairColorLookupTexture)) return true;
                 if (eval(this.HairColorExtendedLookupTexture)) return true;
                 if (eval(this.DialogueQuest)) return true;
@@ -2113,6 +2125,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                obj.MorphValuesLastIndex = eval(this.MorphValuesLastIndex);
                 obj.HairColorLookupTexture = eval(this.HairColorLookupTexture);
                 obj.HairColorExtendedLookupTexture = eval(this.HairColorExtendedLookupTexture);
                 obj.DialogueQuest = eval(this.DialogueQuest);
@@ -2675,6 +2688,10 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
+                    if (printMask?.MorphValuesLastIndex ?? true)
+                    {
+                        sb.AppendItem(MorphValuesLastIndex, "MorphValuesLastIndex");
+                    }
                     if (printMask?.HairColorLookupTexture ?? true)
                     {
                         sb.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
@@ -2788,6 +2805,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? IdleChatterTimeMin;
             public Exception? IdleChatterTimeMax;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>? MorphValues;
+            public Exception? MorphValuesLastIndex;
             public Exception? HairColorLookupTexture;
             public Exception? HairColorExtendedLookupTexture;
             public Exception? DialogueQuest;
@@ -2972,6 +2990,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return IdleChatterTimeMax;
                     case Race_FieldIndex.MorphValues:
                         return MorphValues;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        return MorphValuesLastIndex;
                     case Race_FieldIndex.HairColorLookupTexture:
                         return HairColorLookupTexture;
                     case Race_FieldIndex.HairColorExtendedLookupTexture:
@@ -3247,6 +3267,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.MorphValues:
                         this.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        this.MorphValuesLastIndex = ex;
                         break;
                     case Race_FieldIndex.HairColorLookupTexture:
                         this.HairColorLookupTexture = ex;
@@ -3529,6 +3552,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.MorphValues:
                         this.MorphValues = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>)obj;
                         break;
+                    case Race_FieldIndex.MorphValuesLastIndex:
+                        this.MorphValuesLastIndex = (Exception?)obj;
+                        break;
                     case Race_FieldIndex.HairColorLookupTexture:
                         this.HairColorLookupTexture = (Exception?)obj;
                         break;
@@ -3636,6 +3662,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (IdleChatterTimeMin != null) return true;
                 if (IdleChatterTimeMax != null) return true;
                 if (MorphValues != null) return true;
+                if (MorphValuesLastIndex != null) return true;
                 if (HairColorLookupTexture != null) return true;
                 if (HairColorExtendedLookupTexture != null) return true;
                 if (DialogueQuest != null) return true;
@@ -4115,6 +4142,9 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 {
+                    sb.AppendItem(MorphValuesLastIndex, "MorphValuesLastIndex");
+                }
+                {
                     sb.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
                 }
                 {
@@ -4220,6 +4250,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.IdleChatterTimeMin = this.IdleChatterTimeMin.Combine(rhs.IdleChatterTimeMin);
                 ret.IdleChatterTimeMax = this.IdleChatterTimeMax.Combine(rhs.IdleChatterTimeMax);
                 ret.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphValues?.Overall, rhs.MorphValues?.Overall), Noggog.ExceptionExt.Combine(this.MorphValues?.Specific, rhs.MorphValues?.Specific));
+                ret.MorphValuesLastIndex = this.MorphValuesLastIndex.Combine(rhs.MorphValuesLastIndex);
                 ret.HairColorLookupTexture = this.HairColorLookupTexture.Combine(rhs.HairColorLookupTexture);
                 ret.HairColorExtendedLookupTexture = this.HairColorExtendedLookupTexture.Combine(rhs.HairColorExtendedLookupTexture);
                 ret.DialogueQuest = this.DialogueQuest.Combine(rhs.DialogueQuest);
@@ -4332,6 +4363,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IdleChatterTimeMin;
             public bool IdleChatterTimeMax;
             public MorphValue.TranslationMask? MorphValues;
+            public bool MorphValuesLastIndex;
             public bool HairColorLookupTexture;
             public bool HairColorExtendedLookupTexture;
             public bool DialogueQuest;
@@ -4413,6 +4445,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SubgraphAdditiveRace = defaultOn;
                 this.IdleChatterTimeMin = defaultOn;
                 this.IdleChatterTimeMax = defaultOn;
+                this.MorphValuesLastIndex = defaultOn;
                 this.HairColorLookupTexture = defaultOn;
                 this.HairColorExtendedLookupTexture = defaultOn;
                 this.DialogueQuest = defaultOn;
@@ -4509,6 +4542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((IdleChatterTimeMin, null));
                 ret.Add((IdleChatterTimeMax, null));
                 ret.Add((MorphValues == null ? DefaultOn : !MorphValues.GetCrystal().CopyNothing, MorphValues?.GetCrystal()));
+                ret.Add((MorphValuesLastIndex, null));
                 ret.Add((HairColorLookupTexture, null));
                 ret.Add((HairColorExtendedLookupTexture, null));
                 ret.Add((DialogueQuest, null));
@@ -4758,6 +4792,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? IdleChatterTimeMin { get; set; }
         new Single? IdleChatterTimeMax { get; set; }
         new ExtendedList<MorphValue> MorphValues { get; }
+        new Int32? MorphValuesLastIndex { get; set; }
         new String? HairColorLookupTexture { get; set; }
         new String? HairColorExtendedLookupTexture { get; set; }
         new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
@@ -4892,6 +4927,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IdleChatterTimeMin { get; }
         Single? IdleChatterTimeMax { get; }
         IReadOnlyList<IMorphValueGetter> MorphValues { get; }
+        Int32? MorphValuesLastIndex { get; }
         String? HairColorLookupTexture { get; }
         String? HairColorExtendedLookupTexture { get; }
         IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
@@ -5158,10 +5194,11 @@ namespace Mutagen.Bethesda.Fallout4
         IdleChatterTimeMin = 90,
         IdleChatterTimeMax = 91,
         MorphValues = 92,
-        HairColorLookupTexture = 93,
-        HairColorExtendedLookupTexture = 94,
-        DialogueQuest = 95,
-        BoneData = 96,
+        MorphValuesLastIndex = 93,
+        HairColorLookupTexture = 94,
+        HairColorExtendedLookupTexture = 95,
+        DialogueQuest = 96,
+        BoneData = 97,
     }
     #endregion
 
@@ -5172,9 +5209,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 90;
+        public const ushort AdditionalFieldCount = 91;
 
-        public const ushort FieldCount = 97;
+        public const ushort FieldCount = 98;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -5276,6 +5313,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MSID,
                 RecordTypes.MSM0,
                 RecordTypes.MSM1,
+                RecordTypes.MLSI,
                 RecordTypes.HNAM,
                 RecordTypes.HLTX,
                 RecordTypes.QSTI,
@@ -5432,6 +5470,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.IdleChatterTimeMin = default;
             item.IdleChatterTimeMax = default;
             item.MorphValues.Clear();
+            item.MorphValuesLastIndex = default;
             item.HairColorLookupTexture = default;
             item.HairColorExtendedLookupTexture = default;
             item.DialogueQuest.Clear();
@@ -5719,6 +5758,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.MorphValues,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.MorphValuesLastIndex = item.MorphValuesLastIndex == rhs.MorphValuesLastIndex;
             ret.HairColorLookupTexture = string.Equals(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
             ret.HairColorExtendedLookupTexture = string.Equals(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
             ret.DialogueQuest = item.DialogueQuest.Equals(rhs.DialogueQuest);
@@ -6243,6 +6283,11 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
+            if ((printMask?.MorphValuesLastIndex ?? true)
+                && item.MorphValuesLastIndex is {} MorphValuesLastIndexItem)
+            {
+                sb.AppendItem(MorphValuesLastIndexItem, "MorphValuesLastIndex");
+            }
             if ((printMask?.HairColorLookupTexture ?? true)
                 && item.HairColorLookupTexture is {} HairColorLookupTextureItem)
             {
@@ -6663,6 +6708,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.MorphValues.SequenceEqual(rhs.MorphValues, (l, r) => ((MorphValueCommon)((IMorphValueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MorphValues)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValuesLastIndex) ?? true))
+            {
+                if (lhs.MorphValuesLastIndex != rhs.MorphValuesLastIndex) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
                 if (!string.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
@@ -6820,6 +6869,10 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(IdleChatterTimeMaxitem);
             }
             hash.Add(item.MorphValues);
+            if (item.MorphValuesLastIndex is {} MorphValuesLastIndexitem)
+            {
+                hash.Add(MorphValuesLastIndexitem);
+            }
             if (item.HairColorLookupTexture is {} HairColorLookupTextureitem)
             {
                 hash.Add(HairColorLookupTextureitem);
@@ -7743,6 +7796,10 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValuesLastIndex) ?? true))
+            {
+                item.MorphValuesLastIndex = rhs.MorphValuesLastIndex;
+            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
                 item.HairColorLookupTexture = rhs.HairColorLookupTexture;
@@ -8408,6 +8465,10 @@ namespace Mutagen.Bethesda.Fallout4
             RaceBinaryWriteTranslation.WriteBinaryMorphValues(
                 writer: writer,
                 item: item);
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MorphValuesLastIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.MLSI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColorLookupTexture,
@@ -8712,13 +8773,13 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 8) return null;
-                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 24) return null;
                     if (frame.MetaData.FormVersion!.Value >= 109)
                     {
-                        item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<RaceWeight>(
+                        item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<RaceWeight>(
                             frame: frame,
                             transl: RaceWeight.TryCreateFromBinary);
                     }
@@ -8871,7 +8932,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -8879,7 +8940,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.HCLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IColorRecordGetter>>(
+                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IColorRecordGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHairColors;
@@ -9143,6 +9204,12 @@ namespace Mutagen.Bethesda.Fallout4
                         lastParsed: lastParsed);
                     return (int)Race_FieldIndex.MorphValues;
                 }
+                case RecordTypeInts.MLSI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MorphValuesLastIndex = frame.ReadInt32();
+                    return (int)Race_FieldIndex.MorphValuesLastIndex;
+                }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -9270,7 +9337,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAnimationSoundTagSetGetter>(_package, _recordData, _AnimationSoundLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -9291,7 +9358,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region BipedBodyTemplate
         private RangeInt32? _BipedBodyTemplateLocation;
@@ -9456,32 +9523,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x92;
         private bool _SeverableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_SeverableExplosionLocation, 0x4), isSet: _SeverableExplosion_IsSet);
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x96;
         private bool _SeverableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_SeverableDebrisLocation, 0x4), isSet: _SeverableDebris_IsSet);
         #endregion
         #region SeverableImpactDataSet
         private int _SeverableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9A;
         private bool _SeverableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_SeverableImpactDataSetLocation, 0x4), isSet: _SeverableImpactDataSet_IsSet);
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9E;
         private bool _ExplodableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet);
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA2;
         private bool _ExplodableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet);
         #endregion
         #region ExplodableImpactDataSet
         private int _ExplodableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA6;
         private bool _ExplodableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ExplodableImpactDataSetLocation, 0x4), isSet: _ExplodableImpactDataSet_IsSet);
         #endregion
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xAA;
@@ -9504,25 +9571,25 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleExplosion
         private int _OnCrippleExplosionLocation => _DATALocation!.Value.Min + OnCrippleDecalCountVersioningOffset + 0xB0;
         private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4), isSet: _OnCrippleExplosion_IsSet);
         int OnCrippleExplosionVersioningOffset => OnCrippleDecalCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebris
         private int _OnCrippleDebrisLocation => _DATALocation!.Value.Min + OnCrippleExplosionVersioningOffset + 0xB4;
         private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4), isSet: _OnCrippleDebris_IsSet);
         int OnCrippleDebrisVersioningOffset => OnCrippleExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleImpactDataSet
         private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value.Min + OnCrippleDebrisVersioningOffset + 0xB8;
         private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4), isSet: _OnCrippleImpactDataSet_IsSet);
         int OnCrippleImpactDataSetVersioningOffset => OnCrippleDebrisVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region ExplodableSubsegmentExplosion
         private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value.Min + OnCrippleImpactDataSetVersioningOffset + 0xBC;
         private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 118;
-        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4), isSet: _ExplodableSubsegmentExplosion_IsSet);
         int ExplodableSubsegmentExplosionVersioningOffset => OnCrippleImpactDataSetVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 118 ? -4 : 0);
         #endregion
         #region OrientationLimitsPitch
@@ -9551,8 +9618,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -9565,8 +9632,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!_DefaultHairColorsLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
-                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IColorRecordGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IColorRecordGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -9584,7 +9651,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
@@ -9593,7 +9660,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
@@ -9607,31 +9674,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ImpactMaterialType
         private int? _ImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _ImpactMaterialTypeLocation);
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _ImpactDataSetLocation);
         #endregion
         #region DispemberBloodArt
         private int? _DispemberBloodArtLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt => _DispemberBloodArtLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DispemberBloodArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _DispemberBloodArtLocation);
         #endregion
         #region MeatCapTextureSet
         private int? _MeatCapTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => _MeatCapTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MeatCapTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _MeatCapTextureSetLocation);
         #endregion
         #region CollarTextureSet
         private int? _CollarTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => _CollarTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CollarTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _CollarTextureSetLocation);
         #endregion
         #region SoundOpenCorpse
         private int? _SoundOpenCorpseLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse => _SoundOpenCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundOpenCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundOpenCorpseLocation);
         #endregion
         #region SoundCloseCorpse
         private int? _SoundCloseCorpseLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => _SoundCloseCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundCloseCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundCloseCorpseLocation);
         #endregion
         public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = Array.Empty<IMovementDataOverrideGetter>();
         #region EquipmentFlags
@@ -9641,7 +9708,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _UnarmedWeaponLocation);
         #endregion
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
@@ -9657,19 +9724,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultLocation);
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultSwimLocation);
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultFlyLocation);
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultSneakLocation);
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
@@ -9677,19 +9744,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _MorphRaceLocation);
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _ArmorRaceLocation);
         #endregion
         #region SubgraphTemplateRace
         private int? _SubgraphTemplateRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphTemplateRaceLocation);
         #endregion
         #region SubgraphAdditiveRace
         private int? _SubgraphAdditiveRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => _SubgraphAdditiveRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphAdditiveRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphAdditiveRaceLocation);
         #endregion
         public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
@@ -9708,6 +9775,10 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed);
         #endregion
+        #region MorphValuesLastIndex
+        private int? _MorphValuesLastIndexLocation;
+        public Int32? MorphValuesLastIndex => _MorphValuesLastIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphValuesLastIndexLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region HairColorLookupTexture
         private int? _HairColorLookupTextureLocation;
         public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -9718,7 +9789,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _DialogueQuestLocation);
         #endregion
         #region BoneDataParse
         public partial ParseResult BoneDataParseCustomParse(
@@ -9820,7 +9891,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.SPCT,
                         trigger: RecordTypes.SPLO,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
@@ -9843,31 +9914,27 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.APPR:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Race_FieldIndex.AttachParentSlots;
                 }
                 case RecordTypeInts.DATA:
@@ -10146,6 +10213,11 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         lastParsed: lastParsed);
                     return (int)Race_FieldIndex.MorphValues;
+                }
+                case RecordTypeInts.MLSI:
+                {
+                    _MorphValuesLastIndexLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MorphValuesLastIndex;
                 }
                 case RecordTypeInts.HNAM:
                 {

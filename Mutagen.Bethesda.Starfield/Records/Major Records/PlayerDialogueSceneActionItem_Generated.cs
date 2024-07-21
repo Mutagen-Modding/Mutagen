@@ -1518,19 +1518,19 @@ namespace Mutagen.Bethesda.Starfield
 
         #region PlayerChoice
         private int? _PlayerChoiceLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerChoice => _PlayerChoiceLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerChoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerChoice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerChoiceLocation);
         #endregion
         #region PPST
         private int? _PPSTLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PPST => _PPSTLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PPSTLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PPST => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PPSTLocation);
         #endregion
         #region PNST
         private int? _PNSTLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PNST => _PNSTLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNSTLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PNST => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PNSTLocation);
         #endregion
         #region StartScene
         private int? _StartSceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> StartScene => _StartSceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartSceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> StartScene => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _StartSceneLocation);
         #endregion
         #region PhaseIndex
         private int? _PhaseIndexLocation;
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NpcResponse
         private int? _NpcResponseLocation;
-        public IFormLinkGetter<IDialogTopicGetter> NpcResponse => _NpcResponseLocation.HasValue ? new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcResponseLocation.Value, _package.MetaData.Constants)))) : FormLink<IDialogTopicGetter>.Null;
+        public IFormLinkGetter<IDialogTopicGetter> NpcResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcResponseLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

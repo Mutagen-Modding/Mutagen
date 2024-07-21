@@ -228,7 +228,7 @@ public static class HasModsMixIn
     /// <param name="modKeys">ModKeys to look for</param>
     /// <returns>True if all ModKeys are present in the listings</returns>
     public static bool ModsExist<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         if (modKeys.Length == 0) return true;
         if (modKeys.Length == 1) return ModExists(listings, modKeys[0], enabled);
@@ -257,7 +257,7 @@ public static class HasModsMixIn
     /// Thrown if given mod is not on the collection of listings
     /// </exception>
     public static void AssertModsExist<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         AssertModsExist(listings, enabled: enabled, present: present, message: null, modKeys: modKeys);
     }
@@ -274,7 +274,7 @@ public static class HasModsMixIn
     /// Thrown if given mod is not on the collection of listings
     /// </exception>
     public static void AssertModsExist<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, string? message, params ModKey[] modKeys)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         if (modKeys.Length == 0) return;
         if (modKeys.Length == 1)
@@ -496,5 +496,20 @@ public static class HasModsMixIn
     public static void AssertModsExist(this ILoadOrderGetter<IModListingGetter> loadOrder, bool? enabled, IEnumerable<ModKey> modKeys, string? message = null)
     {
         AssertModsExist(loadOrder, enabled, message: message, modKeys: modKeys.ToArray());
+    }
+
+    public static IEnumerable<TModItem> ResolveAllModsExist<TModItem>(this IEnumerable<IModListingGetter<TModItem>> loadOrder)
+        where TModItem : class, IModKeyed
+    {
+        loadOrder = loadOrder.ToArray();
+        var missingMods = loadOrder.Where(x => x.Mod == null)
+            .ToArray();
+
+        if (missingMods.Length > 0)
+        {
+            throw new MissingModException(missingMods.Select(x => x.ModKey));
+        }
+
+        return loadOrder.Select(x => x.Mod!);
     }
 }

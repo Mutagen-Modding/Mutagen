@@ -113,7 +113,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         var data = typeGen.GetFieldData();
         if (data.RecordType.HasValue)
         {
-            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         using (var args = sb.Call(
@@ -214,7 +214,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         switch (linkType.FormIDType)
         {
             case FormLinkType.FormIDTypeEnum.Normal:
-                return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}){(linkType.MaxIsNone ? ", maxIsNull: true" : null)}))";
+                return $"FormLinkBinaryTranslation.Instance.{(typeGen.Nullable ? "Nullable" : string.Empty)}OverlayFactory<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>({packageAccessor}, {dataAccessor}{(linkType.MaxIsNone ? ", maxIsNull: true" : null)})";
             case FormLinkType.FormIDTypeEnum.EDIDChars:
                 return $"new EDIDLink<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})))";
             default:
@@ -261,8 +261,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         if (data.RecordType.HasValue)
         {
             if (dataType != null) throw new ArgumentException();
-            recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {nameof(FormLinkBinaryTranslation)}.Instance.{nameof(FormLinkBinaryTranslation.NullableRecordOverlayFactory)}<{linkType.GenericString}>(_package, {recordDataAccessor}, _{typeGen.Name}Location{(linkType.MaxIsNone ? ", maxIsNull: true" : null)});");
         }
         else
         {
@@ -284,7 +283,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormLinkBinaryTranslation.Instance.OverlayFactory<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(_package, {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X}), isSet: _{typeGen.Name}_IsSet{(linkType.MaxIsNone ? ", maxIsNull: true" : null)});");
             }
         }
     }

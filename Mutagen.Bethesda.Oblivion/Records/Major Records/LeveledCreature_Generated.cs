@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1804,11 +1803,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledCreatureEntryGetter>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<INpcRecordGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcRecordGetter>.Null;
+        public IFormLinkNullableGetter<INpcRecordGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcRecordGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -82,6 +81,11 @@ namespace Mutagen.Bethesda.Starfield
         public Single? ODTY { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IArtObjectGetter.ODTY => this.ODTY;
+        #endregion
+        #region ODRT
+        public Single? ODRT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IArtObjectGetter.ODRT => this.ODRT;
         #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -212,6 +216,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
+                this.ODRT = initialValue;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
@@ -233,6 +238,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
+                TItem ODRT,
                 TItem ObjectPlacementDefaults,
                 TItem XALG,
                 TItem Transforms,
@@ -253,6 +259,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
+                this.ODRT = ODRT;
                 this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.XALG = XALG;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
@@ -275,6 +282,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
+            public TItem ODRT;
             public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public TItem XALG;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
@@ -299,6 +307,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
@@ -315,6 +324,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
+                hash.Add(this.ODRT);
                 hash.Add(this.ObjectPlacementDefaults);
                 hash.Add(this.XALG);
                 hash.Add(this.Transforms);
@@ -340,6 +350,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
+                if (!eval(this.ODRT)) return false;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
@@ -396,6 +407,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
+                if (eval(this.ODRT)) return true;
                 if (ObjectPlacementDefaults != null)
                 {
                     if (eval(this.ObjectPlacementDefaults.Overall)) return true;
@@ -455,6 +467,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
+                obj.ODRT = eval(this.ODRT);
                 obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
@@ -516,6 +529,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ODRT ?? true)
+                    {
+                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
@@ -598,6 +615,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
+            public Exception? ODRT;
             public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public Exception? XALG;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
@@ -619,6 +637,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case ArtObject_FieldIndex.ODTY:
                         return ODTY;
+                    case ArtObject_FieldIndex.ODRT:
+                        return ODRT;
                     case ArtObject_FieldIndex.ObjectPlacementDefaults:
                         return ObjectPlacementDefaults;
                     case ArtObject_FieldIndex.XALG:
@@ -652,6 +672,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ArtObject_FieldIndex.ODTY:
                         this.ODTY = ex;
+                        break;
+                    case ArtObject_FieldIndex.ODRT:
+                        this.ODRT = ex;
                         break;
                     case ArtObject_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
@@ -697,6 +720,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ArtObject_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
+                    case ArtObject_FieldIndex.ODRT:
+                        this.ODRT = (Exception?)obj;
+                        break;
                     case ArtObject_FieldIndex.ObjectPlacementDefaults:
                         this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
                         break;
@@ -735,6 +761,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
+                if (ODRT != null) return true;
                 if (ObjectPlacementDefaults != null) return true;
                 if (XALG != null) return true;
                 if (Transforms != null) return true;
@@ -773,6 +800,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(ODRT, "ODRT");
                 }
                 ObjectPlacementDefaults?.Print(sb);
                 {
@@ -837,6 +867,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
@@ -870,6 +901,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
+            public bool ODRT;
             public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
             public bool XALG;
             public Transforms.TranslationMask? Transforms;
@@ -888,6 +920,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
+                this.ODRT = defaultOn;
                 this.XALG = defaultOn;
                 this.Keywords = defaultOn;
                 this.Type = defaultOn;
@@ -902,6 +935,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
+                ret.Add((ODRT, null));
                 ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
                 ret.Add((XALG, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
@@ -1072,6 +1106,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
+        new Single? ODRT { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new MemorySlice<Byte>? XALG { get; set; }
         new Transforms? Transforms { get; set; }
@@ -1117,6 +1152,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
+        Single? ODRT { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         ReadOnlyMemorySlice<Byte>? XALG { get; }
         ITransformsGetter? Transforms { get; }
@@ -1314,15 +1350,16 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        ObjectPlacementDefaults = 9,
-        XALG = 10,
-        Transforms = 11,
-        Components = 12,
-        Keywords = 13,
-        Model = 14,
-        Type = 15,
-        DNAMUnknown = 16,
-        EffectShader = 17,
+        ODRT = 9,
+        ObjectPlacementDefaults = 10,
+        XALG = 11,
+        Transforms = 12,
+        Components = 13,
+        Keywords = 14,
+        Model = 15,
+        Type = 16,
+        DNAMUnknown = 17,
+        EffectShader = 18,
     }
     #endregion
 
@@ -1333,9 +1370,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ArtObject.Mask<>);
 
@@ -1370,6 +1407,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ARTO,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.ODRT,
                 RecordTypes.OPDS,
                 RecordTypes.XALG,
                 RecordTypes.PTT2,
@@ -1380,6 +1418,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1432,6 +1472,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
+            item.ODRT = default;
             item.ObjectPlacementDefaults = null;
             item.XALG = default;
             item.Transforms = null;
@@ -1564,6 +1605,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPlacementDefaults,
                 rhs.ObjectPlacementDefaults,
@@ -1648,6 +1690,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ODRT ?? true)
+                && item.ODRT is {} ODRTItem)
+            {
+                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
                 && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
@@ -1772,6 +1819,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ODRT) ?? true))
+            {
+                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
@@ -1852,6 +1903,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYitem)
             {
                 hash.Add(ODTYitem);
+            }
+            if (item.ODRT is {} ODRTitem)
+            {
+                hash.Add(ODRTitem);
             }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
@@ -2056,6 +2111,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ODRT) ?? true))
+            {
+                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
@@ -2375,6 +2434,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODRT,
+                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
                 ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
@@ -2531,6 +2594,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ArtObject_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ArtObject_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
@@ -2573,6 +2642,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2670,6 +2741,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
+        #region ODRT
+        private int? _ODRTLocation;
+        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
         public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
@@ -2701,7 +2776,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region EffectShader
         private int? _EffectShaderLocation;
-        public IFormLinkNullableGetter<IEffectShaderGetter> EffectShader => _EffectShaderLocation.HasValue ? new FormLinkNullable<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EffectShaderLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectShaderGetter>.Null;
+        public IFormLinkNullableGetter<IEffectShaderGetter> EffectShader => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectShaderGetter>(_package, _recordData, _EffectShaderLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2782,6 +2857,11 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)ArtObject_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.ODRT:
+                {
+                    _ODRTLocation = (stream.Position - offset);
+                    return (int)ArtObject_FieldIndex.ODRT;
+                }
                 case RecordTypeInts.OPDS:
                 {
                     _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -2816,12 +2896,14 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)ArtObject_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

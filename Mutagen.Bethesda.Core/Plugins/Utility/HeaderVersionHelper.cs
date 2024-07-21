@@ -1,8 +1,10 @@
+using Mutagen.Bethesda.Plugins.Meta;
+
 namespace Mutagen.Bethesda.Plugins.Utility;
 
 internal static class HeaderVersionHelper
 {
-    public static uint GetNextFormId(
+    public static uint GetInitialFormId(
         GameRelease release,
         HashSet<GameRelease>? allowedReleases,
         float headerVersion,
@@ -32,15 +34,20 @@ internal static class HeaderVersionHelper
         }
         return higherFormIdRange;
     }
-
-    public static uint GetDefaultHigherFormID(GameRelease release)
+    
+    public static uint GetInitialFormId(
+        GameRelease release,
+        HashSet<GameRelease>? allowedReleases,
+        float headerVersion,
+        bool? forceUseLowerFormIDRanges,
+        GameConstants constants)
     {
-        return release.ToCategory() switch
-        {
-            GameCategory.Oblivion => 0xD62,
-            GameCategory.Fallout4 => 0x800,
-            GameCategory.Skyrim => 0x800,
-            GameCategory.Starfield => 0x800,
-        };
+        return GetInitialFormId(
+            release,
+            allowedReleases,
+            headerVersion,
+            forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
+            useLowerRangesVersion: constants.UseLowerRangeFormIDVersion,
+            higherFormIdRange: constants.DefaultHighRangeFormID);
     }
 }

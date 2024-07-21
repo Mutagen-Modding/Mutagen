@@ -1750,10 +1750,10 @@ namespace Mutagen.Bethesda.Oblivion
             item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.Unused = frame.ReadInt32();
-            item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+            item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-            item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+            item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
             item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(

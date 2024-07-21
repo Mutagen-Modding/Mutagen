@@ -52,6 +52,9 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public MagicEffectSound.VersioningBreaks Versioning { get; set; } = default(MagicEffectSound.VersioningBreaks);
+        #endregion
         #region Type
         public MagicEffectSound.SoundType Type { get; set; } = default(MagicEffectSound.SoundType);
         #endregion
@@ -59,6 +62,17 @@ namespace Mutagen.Bethesda.Starfield
         public SoundReference Sound { get; set; } = new SoundReference();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter IMagicEffectSoundGetter.Sound => Sound;
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown = new byte[3];
+        public MemorySlice<Byte> Unknown
+        {
+            get => _Unknown;
+            set => this._Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IMagicEffectSoundGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -99,16 +113,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Type = initialValue;
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Unknown = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Type,
-                TItem Sound)
+                TItem Sound,
+                TItem Unknown)
             {
+                this.Versioning = Versioning;
                 this.Type = Type;
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound, new SoundReference.Mask<TItem>(Sound));
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -120,8 +140,10 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Type;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sound { get; set; }
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -134,15 +156,19 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Type);
                 hash.Add(this.Sound);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -151,12 +177,14 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Type)) return false;
                 if (Sound != null)
                 {
                     if (!eval(this.Sound.Overall)) return false;
                     if (this.Sound.Specific != null && !this.Sound.Specific.All(eval)) return false;
                 }
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -164,12 +192,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Type)) return true;
                 if (Sound != null)
                 {
                     if (eval(this.Sound.Overall)) return true;
                     if (this.Sound.Specific != null && this.Sound.Specific.Any(eval)) return true;
                 }
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -184,8 +214,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Type = eval(this.Type);
                 obj.Sound = this.Sound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound.Overall), this.Sound.Specific?.Translate(eval));
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -204,6 +236,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MagicEffectSound.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Type ?? true)
                     {
                         sb.AppendItem(Type, "Type");
@@ -211,6 +247,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Sound?.Overall ?? true)
                     {
                         Sound?.Print(sb);
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -236,8 +276,10 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Type;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? Sound;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -246,10 +288,14 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectSound_FieldIndex.Versioning:
+                        return Versioning;
                     case MagicEffectSound_FieldIndex.Type:
                         return Type;
                     case MagicEffectSound_FieldIndex.Sound:
                         return Sound;
+                    case MagicEffectSound_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -260,11 +306,17 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectSound_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case MagicEffectSound_FieldIndex.Type:
                         this.Type = ex;
                         break;
                     case MagicEffectSound_FieldIndex.Sound:
                         this.Sound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffectSound_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -276,11 +328,17 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectSound_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case MagicEffectSound_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
                     case MagicEffectSound_FieldIndex.Sound:
                         this.Sound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffectSound_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -290,8 +348,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Type != null) return true;
                 if (Sound != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -318,9 +378,15 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(Type, "Type");
                 }
                 Sound?.Print(sb);
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -329,8 +395,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Sound = this.Sound.Combine(rhs.Sound, (l, r) => l.Combine(r));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -354,8 +422,10 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Type;
             public SoundReference.TranslationMask? Sound;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -365,7 +435,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Type = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -381,8 +453,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Type, null));
                 ret.Add((Sound != null ? Sound.OnOverall : DefaultOn, Sound?.GetCrystal()));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -394,6 +468,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectSoundCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -461,8 +540,10 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IMagicEffectSound>,
         IMagicEffectSoundGetter
     {
+        new MagicEffectSound.VersioningBreaks Versioning { get; set; }
         new MagicEffectSound.SoundType Type { get; set; }
         new SoundReference Sound { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :
@@ -478,8 +559,10 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MagicEffectSound_Registration.Instance;
+        MagicEffectSound.VersioningBreaks Versioning { get; }
         MagicEffectSound.SoundType Type { get; }
         ISoundReferenceGetter Sound { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
 
     }
 
@@ -649,8 +732,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum MagicEffectSound_FieldIndex
     {
-        Type = 0,
-        Sound = 1,
+        Versioning = 0,
+        Type = 1,
+        Sound = 2,
+        Unknown = 3,
     }
     #endregion
 
@@ -661,9 +746,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MagicEffectSound.Mask<>);
 
@@ -736,8 +821,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMagicEffectSound item)
         {
             ClearPartial();
+            item.Versioning = default(MagicEffectSound.VersioningBreaks);
             item.Type = default(MagicEffectSound.SoundType);
             item.Sound.Clear();
+            item.Unknown = new byte[3];
         }
         
         #region Mutagen
@@ -792,8 +879,10 @@ namespace Mutagen.Bethesda.Starfield
             MagicEffectSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Type = item.Type == rhs.Type;
             ret.Sound = MaskItemExt.Factory(item.Sound.GetEqualsMask(rhs.Sound, include), include);
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
         
         public string Print(
@@ -838,6 +927,10 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             MagicEffectSound.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Type ?? true)
             {
                 sb.AppendItem(item.Type, "Type");
@@ -845,6 +938,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Sound?.Overall ?? true)
             {
                 item.Sound?.Print(sb, "Sound");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
         }
         
@@ -855,6 +952,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
@@ -867,14 +968,20 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSoundEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
             return true;
         }
         
         public virtual int GetHashCode(IMagicEffectSoundGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Type);
             hash.Add(item.Sound);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -911,6 +1018,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
@@ -936,6 +1047,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if (rhs.Versioning.HasFlag(MagicEffectSound.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown.ToArray();
             }
         }
         
@@ -1041,6 +1157,15 @@ namespace Mutagen.Bethesda.Starfield
             ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
                 item: SoundItem,
                 writer: writer);
+            if (!item.Versioning.HasFlag(MagicEffectSound.VersioningBreaks.Break0))
+            {
+                if (writer.MetaData.FormVersion!.Value < 518)
+                {
+                    ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.Unknown);
+                }
+            }
         }
 
         public void Write(
@@ -1085,6 +1210,15 @@ namespace Mutagen.Bethesda.Starfield
                 reader: frame,
                 length: 1);
             item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= MagicEffectSound.VersioningBreaks.Break0;
+                return;
+            }
+            if (frame.MetaData.FormVersion!.Value < 518)
+            {
+                item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            }
         }
 
     }
@@ -1151,8 +1285,13 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public MagicEffectSound.VersioningBreaks Versioning { get; private set; }
         public MagicEffectSound.SoundType Type => (MagicEffectSound.SoundType)_structData.Span.Slice(0x0, 0x1)[0];
         public ISoundReferenceGetter Sound => SoundReferenceBinaryOverlay.SoundReferenceFactory(_structData.Slice(0x1), _package, default(TypedParseParams));
+        #region Unknown
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x29 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x29, 0x3).ToArray();
+        int UnknownVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 518 ? -3 : 0;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1178,13 +1317,16 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x29,
+                length: 0x2C,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
             var ret = new MagicEffectSoundBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x29 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x29)
+            {
+                ret.Versioning |= MagicEffectSound.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

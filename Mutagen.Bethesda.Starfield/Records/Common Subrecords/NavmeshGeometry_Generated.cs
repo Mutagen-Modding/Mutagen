@@ -52,11 +52,8 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Versioning
-        public NavmeshGeometry.VersioningBreaks Versioning { get; set; } = default(NavmeshGeometry.VersioningBreaks);
-        #endregion
         #region NavmeshVersion
-        public static readonly UInt32 NavmeshVersionDefault = 15;
+        public static readonly UInt32 NavmeshVersionDefault = 17;
         public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region CrcHash
@@ -82,119 +79,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region Triangles
+        #region UnknownEnd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
-        public ExtendedList<NavmeshTriangle> Triangles
+        private MemorySlice<Byte> _UnknownEnd = new byte[0];
+        public MemorySlice<Byte> UnknownEnd
         {
-            get => this._Triangles;
-            init => this._Triangles = value;
+            get => _UnknownEnd;
+            set => this._UnknownEnd = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavmeshTriangleGetter> INavmeshGeometryGetter.Triangles => _Triangles;
-        #endregion
-
-        #endregion
-        #region EdgeLinks
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
-        public ExtendedList<EdgeLink> EdgeLinks
-        {
-            get => this._EdgeLinks;
-            init => this._EdgeLinks = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IEdgeLinkGetter> INavmeshGeometryGetter.EdgeLinks => _EdgeLinks;
-        #endregion
-
-        #endregion
-        #region DoorTriangles
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
-        public ExtendedList<DoorTriangle> DoorTriangles
-        {
-            get => this._DoorTriangles;
-            init => this._DoorTriangles = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IDoorTriangleGetter> INavmeshGeometryGetter.DoorTriangles => _DoorTriangles;
-        #endregion
-
-        #endregion
-        #region Cover
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshCover> _Cover = new ExtendedList<NavmeshCover>();
-        public ExtendedList<NavmeshCover> Cover
-        {
-            get => this._Cover;
-            init => this._Cover = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavmeshCoverGetter> INavmeshGeometryGetter.Cover => _Cover;
-        #endregion
-
-        #endregion
-        #region CoverTriangleMappings
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshCoverTriangleMap> _CoverTriangleMappings = new ExtendedList<NavmeshCoverTriangleMap>();
-        public ExtendedList<NavmeshCoverTriangleMap> CoverTriangleMappings
-        {
-            get => this._CoverTriangleMappings;
-            init => this._CoverTriangleMappings = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavmeshCoverTriangleMapGetter> INavmeshGeometryGetter.CoverTriangleMappings => _CoverTriangleMappings;
-        #endregion
-
-        #endregion
-        #region Waypoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshWaypoint> _Waypoints = new ExtendedList<NavmeshWaypoint>();
-        public ExtendedList<NavmeshWaypoint> Waypoints
-        {
-            get => this._Waypoints;
-            init => this._Waypoints = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavmeshWaypointGetter> INavmeshGeometryGetter.Waypoints => _Waypoints;
-        #endregion
-
-        #endregion
-        #region GridSize
-        public UInt32 GridSize { get; set; } = default(UInt32);
-        public static RangeUInt32 GridSize_Range = new RangeUInt32(UInt32.MinValue, 12);
-        #endregion
-        #region GridMaxDistance
-        public P2Float GridMaxDistance { get; set; } = default(P2Float);
-        #endregion
-        #region GridMin
-        public P3Float GridMin { get; set; } = default(P3Float);
-        #endregion
-        #region GridMax
-        public P3Float GridMax { get; set; } = default(P3Float);
-        #endregion
-        #region GridArrays
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshGridArray> _GridArrays = new ExtendedList<NavmeshGridArray>();
-        public ExtendedList<NavmeshGridArray> GridArrays
-        {
-            get => this._GridArrays;
-            init => this._GridArrays = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavmeshGridArrayGetter> INavmeshGeometryGetter.GridArrays => _GridArrays;
-        #endregion
-
-        #endregion
-        #region Unknown3
-        public Int32 Unknown3 { get; set; } = default(Int32);
+        ReadOnlyMemorySlice<Byte> INavmeshGeometryGetter.UnknownEnd => this.UnknownEnd;
         #endregion
 
         #region To String
@@ -235,61 +129,25 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Versioning = initialValue;
                 this.NavmeshVersion = initialValue;
                 this.CrcHash = initialValue;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(initialValue, new ANavmeshParent.Mask<TItem>(initialValue));
                 this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
-                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
-                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
-                this.GridSize = initialValue;
-                this.GridMaxDistance = initialValue;
-                this.GridMin = initialValue;
-                this.GridMax = initialValue;
-                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
-                this.Unknown3 = initialValue;
+                this.UnknownEnd = initialValue;
             }
 
             public Mask(
-                TItem Versioning,
                 TItem NavmeshVersion,
                 TItem CrcHash,
                 TItem Parent,
                 TItem Vertices,
-                TItem Triangles,
-                TItem EdgeLinks,
-                TItem DoorTriangles,
-                TItem Cover,
-                TItem CoverTriangleMappings,
-                TItem Waypoints,
-                TItem GridSize,
-                TItem GridMaxDistance,
-                TItem GridMin,
-                TItem GridMax,
-                TItem GridArrays,
-                TItem Unknown3)
+                TItem UnknownEnd)
             {
-                this.Versioning = Versioning;
                 this.NavmeshVersion = NavmeshVersion;
                 this.CrcHash = CrcHash;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(Parent, new ANavmeshParent.Mask<TItem>(Parent));
                 this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(Vertices, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(Cover, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
-                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(CoverTriangleMappings, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
-                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(Waypoints, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
-                this.GridSize = GridSize;
-                this.GridMaxDistance = GridMaxDistance;
-                this.GridMin = GridMin;
-                this.GridMax = GridMax;
-                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(GridArrays, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
-                this.Unknown3 = Unknown3;
+                this.UnknownEnd = UnknownEnd;
             }
 
             #pragma warning disable CS8618
@@ -301,23 +159,11 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Versioning;
             public TItem NavmeshVersion;
             public TItem CrcHash;
             public MaskItem<TItem, ANavmeshParent.Mask<TItem>?>? Parent { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>? Vertices;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>? Triangles;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>? EdgeLinks;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>? DoorTriangles;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>? Cover;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>? CoverTriangleMappings;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>? Waypoints;
-            public TItem GridSize;
-            public TItem GridMaxDistance;
-            public TItem GridMin;
-            public TItem GridMax;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>? GridArrays;
-            public TItem Unknown3;
+            public TItem UnknownEnd;
             #endregion
 
             #region Equals
@@ -330,45 +176,21 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.NavmeshVersion, rhs.NavmeshVersion)) return false;
                 if (!object.Equals(this.CrcHash, rhs.CrcHash)) return false;
                 if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 if (!object.Equals(this.Vertices, rhs.Vertices)) return false;
-                if (!object.Equals(this.Triangles, rhs.Triangles)) return false;
-                if (!object.Equals(this.EdgeLinks, rhs.EdgeLinks)) return false;
-                if (!object.Equals(this.DoorTriangles, rhs.DoorTriangles)) return false;
-                if (!object.Equals(this.Cover, rhs.Cover)) return false;
-                if (!object.Equals(this.CoverTriangleMappings, rhs.CoverTriangleMappings)) return false;
-                if (!object.Equals(this.Waypoints, rhs.Waypoints)) return false;
-                if (!object.Equals(this.GridSize, rhs.GridSize)) return false;
-                if (!object.Equals(this.GridMaxDistance, rhs.GridMaxDistance)) return false;
-                if (!object.Equals(this.GridMin, rhs.GridMin)) return false;
-                if (!object.Equals(this.GridMax, rhs.GridMax)) return false;
-                if (!object.Equals(this.GridArrays, rhs.GridArrays)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.UnknownEnd, rhs.UnknownEnd)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Versioning);
                 hash.Add(this.NavmeshVersion);
                 hash.Add(this.CrcHash);
                 hash.Add(this.Parent);
                 hash.Add(this.Vertices);
-                hash.Add(this.Triangles);
-                hash.Add(this.EdgeLinks);
-                hash.Add(this.DoorTriangles);
-                hash.Add(this.Cover);
-                hash.Add(this.CoverTriangleMappings);
-                hash.Add(this.Waypoints);
-                hash.Add(this.GridSize);
-                hash.Add(this.GridMaxDistance);
-                hash.Add(this.GridMin);
-                hash.Add(this.GridMax);
-                hash.Add(this.GridArrays);
-                hash.Add(this.Unknown3);
+                hash.Add(this.UnknownEnd);
                 return hash.ToHashCode();
             }
 
@@ -377,7 +199,6 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Versioning)) return false;
                 if (!eval(this.NavmeshVersion)) return false;
                 if (!eval(this.CrcHash)) return false;
                 if (Parent != null)
@@ -397,95 +218,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.Triangles != null)
-                {
-                    if (!eval(this.Triangles.Overall)) return false;
-                    if (this.Triangles.Specific != null)
-                    {
-                        foreach (var item in this.Triangles.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.EdgeLinks != null)
-                {
-                    if (!eval(this.EdgeLinks.Overall)) return false;
-                    if (this.EdgeLinks.Specific != null)
-                    {
-                        foreach (var item in this.EdgeLinks.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.DoorTriangles != null)
-                {
-                    if (!eval(this.DoorTriangles.Overall)) return false;
-                    if (this.DoorTriangles.Specific != null)
-                    {
-                        foreach (var item in this.DoorTriangles.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.Cover != null)
-                {
-                    if (!eval(this.Cover.Overall)) return false;
-                    if (this.Cover.Specific != null)
-                    {
-                        foreach (var item in this.Cover.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.CoverTriangleMappings != null)
-                {
-                    if (!eval(this.CoverTriangleMappings.Overall)) return false;
-                    if (this.CoverTriangleMappings.Specific != null)
-                    {
-                        foreach (var item in this.CoverTriangleMappings.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.Waypoints != null)
-                {
-                    if (!eval(this.Waypoints.Overall)) return false;
-                    if (this.Waypoints.Specific != null)
-                    {
-                        foreach (var item in this.Waypoints.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (!eval(this.GridSize)) return false;
-                if (!eval(this.GridMaxDistance)) return false;
-                if (!eval(this.GridMin)) return false;
-                if (!eval(this.GridMax)) return false;
-                if (this.GridArrays != null)
-                {
-                    if (!eval(this.GridArrays.Overall)) return false;
-                    if (this.GridArrays.Specific != null)
-                    {
-                        foreach (var item in this.GridArrays.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.UnknownEnd)) return false;
                 return true;
             }
             #endregion
@@ -493,7 +226,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Versioning)) return true;
                 if (eval(this.NavmeshVersion)) return true;
                 if (eval(this.CrcHash)) return true;
                 if (Parent != null)
@@ -513,95 +245,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.Triangles != null)
-                {
-                    if (eval(this.Triangles.Overall)) return true;
-                    if (this.Triangles.Specific != null)
-                    {
-                        foreach (var item in this.Triangles.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.EdgeLinks != null)
-                {
-                    if (eval(this.EdgeLinks.Overall)) return true;
-                    if (this.EdgeLinks.Specific != null)
-                    {
-                        foreach (var item in this.EdgeLinks.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.DoorTriangles != null)
-                {
-                    if (eval(this.DoorTriangles.Overall)) return true;
-                    if (this.DoorTriangles.Specific != null)
-                    {
-                        foreach (var item in this.DoorTriangles.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.Cover != null)
-                {
-                    if (eval(this.Cover.Overall)) return true;
-                    if (this.Cover.Specific != null)
-                    {
-                        foreach (var item in this.Cover.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.CoverTriangleMappings != null)
-                {
-                    if (eval(this.CoverTriangleMappings.Overall)) return true;
-                    if (this.CoverTriangleMappings.Specific != null)
-                    {
-                        foreach (var item in this.CoverTriangleMappings.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (this.Waypoints != null)
-                {
-                    if (eval(this.Waypoints.Overall)) return true;
-                    if (this.Waypoints.Specific != null)
-                    {
-                        foreach (var item in this.Waypoints.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (eval(this.GridSize)) return true;
-                if (eval(this.GridMaxDistance)) return true;
-                if (eval(this.GridMin)) return true;
-                if (eval(this.GridMax)) return true;
-                if (this.GridArrays != null)
-                {
-                    if (eval(this.GridArrays.Overall)) return true;
-                    if (this.GridArrays.Specific != null)
-                    {
-                        foreach (var item in this.GridArrays.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.UnknownEnd)) return true;
                 return false;
             }
             #endregion
@@ -616,7 +260,6 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Versioning = eval(this.Versioning);
                 obj.NavmeshVersion = eval(this.NavmeshVersion);
                 obj.CrcHash = eval(this.CrcHash);
                 obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavmeshParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
@@ -635,116 +278,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (Triangles != null)
-                {
-                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>());
-                    if (Triangles.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>();
-                        obj.Triangles.Specific = l;
-                        foreach (var item in Triangles.Specific)
-                        {
-                            MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                if (EdgeLinks != null)
-                {
-                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, EdgeLink.Mask<R>?>>());
-                    if (EdgeLinks.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, EdgeLink.Mask<R>?>>();
-                        obj.EdgeLinks.Specific = l;
-                        foreach (var item in EdgeLinks.Specific)
-                        {
-                            MaskItemIndexed<R, EdgeLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, EdgeLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                if (DoorTriangles != null)
-                {
-                    obj.DoorTriangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>?>(eval(this.DoorTriangles.Overall), Enumerable.Empty<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>());
-                    if (DoorTriangles.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>();
-                        obj.DoorTriangles.Specific = l;
-                        foreach (var item in DoorTriangles.Specific)
-                        {
-                            MaskItemIndexed<R, DoorTriangle.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DoorTriangle.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                if (Cover != null)
-                {
-                    obj.Cover = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>?>(eval(this.Cover.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>());
-                    if (Cover.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>();
-                        obj.Cover.Specific = l;
-                        foreach (var item in Cover.Specific)
-                        {
-                            MaskItemIndexed<R, NavmeshCover.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshCover.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                if (CoverTriangleMappings != null)
-                {
-                    obj.CoverTriangleMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>?>(eval(this.CoverTriangleMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>());
-                    if (CoverTriangleMappings.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>();
-                        obj.CoverTriangleMappings.Specific = l;
-                        foreach (var item in CoverTriangleMappings.Specific)
-                        {
-                            MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                if (Waypoints != null)
-                {
-                    obj.Waypoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>?>(eval(this.Waypoints.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>());
-                    if (Waypoints.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>();
-                        obj.Waypoints.Specific = l;
-                        foreach (var item in Waypoints.Specific)
-                        {
-                            MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                obj.GridSize = eval(this.GridSize);
-                obj.GridMaxDistance = eval(this.GridMaxDistance);
-                obj.GridMin = eval(this.GridMin);
-                obj.GridMax = eval(this.GridMax);
-                if (GridArrays != null)
-                {
-                    obj.GridArrays = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>?>(eval(this.GridArrays.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>());
-                    if (GridArrays.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>();
-                        obj.GridArrays.Specific = l;
-                        foreach (var item in GridArrays.Specific)
-                        {
-                            MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.UnknownEnd = eval(this.UnknownEnd);
             }
             #endregion
 
@@ -763,10 +297,6 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(NavmeshGeometry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Versioning ?? true)
-                    {
-                        sb.AppendItem(Versioning, "Versioning");
-                    }
                     if (printMask?.NavmeshVersion ?? true)
                     {
                         sb.AppendItem(NavmeshVersion, "NavmeshVersion");
@@ -798,158 +328,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.Triangles?.Overall ?? true)
-                        && Triangles is {} TrianglesItem)
+                    if (printMask?.UnknownEnd ?? true)
                     {
-                        sb.AppendLine("Triangles =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(TrianglesItem.Overall);
-                            if (TrianglesItem.Specific != null)
-                            {
-                                foreach (var subItem in TrianglesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if ((printMask?.EdgeLinks?.Overall ?? true)
-                        && EdgeLinks is {} EdgeLinksItem)
-                    {
-                        sb.AppendLine("EdgeLinks =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(EdgeLinksItem.Overall);
-                            if (EdgeLinksItem.Specific != null)
-                            {
-                                foreach (var subItem in EdgeLinksItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if ((printMask?.DoorTriangles?.Overall ?? true)
-                        && DoorTriangles is {} DoorTrianglesItem)
-                    {
-                        sb.AppendLine("DoorTriangles =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(DoorTrianglesItem.Overall);
-                            if (DoorTrianglesItem.Specific != null)
-                            {
-                                foreach (var subItem in DoorTrianglesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if ((printMask?.Cover?.Overall ?? true)
-                        && Cover is {} CoverItem)
-                    {
-                        sb.AppendLine("Cover =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(CoverItem.Overall);
-                            if (CoverItem.Specific != null)
-                            {
-                                foreach (var subItem in CoverItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if ((printMask?.CoverTriangleMappings?.Overall ?? true)
-                        && CoverTriangleMappings is {} CoverTriangleMappingsItem)
-                    {
-                        sb.AppendLine("CoverTriangleMappings =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(CoverTriangleMappingsItem.Overall);
-                            if (CoverTriangleMappingsItem.Specific != null)
-                            {
-                                foreach (var subItem in CoverTriangleMappingsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if ((printMask?.Waypoints?.Overall ?? true)
-                        && Waypoints is {} WaypointsItem)
-                    {
-                        sb.AppendLine("Waypoints =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(WaypointsItem.Overall);
-                            if (WaypointsItem.Specific != null)
-                            {
-                                foreach (var subItem in WaypointsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (printMask?.GridSize ?? true)
-                    {
-                        sb.AppendItem(GridSize, "GridSize");
-                    }
-                    if (printMask?.GridMaxDistance ?? true)
-                    {
-                        sb.AppendItem(GridMaxDistance, "GridMaxDistance");
-                    }
-                    if (printMask?.GridMin ?? true)
-                    {
-                        sb.AppendItem(GridMin, "GridMin");
-                    }
-                    if (printMask?.GridMax ?? true)
-                    {
-                        sb.AppendItem(GridMax, "GridMax");
-                    }
-                    if ((printMask?.GridArrays?.Overall ?? true)
-                        && GridArrays is {} GridArraysItem)
-                    {
-                        sb.AppendLine("GridArrays =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(GridArraysItem.Overall);
-                            if (GridArraysItem.Specific != null)
-                            {
-                                foreach (var subItem in GridArraysItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (printMask?.Unknown3 ?? true)
-                    {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(UnknownEnd, "UnknownEnd");
                     }
                 }
             }
@@ -975,23 +356,11 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Versioning;
             public Exception? NavmeshVersion;
             public Exception? CrcHash;
             public MaskItem<Exception?, ANavmeshParent.ErrorMask?>? Parent;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshVertex.ErrorMask?>>?>? Vertices;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>? Triangles;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>? EdgeLinks;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>? DoorTriangles;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>? Cover;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>? CoverTriangleMappings;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>? Waypoints;
-            public Exception? GridSize;
-            public Exception? GridMaxDistance;
-            public Exception? GridMin;
-            public Exception? GridMax;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>? GridArrays;
-            public Exception? Unknown3;
+            public Exception? UnknownEnd;
             #endregion
 
             #region IErrorMask
@@ -1000,8 +369,6 @@ namespace Mutagen.Bethesda.Starfield
                 NavmeshGeometry_FieldIndex enu = (NavmeshGeometry_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavmeshGeometry_FieldIndex.Versioning:
-                        return Versioning;
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         return NavmeshVersion;
                     case NavmeshGeometry_FieldIndex.CrcHash:
@@ -1010,30 +377,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Parent;
                     case NavmeshGeometry_FieldIndex.Vertices:
                         return Vertices;
-                    case NavmeshGeometry_FieldIndex.Triangles:
-                        return Triangles;
-                    case NavmeshGeometry_FieldIndex.EdgeLinks:
-                        return EdgeLinks;
-                    case NavmeshGeometry_FieldIndex.DoorTriangles:
-                        return DoorTriangles;
-                    case NavmeshGeometry_FieldIndex.Cover:
-                        return Cover;
-                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
-                        return CoverTriangleMappings;
-                    case NavmeshGeometry_FieldIndex.Waypoints:
-                        return Waypoints;
-                    case NavmeshGeometry_FieldIndex.GridSize:
-                        return GridSize;
-                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
-                        return GridMaxDistance;
-                    case NavmeshGeometry_FieldIndex.GridMin:
-                        return GridMin;
-                    case NavmeshGeometry_FieldIndex.GridMax:
-                        return GridMax;
-                    case NavmeshGeometry_FieldIndex.GridArrays:
-                        return GridArrays;
-                    case NavmeshGeometry_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case NavmeshGeometry_FieldIndex.UnknownEnd:
+                        return UnknownEnd;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1044,9 +389,6 @@ namespace Mutagen.Bethesda.Starfield
                 NavmeshGeometry_FieldIndex enu = (NavmeshGeometry_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavmeshGeometry_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = ex;
                         break;
@@ -1059,41 +401,8 @@ namespace Mutagen.Bethesda.Starfield
                     case NavmeshGeometry_FieldIndex.Vertices:
                         this.Vertices = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshVertex.ErrorMask?>>?>(ex, null);
                         break;
-                    case NavmeshGeometry_FieldIndex.Triangles:
-                        this.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.EdgeLinks:
-                        this.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.DoorTriangles:
-                        this.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.Cover:
-                        this.Cover = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
-                        this.CoverTriangleMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.Waypoints:
-                        this.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridSize:
-                        this.GridSize = ex;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
-                        this.GridMaxDistance = ex;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMin:
-                        this.GridMin = ex;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMax:
-                        this.GridMax = ex;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridArrays:
-                        this.GridArrays = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>(ex, null);
-                        break;
-                    case NavmeshGeometry_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case NavmeshGeometry_FieldIndex.UnknownEnd:
+                        this.UnknownEnd = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1105,9 +414,6 @@ namespace Mutagen.Bethesda.Starfield
                 NavmeshGeometry_FieldIndex enu = (NavmeshGeometry_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavmeshGeometry_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = (Exception?)obj;
                         break;
@@ -1120,41 +426,8 @@ namespace Mutagen.Bethesda.Starfield
                     case NavmeshGeometry_FieldIndex.Vertices:
                         this.Vertices = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshVertex.ErrorMask?>>?>)obj;
                         break;
-                    case NavmeshGeometry_FieldIndex.Triangles:
-                        this.Triangles = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.EdgeLinks:
-                        this.EdgeLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.DoorTriangles:
-                        this.DoorTriangles = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.Cover:
-                        this.Cover = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
-                        this.CoverTriangleMappings = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.Waypoints:
-                        this.Waypoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridSize:
-                        this.GridSize = (Exception?)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
-                        this.GridMaxDistance = (Exception?)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMin:
-                        this.GridMin = (Exception?)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridMax:
-                        this.GridMax = (Exception?)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.GridArrays:
-                        this.GridArrays = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>)obj;
-                        break;
-                    case NavmeshGeometry_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case NavmeshGeometry_FieldIndex.UnknownEnd:
+                        this.UnknownEnd = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1164,23 +437,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Versioning != null) return true;
                 if (NavmeshVersion != null) return true;
                 if (CrcHash != null) return true;
                 if (Parent != null) return true;
                 if (Vertices != null) return true;
-                if (Triangles != null) return true;
-                if (EdgeLinks != null) return true;
-                if (DoorTriangles != null) return true;
-                if (Cover != null) return true;
-                if (CoverTriangleMappings != null) return true;
-                if (Waypoints != null) return true;
-                if (GridSize != null) return true;
-                if (GridMaxDistance != null) return true;
-                if (GridMin != null) return true;
-                if (GridMax != null) return true;
-                if (GridArrays != null) return true;
-                if (Unknown3 != null) return true;
+                if (UnknownEnd != null) return true;
                 return false;
             }
             #endregion
@@ -1207,9 +468,6 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Versioning, "Versioning");
-                }
-                {
                     sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                 }
                 {
@@ -1234,146 +492,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (Triangles is {} TrianglesItem)
                 {
-                    sb.AppendLine("Triangles =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(TrianglesItem.Overall);
-                        if (TrianglesItem.Specific != null)
-                        {
-                            foreach (var subItem in TrianglesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (EdgeLinks is {} EdgeLinksItem)
-                {
-                    sb.AppendLine("EdgeLinks =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(EdgeLinksItem.Overall);
-                        if (EdgeLinksItem.Specific != null)
-                        {
-                            foreach (var subItem in EdgeLinksItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (DoorTriangles is {} DoorTrianglesItem)
-                {
-                    sb.AppendLine("DoorTriangles =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(DoorTrianglesItem.Overall);
-                        if (DoorTrianglesItem.Specific != null)
-                        {
-                            foreach (var subItem in DoorTrianglesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (Cover is {} CoverItem)
-                {
-                    sb.AppendLine("Cover =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(CoverItem.Overall);
-                        if (CoverItem.Specific != null)
-                        {
-                            foreach (var subItem in CoverItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (CoverTriangleMappings is {} CoverTriangleMappingsItem)
-                {
-                    sb.AppendLine("CoverTriangleMappings =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(CoverTriangleMappingsItem.Overall);
-                        if (CoverTriangleMappingsItem.Specific != null)
-                        {
-                            foreach (var subItem in CoverTriangleMappingsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (Waypoints is {} WaypointsItem)
-                {
-                    sb.AppendLine("Waypoints =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(WaypointsItem.Overall);
-                        if (WaypointsItem.Specific != null)
-                        {
-                            foreach (var subItem in WaypointsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                {
-                    sb.AppendItem(GridSize, "GridSize");
-                }
-                {
-                    sb.AppendItem(GridMaxDistance, "GridMaxDistance");
-                }
-                {
-                    sb.AppendItem(GridMin, "GridMin");
-                }
-                {
-                    sb.AppendItem(GridMax, "GridMax");
-                }
-                if (GridArrays is {} GridArraysItem)
-                {
-                    sb.AppendLine("GridArrays =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(GridArraysItem.Overall);
-                        if (GridArraysItem.Specific != null)
-                        {
-                            foreach (var subItem in GridArraysItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
-                {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(UnknownEnd, "UnknownEnd");
                 }
             }
             #endregion
@@ -1383,23 +503,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.NavmeshVersion = this.NavmeshVersion.Combine(rhs.NavmeshVersion);
                 ret.CrcHash = this.CrcHash.Combine(rhs.CrcHash);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
                 ret.Vertices = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshVertex.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
-                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
-                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), Noggog.ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
-                ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), Noggog.ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
-                ret.Cover = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cover?.Overall, rhs.Cover?.Overall), Noggog.ExceptionExt.Combine(this.Cover?.Specific, rhs.Cover?.Specific));
-                ret.CoverTriangleMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CoverTriangleMappings?.Overall, rhs.CoverTriangleMappings?.Overall), Noggog.ExceptionExt.Combine(this.CoverTriangleMappings?.Specific, rhs.CoverTriangleMappings?.Specific));
-                ret.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Waypoints?.Overall, rhs.Waypoints?.Overall), Noggog.ExceptionExt.Combine(this.Waypoints?.Specific, rhs.Waypoints?.Specific));
-                ret.GridSize = this.GridSize.Combine(rhs.GridSize);
-                ret.GridMaxDistance = this.GridMaxDistance.Combine(rhs.GridMaxDistance);
-                ret.GridMin = this.GridMin.Combine(rhs.GridMin);
-                ret.GridMax = this.GridMax.Combine(rhs.GridMax);
-                ret.GridArrays = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.GridArrays?.Overall, rhs.GridArrays?.Overall), Noggog.ExceptionExt.Combine(this.GridArrays?.Specific, rhs.GridArrays?.Specific));
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.UnknownEnd = this.UnknownEnd.Combine(rhs.UnknownEnd);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1423,23 +531,11 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Versioning;
             public bool NavmeshVersion;
             public bool CrcHash;
             public ANavmeshParent.TranslationMask? Parent;
             public NavmeshVertex.TranslationMask? Vertices;
-            public NavmeshTriangle.TranslationMask? Triangles;
-            public EdgeLink.TranslationMask? EdgeLinks;
-            public DoorTriangle.TranslationMask? DoorTriangles;
-            public NavmeshCover.TranslationMask? Cover;
-            public NavmeshCoverTriangleMap.TranslationMask? CoverTriangleMappings;
-            public NavmeshWaypoint.TranslationMask? Waypoints;
-            public bool GridSize;
-            public bool GridMaxDistance;
-            public bool GridMin;
-            public bool GridMax;
-            public NavmeshGridArray.TranslationMask? GridArrays;
-            public bool Unknown3;
+            public bool UnknownEnd;
             #endregion
 
             #region Ctors
@@ -1449,14 +545,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Versioning = defaultOn;
                 this.NavmeshVersion = defaultOn;
                 this.CrcHash = defaultOn;
-                this.GridSize = defaultOn;
-                this.GridMaxDistance = defaultOn;
-                this.GridMin = defaultOn;
-                this.GridMax = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.UnknownEnd = defaultOn;
             }
 
             #endregion
@@ -1472,23 +563,11 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Versioning, null));
                 ret.Add((NavmeshVersion, null));
                 ret.Add((CrcHash, null));
                 ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
                 ret.Add((Vertices == null ? DefaultOn : !Vertices.GetCrystal().CopyNothing, Vertices?.GetCrystal()));
-                ret.Add((Triangles == null ? DefaultOn : !Triangles.GetCrystal().CopyNothing, Triangles?.GetCrystal()));
-                ret.Add((EdgeLinks == null ? DefaultOn : !EdgeLinks.GetCrystal().CopyNothing, EdgeLinks?.GetCrystal()));
-                ret.Add((DoorTriangles == null ? DefaultOn : !DoorTriangles.GetCrystal().CopyNothing, DoorTriangles?.GetCrystal()));
-                ret.Add((Cover == null ? DefaultOn : !Cover.GetCrystal().CopyNothing, Cover?.GetCrystal()));
-                ret.Add((CoverTriangleMappings == null ? DefaultOn : !CoverTriangleMappings.GetCrystal().CopyNothing, CoverTriangleMappings?.GetCrystal()));
-                ret.Add((Waypoints == null ? DefaultOn : !Waypoints.GetCrystal().CopyNothing, Waypoints?.GetCrystal()));
-                ret.Add((GridSize, null));
-                ret.Add((GridMaxDistance, null));
-                ret.Add((GridMin, null));
-                ret.Add((GridMax, null));
-                ret.Add((GridArrays == null ? DefaultOn : !GridArrays.GetCrystal().CopyNothing, GridArrays?.GetCrystal()));
-                ret.Add((Unknown3, null));
+                ret.Add((UnknownEnd, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1500,11 +579,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        [Flags]
-        public enum VersioningBreaks
-        {
-            Break0 = 1
-        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshGeometrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1572,23 +646,11 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<INavmeshGeometry>,
         INavmeshGeometryGetter
     {
-        new NavmeshGeometry.VersioningBreaks Versioning { get; set; }
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 CrcHash { get; set; }
         new ANavmeshParent Parent { get; set; }
         new ExtendedList<NavmeshVertex> Vertices { get; }
-        new ExtendedList<NavmeshTriangle> Triangles { get; }
-        new ExtendedList<EdgeLink> EdgeLinks { get; }
-        new ExtendedList<DoorTriangle> DoorTriangles { get; }
-        new ExtendedList<NavmeshCover> Cover { get; }
-        new ExtendedList<NavmeshCoverTriangleMap> CoverTriangleMappings { get; }
-        new ExtendedList<NavmeshWaypoint> Waypoints { get; }
-        new UInt32 GridSize { get; set; }
-        new P2Float GridMaxDistance { get; set; }
-        new P3Float GridMin { get; set; }
-        new P3Float GridMax { get; set; }
-        new ExtendedList<NavmeshGridArray> GridArrays { get; }
-        new Int32 Unknown3 { get; set; }
+        new MemorySlice<Byte> UnknownEnd { get; set; }
     }
 
     public partial interface INavmeshGeometryGetter :
@@ -1604,23 +666,11 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavmeshGeometry_Registration.Instance;
-        NavmeshGeometry.VersioningBreaks Versioning { get; }
         UInt32 NavmeshVersion { get; }
         UInt32 CrcHash { get; }
         IANavmeshParentGetter Parent { get; }
         IReadOnlyList<INavmeshVertexGetter> Vertices { get; }
-        IReadOnlyList<INavmeshTriangleGetter> Triangles { get; }
-        IReadOnlyList<IEdgeLinkGetter> EdgeLinks { get; }
-        IReadOnlyList<IDoorTriangleGetter> DoorTriangles { get; }
-        IReadOnlyList<INavmeshCoverGetter> Cover { get; }
-        IReadOnlyList<INavmeshCoverTriangleMapGetter> CoverTriangleMappings { get; }
-        IReadOnlyList<INavmeshWaypointGetter> Waypoints { get; }
-        UInt32 GridSize { get; }
-        P2Float GridMaxDistance { get; }
-        P3Float GridMin { get; }
-        P3Float GridMax { get; }
-        IReadOnlyList<INavmeshGridArrayGetter> GridArrays { get; }
-        Int32 Unknown3 { get; }
+        ReadOnlyMemorySlice<Byte> UnknownEnd { get; }
 
     }
 
@@ -1790,23 +840,11 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum NavmeshGeometry_FieldIndex
     {
-        Versioning = 0,
-        NavmeshVersion = 1,
-        CrcHash = 2,
-        Parent = 3,
-        Vertices = 4,
-        Triangles = 5,
-        EdgeLinks = 6,
-        DoorTriangles = 7,
-        Cover = 8,
-        CoverTriangleMappings = 9,
-        Waypoints = 10,
-        GridSize = 11,
-        GridMaxDistance = 12,
-        GridMin = 13,
-        GridMax = 14,
-        GridArrays = 15,
-        Unknown3 = 16,
+        NavmeshVersion = 0,
+        CrcHash = 1,
+        Parent = 2,
+        Vertices = 3,
+        UnknownEnd = 4,
     }
     #endregion
 
@@ -1817,9 +855,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(NavmeshGeometry.Mask<>);
 
@@ -1892,31 +930,17 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavmeshGeometry item)
         {
             ClearPartial();
-            item.Versioning = default(NavmeshGeometry.VersioningBreaks);
             item.NavmeshVersion = NavmeshGeometry.NavmeshVersionDefault;
             item.CrcHash = NavmeshGeometry.CrcHashDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
-            item.Triangles.Clear();
-            item.EdgeLinks.Clear();
-            item.DoorTriangles.Clear();
-            item.Cover.Clear();
-            item.CoverTriangleMappings.Clear();
-            item.Waypoints.Clear();
-            item.GridSize = default(UInt32);
-            item.GridMaxDistance = default(P2Float);
-            item.GridMin = default(P3Float);
-            item.GridMax = default(P3Float);
-            item.GridArrays.Clear();
-            item.Unknown3 = default(Int32);
+            item.UnknownEnd = Array.Empty<byte>();
         }
         
         #region Mutagen
         public void RemapLinks(INavmeshGeometry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Parent.RemapLinks(mapping);
-            obj.EdgeLinks.RemapLinks(mapping);
-            obj.DoorTriangles.RemapLinks(mapping);
         }
         
         #endregion
@@ -1965,7 +989,6 @@ namespace Mutagen.Bethesda.Starfield
             NavmeshGeometry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.NavmeshVersion = item.NavmeshVersion == rhs.NavmeshVersion;
             ret.CrcHash = item.CrcHash == rhs.CrcHash;
             ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
@@ -1973,39 +996,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Vertices,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Triangles = item.Triangles.CollectionEqualsHelper(
-                rhs.Triangles,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.EdgeLinks = item.EdgeLinks.CollectionEqualsHelper(
-                rhs.EdgeLinks,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.DoorTriangles = item.DoorTriangles.CollectionEqualsHelper(
-                rhs.DoorTriangles,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Cover = item.Cover.CollectionEqualsHelper(
-                rhs.Cover,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.CoverTriangleMappings = item.CoverTriangleMappings.CollectionEqualsHelper(
-                rhs.CoverTriangleMappings,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Waypoints = item.Waypoints.CollectionEqualsHelper(
-                rhs.Waypoints,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.GridSize = item.GridSize == rhs.GridSize;
-            ret.GridMaxDistance = item.GridMaxDistance.Equals(rhs.GridMaxDistance);
-            ret.GridMin = item.GridMin.Equals(rhs.GridMin);
-            ret.GridMax = item.GridMax.Equals(rhs.GridMax);
-            ret.GridArrays = item.GridArrays.CollectionEqualsHelper(
-                rhs.GridArrays,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.UnknownEnd = MemoryExtensions.SequenceEqual(item.UnknownEnd.Span, rhs.UnknownEnd.Span);
         }
         
         public string Print(
@@ -2050,10 +1041,6 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
-            if (printMask?.Versioning ?? true)
-            {
-                sb.AppendItem(item.Versioning, "Versioning");
-            }
             if (printMask?.NavmeshVersion ?? true)
             {
                 sb.AppendItem(item.NavmeshVersion, "NavmeshVersion");
@@ -2080,123 +1067,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Triangles?.Overall ?? true)
+            if (printMask?.UnknownEnd ?? true)
             {
-                sb.AppendLine("Triangles =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.Triangles)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.EdgeLinks?.Overall ?? true)
-            {
-                sb.AppendLine("EdgeLinks =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.EdgeLinks)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.DoorTriangles?.Overall ?? true)
-            {
-                sb.AppendLine("DoorTriangles =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.DoorTriangles)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.Cover?.Overall ?? true)
-            {
-                sb.AppendLine("Cover =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.Cover)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.CoverTriangleMappings?.Overall ?? true)
-            {
-                sb.AppendLine("CoverTriangleMappings =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.CoverTriangleMappings)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.Waypoints?.Overall ?? true)
-            {
-                sb.AppendLine("Waypoints =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.Waypoints)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.GridSize ?? true)
-            {
-                sb.AppendItem(item.GridSize, "GridSize");
-            }
-            if (printMask?.GridMaxDistance ?? true)
-            {
-                sb.AppendItem(item.GridMaxDistance, "GridMaxDistance");
-            }
-            if (printMask?.GridMin ?? true)
-            {
-                sb.AppendItem(item.GridMin, "GridMin");
-            }
-            if (printMask?.GridMax ?? true)
-            {
-                sb.AppendItem(item.GridMax, "GridMax");
-            }
-            if (printMask?.GridArrays?.Overall ?? true)
-            {
-                sb.AppendLine("GridArrays =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.GridArrays)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
-            if (printMask?.Unknown3 ?? true)
-            {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendLine($"UnknownEnd => {SpanExt.ToHexString(item.UnknownEnd)}");
             }
         }
         
@@ -2207,10 +1080,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Versioning) ?? true))
-            {
-                if (lhs.Versioning != rhs.Versioning) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshVersion) ?? true))
             {
                 if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
@@ -2231,53 +1100,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Vertices.SequenceEqual(rhs.Vertices, (l, r) => ((NavmeshVertexCommon)((INavmeshVertexGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Vertices)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Triangles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.UnknownEnd) ?? true))
             {
-                if (!lhs.Triangles.SequenceEqual(rhs.Triangles, (l, r) => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Triangles)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.EdgeLinks) ?? true))
-            {
-                if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks, (l, r) => ((EdgeLinkCommon)((IEdgeLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.EdgeLinks)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.DoorTriangles) ?? true))
-            {
-                if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles, (l, r) => ((DoorTriangleCommon)((IDoorTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.DoorTriangles)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Cover) ?? true))
-            {
-                if (!lhs.Cover.SequenceEqual(rhs.Cover, (l, r) => ((NavmeshCoverCommon)((INavmeshCoverGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Cover)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings) ?? true))
-            {
-                if (!lhs.CoverTriangleMappings.SequenceEqual(rhs.CoverTriangleMappings, (l, r) => ((NavmeshCoverTriangleMapCommon)((INavmeshCoverTriangleMapGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
-            {
-                if (!lhs.Waypoints.SequenceEqual(rhs.Waypoints, (l, r) => ((NavmeshWaypointCommon)((INavmeshWaypointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Waypoints)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
-            {
-                if (lhs.GridSize != rhs.GridSize) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
-            {
-                if (!lhs.GridMaxDistance.Equals(rhs.GridMaxDistance)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
-            {
-                if (!lhs.GridMin.Equals(rhs.GridMin)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
-            {
-                if (!lhs.GridMax.Equals(rhs.GridMax)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
-            {
-                if (!lhs.GridArrays.SequenceEqual(rhs.GridArrays, (l, r) => ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown3) ?? true))
-            {
-                if (lhs.Unknown3 != rhs.Unknown3) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.UnknownEnd.Span, rhs.UnknownEnd.Span)) return false;
             }
             return true;
         }
@@ -2285,23 +1110,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(INavmeshGeometryGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Versioning);
             hash.Add(item.NavmeshVersion);
             hash.Add(item.CrcHash);
             hash.Add(item.Parent);
             hash.Add(item.Vertices);
-            hash.Add(item.Triangles);
-            hash.Add(item.EdgeLinks);
-            hash.Add(item.DoorTriangles);
-            hash.Add(item.Cover);
-            hash.Add(item.CoverTriangleMappings);
-            hash.Add(item.Waypoints);
-            hash.Add(item.GridSize);
-            hash.Add(item.GridMaxDistance);
-            hash.Add(item.GridMin);
-            hash.Add(item.GridMax);
-            hash.Add(item.GridArrays);
-            hash.Add(item.Unknown3);
+            hash.Add(item.UnknownEnd);
             return hash.ToHashCode();
         }
         
@@ -2323,14 +1136,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.EnumerateFormLinks()))
-            {
-                yield return FormLinkInformation.Factory(item);
-            }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.EnumerateFormLinks()))
-            {
-                yield return FormLinkInformation.Factory(item);
-            }
             yield break;
         }
         
@@ -2349,10 +1154,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
             if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshVersion) ?? true))
             {
                 item.NavmeshVersion = rhs.NavmeshVersion;
@@ -2407,194 +1208,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Triangles) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.UnknownEnd) ?? true))
             {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Triangles);
-                try
-                {
-                    item.Triangles.SetTo(
-                        rhs.Triangles
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.EdgeLinks) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.EdgeLinks);
-                try
-                {
-                    item.EdgeLinks.SetTo(
-                        rhs.EdgeLinks
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.DoorTriangles) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.DoorTriangles);
-                try
-                {
-                    item.DoorTriangles.SetTo(
-                        rhs.DoorTriangles
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Cover) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Cover);
-                try
-                {
-                    item.Cover.SetTo(
-                        rhs.Cover
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings);
-                try
-                {
-                    item.CoverTriangleMappings.SetTo(
-                        rhs.CoverTriangleMappings
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Waypoints);
-                try
-                {
-                    item.Waypoints.SetTo(
-                        rhs.Waypoints
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
-            {
-                item.GridSize = rhs.GridSize;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
-            {
-                item.GridMaxDistance = rhs.GridMaxDistance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
-            {
-                item.GridMin = rhs.GridMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
-            {
-                item.GridMax = rhs.GridMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
-            {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.GridArrays);
-                try
-                {
-                    item.GridArrays.SetTo(
-                        rhs.GridArrays
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (rhs.Versioning.HasFlag(NavmeshGeometry.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown3) ?? true))
-            {
-                item.Unknown3 = rhs.Unknown3;
+                item.UnknownEnd = rhs.UnknownEnd.ToArray();
             }
         }
         
@@ -2709,103 +1325,9 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                items: item.Triangles,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((NavmeshTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
-                writer: writer,
-                items: item.EdgeLinks,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((EdgeLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
-                writer: writer,
-                items: item.DoorTriangles,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((DoorTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshCoverGetter>.Instance.Write(
-                writer: writer,
-                items: item.Cover,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshCoverGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((NavmeshCoverBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshCoverTriangleMapGetter>.Instance.Write(
-                writer: writer,
-                items: item.CoverTriangleMappings,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshCoverTriangleMapGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((NavmeshCoverTriangleMapBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshWaypointGetter>.Instance.Write(
-                writer: writer,
-                items: item.Waypoints,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshWaypointGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((NavmeshWaypointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            writer.Write(item.GridSize);
-            P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.GridMaxDistance);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.GridMin);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.GridMax);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshGridArrayGetter>.Instance.Write(
-                writer: writer,
-                items: item.GridArrays,
-                transl: (MutagenWriter subWriter, INavmeshGridArrayGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((NavmeshGridArrayBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
-            if (!item.Versioning.HasFlag(NavmeshGeometry.VersioningBreaks.Break0))
-            {
-                writer.Write(item.Unknown3);
-            }
+                item: item.UnknownEnd);
         }
 
         public static partial void WriteBinaryParentCustom(
@@ -2869,50 +1391,7 @@ namespace Mutagen.Bethesda.Starfield
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: NavmeshVertex.TryCreateFromBinary));
-            item.Triangles.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: NavmeshTriangle.TryCreateFromBinary));
-            item.EdgeLinks.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: EdgeLink.TryCreateFromBinary));
-            item.DoorTriangles.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: DoorTriangle.TryCreateFromBinary));
-            item.Cover.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCover>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: NavmeshCover.TryCreateFromBinary));
-            item.CoverTriangleMappings.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCoverTriangleMap>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: NavmeshCoverTriangleMap.TryCreateFromBinary));
-            item.Waypoints.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshWaypoint>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    reader: frame,
-                    transl: NavmeshWaypoint.TryCreateFromBinary));
-            item.GridSize = frame.ReadUInt32();
-            item.GridMaxDistance = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.GridMin = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.GridMax = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.GridArrays.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshGridArray>.Instance.Parse(
-                    reader: frame,
-                    transl: NavmeshGridArray.TryCreateFromBinary));
-            if (frame.Complete)
-            {
-                item.Versioning |= NavmeshGeometry.VersioningBreaks.Break0;
-                return;
-            }
-            item.Unknown3 = frame.ReadInt32();
+            item.UnknownEnd = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
         public static partial void FillBinaryParentCustom(
@@ -2983,7 +1462,6 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public NavmeshGeometry.VersioningBreaks Versioning { get; private set; }
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public UInt32 CrcHash => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region Parent
@@ -2994,39 +1472,10 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<INavmeshVertexGetter> Vertices => BinaryOverlayList.FactoryByCountLength<INavmeshVertexGetter>(_structData.Slice(0x10), _package, 16, countLength: 4, (s, p) => NavmeshVertexBinaryOverlay.NavmeshVertexFactory(s, p));
         protected int VerticesEndingPos;
         #endregion
-        #region Triangles
-        protected int TrianglesEndingPos;
-        partial void CustomTrianglesEndPos();
+        #region UnknownEnd
+        public ReadOnlyMemorySlice<Byte> UnknownEnd => _structData.Span.Slice(VerticesEndingPos).ToArray();
+        protected int UnknownEndEndingPos;
         #endregion
-        #region EdgeLinks
-        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<IEdgeLinkGetter>(_structData.Slice(TrianglesEndingPos), _package, 11, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
-        protected int EdgeLinksEndingPos;
-        #endregion
-        #region DoorTriangles
-        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_structData.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
-        protected int DoorTrianglesEndingPos;
-        #endregion
-        #region Cover
-        public IReadOnlyList<INavmeshCoverGetter> Cover => BinaryOverlayList.FactoryByCountLength<INavmeshCoverGetter>(_structData.Slice(DoorTrianglesEndingPos), _package, 12, countLength: 4, (s, p) => NavmeshCoverBinaryOverlay.NavmeshCoverFactory(s, p));
-        protected int CoverEndingPos;
-        #endregion
-        #region CoverTriangleMappings
-        public IReadOnlyList<INavmeshCoverTriangleMapGetter> CoverTriangleMappings => BinaryOverlayList.FactoryByCountLength<INavmeshCoverTriangleMapGetter>(_structData.Slice(CoverEndingPos), _package, 4, countLength: 4, (s, p) => NavmeshCoverTriangleMapBinaryOverlay.NavmeshCoverTriangleMapFactory(s, p));
-        protected int CoverTriangleMappingsEndingPos;
-        #endregion
-        #region Waypoints
-        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_structData.Slice(CoverTriangleMappingsEndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
-        protected int WaypointsEndingPos;
-        #endregion
-        public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(WaypointsEndingPos, 0x4));
-        public P2Float GridMaxDistance => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0x4, 0x8));
-        public P3Float GridMin => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0xC, 0xC));
-        public P3Float GridMax => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0x18, 0xC));
-        #region GridArrays
-        public IReadOnlyList<INavmeshGridArrayGetter> GridArrays => BinaryOverlayList.FactoryByLazyParse<INavmeshGridArrayGetter>(_structData.Slice(WaypointsEndingPos + 0x24), _package, (s, p) => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(s, p));
-        protected int GridArraysEndingPos;
-        #endregion
-        public Int32 Unknown3 => _structData.Length <= GridArraysEndingPos + 0x0 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(GridArraysEndingPos + 0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3048,13 +1497,6 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package)
         {
             ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 16 + 4;
-            ret.CustomTrianglesEndPos();
-            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
-            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
-            ret.CoverEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 12 + 4;
-            ret.CoverTriangleMappingsEndingPos = ret.CoverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverEndingPos)) * 4 + 4;
-            ret.WaypointsEndingPos = ret.CoverTriangleMappingsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverTriangleMappingsEndingPos)) * 18 + 4;
-            ret.GridArraysEndingPos = ret._structData.Length;
         }
 
         public static INavmeshGeometryGetter NavmeshGeometryFactory(
@@ -3073,10 +1515,6 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             NavmeshGeometryParseEndingPositions(ret, package);
-            if (ret._structData.Length <= ret.GridArraysEndingPos)
-            {
-                ret.Versioning |= NavmeshGeometry.VersioningBreaks.Break0;
-            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -107,6 +107,13 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     /// <inheritdoc />
     public void Add(TMajor record) => InternalCache.Add(record);
 
+    /// <inheritdoc />
+    public TMajor AddReturn(TMajor record)
+    {
+        InternalCache.Add(record);
+        return record;
+    }
+
     private TMajor ConfirmCorrectType(IMajorRecord record, string paramName)
     {
         if (record == null) throw new ArgumentNullException(paramName);
@@ -288,18 +295,25 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
         var finalPos = stream.Position + groupMeta.TotalLength;
         stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
         // Parse MajorRecord locations
-        FormID? lastParsed = default;
+        FormKey? lastParsed = default;
         while (stream.Position < finalPos)
         {
             VariableHeader varMeta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory);
             if (varMeta.TryGetAsGroup(out var groupHeader))
             {
-                var formId = FormID.Factory(groupHeader.ContainedRecordTypeData, stream.MetaData.MasterReferences);
-                if (formId != lastParsed)
+                var formId = FormID.Factory(groupHeader.ContainedRecordTypeData.UInt32());
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, formId, reference: false);
+                if (formKey != lastParsed)
                 {
                     // Orphaned subgroup
-                    var formKey = FormKey.Factory(package.MetaData.MasterReferences!, formId.Raw);
-                    locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                    try
+                    {
+                        locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new RecordCollisionException(formKey, typeof(T));
+                    }
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
                 lastParsed = null;
@@ -311,7 +325,7 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                 {
                     throw new MalformedDataException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                 }
-                var formKey = FormKey.Factory(package.MetaData.MasterReferences!, majorMeta.FormID.Raw);
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
                 try
                 {
                     locationDict.Add(formKey, checked((int)(stream.Position - offset)));
@@ -321,7 +335,7 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                     throw new RecordCollisionException(formKey, typeof(T));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
-                lastParsed = majorMeta.FormID;
+                lastParsed = formKey;
             }
         }
 

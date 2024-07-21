@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -3436,11 +3435,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOwnerGetter>(_package, _recordData, _OwnerLocation);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -3463,11 +3462,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region MultiBoundReference
         private int? _MultiBoundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => _MultiBoundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultiBoundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region IgnoredBySandbox
         private int? _IgnoredBySandboxLocation;
@@ -3476,7 +3475,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         public IReadOnlyList<Single>? DistantLodData { get; private set; }
         #region Scale
@@ -3618,14 +3617,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)APlacedTrap_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XLRL:
@@ -3635,14 +3632,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DistantLodData = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.DistantLodData;
                 }
                 case RecordTypeInts.XSCL:

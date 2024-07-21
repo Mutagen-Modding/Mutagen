@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.Inis.DI;
 public interface IIniPathLookup
 {
     FilePath Get(GameRelease release);
+    FilePath? TryGet(GameRelease release);
 }
 
 public class IniPathLookup : IIniPathLookup
@@ -18,13 +19,33 @@ public class IniPathLookup : IIniPathLookup
         _gameDirectoryLookup = gameDirectoryLookup;
     }
     
+    public FilePath? TryGet(GameRelease release)
+    {
+        var constants = GameConstants.Get(release);
+        var docsString = constants.MyDocumentsString;
+        if (docsString == null)
+        {
+            var gameDir = _gameDirectoryLookup.TryGet(release);
+            if (gameDir == null) return null;
+            
+            return Path.Combine(gameDir, ToIniFileName(release));
+        }
+        
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "My Games",
+            docsString, 
+            ToIniFileName(release));
+    }
+    
     public FilePath Get(GameRelease release)
     {
         var constants = GameConstants.Get(release);
         var docsString = constants.MyDocumentsString;
         if (docsString == null)
         {
-            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
+            var gameDir = _gameDirectoryLookup.Get(release);
+            return Path.Combine(gameDir, ToIniFileName(release));
         }
         
         return Path.Combine(

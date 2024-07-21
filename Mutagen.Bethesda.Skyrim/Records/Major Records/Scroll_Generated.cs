@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -3388,11 +3387,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _MenuDisplayObjectLocation);
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipmentTypeLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3402,11 +3401,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region Value
@@ -3463,7 +3462,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value.Min + 0x20;
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> HalfCostPerk => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_HalfCostPerkLocation, 0x4), isSet: _HalfCostPerk_IsSet);
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
@@ -3555,7 +3554,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Scroll_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:

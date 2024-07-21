@@ -143,6 +143,9 @@ public static class Implicits
         var starfieldBaseMasters = new HashSet<ModKey>()
         {
             "Starfield.esm",
+            "Constellation.esm",
+            "OldMars.esm",
+            "BlueprintShips-Starfield.esm",
         };
         Starfield = new ImplicitRegistration(
             GameRelease.Starfield,

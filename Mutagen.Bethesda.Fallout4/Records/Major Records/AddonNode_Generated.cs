@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1956,11 +1955,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region Light
         private int? _LightLocation;
-        public IFormLinkNullableGetter<ILightGetter> Light => _LightLocation.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+        public IFormLinkNullableGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightGetter>(_package, _recordData, _LightLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region MasterParticleSystemCap

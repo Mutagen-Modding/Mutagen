@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Ability => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

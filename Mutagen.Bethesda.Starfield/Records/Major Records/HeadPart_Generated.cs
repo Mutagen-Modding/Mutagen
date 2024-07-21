@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1370,6 +1369,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2436,6 +2437,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2599,15 +2602,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ValidRacesLocation);
         #endregion
         #region MNAM
         private int? _MNAMLocation;
-        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => _MNAMLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _MNAMLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2695,6 +2698,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2721,7 +2726,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.ExtraParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHeadPartGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

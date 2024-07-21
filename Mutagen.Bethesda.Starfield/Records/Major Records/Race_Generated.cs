@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -3742,6 +3741,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -3777,6 +3778,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.RPRF,
                 RecordTypes.RNAM,
                 RecordTypes.SRAC,
+                RecordTypes.SADD,
                 RecordTypes.SAKD,
                 RecordTypes.SGNM,
                 RecordTypes.SAPT,
@@ -6397,11 +6399,11 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 8) return null;
-                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 24) return null;
-                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Weight>(
+                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Weight>(
                         frame: frame,
                         transl: Weight.TryCreateFromBinary);
                     if (dataFrame.Remaining < 8) return null;
@@ -6578,7 +6580,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -6724,6 +6726,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:
@@ -6876,7 +6879,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
@@ -6889,7 +6892,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         private RangeInt32? _DAT2Location;
         #region Height
@@ -6970,17 +6973,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Explosion
         private int _ExplosionLocation => _DAT2Location!.Value.Min + 0x8C;
         private bool _Explosion_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
         #endregion
         #region Debris
         private int _DebrisLocation => _DAT2Location!.Value.Min + 0x90;
         private bool _Debris_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> Debris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet);
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DAT2Location!.Value.Min + 0x94;
         private bool _ImpactDataSet_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
         #endregion
         #region OrientationLimitsPitch
         private int _OrientationLimitsPitchLocation => _DAT2Location!.Value.Min + 0x98;
@@ -7019,8 +7022,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -7039,7 +7042,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AimAssistPose
         private int? _AimAssistPoseLocation;
-        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => _AimAssistPoseLocation.HasValue ? new FormLinkNullable<IAimAssistPoseGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AimAssistPoseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAimAssistPoseGetter>.Null;
+        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAimAssistPoseGetter>(_package, _recordData, _AimAssistPoseLocation);
         #endregion
         #region NAM3
         public partial ParseResult NAM3CustomParse(
@@ -7049,7 +7052,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImpactMaterialType
         private int? _ImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _ImpactMaterialTypeLocation);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         public ISoundReferenceGetter? WED1 { get; private set; }
@@ -7061,19 +7064,19 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _UnarmedWeaponLocation);
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultLocation);
         #endregion
         #region BaseMovementSwimDefault
         private int? _BaseMovementSwimDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => _BaseMovementSwimDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementSwimDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementSwimDefaultLocation);
         #endregion
         #region BaseMovementFlyDefault
         private int? _BaseMovementFlyDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => _BaseMovementFlyDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementFlyDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementFlyDefaultLocation);
         #endregion
         #region ChargenAndSkintones
         private IGenderedItemGetter<IChargenAndSkintonesGetter?>? _ChargenAndSkintonesOverlay;
@@ -7081,11 +7084,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _ArmorRaceLocation);
         #endregion
         #region SubgraphTemplateRace
         private int? _SubgraphTemplateRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphTemplateRaceLocation);
         #endregion
         public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
@@ -7098,7 +7101,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _DialogueQuestLocation);
         #endregion
         #region HeadPartsAndBoneModifiers
         private IGenderedItemGetter<IHeadPartsAndBoneModifiersGetter?>? _HeadPartsAndBoneModifiersOverlay;
@@ -7193,7 +7196,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.ActorEffect = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -7222,19 +7225,17 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.GNAM:
@@ -7539,6 +7540,7 @@ namespace Mutagen.Bethesda.Starfield
                     _SubgraphTemplateRaceLocation = (stream.Position - offset);
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:

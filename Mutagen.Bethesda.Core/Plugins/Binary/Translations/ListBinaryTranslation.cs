@@ -345,12 +345,22 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
     public ExtendedList<T> Parse( 
         MutagenFrame reader, 
         BinaryMasterParseDelegate<T> transl, 
-        TypedParseParams translationParams = default) 
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null) 
     { 
         translationParams = translationParams.ShortCircuit(); 
         var ret = new ExtendedList<T>(); 
         while (!reader.Complete) 
-        { 
+        {
+            if (endMarker != null)
+            {
+                var rec = reader.GetSubrecord();
+                if (rec.RecordType == endMarker.Value)
+                {
+                    reader.Position += rec.TotalLength;
+                    break;
+                }
+            }
             if (transl(reader, out var subItem, translationParams)) 
             { 
                 ret.Add(subItem); 
@@ -726,7 +736,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterParseDelegate<T> transl, 
         RecordTriggerSpecs triggeringRecord, 
         TypedParseParams translationParams = default, 
-        bool nullIfZero = true) 
+        bool nullIfZero = true,
+        RecordType? endMarker = null) 
     { 
         translationParams = translationParams.ShortCircuit(); 
         var subHeader = reader.GetSubrecord(); 
@@ -747,13 +758,20 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                 transl, 
                 triggeringRecord, 
                 translationParams, 
-                nullIfZero: nullIfZero); 
+                nullIfZero: nullIfZero,
+                endMarker: endMarker); 
         } 
-        else 
+        else if (recType == endMarker)
+        {
+            reader.Position += subHeader.TotalLength;
+            return Array.Empty<T>();
+        }
+        else
         { 
             return Parse( 
                 reader, 
-                transl); 
+                transl,
+                endMarker: endMarker); 
         } 
     } 
  
@@ -763,7 +781,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterParseDelegate<T> transl, 
         RecordTriggerSpecs? triggeringRecord = null, 
         TypedParseParams translationParams = default, 
-        bool nullIfZero = false) 
+        bool nullIfZero = false,
+        RecordType? endMarker = null) 
     { 
         if (amount == 0 && nullIfZero) return Enumerable.Empty<T>(); 
         translationParams = translationParams.ShortCircuit(); 
@@ -772,7 +791,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         for (int i = 0; i < amount; i++) 
         { 
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
-            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break; 
+            if (endMarker == nextRecord)
+            {
+                reader.ReadSubrecord();
+                break;
+            }
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui) 
             { 
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
@@ -787,7 +811,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                     new MalformedDataException($"Parsed item on the list consumed no data."), 
                     nextRecord); 
             } 
-        } 
+        }
+
+        if (endMarker.HasValue)
+        {
+            reader.TryReadSubrecord(endMarker.Value, out _);
+        }
         if (reader.Position == startingPos) 
         { 
             throw new MalformedDataException($"Parsed list of {amount} items consumed no data."); 

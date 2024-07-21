@@ -2472,7 +2472,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region HeadtrackActorID
         private int? _HeadtrackActorIDLocation;
@@ -2658,7 +2658,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPackageGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

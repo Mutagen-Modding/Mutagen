@@ -50,7 +50,10 @@ partial class CellBinaryCreateTranslation
         {
             if (frame.Reader.Complete) return;
             if (!frame.TryGetGroupHeader(out var groupMeta)) return;
-            var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+            var formKey = FormKey.Factory(
+                frame.MetaData.MasterReferences,
+                new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                reference: true);
             if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
             {
                 obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
@@ -103,7 +106,10 @@ partial class CellBinaryCreateTranslation
         ICellInternal obj)
     {
         var groupMeta = frame.ReadGroupHeader();
-        var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+        var formKey = FormKey.Factory(
+            frame.MetaData.MasterReferences, 
+            new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+            reference: true);
         if (formKey != obj.FormKey)
         {
             throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
@@ -182,7 +188,10 @@ partial class CellBinaryCreateTranslation
     static void ParseTemporary(MutagenFrame frame, ICellInternal obj)
     {
         var groupMeta = frame.ReadGroupHeader();
-        var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+        var formKey = FormKey.Factory(
+            frame.MetaData.MasterReferences, 
+            new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+            reference: true);
         if (formKey != obj.FormKey)
         {
             throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
@@ -254,7 +263,7 @@ partial class CellBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.UnknownGroupData);
@@ -264,7 +273,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         writer.Write(obj.PersistentTimestamp);
                         writer.Write(obj.PersistentUnknownGroupData);
@@ -282,7 +291,7 @@ partial class CellBinaryWriteTranslation
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormKey);
+                            obj);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         writer.Write(obj.TemporaryUnknownGroupData);
@@ -424,7 +433,10 @@ partial class CellBinaryOverlay
         if (stream.Complete) return;
         var startPos = stream.Position;
         if (!stream.TryGetGroupHeader(out var groupMeta)) return;
-        var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+        var formKey = FormKey.Factory(
+            _package.MetaData.MasterReferences, 
+            new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+            reference: true);
         if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
         {
             if (formKey != this.FormKey)

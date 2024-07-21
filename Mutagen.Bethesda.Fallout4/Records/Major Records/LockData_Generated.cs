@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public LockLevel Level => (LockLevel)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IKeyGetter> Key => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeyGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public LockData.Flag Flags => (LockData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(

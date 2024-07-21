@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAnimationSoundTagSetGetter>(_package, _recordData, _AnimationSoundLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

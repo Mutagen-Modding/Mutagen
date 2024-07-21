@@ -1155,11 +1155,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region WorldMorph
         private int? _WorldMorphLocation;
-        public IFormLinkNullableGetter<IMorphableObjectGetter> WorldMorph => _WorldMorphLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldMorphLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> WorldMorph => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _WorldMorphLocation);
         #endregion
         #region FirstPersonMorph
         private int? _FirstPersonMorphLocation;
-        public IFormLinkNullableGetter<IMorphableObjectGetter> FirstPersonMorph => _FirstPersonMorphLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonMorphLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> FirstPersonMorph => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _FirstPersonMorphLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

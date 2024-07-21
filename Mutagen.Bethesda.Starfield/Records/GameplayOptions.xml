@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GameplayOptions" recordType="GPOF" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <String name="Title" recordType="NNAM" translated="Normal" />
+      <String name="Description" recordType="DNAM" translated="Normal" />
+      <ByteArray name="TNAM" recordType="TNAM" unknown="true" />
+      <ByteArray name="DefaultIndex" recordType="VNAM" />
+      <ByteArray name="WNAM" recordType="WNAM" unknown="true" />
+      <RefDirect name="GPOD" refName="GPOD" />
+      <RefList name="SliderEntries" refName="SliderEntry" />
+    </Fields>
+  </Object>
+  <Object name="GPOD" recordType="GPOD" objType="Subrecord">
+    <Fields>
+      <Float name="Unknown1"  unknown="true" />
+      <Float name="Unknown2"  unknown="true" />
+      <Float name="Unknown3"  unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SliderEntry" objType="Subrecord">
+    <Fields>
+      <String name="Description" recordType="VOVS" translated="Normal" />
+      <Float name="SliderIndex" recordType="VORV" />
+      <String name="Name" recordType="RESN" translated="Normal" />
+      <Float name="XpMultiplier" recordType="VORN" />
+    </Fields>
+  </Object>
+</Loqui>

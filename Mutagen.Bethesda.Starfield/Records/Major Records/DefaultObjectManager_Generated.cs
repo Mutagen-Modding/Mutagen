@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1616,14 +1615,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IDefaultObjectUseGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Objects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IDefaultObjectUseGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => DefaultObjectUseBinaryOverlay.DefaultObjectUseFactory(s, p));
-                    stream.Position += subLen;
                     return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:

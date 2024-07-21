@@ -3854,15 +3854,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _SpecificLocationLocation);
         #endregion
         #region ForcedReference
         private int? _ForcedReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedGetter> ForcedReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _ForcedReferenceLocation);
         #endregion
         #region UniqueActor
         private int? _UniqueActorLocation;
-        public IFormLinkNullableGetter<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> UniqueActor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _UniqueActorLocation);
         #endregion
         public ILocationAliasReferenceGetter? Location { get; private set; }
         public IExternalAliasReferenceGetter? External { get; private set; }
@@ -3877,30 +3877,30 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SpectatorOverridePackageListLocation);
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ObserveDeadBodyOverridePackageListLocation);
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _GuardWarnOverridePackageListLocation);
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _CombatOverridePackageListLocation);
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<IMessageGetter> DisplayName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _DisplayNameLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
         public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = Array.Empty<IFormLinkGetter<IFactionGetter>>();
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region VoiceTypes
         private int? _VoiceTypesLocation;
-        public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
+        public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAliasVoiceTypeGetter>(_package, _recordData, _VoiceTypesLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4074,7 +4074,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)QuestAlias_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNTO:
@@ -4121,7 +4121,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4135,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Factions = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IFactionGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IFactionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFactionGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4149,7 +4149,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.PackageData = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPackageGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1696,15 +1695,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AmbientSoundLocation);
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
-        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRegionGetter>(_package, _recordData, _UseSoundFromRegionLocation);
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
+        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReverbParametersGetter>(_package, _recordData, _EnvironmentTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

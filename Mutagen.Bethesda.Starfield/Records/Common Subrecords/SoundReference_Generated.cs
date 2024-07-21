@@ -1224,8 +1224,8 @@ namespace Mutagen.Bethesda.Starfield
 
         public Guid Start => new Guid(_structData.Slice(0x0, 0x10).Slice(0, 16));
         public Guid Stop => new Guid(_structData.Slice(0x10, 0x10).Slice(0, 16));
-        public IFormLinkGetter<IConditionRecordGetter> Condition => new FormLink<IConditionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
-        public IFormLinkGetter<IWWiseEventDataGetter> EventMapping => new FormLink<IWWiseEventDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x24, 0x4))));
+        public IFormLinkGetter<IConditionRecordGetter> Condition => FormLinkBinaryTranslation.Instance.OverlayFactory<IConditionRecordGetter>(_package, _structData.Span.Slice(0x20, 0x4));
+        public IFormLinkGetter<IWWiseEventDataGetter> EventMapping => FormLinkBinaryTranslation.Instance.OverlayFactory<IWWiseEventDataGetter>(_package, _structData.Span.Slice(0x24, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

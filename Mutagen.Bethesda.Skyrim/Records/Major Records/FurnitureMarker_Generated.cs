@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Boolean Enabled => _structData.Slice(0x0, 0x1)[0] >= 1;
         public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x1), _package, default(TypedParseParams));
-        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0x5, 0x4));
         public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x9), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,

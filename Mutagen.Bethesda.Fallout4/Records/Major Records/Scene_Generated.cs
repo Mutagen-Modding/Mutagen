@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -3555,7 +3554,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;
@@ -3592,7 +3591,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         #region Index
         private int? _IndexLocation;
@@ -3770,7 +3769,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Scene_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CTDA:

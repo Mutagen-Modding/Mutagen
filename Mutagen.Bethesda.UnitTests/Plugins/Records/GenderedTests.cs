@@ -17,12 +17,15 @@ public class GenderedTests
     [Fact]
     public void RaceHeadPart_DanglingMarker()
     {
+        var masters = SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(Constants.Skyrim));
         var frame = new MutagenFrame(
             new MutagenBinaryReadStream(
                 File.OpenRead(TestDataPathing.RaceHeadPartDanglingMaster), 
-                new ParsingBundle(
+                new ParsingMeta(
                     GameRelease.SkyrimSE, 
-                    new MasterReferenceCollection(Constants.Skyrim))));
+                    Constants.Skyrim,
+                    masters)));
         var headData = GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
             frame: frame,
             maleMarker: RecordTypes.MNAM,

@@ -8,10 +8,14 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -116,6 +120,7 @@ internal static class PluginUtilityTranslation
                         translationParams: translationParams);
                 }
                 catch (Exception ex)
+                when (ex is not SubrecordException)
                 {
                     throw new SubrecordException(
                         subMeta.RecordType,
@@ -393,7 +398,6 @@ internal static class PluginUtilityTranslation
             nextRecordType: modHeader.RecordType,
             contentLength: checked((int)modHeader.ContentLength),
             translationParams: null);
-        frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
         while (!frame.Complete)
         {
             var groupHeader = frame.GetGroupHeader();
@@ -551,5 +555,25 @@ internal static class PluginUtilityTranslation
 
         lhs.RawPath = rhs.RawPath;
         return lhs;
+    }
+
+    internal static BinaryWriteParameters SetStringsWriter(
+        IModGetter mod,
+        BinaryWriteParameters writeParameters,
+        string path,
+        ModKey modKey)
+    {
+        if (writeParameters.StringsWriter != null) return writeParameters;
+        if (!mod.UsingLocalization) return writeParameters;
+        
+        return writeParameters with
+        {
+            StringsWriter = new StringsWriter(
+                release: mod.GameRelease, 
+                modKey: modKey, 
+                writeDirectory: Path.Combine(Path.GetDirectoryName(path)!, "Strings"),
+                encodingProvider: MutagenEncoding.Default,
+                fileSystem: writeParameters.FileSystem.GetOrDefault())
+        };
     }
 }

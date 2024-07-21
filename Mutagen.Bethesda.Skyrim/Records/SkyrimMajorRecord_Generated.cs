@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -472,6 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -784,6 +785,20 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMajorRecordInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]

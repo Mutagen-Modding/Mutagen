@@ -67,6 +67,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region DATA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
+        {
+            get => this._DATA;
+            set => this._DATA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IBlockHeightAdjustmentComponentGetter.DATA => this.DATA;
+        #endregion
 
         #region To String
 
@@ -105,10 +116,20 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem SurfaceBlocks)
+            public Mask(TItem initialValue)
+            : base(initialValue)
+            {
+                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>());
+                this.DATA = initialValue;
+            }
+
+            public Mask(
+                TItem SurfaceBlocks,
+                TItem DATA)
             : base()
             {
                 this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(SurfaceBlocks, Enumerable.Empty<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>());
+                this.DATA = DATA;
             }
 
             #pragma warning disable CS8618
@@ -121,6 +142,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>? SurfaceBlocks;
+            public TItem DATA;
             #endregion
 
             #region Equals
@@ -135,12 +157,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.SurfaceBlocks, rhs.SurfaceBlocks)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.SurfaceBlocks);
+                hash.Add(this.DATA);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -163,6 +187,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.DATA)) return false;
                 return true;
             }
             #endregion
@@ -183,6 +208,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.DATA)) return true;
                 return false;
             }
             #endregion
@@ -213,6 +239,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.DATA = eval(this.DATA);
             }
             #endregion
 
@@ -250,6 +277,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.DATA ?? true)
+                    {
+                        sb.AppendItem(DATA, "DATA");
+                    }
                 }
             }
             #endregion
@@ -262,6 +293,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BlockHeightAdjustmentComponentItem.ErrorMask?>>?>? SurfaceBlocks;
+            public Exception? DATA;
             #endregion
 
             #region IErrorMask
@@ -272,6 +304,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks:
                         return SurfaceBlocks;
+                    case BlockHeightAdjustmentComponent_FieldIndex.DATA:
+                        return DATA;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -284,6 +318,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks:
                         this.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BlockHeightAdjustmentComponentItem.ErrorMask?>>?>(ex, null);
+                        break;
+                    case BlockHeightAdjustmentComponent_FieldIndex.DATA:
+                        this.DATA = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -299,6 +336,9 @@ namespace Mutagen.Bethesda.Starfield
                     case BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks:
                         this.SurfaceBlocks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BlockHeightAdjustmentComponentItem.ErrorMask?>>?>)obj;
                         break;
+                    case BlockHeightAdjustmentComponent_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -309,6 +349,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (SurfaceBlocks != null) return true;
+                if (DATA != null) return true;
                 return false;
             }
             #endregion
@@ -353,6 +394,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(DATA, "DATA");
+                }
             }
             #endregion
 
@@ -362,6 +406,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BlockHeightAdjustmentComponentItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Overall, rhs.SurfaceBlocks?.Overall), Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Specific, rhs.SurfaceBlocks?.Specific));
+                ret.DATA = this.DATA.Combine(rhs.DATA);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -385,6 +430,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public BlockHeightAdjustmentComponentItem.TranslationMask? SurfaceBlocks;
+            public bool DATA;
             #endregion
 
             #region Ctors
@@ -393,6 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.DATA = defaultOn;
             }
 
             #endregion
@@ -401,6 +448,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((SurfaceBlocks == null ? DefaultOn : !SurfaceBlocks.GetCrystal().CopyNothing, SurfaceBlocks?.GetCrystal()));
+                ret.Add((DATA, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -473,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IBlockHeightAdjustmentComponent>
     {
         new IArray2d<BlockHeightAdjustmentComponentItem> SurfaceBlocks { get; }
+        new MemorySlice<Byte>? DATA { get; set; }
     }
 
     public partial interface IBlockHeightAdjustmentComponentGetter :
@@ -482,6 +531,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponent_Registration.Instance;
         IReadOnlyArray2d<IBlockHeightAdjustmentComponentItemGetter> SurfaceBlocks { get; }
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
 
     }
 
@@ -627,6 +677,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum BlockHeightAdjustmentComponent_FieldIndex
     {
         SurfaceBlocks = 0,
+        DATA = 1,
     }
     #endregion
 
@@ -637,9 +688,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(BlockHeightAdjustmentComponent.Mask<>);
 
@@ -672,7 +723,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.DAT2);
+                RecordTypes.DAT2,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -718,6 +770,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.SurfaceBlocks.SetAllTo(new BlockHeightAdjustmentComponentItem());
+            item.DATA = default;
             base.Clear(item);
         }
         
@@ -789,6 +842,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.SurfaceBlocks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -853,6 +907,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.DATA ?? true)
+                && item.DATA is {} DATAItem)
+            {
+                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+            }
         }
         
         public static BlockHeightAdjustmentComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
@@ -876,6 +935,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SurfaceBlocks.SequenceEqual(rhs.SurfaceBlocks, (l, r) => ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)l.Value).CommonInstance()!).Equals(l.Value, r.Value, equalsMask?.GetSubCrystal((int)BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponent_FieldIndex.DATA) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
+            }
             return true;
         }
         
@@ -894,6 +957,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.SurfaceBlocks);
+            if (item.DATA is {} DATAItem)
+            {
+                hash.Add(DATAItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -966,6 +1033,17 @@ namespace Mutagen.Bethesda.Starfield
                 finally
                 {
                     errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponent_FieldIndex.DATA) ?? true))
+            {
+                if(rhs.DATA is {} DATArhs)
+                {
+                    item.DATA = DATArhs.ToArray();
+                }
+                else
+                {
+                    item.DATA = default;
                 }
             }
         }
@@ -1093,6 +1171,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DATA,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -1157,6 +1239,12 @@ namespace Mutagen.Bethesda.Starfield
                             transl: BlockHeightAdjustmentComponentItem.TryCreateFromBinary));
                     return (int)BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks;
                 }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)BlockHeightAdjustmentComponent_FieldIndex.DATA;
+                }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1216,6 +1304,10 @@ namespace Mutagen.Bethesda.Starfield
         #region SurfaceBlocks
         private static IReadOnlyArray2d<IBlockHeightAdjustmentComponentItemGetter> _SurfaceBlocksEmpty = new Array2d<IBlockHeightAdjustmentComponentItemGetter>(16, 16, new BlockHeightAdjustmentComponentItem());
         public IReadOnlyArray2d<IBlockHeightAdjustmentComponentItemGetter> SurfaceBlocks { get; private set; } = _SurfaceBlocksEmpty;
+        #endregion
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1290,6 +1382,11 @@ namespace Mutagen.Bethesda.Starfield
                         size: BlockHeightAdjustmentComponent.SurfaceBlocksFixedSize,
                         getter: (s, p) => BlockHeightAdjustmentComponentItemBinaryOverlay.BlockHeightAdjustmentComponentItemFactory(s, p));
                     return (int)BlockHeightAdjustmentComponent_FieldIndex.SurfaceBlocks;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset);
+                    return (int)BlockHeightAdjustmentComponent_FieldIndex.DATA;
                 }
                 default:
                     return base.FillRecordType(

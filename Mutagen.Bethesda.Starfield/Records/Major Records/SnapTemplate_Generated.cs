@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2584,7 +2583,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _ParentLocation);
         #endregion
         public IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; private set; } = Array.Empty<ISnapNodeEntryGetter>();
         public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = Array.Empty<ISnapParentNodeEntryGetter>();

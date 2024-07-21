@@ -31,6 +31,7 @@
       </CustomLogic>
       <RefList name="Aliases" refName="AQuestAlias" binary="NoGeneration" nullable="True" />
       <FormLink name="QuestGroup" recordType="GNAM" refName="Keyword" />
+      <String name="SwfFile" recordType="SNAM" />
       <FormLink name="MissionTypeKeyword" refName="Keyword" recordType="QMTY" />
       <String name="MissionBoardDescription" translated="Normal" recordType="QMSU" />
       <RefList name="MissionBoardInfoPanels" refName="QuestMissionBoardPanel" />

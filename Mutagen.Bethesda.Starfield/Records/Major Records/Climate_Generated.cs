@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2203,26 +2202,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.WLST:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Weathers = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherTypeGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Climate_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.WSLT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.WeatherSettings = BinaryOverlayList.FactoryByStartIndex<IClimateWeatherSettingsGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.WeatherSettings = BinaryOverlayList.FactoryByStartIndexWithTrigger<IClimateWeatherSettingsGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ClimateWeatherSettingsBinaryOverlay.ClimateWeatherSettingsFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Climate_FieldIndex.WeatherSettings;
                 }
                 case RecordTypeInts.TNAM:

@@ -99,7 +99,7 @@ partial class TraversalReferenceBinaryWriteTranslation
         else
         {
             writer.Write(0);
-            FormKeyBinaryTranslation.Instance.Write(writer, trav.FormKey);
+            FormKeyBinaryTranslation.Instance.Write(writer, trav);
         }
         writer.Write(item.Unknown);
     }
@@ -151,9 +151,7 @@ partial class TraversalReferenceBinaryOverlay
     {
         if (HasFormKey)
         {
-            return new FormLinkNullable<ITraversalGetter>(
-                FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(
-                    _structData.Slice(0x2C))));
+            return FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ITraversalGetter>(_package, _structData.Slice(0x2C));
         }
         else
         {

@@ -55,7 +55,6 @@ public class TriggeringRecordModule : GenerationModule
     {
         var data = obj.GetObjectData();
         var record = obj.Node.GetAttribute("recordType");
-        data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
         data.CustomBinary = obj.Node.GetAttribute<bool>("customBinary", defaultVal: false);
         data.UsesStringFiles = obj.Node.GetAttribute<bool>("usesStringFiles", defaultVal: true);
         data.CustomBinaryEnd = obj.Node.GetAttribute<CustomEnd>("customBinaryEnd", defaultVal: CustomEnd.Off);

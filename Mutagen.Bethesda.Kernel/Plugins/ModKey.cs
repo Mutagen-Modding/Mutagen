@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins;
 /// General practice is to use ModKey.TryFactory on a mod's file name when at all possible
 /// </summary>
 [DebuggerDisplay("ModKey {FileName}")]
-public readonly struct ModKey : IEquatable<ModKey>
+public readonly struct ModKey : IEquatable<ModKey>, IModKeyed
 {
     /// <summary>
     /// A static readonly singleton representing a null ModKey
@@ -527,4 +527,6 @@ public readonly struct ModKey : IEquatable<ModKey>
     private static readonly Comparer<ModKey> _alphabetical = Comparer<ModKey>.Create((x, y) => x.FileName.String.CompareTo(y.FileName.String));
     public static Comparer<ModKey> Alphabetical => _alphabetical;
     #endregion
+
+    ModKey IModKeyed.ModKey => this;
 }

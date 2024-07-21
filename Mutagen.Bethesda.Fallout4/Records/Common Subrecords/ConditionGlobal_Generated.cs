@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> ComparisonValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IGlobalGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         #region Data
         protected int DataEndingPos;
         partial void CustomDataEndPos();

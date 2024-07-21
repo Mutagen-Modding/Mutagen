@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1177,6 +1176,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -1559,6 +1560,20 @@ namespace Mutagen.Bethesda.Starfield
             ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -2180,6 +2195,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "OrbitalDataComponent":
                 case "IOrbitalDataComponentGetter":
                 case "IOrbitalDataComponent":
+                case "CityMapsUsageComponent":
+                case "ICityMapsUsageComponentGetter":
+                case "ICityMapsUsageComponent":
                     break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":
@@ -3673,19 +3691,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Branch
         private int? _BranchLocation;
-        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogBranchGetter>(_package, _recordData, _BranchLocation);
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         #region AffinityEvent
         private int? _AffinityEventLocation;
-        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent => _AffinityEventLocation.HasValue ? new FormLinkNullable<IAffinityEventGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AffinityEventLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAffinityEventGetter>.Null;
+        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _AffinityEventLocation);
         #endregion
         private RangeInt32? _DATALocation;
         #region TopicFlags
@@ -3843,14 +3861,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TIFL:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.TopicInfoList = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IDialogResponsesGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.TopicInfoList = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IDialogResponsesGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IDialogResponsesGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogResponsesGetter>(p, s));
                     return (int)DialogTopic_FieldIndex.TopicInfoList;
                 }
                 case RecordTypeInts.TIFC:

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -3130,7 +3129,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InteractionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InteractionKeywordLocation);
         #endregion
         #region Flags2
         public partial ParseResult Flags2CustomParse(
@@ -3144,7 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AssociatedSpell
         private int? _AssociatedSpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AssociatedSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _AssociatedSpellLocation);
         #endregion
         #region DisabledMarkers
         public partial ParseResult DisabledMarkersCustomParse(
@@ -3281,7 +3280,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Furniture_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

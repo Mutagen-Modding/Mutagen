@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -6629,11 +6628,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IShaderParticleGeometryGetter>(_package, _recordData, _PrecipitationLocation);
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVisualEffectGetter>(_package, _recordData, _VisualEffectLocation);
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -6926,7 +6925,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _SunGlareLensFlareLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -7119,7 +7118,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStaticGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

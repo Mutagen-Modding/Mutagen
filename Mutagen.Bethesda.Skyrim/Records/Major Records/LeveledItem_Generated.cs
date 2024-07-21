@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1896,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(

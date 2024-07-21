@@ -901,6 +901,7 @@
     <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="TestTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

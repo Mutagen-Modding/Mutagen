@@ -204,7 +204,7 @@ partial class MagicEffectBinaryWriteTranslation
 
     public static partial void WriteBinaryAssociatedItemCustom(MutagenWriter writer, IMagicEffectGetter item)
     {
-        writer.Write(writer.MetaData.MasterReferences!.GetFormID(item.Archetype.AssociationKey).Raw);
+        FormKeyBinaryTranslation.Instance.Write(writer, item.Archetype.AssociationKey);
     }
 }
 

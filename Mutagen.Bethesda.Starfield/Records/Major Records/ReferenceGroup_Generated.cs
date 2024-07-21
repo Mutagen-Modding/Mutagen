@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2094,15 +2093,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => _ReferenceLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         #region PackIn
         private int? _PackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> PackIn => _PackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> PackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _PackInLocation);
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => _LNAMLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _LNAMLocation);
         #endregion
         public IReadOnlyList<UInt32>? MNAM { get; private set; }
         partial void CustomFactoryEnd(
@@ -2205,14 +2204,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.MNAM = BinaryOverlayList.FactoryByStartIndex<UInt32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.MNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)ReferenceGroup_FieldIndex.MNAM;
                 }
                 default:

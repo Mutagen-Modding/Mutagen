@@ -2157,24 +2157,24 @@ namespace Mutagen.Bethesda.Starfield
 
         public Int32 UnknownInt => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public Int32 UnknownInt2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink1 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink1 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public Int32 UnknownInt3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink2 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink3 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink4 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink5 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink6 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink2 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x10, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink4 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink5 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x1C, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink6 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x20, 0x4));
         public Single UnknownFloat1 => _structData.Slice(0x24, 0x4).Float();
         public Single UnknownFloat2 => _structData.Slice(0x28, 0x4).Float();
         public Single UnknownFloat3 => _structData.Slice(0x2C, 0x4).Float();
         public Single UnknownFloat4 => _structData.Slice(0x30, 0x4).Float();
         public Single UnknownFloat5 => _structData.Slice(0x34, 0x4).Float();
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink7 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x38, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink7 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x38, 0x4));
         public Int32 UnknownInt4 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x3C, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink8 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x40, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink8 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x40, 0x4));
         public Single UnknownFloat6 => _structData.Slice(0x44, 0x4).Float();
         public Int32 UnknownInt5 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x48, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink9 => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4C, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> UnknownLink9 => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x4C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

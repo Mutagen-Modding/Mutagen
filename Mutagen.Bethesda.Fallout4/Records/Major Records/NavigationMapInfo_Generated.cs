@@ -2052,16 +2052,16 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
         public Single UnknownFloat => _structData.Slice(0x14, 0x4).Float();
         #region MergedTo
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x18), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors

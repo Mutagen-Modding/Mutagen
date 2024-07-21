@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
@@ -337,7 +337,7 @@ public class MajorRecordModule : GenerationModule
         if (await obj.IsMajorRecord())
         {
             yield return "Mutagen.Bethesda.Plugins.Utility";
-            yield return "Mutagen.Bethesda.Plugins.RecordTypeMapping";
+            yield return "Mutagen.Bethesda.Plugins.Records.Mapping";
         }
     }
 }

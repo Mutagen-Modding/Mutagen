@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2818,11 +2817,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         public IReadOnlyList<IConstructibleObjectComponentGetter>? Components { get; private set; }
         #region Description
@@ -2832,11 +2831,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IConstructibleObjectTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConstructibleObjectTargetGetter>.Null;
+        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IConstructibleObjectTargetGetter>(_package, _recordData, _CreatedObjectLocation);
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         #region NAM1
         private int? _NAM1Location;
@@ -2852,7 +2851,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MenuArtObject
         private int? _MenuArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => _MenuArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _MenuArtObjectLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
         public IReadOnlyList<IConstructibleCreatedObjectCountGetter>? CreatedObjectCounts { get; private set; }
@@ -2937,14 +2936,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Components = BinaryOverlayList.FactoryByStartIndex<IConstructibleObjectComponentGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Components = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.Components;
                 }
                 case RecordTypeInts.DESC:
@@ -2999,26 +2996,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Categories = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Categories = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)ConstructibleObject_FieldIndex.Categories;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.CreatedObjectCounts = BinaryOverlayList.FactoryByStartIndex<IConstructibleCreatedObjectCountGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.CreatedObjectCounts = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleCreatedObjectCountGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => ConstructibleCreatedObjectCountBinaryOverlay.ConstructibleCreatedObjectCountFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ConstructibleObject_FieldIndex.CreatedObjectCounts;
                 }
                 default:

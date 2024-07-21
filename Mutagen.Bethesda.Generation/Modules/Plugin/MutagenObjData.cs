@@ -13,7 +13,6 @@ public class MutagenObjData
     public ObjectGeneration ObjGen { get; }
     public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType;
-    public bool FailOnUnknown;
     public ObjectType? ObjectType;
     public RecordType? MarkerType;
     public RecordCollection TriggeringRecordTypes = new();

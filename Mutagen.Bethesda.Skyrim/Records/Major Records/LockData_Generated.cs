@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public LockLevel Level => (LockLevel)_structData.Span.Slice(0x0, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IKeyGetter> Key => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeyGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public LockData.Flag Flags => (LockData.Flag)_structData.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x9, 0xB).ToArray();
         partial void CustomFactoryEnd(

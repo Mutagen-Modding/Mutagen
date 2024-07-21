@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Destination => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
         partial void CustomFactoryEnd(

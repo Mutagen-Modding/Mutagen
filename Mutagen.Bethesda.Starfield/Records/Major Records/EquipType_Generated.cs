@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1694,7 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ConditionActorValue
         private int? _ConditionActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => _ConditionActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConditionActorValueLocation.Value, _package.MetaData.Constants)), maxIsNull: true)) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ConditionActorValueLocation, maxIsNull: true);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1767,14 +1766,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.PNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEquipTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.SlotParents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEquipTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEquipTypeGetter>(p, s));
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="XTRV" objType="Subrecord" recordType="XTRV" >
+    <Fields>
+      <FormLink name="Traversal" refName="Traversal" />
+      <ByteArray name="Unknown" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

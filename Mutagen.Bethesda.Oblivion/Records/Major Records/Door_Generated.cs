@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2104,19 +2103,19 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> OpenSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _OpenSoundLocation);
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> CloseSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _CloseSoundLocation);
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> LoopSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _LoopSoundLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -2235,7 +2234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.RandomTeleportDestinations = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlaceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Skyrim;
 using Noggog.Testing.IO;
 using Xunit;
@@ -16,7 +17,11 @@ public class BinaryOverlayTests
         try
         {
             fs.File.WriteAllText(modPath, "DERP");
-            var mod = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimLE, fileSystem: fs);
+            var mod = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimLE, 
+                new BinaryReadParameters()
+                {
+                    FileSystem = fs
+                });
         }
         catch (ArgumentException)
         {

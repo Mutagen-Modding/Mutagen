@@ -5,6 +5,9 @@
       <Data recordType="ANAM">
         <Fields>
           <Bool name="HideBeamByDefault" byteLength="1" />
+          <UInt32 name="UnknownOldField" >
+            <Versioning formVersion="522" action="Remove" />
+          </UInt32>
           <String name="NodeName" binaryType="PrependLengthWithNullIfContent" />
           <Float name="BeamReactivationDelayAfterEquipOrReloadSeconds" />
           <Float name="BeamDeactivationDelayAfterReloadSeconds" />

@@ -1,5 +1,5 @@
 using System.Buffers.Binary;
-using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -15,44 +15,193 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        StarfieldRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
+
+    public override bool CanBeSmallMaster => true;
+    
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Master, value);
+    }
+
+    public override bool IsSmallMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Light, value);
+    }
+
+    public override bool CanBeMediumMaster => true;
+
+    public override bool IsMediumMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Medium);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(StarfieldModHeader.HeaderFlag.Medium, value);
+    }
+
+    public override bool ListsOverriddenForms => true;
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         StarfieldRelease release, 
         float headerVersion, 
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 0f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
     }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+    
+    internal class StarfieldCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask>
+    {
+        public static readonly StarfieldCreateBuilderInstantiator Instance = new();
+        
+        public IStarfieldMod Mutable(BinaryReadMutableBuilder<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return StarfieldMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return StarfieldMod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public IStarfieldModDisposableGetter Readonly(BinaryReadBuilder<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return StarfieldMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return StarfieldMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToStarfieldRelease(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public static BinaryReadBuilderSeparatedSourceChoice<IStarfieldMod, IStarfieldModDisposableGetter, GroupMask> 
+        Create(StarfieldRelease release) => new(
+            release.ToGameRelease(), 
+            StarfieldCreateBuilderInstantiator.Instance,
+            needsRecordTypeInfoCacheReader: true);
+    
+    internal class StarfieldWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IStarfieldModGetter>
+    {
+        public static readonly StarfieldWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IStarfieldModGetter mod, BinaryWriteBuilderParams<IStarfieldModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IStarfieldModGetter mod, BinaryWriteBuilderParams<IStarfieldModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter> 
+        BeginWrite => new(
+        this, 
+        StarfieldWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder => new(StarfieldWriteBuilderInstantiator.Instance);
 }
 
 internal partial class StarfieldModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        StarfieldMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        StarfieldMod.GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Master);
+    public bool CanBeSmallMaster => true;
+    public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Light);
+    public bool CanBeMediumMaster => true;
+    public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Medium);
+    public bool ListsOverriddenForms => true;
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+
+    public IBinaryModdedWriteBuilderLoadOrderChoice 
+        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter>(
+        this, 
+        StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
 }
 
 partial class StarfieldModSetterCommon
@@ -232,7 +381,7 @@ partial class StarfieldModCommon
             worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);

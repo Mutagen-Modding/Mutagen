@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1983,11 +1982,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region MenuSlider
         private int? _MenuSliderLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => _MenuSliderLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSliderLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> MenuSlider => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _MenuSliderLocation);
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;

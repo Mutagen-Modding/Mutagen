@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -86,24 +85,24 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region ActorValue
-        private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
-        public IFormLink<IActorValueInformationGetter> ActorValue
+        private readonly IFormLinkNullable<IActorValueInformationGetter> _ActorValue = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> ActorValue
         {
             get => _ActorValue;
             set => _ActorValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IActorValueInformationGetter> IAffinityEventGetter.ActorValue => this.ActorValue;
+        IFormLinkNullableGetter<IActorValueInformationGetter> IAffinityEventGetter.ActorValue => this.ActorValue;
         #endregion
         #region Size
-        private readonly IFormLink<IGlobalGetter> _Size = new FormLink<IGlobalGetter>();
-        public IFormLink<IGlobalGetter> Size
+        private readonly IFormLinkNullable<IGlobalGetter> _Size = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Size
         {
             get => _Size;
             set => _Size.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGlobalGetter> IAffinityEventGetter.Size => this.Size;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Size => this.Size;
         #endregion
         #region Distance
         private readonly IFormLinkNullable<IGlobalGetter> _Distance = new FormLinkNullable<IGlobalGetter>();
@@ -834,8 +833,8 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte> FNAM { get; set; }
         new String? Context { get; set; }
         new ExtendedList<ActorReaction> ActorReactions { get; }
-        new IFormLink<IActorValueInformationGetter> ActorValue { get; set; }
-        new IFormLink<IGlobalGetter> Size { get; set; }
+        new IFormLinkNullable<IActorValueInformationGetter> ActorValue { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Size { get; set; }
         new IFormLinkNullable<IGlobalGetter> Distance { get; set; }
         new IFormLinkNullable<IGlobalGetter> Cooldown { get; set; }
         new IFormLinkNullable<IFactionGetter> Faction { get; set; }
@@ -860,8 +859,8 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte> FNAM { get; }
         String? Context { get; }
         IReadOnlyList<IActorReactionGetter> ActorReactions { get; }
-        IFormLinkGetter<IActorValueInformationGetter> ActorValue { get; }
-        IFormLinkGetter<IGlobalGetter> Size { get; }
+        IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Size { get; }
         IFormLinkNullableGetter<IGlobalGetter> Distance { get; }
         IFormLinkNullableGetter<IGlobalGetter> Cooldown { get; }
         IFormLinkNullableGetter<IFactionGetter> Faction { get; }
@@ -1330,11 +1329,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (printMask?.ActorValue ?? true)
             {
-                sb.AppendItem(item.ActorValue.FormKey, "ActorValue");
+                sb.AppendItem(item.ActorValue.FormKeyNullable, "ActorValue");
             }
             if (printMask?.Size ?? true)
             {
-                sb.AppendItem(item.Size.FormKey, "Size");
+                sb.AppendItem(item.Size.FormKeyNullable, "Size");
             }
             if (printMask?.Distance ?? true)
             {
@@ -1502,8 +1501,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            yield return FormLinkInformation.Factory(obj.ActorValue);
-            yield return FormLinkInformation.Factory(obj.Size);
+            if (FormLinkInformation.TryFactory(obj.ActorValue, out var ActorValueInfo))
+            {
+                yield return ActorValueInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Size, out var SizeInfo))
+            {
+                yield return SizeInfo;
+            }
             if (FormLinkInformation.TryFactory(obj.Distance, out var DistanceInfo))
             {
                 yield return DistanceInfo;
@@ -1624,11 +1629,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorValue) ?? true))
             {
-                item.ActorValue.SetTo(rhs.ActorValue.FormKey);
+                item.ActorValue.SetTo(rhs.ActorValue.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Size) ?? true))
             {
-                item.Size.SetTo(rhs.Size.FormKey);
+                item.Size.SetTo(rhs.Size.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Distance) ?? true))
             {
@@ -1819,11 +1824,11 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActorValue,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Size,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
@@ -2049,23 +2054,23 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
         #region ActorValue
         private int? _ActorValueLocation;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => _ActorValueLocation.HasValue ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueLocation.Value, _package.MetaData.Constants)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
         #region Size
         private int? _SizeLocation;
-        public IFormLinkGetter<IGlobalGetter> Size => _SizeLocation.HasValue ? new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SizeLocation.Value, _package.MetaData.Constants)))) : FormLink<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Size => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _SizeLocation);
         #endregion
         #region Distance
         private int? _DistanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Distance => _DistanceLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DistanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Distance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _DistanceLocation);
         #endregion
         #region Cooldown
         private int? _CooldownLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => _CooldownLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CooldownLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _CooldownLocation);
         #endregion
         #region Faction
         private int? _FactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Faction => _FactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FactionLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

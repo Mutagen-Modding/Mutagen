@@ -89,6 +89,8 @@ public partial class RecordTypeInts
     public const int GDRY = 0x59524447;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
+    public const int GPOF = 0x464F5047;
+    public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;

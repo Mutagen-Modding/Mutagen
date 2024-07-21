@@ -1316,14 +1316,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDGS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IGrassGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Grasses = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IGrassGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGrassGetter>(p, s));
                     return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:

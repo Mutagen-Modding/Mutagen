@@ -1448,14 +1448,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Types, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Types = BinaryOverlayList.FactoryByStartIndexWithTrigger<MapMarker.Type>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 2,
                         getter: (s, p) => (MapMarker.Type)BinaryPrimitives.ReadUInt16LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)MapMarker_FieldIndex.Types;
                 }
                 default:

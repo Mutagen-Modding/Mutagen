@@ -375,6 +375,7 @@ public partial class RecordTypes
     public static readonly RecordType MIC2 = new(0x3243494D);
     public static readonly RecordType MICO = new(0x4F43494D);
     public static readonly RecordType MISC = new(0x4353494D);
+    public static readonly RecordType MLSI = new(0x49534C4D);
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MO2C = new(0x43324F4D);
     public static readonly RecordType MO2F = new(0x46324F4D);

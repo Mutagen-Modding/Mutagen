@@ -1321,14 +1321,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDOT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IRegionObjectGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Objects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionObjectGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 52,
                         getter: (s, p) => RegionObjectBinaryOverlay.RegionObjectFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionObjects_FieldIndex.Objects;
                 }
                 default:

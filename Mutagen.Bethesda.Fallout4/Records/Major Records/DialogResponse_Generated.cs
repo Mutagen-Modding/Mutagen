@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Emotion => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet);
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDALocation!.Value.Min + 0x4;
@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Sound
         private int _SoundLocation => _TRDALocation!.Value.Min + 0x5;
         private bool _Sound_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet);
         #endregion
         #region Unknown
         private int _UnknownLocation => _TRDALocation!.Value.Min + 0x9;
@@ -2130,11 +2130,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _SpeakerIdleAnimationLocation);
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _ListenerIdleAnimationLocation);
         #endregion
         #region InterruptPercentageTNAM
         public partial ParseResult InterruptPercentageTNAMCustomParse(
@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => _CameraPathLocation.HasValue ? new FormLinkNullable<ICameraPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICameraPathGetter>.Null;
+        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICameraPathGetter>(_package, _recordData, _CameraPathLocation);
         #endregion
         #region StopOnSceneEnd
         private int? _StopOnSceneEndLocation;

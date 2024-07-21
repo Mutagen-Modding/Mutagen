@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Points
         public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_structData.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;

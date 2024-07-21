@@ -124,6 +124,7 @@
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
     <Compile Include="Assets\StarfieldTextureAssetType.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />
@@ -1929,6 +1930,9 @@
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetTargetHeightConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionDatas\UnknownConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ContainerEntry_Generated.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
     </Compile>
@@ -2215,6 +2219,12 @@
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledPackIn.cs">
+      <DependentUpon>LeveledPackIn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpaceCell.cs">
+      <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
@@ -2283,6 +2293,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Note.cs">
+      <DependentUpon>Note.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
@@ -4435,12 +4448,6 @@
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\StarfieldGroup_Generated.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>
@@ -6526,9 +6533,6 @@
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentItem_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SnapTemplateBehaviorItem_Generated.cs">
       <DependentUpon>SnapTemplateBehavior.xml</DependentUpon>
     </Compile>
@@ -6601,6 +6605,45 @@
     </Compile>
     <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PTTA_Generated.cs">
+      <DependentUpon>PTTA.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\XTRV_Generated.cs">
+      <DependentUpon>XTRV.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameplayOptions_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GPOD_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SliderEntry_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Note_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANoteData_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteVoice_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteProgram_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

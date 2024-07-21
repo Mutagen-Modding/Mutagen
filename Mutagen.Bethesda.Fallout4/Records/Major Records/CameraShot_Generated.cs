@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2757,7 +2756,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceModifierLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

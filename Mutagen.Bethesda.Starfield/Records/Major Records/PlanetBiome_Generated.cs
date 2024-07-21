@@ -1718,12 +1718,12 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IBiomeGetter> Biome => new FormLink<IBiomeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IBiomeGetter> Biome => FormLinkBinaryTranslation.Instance.OverlayFactory<IBiomeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single Percentage => _structData.Slice(0x4, 0x4).Float();
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGenOverride => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGenOverride => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         #region Fauna
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> Fauna => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INpcGetter>>(_structData.Slice(0x10), _package, 4, countLength: 4, (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> Fauna => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INpcGetter>>(_structData.Slice(0x10), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
         protected int FaunaEndingPos;
         #endregion
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(FaunaEndingPos, 0x4));

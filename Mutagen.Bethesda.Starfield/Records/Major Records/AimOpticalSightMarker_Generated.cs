@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -57,6 +56,9 @@ namespace Mutagen.Bethesda.Starfield
 
         #region HideBeamByDefault
         public Boolean HideBeamByDefault { get; set; } = default(Boolean);
+        #endregion
+        #region UnknownOldField
+        public UInt32 UnknownOldField { get; set; } = default(UInt32);
         #endregion
         #region NodeName
         public String NodeName { get; set; } = string.Empty;
@@ -144,6 +146,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.HideBeamByDefault = initialValue;
+                this.UnknownOldField = initialValue;
                 this.NodeName = initialValue;
                 this.BeamReactivationDelayAfterEquipOrReloadSeconds = initialValue;
                 this.BeamDeactivationDelayAfterReloadSeconds = initialValue;
@@ -168,6 +171,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem HideBeamByDefault,
+                TItem UnknownOldField,
                 TItem NodeName,
                 TItem BeamReactivationDelayAfterEquipOrReloadSeconds,
                 TItem BeamDeactivationDelayAfterReloadSeconds,
@@ -191,6 +195,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.HideBeamByDefault = HideBeamByDefault;
+                this.UnknownOldField = UnknownOldField;
                 this.NodeName = NodeName;
                 this.BeamReactivationDelayAfterEquipOrReloadSeconds = BeamReactivationDelayAfterEquipOrReloadSeconds;
                 this.BeamDeactivationDelayAfterReloadSeconds = BeamDeactivationDelayAfterReloadSeconds;
@@ -216,6 +221,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem HideBeamByDefault;
+            public TItem UnknownOldField;
             public TItem NodeName;
             public TItem BeamReactivationDelayAfterEquipOrReloadSeconds;
             public TItem BeamDeactivationDelayAfterReloadSeconds;
@@ -243,6 +249,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.HideBeamByDefault, rhs.HideBeamByDefault)) return false;
+                if (!object.Equals(this.UnknownOldField, rhs.UnknownOldField)) return false;
                 if (!object.Equals(this.NodeName, rhs.NodeName)) return false;
                 if (!object.Equals(this.BeamReactivationDelayAfterEquipOrReloadSeconds, rhs.BeamReactivationDelayAfterEquipOrReloadSeconds)) return false;
                 if (!object.Equals(this.BeamDeactivationDelayAfterReloadSeconds, rhs.BeamDeactivationDelayAfterReloadSeconds)) return false;
@@ -262,6 +269,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.HideBeamByDefault);
+                hash.Add(this.UnknownOldField);
                 hash.Add(this.NodeName);
                 hash.Add(this.BeamReactivationDelayAfterEquipOrReloadSeconds);
                 hash.Add(this.BeamDeactivationDelayAfterReloadSeconds);
@@ -286,6 +294,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.HideBeamByDefault)) return false;
+                if (!eval(this.UnknownOldField)) return false;
                 if (!eval(this.NodeName)) return false;
                 if (!eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds)) return false;
                 if (!eval(this.BeamDeactivationDelayAfterReloadSeconds)) return false;
@@ -308,6 +317,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.HideBeamByDefault)) return true;
+                if (eval(this.UnknownOldField)) return true;
                 if (eval(this.NodeName)) return true;
                 if (eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds)) return true;
                 if (eval(this.BeamDeactivationDelayAfterReloadSeconds)) return true;
@@ -337,6 +347,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.HideBeamByDefault = eval(this.HideBeamByDefault);
+                obj.UnknownOldField = eval(this.UnknownOldField);
                 obj.NodeName = eval(this.NodeName);
                 obj.BeamReactivationDelayAfterEquipOrReloadSeconds = eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds);
                 obj.BeamDeactivationDelayAfterReloadSeconds = eval(this.BeamDeactivationDelayAfterReloadSeconds);
@@ -371,6 +382,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.HideBeamByDefault ?? true)
                     {
                         sb.AppendItem(HideBeamByDefault, "HideBeamByDefault");
+                    }
+                    if (printMask?.UnknownOldField ?? true)
+                    {
+                        sb.AppendItem(UnknownOldField, "UnknownOldField");
                     }
                     if (printMask?.NodeName ?? true)
                     {
@@ -436,6 +451,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? HideBeamByDefault;
+            public Exception? UnknownOldField;
             public Exception? NodeName;
             public Exception? BeamReactivationDelayAfterEquipOrReloadSeconds;
             public Exception? BeamDeactivationDelayAfterReloadSeconds;
@@ -459,6 +475,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
                         return HideBeamByDefault;
+                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
+                        return UnknownOldField;
                     case AimOpticalSightMarker_FieldIndex.NodeName:
                         return NodeName;
                     case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds:
@@ -497,6 +515,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
                         this.HideBeamByDefault = ex;
+                        break;
+                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
+                        this.UnknownOldField = ex;
                         break;
                     case AimOpticalSightMarker_FieldIndex.NodeName:
                         this.NodeName = ex;
@@ -551,6 +572,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
                         this.HideBeamByDefault = (Exception?)obj;
                         break;
+                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
+                        this.UnknownOldField = (Exception?)obj;
+                        break;
                     case AimOpticalSightMarker_FieldIndex.NodeName:
                         this.NodeName = (Exception?)obj;
                         break;
@@ -600,6 +624,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (HideBeamByDefault != null) return true;
+                if (UnknownOldField != null) return true;
                 if (NodeName != null) return true;
                 if (BeamReactivationDelayAfterEquipOrReloadSeconds != null) return true;
                 if (BeamDeactivationDelayAfterReloadSeconds != null) return true;
@@ -641,6 +666,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(HideBeamByDefault, "HideBeamByDefault");
+                }
+                {
+                    sb.AppendItem(UnknownOldField, "UnknownOldField");
                 }
                 {
                     sb.AppendItem(NodeName, "NodeName");
@@ -690,6 +718,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.HideBeamByDefault = this.HideBeamByDefault.Combine(rhs.HideBeamByDefault);
+                ret.UnknownOldField = this.UnknownOldField.Combine(rhs.UnknownOldField);
                 ret.NodeName = this.NodeName.Combine(rhs.NodeName);
                 ret.BeamReactivationDelayAfterEquipOrReloadSeconds = this.BeamReactivationDelayAfterEquipOrReloadSeconds.Combine(rhs.BeamReactivationDelayAfterEquipOrReloadSeconds);
                 ret.BeamDeactivationDelayAfterReloadSeconds = this.BeamDeactivationDelayAfterReloadSeconds.Combine(rhs.BeamDeactivationDelayAfterReloadSeconds);
@@ -726,6 +755,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool HideBeamByDefault;
+            public bool UnknownOldField;
             public bool NodeName;
             public bool BeamReactivationDelayAfterEquipOrReloadSeconds;
             public bool BeamDeactivationDelayAfterReloadSeconds;
@@ -748,6 +778,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.HideBeamByDefault = defaultOn;
+                this.UnknownOldField = defaultOn;
                 this.NodeName = defaultOn;
                 this.BeamReactivationDelayAfterEquipOrReloadSeconds = defaultOn;
                 this.BeamDeactivationDelayAfterReloadSeconds = defaultOn;
@@ -769,6 +800,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((HideBeamByDefault, null));
+                ret.Add((UnknownOldField, null));
                 ret.Add((NodeName, null));
                 ret.Add((BeamReactivationDelayAfterEquipOrReloadSeconds, null));
                 ret.Add((BeamDeactivationDelayAfterReloadSeconds, null));
@@ -930,6 +962,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new Boolean HideBeamByDefault { get; set; }
+        new UInt32 UnknownOldField { get; set; }
         new String NodeName { get; set; }
         new Single BeamReactivationDelayAfterEquipOrReloadSeconds { get; set; }
         new Single BeamDeactivationDelayAfterReloadSeconds { get; set; }
@@ -962,6 +995,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => AimOpticalSightMarker_Registration.Instance;
         Boolean HideBeamByDefault { get; }
+        UInt32 UnknownOldField { get; }
         String NodeName { get; }
         Single BeamReactivationDelayAfterEquipOrReloadSeconds { get; }
         Single BeamDeactivationDelayAfterReloadSeconds { get; }
@@ -1152,19 +1186,20 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         HideBeamByDefault = 7,
-        NodeName = 8,
-        BeamReactivationDelayAfterEquipOrReloadSeconds = 9,
-        BeamDeactivationDelayAfterReloadSeconds = 10,
-        Light = 11,
-        Unknown1 = 12,
-        Unknown2 = 13,
-        BeamReactivationDelayAfterFiringSeconds = 14,
-        BeamArtObject = 15,
-        DotArtObject = 16,
-        Unknown3 = 17,
-        Unknown4 = 18,
-        ShowBeamAtHip = 19,
-        Unknown5 = 20,
+        UnknownOldField = 8,
+        NodeName = 9,
+        BeamReactivationDelayAfterEquipOrReloadSeconds = 10,
+        BeamDeactivationDelayAfterReloadSeconds = 11,
+        Light = 12,
+        Unknown1 = 13,
+        Unknown2 = 14,
+        BeamReactivationDelayAfterFiringSeconds = 15,
+        BeamArtObject = 16,
+        DotArtObject = 17,
+        Unknown3 = 18,
+        Unknown4 = 19,
+        ShowBeamAtHip = 20,
+        Unknown5 = 21,
     }
     #endregion
 
@@ -1175,9 +1210,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(AimOpticalSightMarker.Mask<>);
 
@@ -1256,6 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.HideBeamByDefault = default(Boolean);
+            item.UnknownOldField = default(UInt32);
             item.NodeName = string.Empty;
             item.BeamReactivationDelayAfterEquipOrReloadSeconds = default(Single);
             item.BeamDeactivationDelayAfterReloadSeconds = default(Single);
@@ -1357,6 +1393,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.HideBeamByDefault = item.HideBeamByDefault == rhs.HideBeamByDefault;
+            ret.UnknownOldField = item.UnknownOldField == rhs.UnknownOldField;
             ret.NodeName = string.Equals(item.NodeName, rhs.NodeName);
             ret.BeamReactivationDelayAfterEquipOrReloadSeconds = item.BeamReactivationDelayAfterEquipOrReloadSeconds.EqualsWithin(rhs.BeamReactivationDelayAfterEquipOrReloadSeconds);
             ret.BeamDeactivationDelayAfterReloadSeconds = item.BeamDeactivationDelayAfterReloadSeconds.EqualsWithin(rhs.BeamDeactivationDelayAfterReloadSeconds);
@@ -1422,6 +1459,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.HideBeamByDefault ?? true)
             {
                 sb.AppendItem(item.HideBeamByDefault, "HideBeamByDefault");
+            }
+            if (printMask?.UnknownOldField ?? true)
+            {
+                sb.AppendItem(item.UnknownOldField, "UnknownOldField");
             }
             if (printMask?.NodeName ?? true)
             {
@@ -1529,6 +1570,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.HideBeamByDefault != rhs.HideBeamByDefault) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.UnknownOldField) ?? true))
+            {
+                if (lhs.UnknownOldField != rhs.UnknownOldField) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.NodeName) ?? true))
             {
                 if (!string.Equals(lhs.NodeName, rhs.NodeName)) return false;
@@ -1610,6 +1655,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.HideBeamByDefault);
+            hash.Add(item.UnknownOldField);
             hash.Add(item.NodeName);
             hash.Add(item.BeamReactivationDelayAfterEquipOrReloadSeconds);
             hash.Add(item.BeamDeactivationDelayAfterReloadSeconds);
@@ -1732,6 +1778,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.HideBeamByDefault) ?? true))
             {
                 item.HideBeamByDefault = rhs.HideBeamByDefault;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.UnknownOldField) ?? true))
+            {
+                item.UnknownOldField = rhs.UnknownOldField;
             }
             if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.NodeName) ?? true))
             {
@@ -1945,6 +1995,10 @@ namespace Mutagen.Bethesda.Starfield
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ANAM)))
             {
                 writer.Write(item.HideBeamByDefault);
+                if (writer.MetaData.FormVersion!.Value < 522)
+                {
+                    writer.Write(item.UnknownOldField);
+                }
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.NodeName,
@@ -2071,6 +2125,11 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
                     item.HideBeamByDefault = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 4) return null;
+                    if (frame.MetaData.FormVersion!.Value < 522)
+                    {
+                        item.UnknownOldField = dataFrame.ReadUInt32();
+                    }
                     item.NodeName = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
@@ -2165,8 +2224,14 @@ namespace Mutagen.Bethesda.Starfield
         private bool _HideBeamByDefault_IsSet => _ANAMLocation.HasValue;
         public Boolean HideBeamByDefault => _HideBeamByDefault_IsSet ? _recordData.Slice(_HideBeamByDefaultLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
+        #region UnknownOldField
+        private int _UnknownOldFieldLocation => _ANAMLocation!.Value.Min + 0x1;
+        private bool _UnknownOldField_IsSet => _ANAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 522;
+        public UInt32 UnknownOldField => _UnknownOldField_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownOldFieldLocation, 4)) : default(UInt32);
+        int UnknownOldFieldVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 522 ? -4 : 0;
+        #endregion
         #region NodeName
-        private int _NodeNameLocation => _ANAMLocation!.Value.Min + 0x1;
+        private int _NodeNameLocation => _ANAMLocation!.Value.Min + UnknownOldFieldVersioningOffset + 0x5;
         private bool _NodeName_IsSet => _ANAMLocation.HasValue;
         public String NodeName => _NodeName_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_NodeNameLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int NodeNameEndingPos;
@@ -2184,7 +2249,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Light
         private int _LightLocation => NodeNameEndingPos + 0x8;
         private bool _Light_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
         #endregion
         #region Unknown1
         private int _Unknown1Location => NodeNameEndingPos + 0xC;
@@ -2204,12 +2269,12 @@ namespace Mutagen.Bethesda.Starfield
         #region BeamArtObject
         private int _BeamArtObjectLocation => NodeNameEndingPos + 0x18;
         private bool _BeamArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => _BeamArtObject_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_BeamArtObjectLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_BeamArtObjectLocation, 0x4), isSet: _BeamArtObject_IsSet);
         #endregion
         #region DotArtObject
         private int _DotArtObjectLocation => NodeNameEndingPos + 0x1C;
         private bool _DotArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> DotArtObject => _DotArtObject_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DotArtObjectLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> DotArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_DotArtObjectLocation, 0x4), isSet: _DotArtObject_IsSet);
         #endregion
         #region Unknown3
         private int _Unknown3Location => NodeNameEndingPos + 0x20;
@@ -2274,7 +2339,7 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.NodeNameEndingPos = ret._ANAMLocation!.Value.Min + 0x1 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + 0x1)) + 4;
+            ret.NodeNameEndingPos = ret._ANAMLocation!.Value.Min + ret.UnknownOldFieldVersioningOffset + 0x5 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + ret.UnknownOldFieldVersioningOffset + 0x5)) + 4;
             return ret;
         }
 

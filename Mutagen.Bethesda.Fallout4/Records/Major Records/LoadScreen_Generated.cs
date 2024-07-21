@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2070,11 +2069,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticObjectGetter>.Null;
+        public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticObjectGetter>(_package, _recordData, _LoadingScreenNifLocation);
         #endregion
         #region Transform
         private int? _TransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> Transform => _TransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        public IFormLinkNullableGetter<ITransformGetter> Transform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _TransformLocation);
         #endregion
         public ILoadScreenRotationGetter? Rotation { get; private set; }
         public ILoadScreenZoomGetter? Zoom { get; private set; }

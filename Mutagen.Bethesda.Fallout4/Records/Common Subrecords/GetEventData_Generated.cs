@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
         public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Parameter3 => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Parameter3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         #region ParameterParsing
         partial void ParameterParsingCustomParse(
             OverlayStream stream,

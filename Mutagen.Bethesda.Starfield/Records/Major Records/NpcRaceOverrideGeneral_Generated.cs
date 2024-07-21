@@ -1587,12 +1587,12 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IMaterialTypeGetter> ImpactMaterialType => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IMaterialTypeGetter> ImpactMaterialType => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public ISoundReferenceGetter WED0 => SoundReferenceBinaryOverlay.SoundReferenceFactory(_structData.Slice(0x4), _package, default(TypedParseParams));
         public ISoundReferenceGetter WED1 => SoundReferenceBinaryOverlay.SoundReferenceFactory(_structData.Slice(0x2C), _package, default(TypedParseParams));
-        public IFormLinkGetter<IExplosionGetter> UnknownForm1 => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x54, 0x4))));
-        public IFormLinkGetter<IDebrisGetter> UnknownForm2 => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x58, 0x4))));
-        public IFormLinkGetter<IImpactDataSetGetter> UnknownForm3 => new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5C, 0x4))));
+        public IFormLinkGetter<IExplosionGetter> UnknownForm1 => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _structData.Span.Slice(0x54, 0x4));
+        public IFormLinkGetter<IDebrisGetter> UnknownForm2 => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _structData.Span.Slice(0x58, 0x4));
+        public IFormLinkGetter<IImpactDataSetGetter> UnknownForm3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _structData.Span.Slice(0x5C, 0x4));
         public Single UnknownFloat => _structData.Slice(0x60, 0x4).Float();
         public UInt16 UnknownInt16 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x64, 0x2));
         public NpcRaceOverrideGeneral.ActiveOverride ActiveOverrides => (NpcRaceOverrideGeneral.ActiveOverride)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x66, 0x4));

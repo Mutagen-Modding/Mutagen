@@ -92,7 +92,9 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: fileSystem), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(
+                        release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem,
+                        returnEmptyIfMissing: true))
                     {
                         try
                         {

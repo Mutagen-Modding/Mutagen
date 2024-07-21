@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -3925,16 +3924,16 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = Array.Empty<IItemEntryGetter>();
         #region AIData
@@ -3945,7 +3944,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClassGetter>.Null;
+        public IFormLinkNullableGetter<IClassGetter> Class => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClassGetter>(_package, _recordData, _ClassLocation);
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
@@ -3953,7 +3952,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hair
         private int? _HairLocation;
-        public IFormLinkNullableGetter<IHairGetter> Hair => _HairLocation.HasValue ? new FormLinkNullable<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHairGetter>.Null;
+        public IFormLinkNullableGetter<IHairGetter> Hair => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHairGetter>(_package, _recordData, _HairLocation);
         #endregion
         #region HairLength
         private int? _HairLengthLocation;
@@ -3966,7 +3965,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region FaceGenGeometrySymmetric
         private int? _FaceGenGeometrySymmetricLocation;
@@ -4101,7 +4100,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4140,7 +4139,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IAIPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IAIPackageGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4151,13 +4150,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.KFFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Animations = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
                     return (int)Npc_FieldIndex.Animations;
                 }
                 case RecordTypeInts.CNAM:
@@ -4182,14 +4179,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEyeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
                     return (int)Npc_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.HCLR:

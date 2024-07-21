@@ -180,7 +180,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
             default:
                 break;
         }
-        sb.AppendLine($"_{dataType.GetFieldData().RecordType}Location = new({locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength, finalPos - offset - 1);");
+        sb.AppendLine($"_{dataType.GetFieldData().RecordType}Location = new({locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.TypeAndLengthLength, finalPos - offset - 1);");
         if (dataType.Nullable)
         {
             sb.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
@@ -204,7 +204,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordHeader(_recordData.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubrecordHeader(_recordData.Slice({locationAccessor})).ContentLength;");
                 }
                 sb.AppendLine($"if (subLen <= {length.PassedAccessor})");
                 using (sb.CurlyBrace())
@@ -217,7 +217,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                 }
             }
         }

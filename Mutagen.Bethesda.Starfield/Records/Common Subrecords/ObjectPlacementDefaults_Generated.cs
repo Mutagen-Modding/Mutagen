@@ -50,6 +50,9 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public ObjectPlacementDefaults.VersioningBreaks Versioning { get; set; } = default(ObjectPlacementDefaults.VersioningBreaks);
+        #endregion
         #region Unknown1
         public Single Unknown1 { get; set; } = default(Single);
         #endregion
@@ -149,6 +152,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Unknown1 = initialValue;
                 this.Unknown2 = initialValue;
                 this.Unknown3 = initialValue;
@@ -172,6 +176,7 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Unknown1,
                 TItem Unknown2,
                 TItem Unknown3,
@@ -193,6 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Unknown19,
                 TItem Unknown20)
             {
+                this.Versioning = Versioning;
                 this.Unknown1 = Unknown1;
                 this.Unknown2 = Unknown2;
                 this.Unknown3 = Unknown3;
@@ -224,6 +230,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Unknown1;
             public TItem Unknown2;
             public TItem Unknown3;
@@ -256,6 +263,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
@@ -281,6 +289,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Unknown1);
                 hash.Add(this.Unknown2);
                 hash.Add(this.Unknown3);
@@ -309,6 +318,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.Unknown3)) return false;
@@ -336,6 +346,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.Unknown2)) return true;
                 if (eval(this.Unknown3)) return true;
@@ -370,6 +381,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.Unknown2 = eval(this.Unknown2);
                 obj.Unknown3 = eval(this.Unknown3);
@@ -408,6 +420,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ObjectPlacementDefaults.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Unknown1 ?? true)
                     {
                         sb.AppendItem(Unknown1, "Unknown1");
@@ -512,6 +528,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Unknown1;
             public Exception? Unknown2;
             public Exception? Unknown3;
@@ -540,6 +557,8 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectPlacementDefaults_FieldIndex enu = (ObjectPlacementDefaults_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectPlacementDefaults_FieldIndex.Versioning:
+                        return Versioning;
                     case ObjectPlacementDefaults_FieldIndex.Unknown1:
                         return Unknown1;
                     case ObjectPlacementDefaults_FieldIndex.Unknown2:
@@ -590,6 +609,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectPlacementDefaults_FieldIndex enu = (ObjectPlacementDefaults_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectPlacementDefaults_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case ObjectPlacementDefaults_FieldIndex.Unknown1:
                         this.Unknown1 = ex;
                         break;
@@ -660,6 +682,9 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectPlacementDefaults_FieldIndex enu = (ObjectPlacementDefaults_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectPlacementDefaults_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case ObjectPlacementDefaults_FieldIndex.Unknown1:
                         this.Unknown1 = (Exception?)obj;
                         break;
@@ -728,6 +753,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Unknown1 != null) return true;
                 if (Unknown2 != null) return true;
                 if (Unknown3 != null) return true;
@@ -773,6 +799,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 {
                     sb.AppendItem(Unknown1, "Unknown1");
                 }
@@ -841,6 +870,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
@@ -884,6 +914,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Unknown1;
             public bool Unknown2;
             public bool Unknown3;
@@ -913,6 +944,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Unknown1 = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.Unknown3 = defaultOn;
@@ -948,6 +980,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Unknown1, null));
                 ret.Add((Unknown2, null));
                 ret.Add((Unknown3, null));
@@ -975,6 +1008,14 @@ namespace Mutagen.Bethesda.Starfield
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -1040,6 +1081,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IObjectPlacementDefaults>,
         IObjectPlacementDefaultsGetter
     {
+        new ObjectPlacementDefaults.VersioningBreaks Versioning { get; set; }
         new Single Unknown1 { get; set; }
         new Single Unknown2 { get; set; }
         new Single Unknown3 { get; set; }
@@ -1074,6 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ObjectPlacementDefaults_Registration.Instance;
+        ObjectPlacementDefaults.VersioningBreaks Versioning { get; }
         Single Unknown1 { get; }
         Single Unknown2 { get; }
         Single Unknown3 { get; }
@@ -1263,26 +1306,27 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum ObjectPlacementDefaults_FieldIndex
     {
-        Unknown1 = 0,
-        Unknown2 = 1,
-        Unknown3 = 2,
-        Unknown4 = 3,
-        Unknown5 = 4,
-        Unknown6 = 5,
-        Unknown7 = 6,
-        Unknown8 = 7,
-        Unknown9 = 8,
-        Unknown10 = 9,
-        Unknown11 = 10,
-        Unknown12 = 11,
-        Unknown13 = 12,
-        Unknown14 = 13,
-        Unknown15 = 14,
-        Unknown16 = 15,
-        Unknown17 = 16,
-        Unknown18 = 17,
-        Unknown19 = 18,
-        Unknown20 = 19,
+        Versioning = 0,
+        Unknown1 = 1,
+        Unknown2 = 2,
+        Unknown3 = 3,
+        Unknown4 = 4,
+        Unknown5 = 5,
+        Unknown6 = 6,
+        Unknown7 = 7,
+        Unknown8 = 8,
+        Unknown9 = 9,
+        Unknown10 = 10,
+        Unknown11 = 11,
+        Unknown12 = 12,
+        Unknown13 = 13,
+        Unknown14 = 14,
+        Unknown15 = 15,
+        Unknown16 = 16,
+        Unknown17 = 17,
+        Unknown18 = 18,
+        Unknown19 = 19,
+        Unknown20 = 20,
     }
     #endregion
 
@@ -1293,9 +1337,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(ObjectPlacementDefaults.Mask<>);
 
@@ -1368,6 +1412,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IObjectPlacementDefaults item)
         {
             ClearPartial();
+            item.Versioning = default(ObjectPlacementDefaults.VersioningBreaks);
             item.Unknown1 = default(Single);
             item.Unknown2 = default(Single);
             item.Unknown3 = default(Single);
@@ -1441,6 +1486,7 @@ namespace Mutagen.Bethesda.Starfield
             ObjectPlacementDefaults.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
             ret.Unknown3 = item.Unknown3.EqualsWithin(rhs.Unknown3);
@@ -1505,6 +1551,10 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             ObjectPlacementDefaults.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Unknown1 ?? true)
             {
                 sb.AppendItem(item.Unknown1, "Unknown1");
@@ -1594,6 +1644,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)ObjectPlacementDefaults_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ObjectPlacementDefaults_FieldIndex.Unknown1) ?? true))
             {
                 if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
@@ -1680,6 +1734,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IObjectPlacementDefaultsGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Unknown1);
             hash.Add(item.Unknown2);
             hash.Add(item.Unknown3);
@@ -1732,6 +1787,10 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)ObjectPlacementDefaults_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)ObjectPlacementDefaults_FieldIndex.Unknown1) ?? true))
             {
                 item.Unknown1 = rhs.Unknown1;
@@ -1804,6 +1863,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown18 = rhs.Unknown18;
             }
+            if (rhs.Versioning.HasFlag(ObjectPlacementDefaults.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ObjectPlacementDefaults_FieldIndex.Unknown19) ?? true))
             {
                 item.Unknown19 = rhs.Unknown19;
@@ -1962,12 +2022,15 @@ namespace Mutagen.Bethesda.Starfield
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown18);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown19);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown20);
+            if (!item.Versioning.HasFlag(ObjectPlacementDefaults.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown19);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown20);
+            }
         }
 
         public void Write(
@@ -2026,6 +2089,11 @@ namespace Mutagen.Bethesda.Starfield
             item.Unknown16 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown17 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown18 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= ObjectPlacementDefaults.VersioningBreaks.Break0;
+                return;
+            }
             item.Unknown19 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown20 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
@@ -2093,6 +2161,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public ObjectPlacementDefaults.VersioningBreaks Versioning { get; private set; }
         public Single Unknown1 => _structData.Slice(0x0, 0x4).Float();
         public Single Unknown2 => _structData.Slice(0x4, 0x4).Float();
         public Single Unknown3 => _structData.Slice(0x8, 0x4).Float();
@@ -2111,8 +2180,8 @@ namespace Mutagen.Bethesda.Starfield
         public Single Unknown16 => _structData.Slice(0x3C, 0x4).Float();
         public Single Unknown17 => _structData.Slice(0x40, 0x4).Float();
         public Single Unknown18 => _structData.Slice(0x44, 0x4).Float();
-        public Single Unknown19 => _structData.Slice(0x48, 0x4).Float();
-        public Single Unknown20 => _structData.Slice(0x4C, 0x4).Float();
+        public Single Unknown19 => _structData.Length <= 0x48 ? default : _structData.Slice(0x48, 0x4).Float();
+        public Single Unknown20 => _structData.Length <= 0x4C ? default : _structData.Slice(0x4C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2144,7 +2213,10 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new ObjectPlacementDefaultsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x50 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x48)
+            {
+                ret.Versioning |= ObjectPlacementDefaults.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

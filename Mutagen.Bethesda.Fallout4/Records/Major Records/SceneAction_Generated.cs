@@ -4843,68 +4843,68 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<IStartSceneGetter>();
         #region PlayerPositiveResponse
         private int? _PlayerPositiveResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerPositiveResponse => _PlayerPositiveResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerPositiveResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerPositiveResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerPositiveResponseLocation);
         #endregion
         #region PlayerNegativeResponse
         private int? _PlayerNegativeResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerNegativeResponse => _PlayerNegativeResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerNegativeResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerNegativeResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerNegativeResponseLocation);
         #endregion
         #region PlayerNeutralResponse
         private int? _PlayerNeutralResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerNeutralResponse => _PlayerNeutralResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerNeutralResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerNeutralResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerNeutralResponseLocation);
         #endregion
         #region PlayerQuestionResponse
         private int? _PlayerQuestionResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerQuestionResponse => _PlayerQuestionResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerQuestionResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> PlayerQuestionResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerQuestionResponseLocation);
         #endregion
         #region PlayerPositiveSubtype
         private int? _PlayerPositiveSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PlayerPositiveSubtype => _PlayerPositiveSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerPositiveSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PlayerPositiveSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PlayerPositiveSubtypeLocation);
         #endregion
         #region PlayerNegativeSubtype
         private int? _PlayerNegativeSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PlayerNegativeSubtype => _PlayerNegativeSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerNegativeSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PlayerNegativeSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PlayerNegativeSubtypeLocation);
         #endregion
         #region PlayerNeutralSubtype
         private int? _PlayerNeutralSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PlayerNeutralSubtype => _PlayerNeutralSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerNeutralSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PlayerNeutralSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PlayerNeutralSubtypeLocation);
         #endregion
         #region PlayerQuestionSubtype
         private int? _PlayerQuestionSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PlayerQuestionSubtype => _PlayerQuestionSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerQuestionSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PlayerQuestionSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PlayerQuestionSubtypeLocation);
         #endregion
         public IReadOnlyList<Int32>? NpcHeadtrackingActorIds { get; private set; }
         #region NpcPositiveResponse
         private int? _NpcPositiveResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> NpcPositiveResponse => _NpcPositiveResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcPositiveResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> NpcPositiveResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcPositiveResponseLocation);
         #endregion
         #region NpcNegativeResponse
         private int? _NpcNegativeResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> NpcNegativeResponse => _NpcNegativeResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcNegativeResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> NpcNegativeResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcNegativeResponseLocation);
         #endregion
         #region NpcNeutralResponse
         private int? _NpcNeutralResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> NpcNeutralResponse => _NpcNeutralResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcNeutralResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> NpcNeutralResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcNeutralResponseLocation);
         #endregion
         #region NpcQuestionResponse
         private int? _NpcQuestionResponseLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> NpcQuestionResponse => _NpcQuestionResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcQuestionResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> NpcQuestionResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _NpcQuestionResponseLocation);
         #endregion
         #region NpcPositiveSubtype
         private int? _NpcPositiveSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> NpcPositiveSubtype => _NpcPositiveSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcPositiveSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> NpcPositiveSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _NpcPositiveSubtypeLocation);
         #endregion
         #region NpcNegativeSubtype
         private int? _NpcNegativeSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> NpcNegativeSubtype => _NpcNegativeSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcNegativeSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> NpcNegativeSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _NpcNegativeSubtypeLocation);
         #endregion
         #region NpcNeutralSubtype
         private int? _NpcNeutralSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> NpcNeutralSubtype => _NpcNeutralSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcNeutralSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> NpcNeutralSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _NpcNeutralSubtypeLocation);
         #endregion
         #region NpcQuestionSubtype
         private int? _NpcQuestionSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> NpcQuestionSubtype => _NpcQuestionSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NpcQuestionSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> NpcQuestionSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _NpcQuestionSubtypeLocation);
         #endregion
         #region DialogueTargetActorId
         private int? _DialogueTargetActorIdLocation;
@@ -4913,7 +4913,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
         #endregion
         #region HTIDParsing
         public partial ParseResult HTIDParsingCustomParse(
@@ -4944,15 +4944,15 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<Int32>? PlayerHeadTrackingActorIds { get; private set; }
         #region DialogueSubtype
         private int? _DialogueSubtypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => _DialogueSubtypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueSubtypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _DialogueSubtypeLocation);
         #endregion
         #region AnimArchType
         private int? _AnimArchTypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimArchType => _AnimArchTypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimArchTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> AnimArchType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimArchTypeLocation);
         #endregion
         #region AudioOutputOverride
         private int? _AudioOutputOverrideLocation;
-        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => _AudioOutputOverrideLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AudioOutputOverrideLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _AudioOutputOverrideLocation);
         #endregion
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         partial void CustomFactoryEnd(
@@ -5211,14 +5211,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DTID:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.NpcHeadtrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.NpcHeadtrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)SceneAction_FieldIndex.NpcHeadtrackingActorIds;
                 }
                 case RecordTypeInts.NPOT:
@@ -5274,7 +5272,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                             mem: stream.RemainingMemory,
                             package: _package,
-                            getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                            getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPackageGetter>(p, s),
                             locs: ParseRecordLocations(
                                 stream: stream,
                                 constants: _package.MetaData.Constants.SubConstants,
@@ -5297,7 +5295,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                                     mem: stream.RemainingMemory,
                                     package: _package,
-                                    getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                                    getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPackageGetter>(p, s),
                                     locs: ParseRecordLocations(
                                         stream: stream,
                                         constants: _package.MetaData.Constants.SubConstants,
@@ -5333,14 +5331,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EmotionValue)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 4,
                             getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                        stream.Position += subLen;
                         return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
                     }
                     else
@@ -5356,14 +5352,12 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                             case 1:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 4,
                                     getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                                stream.Position += subLen;
                                 return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
                             }
                             default:

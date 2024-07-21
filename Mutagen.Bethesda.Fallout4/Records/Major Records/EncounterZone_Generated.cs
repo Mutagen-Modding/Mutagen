@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1709,12 +1708,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value.Min;
         private bool _Owner_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public IFormLinkGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.OverlayFactory<IOwnerGetter>(_package, _recordData.Span.Slice(_OwnerLocation, 0x4), isSet: _Owner_IsSet);
         #endregion
         #region Location
         private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        public IFormLinkGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _recordData.Span.Slice(_LocationLocation, 0x4), isSet: _Location_IsSet);
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Assets;
@@ -2626,7 +2625,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Restriction
         private int? _RestrictionLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Restriction => _RestrictionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RestrictionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> Restriction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _RestrictionLocation);
         #endregion
         #region PerkIcon
         private int? _PerkIconLocation;
@@ -2634,7 +2633,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Training
         private int? _TrainingLocation;
-        public IFormLinkNullableGetter<IPerkGetter> Training => _TrainingLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrainingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> Training => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _TrainingLocation);
         #endregion
         public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = Array.Empty<IPerkRankGetter>();
         public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = Array.Empty<IFormLinkGetter<IPerkGetter>>();
@@ -2763,7 +2762,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.BackgroundSkills = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPerkGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IPerkGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

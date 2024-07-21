@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2992,7 +2991,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3010,11 +3009,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PickUpSoundLocation);
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _PutDownSoundLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3039,7 +3038,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Projectile
         private int _ProjectileLocation => _DNAMLocation!.Value.Min;
         private bool _Projectile_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet);
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -3198,7 +3197,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:

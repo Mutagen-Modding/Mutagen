@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILeveledPackInTargetGetter> PackIn => new FormLink<ILeveledPackInTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILeveledPackInTargetGetter> PackIn => FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledPackInTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Unknown
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x4).ToArray();
         protected int UnknownEndingPos;

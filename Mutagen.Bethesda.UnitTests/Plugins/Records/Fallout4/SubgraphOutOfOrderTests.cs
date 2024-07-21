@@ -9,6 +9,8 @@ public class SubgraphOutOfOrderTests : ASpecificCaseTest<Subgraph, ISubgraphGett
 {
     public override ModPath Path => new(ModKey.FromFileName("Fallout4.esm"), TestDataPathing.SubgraphOutOfOrder);
     public override GameRelease Release => GameRelease.Fallout4;
+    public override bool TestPassthrough => false;
+    
     public override void TestItem(ISubgraphGetter subgraph)
     {       
         subgraph.ActorKeywords.Should().Equal(

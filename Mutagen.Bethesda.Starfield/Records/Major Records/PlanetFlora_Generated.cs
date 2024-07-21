@@ -1165,8 +1165,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFloraGetter> Model => new FormLink<IFloraGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IMiscItemGetter> Resource => new FormLink<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IFloraGetter> Model => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IMiscItemGetter> Resource => FormLinkBinaryTranslation.Instance.OverlayFactory<IMiscItemGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Byte Frequency => _structData.Span[0x8];
         partial void CustomFactoryEnd(
             OverlayStream stream,

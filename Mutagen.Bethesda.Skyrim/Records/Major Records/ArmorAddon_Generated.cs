@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -2670,7 +2669,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 2) return null;
-                    item.Priority = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Byte>(
+                    item.Priority = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Byte>(
                         frame: frame,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     ArmorAddonBinaryCreateTranslation.FillBinaryWeightSliderEnabledCustom(
@@ -2709,7 +2708,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    item.SkinTexture = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<ITextureSetGetter>>(
+                    item.SkinTexture = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkNullableGetter<ITextureSetGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM0,
                         femaleMarker: RecordTypes.NAM1,
@@ -2721,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
                 {
-                    item.TextureSwapList = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<IFormListGetter>>(
+                    item.TextureSwapList = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkNullableGetter<IFormListGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM2,
                         femaleMarker: RecordTypes.NAM3,
@@ -2830,7 +2829,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region Priority
@@ -2887,11 +2886,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
-        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFootstepSetGetter>(_package, _recordData, _FootstepSoundLocation);
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _ArtObjectLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3011,7 +3010,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM0,
                         female: RecordTypes.NAM1,
                         stream: stream,
-                        creator: static (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ITextureSetGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
                         fallback: FormLinkNullable<ITextureSetGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
@@ -3023,7 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM2,
                         female: RecordTypes.NAM3,
                         stream: stream,
-                        creator: static (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IFormListGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
                         fallback: FormLinkNullable<IFormListGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
@@ -3032,7 +3031,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IRaceGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

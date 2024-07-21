@@ -32,7 +32,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a byte.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 1</exception>
     /// <returns>Subrecord's content as a byte</returns>
     public static byte AsUInt8(this SubrecordFrame frame)
     {
@@ -44,7 +44,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a sbyte.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 1</exception>
     /// <returns>Subrecord's content as a sbyte</returns>
     public static sbyte AsInt8(this SubrecordFrame frame)
     {
@@ -56,7 +56,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a ushort.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 2</exception>
     /// <returns>Subrecord's content as a ushort</returns>
     public static ushort AsUInt16(this SubrecordFrame frame)
     {
@@ -68,7 +68,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a short.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 2</exception>
     /// <returns>Subrecord's content as a short</returns>
     public static short AsInt16(this SubrecordFrame frame)
     {
@@ -80,7 +80,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a uint.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a uint</returns>
     public static uint AsUInt32(this SubrecordFrame frame)
     {
@@ -92,7 +92,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a int.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a int</returns>
     public static int AsInt32(this SubrecordFrame frame)
     {
@@ -104,7 +104,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a ulong.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a ulong</returns>
     public static ulong AsUInt64(this SubrecordFrame frame)
     {
@@ -116,7 +116,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a long.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a long</returns>
     public static long AsInt64(this SubrecordFrame frame)
     {
@@ -128,7 +128,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a float.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a float</returns>
     public static float AsFloat(this SubrecordFrame frame)
     {
@@ -140,7 +140,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a double.
     /// </summary>
     /// <param name="frame">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a double</returns>
     public static double AsDouble(this SubrecordFrame frame)
     {
@@ -164,7 +164,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a byte.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 1</exception>
     /// <returns>Subrecord's content as a byte</returns>
     public static byte AsUInt8(this SubrecordPinFrame pin) => pin.Frame.AsUInt8();
 
@@ -172,7 +172,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a sbyte.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 1</exception>
     /// <returns>Subrecord's content as a sbyte</returns>
     public static sbyte AsInt8(this SubrecordPinFrame pin) => pin.Frame.AsInt8();
 
@@ -180,7 +180,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a ushort.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 2</exception>
     /// <returns>Subrecord's content as a ushort</returns>
     public static ushort AsUInt16(this SubrecordPinFrame pin) => pin.Frame.AsUInt16();
 
@@ -188,7 +188,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a short.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 2</exception>
     /// <returns>Subrecord's content as a short</returns>
     public static short AsInt16(this SubrecordPinFrame pin) => pin.Frame.AsInt16();
 
@@ -196,7 +196,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a uint.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a uint</returns>
     public static uint AsUInt32(this SubrecordPinFrame pin) => pin.Frame.AsUInt32();
 
@@ -204,7 +204,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a int.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a int</returns>
     public static int AsInt32(this SubrecordPinFrame pin) => pin.Frame.AsInt32();
 
@@ -212,7 +212,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a ulong.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a ulong</returns>
     public static ulong AsUInt64(this SubrecordPinFrame pin) => pin.Frame.AsUInt64();
 
@@ -220,7 +220,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a long.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a long</returns>
     public static long AsInt64(this SubrecordPinFrame pin) => pin.Frame.AsInt64();
 
@@ -228,7 +228,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a float.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
     /// <returns>Subrecord's content as a float</returns>
     public static float AsFloat(this SubrecordPinFrame pin) => pin.Frame.AsFloat();
 
@@ -236,7 +236,7 @@ public static class HeaderExt
     /// Interprets a subrecord's content as a double.
     /// </summary>
     /// <param name="pin">Frame to read from</param>
-    /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 8</exception>
     /// <returns>Subrecord's content as a double</returns>
     public static double AsDouble(this SubrecordPinFrame pin) => pin.Frame.AsDouble();
 
@@ -247,6 +247,17 @@ public static class HeaderExt
     /// <param name="encoding">Encoding to use</param>
     /// <returns>Subrecord's content as a string, null trimmed if applicable</returns>
     public static string AsString(this SubrecordPinFrame pin, IMutagenEncoding encoding) => pin.Frame.AsString(encoding);
+
+    /// <summary>
+    /// Interprets a subrecord's content as a FormID.
+    /// </summary>
+    /// <param name="pin">Frame to read from</param>
+    /// <exception cref="System.ArgumentException">Thrown if frame's content length is not exactly 4</exception>
+    /// <returns>Subrecord's content as a FormID</returns>
+    public static FormID AsFormID(this SubrecordPinFrame pin)
+    {
+        return new FormID(pin.AsUInt32());
+    }
     #endregion
     #endregion
 

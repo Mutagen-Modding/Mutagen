@@ -2177,14 +2177,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTEC:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.TemplateColors = BinaryOverlayList.FactoryByStartIndex<ITintTemplateColorGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.TemplateColors = BinaryOverlayList.FactoryByStartIndexWithTrigger<ITintTemplateColorGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 14,
                         getter: (s, p) => TintTemplateColorBinaryOverlay.TintTemplateColorFactory(s, p));
-                    stream.Position += subLen;
                     return (int)TintTemplateOption_FieldIndex.TemplateColors;
                 }
                 case RecordTypeInts.TTED:

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -3944,11 +3943,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _OwnerQuestLocation);
         #endregion
         #region PackageTemplate
         partial void PackageTemplateCustomParse(

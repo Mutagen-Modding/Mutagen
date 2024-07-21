@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2874,7 +2873,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISurfaceBlockFloatItemGetter? NAM4 { get; private set; }
         #region NAM5
         private int? _NAM5Location;
-        public IFormLinkNullableGetter<ISurfaceBlockGetter> NAM5 => _NAM5Location.HasValue ? new FormLinkNullable<ISurfaceBlockGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceBlockGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceBlockGetter> NAM5 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceBlockGetter>(_package, _recordData, _NAM5Location);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -6217,7 +6216,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TNAM
         private int? _TNAMLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> TNAM => _TNAMLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> TNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _TNAMLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICombatStyleGetter>>? UNAM { get; private set; }
         partial void CustomFactoryEnd(
@@ -6371,14 +6370,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.UNAM = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICombatStyleGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.UNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICombatStyleGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ICombatStyleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICombatStyleGetter>(p, s));
                     return (int)CombatStyle_FieldIndex.UNAM;
                 }
                 default:

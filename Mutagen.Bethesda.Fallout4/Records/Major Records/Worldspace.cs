@@ -57,7 +57,7 @@ partial class WorldspaceBinaryCreateTranslation
             {
                 obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
                 obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.HeaderData.Slice(groupHeader.HeaderLength - 4));
-                var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
+                var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences);
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
@@ -140,7 +140,7 @@ partial class WorldspaceBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 writer.Write(obj.SubCellsTimestamp);
                 writer.Write(obj.SubCellsUnknown);
@@ -194,7 +194,10 @@ partial class WorldspaceBinaryOverlay
             if (stream.Complete) return;
             if (!stream.TryGetGroupHeader(out var groupMeta) || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-            if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+            if (this.FormKey != FormKey.Factory(
+                    _package.MetaData.MasterReferences,
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                    reference: true))
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }

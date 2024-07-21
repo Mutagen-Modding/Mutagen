@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Oblivion;
 
@@ -37,6 +38,11 @@ public partial class OblivionModHeader
     }
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
+    
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public partial interface IOblivionModHeader : IModHeaderCommon
@@ -52,7 +58,6 @@ partial class OblivionModHeaderBinaryCreateTranslation
                 reader: frame.SpawnAll(),
                 triggeringRecord: RecordTypes.MAST,
                 transl: MasterReference.TryCreateFromBinary));
-        frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
     }
 }
 

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -4716,7 +4715,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AmbientSound
         private int _AmbientSoundLocation => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x131;
         private bool _AmbientSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public IFormLinkGetter<ISoundGetter> AmbientSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet);
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x135;

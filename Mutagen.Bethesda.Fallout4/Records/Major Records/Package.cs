@@ -111,7 +111,7 @@ partial class PackageBinaryCreateTranslation
             throw new ArgumentException();
         }
         var dataCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcuRecord.Content));
-        item.PackageTemplate.FormKey = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
+        item.PackageTemplate.FormKey = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences);
         item.DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcuRecord.Content.Slice(8));
 
         FillPackageData(frame.Reader, dataCount, item.Data);
@@ -362,7 +362,7 @@ partial class PackageBinaryWriteTranslation
         {
             jumpbackPos = writer.Position;
             writer.Write(data.Count);
-            FormKeyBinaryTranslation.Instance.Write(writer, item.PackageTemplate.FormKey);
+            FormKeyBinaryTranslation.Instance.Write(writer, item.PackageTemplate);
             writer.Write(item.DataInputVersion);
         }
 
@@ -520,7 +520,7 @@ partial class PackageBinaryOverlay
     {
         var pkcu = stream.ReadSubrecord();
         var count = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcu.Content));
-        _packageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcu.Content.Slice(4), _package.MetaData.MasterReferences!);
+        _packageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcu.Content.Slice(4), _package.MetaData.MasterReferences);
         DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcu.Content.Slice(8));
 
         PackageBinaryCreateTranslation.FillPackageData(

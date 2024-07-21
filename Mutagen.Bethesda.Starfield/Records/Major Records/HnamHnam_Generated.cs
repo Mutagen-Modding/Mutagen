@@ -1427,14 +1427,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.HTID:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ReferenceAliasIDs = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ReferenceAliasIDs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)HnamHnam_FieldIndex.ReferenceAliasIDs;
                 }
                 case RecordTypeInts.FNAM:

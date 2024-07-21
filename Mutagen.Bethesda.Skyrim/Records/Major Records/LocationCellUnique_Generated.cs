@@ -1176,9 +1176,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> Actor => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IPlacedNpcGetter> Ref => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<INpcGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedNpcGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedNpcGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

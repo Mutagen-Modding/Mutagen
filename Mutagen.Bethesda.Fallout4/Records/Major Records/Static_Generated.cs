@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2903,11 +2902,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region PreviewTransform
         private int? _PreviewTransformLocation;
-        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITransformGetter>(_package, _recordData, _PreviewTransformLocation);
         #endregion
         #region ForcedLocRefType
         private int? _ForcedLocRefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => _ForcedLocRefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ForcedLocRefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _ForcedLocRefTypeLocation);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
@@ -2933,7 +2932,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialObjectGetter>(_package, _recordData.Span.Slice(_MaterialLocation, 0x4), isSet: _Material_IsSet);
         #endregion
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _DNAMLocation!.Value.Min + 0x8;
@@ -3063,14 +3062,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Static_FieldIndex.Properties;
                 }
                 case RecordTypeInts.FULL:

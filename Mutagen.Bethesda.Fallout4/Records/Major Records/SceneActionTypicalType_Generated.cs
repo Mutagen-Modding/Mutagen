@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PlaySound => new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PlaySound => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISoundDescriptorGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

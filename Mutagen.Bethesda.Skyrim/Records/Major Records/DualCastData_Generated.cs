@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1866,27 +1865,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
         #endregion
         #region EffectShader
         private int _EffectShaderLocation => _DATALocation!.Value.Min + 0x8;
         private bool _EffectShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EffectShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EffectShaderLocation, 0x4), isSet: _EffectShader_IsSet);
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0xC;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_HitEffectArtLocation, 0x4), isSet: _HitEffectArt_IsSet);
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
         #endregion
         #region InheritScale
         private int _InheritScaleLocation => _DATALocation!.Value.Min + 0x14;

@@ -1458,8 +1458,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte ModelDamageStage => _structData.Span[0x2];
         public DestructionStageData.Flag Flags => (DestructionStageData.Flag)_structData.Span.Slice(0x3, 0x1)[0];
         public Int32 SelfDamagePerSecond => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IDebrisGetter> Debris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         public Int32 DebrisCount => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

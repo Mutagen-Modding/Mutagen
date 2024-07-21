@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -3322,16 +3321,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         #region SourcePackIn
         private int? _SourcePackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _SourcePackInLocation);
         #endregion
         #region IgnoredBySandbox
         private int? _IgnoredBySandboxLocation;
@@ -3349,11 +3348,11 @@ namespace Mutagen.Bethesda.Starfield
         public IOwnershipGetter? Ownership { get; private set; }
         #region EncounterLocation
         private int? _EncounterLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => _EncounterLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
         #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
@@ -3440,14 +3439,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRFG:
@@ -3515,14 +3512,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)APlacedTrap_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XESP:

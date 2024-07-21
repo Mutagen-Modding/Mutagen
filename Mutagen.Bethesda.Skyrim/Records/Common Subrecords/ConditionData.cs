@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -37,6 +38,6 @@ partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditio
 partial class ConditionDataBinaryOverlay
 {
     public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+    public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ISkyrimMajorRecordGetter>(_package, _structData.Span.Slice(0x10, 0x4));
     public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
 }

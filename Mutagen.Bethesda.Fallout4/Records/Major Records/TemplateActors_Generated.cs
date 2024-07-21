@@ -1834,19 +1834,19 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcSpawnGetter> TraitTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> StatsTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> FactionsTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> SpellListTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> AiDataTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> AiPackagesTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> ModelOrAnimationTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> BaseDataTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> InventoryTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> ScriptTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x24, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> DefPackListTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x28, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> AttackDataTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x2C, 0x4))));
-        public IFormLinkGetter<INpcSpawnGetter> KeywordsTemplate => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x30, 0x4))));
+        public IFormLinkGetter<INpcSpawnGetter> TraitTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> StatsTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> FactionsTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> SpellListTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> AiDataTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x10, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> AiPackagesTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> ModelOrAnimationTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> BaseDataTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x1C, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> InventoryTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x20, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> ScriptTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x24, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> DefPackListTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x28, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> AttackDataTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x2C, 0x4));
+        public IFormLinkGetter<INpcSpawnGetter> KeywordsTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcSpawnGetter>(_package, _structData.Span.Slice(0x30, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

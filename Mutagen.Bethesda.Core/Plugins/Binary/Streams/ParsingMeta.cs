@@ -1,15 +1,21 @@
+using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
 /// <summary>
 /// Class containing all the extra meta bits for parsing
 /// </summary>
-public sealed class ParsingBundle
+public sealed class ParsingMeta
 {
     /// <summary>
     /// Game constants meta object to reference for header length measurements
@@ -17,9 +23,9 @@ public sealed class ParsingBundle
     public GameConstants Constants { get; }
 
     /// <summary>
-    /// MasterReferenceReader to reference while reading
+    /// Masters to reference while reading
     /// </summary>
-    public IMasterReferenceCollection MasterReferences { get; }
+    public IReadOnlySeparatedMasterPackage MasterReferences { get; set; }
 
     /// <summary>
     /// Optional RecordInfoCache to reference while reading
@@ -49,19 +55,27 @@ public sealed class ParsingBundle
     /// <summary>
     /// ModKey of the mod being parsed
     /// </summary>
-    public ModKey ModKey { get; set; }
+    public ModKey ModKey { get; }
 
     public EncodingBundle Encodings { get; set; } = new(MutagenEncoding._1252, MutagenEncoding._1252);
 
     public Language TranslatedTargetLanguage { get; set; } = Language.English;
 
-    public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
+    public bool ThrowOnUnknown { get; set; }
+
+    public IFileSystem FileSystem { get; set; } = IFileSystemExt.DefaultFilesystem;
+
+    internal ParsingMeta(
+        GameConstants constants,
+        ModKey modKey,
+        IReadOnlySeparatedMasterPackage masterReferences)
     {
         Constants = constants;
+        ModKey = modKey;
         MasterReferences = masterReferences;
     }
 
-    public static implicit operator GameConstants(ParsingBundle bundle)
+    public static implicit operator GameConstants(ParsingMeta bundle)
     {
         return bundle.Constants;
     }
@@ -71,7 +85,7 @@ public sealed class ParsingBundle
         // Nothing for now.  Need to implement
     }
 
-    public void Absorb(StringsReadParameters? stringsReadParameters)
+    private void Absorb(StringsReadParameters? stringsReadParameters)
     {
         if (stringsReadParameters == null) return;
         if (stringsReadParameters.TargetLanguage != null)
@@ -102,5 +116,45 @@ public sealed class ParsingBundle
                 NonTranslated = stringsReadParameters.NonTranslatedEncodingOverride
             };
         }
+    }
+
+    private void Absorb(BinaryReadParameters? readParameters)
+    {
+        if (readParameters == null) return;
+        if (Constants.UsesStrings)
+        {
+            Absorb(readParameters.StringsParam);
+        }
+        ThrowOnUnknown = readParameters.ThrowOnUnknownSubrecord;
+        Parallel = readParameters.Parallel;
+        FileSystem = readParameters.FileSystem.GetOrDefault();
+    }
+
+    public static ParsingMeta Factory(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModPath modPath)
+    {
+        var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: param.FileSystem);
+        var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
+        var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.LoadOrder);
+        var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
+        meta.Absorb(param);
+        return meta;
+    }
+
+    public static ParsingMeta Factory(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModKey modKey,
+        Stream stream)
+    {
+        var header = ModHeaderFrame.FromStream(stream, modKey, release);
+        var rawMasters = MasterReferenceCollection.FromModHeader(modKey, header);
+        stream.Position = 0;
+        var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.LoadOrder);
+        var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
+        meta.Absorb(param);
+        return meta;
     }
 }

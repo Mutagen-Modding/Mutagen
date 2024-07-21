@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -492,13 +493,17 @@ public sealed record GameEnvironmentBuilder
 
         var loGetter = new LoadOrderImporter(
             fs,
+            Release,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter(
                 fs,
                 Release));
 
-        ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import();
+        ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import(new BinaryReadParameters()
+        {
+            FileSystem = fs
+        });
         foreach (var filter in ModListingProcessors)
         {
             lo = filter(lo.ListedOrder).ToLoadOrder();

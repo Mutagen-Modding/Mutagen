@@ -1428,11 +1428,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region WeaponSlot
         private int? _WeaponSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> WeaponSlot => _WeaponSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeaponSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> WeaponSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _WeaponSlotLocation);
         #endregion
         #region RequiredSlot
         private int? _RequiredSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> RequiredSlot => _RequiredSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RequiredSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> RequiredSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _RequiredSlotLocation);
         #endregion
         #region Description
         private int? _DescriptionLocation;

@@ -9,6 +9,8 @@ public class OblivionRegionTests : ASpecificCaseTest<Region, IRegionGetter>
 {
     public override ModPath Path => TestDataPathing.OblivionRegion;
     public override GameRelease Release => GameRelease.Oblivion;
+    public override bool TestPassthrough => false;
+    
     public override void TestItem(IRegionGetter item)
     {
         item.Sounds.Should().NotBeNull();

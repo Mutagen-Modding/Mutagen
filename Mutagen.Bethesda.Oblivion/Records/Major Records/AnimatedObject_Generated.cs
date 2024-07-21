@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1525,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region IdleAnimation
         private int? _IdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleAnimationLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

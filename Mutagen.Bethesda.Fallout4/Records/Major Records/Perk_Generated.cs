@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2697,11 +2696,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundLocation);
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _NextPerkLocation);
         #endregion
         #region Swf
         private int? _SwfLocation;

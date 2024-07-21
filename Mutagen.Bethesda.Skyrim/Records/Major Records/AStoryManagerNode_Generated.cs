@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1666,11 +1665,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAStoryManagerNodeGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region PreviousSibling
         private int? _PreviousSiblingLocation;
-        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => _PreviousSiblingLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviousSiblingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAStoryManagerNodeGetter>(_package, _recordData, _PreviousSiblingLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

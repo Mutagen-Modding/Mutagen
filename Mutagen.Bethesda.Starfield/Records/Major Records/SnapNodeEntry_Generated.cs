@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public UInt32 NodeID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<ISnapTemplateNodeGetter> Node => new FormLink<ISnapTemplateNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISnapTemplateNodeGetter> Node => FormLinkBinaryTranslation.Instance.OverlayFactory<ISnapTemplateNodeGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x14, 0xC));
         public UInt64 Unknown => BinaryPrimitives.ReadUInt64LittleEndian(_structData.Slice(0x20, 0x8));

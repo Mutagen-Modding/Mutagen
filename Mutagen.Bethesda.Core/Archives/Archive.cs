@@ -72,11 +72,14 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IFileSystem? fileSystem = null)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(
+        GameRelease release, DirectoryPath dataFolderPath, IFileSystem? fileSystem = null, 
+        bool returnEmptyIfMissing = true)
     {
         return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get();
+            .Get(returnEmptyIfMissing: returnEmptyIfMissing);
     }
 
     /// <summary>
@@ -86,12 +89,13 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
-        IEnumerable<FileName>? archiveOrdering, IFileSystem? fileSystem = null)
+        IEnumerable<FileName>? archiveOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
         return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(archiveOrdering);
+            .Get(archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
     }
 
     /// <summary>
@@ -103,12 +107,13 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
-        ModKey modKey, IFileSystem? fileSystem = null)
+        ModKey modKey, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
         return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey);
+            .Get(modKey, returnEmptyIfMissing: returnEmptyIfMissing);
     }
 
     /// <summary>
@@ -121,13 +126,14 @@ public static class Archive
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
         ModKey modKey, IEnumerable<FileName>? archiveOrdering, 
-        IFileSystem? fileSystem = null)
+        IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
         return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey, archiveOrdering);
+            .Get(modKey, archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
     }
 
     /// <summary>
@@ -140,12 +146,13 @@ public static class Archive
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
     /// <param name="fileSystem">FileSystem to use</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
-        ModKey modKey, IComparer<FileName>? archiveOrdering, IFileSystem? fileSystem = null)
+        ModKey modKey, IComparer<FileName>? archiveOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
         return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey, archiveOrdering);
+            .Get(modKey, archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
     }
 
     /// <summary>

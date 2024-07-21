@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
@@ -17,6 +18,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         : base(expectedLen: 4)
     {
         this.PreferDirectTranslation = false;
+        AdditionalCopyInParams.Add((o, t) => TryGet<string>.Succeed("reference: false"));
     }
 
     public override async Task GenerateWrapperFields(
@@ -37,7 +39,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
             throw new NotImplementedException();
         }
         var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{dataType.GetFieldData().RecordType}Location + {passedLengthAccessor}";
-        sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({structDataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
+        sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({structDataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.MasterReferences)}, reference: false);");
     }
 
     public override async Task GenerateCopyInRet(
@@ -70,6 +72,30 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
                 args.Add($"errorMask: {errorMaskAccessor}");
             }
             args.Add($"translationMask: {translationMaskAccessor}");
+            args.Add($"reference: false");
+        }
+    }
+    
+    public override async Task GenerateWrite(
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor writerAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor,
+        Accessor converterAccessor)
+    {
+        if (!(await objGen.IsMajorRecord()))
+        {
+            throw new NotImplementedException();
+        }
+        using (var args = sb.Call(
+                   $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+        {
+            args.Add($"writer: {writerAccessor}");
+            args.Add($"item: item");
+            args.Add($"reference: false");
         }
     }
 }

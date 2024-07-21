@@ -2,23 +2,24 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="NavmeshGeometry" objType="Subrecord" recordType="NVNM">
     <Fields>
-      <UInt32 name="NavmeshVersion" default="15" />
+      <UInt32 name="NavmeshVersion" default="17" />
       <UInt32 name="CrcHash" default="0xA5E9A03C" />
       <RefDirect name="Parent" refName="ANavmeshParent" binary="Custom" byteLength="8" />
       <RefList name="Vertices" counterLength="4" refName="NavmeshVertex" />
-      <RefList name="Triangles" refName="NavmeshTriangle" counterLength="4" binaryOverlay="Custom" />
-      <RefList name="EdgeLinks" refName="EdgeLink" counterLength="4" />
-      <RefList name="DoorTriangles" refName="DoorTriangle" counterLength="4" />
-      <RefList name="Cover" counterLength="4" refName="NavmeshCover" />
-      <RefList name="CoverTriangleMappings" counterLength="4" refName="NavmeshCoverTriangleMap" />
-      <RefList name="Waypoints" refName="NavmeshWaypoint" counterLength="4" />
-      <UInt32 name="GridSize" max="12" />
-      <P2Float name="GridMaxDistance" />
-      <P3Float name="GridMin" />
-      <P3Float name="GridMax" />
-      <RefList name="GridArrays" refName="NavmeshGridArray" />
-      <Break />
-      <Int32 name="Unknown3" />
+      <ByteArray name="UnknownEnd" />
+<!--      <RefList name="Triangles" refName="NavmeshTriangle" counterLength="4" binaryOverlay="Custom" />-->
+<!--      <RefList name="EdgeLinks" refName="EdgeLink" counterLength="4" />-->
+<!--      <RefList name="DoorTriangles" refName="DoorTriangle" counterLength="4" />-->
+<!--      <RefList name="Cover" counterLength="4" refName="NavmeshCover" />-->
+<!--      <RefList name="CoverTriangleMappings" counterLength="4" refName="NavmeshCoverTriangleMap" />-->
+<!--      <RefList name="Waypoints" refName="NavmeshWaypoint" counterLength="4" />-->
+<!--      <UInt32 name="GridSize" max="12" />-->
+<!--      <P2Float name="GridMaxDistance" />-->
+<!--      <P3Float name="GridMin" />-->
+<!--      <P3Float name="GridMax" />-->
+<!--      <RefList name="GridArrays" refName="NavmeshGridArray" />-->
+<!--      <Break />-->
+<!--      <Int32 name="Unknown3" />-->
     </Fields>
   </Object>
   <Object name="ANavmeshParent" abstract="true" objType="Subrecord">

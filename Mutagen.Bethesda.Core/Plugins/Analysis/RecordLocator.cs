@@ -1,10 +1,13 @@
 using System.Collections.Immutable;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
@@ -57,14 +60,39 @@ public sealed class RecordLocator
 
     public static RecordLocatorResults GetLocations(
         ModPath filePath,
-        GameConstants constants,
-        RecordInterest? interest = null)
+        GameRelease release,
+        ILoadOrderGetter<IModFlagsGetter>? loadOrder,
+        RecordInterest? interest = null,
+        IFileSystem? fileSystem = null)
     {
         using var stream = new MutagenBinaryReadStream(
             filePath,
-            new ParsingBundle(
+            new ParsingMeta(
+                release, 
+                filePath.ModKey,
+                SeparatedMasterPackage.Factory(release, filePath, loadOrder, fileSystem))
+            {
+                FileSystem = fileSystem.GetOrDefault()
+            });
+        return GetLocations(stream, interest);
+    }
+
+    public static RecordLocatorResults GetLocations(
+        ModPath filePath,
+        GameConstants constants,
+        IReadOnlySeparatedMasterPackage masters,
+        RecordInterest? interest = null,
+        IFileSystem? fileSystem = null)
+    {
+        using var stream = new MutagenBinaryReadStream(
+            filePath,
+            new ParsingMeta(
                 constants, 
-                MasterReferenceCollection.FromPath(filePath, constants.Release)));
+                filePath.ModKey,
+                masters)
+            {
+                FileSystem = fileSystem.GetOrDefault()
+            });
         return GetLocations(stream, interest);
     }
 
@@ -168,7 +196,7 @@ public sealed class RecordLocator
             if (IsInterested(targetRec))
             {
                 var pos = reader.Position;
-                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences, majorRecordMeta.FormID.Raw);
+                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences, majorRecordMeta.FormID, reference: false);
 
                 _locs.Add(
                     formKey: currentFormKey,
@@ -274,7 +302,7 @@ public sealed class RecordLocator
                     }
                 }
 
-                var formKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorMeta.FormID.Raw);
+                var formKey = FormKey.Factory(reader.MetaData.MasterReferences, majorMeta.FormID, reference: false);
                 var len = majorMeta.TotalLength;
                 yield return (
                     formKey,

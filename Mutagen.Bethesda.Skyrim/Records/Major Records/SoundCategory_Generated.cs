@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1779,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundCategoryGetter>(_package, _recordData, _ParentLocation);
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;
