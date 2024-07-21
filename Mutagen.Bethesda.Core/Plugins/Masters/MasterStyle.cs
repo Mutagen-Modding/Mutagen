@@ -21,7 +21,6 @@ internal static class MasterStyleConstruction
         if (small && medium)
         {
             throw new ModHeaderMalformedException(
-                Enumerable.Empty<ModKey>(),
                 "Mod was both a light and medium master");
         }
 
