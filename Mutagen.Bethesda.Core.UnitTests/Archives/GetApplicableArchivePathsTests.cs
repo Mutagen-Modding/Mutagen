@@ -21,7 +21,7 @@ public class GetApplicableArchivePathsTests
     private const string UnusedExplicitListingBsa = "SomeExplicitListing2.bsa";
     private const string SkyrimBsa = "Skyrim.bsa";
     private const string MyModBsa = "MyMod.bsa";
-    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}BaseFolder";
+    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}{Path.Combine("Games", "Skyrim", "Data")}";
 
     private IFileSystem GetFileSystem()
     {
@@ -81,7 +81,8 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         var get = GetClass(fs);
         var applicable = get.Get()
             .ToArray();
-        applicable.Should().StartWith(new FilePath(Path.Combine(BaseFolder, SomeExplicitListingBsa)));
+        applicable.Should().StartWith(new FilePath(
+            Path.Combine(BaseFolder, SomeExplicitListingBsa)));
         applicable.Should().BeEquivalentTo(new FilePath[]
         {
             Path.Combine(BaseFolder, SomeExplicitListingBsa),

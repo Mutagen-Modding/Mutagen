@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
@@ -20,6 +20,14 @@ public interface IGetApplicableArchivePaths
     /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     IEnumerable<FilePath> Get(IEnumerable<FileName>? archiveOrdering, bool returnEmptyIfMissing = true);
+
+    /// <summary>
+    /// Enumerates all Archives
+    /// </summary>
+    /// <param name="modOrdering">Archive ordering overload based on a mod order.  Empty enumerable means no ordering.</param>
+    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
+    /// <returns></returns>
+    IEnumerable<FilePath> Get(IEnumerable<ModKey>? modOrdering, bool returnEmptyIfMissing = true);
 
     /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
@@ -88,6 +96,11 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         return GetInternal(default(ModKey?), GetPriorityOrderComparer(archiveOrdering, emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
     }
 
+    public IEnumerable<FilePath> Get(IEnumerable<ModKey>? modOrdering, bool returnEmptyIfMissing = true)
+    {
+        return GetInternal(default, GetPriorityModOrderComparer(modOrdering), returnEmptyIfMissing);
+    }
+
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
     {
@@ -144,6 +157,7 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         return ret;
     }
 
+
     private IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName>? listedArchiveOrdering, bool emptyIfMissing)
     {
         if (emptyIfMissing)
@@ -165,6 +179,34 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
             if (indexA == -1) return 1;
             if (indexB == -1) return -1;
             return indexA - indexB;
+        });
+    }
+    
+    private IComparer<FileName>? GetPriorityModOrderComparer(IEnumerable<ModKey>? listedModOrdering)
+    {
+        if (listedModOrdering is null) return null;
+
+        var iniListedArchives = _iniListings.Get().ToList();
+        var modOrderingList = listedModOrdering.ToList();
+        return Comparer<FileName>.Create((a, b) =>
+        {
+            var iniIndexOfA = iniListedArchives.IndexOf(a);
+            var iniIndexOfB = iniListedArchives.IndexOf(b);
+
+            // Handle if any of the archives are listed in the ini file
+            if (iniIndexOfA != -1 || iniIndexOfB != -1) {
+                if (iniIndexOfA == -1) return 1;
+                if (iniIndexOfB == -1) return -1;
+                return iniIndexOfA - iniIndexOfB;
+            }
+
+            // If neither are listed in the ini file, use the mod ordering
+            var modIndexA = modOrderingList.FindIndex(modKey => _applicability.IsApplicable(modKey, a));
+            var modIndexB = modOrderingList.FindIndex(modKey => _applicability.IsApplicable(modKey, b));
+            if (modIndexA == -1 && modIndexB == -1) return 0;
+            if (modIndexA == -1) return 1;
+            if (modIndexB == -1) return -1;
+            return modIndexA - modIndexB;
         });
     }
 }
