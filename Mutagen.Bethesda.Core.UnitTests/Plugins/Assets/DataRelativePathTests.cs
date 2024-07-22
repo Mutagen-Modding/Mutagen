@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Runtime.InteropServices;
+using FluentAssertions;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
@@ -8,12 +9,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Assets;
 
 public class DataRelativePathTests 
 {
+    static bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    static string absPrefix = isWindows ? "C:\\" : "/";
     static readonly string DataPath = Path.Combine("Meshes" ,"Clutter", "MyMesh.nif");
 
     [Fact]
     public void AbsolutePath()
     {
-        var path = "C:\\Skyrim\\Data\\Meshes\\Clutter\\MyMesh.nif";
+        var path = @$"{absPrefix}{Path.Combine("Skyrim", "Data", "Meshes", "Clutter", "MyMesh.nif")}";
         var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
@@ -21,7 +24,7 @@ public class DataRelativePathTests
     [Fact]
     public void DataRelativePath()
     {
-        var path = "Data\\Meshes\\Clutter\\MyMesh.nif";
+        var path = Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif");
         var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
@@ -30,7 +33,7 @@ public class DataRelativePathTests
     [Fact]
     public void DataRelativePathWithPrefix()
     {
-        var path = "SomeFolder\\Data\\Meshes\\Clutter\\MyMesh.nif";
+        var path = Path.Combine("SomeFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
         var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
@@ -38,7 +41,7 @@ public class DataRelativePathTests
     [Fact]
     public void PrefixedDataRelativePath()
     {
-        var path = "\\Data\\Meshes\\Clutter\\MyMesh.nif";
+        var path = $"{Path.DirectorySeparatorChar}{Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif")}";
         var link = new DataRelativePath(path);
         link.Path.Should().Be(DataPath);
     }
@@ -46,7 +49,7 @@ public class DataRelativePathTests
     [Fact]
     public void FirstLevelChildRelativePath()
     {
-        var path = "Clutter\\MyMesh.nif";
+        var path = Path.Combine("Clutter", "MyMesh.nif");
         var link = new DataRelativePath(path);
         link.Path.Should().Be(path);
     }
@@ -56,8 +59,7 @@ public class DataRelativePathTests
     {
         Assert.Throws<AssetPathMisalignedException>(() =>
         {
-            new DataRelativePath(
-                "C:\\Skyrim\\NoDataPath\\MyMesh.nif");
+            new DataRelativePath($"{absPrefix}{Path.Combine("Skyrim", "NoDataPath", "MyMesh.nif")}");
         });
     }
 }
