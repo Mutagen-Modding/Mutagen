@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            item.File.RawPath = rhs.File.RawPath;
+            item.File.GivenPath = rhs.File.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if(rhs.Data is {} Datarhs)
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.File.RawPath,
+                item: item.File.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.File.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SimpleModel_FieldIndex.File;

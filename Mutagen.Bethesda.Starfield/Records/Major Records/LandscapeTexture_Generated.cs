@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MaterialPath?.RawPath,
+                item: item.MaterialPath?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.Write(

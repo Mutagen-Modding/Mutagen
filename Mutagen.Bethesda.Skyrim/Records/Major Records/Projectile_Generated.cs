@@ -3085,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CollisionLayer.SetTo(rhs.CollisionLayer.FormKey);
             }
-            item.MuzzleFlashModel.RawPath = rhs.MuzzleFlashModel.RawPath;
+            item.MuzzleFlashModel.GivenPath = rhs.MuzzleFlashModel.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
@@ -3381,7 +3381,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MuzzleFlashModel.RawPath,
+                item: item.MuzzleFlashModel.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -3587,7 +3587,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MuzzleFlashModel.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.MuzzleFlashModel.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;

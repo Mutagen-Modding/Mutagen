@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticleTexture?.RawPath,
+                item: item.ParticleTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
         }

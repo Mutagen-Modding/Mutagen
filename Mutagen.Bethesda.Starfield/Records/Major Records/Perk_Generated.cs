@@ -2313,7 +2313,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PerkIcon?.RawPath,
+                item: item.PerkIcon?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(

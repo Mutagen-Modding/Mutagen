@@ -231,7 +231,7 @@ partial class WeatherBinaryWriteTranslation
             if (cloudTex[i] is not {} tex) continue;
             using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
             {
-                writer.Write(tex.RawPath, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                writer.Write(tex.GivenPath, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
             }
         }
     }

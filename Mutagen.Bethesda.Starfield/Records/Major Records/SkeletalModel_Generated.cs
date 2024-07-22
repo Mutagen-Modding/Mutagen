@@ -1273,12 +1273,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Rig?.RawPath,
+                item: item.Rig?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM5),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.AnimationText?.RawPath,
+                item: item.AnimationText?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM6),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(

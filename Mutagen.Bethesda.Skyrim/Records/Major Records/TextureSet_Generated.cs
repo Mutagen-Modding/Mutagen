@@ -2028,42 +2028,42 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Diffuse?.RawPath,
+                item: item.Diffuse?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NormalOrGloss?.RawPath,
+                item: item.NormalOrGloss?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.EnvironmentMaskOrSubsurfaceTint?.RawPath,
+                item: item.EnvironmentMaskOrSubsurfaceTint?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.GlowOrDetailMap?.RawPath,
+                item: item.GlowOrDetailMap?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Height?.RawPath,
+                item: item.Height?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Environment?.RawPath,
+                item: item.Environment?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Multilayer?.RawPath,
+                item: item.Multilayer?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BacklightMaskOrSpecular?.RawPath,
+                item: item.BacklightMaskOrSpecular?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Decal is {} DecalItem)

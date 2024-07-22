@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Percentage = rhs.Percentage;
             }
-            item.ModelFilename.RawPath = rhs.ModelFilename.RawPath;
+            item.ModelFilename.GivenPath = rhs.ModelFilename.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer.Write(item.Percentage);
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ModelFilename.RawPath,
+                    item: item.ModelFilename.GivenPath,
                     binaryType: StringBinaryType.NullTerminate);
                 EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
             ret.ModelFilename = new AssetLink<StarfieldModelAssetType>(BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.RawPath.Length + 1;
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.GivenPath.Length + 1;
             return ret;
         }
 

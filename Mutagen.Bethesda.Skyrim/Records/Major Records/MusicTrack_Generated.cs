@@ -2173,12 +2173,12 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TrackFilename?.RawPath,
+                item: item.TrackFilename?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FinaleFilename?.RawPath,
+                item: item.FinaleFilename?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.LoopData is {} LoopDataItem)

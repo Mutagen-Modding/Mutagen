@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     StringBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem.RawPath,
+                        item: subItem.GivenPath,
                         header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                         binaryType: StringBinaryType.NullTerminate);
                 });

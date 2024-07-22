@@ -5135,7 +5135,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MapImage?.RawPath,
+                item: item.MapImage?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.CloudModel is {} CloudModelItem)
@@ -5188,27 +5188,27 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CanopyShadow?.RawPath,
+                item: item.CanopyShadow?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterNoiseTexture?.RawPath,
+                item: item.WaterNoiseTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodDiffuseTexture?.RawPath,
+                item: item.HdLodDiffuseTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodNormalTexture?.RawPath,
+                item: item.HdLodNormalTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterEnvironmentMap?.RawPath,
+                item: item.WaterEnvironmentMap?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(

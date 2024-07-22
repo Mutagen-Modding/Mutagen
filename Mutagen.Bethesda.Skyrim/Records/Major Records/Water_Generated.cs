@@ -5299,22 +5299,22 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerOneTexture?.RawPath,
+                item: item.NoiseLayerOneTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerTwoTexture?.RawPath,
+                item: item.NoiseLayerTwoTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerThreeTexture?.RawPath,
+                item: item.NoiseLayerThreeTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FlowNormalsNoiseTexture?.RawPath,
+                item: item.FlowNormalsNoiseTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM5),
                 binaryType: StringBinaryType.NullTerminate);
         }

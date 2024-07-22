@@ -149,9 +149,4 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
     {
         return new DataRelativePath(path);
     }
-
-    public static implicit operator string(DataRelativePath path)
-    {
-        return path.Path;
-    }
 }

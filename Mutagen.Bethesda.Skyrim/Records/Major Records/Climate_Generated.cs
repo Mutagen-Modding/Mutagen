@@ -2060,12 +2060,12 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunTexture?.RawPath,
+                item: item.SunTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunGlareTexture?.RawPath,
+                item: item.SunGlareTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model is {} ModelItem)

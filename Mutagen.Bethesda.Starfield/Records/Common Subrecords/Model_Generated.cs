@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File?.RawPath,
+                item: item.File?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(

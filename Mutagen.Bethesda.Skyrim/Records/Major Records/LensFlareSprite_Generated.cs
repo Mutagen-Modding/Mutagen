@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Texture?.RawPath,
+                item: item.Texture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data is {} DataItem)

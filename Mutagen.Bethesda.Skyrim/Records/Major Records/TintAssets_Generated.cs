@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.TINI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FileName?.RawPath,
+                item: item.FileName?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
