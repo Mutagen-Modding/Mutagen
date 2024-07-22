@@ -12,11 +12,7 @@ public class AssetLinkBuilderTests
 {
     public class TestAssetType : IAssetType
     {
-#if NET7_0_OR_GREATER
         public static IAssetType Instance { get; } = new TestAssetType();
-#else
-    public static readonly TestAssetType Instance = new();
-#endif
         public string BaseFolder => "TestFolder";
         public IEnumerable<string> FileExtensions => new []{ ".test" };
     }

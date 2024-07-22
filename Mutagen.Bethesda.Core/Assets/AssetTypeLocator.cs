@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Assets;
 using Noggog;
 namespace Mutagen.Bethesda.Assets; 
 
-#if NET7_0_OR_GREATER
 public class AssetTypeLocator
 {
 	private static readonly Dictionary<GameCategory, Dictionary<string,Dictionary<string,IAssetType>>> Types;
@@ -88,4 +87,3 @@ public class AssetTypeLocator
 		return null;
 	}
 }
-#endif

@@ -8,7 +8,6 @@ namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
 
 public class AssetTypeTests
 {
-#if NET7_0_OR_GREATER
     public IAssetType GetInstance<TAssetType>()
         where TAssetType : class, IAssetType
     {
@@ -79,5 +78,4 @@ public class AssetTypeTests
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Script", "HelloWorld.pex")).Should().BeNull();
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "HelloWorld.abc")).Should().BeNull();
     }
-#endif
 }
