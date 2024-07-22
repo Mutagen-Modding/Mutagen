@@ -17,12 +17,14 @@ public class AssetLinkGetter<TAssetType> :
 {
     protected DataRelativePath _DataRelativePath;
     protected string _givenPath;
-    protected static readonly IAssetType AssetInstance;
+    protected static readonly TAssetType AssetInstance;
     public static readonly AssetLinkGetter<TAssetType> Null = new();
+    
+    public IAssetType AssetTypeInstance => AssetInstance;
 
     static AssetLinkGetter()
     {
-        AssetInstance = TAssetType.Instance;
+        AssetInstance = (TAssetType)TAssetType.Instance;
     }
 
     public AssetLinkGetter()
@@ -177,6 +179,8 @@ public class AssetLink<TAssetType> :
     IAssetLink<TAssetType>
     where TAssetType : class, IAssetType
 {
+    TAssetType IAssetLink<TAssetType>.AssetTypeInstance => AssetInstance;
+    
     public AssetLink()
         : base(DataRelativePath.NullPath)
     {
@@ -235,21 +239,6 @@ public class AssetLink<TAssetType> :
         return false;
     }
 
-    public void SetPath(DataRelativePath? path)
-    {
-        if (!TrySetPath(path))
-        {
-            throw new AssetPathMisalignedException(path?.Path!, AssetInstance);
-        }
-    }
-
-    public void SetPath(string? path)
-    {
-        if (!TrySetPath(path))
-        {
-            throw new AssetPathMisalignedException(path!, AssetInstance);
-        }
-    }
 
     public new string GivenPath
     {
@@ -320,4 +309,23 @@ public class AssetLink<TAssetType> :
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLink<TAssetType>?(DataRelativePath? path) => path == null ? null : new(path.Value);
+}
+
+public static class AssetLinkExt
+{
+    public static void SetPath(this IAssetLink assetLink, DataRelativePath? path)
+    {
+        if (!assetLink.TrySetPath(path))
+        {
+            throw new AssetPathMisalignedException(path?.Path!, assetLink.AssetTypeInstance);
+        }
+    }
+
+    public static void SetPath(this IAssetLink assetLink, string? path)
+    {
+        if (!assetLink.TrySetPath(path))
+        {
+            throw new AssetPathMisalignedException(path!, assetLink.AssetTypeInstance);
+        }
+    }
 }

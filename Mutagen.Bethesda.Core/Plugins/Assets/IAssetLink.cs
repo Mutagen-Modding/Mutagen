@@ -4,6 +4,8 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {
+    IAssetType AssetTypeInstance { get; }
+
     /// <summary>
     /// Original given path to the Asset Link
     /// </summary>
@@ -47,6 +49,8 @@ public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter
 public interface IAssetLink<out TAssetType> : IAssetLink<IAssetLink<TAssetType>, TAssetType>
     where TAssetType : IAssetType
 {
+    new TAssetType AssetTypeInstance { get; }
+
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
@@ -70,9 +74,18 @@ public interface IAssetLink<out TLinkType, out TAssetType> :
 public interface IAssetLink : IAssetLinkGetter
 {
     /// <summary>
-    /// Set the path to a path that is relative to the game's Data directory
+    /// Attempts to set the path of the AssetLink.  <br />
+    /// Will back out and return false if path does not align with expected folder structure.
     /// </summary>
+    /// <returns>True if path matched expected patterns.  False if it did not align with expected folder structure</returns>
     bool TrySetPath(DataRelativePath? path);
+    
+    /// <summary>
+    /// Attempts to set the path of the AssetLink.  <br />
+    /// Will back out and return false if path does not align with expected folder structure.
+    /// </summary>
+    /// <returns>True if path matched expected patterns.  False if it did not align with expected folder structure</returns>
+    bool TrySetPath(string? path);
 
     /// <summary>
     /// Raw path pointing to the asset
