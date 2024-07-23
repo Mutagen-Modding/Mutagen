@@ -30,9 +30,12 @@ public class IniPathLookup : IIniPathLookup
             
             return Path.Combine(gameDir, ToIniFileName(release));
         }
+
+        var envPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        if (envPath.IsNullOrWhitespace()) return null;
         
         return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            envPath,
             "My Games",
             docsString, 
             ToIniFileName(release));
@@ -47,9 +50,15 @@ public class IniPathLookup : IIniPathLookup
             var gameDir = _gameDirectoryLookup.Get(release);
             return Path.Combine(gameDir, ToIniFileName(release));
         }
+
+        var envPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        if (envPath.IsNullOrWhitespace())
+        {
+            throw new DirectoryNotFoundException("Could not find MyDocuments environment path");
+        }
         
         return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            envPath,
             "My Games",
             docsString, 
             ToIniFileName(release));
@@ -58,5 +67,25 @@ public class IniPathLookup : IIniPathLookup
     public static string ToIniFileName(GameRelease release)
     {
         return $"{GameConstants.Get(release).IniName}.ini";
+    }
+}
+
+internal class IniPathLookupInjection : IIniPathLookup
+{
+    private readonly string _path;
+
+    public IniPathLookupInjection(string path)
+    {
+        _path = path;
+    }
+    
+    public FilePath Get(GameRelease release)
+    {
+        return _path;
+    }
+
+    public FilePath? TryGet(GameRelease release)
+    {
+        return _path;
     }
 }
