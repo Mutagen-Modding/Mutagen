@@ -1378,7 +1378,7 @@ public class StarfieldProcessor : Processor
                 var strLoc = 0;
                 while (true)
                 {
-                    var index = str.Substring(strLoc).IndexOf(target);
+                    var index = str.Substring(strLoc).IndexOf(target, StringComparison.InvariantCulture);
                     if (index == -1) break;
                     strLoc += index + 4;
                     ProcessFormIDOverflow(data, fileOffset, ref strLoc);
