@@ -24450,511 +24450,508 @@ namespace Mutagen.Bethesda.Starfield
                     yield return additional;
                 }
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
             {
-                if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
-                {
-                    foreach (var item in KeywordslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
-                {
-                    foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
-                {
-                    foreach (var item in GlobalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
-                {
-                    foreach (var item in FactionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
-                {
-                    foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in KeywordslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
+            {
+                foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
-                {
-                    foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
-                {
-                    foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
-                {
-                    foreach (var item in ArmorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
-                {
-                    foreach (var item in BookslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
-                {
-                    foreach (var item in ContainerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
-                {
-                    foreach (var item in DoorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Lights is IAssetLinkContainerGetter LightslinkCont)
-                {
-                    foreach (var item in LightslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
-                {
-                    foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Statics is IAssetLinkContainerGetter StaticslinkCont)
-                {
-                    foreach (var item in StaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
-                {
-                    foreach (var item in StaticCollectionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PackIns is IAssetLinkContainerGetter PackInslinkCont)
-                {
-                    foreach (var item in PackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.MoveableStatics is IAssetLinkContainerGetter MoveableStaticslinkCont)
-                {
-                    foreach (var item in MoveableStaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Grasses is IAssetLinkContainerGetter GrasseslinkCont)
-                {
-                    foreach (var item in GrasseslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Florae is IAssetLinkContainerGetter FloraelinkCont)
-                {
-                    foreach (var item in FloraelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
-                {
-                    foreach (var item in FurniturelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
-                {
-                    foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
+            {
+                foreach (var item in GlobalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Npcs is IAssetLinkContainerGetter NpcslinkCont)
-                {
-                    foreach (var item in NpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledNpcs is IAssetLinkContainerGetter LeveledNpcslinkCont)
-                {
-                    foreach (var item in LeveledNpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledPackIns is IAssetLinkContainerGetter LeveledPackInslinkCont)
-                {
-                    foreach (var item in LeveledPackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
+            {
+                foreach (var item in FactionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
-                {
-                    foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
+            {
+                foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
-                {
-                    foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Notes is IAssetLinkContainerGetter NoteslinkCont)
-                {
-                    foreach (var item in NoteslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
-                {
-                    foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Hazards is IAssetLinkContainerGetter HazardslinkCont)
-                {
-                    foreach (var item in HazardslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.BendableSplines is IAssetLinkContainerGetter BendableSplineslinkCont)
-                {
-                    foreach (var item in BendableSplineslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Terminals is IAssetLinkContainerGetter TerminalslinkCont)
-                {
-                    foreach (var item in TerminalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
-                {
-                    foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.GenericBaseForms is IAssetLinkContainerGetter GenericBaseFormslinkCont)
-                {
-                    foreach (var item in GenericBaseFormslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.LeveledBaseForms.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
+            {
+                foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
+            {
+                foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
-                {
-                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
-                {
-                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
-                {
-                    foreach (var item in QuestslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
-                {
-                    foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
-                {
-                    foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
-                {
-                    foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
+            {
+                foreach (var item in ArmorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
-                {
-                    foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
+            {
+                foreach (var item in BookslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
+            {
+                foreach (var item in ContainerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
-                {
-                    foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
+            {
+                foreach (var item in DoorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Lights is IAssetLinkContainerGetter LightslinkCont)
+            {
+                foreach (var item in LightslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
-                {
-                    foreach (var item in ImpactslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
-                {
-                    foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
-                {
-                    foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
-                {
-                    foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Layers is IAssetLinkContainerGetter LayerslinkCont)
-                {
-                    foreach (var item in LayerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
-                {
-                    foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ObjectModifications is IAssetLinkContainerGetter ObjectModificationslinkCont)
-                {
-                    foreach (var item in ObjectModificationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplateNodes is IAssetLinkContainerGetter SnapTemplateNodeslinkCont)
-                {
-                    foreach (var item in SnapTemplateNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplates is IAssetLinkContainerGetter SnapTemplateslinkCont)
-                {
-                    foreach (var item in SnapTemplateslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.GroundCovers is IAssetLinkContainerGetter GroundCoverslinkCont)
-                {
-                    foreach (var item in GroundCoverslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
+            {
+                foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
-                {
-                    foreach (var item in SurfaceBlockslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SurfacePatterns is IAssetLinkContainerGetter SurfacePatternslinkCont)
-                {
-                    foreach (var item in SurfacePatternslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SurfaceTrees is IAssetLinkContainerGetter SurfaceTreeslinkCont)
-                {
-                    foreach (var item in SurfaceTreeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.BoneModifiers is IAssetLinkContainerGetter BoneModifierslinkCont)
-                {
-                    foreach (var item in BoneModifierslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplateBehaviors is IAssetLinkContainerGetter SnapTemplateBehaviorslinkCont)
-                {
-                    foreach (var item in SnapTemplateBehaviorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
-                {
-                    foreach (var item in PlanetslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PlanetContentManagerBranchNodes is IAssetLinkContainerGetter PlanetContentManagerBranchNodeslinkCont)
-                {
-                    foreach (var item in PlanetContentManagerBranchNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PlanetContentManagerContentNodes is IAssetLinkContainerGetter PlanetContentManagerContentNodeslinkCont)
-                {
-                    foreach (var item in PlanetContentManagerContentNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Stars is IAssetLinkContainerGetter StarslinkCont)
-                {
-                    foreach (var item in StarslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LayeredMaterialSwaps is IAssetLinkContainerGetter LayeredMaterialSwapslinkCont)
-                {
-                    foreach (var item in LayeredMaterialSwapslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Statics is IAssetLinkContainerGetter StaticslinkCont)
+            {
+                foreach (var item in StaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
+            }
+            if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
+            {
+                foreach (var item in StaticCollectionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in TimeOfDayslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
+            }
+            if (obj.PackIns is IAssetLinkContainerGetter PackInslinkCont)
+            {
+                foreach (var item in PackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.Challenges is IAssetLinkContainerGetter ChallengeslinkCont)
+            }
+            if (obj.MoveableStatics is IAssetLinkContainerGetter MoveableStaticslinkCont)
+            {
+                foreach (var item in MoveableStaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ChallengeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is IAssetLinkContainerGetter GrasseslinkCont)
+            {
+                foreach (var item in GrasseslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Florae is IAssetLinkContainerGetter FloraelinkCont)
+            {
+                foreach (var item in FloraelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
+            {
+                foreach (var item in FurniturelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
+            {
+                foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Npcs is IAssetLinkContainerGetter NpcslinkCont)
+            {
+                foreach (var item in NpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledNpcs is IAssetLinkContainerGetter LeveledNpcslinkCont)
+            {
+                foreach (var item in LeveledNpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledPackIns is IAssetLinkContainerGetter LeveledPackInslinkCont)
+            {
+                foreach (var item in LeveledPackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
+            {
+                foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
+            {
+                foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Notes is IAssetLinkContainerGetter NoteslinkCont)
+            {
+                foreach (var item in NoteslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
+            {
+                foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Hazards is IAssetLinkContainerGetter HazardslinkCont)
+            {
+                foreach (var item in HazardslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BendableSplines is IAssetLinkContainerGetter BendableSplineslinkCont)
+            {
+                foreach (var item in BendableSplineslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Terminals is IAssetLinkContainerGetter TerminalslinkCont)
+            {
+                foreach (var item in TerminalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
+            {
+                foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.GenericBaseForms is IAssetLinkContainerGetter GenericBaseFormslinkCont)
+            {
+                foreach (var item in GenericBaseFormslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.LeveledBaseForms.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
+            {
+                foreach (var item in QuestslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
+            {
+                foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
+            {
+                foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
+            {
+                foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
+            {
+                foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
+            {
+                foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
+            {
+                foreach (var item in ImpactslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
+            {
+                foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
+            {
+                foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
+            {
+                foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Layers is IAssetLinkContainerGetter LayerslinkCont)
+            {
+                foreach (var item in LayerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
+            {
+                foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ObjectModifications is IAssetLinkContainerGetter ObjectModificationslinkCont)
+            {
+                foreach (var item in ObjectModificationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplateNodes is IAssetLinkContainerGetter SnapTemplateNodeslinkCont)
+            {
+                foreach (var item in SnapTemplateNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplates is IAssetLinkContainerGetter SnapTemplateslinkCont)
+            {
+                foreach (var item in SnapTemplateslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.GroundCovers is IAssetLinkContainerGetter GroundCoverslinkCont)
+            {
+                foreach (var item in GroundCoverslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
+            {
+                foreach (var item in SurfaceBlockslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SurfacePatterns is IAssetLinkContainerGetter SurfacePatternslinkCont)
+            {
+                foreach (var item in SurfacePatternslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SurfaceTrees is IAssetLinkContainerGetter SurfaceTreeslinkCont)
+            {
+                foreach (var item in SurfaceTreeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BoneModifiers is IAssetLinkContainerGetter BoneModifierslinkCont)
+            {
+                foreach (var item in BoneModifierslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplateBehaviors is IAssetLinkContainerGetter SnapTemplateBehaviorslinkCont)
+            {
+                foreach (var item in SnapTemplateBehaviorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
+            {
+                foreach (var item in PlanetslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PlanetContentManagerBranchNodes is IAssetLinkContainerGetter PlanetContentManagerBranchNodeslinkCont)
+            {
+                foreach (var item in PlanetContentManagerBranchNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PlanetContentManagerContentNodes is IAssetLinkContainerGetter PlanetContentManagerContentNodeslinkCont)
+            {
+                foreach (var item in PlanetContentManagerContentNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Stars is IAssetLinkContainerGetter StarslinkCont)
+            {
+                foreach (var item in StarslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LayeredMaterialSwaps is IAssetLinkContainerGetter LayeredMaterialSwapslinkCont)
+            {
+                foreach (var item in LayeredMaterialSwapslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
+            {
+                foreach (var item in TimeOfDayslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
+            {
+                foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Challenges is IAssetLinkContainerGetter ChallengeslinkCont)
+            {
+                foreach (var item in ChallengeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
             }
             yield break;

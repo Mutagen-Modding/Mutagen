@@ -4490,13 +4490,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     yield return obj.MapImage;
                 }
-                if (obj.CloudModel is {} CloudModelItems)
-                {
-                    foreach (var item in CloudModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
                 if (obj.CanopyShadow != null)
                 {
                     yield return obj.CanopyShadow;
@@ -4517,18 +4510,25 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     yield return obj.WaterEnvironmentMap;
                 }
-                if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
-                {
-                    foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            }
+            if (obj.CloudModel is {} CloudModelItems)
+            {
+                foreach (var item in CloudModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
+            }
+            if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
+            {
+                foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
             }
             yield break;
         }
