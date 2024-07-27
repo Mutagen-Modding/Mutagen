@@ -1,4 +1,4 @@
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -83,6 +83,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
         DirectoryPath dataFolder,
         IEnumerable<ModKey> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with the load order found in mod header, and with given data folder as reference.
+    /// </summary>
+    /// <param name="dataFolder">Data folder path to use when reading load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrderFromHeaderMasters(
+        DirectoryPath? dataFolder);
 }
 
 public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModdedWriteBuilderLoadOrderChoice
@@ -242,6 +250,46 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
+
+    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrderFromHeaderMasters(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+            {
+                _loadOrderSetter = (m, p) =>
+                {
+                    var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
+                    return p with
+                    {
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    };
+                }
+            });
+        }
+        else
+        {
+            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+            {
+                _loadOrderSetter = (m, p) =>
+                {
+                    var lo = LoadOrder.Import<TModGetter>(
+                        dataFolder.Value, _mod.MasterReferences.Select(x => x.Master),
+                        m.GameRelease, _params._param.FileSystem);   
+                    return p with
+                    {
+                        LoadOrder = new LoadOrder<IModFlagsGetter>(
+                            lo.PriorityOrder.ResolveAllModsExist(),
+                            disposeItems: false),
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    };
+                }
+            });
+        }
+    }
+
     IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(DirectoryPath dataFolder, IEnumerable<ModKey> loadOrder) => WithLoadOrder(dataFolder, loadOrder);
 }
 
