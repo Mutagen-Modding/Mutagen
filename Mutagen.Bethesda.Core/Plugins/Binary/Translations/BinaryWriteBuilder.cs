@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -491,7 +491,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="fileSystem">Filesystem to write to</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithFileSystem(IFileSystem fileSystem);
+    IFileBinaryModdedWriteBuilder WithFileSystem(IFileSystem? fileSystem);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list keys in sync<br/>
@@ -730,7 +730,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="fileSystem">Filesystem to write to</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithFileSystem(IFileSystem fileSystem)
+    public FileBinaryModdedWriteBuilder<TModGetter> WithFileSystem(IFileSystem? fileSystem)
     {
         return this with
         {
@@ -743,7 +743,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithFileSystem(IFileSystem fileSystem) => WithFileSystem(fileSystem);
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithFileSystem(IFileSystem? fileSystem) => WithFileSystem(fileSystem);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list keys in sync<br/>

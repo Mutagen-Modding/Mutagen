@@ -559,7 +559,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     /// </summary>
     /// <param name="fileSystem">FileSystem to read from</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithFileSystem(IFileSystem fileSystem)
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithFileSystem(IFileSystem? fileSystem)
     {
         return this with
         {
