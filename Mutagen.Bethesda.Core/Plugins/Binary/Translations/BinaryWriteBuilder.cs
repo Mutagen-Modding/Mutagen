@@ -96,7 +96,7 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
 public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModdedWriteBuilderLoadOrderChoice
     where TModGetter : class, IModGetter
 {
-    internal TModGetter _mod { get; init; } = null!;
+    internal TModGetter _mod { get; init; } = null!;    
     internal BinaryWriteBuilderParams<TModGetter> _params;
 
     internal BinaryModdedWriteBuilderLoadOrderChoice(
