@@ -139,7 +139,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.PriorityOrder.ResolveAllModsExist(),
+                        loadOrder.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
@@ -187,7 +187,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
                 };
@@ -212,7 +212,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
@@ -242,7 +242,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
@@ -280,7 +280,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     return p with
                     {
                         LoadOrder = new LoadOrder<IModFlagsGetter>(
-                            lo.PriorityOrder.ResolveAllModsExist(),
+                            lo.ListedOrder.ResolveAllModsExist(),
                             disposeItems: false),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
@@ -335,7 +335,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.PriorityOrder.ResolveAllModsExist(),
+                        loadOrder.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
@@ -381,7 +381,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
                 };
@@ -405,7 +405,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
@@ -434,7 +434,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 return p with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.PriorityOrder.ResolveAllModsExist(),
+                        lo.ListedOrder.ResolveAllModsExist(),
                         disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
