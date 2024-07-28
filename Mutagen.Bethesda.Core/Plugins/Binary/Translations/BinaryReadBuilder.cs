@@ -1,6 +1,8 @@
 using System.IO.Abstractions;
 using Loqui.Internal;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -26,6 +28,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal TGroupMask? GroupMask { get; init; }
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
+    internal Func<BinaryReadParameters>? _loadOrderSetter { get; init; }
 }
 
 /// <summary>
@@ -176,7 +179,7 @@ public class BinaryReadBuilderSourceStreamFactoryChoice<TMod, TModGetter, TGroup
 /// </summary>
 public class BinaryReadBuilderSeparatedSourceChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly GameRelease _release;
     private readonly IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator;
@@ -240,7 +243,7 @@ public class BinaryReadBuilderSeparatedSourceChoice<TMod, TModGetter, TGroupMask
 /// </summary>
 public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param;
 
@@ -253,7 +256,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// <summary>
     /// Provides a load order of mod objects to look to. <br />
     /// This is used to construct the separated load order needed to interpret FormIDs. <br />
-    /// It is expected to contain all of the mods that this mod has as masters.
+    /// It is expected to contain all of the mods that this mod has as masters. 
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
@@ -279,13 +282,72 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
     }
+
+    /// <summary>
+    /// Writes the mod with the load order found in mod header, and with given data folder as reference.
+    /// </summary>
+    /// <param name="dataFolder">Data folder path to use when reading load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrderFromHeaderMasters(
+        DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+        }
+        else
+        {
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+            {
+                _loadOrderSetter = () =>
+                {
+                    ModHeaderFrame modHeader;
+                    if (_param._path != null)
+                    {
+                        modHeader = ModHeaderFrame.FromPath(
+                            new ModPath(_param.ModKey, _param._path.Value), _param.GameRelease,
+                            readSafe: true,
+                            _param.Params.FileSystem);
+                    }
+                    else if (_param._stream != null)
+                    {
+                        var pos = _param._stream.Position;
+                        modHeader = ModHeaderFrame.FromStream(_param._stream, _param.ModKey, _param.GameRelease);
+                        _param._stream.Position = pos;
+                    }
+                    else if (_param._streamFactory != null)
+                    {
+                        using var stream = _param._streamFactory();
+                        modHeader = ModHeaderFrame.FromStream(stream, _param.ModKey, _param.GameRelease);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Parameters didn't define any filepath or streams");
+                    }
+
+                    var masters = MasterReferenceCollection.FromModHeader( 
+                        _param.ModKey,
+                        modHeader);
+                    var lo = LoadOrder.Import<TModGetter>(
+                        dataFolder.Value, masters.Masters.Select(x => x.Master),
+                        _param.GameRelease, _param.Params.FileSystem);  
+                    return _param.Params with
+                    {
+                        LoadOrder = new LoadOrder<IModFlagsGetter>(
+                            lo.ListedOrder.ResolveAllModsExist(),
+                            disposeItems: false),
+                    };
+                }
+            });
+        }
+    }
 }
 
 public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     where TMod : IMod
     where TModGetter : IModDisposeGetter
 {
-    internal BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param { get; init; }
+    internal BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param { get; set; }
 
     internal BinaryReadBuilder(
         BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> param)
@@ -304,6 +366,13 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     /// <returns>A readonly mod object with minimal initial parsing done</returns>
     public TModGetter Construct()
     {
+        if (_param._loadOrderSetter != null)
+        {
+            _param = _param with
+            {
+                Params = _param._loadOrderSetter()
+            };
+        }
         return _param._instantiator.Readonly(this);
     }
 
@@ -884,6 +953,13 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     /// <returns>A mutable mod object with all the data loaded</returns>
     public new TMod Construct()
     {
+        if (_param._loadOrderSetter != null)
+        {
+            _param = _param with
+            {
+                Params = _param._loadOrderSetter()
+            };
+        }
         return _param._instantiator.Mutable(this);
     }
 }
