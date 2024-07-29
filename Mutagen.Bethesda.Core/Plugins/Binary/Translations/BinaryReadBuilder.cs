@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using Loqui.Internal;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -29,6 +30,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
     internal Func<BinaryReadParameters>? _loadOrderSetter { get; init; }
+    internal Func<DirectoryPath>? _dataFolderGetter { get; init; }
 }
 
 /// <summary>
@@ -258,6 +260,34 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// This is used to construct the separated load order needed to interpret FormIDs. <br />
     /// It is expected to contain all of the mods that this mod has as masters. 
     /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultLoadOrder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease),
+            _loadOrderSetter = () =>
+            {
+                var dataFolder = _param._dataFolderGetter?.Invoke() ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, 
+                    _param.GameRelease, 
+                    _param.Params.FileSystem);   
+                return _param.Params with
+                {
+                    LoadOrder = new LoadOrder<IModFlagsGetter>(
+                        lo.ListedOrder.ResolveAllModsExist(),
+                        disposeItems: false),
+                };
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
     public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModFlagsGetter>? loadOrder)
@@ -271,7 +301,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 }
             });
     }
-    
+
     /// <summary>
     /// Opt to not provide a load order. <br />
     /// WARNING:  This can lead to corrupted content if the mod contains references to light or half masters.
@@ -286,60 +316,89 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// <summary>
     /// Writes the mod with the load order found in mod header, and with given data folder as reference.
     /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrderFromHeaderMasters(
-        DirectoryPath? dataFolder)
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrderFromHeaderMasters()
+    {
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = () =>
+            {
+                ModHeaderFrame modHeader;
+                if (_param._path != null)
+                {
+                    modHeader = ModHeaderFrame.FromPath(
+                        new ModPath(_param.ModKey, _param._path.Value), _param.GameRelease,
+                        readSafe: true,
+                        _param.Params.FileSystem);
+                }
+                else if (_param._stream != null)
+                {
+                    var pos = _param._stream.Position;
+                    modHeader = ModHeaderFrame.FromStream(_param._stream, _param.ModKey, _param.GameRelease);
+                    _param._stream.Position = pos;
+                }
+                else if (_param._streamFactory != null)
+                {
+                    using var stream = _param._streamFactory();
+                    modHeader = ModHeaderFrame.FromStream(stream, _param.ModKey, _param.GameRelease);
+                }
+                else
+                {
+                    throw new ArgumentException("Parameters didn't define any filepath or streams");
+                }
+
+                var masters = MasterReferenceCollection.FromModHeader(
+                    _param.ModKey,
+                    modHeader);
+                var dataFolder = _param._dataFolderGetter?.Invoke() ??
+                                 throw new ArgumentNullException("Data folder source was not specified");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, masters.Masters.Select(x => x.Master),
+                    _param.GameRelease, _param.Params.FileSystem);
+                return _param.Params with
+                {
+                    LoadOrder = new LoadOrder<IModFlagsGetter>(
+                        lo.ListedOrder.ResolveAllModsExist(),
+                        disposeItems: false),
+                };
+            }
+        });
+    }
+}
+
+/// <summary>
+/// Choice of Data folder location
+/// </summary>
+public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
+    where TMod : IMod
+    where TModGetter : class, IModDisposeGetter
+{
+    private readonly BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param;
+
+    internal BinaryReadBuilderDataFolderChoice(
+        BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> param)
+    {
+        _param = param;
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+        });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
     {
         if (dataFolder == null)
         {
-            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+            return WithDefaultDataFolder();
         }
-        else
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
-            {
-                _loadOrderSetter = () =>
-                {
-                    ModHeaderFrame modHeader;
-                    if (_param._path != null)
-                    {
-                        modHeader = ModHeaderFrame.FromPath(
-                            new ModPath(_param.ModKey, _param._path.Value), _param.GameRelease,
-                            readSafe: true,
-                            _param.Params.FileSystem);
-                    }
-                    else if (_param._stream != null)
-                    {
-                        var pos = _param._stream.Position;
-                        modHeader = ModHeaderFrame.FromStream(_param._stream, _param.ModKey, _param.GameRelease);
-                        _param._stream.Position = pos;
-                    }
-                    else if (_param._streamFactory != null)
-                    {
-                        using var stream = _param._streamFactory();
-                        modHeader = ModHeaderFrame.FromStream(stream, _param.ModKey, _param.GameRelease);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Parameters didn't define any filepath or streams");
-                    }
-
-                    var masters = MasterReferenceCollection.FromModHeader( 
-                        _param.ModKey,
-                        modHeader);
-                    var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder.Value, masters.Masters.Select(x => x.Master),
-                        _param.GameRelease, _param.Params.FileSystem);  
-                    return _param.Params with
-                    {
-                        LoadOrder = new LoadOrder<IModFlagsGetter>(
-                            lo.ListedOrder.ResolveAllModsExist(),
-                            disposeItems: false),
-                    };
-                }
-            });
-        }
+            _dataFolderGetter = () => dataFolder.Value
+        });
     }
 }
 
@@ -642,6 +701,26 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
         };
     }
 
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+        });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return WithDefaultDataFolder();
+        }
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => dataFolder.Value
+        });
+    }
+    
     #endregion
 }
 
@@ -908,6 +987,26 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
         };
     }
 
+    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+        });
+    }
+    
+    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return WithDefaultDataFolder();
+        }
+        return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = () => dataFolder.Value
+        });
+    }
+    
     #endregion
     
     /// <summary>
