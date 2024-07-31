@@ -29,8 +29,8 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal TGroupMask? GroupMask { get; init; }
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
-    internal Func<BinaryReadParameters>? _loadOrderSetter { get; init; }
-    internal Func<DirectoryPath>? _dataFolderGetter { get; init; }
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, BinaryReadParameters>? _loadOrderSetter { get; init; }
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
 }
 
 /// <summary>
@@ -265,15 +265,15 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease),
-            _loadOrderSetter = () =>
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease),
+            _loadOrderSetter = static (param) =>
             {
-                var dataFolder = _param._dataFolderGetter?.Invoke() ?? throw new ArgumentNullException("Data folder source was not set");
+                var dataFolder = param._dataFolderGetter?.Invoke(param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, 
-                    _param.GameRelease, 
-                    _param.Params.FileSystem);   
-                return _param.Params with
+                    param.GameRelease, 
+                    param.Params.FileSystem);   
+                return param.Params with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -321,26 +321,26 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
         {
-            _loadOrderSetter = () =>
+            _loadOrderSetter = static (param) =>
             {
                 ModHeaderFrame modHeader;
-                if (_param._path != null)
+                if (param._path != null)
                 {
                     modHeader = ModHeaderFrame.FromPath(
-                        new ModPath(_param.ModKey, _param._path.Value), _param.GameRelease,
+                        new ModPath(param.ModKey, param._path.Value), param.GameRelease,
                         readSafe: true,
-                        _param.Params.FileSystem);
+                        param.Params.FileSystem);
                 }
-                else if (_param._stream != null)
+                else if (param._stream != null)
                 {
-                    var pos = _param._stream.Position;
-                    modHeader = ModHeaderFrame.FromStream(_param._stream, _param.ModKey, _param.GameRelease);
-                    _param._stream.Position = pos;
+                    var pos = param._stream.Position;
+                    modHeader = ModHeaderFrame.FromStream(param._stream, param.ModKey, param.GameRelease);
+                    param._stream.Position = pos;
                 }
-                else if (_param._streamFactory != null)
+                else if (param._streamFactory != null)
                 {
-                    using var stream = _param._streamFactory();
-                    modHeader = ModHeaderFrame.FromStream(stream, _param.ModKey, _param.GameRelease);
+                    using var stream = param._streamFactory();
+                    modHeader = ModHeaderFrame.FromStream(stream, param.ModKey, param.GameRelease);
                 }
                 else
                 {
@@ -348,14 +348,14 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 }
 
                 var masters = MasterReferenceCollection.FromModHeader(
-                    _param.ModKey,
+                    param.ModKey,
                     modHeader);
-                var dataFolder = _param._dataFolderGetter?.Invoke() ??
+                var dataFolder = param._dataFolderGetter?.Invoke(param) ??
                                  throw new ArgumentNullException("Data folder source was not specified");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, masters.Masters.Select(x => x.Master),
-                    _param.GameRelease, _param.Params.FileSystem);
-                return _param.Params with
+                    param.GameRelease, param.Params.FileSystem);
+                return param.Params with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -385,7 +385,7 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     
@@ -397,7 +397,7 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
         }
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => dataFolder.Value
+            _dataFolderGetter = (param) => dataFolder.Value
         });
     }
 }
@@ -429,7 +429,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
         {
             _param = _param with
             {
-                Params = _param._loadOrderSetter()
+                Params = _param._loadOrderSetter(_param)
             };
         }
         return _param._instantiator.Readonly(this);
@@ -705,7 +705,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     
@@ -717,7 +717,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
         }
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => dataFolder.Value
+            _dataFolderGetter = (param) => dataFolder.Value
         });
     }
     
@@ -991,7 +991,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     {
         return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => GameLocator.Instance.GetDataDirectory(_param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     
@@ -1003,7 +1003,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
         }
         return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = () => dataFolder.Value
+            _dataFolderGetter = (param) => dataFolder.Value
         });
     }
     
@@ -1056,7 +1056,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
         {
             _param = _param with
             {
-                Params = _param._loadOrderSetter()
+                Params = _param._loadOrderSetter(_param)
             };
         }
         return _param._instantiator.Mutable(this);

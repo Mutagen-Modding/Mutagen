@@ -19,7 +19,8 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal BinaryWriteParameters _param { get; init; } = BinaryWriteParameters.Default;
     internal FilePath? _path { get; init; }
     internal Stream? _stream { get; init; }
-    internal Func<TModGetter, BinaryWriteParameters, BinaryWriteParameters>? _loadOrderSetter { get; init; }
+    internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
+    internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
 }
 
 /// <summary>
@@ -69,28 +70,16 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
     /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        DirectoryPath dataFolder);
-
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
     /// <param name="loadOrder">Load order</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        DirectoryPath dataFolder,
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
         IEnumerable<ModKey> loadOrder);
 
     /// <summary>
     /// Writes the mod with the load order found in mod header, and with given data folder as reference.
     /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrderFromHeaderMasters(
-        DirectoryPath? dataFolder);
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrderFromHeaderMasters();
 }
 
 public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModdedWriteBuilderLoadOrderChoice
@@ -136,7 +125,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
-                return p with
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         loadOrder.ListedOrder.ResolveAllModsExist(),
@@ -161,7 +150,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
-                return p with
+                return p._param with
                 {
                     LoadOrder = loadOrder,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
@@ -180,11 +169,12 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     {
         return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
         {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = (m, p) =>
             {
-                var dataFolder = GameLocator.Instance.GetDataDirectory(m.GameRelease);
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
+                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -199,47 +189,20 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
     /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder)
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(DirectoryPath dataFolder) => WithLoadOrder(dataFolder);
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
     /// <param name="loadOrder">Load order</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder,
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
         IEnumerable<ModKey> loadOrder)
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+        return new BinaryModdedWriteBuilderDataFolderChoice<TModGetter>(_mod, _params with
         {
             _loadOrderSetter = (m, p) =>
             {
+                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, loadOrder,
                     m.GameRelease, _params._param.FileSystem);   
-                return p with
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -250,47 +213,30 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<ModKey> loadOrder) => WithLoadOrder(loadOrder);
 
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrderFromHeaderMasters(DirectoryPath? dataFolder)
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
     {
-        if (dataFolder == null)
+        return new BinaryModdedWriteBuilderDataFolderChoice<TModGetter>(_mod, _params with
         {
-            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+            _loadOrderSetter = (m, p) =>
             {
-                _loadOrderSetter = (m, p) =>
+                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, _mod.MasterReferences.Select(x => x.Master),
+                    m.GameRelease, _params._param.FileSystem);   
+                return p._param with
                 {
-                    var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
-                    return p with
-                    {
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                    };
-                }
-            });
-        }
-        else
-        {
-            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-            {
-                _loadOrderSetter = (m, p) =>
-                {
-                    var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder.Value, _mod.MasterReferences.Select(x => x.Master),
-                        m.GameRelease, _params._param.FileSystem);   
-                    return p with
-                    {
-                        LoadOrder = new LoadOrder<IModFlagsGetter>(
-                            lo.ListedOrder.ResolveAllModsExist(),
-                            disposeItems: false),
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                    };
-                }
-            });
-        }
+                    LoadOrder = new LoadOrder<IModFlagsGetter>(
+                        lo.ListedOrder.ResolveAllModsExist(),
+                        disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                };
+            }
+        });
     }
-
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(DirectoryPath dataFolder, IEnumerable<ModKey> loadOrder) => WithLoadOrder(dataFolder, loadOrder);
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrderFromHeaderMasters() => WithLoadOrderFromHeaderMasters();
 }
 
 public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
@@ -332,7 +278,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         {
             _loadOrderSetter = (m, p) =>
             {
-                return p with
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         loadOrder.ListedOrder.ResolveAllModsExist(),
@@ -356,7 +302,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         {
             _loadOrderSetter = (m, p) =>
             {
-                return p with
+                return p._param with
                 {
                     LoadOrder = loadOrder,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
@@ -374,11 +320,12 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     {
         return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
         {
-            _loadOrderSetter = (m, p) =>
+            _dataFolderGetter = static (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
+            _loadOrderSetter = static (m, p) =>
             {
-                var dataFolder = GameLocator.Instance.GetDataDirectory(m.GameRelease);
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -392,46 +339,20 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
     /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder)
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
     /// <param name="loadOrder">Load order</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder,
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
         IEnumerable<ModKey> loadOrder)
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
+        return new BinaryWriteBuilderDataFolderChoice<TModGetter>(_params with
         {
             _loadOrderSetter = (m, p) =>
             {
+                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, loadOrder,
                     m.GameRelease, _params._param.FileSystem);   
-                return p with
+                return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
                         lo.ListedOrder.ResolveAllModsExist(),
@@ -442,6 +363,104 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             }
         });
     }
+
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
+    {
+        return new BinaryWriteBuilderDataFolderChoice<TModGetter>(_params with
+        {
+            _loadOrderSetter = (m, p) =>
+            {
+                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, m.MasterReferences.Select(x => x.Master),
+                    m.GameRelease, _params._param.FileSystem);   
+                return p._param with
+                {
+                    LoadOrder = new LoadOrder<IModFlagsGetter>(
+                        lo.ListedOrder.ResolveAllModsExist(),
+                        disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                };
+            }
+        });
+    }
+}
+
+public record BinaryWriteBuilderDataFolderChoice<TModGetter>
+    where TModGetter : class, IModGetter
+{
+    internal BinaryWriteBuilderParams<TModGetter> _param;
+
+    internal BinaryWriteBuilderDataFolderChoice(BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _param = @params;
+    }
+
+    public BinaryWriteBuilderTargetChoice<TModGetter> WithDefaultDataFolder()
+    {
+        return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
+        {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+        });
+    }
+    
+    public BinaryWriteBuilderTargetChoice<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return WithDefaultDataFolder();
+        }
+        return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+}
+
+public interface IBinaryModdedWriteBuilderDataFolderChoice
+{
+    IBinaryModdedWriteBuilderTargetChoice WithDefaultDataFolder();
+    IBinaryModdedWriteBuilderTargetChoice WithDataFolder(DirectoryPath? dataFolder);
+}
+
+public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModdedWriteBuilderDataFolderChoice
+    where TModGetter : class, IModGetter
+{
+    private readonly TModGetter _mod;
+    internal BinaryWriteBuilderParams<TModGetter> _param;
+
+    internal BinaryModdedWriteBuilderDataFolderChoice(TModGetter mod, BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _mod = mod;
+        _param = @params;
+    }
+
+    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDefaultDataFolder()
+    {
+        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
+        {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+        });
+    }
+
+    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithDefaultDataFolder() =>
+        WithDefaultDataFolder();
+    
+    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return WithDefaultDataFolder();
+        }
+        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+
+    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithDataFolder(DirectoryPath? dataFolder) =>
+        WithDataFolder(dataFolder);
 }
 
 public interface IBinaryModdedWriteBuilderTargetChoice
@@ -1254,7 +1273,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         {
             _params = _params with
             {
-                _param = _params._loadOrderSetter(_mod, _params._param)
+                _param = _params._loadOrderSetter(_mod, _params)
             };
         }
         await _params._writer.WriteAsync(_mod, _params);
@@ -1270,7 +1289,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         {
             _params = _params with
             {
-                _param = _params._loadOrderSetter(_mod, _params._param)
+                _param = _params._loadOrderSetter(_mod, _params)
             };
         }
         _params._writer.Write(_mod, _params);
@@ -1783,7 +1802,7 @@ public record FileBinaryWriteBuilder<TModGetter>
         {
             _params = _params with
             {
-                _param = _params._loadOrderSetter(mod, _params._param)
+                _param = _params._loadOrderSetter(mod, _params)
             };
         }
         await _params._writer.WriteAsync(mod, _params);
@@ -1799,7 +1818,7 @@ public record FileBinaryWriteBuilder<TModGetter>
         {
             _params = _params with
             {
-                _param = _params._loadOrderSetter(mod, _params._param)
+                _param = _params._loadOrderSetter(mod, _params)
             };
         }
         _params._writer.Write(mod, _params);
