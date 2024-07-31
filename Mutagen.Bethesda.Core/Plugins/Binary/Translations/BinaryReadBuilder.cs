@@ -393,7 +393,7 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
     {
         if (dataFolder == null)
         {
-            return WithDefaultDataFolder();
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
         }
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
@@ -713,7 +713,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     {
         if (dataFolder == null)
         {
-            return WithDefaultDataFolder();
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
         }
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
@@ -999,7 +999,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     {
         if (dataFolder == null)
         {
-            return WithDefaultDataFolder();
+            return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param);
         }
         return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
         {

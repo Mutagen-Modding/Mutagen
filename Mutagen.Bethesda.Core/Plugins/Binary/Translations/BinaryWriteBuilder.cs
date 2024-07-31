@@ -409,7 +409,7 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
     {
         if (dataFolder == null)
         {
-            return WithDefaultDataFolder();
+            return new BinaryWriteBuilderTargetChoice<TModGetter>(_param);
         }
         return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
         {
@@ -451,7 +451,7 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
     {
         if (dataFolder == null)
         {
-            return WithDefaultDataFolder();
+            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param);
         }
         return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
         {
