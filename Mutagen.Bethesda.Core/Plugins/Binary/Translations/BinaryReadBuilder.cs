@@ -323,6 +323,12 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
         {
             _loadOrderSetter = static (param) =>
             {
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return param.Params;
+                }
+                
                 ModHeaderFrame modHeader;
                 if (param._path != null)
                 {
@@ -350,10 +356,8 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var masters = MasterReferenceCollection.FromModHeader(
                     param.ModKey,
                     modHeader);
-                var dataFolder = param._dataFolderGetter?.Invoke(param) ??
-                                 throw new ArgumentNullException("Data folder source was not specified");
                 var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder, masters.Masters.Select(x => x.Master),
+                    dataFolder.Value, masters.Masters.Select(x => x.Master),
                     param.GameRelease, param.Params.FileSystem);
                 return param.Params with
                 {
@@ -399,6 +403,11 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
         {
             _dataFolderGetter = (param) => dataFolder.Value
         });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithNoDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
     }
 }
 
