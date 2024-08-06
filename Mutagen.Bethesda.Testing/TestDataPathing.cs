@@ -42,6 +42,8 @@ public class TestDataPathing
     public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
     public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
+    public static string SkyrimDuplicateMasterListing = "Files/Skyrim/DuplicateMasterListing.esp";
+    public static string StarfieldDuplicateMasterListing = "Files/Starfield/DuplicateMasterListing.esp";
     public static string VoiceTypeTesting = "Files/Skyrim/VoiceTypeTestPlugin.esm";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
     public static string CountMissing = "Files/Core/CountMissing.esp";

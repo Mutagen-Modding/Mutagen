@@ -20,9 +20,9 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 {
     internal record MasterStyleIndex(uint Index, MasterStyle Style);
 
-    public ILoadOrderGetter<ModKey> Full { get; private set; } = null!;
-    public ILoadOrderGetter<ModKey> Light { get; private set; } = null!;
-    public ILoadOrderGetter<ModKey> Medium { get; private set; } = null!;
+    public IReadOnlyList<ModKey> Full { get; private set; } = null!;
+    public IReadOnlyList<ModKey> Light { get; private set; } = null!;
+    public IReadOnlyList<ModKey> Medium { get; private set; } = null!;
     public ModKey CurrentMod { get; private set; }
     public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
@@ -80,14 +80,14 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         public ModKey CurrentMod { get; }
         public IReadOnlyMasterReferenceCollection Raw { get; }
 
-        public ILoadOrderGetter<ModKey> Normal { get; }
+        public IReadOnlyList<ModKey> Normal { get; }
 
         internal IReadOnlyDictionary<ModKey, MasterStyleIndex> _lookup = null!;
 
         public NotSeparatedMasterPackage(
             ModKey currentMod,
             IReadOnlyMasterReferenceCollection masters,
-            LoadOrder<ModKey> normal)
+            IReadOnlyList<ModKey> normal)
         {
             CurrentMod = currentMod;
             Raw = masters;
@@ -140,7 +140,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         var ret = new NotSeparatedMasterPackage(
             masters.CurrentMod,
             masters,
-            new LoadOrder<ModKey>(normal, disposeItems: false));
+            normal);
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
         FillLookup(ret.Normal, lookup, MasterStyle.Full);
         ret._lookup = lookup;
@@ -229,9 +229,9 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
         var ret = new SeparatedMasterPackage()
         {
-            Full = new LoadOrder<ModKey>(normal, disposeItems: false),
-            Medium = new LoadOrder<ModKey>(medium, disposeItems: false),
-            Light = new LoadOrder<ModKey>(light, disposeItems: false),
+            Full = normal,
+            Medium = medium,
+            Light = light,
             Raw = masters,
             CurrentMod = masters.CurrentMod,
         };
@@ -256,12 +256,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     }
 
     internal static void FillLookup(
-        ILoadOrderGetter<ModKey> masters,
+        IReadOnlyList<ModKey> masters,
         Dictionary<ModKey, MasterStyleIndex> dict,
         MasterStyle style)
     {
         byte index = 0;
-        foreach (var modKey in masters.ListedOrder)
+        foreach (var modKey in masters)
         {
             dict.Set(modKey, new(index, style));
             index++;
@@ -287,7 +287,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         out MasterStyle style,
         out uint index,
         out uint id,
-        out ILoadOrderGetter<ModKey> loadOrder)
+        out IReadOnlyList<ModKey> loadOrder)
     {
         var fullMasterIndex = formId.FullMasterIndex;
         switch (fullMasterIndex)
