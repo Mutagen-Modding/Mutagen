@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
 
 public class AssetTestsSkyrim
 {

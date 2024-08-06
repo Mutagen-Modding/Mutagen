@@ -1,8 +1,7 @@
 ﻿using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.UnitTests.Plugins.Records;
 
-namespace Mutagen.Bethesda.UnitTests.Fallout4.Records;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Fallout4;
 
 public class ObjectModificationCanImportNoDataTest : ASpecificCaseTest<AObjectModification, IAObjectModificationGetter>
 {

@@ -1,18 +1,18 @@
 ﻿using FluentAssertions;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Records;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Oblivion;
 
 public class EnumerateContextsTests
 {
     [Theory]
-    [MutagenModAutoData(GameRelease.SkyrimSE)]
+    [MutagenModAutoData(GameRelease.Oblivion)]
     public void CellEnumeration(
-        SkyrimMod mod,
+        OblivionMod mod,
         Cell cell1,
         Cell cell2,
         Cell cell3,

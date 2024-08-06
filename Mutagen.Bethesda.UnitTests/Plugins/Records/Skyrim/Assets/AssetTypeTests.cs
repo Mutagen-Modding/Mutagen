@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Skyrim.Assets;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
 
 public class AssetTypeTests
 {

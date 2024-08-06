@@ -6,7 +6,8 @@ using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
+
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
 
 public class VoiceTypeAssetLookupTestSkyrim
 {
