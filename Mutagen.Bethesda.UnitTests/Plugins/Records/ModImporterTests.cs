@@ -30,6 +30,24 @@ public class ModImporterTests
     }
     
     [Theory, MutagenModAutoData]
+    public void GenericClassDisposableGetter(
+        IFileSystem fileSystem,
+        SkyrimMod mod,
+        Npc npc,
+        DirectoryPath existingDir,
+        ModImporter<ISkyrimModDisposableGetter> sut)
+    {
+        var path = Path.Combine(existingDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .WithNoLoadOrder()
+            .ToPath(path)
+            .WithFileSystem(fileSystem)
+            .Write();
+        var import = sut.Import(path);
+        import.Should().BeOfType<SkyrimModBinaryOverlay>();
+    }
+    
+    [Theory, MutagenModAutoData]
     public void GenericClassSetter(
         IFileSystem fileSystem,
         SkyrimMod mod,

@@ -1,8 +1,6 @@
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -18,6 +16,13 @@ internal class NoReleaseModInstantiatorTest : AModInstantiatorTest<OblivionMod, 
 }
 
 internal class ReleaseModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
+{
+    public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
+    public override GameRelease Release => GameRelease.SkyrimSE;
+    public override ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
+}
+
+internal class DisposableModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModDisposableGetter, SkyrimModBinaryOverlay>
 {
     public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
     public override GameRelease Release => GameRelease.SkyrimSE;
