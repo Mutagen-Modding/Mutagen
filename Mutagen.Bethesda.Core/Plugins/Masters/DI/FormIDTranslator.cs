@@ -17,13 +17,13 @@ internal static class FormIDTranslator
         IFormLinkIdentifier key,
         bool reference)
     {
+        if (key.FormKey == FormKey.Null)
+        {
+            return FormID.Null;
+        }
+
         if (!masters.TryLookupModKey(key.FormKey.ModKey, reference, out var style, out var index))
         {
-            if (key.FormKey == FormKey.Null)
-            {
-                return FormID.Null;
-            }
-
             throw new UnmappableFormIDException(
                 key,
                 masters.Raw.Masters
