@@ -172,7 +172,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = (m, p) =>
             {
-                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
@@ -199,7 +199,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
-                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param);
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
                 if (dataFolder == null)
                 {
                     return p._param with
@@ -212,7 +212,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 {
                     var lo = LoadOrder.Import<TModGetter>(
                         dataFolder.Value, loadOrder,
-                        m.GameRelease, _params._param.FileSystem);
+                        m.GameRelease, p._param.FileSystem);
                     return p._param with
                     {
                         LoadOrder = new LoadOrder<IModFlagsGetter>(
@@ -233,7 +233,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
-                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param);
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
                 if (dataFolder == null)
                 {
                     var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
@@ -247,7 +247,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 {
                     var lo = LoadOrder.Import<TModGetter>(
                         dataFolder.Value, _mod.MasterReferences.Select(x => x.Master),
-                        m.GameRelease, _params._param.FileSystem);   
+                        m.GameRelease, p._param.FileSystem);   
                     return p._param with
                     {
                         LoadOrder = new LoadOrder<IModFlagsGetter>(
@@ -372,10 +372,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         {
             _loadOrderSetter = (m, p) =>
             {
-                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, loadOrder,
-                    m.GameRelease, _params._param.FileSystem);   
+                    m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
@@ -392,12 +392,12 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     {
         return new BinaryWriteBuilderDataFolderChoice<TModGetter>(_params with
         {
-            _loadOrderSetter = (m, p) =>
+            _loadOrderSetter = static (m, p) =>
             {
-                var dataFolder = _params._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, m.MasterReferences.Select(x => x.Master),
-                    m.GameRelease, _params._param.FileSystem);   
+                    m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
                     LoadOrder = new LoadOrder<IModFlagsGetter>(
