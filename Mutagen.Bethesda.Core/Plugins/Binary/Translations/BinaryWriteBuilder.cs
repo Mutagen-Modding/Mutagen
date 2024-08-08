@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -173,12 +174,17 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             _loadOrderSetter = (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
+                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);
+                LoadOrder<IModFlagsGetter>? modFlagsLo = null;
+                if (GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
+                {
+                    modFlagsLo = new LoadOrder<IModFlagsGetter>(
+                        lo.ListedOrder.ResolveAllModsExist(),
+                        disposeItems: false);
+                }
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = modFlagsLo,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
@@ -199,19 +205,22 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
+                var loArray = loadOrder
+                    .Where(x => x != m.ModKey)
+                    .ToArray();
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
-                if (dataFolder == null)
+                if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
                     return p._param with
                     {
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(loArray),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loArray)
                     };
                 }
                 else
                 {
                     var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder.Value, loadOrder,
+                        dataFolder.Value, loArray,
                         m.GameRelease, p._param.FileSystem);
                     return p._param with
                     {
@@ -234,7 +243,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             _loadOrderSetter = (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
-                if (dataFolder == null)
+                if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
                     var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
                     return p._param with
