@@ -2381,6 +2381,9 @@
     <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PERS.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PhotoModeFeature.cs">
       <DependentUpon>PhotoModeFeature.xml</DependentUpon>
     </Compile>
@@ -6671,6 +6674,15 @@
     </Compile>
     <Compile Include="Records\Major Records\ATerminalMenuItemTarget_Generated.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERS_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERSItem_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERSItems_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -181,6 +181,7 @@
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="Challenges" refName="Challenge" />
       <Group name="FacialExpressions" refName="FacialExpression" />
+      <Group name="PERS" refName="PERS" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

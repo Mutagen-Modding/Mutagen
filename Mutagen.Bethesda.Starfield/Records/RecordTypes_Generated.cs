@@ -686,6 +686,7 @@ public partial class RecordTypes
     public static readonly RecordType PDSH = new(0x48534450);
     public static readonly RecordType PDTO = new(0x4F544450);
     public static readonly RecordType PERK = new(0x4B524550);
+    public static readonly RecordType PERS = new(0x53524550);
     public static readonly RecordType PFCT = new(0x54434650);
     public static readonly RecordType PFHS = new(0x53484650);
     public static readonly RecordType PFIG = new(0x47494650);

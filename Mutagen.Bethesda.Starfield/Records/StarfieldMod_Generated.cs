@@ -234,6 +234,7 @@ namespace Mutagen.Bethesda.Starfield
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
+            _PERS_Object = new StarfieldGroup<PERS>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1464,6 +1465,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IFacialExpressionGetter> IStarfieldModGetter.FacialExpressions => _FacialExpressions_Object;
         #endregion
+        #region PERS
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<PERS> _PERS_Object;
+        public StarfieldGroup<PERS> PERS => _PERS_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IPERSGetter> IStarfieldModGetter.PERS => _PERS_Object;
+        #endregion
 
         #region To String
 
@@ -1678,6 +1686,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1855,7 +1864,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem TimeOfDays,
                 TItem ActorValueModulations,
                 TItem Challenges,
-                TItem FacialExpressions)
+                TItem FacialExpressions,
+                TItem PERS)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -2032,6 +2042,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Challenges, new StarfieldGroup.Mask<TItem>(Challenges));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FacialExpressions, new StarfieldGroup.Mask<TItem>(FacialExpressions));
+                this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PERS, new StarfieldGroup.Mask<TItem>(PERS));
             }
 
             #pragma warning disable CS8618
@@ -2218,6 +2229,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Challenges { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FacialExpressions { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PERS { get; set; }
             #endregion
 
             #region Equals
@@ -2405,6 +2417,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
                 if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 if (!object.Equals(this.FacialExpressions, rhs.FacialExpressions)) return false;
+                if (!object.Equals(this.PERS, rhs.PERS)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -2585,6 +2598,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ActorValueModulations);
                 hash.Add(this.Challenges);
                 hash.Add(this.FacialExpressions);
+                hash.Add(this.PERS);
                 return hash.ToHashCode();
             }
 
@@ -3468,6 +3482,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.FacialExpressions.Overall)) return false;
                     if (this.FacialExpressions.Specific != null && !this.FacialExpressions.Specific.All(eval)) return false;
                 }
+                if (PERS != null)
+                {
+                    if (!eval(this.PERS.Overall)) return false;
+                    if (this.PERS.Specific != null && !this.PERS.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -4350,6 +4369,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.FacialExpressions.Overall)) return true;
                     if (this.FacialExpressions.Specific != null && this.FacialExpressions.Specific.Any(eval)) return true;
                 }
+                if (PERS != null)
+                {
+                    if (eval(this.PERS.Overall)) return true;
+                    if (this.PERS.Specific != null && this.PERS.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -4539,6 +4563,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
                 obj.Challenges = this.Challenges == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
                 obj.FacialExpressions = this.FacialExpressions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FacialExpressions.Overall), this.FacialExpressions.Specific?.Translate(eval));
+                obj.PERS = this.PERS == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PERS.Overall), this.PERS.Specific?.Translate(eval));
             }
             #endregion
 
@@ -5257,6 +5282,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         FacialExpressions?.Print(sb);
                     }
+                    if (printMask?.PERS?.Overall ?? true)
+                    {
+                        PERS?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -5456,6 +5485,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>? FacialExpressions;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>? PERS;
             #endregion
 
             #region IErrorMask
@@ -5814,6 +5844,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Challenges;
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         return FacialExpressions;
+                    case StarfieldMod_FieldIndex.PERS:
+                        return PERS;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -6348,6 +6380,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         this.FacialExpressions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.PERS:
+                        this.PERS = new MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -6884,6 +6919,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         this.FacialExpressions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.PERS:
+                        this.PERS = (MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -7067,6 +7105,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ActorValueModulations != null) return true;
                 if (Challenges != null) return true;
                 if (FacialExpressions != null) return true;
+                if (PERS != null) return true;
                 return false;
             }
             #endregion
@@ -7267,6 +7306,7 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulations?.Print(sb);
                 Challenges?.Print(sb);
                 FacialExpressions?.Print(sb);
+                PERS?.Print(sb);
             }
             #endregion
 
@@ -7450,6 +7490,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
                 ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 ret.FacialExpressions = this.FacialExpressions.Combine(rhs.FacialExpressions, (l, r) => l.Combine(r));
+                ret.PERS = this.PERS.Combine(rhs.PERS, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -7648,6 +7689,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
             public StarfieldGroup.TranslationMask<Challenge.TranslationMask>? Challenges;
             public StarfieldGroup.TranslationMask<FacialExpression.TranslationMask>? FacialExpressions;
+            public StarfieldGroup.TranslationMask<PERS.TranslationMask>? PERS;
             #endregion
 
             #region Ctors
@@ -7847,6 +7889,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
                 ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
                 ret.Add((FacialExpressions != null ? FacialExpressions.OnOverall : DefaultOn, FacialExpressions?.GetCrystal()));
+                ret.Add((PERS != null ? PERS.OnOverall : DefaultOn, PERS?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -8075,6 +8118,7 @@ namespace Mutagen.Bethesda.Starfield
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
+            _PERS_Object = new StarfieldGroup<PERS>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -8780,6 +8824,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FacialExpressions.RecordCache.Set(rhsMod.FacialExpressions.RecordCache.Items);
             }
+            if (mask?.PERS ?? true)
+            {
+                this.PERS.RecordCache.Set(rhsMod.PERS.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -8964,6 +9012,7 @@ namespace Mutagen.Bethesda.Starfield
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
             count += Challenges.RecordCache.Count > 0 ? 1 : default(uint);
             count += FacialExpressions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += PERS.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -9411,6 +9460,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
         new StarfieldGroup<Challenge> Challenges { get; }
         new StarfieldGroup<FacialExpression> FacialExpressions { get; }
+        new StarfieldGroup<PERS> PERS { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -9605,6 +9655,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
         IStarfieldGroupGetter<IChallengeGetter> Challenges { get; }
         IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions { get; }
+        IStarfieldGroupGetter<IPERSGetter> PERS { get; }
 
         #region Mutagen
         StarfieldRelease StarfieldRelease { get; }
@@ -10330,6 +10381,7 @@ namespace Mutagen.Bethesda.Starfield
         ActorValueModulations = 172,
         Challenges = 173,
         FacialExpressions = 174,
+        PERS = 175,
     }
     #endregion
 
@@ -10340,9 +10392,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 175;
+        public const ushort AdditionalFieldCount = 176;
 
-        public const ushort FieldCount = 175;
+        public const ushort FieldCount = 176;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10582,6 +10634,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ActorValueModulations.Clear();
             item.Challenges.Clear();
             item.FacialExpressions.Clear();
+            item.PERS.Clear();
         }
         
         #region Mutagen
@@ -10726,6 +10779,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.TimeOfDays.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
             obj.Challenges.RemapLinks(mapping);
+            obj.PERS.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -10934,6 +10988,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ActorValueModulations.Remove(keys);
             obj.Challenges.Remove(keys);
             obj.FacialExpressions.Remove(keys);
+            obj.PERS.Remove(keys);
         }
         
         public void Remove(
@@ -12385,6 +12440,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    obj.PERS.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -13679,6 +13742,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
             ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
             ret.FacialExpressions = MaskItemExt.Factory(item.FacialExpressions.GetEqualsMask(rhs.FacialExpressions, include), include);
+            ret.PERS = MaskItemExt.Factory(item.PERS.GetEqualsMask(rhs.PERS, include), include);
         }
         
         public string Print(
@@ -14422,6 +14486,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.FacialExpressions?.Overall ?? true)
             {
                 item.FacialExpressions?.Print(sb, "FacialExpressions");
+            }
+            if (printMask?.PERS?.Overall ?? true)
+            {
+                item.PERS?.Print(sb, "PERS");
             }
         }
         
@@ -15832,6 +15900,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isFacialExpressionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.PERS) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PERS, rhs.PERS, out var lhsPERS, out var rhsPERS, out var isPERSEqual))
+                {
+                    if (!object.Equals(lhsPERS, rhsPERS)) return false;
+                }
+                else if (!isPERSEqual) return false;
+            }
             return true;
         }
         
@@ -16013,6 +16089,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ActorValueModulations);
             hash.Add(item.Challenges);
             hash.Add(item.FacialExpressions);
+            hash.Add(item.PERS);
             return hash.ToHashCode();
         }
         
@@ -16900,6 +16977,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IFacialExpression":
                 case "IFacialExpressionInternal":
                     return obj.FacialExpressions;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    return obj.PERS;
                 default:
                     return null;
             }
@@ -16917,7 +16999,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[174];
+            Stream[] outputStreams = new Stream[175];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -17093,6 +17175,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 171, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Challenges, 172, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 173, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PERS, 174, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -17728,6 +17811,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.PERS.EnumerateFormLinks())
+            {
+                yield return item;
             }
             yield break;
         }
@@ -18427,6 +18514,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.FacialExpressions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PERS.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -20018,6 +20109,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IFacialExpression":
                 case "IFacialExpressionInternal":
                     foreach (var item in obj.FacialExpressions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    foreach (var item in obj.PERS.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -21734,6 +21834,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.FacialExpressions,
                 groupGetter: (m) => m.FacialExpressions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, PERS, IPERSGetter>(
+                srcGroup: obj.PERS,
+                type: typeof(IPERSGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.PERS,
+                groupGetter: (m) => m.PERS))
             {
                 yield return item;
             }
@@ -24186,6 +24295,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.FacialExpressions,
                         groupGetter: (m) => m.FacialExpressions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, PERS, IPERSGetter>(
+                        srcGroup: obj.PERS,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.PERS,
+                        groupGetter: (m) => m.PERS))
                     {
                         yield return item;
                     }
@@ -28472,6 +28595,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.PERS) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.PERS);
+                try
+                {
+                    item.PERS.DeepCopyIn(
+                        rhs: rhs.PERS,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.PERS));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -28736,6 +28879,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ActorValueModulations;
         public bool Challenges;
         public bool FacialExpressions;
+        public bool PERS;
         public GroupMask()
         {
         }
@@ -28915,6 +29059,7 @@ namespace Mutagen.Bethesda.Starfield
             ActorValueModulations = defaultValue;
             Challenges = defaultValue;
             FacialExpressions = defaultValue;
+            PERS = defaultValue;
         }
     }
 
@@ -30884,6 +31029,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FacialExpressionsItem).BinaryWriteTranslator).Write<IFacialExpressionGetter>(
                         item: FacialExpressionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.PERS ?? true)
+            {
+                var PERSItem = item.PERS;
+                if (PERSItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PERSItem).BinaryWriteTranslator).Write<IPERSGetter>(
+                        item: PERSItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -33394,6 +33550,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.FacialExpressions;
                 }
+                case RecordTypeInts.PERS:
+                {
+                    if (importMask?.PERS ?? true)
+                    {
+                        item.PERS.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.PERS;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -34428,6 +34598,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _FacialExpressionsLocations;
         private IStarfieldGroupGetter<IFacialExpressionGetter>? _FacialExpressions => _FacialExpressionsLocations != null ? StarfieldGroupBinaryOverlay<IFacialExpressionGetter>.StarfieldGroupFactory(_stream, _FacialExpressionsLocations, _package) : default;
         public IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions => _FacialExpressions ?? new StarfieldGroup<FacialExpression>(this);
+        #endregion
+        #region PERS
+        private List<RangeInt64>? _PERSLocations;
+        private IStarfieldGroupGetter<IPERSGetter>? _PERS => _PERSLocations != null ? StarfieldGroupBinaryOverlay<IPERSGetter>.StarfieldGroupFactory(_stream, _PERSLocations, _package) : default;
+        public IStarfieldGroupGetter<IPERSGetter> PERS => _PERS ?? new StarfieldGroup<PERS>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
@@ -35554,6 +35729,12 @@ namespace Mutagen.Bethesda.Starfield
                     _FacialExpressionsLocations ??= new();
                     _FacialExpressionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.FacialExpressions;
+                }
+                case RecordTypeInts.PERS:
+                {
+                    _PERSLocations ??= new();
+                    _PERSLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.PERS;
                 }
                 default:
                     return default(int?);

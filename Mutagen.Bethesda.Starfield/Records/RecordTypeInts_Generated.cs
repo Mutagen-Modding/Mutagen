@@ -684,6 +684,7 @@ public partial class RecordTypeInts
     public const int PDSH = 0x48534450;
     public const int PDTO = 0x4F544450;
     public const int PERK = 0x4B524550;
+    public const int PERS = 0x53524550;
     public const int PFCT = 0x54434650;
     public const int PFHS = 0x53484650;
     public const int PFIG = 0x47494650;
