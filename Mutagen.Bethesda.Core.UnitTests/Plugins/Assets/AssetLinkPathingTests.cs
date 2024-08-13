@@ -30,6 +30,15 @@ public class AssetLinkPathingTests
     }
 
     [Fact]
+    public void BaseFolderRelativePath()
+    {
+        var path = $"{Path.Combine("Meshes", "Clutter", "MyMesh.nif")}";
+        var link = new AssetLink<TestAssetType>(path);
+        link.DataRelativePath.Should().Be(DataPath);
+        link.GivenPath.Should().Be(path);
+    }
+
+    [Fact]
     public void PrefixedDataRelativePath()
     {
         var path = $"{Path.DirectorySeparatorChar}{Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif")}";

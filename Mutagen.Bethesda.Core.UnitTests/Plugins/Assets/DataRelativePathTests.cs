@@ -29,7 +29,6 @@ public class DataRelativePathTests
         link.Path.Should().Be(DataPath);
     }
 
-
     [Fact]
     public void DataRelativePathWithPrefix()
     {
@@ -61,5 +60,69 @@ public class DataRelativePathTests
         {
             new DataRelativePath($"{absPrefix}{Path.Combine("Skyrim", "NoDataPath", "MyMesh.nif")}");
         });
+    }
+
+    [Fact]
+    public void BaseFolderContainsData()
+    {
+        var path = Path.Combine("SomeDataFolder", "OtherFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void BaseFolderContainsData2()
+    {
+        var path = Path.Combine("SomeData", "OtherFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void BaseFolderContainsData3()
+    {
+        var path = Path.Combine("DataFolder", "OtherFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void BaseFolderContainsData4()
+    {
+        var path = Path.Combine("OtherFolder", "SomeDataFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void BaseFolderContainsData5()
+    {
+        var path = Path.Combine("OtherFolder", "SomeData", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void BaseFolderContainsData6()
+    {
+        var path = Path.Combine("OtherFolder", "DataFolder", "Data", "Meshes", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(DataPath);
+    }
+
+    [Fact]
+    public void AnimTextData()
+    {
+        var path = Path.Combine("AnimTextData", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(path);
+    }
+
+    [Fact]
+    public void AnimTextDataWithData()
+    {
+        var path = Path.Combine("Data", "AnimTextData", "Clutter", "MyMesh.nif");
+        var link = new DataRelativePath(path);
+        link.Path.Should().Be(Path.Combine("AnimTextData", "Clutter", "MyMesh.nif"));
     }
 }

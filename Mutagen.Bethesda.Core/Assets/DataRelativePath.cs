@@ -87,17 +87,57 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
             .TrimStart(System.IO.Path.DirectorySeparatorChar)
             .TrimStart(System.IO.Path.AltDirectorySeparatorChar);
 
-        int index;
-        if ((index = path.IndexOf(DataPrefix, PathComparison)) != -1)
+        if (TryLocateDataTrimIndex(path, out var index))
         {
-            path = path[(DataPrefixLength + index)..];
-        }
-        else if ((index = path.IndexOf(DataPrefixAlt, PathComparison)) != -1)
-        {
-            path = path[(DataPrefixLength + index)..];
+            path = path[index..];
         }
 
         return path.ToString();
+    }
+
+    private static bool TryLocateDataTrimIndex(ReadOnlySpan<char> path, out int index)
+    {
+        index = 0;
+        while (true)
+        {
+            var shiftIndex = path.Slice(index).IndexOf(DataDirectory, PathComparison);
+            if (shiftIndex == -1) return false;
+            index += shiftIndex;
+            if (EnclosedByDirectoryPaths(path, index))
+            {
+                index = DataPrefixLength + index;
+                return true;
+            }
+            else
+            {
+                index = DataPrefixLength + index;
+            }
+        }
+    }
+
+    private static bool EnclosedByDirectoryPaths(ReadOnlySpan<char> path, int index)
+    {
+        if (index != 0)
+        {
+            var charBefore = path[index - 1];
+            if (charBefore != System.IO.Path.DirectorySeparatorChar
+                && charBefore != System.IO.Path.AltDirectorySeparatorChar)
+            {
+                return false;
+            }
+        }
+        
+        if (index < path.Length - 1)
+        {
+            var charAfter = path[index + DataDirectory.Length];
+            if (charAfter != System.IO.Path.DirectorySeparatorChar
+                && charAfter != System.IO.Path.AltDirectorySeparatorChar)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public override string ToString()
