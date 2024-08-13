@@ -59,8 +59,6 @@ partial class TerminalMenuItemBinaryCreateTranslation
             default:
                 throw new ArgumentOutOfRangeException("Type", $"Type was unknown: {(ushort)type}");
         }
-
-        frame.Position += 2;
     }
 
     public static partial ParseResult FillBinaryTargetParseCustom(
@@ -106,7 +104,6 @@ partial class TerminalMenuItemBinaryWriteTranslation
             _ => throw new ArgumentOutOfRangeException()
         };
         writer.Write((ushort)type);
-        writer.WriteZeros(2);
     }
 
     public static partial void WriteBinaryTargetParseCustom(

@@ -5,7 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="ShowBodyText" recordType="TMVT" enumName="TerminalMenu.ShowBodyTextOption" />
-      <Enum name="MenuButtonStyle" recordType="DNAM" enumName="TerminalMenu.MenuButtonStyleOption" />
+      <Enum name="MenuButtonStyle" recordType="DNAM" enumName="TerminalMenu.MenuButtonStyleOption" byteLength="1" />
       <Enum name="Style" recordType="SNAM" enumName="TerminalMenu.StyleOption" />
       <String name="INAM" recordType="INAM" unknown="true" translated="Normal"/>
       <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalMenuBodyText" allowNoCounter="false"/>
@@ -25,9 +25,10 @@
       <String name="ShortText" translated="Normal" recordType="ISTX" />
       <Data recordType="ISET">
         <Fields>
-          <CustomLogic name="TypeParse" byteLength="4" />
-          <Enum name="Flags" byteLength="1" enumName="TerminalMenuItem.Flag" />
+          <CustomLogic name="TypeParse" byteLength="2" />
           <UInt16 name="UnusedISET" />
+          <Enum name="Flags" byteLength="1" enumName="TerminalMenuItem.Flag" />
+          <ByteArray name="UnusedISET2" byteLength="3" nullable="false" />
         </Fields>
       </Data>
       <UInt16 name="ID" recordType="ITID" nullable="False" />

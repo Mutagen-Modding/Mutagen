@@ -62,11 +62,22 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? ITerminalMenuItemGetter.ShortText => this.ShortText;
         #endregion
+        #region UnusedISET
+        public UInt16 UnusedISET { get; set; } = default(UInt16);
+        #endregion
         #region Flags
         public TerminalMenuItem.Flag Flags { get; set; } = default(TerminalMenuItem.Flag);
         #endregion
-        #region UnusedISET
-        public UInt16 UnusedISET { get; set; } = default(UInt16);
+        #region UnusedISET2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _UnusedISET2 = new byte[3];
+        public MemorySlice<Byte> UnusedISET2
+        {
+            get => _UnusedISET2;
+            set => this._UnusedISET2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> ITerminalMenuItemGetter.UnusedISET2 => this.UnusedISET2;
         #endregion
         #region ID
         public UInt16 ID { get; set; } = default(UInt16);
@@ -142,8 +153,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Text = initialValue;
                 this.ShortText = initialValue;
-                this.Flags = initialValue;
                 this.UnusedISET = initialValue;
+                this.Flags = initialValue;
+                this.UnusedISET2 = initialValue;
                 this.ID = initialValue;
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
                 this.Target = new MaskItem<TItem, ATerminalMenuItemTarget.Mask<TItem>?>(initialValue, new ATerminalMenuItemTarget.Mask<TItem>(initialValue));
@@ -153,8 +165,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(
                 TItem Text,
                 TItem ShortText,
-                TItem Flags,
                 TItem UnusedISET,
+                TItem Flags,
+                TItem UnusedISET2,
                 TItem ID,
                 TItem Lock,
                 TItem Target,
@@ -162,8 +175,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Text = Text;
                 this.ShortText = ShortText;
-                this.Flags = Flags;
                 this.UnusedISET = UnusedISET;
+                this.Flags = Flags;
+                this.UnusedISET2 = UnusedISET2;
                 this.ID = ID;
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
                 this.Target = new MaskItem<TItem, ATerminalMenuItemTarget.Mask<TItem>?>(Target, new ATerminalMenuItemTarget.Mask<TItem>(Target));
@@ -181,8 +195,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Text;
             public TItem ShortText;
-            public TItem Flags;
             public TItem UnusedISET;
+            public TItem Flags;
+            public TItem UnusedISET2;
             public TItem ID;
             public MaskItem<TItem, LockData.Mask<TItem>?>? Lock { get; set; }
             public MaskItem<TItem, ATerminalMenuItemTarget.Mask<TItem>?>? Target { get; set; }
@@ -201,8 +216,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.Text, rhs.Text)) return false;
                 if (!object.Equals(this.ShortText, rhs.ShortText)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.UnusedISET, rhs.UnusedISET)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.UnusedISET2, rhs.UnusedISET2)) return false;
                 if (!object.Equals(this.ID, rhs.ID)) return false;
                 if (!object.Equals(this.Lock, rhs.Lock)) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;
@@ -214,8 +230,9 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Text);
                 hash.Add(this.ShortText);
-                hash.Add(this.Flags);
                 hash.Add(this.UnusedISET);
+                hash.Add(this.Flags);
+                hash.Add(this.UnusedISET2);
                 hash.Add(this.ID);
                 hash.Add(this.Lock);
                 hash.Add(this.Target);
@@ -230,8 +247,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!eval(this.Text)) return false;
                 if (!eval(this.ShortText)) return false;
-                if (!eval(this.Flags)) return false;
                 if (!eval(this.UnusedISET)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.UnusedISET2)) return false;
                 if (!eval(this.ID)) return false;
                 if (Lock != null)
                 {
@@ -264,8 +282,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (eval(this.Text)) return true;
                 if (eval(this.ShortText)) return true;
-                if (eval(this.Flags)) return true;
                 if (eval(this.UnusedISET)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.UnusedISET2)) return true;
                 if (eval(this.ID)) return true;
                 if (Lock != null)
                 {
@@ -305,8 +324,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 obj.Text = eval(this.Text);
                 obj.ShortText = eval(this.ShortText);
-                obj.Flags = eval(this.Flags);
                 obj.UnusedISET = eval(this.UnusedISET);
+                obj.Flags = eval(this.Flags);
+                obj.UnusedISET2 = eval(this.UnusedISET2);
                 obj.ID = eval(this.ID);
                 obj.Lock = this.Lock == null ? null : new MaskItem<R, LockData.Mask<R>?>(eval(this.Lock.Overall), this.Lock.Specific?.Translate(eval));
                 obj.Target = this.Target == null ? null : new MaskItem<R, ATerminalMenuItemTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
@@ -351,13 +371,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ShortText, "ShortText");
                     }
+                    if (printMask?.UnusedISET ?? true)
+                    {
+                        sb.AppendItem(UnusedISET, "UnusedISET");
+                    }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.UnusedISET ?? true)
+                    if (printMask?.UnusedISET2 ?? true)
                     {
-                        sb.AppendItem(UnusedISET, "UnusedISET");
+                        sb.AppendItem(UnusedISET2, "UnusedISET2");
                     }
                     if (printMask?.ID ?? true)
                     {
@@ -416,8 +440,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? Text;
             public Exception? ShortText;
-            public Exception? Flags;
             public Exception? UnusedISET;
+            public Exception? Flags;
+            public Exception? UnusedISET2;
             public Exception? ID;
             public MaskItem<Exception?, LockData.ErrorMask?>? Lock;
             public MaskItem<Exception?, ATerminalMenuItemTarget.ErrorMask?>? Target;
@@ -434,10 +459,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Text;
                     case TerminalMenuItem_FieldIndex.ShortText:
                         return ShortText;
-                    case TerminalMenuItem_FieldIndex.Flags:
-                        return Flags;
                     case TerminalMenuItem_FieldIndex.UnusedISET:
                         return UnusedISET;
+                    case TerminalMenuItem_FieldIndex.Flags:
+                        return Flags;
+                    case TerminalMenuItem_FieldIndex.UnusedISET2:
+                        return UnusedISET2;
                     case TerminalMenuItem_FieldIndex.ID:
                         return ID;
                     case TerminalMenuItem_FieldIndex.Lock:
@@ -462,11 +489,14 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenuItem_FieldIndex.ShortText:
                         this.ShortText = ex;
                         break;
+                    case TerminalMenuItem_FieldIndex.UnusedISET:
+                        this.UnusedISET = ex;
+                        break;
                     case TerminalMenuItem_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case TerminalMenuItem_FieldIndex.UnusedISET:
-                        this.UnusedISET = ex;
+                    case TerminalMenuItem_FieldIndex.UnusedISET2:
+                        this.UnusedISET2 = ex;
                         break;
                     case TerminalMenuItem_FieldIndex.ID:
                         this.ID = ex;
@@ -496,11 +526,14 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenuItem_FieldIndex.ShortText:
                         this.ShortText = (Exception?)obj;
                         break;
+                    case TerminalMenuItem_FieldIndex.UnusedISET:
+                        this.UnusedISET = (Exception?)obj;
+                        break;
                     case TerminalMenuItem_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case TerminalMenuItem_FieldIndex.UnusedISET:
-                        this.UnusedISET = (Exception?)obj;
+                    case TerminalMenuItem_FieldIndex.UnusedISET2:
+                        this.UnusedISET2 = (Exception?)obj;
                         break;
                     case TerminalMenuItem_FieldIndex.ID:
                         this.ID = (Exception?)obj;
@@ -524,8 +557,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Text != null) return true;
                 if (ShortText != null) return true;
-                if (Flags != null) return true;
                 if (UnusedISET != null) return true;
+                if (Flags != null) return true;
+                if (UnusedISET2 != null) return true;
                 if (ID != null) return true;
                 if (Lock != null) return true;
                 if (Target != null) return true;
@@ -562,10 +596,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ShortText, "ShortText");
                 }
                 {
+                    sb.AppendItem(UnusedISET, "UnusedISET");
+                }
+                {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(UnusedISET, "UnusedISET");
+                    sb.AppendItem(UnusedISET2, "UnusedISET2");
                 }
                 {
                     sb.AppendItem(ID, "ID");
@@ -600,8 +637,9 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Text = this.Text.Combine(rhs.Text);
                 ret.ShortText = this.ShortText.Combine(rhs.ShortText);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.UnusedISET = this.UnusedISET.Combine(rhs.UnusedISET);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.UnusedISET2 = this.UnusedISET2.Combine(rhs.UnusedISET2);
                 ret.ID = this.ID.Combine(rhs.ID);
                 ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
                 ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
@@ -631,8 +669,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool Text;
             public bool ShortText;
-            public bool Flags;
             public bool UnusedISET;
+            public bool Flags;
+            public bool UnusedISET2;
             public bool ID;
             public LockData.TranslationMask? Lock;
             public ATerminalMenuItemTarget.TranslationMask? Target;
@@ -648,8 +687,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.Text = defaultOn;
                 this.ShortText = defaultOn;
-                this.Flags = defaultOn;
                 this.UnusedISET = defaultOn;
+                this.Flags = defaultOn;
+                this.UnusedISET2 = defaultOn;
                 this.ID = defaultOn;
             }
 
@@ -668,8 +708,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((Text, null));
                 ret.Add((ShortText, null));
-                ret.Add((Flags, null));
                 ret.Add((UnusedISET, null));
+                ret.Add((Flags, null));
+                ret.Add((UnusedISET2, null));
                 ret.Add((ID, null));
                 ret.Add((Lock != null ? Lock.OnOverall : DefaultOn, Lock?.GetCrystal()));
                 ret.Add((Target != null ? Target.OnOverall : DefaultOn, Target?.GetCrystal()));
@@ -754,8 +795,9 @@ namespace Mutagen.Bethesda.Starfield
     {
         new TranslatedString Text { get; set; }
         new TranslatedString? ShortText { get; set; }
-        new TerminalMenuItem.Flag Flags { get; set; }
         new UInt16 UnusedISET { get; set; }
+        new TerminalMenuItem.Flag Flags { get; set; }
+        new MemorySlice<Byte> UnusedISET2 { get; set; }
         new UInt16 ID { get; set; }
         new LockData? Lock { get; set; }
         new ATerminalMenuItemTarget Target { get; set; }
@@ -777,8 +819,9 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => TerminalMenuItem_Registration.Instance;
         ITranslatedStringGetter Text { get; }
         ITranslatedStringGetter? ShortText { get; }
-        TerminalMenuItem.Flag Flags { get; }
         UInt16 UnusedISET { get; }
+        TerminalMenuItem.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte> UnusedISET2 { get; }
         UInt16 ID { get; }
         ILockDataGetter? Lock { get; }
         IATerminalMenuItemTargetGetter Target { get; }
@@ -954,12 +997,13 @@ namespace Mutagen.Bethesda.Starfield
     {
         Text = 0,
         ShortText = 1,
-        Flags = 2,
-        UnusedISET = 3,
-        ID = 4,
-        Lock = 5,
-        Target = 6,
-        Conditions = 7,
+        UnusedISET = 2,
+        Flags = 3,
+        UnusedISET2 = 4,
+        ID = 5,
+        Lock = 6,
+        Target = 7,
+        Conditions = 8,
     }
     #endregion
 
@@ -970,9 +1014,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(TerminalMenuItem.Mask<>);
 
@@ -1062,8 +1106,9 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Text.Clear();
             item.ShortText = default;
-            item.Flags = default(TerminalMenuItem.Flag);
             item.UnusedISET = default(UInt16);
+            item.Flags = default(TerminalMenuItem.Flag);
+            item.UnusedISET2 = new byte[3];
             item.ID = default(UInt16);
             item.Lock = null;
             item.Target.Clear();
@@ -1122,8 +1167,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.Text = object.Equals(item.Text, rhs.Text);
             ret.ShortText = object.Equals(item.ShortText, rhs.ShortText);
-            ret.Flags = item.Flags == rhs.Flags;
             ret.UnusedISET = item.UnusedISET == rhs.UnusedISET;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.UnusedISET2 = MemoryExtensions.SequenceEqual(item.UnusedISET2.Span, rhs.UnusedISET2.Span);
             ret.ID = item.ID == rhs.ID;
             ret.Lock = EqualsMaskHelper.EqualsHelper(
                 item.Lock,
@@ -1188,13 +1234,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ShortTextItem, "ShortText");
             }
+            if (printMask?.UnusedISET ?? true)
+            {
+                sb.AppendItem(item.UnusedISET, "UnusedISET");
+            }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.UnusedISET ?? true)
+            if (printMask?.UnusedISET2 ?? true)
             {
-                sb.AppendItem(item.UnusedISET, "UnusedISET");
+                sb.AppendLine($"UnusedISET2 => {SpanExt.ToHexString(item.UnusedISET2)}");
             }
             if (printMask?.ID ?? true)
             {
@@ -1240,13 +1290,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.ShortText, rhs.ShortText)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET) ?? true))
+            {
+                if (lhs.UnusedISET != rhs.UnusedISET) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET2) ?? true))
             {
-                if (lhs.UnusedISET != rhs.UnusedISET) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.UnusedISET2.Span, rhs.UnusedISET2.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ID) ?? true))
             {
@@ -1283,8 +1337,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ShortTextitem);
             }
-            hash.Add(item.Flags);
             hash.Add(item.UnusedISET);
+            hash.Add(item.Flags);
+            hash.Add(item.UnusedISET2);
             hash.Add(item.ID);
             if (item.Lock is {} Lockitem)
             {
@@ -1350,13 +1405,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ShortText = rhs.ShortText?.DeepCopy();
             }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET) ?? true))
+            {
+                item.UnusedISET = rhs.UnusedISET;
+            }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.UnusedISET2) ?? true))
             {
-                item.UnusedISET = rhs.UnusedISET;
+                item.UnusedISET2 = rhs.UnusedISET2.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ID) ?? true))
             {
@@ -1548,11 +1607,14 @@ namespace Mutagen.Bethesda.Starfield
                 TerminalMenuItemBinaryWriteTranslation.WriteBinaryTypeParse(
                     writer: writer,
                     item: item);
+                writer.Write(item.UnusedISET);
                 EnumBinaryTranslation<TerminalMenuItem.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
-                writer.Write(item.UnusedISET);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.UnusedISET2);
             }
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1670,17 +1732,18 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 4) return null;
+                    if (dataFrame.Remaining < 2) return null;
                     TerminalMenuItemBinaryCreateTranslation.FillBinaryTypeParseCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.UnusedISET = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<TerminalMenuItem.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
-                    if (dataFrame.Remaining < 2) return null;
-                    item.UnusedISET = dataFrame.ReadUInt16();
-                    return (int)TerminalMenuItem_FieldIndex.UnusedISET;
+                    item.UnusedISET2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)TerminalMenuItem_FieldIndex.UnusedISET2;
                 }
                 case RecordTypeInts.ITID:
                 {
@@ -1806,15 +1869,20 @@ namespace Mutagen.Bethesda.Starfield
             OverlayStream stream,
             int offset);
         #endregion
+        #region UnusedISET
+        private int _UnusedISETLocation => _ISETLocation!.Value.Min + 0x2;
+        private bool _UnusedISET_IsSet => _ISETLocation.HasValue;
+        public UInt16 UnusedISET => _UnusedISET_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedISETLocation, 2)) : default(UInt16);
+        #endregion
         #region Flags
         private int _FlagsLocation => _ISETLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ISETLocation.HasValue;
         public TerminalMenuItem.Flag Flags => _Flags_IsSet ? (TerminalMenuItem.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
-        #region UnusedISET
-        private int _UnusedISETLocation => _ISETLocation!.Value.Min + 0x5;
-        private bool _UnusedISET_IsSet => _ISETLocation.HasValue;
-        public UInt16 UnusedISET => _UnusedISET_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedISETLocation, 2)) : default(UInt16);
+        #region UnusedISET2
+        private int _UnusedISET2Location => _ISETLocation!.Value.Min + 0x5;
+        private bool _UnusedISET2_IsSet => _ISETLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> UnusedISET2 => _UnusedISET2_IsSet ? _recordData.Span.Slice(_UnusedISET2Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region ID
         private int? _IDLocation;
@@ -1908,7 +1976,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ISET:
                 {
                     _ISETLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)TerminalMenuItem_FieldIndex.UnusedISET;
+                    return (int)TerminalMenuItem_FieldIndex.UnusedISET2;
                 }
                 case RecordTypeInts.ITID:
                 {

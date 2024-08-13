@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Starfield
             EnumBinaryTranslation<TerminalMenu.MenuButtonStyleOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MenuButtonStyle,
-                length: 4,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             EnumBinaryTranslation<TerminalMenu.StyleOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MenuButtonStyle
         private int? _MenuButtonStyleLocation;
-        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle => _MenuButtonStyleLocation.HasValue ? (TerminalMenu.MenuButtonStyleOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuButtonStyleLocation!.Value, _package.MetaData.Constants)) : default(TerminalMenu.MenuButtonStyleOption?);
+        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle => _MenuButtonStyleLocation.HasValue ? (TerminalMenu.MenuButtonStyleOption)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuButtonStyleLocation!.Value, _package.MetaData.Constants)[0] : default(TerminalMenu.MenuButtonStyleOption?);
         #endregion
         #region Style
         private int? _StyleLocation;
