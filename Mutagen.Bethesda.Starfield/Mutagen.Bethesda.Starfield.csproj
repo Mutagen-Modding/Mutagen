@@ -2507,6 +2507,12 @@
     <Compile Include="Records\Major Records\Terminal.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\TerminalMenu.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItem.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
@@ -6644,6 +6650,27 @@
     </Compile>
     <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemDisplayText_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemSubmenu_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemDataslate_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemReturnToDesktop_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemReturnToPrevious_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemForceRedraw_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ATerminalMenuItemTarget_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

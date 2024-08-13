@@ -4,9 +4,9 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <ByteArray name="TMVT" recordType="TMVT" unknown="true" />
-      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
-      <ByteArray name="SNAM" recordType="SNAM" unknown="true" />
+      <Enum name="ShowBodyText" recordType="TMVT" enumName="TerminalMenu.ShowBodyTextOption" />
+      <Enum name="MenuButtonStyle" recordType="DNAM" enumName="TerminalMenu.MenuButtonStyleOption" />
+      <Enum name="Style" recordType="SNAM" enumName="TerminalMenu.StyleOption" />
       <String name="INAM" recordType="INAM" unknown="true" translated="Normal"/>
       <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalMenuBodyText" allowNoCounter="false"/>
       <RefList name="MenuItems" counterRecType="ISIZ" refName="TerminalMenuItem" allowNoCounter="false"/>
@@ -21,14 +21,52 @@
   </Object>
   <Object name="TerminalMenuItem" objType="Subrecord">
     <Fields>
-      <String name="ItemText" translated="Normal" recordType="ITXT" nullable="False" />
-      <String name="ItemShortText" translated="Normal" recordType="ISTX" />
-      <ByteArray name="ISET" recordType="ISET" unknown="true" />
-      <UInt16 name="ItemId" recordType="ITID" nullable="False" />
+      <String name="Text" translated="Normal" recordType="ITXT" nullable="False" />
+      <String name="ShortText" translated="Normal" recordType="ISTX" />
+      <Data recordType="ISET">
+        <Fields>
+          <CustomLogic name="TypeParse" byteLength="4" />
+          <Enum name="Flags" byteLength="1" enumName="TerminalMenuItem.Flag" />
+          <UInt16 name="UnusedISET" />
+        </Fields>
+      </Data>
+      <UInt16 name="ID" recordType="ITID" nullable="False" />
       <RefDirect name="Lock" refName="LockData" />
-      <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
-      <String name="DisplayText" translated="Normal" recordType="UNAM" />
+      <RefDirect name="Target" refName="ATerminalMenuItemTarget" nullable="False" binary="NoGeneration" />
+      <CustomLogic name="TargetParse" >
+        <RecordType>UNAM</RecordType>
+        <RecordType>TNAM</RecordType>
+        <RecordType>BNAM</RecordType>
+      </CustomLogic>
       <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="ATerminalMenuItemTarget" objType="Subrecord" abstract="true" />
+  <Object name="TerminalMenuItemDisplayText" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
+      <String name="DisplayText" translated="Normal" recordType="UNAM" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItemSubmenu" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
+      <FormLink name="Submenu" recordType="TNAM" refName="Terminal" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItemDataslate" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
+      <FormLink name="Dataslate" recordType="BNAM" refName="Book" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItemReturnToDesktop" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItemReturnToPrevious" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItemForceRedraw" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
+    <Fields>
     </Fields>
   </Object>
 </Loqui>
