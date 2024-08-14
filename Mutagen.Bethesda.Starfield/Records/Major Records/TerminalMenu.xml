@@ -45,17 +45,17 @@
   <Object name="ATerminalMenuItemTarget" objType="Subrecord" abstract="true" />
   <Object name="TerminalMenuItemDisplayText" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
     <Fields>
-      <String name="DisplayText" translated="Normal" recordType="UNAM" nullable="False" />
+      <String name="DisplayText" translated="Normal" recordType="UNAM" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItemSubmenu" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
     <Fields>
-      <FormLink name="Submenu" recordType="TNAM" refName="Terminal" nullable="False" />
+      <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItemDataslate" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >
     <Fields>
-      <FormLink name="Dataslate" recordType="BNAM" refName="Book" nullable="False" />
+      <FormLink name="Dataslate" recordType="BNAM" refName="Book" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItemReturnToDesktop" objType="Subrecord" baseClass="ATerminalMenuItemTarget" >

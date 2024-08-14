@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Submenu
-        private readonly IFormLink<ITerminalGetter> _Submenu = new FormLink<ITerminalGetter>();
-        public IFormLink<ITerminalGetter> Submenu
+        private readonly IFormLinkNullable<ITerminalGetter> _Submenu = new FormLinkNullable<ITerminalGetter>();
+        public IFormLinkNullable<ITerminalGetter> Submenu
         {
             get => _Submenu;
             set => _Submenu.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ITerminalGetter> ITerminalMenuItemSubmenuGetter.Submenu => this.Submenu;
+        IFormLinkNullableGetter<ITerminalGetter> ITerminalMenuItemSubmenuGetter.Submenu => this.Submenu;
         #endregion
 
         #region To String
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ITerminalMenuItemSubmenu>,
         ITerminalMenuItemSubmenuGetter
     {
-        new IFormLink<ITerminalGetter> Submenu { get; set; }
+        new IFormLinkNullable<ITerminalGetter> Submenu { get; set; }
     }
 
     public partial interface ITerminalMenuItemSubmenuGetter :
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<ITerminalMenuItemSubmenuGetter>
     {
         static new ILoquiRegistration StaticRegistration => TerminalMenuItemSubmenu_Registration.Instance;
-        IFormLinkGetter<ITerminalGetter> Submenu { get; }
+        IFormLinkNullableGetter<ITerminalGetter> Submenu { get; }
 
     }
 
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
             if (printMask?.Submenu ?? true)
             {
-                sb.AppendItem(item.Submenu.FormKey, "Submenu");
+                sb.AppendItem(item.Submenu.FormKeyNullable, "Submenu");
             }
         }
         
@@ -838,7 +838,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Submenu);
+            if (FormLinkInformation.TryFactory(obj.Submenu, out var SubmenuInfo))
+            {
+                yield return SubmenuInfo;
+            }
             yield break;
         }
         
@@ -865,7 +868,7 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItemSubmenu_FieldIndex.Submenu) ?? true))
             {
-                item.Submenu.SetTo(rhs.Submenu.FormKey);
+                item.Submenu.SetTo(rhs.Submenu.FormKeyNullable);
             }
         }
         
@@ -976,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Submenu,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
@@ -1092,7 +1095,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Submenu
         private int? _SubmenuLocation;
-        public IFormLinkGetter<ITerminalGetter> Submenu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _SubmenuLocation);
+        public IFormLinkNullableGetter<ITerminalGetter> Submenu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _SubmenuLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

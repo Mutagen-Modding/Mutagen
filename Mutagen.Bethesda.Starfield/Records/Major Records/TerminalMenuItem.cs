@@ -130,12 +130,13 @@ partial class TerminalMenuItemBinaryOverlay
 
     private IATerminalMenuItemTargetGetter GetTarget()
     {
+        var data = _targetLocation.HasValue ? _recordData.Slice(_targetLocation.Value) : Array.Empty<byte>();
         switch (Type)
         {
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.DisplayText:
-                return TerminalMenuItemDisplayTextBinaryOverlay.TerminalMenuItemDisplayTextFactory(_recordData.Slice(_targetLocation!.Value), _package);
+                return TerminalMenuItemDisplayTextBinaryOverlay.TerminalMenuItemDisplayTextFactory(data, _package);
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.SubmenuTerminalMenu:
-                return TerminalMenuItemSubmenuBinaryOverlay.TerminalMenuItemSubmenuFactory(_recordData.Slice(_targetLocation!.Value), _package);
+                return TerminalMenuItemSubmenuBinaryOverlay.TerminalMenuItemSubmenuFactory(data, _package);
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.ActionReturnToDesktop:
                 return new TerminalMenuItemReturnToDesktop();
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.ActionReturnToPrevious:
@@ -143,7 +144,7 @@ partial class TerminalMenuItemBinaryOverlay
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.ActionForceRedraw:
                 return new TerminalMenuItemForceRedraw();
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.DataSlateBOOK:
-                return TerminalMenuItemDataslateBinaryOverlay.TerminalMenuItemDataslateFactory(_recordData.Slice(_targetLocation!.Value), _package);
+                return TerminalMenuItemDataslateBinaryOverlay.TerminalMenuItemDataslateFactory(data, _package);
             default:
                 throw new ArgumentOutOfRangeException();
         }

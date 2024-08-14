@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Dataslate
-        private readonly IFormLink<IBookGetter> _Dataslate = new FormLink<IBookGetter>();
-        public IFormLink<IBookGetter> Dataslate
+        private readonly IFormLinkNullable<IBookGetter> _Dataslate = new FormLinkNullable<IBookGetter>();
+        public IFormLinkNullable<IBookGetter> Dataslate
         {
             get => _Dataslate;
             set => _Dataslate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IBookGetter> ITerminalMenuItemDataslateGetter.Dataslate => this.Dataslate;
+        IFormLinkNullableGetter<IBookGetter> ITerminalMenuItemDataslateGetter.Dataslate => this.Dataslate;
         #endregion
 
         #region To String
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ITerminalMenuItemDataslate>,
         ITerminalMenuItemDataslateGetter
     {
-        new IFormLink<IBookGetter> Dataslate { get; set; }
+        new IFormLinkNullable<IBookGetter> Dataslate { get; set; }
     }
 
     public partial interface ITerminalMenuItemDataslateGetter :
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<ITerminalMenuItemDataslateGetter>
     {
         static new ILoquiRegistration StaticRegistration => TerminalMenuItemDataslate_Registration.Instance;
-        IFormLinkGetter<IBookGetter> Dataslate { get; }
+        IFormLinkNullableGetter<IBookGetter> Dataslate { get; }
 
     }
 
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
             if (printMask?.Dataslate ?? true)
             {
-                sb.AppendItem(item.Dataslate.FormKey, "Dataslate");
+                sb.AppendItem(item.Dataslate.FormKeyNullable, "Dataslate");
             }
         }
         
@@ -838,7 +838,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Dataslate);
+            if (FormLinkInformation.TryFactory(obj.Dataslate, out var DataslateInfo))
+            {
+                yield return DataslateInfo;
+            }
             yield break;
         }
         
@@ -865,7 +868,7 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItemDataslate_FieldIndex.Dataslate) ?? true))
             {
-                item.Dataslate.SetTo(rhs.Dataslate.FormKey);
+                item.Dataslate.SetTo(rhs.Dataslate.FormKeyNullable);
             }
         }
         
@@ -976,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Dataslate,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
@@ -1092,7 +1095,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Dataslate
         private int? _DataslateLocation;
-        public IFormLinkGetter<IBookGetter> Dataslate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBookGetter>(_package, _recordData, _DataslateLocation);
+        public IFormLinkNullableGetter<IBookGetter> Dataslate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBookGetter>(_package, _recordData, _DataslateLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

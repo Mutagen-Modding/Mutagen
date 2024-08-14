@@ -54,8 +54,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region DisplayText
-        public TranslatedString DisplayText { get; set; } = string.Empty;
-        ITranslatedStringGetter ITerminalMenuItemDisplayTextGetter.DisplayText => this.DisplayText;
+        public TranslatedString? DisplayText { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITerminalMenuItemDisplayTextGetter.DisplayText => this.DisplayText;
         #endregion
 
         #region To String
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ITerminalMenuItemDisplayText>,
         ITerminalMenuItemDisplayTextGetter
     {
-        new TranslatedString DisplayText { get; set; }
+        new TranslatedString? DisplayText { get; set; }
     }
 
     public partial interface ITerminalMenuItemDisplayTextGetter :
@@ -406,7 +407,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<ITerminalMenuItemDisplayTextGetter>
     {
         static new ILoquiRegistration StaticRegistration => TerminalMenuItemDisplayText_Registration.Instance;
-        ITranslatedStringGetter DisplayText { get; }
+        ITranslatedStringGetter? DisplayText { get; }
 
     }
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITerminalMenuItemDisplayText item)
         {
             ClearPartial();
-            item.DisplayText.Clear();
+            item.DisplayText = default;
             base.Clear(item);
         }
         
@@ -755,9 +756,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.DisplayText ?? true)
+            if ((printMask?.DisplayText ?? true)
+                && item.DisplayText is {} DisplayTextItem)
             {
-                sb.AppendItem(item.DisplayText, "DisplayText");
+                sb.AppendItem(DisplayTextItem, "DisplayText");
             }
         }
         
@@ -799,7 +801,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ITerminalMenuItemDisplayTextGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.DisplayText);
+            if (item.DisplayText is {} DisplayTextitem)
+            {
+                hash.Add(DisplayTextitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -850,7 +855,7 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItemDisplayText_FieldIndex.DisplayText) ?? true))
             {
-                item.DisplayText = rhs.DisplayText.DeepCopy();
+                item.DisplayText = rhs.DisplayText?.DeepCopy();
             }
         }
         
@@ -961,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DisplayText,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM),
@@ -1081,7 +1086,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region DisplayText
         private int? _DisplayTextLocation;
-        public ITranslatedStringGetter DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
