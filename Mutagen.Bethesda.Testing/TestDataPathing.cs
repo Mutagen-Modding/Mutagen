@@ -50,6 +50,7 @@ public class TestDataPathing
     public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
     public static string SmallOblivionMod = "Plugins/Binary/Headers/SmallOblivionMod.esp";
     public static string StarfieldUnknownCondition = "Files/Starfield/UnknownCondition.esp";
+    public static string StarfieldTraversals = "Files/Starfield/Traversals.esp";
 
     public static byte[] GetBytes(FilePath path)
     {

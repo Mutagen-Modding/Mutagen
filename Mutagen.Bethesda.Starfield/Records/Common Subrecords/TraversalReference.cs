@@ -218,6 +218,8 @@ partial class TraversalReferenceBinaryOverlay
             }
         }
 
+        stream.Position = checked((int)finalPos);
+
         return locs;
     }
 
