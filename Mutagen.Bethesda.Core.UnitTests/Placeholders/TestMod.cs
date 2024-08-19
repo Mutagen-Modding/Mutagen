@@ -182,17 +182,7 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
-    {
-        throw new NotImplementedException();
-    }
-
     public void WriteToBinary(Stream stream, BinaryWriteParameters? param = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
     {
         throw new NotImplementedException();
     }

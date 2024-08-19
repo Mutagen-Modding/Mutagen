@@ -201,7 +201,8 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
             new ParsingMeta(
                 release, 
                 modKey,
-                masterReferences: null!));
+                masterReferences: null!),
+            dispose: false);
         return mutStream.ReadModHeaderFrame(readSafe: readSafe);
     }
 }
