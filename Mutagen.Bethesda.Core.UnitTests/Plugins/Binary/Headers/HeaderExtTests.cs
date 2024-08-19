@@ -107,7 +107,7 @@ public class HeaderExtTests
     {
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);
         var modHeader = new ModHeaderFrame(GameConstants.SkyrimSE, b);
-        modHeader.Masters().Select(x => x.AsString(MutagenEncoding._1252))
+        modHeader.MasterSubrecords().Select(x => x.AsString(MutagenEncoding._1252))
             .Should().Equal("Dawnguard.esm");
     }
 

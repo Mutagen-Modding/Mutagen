@@ -148,19 +148,8 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         ModKey modKey,
         ModHeaderFrame header)
     {
-        var package = new BinaryOverlayFactoryPackage(
-            new ParsingMeta(header.Meta, modKey, masterReferences: null!));
         return new MasterReferenceCollection(
             modKey,
-            header
-                .Masters()
-                .Select(mastPin =>
-                {
-                    return MasterReferenceBinaryOverlay.MasterReferenceFactory(
-                            mastPin.HeaderAndContentData,
-                            package)
-                        // In case not read safe
-                        .DeepCopy();
-                }));
+            header.Masters(modKey));
     }
 }
