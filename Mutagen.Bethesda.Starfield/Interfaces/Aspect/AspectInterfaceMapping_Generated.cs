@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
-            dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(
-                false,
+            dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
+                true,
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
@@ -67,8 +67,9 @@ namespace Mutagen.Bethesda.Starfield
                     Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
-                    Setter: null,
+                    Setter: typeof(IHaveVirtualMachineAdapter),
                     Getter: typeof(IHaveVirtualMachineAdapterGetter)));
+            dict[typeof(IHaveVirtualMachineAdapterGetter)] = dict[typeof(IHaveVirtualMachineAdapter)] with { Setter = false };
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

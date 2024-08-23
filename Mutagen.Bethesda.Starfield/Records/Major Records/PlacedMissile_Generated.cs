@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedMissile :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedMissileInternal>,
         IPlacedMissileGetter,
         IPositionRotation,

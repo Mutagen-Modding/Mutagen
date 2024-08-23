@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedHazard :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedHazardInternal>,
         IPlacedHazardGetter,
         IPositionRotation,

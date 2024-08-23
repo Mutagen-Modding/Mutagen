@@ -60,6 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SceneAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public SceneAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -67,7 +70,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISceneAdapterGetter? ISceneGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Flags
         public Scene.Flag? Flags { get; set; }
@@ -1175,10 +1181,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScene :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<ISceneInternal>,
         ISceneGetter,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
         new ExtendedList<ScenePhase> Phases { get; }

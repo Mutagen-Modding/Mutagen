@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PerkAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public PerkAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -66,7 +69,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         /// <summary>
@@ -1130,6 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureAssociation,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPerkInternal>,
         INamed,
         INamedRequired,
@@ -1137,6 +1144,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new PerkAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired

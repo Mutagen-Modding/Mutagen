@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Fallout4
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
-            dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(
-                false,
+            dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
+                true,
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
@@ -98,8 +98,9 @@ namespace Mutagen.Bethesda.Fallout4
                     Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
-                    Setter: null,
+                    Setter: typeof(IHaveVirtualMachineAdapter),
                     Getter: typeof(IHaveVirtualMachineAdapterGetter)));
+            dict[typeof(IHaveVirtualMachineAdapterGetter)] = dict[typeof(IHaveVirtualMachineAdapter)] with { Setter = false };
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

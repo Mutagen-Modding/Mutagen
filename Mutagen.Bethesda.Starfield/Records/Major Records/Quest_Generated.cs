@@ -61,6 +61,9 @@ namespace Mutagen.Bethesda.Starfield
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private QuestAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public QuestAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -68,7 +71,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         /// <summary>
@@ -2525,6 +2531,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IQuest :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestInternal>,
         IMajorRecordEnumerable,
@@ -2535,6 +2542,9 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new QuestAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired

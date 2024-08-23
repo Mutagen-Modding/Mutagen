@@ -60,6 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PackageAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public PackageAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -67,7 +70,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPackageAdapterGetter? IPackageGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Flags
         public Package.Flag Flags { get; set; } = default(Package.Flag);
@@ -1741,10 +1747,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackage :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPackageInternal>,
         IPackageGetter,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
         new Package.Types Type { get; set; }

@@ -58,6 +58,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SceneAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public SceneAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -65,7 +68,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISceneAdapterGetter? ISceneGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Flags
         public Scene.Flag? Flags { get; set; }
@@ -1548,10 +1554,14 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IScene :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISceneInternal>,
         ISceneGetter
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
         new ExtendedList<ScenePhase> Phases { get; }

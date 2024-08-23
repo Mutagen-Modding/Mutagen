@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedTrap :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedTrapInternal>,
         IPlacedTrapGetter,
         IPositionRotation,

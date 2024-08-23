@@ -519,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedBarrier :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedBarrierInternal>,
         IPlacedBarrierGetter,
         IScripted

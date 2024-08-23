@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -74,6 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IFurnitureGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -1196,6 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
         IExplodeSpawn,
         IFormLinkContainer,
         IFurnitureGetter,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFurnitureInternal>,
         IModeled,
@@ -1211,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>

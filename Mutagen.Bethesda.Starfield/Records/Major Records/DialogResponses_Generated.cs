@@ -61,6 +61,9 @@ namespace Mutagen.Bethesda.Starfield
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DialogResponsesAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public DialogResponsesAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -68,7 +71,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDialogResponsesAdapterGetter? IDialogResponsesGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1467,9 +1473,13 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainer,
         IDialogResponsesGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IDialogResponsesInternal>,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new DialogResponseFlags? Flags { get; set; }

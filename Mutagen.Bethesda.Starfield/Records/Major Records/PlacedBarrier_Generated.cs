@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedBarrier :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedBarrierInternal>,
         IPlacedBarrierGetter,
         IPositionRotation,

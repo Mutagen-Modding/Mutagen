@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedBeam :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedBeamInternal>,
         IPlacedBeamGetter,
         IPositionRotation,

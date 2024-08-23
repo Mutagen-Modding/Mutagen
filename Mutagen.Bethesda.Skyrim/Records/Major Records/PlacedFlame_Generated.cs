@@ -519,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedFlame :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedFlameInternal>,
         IPlacedFlameGetter,
         IScripted

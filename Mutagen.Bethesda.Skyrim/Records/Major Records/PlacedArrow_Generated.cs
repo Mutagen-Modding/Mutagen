@@ -519,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedArrow :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedArrowInternal>,
         IPlacedArrowGetter,
         IScripted

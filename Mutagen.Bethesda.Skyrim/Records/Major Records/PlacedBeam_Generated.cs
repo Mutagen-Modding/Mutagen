@@ -519,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedBeam :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedBeamInternal>,
         IPlacedBeamGetter,
         IScripted

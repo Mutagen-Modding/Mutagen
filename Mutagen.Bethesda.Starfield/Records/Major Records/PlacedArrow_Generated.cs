@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedArrow :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedArrowInternal>,
         IPlacedArrowGetter,
         IPositionRotation,

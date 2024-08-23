@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -71,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout4
         IVirtualMachineAdapterGetter? IFloraGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -1220,6 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFloraGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFloraInternal>,
         IModeled,
@@ -1233,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>

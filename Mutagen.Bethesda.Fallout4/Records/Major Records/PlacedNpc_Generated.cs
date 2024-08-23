@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -70,6 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -2032,6 +2033,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedNpc :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
@@ -2042,7 +2044,7 @@ namespace Mutagen.Bethesda.Fallout4
         IScripted
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<INpcGetter> Base { get; set; }

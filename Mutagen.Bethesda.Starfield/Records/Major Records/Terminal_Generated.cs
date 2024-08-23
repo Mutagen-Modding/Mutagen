@@ -61,6 +61,9 @@ namespace Mutagen.Bethesda.Starfield
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapterIndexed? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public VirtualMachineAdapterIndexed? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -68,7 +71,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterIndexedGetter? ITerminalGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region ObjectBounds
         /// <summary>
@@ -1746,6 +1752,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IConstructible,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITerminalInternal>,
         IModeled,
@@ -1758,6 +1765,9 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new VirtualMachineAdapterIndexed? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: IObjectBounded

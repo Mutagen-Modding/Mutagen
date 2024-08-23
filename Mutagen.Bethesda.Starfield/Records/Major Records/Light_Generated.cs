@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -72,6 +72,7 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? ILightGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -1271,6 +1272,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IEmittance,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
@@ -1280,7 +1282,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>

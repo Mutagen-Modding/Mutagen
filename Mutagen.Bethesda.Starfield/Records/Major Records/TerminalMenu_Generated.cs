@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda.Starfield
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapterIndexed? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public VirtualMachineAdapterIndexed? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -66,7 +69,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterIndexedGetter? ITerminalMenuGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         /// <summary>
@@ -914,6 +920,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ITerminalMenu :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<ITerminalMenuInternal>,
         INamed,
         INamedRequired,
@@ -922,6 +929,9 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new VirtualMachineAdapterIndexed? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired

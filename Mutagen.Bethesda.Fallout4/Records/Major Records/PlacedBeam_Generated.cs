@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedBeam :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedBeamInternal>,
         IPlacedBeamGetter,
         IPositionRotation,

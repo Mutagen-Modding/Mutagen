@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedMissile :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedMissileInternal>,
         IPlacedMissileGetter,
         IPositionRotation,

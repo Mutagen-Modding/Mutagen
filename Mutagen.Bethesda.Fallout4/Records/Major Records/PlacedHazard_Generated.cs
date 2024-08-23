@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedHazard :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedHazardInternal>,
         IPlacedHazardGetter,
         IPositionRotation,
