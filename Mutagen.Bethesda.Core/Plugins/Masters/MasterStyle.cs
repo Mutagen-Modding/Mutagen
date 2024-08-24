@@ -4,13 +4,6 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Masters;
 
-public enum MasterStyle
-{
-    Full,
-    Small,
-    Medium
-}
-
 internal static class MasterStyleConstruction
 {
     public static MasterStyle ConstructFromFlags(int flags, GameConstants constants)
