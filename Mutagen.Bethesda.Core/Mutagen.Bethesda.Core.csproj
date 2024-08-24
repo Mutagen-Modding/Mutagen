@@ -19,13 +19,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="DotNetZip" />
         <PackageReference Include="ini-parser-netstandard" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" />
         <PackageReference Include="Loqui" />
         <PackageReference Include="Noggog.CSharpExt" />
         <PackageReference Include="SharpZipLib" />
         <PackageReference Include="System.Collections.Immutable" />
+        <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />

@@ -1,10 +1,10 @@
-using Ionic.Zlib;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
+using System.IO.Compression;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
@@ -47,9 +47,9 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
             // Remove compression flag
             BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
             // Copy uncompressed data over
-            using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
+            using (var stream = new ZLibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
             {
-                stream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
+                stream.ReadExactly(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
             }
             slice = new MemorySlice<byte>(buf);
         }
