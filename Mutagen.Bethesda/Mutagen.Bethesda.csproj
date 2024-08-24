@@ -14,7 +14,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" />
     <PackageReference Include="Loqui" />
     <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
