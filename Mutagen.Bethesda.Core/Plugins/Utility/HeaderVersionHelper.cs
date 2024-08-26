@@ -16,7 +16,7 @@ internal static class HeaderVersionHelper
         {
             if (forceUseLowerFormIDRanges.Value)
             {
-                return 1;
+                return 0;
             }
             else
             {
@@ -29,7 +29,7 @@ internal static class HeaderVersionHelper
             if (useLowerRangesVersion.HasValue
                 && headerVersion >= useLowerRangesVersion.Value)
             {
-                return 1;
+                return 0;
             }
         }
         return higherFormIdRange;
