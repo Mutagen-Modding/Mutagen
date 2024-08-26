@@ -54,7 +54,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <summary>
     /// True if FormKey is considered Null
     /// </summary>
-    public bool IsNull => ID == 0 || ModKey.IsNull;
+    public bool IsNull => ModKey.IsNull;
 
     /// <summary>
     /// Constructor taking a ModKey and ID as separate parameters
@@ -133,30 +133,20 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
             return false;
         }
 
-        uint id;
-        int delim;
-        if (IsDelim(str[4]) && str.Slice(0, 4).Equals(NullStr, StringComparison.OrdinalIgnoreCase))
+        // If delimeter not in place, invalid
+        if (!IsDelim(str[6]))
         {
-            delim = 4;
-            id = 0;
+            formKey = default!;
+            return false;
         }
-        else
+
+        int delim = 6;
+
+        // Convert ID section
+        if (!uint.TryParse(str.Slice(0, delim), NumberStyles.HexNumber, null, out var id))
         {
-            // If delimeter not in place, invalid
-            if (!IsDelim(str[6]))
-            {
-                formKey = default!;
-                return false;
-            }
-
-            delim = 6;
-
-            // Convert ID section
-            if (!uint.TryParse(str.Slice(0, delim), NumberStyles.HexNumber, null, out id))
-            {
-                formKey = default!;
-                return false;
-            }
+            formKey = default!;
+            return false;
         }
 
         // Slice past delimiter
