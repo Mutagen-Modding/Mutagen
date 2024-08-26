@@ -163,7 +163,8 @@ internal sealed class ModHeaderWriteLogic
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {
-            modHeader.NumRecords = _numRecords;
+            // Can't use raw count, as more gets considered in this tally
+            modHeader.NumRecords = mod.GetRecordCount();
         }
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {

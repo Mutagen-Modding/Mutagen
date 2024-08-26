@@ -2791,6 +2791,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
@@ -3116,73 +3117,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void SyncRecordCount()
         {
-            this.ModHeader.Stats.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
-
-        public uint GetRecordCount()
-        {
-            uint count = (uint)this.EnumerateMajorRecords().Count();
-            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Hairs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Eyes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Sounds.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Skills.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Scripts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LandTextures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Enchantments.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Spells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Birthsigns.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AlchemicalApparatus.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Clothes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Miscellaneous.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Trees.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Flora.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Creatures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledCreatures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoulGems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Potions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Subspaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SigilStones.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Cells.Records.Count > 0 ? 1 : default(uint);
-            count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AIPackages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledSpells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
-            GetCustomRecordCount((customCount) => count += customCount);
-            return count;
-        }
-
-        partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModSetterCommon.Instance.RemapLinks(this, mapping);
@@ -3725,6 +3661,11 @@ namespace Mutagen.Bethesda.Oblivion
             return (IGroup?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
+        }
+
+        public static uint GetRecordCount(this IOblivionModGetter item)
+        {
+            return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetRecordCount(item: item);
         }
 
         [DebuggerStepThrough]
@@ -6379,6 +6320,71 @@ namespace Mutagen.Bethesda.Oblivion
             PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
+        
+        public uint GetRecordCount(IOblivionModGetter item)
+        {
+            uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hairs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Eyes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Sounds.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Skills.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Scripts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LandTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Enchantments.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Birthsigns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AlchemicalApparatus.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Clothes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Doors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Lights.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Miscellaneous.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Trees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Flora.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Creatures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledCreatures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoulGems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keys.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Potions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Subspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SigilStones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Cells.Records.Count > 0 ? 1 : default(uint);
+            count += item.Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AIPackages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledSpells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            GetCustomRecordCount(item, (customCount) => count += customCount);
+            return count;
+        }
+        
+        partial void GetCustomRecordCount(IOblivionModGetter item, Action<uint> setter);
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOblivionModGetter obj)
         {
@@ -12011,6 +12017,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;

@@ -34,6 +34,10 @@ public class TestMod : ITestMod, IDisposable
 
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
     public IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite => throw new NotImplementedException();
+    public uint GetRecordCount()
+    {
+        throw new NotImplementedException();
+    }
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }

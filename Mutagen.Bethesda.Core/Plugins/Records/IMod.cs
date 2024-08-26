@@ -94,6 +94,12 @@ public interface IModGetter :
     uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
     
     IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite { get; }
+
+    /// <summary>
+    /// Calculates the record count by enumerating all records
+    /// </summary>
+    /// <returns>Calculated record count of the contained records</returns>
+    uint GetRecordCount();
 }
 
 /// <summary>

@@ -88,6 +88,7 @@ public abstract class AMod : IMod
     IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts() => throw new NotImplementedException();
+    uint IModGetter.GetRecordCount()=> throw new NotImplementedException();
     #endregion
 
     /// <inheritdoc />
