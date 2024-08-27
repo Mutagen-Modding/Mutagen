@@ -235,11 +235,11 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <returns>a string that is safe for use in file paths</returns>
     public string ToFilesafeString()
     {
-        if (ID == 0 && ModKey.IsNull)
+        if (ModKey.IsNull)
         {
             return "Null";
         }
-        return $"{(ID == 0 ? "Null" : IDString())}_{ModKey}";
+        return $"{IDString()}_{ModKey}";
     }
 
     /// <summary>
