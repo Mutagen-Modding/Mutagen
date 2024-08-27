@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 NumRecords { get; set; } = default(UInt32);
         #endregion
         #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x1;
+        public static readonly UInt32 NextFormIDDefault = 0x0;
         public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
