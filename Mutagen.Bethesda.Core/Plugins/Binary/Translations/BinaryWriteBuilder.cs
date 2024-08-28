@@ -1322,7 +1322,8 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.SingleThread() => SingleThread();
 
     /// <summary>
-    /// Specifies a list of masters to include if they are not included naturally
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
     /// </summary>
     /// <param name="modKeys">Extra ModKeys to include</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1334,7 +1335,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = modKeys
+                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
                 }
             }
         };
@@ -1892,7 +1893,8 @@ public record FileBinaryWriteBuilder<TModGetter>
     }
 
     /// <summary>
-    /// Specifies a list of masters to include if they are not included naturally
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
     /// </summary>
     /// <param name="modKeys">Extra ModKeys to include</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1904,7 +1906,7 @@ public record FileBinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = modKeys
+                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
                 }
             }
         };
