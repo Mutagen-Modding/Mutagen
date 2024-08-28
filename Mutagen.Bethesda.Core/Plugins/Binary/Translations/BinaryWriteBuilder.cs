@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 internal record BinaryWriteBuilderParams<TModGetter>
     where TModGetter : class, IModGetter
 {
+    internal required GameRelease _gameRelease { get; init; }
     internal IBinaryWriteBuilderWriter<TModGetter> _writer { get; init; } = null!;
     internal BinaryWriteParameters _param { get; init; } = BinaryWriteParameters.Default;
     internal FilePath? _path { get; init; }
@@ -96,6 +97,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         _mod = mod;
         _params = new BinaryWriteBuilderParams<TModGetter>()
         {
+            _gameRelease = mod.GameRelease,
             _writer = writer,
         };
     }
@@ -278,10 +280,12 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     internal BinaryWriteBuilderParams<TModGetter> _params;
 
     internal BinaryWriteBuilderLoadOrderChoice(
+        GameRelease release,
         IBinaryWriteBuilderWriter<TModGetter> writer)
     {
         _params = new BinaryWriteBuilderParams<TModGetter>()
         {
+            _gameRelease = release,
             _writer = writer,
         };
     }
@@ -1956,6 +1960,10 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <returns>A task to await for writing completion</returns>
     public void Write(TModGetter mod)
     {
+        if (_params._gameRelease != mod.GameRelease)
+        {
+            throw new ArgumentException($"GameRelease did not match provided mod: {_params._gameRelease} != {mod.GameRelease}");
+        }
         if (_params._loadOrderSetter != null)
         {
             _params = _params with

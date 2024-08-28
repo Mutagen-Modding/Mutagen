@@ -161,7 +161,7 @@ public partial class OblivionMod : AMod
 
     IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IOblivionModGetter> WriteBuilder => new(OblivionWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderLoadOrderChoice<IOblivionModGetter> WriteBuilder() => new(GameRelease.Oblivion, OblivionWriteBuilderInstantiator.Instance);
 }
 
 internal partial class OblivionModBinaryOverlay

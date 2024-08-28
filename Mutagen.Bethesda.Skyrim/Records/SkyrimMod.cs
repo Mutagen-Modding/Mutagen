@@ -183,7 +183,7 @@ public partial class SkyrimMod : AMod
 
     IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<ISkyrimModGetter> WriteBuilder => new(SkyrimWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderLoadOrderChoice<ISkyrimModGetter> WriteBuilder(SkyrimRelease release) => new(release.ToGameRelease(), SkyrimWriteBuilderInstantiator.Instance);
 }
 
 internal partial class SkyrimModBinaryOverlay

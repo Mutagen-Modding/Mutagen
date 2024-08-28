@@ -170,7 +170,7 @@ public partial class Fallout4Mod : AMod
 
     IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder => new(Fallout4WriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder(Fallout4Release release) => new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
 }
 
 internal partial class Fallout4ModBinaryOverlay

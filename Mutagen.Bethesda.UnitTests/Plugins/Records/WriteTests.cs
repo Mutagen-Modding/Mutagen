@@ -191,7 +191,7 @@ public class WriteTests
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var armor = mod.Armors.AddNew();
-        var writer = SkyrimMod.WriteBuilder
+        var writer = SkyrimMod.WriteBuilder(SkyrimRelease.SkyrimLE)
             .WithNoLoadOrder()
             .ToPath(tmp.File.Path)
             .NoModKeySync()
@@ -213,6 +213,22 @@ public class WriteTests
                 .NoModKeySync()
                 .WithMastersListContent(MastersListContentOption.Iterate)
                 .Write();
+        });
+    }
+
+    [Fact]
+    public async Task WriteWithMisalignedGameRelease()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+        var writer = SkyrimMod.WriteBuilder(SkyrimRelease.SkyrimSE)
+            .WithNoLoadOrder()
+            .ToPath(tmp.File.Path)
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate);
+        Assert.Throws<ArgumentException>(() =>
+        {
+            writer.Write(mod);
         });
     }
 

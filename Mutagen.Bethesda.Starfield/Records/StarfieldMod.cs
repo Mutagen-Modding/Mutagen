@@ -178,7 +178,7 @@ public partial class StarfieldMod : AMod
 
     IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder => new(StarfieldWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder(StarfieldRelease release) => new(release.ToGameRelease(), StarfieldWriteBuilderInstantiator.Instance);
 }
 
 internal partial class StarfieldModBinaryOverlay
