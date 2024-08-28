@@ -26,6 +26,11 @@ public sealed record BinaryWriteParameters
     public MastersListContentOption MastersListContent = MastersListContentOption.Iterate;
 
     /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    public IEnumerable<ModKey>? ExtraIncludeMasters { get; init; }
+
+    /// <summary>
     /// Logic to use to keep a mod's record count in sync
     /// </summary>
     public RecordCountOption RecordCount = RecordCountOption.Iterate;

@@ -134,6 +134,15 @@ internal sealed class ModHeaderWriteLogic
     private IReadOnlyMasterReferenceCollection ConstructWriteMasters(IModGetter mod)
     {
         MasterReferenceCollection ret = new MasterReferenceCollection(mod.ModKey);
+
+        foreach (var extraMaster in _params.ExtraIncludeMasters.EmptyIfNull())
+        {
+            if (!_modKeys.ContainsKey(extraMaster))
+            {
+                _modKeys[extraMaster] = null;
+            }
+        }
+        
         _modKeys.Remove(mod.ModKey);
         _modKeys.Remove(ModKey.Null);
         var modKeysList = _modKeys.Keys.ToList();

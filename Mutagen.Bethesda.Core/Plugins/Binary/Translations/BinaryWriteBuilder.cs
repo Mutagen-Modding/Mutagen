@@ -770,6 +770,13 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder SingleThread();
 
     /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithExtraIncludeMasters(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
     void Write();
@@ -1304,6 +1311,26 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.SingleThread() => SingleThread();
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludeMasters(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    ExtraIncludeMasters = modKeys
+                }
+            }
+        };
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludeMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludeMasters(modKeys);
     
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1828,6 +1855,25 @@ public record FileBinaryWriteBuilder<TModGetter>
                     {
                         MaxDegreeOfParallelism = 1
                     }
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> WithExtraIncludeMasters(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    ExtraIncludeMasters = modKeys
                 }
             }
         };
