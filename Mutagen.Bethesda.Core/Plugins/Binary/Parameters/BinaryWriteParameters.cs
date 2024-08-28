@@ -23,12 +23,17 @@ public sealed record BinaryWriteParameters
     /// Logic to use to keep a mod's master list content in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
-    public MastersListContentOption MastersListContent = MastersListContentOption.Iterate;
+    public AMastersListContentOption MastersListContent = MastersListContentOption.Iterate;
 
     /// <summary>
     /// Specifies a list of masters to include if they are not included naturally
     /// </summary>
     public IEnumerable<ModKey>? ExtraIncludeMasters { get; init; }
+
+    /// <summary>
+    /// Specifies a list of masters to override 
+    /// </summary>
+    public IEnumerable<ModKey>? OverrideMasters { get; init; }
 
     /// <summary>
     /// Logic to use to keep a mod's record count in sync

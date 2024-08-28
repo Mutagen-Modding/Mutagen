@@ -777,6 +777,15 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder WithExtraIncludeMasters(IEnumerable<ModKey> modKeys);
 
     /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
     void Write();
@@ -1331,6 +1340,28 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludeMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludeMasters(modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    OverrideMasters = modKeys
+                }
+            }
+        };
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys) => WithExplicitOverridingMasterList(modKeys);
     
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1874,6 +1905,27 @@ public record FileBinaryWriteBuilder<TModGetter>
                 _param = _params._param with
                 {
                     ExtraIncludeMasters = modKeys
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    OverrideMasters = modKeys
                 }
             }
         };
