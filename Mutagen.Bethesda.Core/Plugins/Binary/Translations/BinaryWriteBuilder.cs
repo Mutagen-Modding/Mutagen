@@ -783,11 +783,18 @@ public interface IFileBinaryModdedWriteBuilder
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
     IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
+    /// The Construction Kit complains when loading mods that do not have base masters listed. <br />
+    /// This call includes base masters even if they are not needed by the mod's content
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithConstructionKitRequiredMasters();
 
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1349,7 +1356,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1367,6 +1374,18 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys) => WithExplicitOverridingMasterList(modKeys);
+
+    /// <summary>
+    /// The CK complains when loading mods that do not have base masters listed. <br />
+    /// This call includes base masters even if they are not needed by the mod's content
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> WithConstructionKitRequiredMasters()
+    {
+        var implicits = Implicits.Get(this._mod.GameRelease);
+        return this.WithExtraIncludedMasters(implicits.BaseMasters);
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithConstructionKitRequiredMasters() => WithConstructionKitRequiredMasters();
     
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1919,7 +1938,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1935,6 +1954,17 @@ public record FileBinaryWriteBuilder<TModGetter>
                 }
             }
         };
+    }
+    
+    /// <summary>
+    /// The CK complains when loading mods that do not have base masters listed. <br />
+    /// This call includes base masters even if they are not needed by the mod's content
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> WithConstructionKitRequiredMasters()
+    {
+        var implicits = Implicits.Get(this._params._gameRelease);
+        return WithExtraIncludedMasters(implicits.BaseMasters);
     }
     
     /// <summary>
