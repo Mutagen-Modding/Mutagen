@@ -774,12 +774,12 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="modKeys">Extra ModKeys to include</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithExtraIncludeMasters(IEnumerable<ModKey> modKeys);
+    IFileBinaryModdedWriteBuilder WithExtraIncludedMasters(IEnumerable<ModKey> modKeys);
 
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1327,7 +1327,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="modKeys">Extra ModKeys to include</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludeMasters(IEnumerable<ModKey> modKeys)
+    public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
         return this with
         {
@@ -1340,12 +1340,12 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludeMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludeMasters(modKeys);
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludedMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludedMasters(modKeys);
 
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1898,7 +1898,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="modKeys">Extra ModKeys to include</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithExtraIncludeMasters(IEnumerable<ModKey> modKeys)
+    public FileBinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
         return this with
         {
@@ -1915,7 +1915,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludeMasters" />, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" />, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
