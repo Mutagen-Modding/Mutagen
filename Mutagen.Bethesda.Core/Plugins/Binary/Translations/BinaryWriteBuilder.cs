@@ -792,13 +792,6 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys);
 
     /// <summary>
-    /// The Construction Kit complains when loading mods that do not have base masters listed. <br />
-    /// This call includes base masters even if they are not needed by the mod's content
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithConstructionKitRequiredMasters();
-
-    /// <summary>
     /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
     /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
     /// to avoid issues when loading the plugin in the Creation Kit.
@@ -1384,18 +1377,6 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys) => WithExplicitOverridingMasterList(modKeys);
-
-    /// <summary>
-    /// The CK complains when loading mods that do not have base masters listed. <br />
-    /// This call includes base masters even if they are not needed by the mod's content
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithConstructionKitRequiredMasters()
-    {
-        var implicits = Implicits.Get(this._mod.GameRelease);
-        return this.WithExtraIncludedMasters(implicits.BaseMasters);
-    }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithConstructionKitRequiredMasters() => WithConstructionKitRequiredMasters();
 
     public IFileBinaryModdedWriteBuilder WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder)
     {
