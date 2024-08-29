@@ -1,7 +1,9 @@
 using System.IO.Abstractions;
+using DynamicData;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -797,6 +799,14 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder WithConstructionKitRequiredMasters();
 
     /// <summary>
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder);
+
+    /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
     void Write();
@@ -1386,7 +1396,43 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         return this.WithExtraIncludedMasters(implicits.BaseMasters);
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithConstructionKitRequiredMasters() => WithConstructionKitRequiredMasters();
-    
+
+    public IFileBinaryModdedWriteBuilder WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder)
+    {
+        // Collect all transitive masters
+        var masters = new HashSet<ModKey>();
+        var remainingMasters = new Queue<IMasterReferenceGetter>(_mod.MasterReferences);
+        while (remainingMasters.Count > 0)
+        {
+            var master = remainingMasters.Dequeue();
+            masters.Add(master.Master);
+            loadOrder.AssertListsMod(master.Master);
+
+            var masterMod = loadOrder.ListedOrder.First(mod => mod.ModKey == master.Master).Mod ?? throw new MissingModException(master.Master);
+            foreach (var parent in masterMod.MasterReferences)
+            {
+                remainingMasters.Enqueue(parent);
+                masters.Add(parent.Master);
+            }
+        }
+
+        // Ensure the masters are in the same order as the load order
+        var modKeyOrder = loadOrder.ListedOrder.Select(listing => listing.ModKey);
+        var sortedMasters = masters.OrderBy(m => modKeyOrder.IndexOf(m));
+
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(sortedMasters).Distinct().ToArray()
+                }
+            }
+        };
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder) => WithAllParentMasters(loadOrder);
+
     /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
