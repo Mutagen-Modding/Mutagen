@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default(Byte);
+        public Percent ChanceNone { get; set; } = default(Percent);
         #endregion
         #region MaxCount
         public Byte MaxCount { get; set; } = default(Byte);
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Byte ChanceNone { get; set; }
+        new Percent ChanceNone { get; set; }
         new Byte MaxCount { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; set; }
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Byte ChanceNone { get; }
+        Percent ChanceNone { get; }
         Byte MaxCount { get; }
         LeveledNpc.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default(Byte);
+            item.ChanceNone = default(Percent);
             item.MaxCount = default(Byte);
             item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Global = item.Global.Equals(rhs.Global);
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.MaxCount) ?? true))
             {
@@ -2025,9 +2025,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -2167,7 +2168,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
                     return (int)LeveledNpc_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:
@@ -2291,7 +2294,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Percent ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;

@@ -3,7 +3,7 @@
   <Object name="LeveledItem" recordType="LVLI" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
       <UInt8 name="MaxCount" recordType="LVLM" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
@@ -35,7 +35,7 @@
         <Interface>IItem</Interface>
       </FormLink>
       <Int16 name="Count" />
-      <Percent name="ChanceNone" integerType="Byte" />
+      <Percent name="ChanceNone" integerType="ByteHundred" />
       <Int8 name="Unused2" />
     </Fields>
   </Object>

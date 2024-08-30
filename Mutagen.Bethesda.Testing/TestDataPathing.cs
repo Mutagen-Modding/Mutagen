@@ -51,6 +51,8 @@ public class TestDataPathing
     public static string SmallOblivionMod = "Plugins/Binary/Headers/SmallOblivionMod.esp";
     public static string StarfieldUnknownCondition = "Files/Starfield/UnknownCondition.esp";
     public static string StarfieldTraversals = "Files/Starfield/Traversals.esp";
+    public static string Fallout4LeveledItems = "Files/Fallout4/LeveledItems.esp";
+    public static string Fallout4LeveledItemsOverflow = "Files/Fallout4/LeveledItemsOverflow.esp";
 
     public static byte[] GetBytes(FilePath path)
     {

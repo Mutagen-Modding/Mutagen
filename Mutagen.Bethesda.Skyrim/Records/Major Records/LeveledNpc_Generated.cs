@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default(Byte);
+        public Percent ChanceNone { get; set; } = default(Percent);
         #endregion
         #region Flags
         public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Byte ChanceNone { get; set; }
+        new Percent ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Byte ChanceNone { get; }
+        Percent ChanceNone { get; }
         LeveledNpc.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; }
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default(Byte);
+            item.ChanceNone = default(Percent);
             item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
             item.Entries = null;
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Global = item.Global.Equals(rhs.Global);
             ret.Entries = item.Entries.CollectionEqualsHelper(
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
             {
@@ -1838,9 +1838,10 @@ namespace Mutagen.Bethesda.Skyrim
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             EnumBinaryTranslation<LeveledNpc.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1964,7 +1965,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
                     return (int)LeveledNpc_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -2070,7 +2073,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Percent ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
         #region Flags
         private int? _FlagsLocation;

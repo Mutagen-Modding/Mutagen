@@ -67,6 +67,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
         AddDynamicProcessing(RecordTypes.ARMA, ProcessArmorAddons);
+        AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -731,6 +732,19 @@ public class Fallout4Processor : Processor
             if (subRec.Content[3] == 3)
             {
                 Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
+            }
+        }
+    }
+
+    private void ProcessLeveledItems(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLO))
+        {
+            if (subRec.Content[10] > 100)
+            {
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 10, 0);
             }
         }
     }

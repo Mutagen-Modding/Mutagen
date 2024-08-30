@@ -17,6 +17,14 @@ public static class PercentBinaryTranslation
                 return Percent.FactoryPutInRange(((double)BinaryPrimitives.ReadUInt16LittleEndian(bytes)) / ushort.MaxValue);
             case FloatIntegerType.Byte:
                 return Percent.FactoryPutInRange(((double)bytes[0]) / byte.MaxValue);
+            case FloatIntegerType.ByteHundred:
+            {
+                if (bytes[0] > 100)
+                {
+                    return Percent.Zero;
+                }
+                return Percent.FactoryPutInRange(((double)bytes[0]) / 100);
+            }
             default:
                 throw new NotImplementedException();
         }
@@ -33,6 +41,15 @@ public static class PercentBinaryTranslation
                 return Percent.FactoryPutInRange(((double)reader.ReadUInt16()) / ushort.MaxValue);
             case FloatIntegerType.Byte:
                 return Percent.FactoryPutInRange(((double)reader.ReadUInt8()) / byte.MaxValue);
+            case FloatIntegerType.ByteHundred:
+            {
+                var raw = reader.ReadUInt8();
+                if (raw > 100)
+                {
+                    return Percent.Zero;
+                }
+                return Percent.FactoryPutInRange(((double)raw) / 100);
+            }
             default:
                 throw new NotImplementedException();
         }
@@ -51,6 +68,9 @@ public static class PercentBinaryTranslation
                 return;
             case FloatIntegerType.Byte:
                 writer.Write((byte)(item.Value * byte.MaxValue));
+                return;
+            case FloatIntegerType.ByteHundred:
+                writer.Write((byte)(item.Value * 100));
                 return;
             default:
                 throw new NotImplementedException();
