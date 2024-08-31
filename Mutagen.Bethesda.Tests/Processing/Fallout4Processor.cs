@@ -229,11 +229,15 @@ public class Fallout4Processor : Processor
         {
             ProcessFormIDOverflows(frame, fileOffset);
         }
-        if (majorFrame.FormID.FullId == 0x3D62A
-            && majorFrame.TryFindSubrecord(RecordTypes.COCT, out frame))
+        foreach (var fmrs in majorFrame.FindEnumerateSubrecords(RecordTypes.FMRS))
         {
+            ProcessZeroFloats(fmrs, fileOffset);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.COCT, out frame))
+        {
+            var numEntries = majorFrame.FindEnumerateSubrecordsAfter(RecordTypes.CNTO, frame).Count();
             var bytes = new byte[4];
-            BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
+            BinaryPrimitives.WriteInt32LittleEndian(bytes, (byte)numEntries);
             Instructions.SetSubstitution(
                 fileOffset + frame.Location + frame.HeaderLength,
                 bytes);
