@@ -961,9 +961,6 @@
     <Compile Include="Records\Major Records\ImpactDataSet_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LeveledSpell_Generated.cs">
-      <DependentUpon>LeveledSpell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MaterialSwap_Generated.cs">
       <DependentUpon>MaterialSwap.xml</DependentUpon>
     </Compile>

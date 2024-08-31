@@ -9725,10 +9725,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ISpellRecord":
-                case "ISpellRecordGetter":
-                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IEmittance":
                 case "IEmittanceGetter":
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
@@ -9784,6 +9780,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundGetter":
                     Remove(obj, keys, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IStaticObject":
                 case "IStaticObjectGetter":

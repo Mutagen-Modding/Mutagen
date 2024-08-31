@@ -361,7 +361,6 @@ public partial class RecordTypes
     public static readonly RecordType LVLN = new(0x4E4C564C);
     public static readonly RecordType LVLO = new(0x4F4C564C);
     public static readonly RecordType LVSG = new(0x4753564C);
-    public static readonly RecordType LVSP = new(0x5053564C);
     public static readonly RecordType MASE = new(0x4553414D);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MATO = new(0x4F54414D);

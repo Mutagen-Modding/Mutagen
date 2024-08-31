@@ -47,7 +47,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
                 Key_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 LeveledNpc_Registration.Instance,
-                LeveledSpell_Registration.Instance,
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MovableStatic_Registration.Instance,
@@ -97,7 +96,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
                 Key_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 LeveledNpc_Registration.Instance,
-                LeveledSpell_Registration.Instance,
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MovableStatic_Registration.Instance,
@@ -148,7 +146,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
                 Key_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 LeveledNpc_Registration.Instance,
-                LeveledSpell_Registration.Instance,
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MovableStatic_Registration.Instance,
@@ -480,17 +477,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(INpcSpawn),
                 Getter: typeof(INpcSpawnGetter)));
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
-        dict[typeof(ISpellRecord)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                LeveledSpell_Registration.Instance,
-                Spell_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ISpellRecord),
-                Getter: typeof(ISpellRecordGetter)));
-        dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
         dict[typeof(IEmittance)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -581,6 +567,16 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ISound),
                 Getter: typeof(ISoundGetter)));
         dict[typeof(ISoundGetter)] = dict[typeof(ISound)] with { Setter = false };
+        dict[typeof(ISpellRecord)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Spell_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(ISpellRecord),
+                Getter: typeof(ISpellRecordGetter)));
+        dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
         dict[typeof(IStaticObject)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
