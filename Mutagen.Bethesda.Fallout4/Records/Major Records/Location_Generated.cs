@@ -3014,6 +3014,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.RCUN,
                 RecordTypes.ACSR,
                 RecordTypes.LCSR,
+                RecordTypes.XXXX,
                 RecordTypes.RCSR,
                 RecordTypes.ACEC,
                 RecordTypes.LCEC,
@@ -4827,6 +4828,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.LocationCellStaticReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCSR),
+                overflowRecord: RecordTypes.XXXX,
                 transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -5289,6 +5291,11 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return (int)Location_FieldIndex.Color;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -5690,6 +5697,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     _ColorLocation = (stream.Position - offset);
                     return (int)Location_FieldIndex.Color;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(
