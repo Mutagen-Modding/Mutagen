@@ -786,6 +786,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IPlanetContentManagerTreeInternal>,
         IPlanetContentManagerTreeGetter,
+        IPlanetParentNode,
         IStarfieldMajorRecordInternal
     {
         new MemorySlice<Byte> NAM1 { get; set; }
@@ -808,7 +809,8 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlanetContentManagerTreeGetter>,
-        IMapsToGetter<IPlanetContentManagerTreeGetter>
+        IMapsToGetter<IPlanetContentManagerTreeGetter>,
+        IPlanetParentNodeGetter
     {
         static new ILoquiRegistration StaticRegistration => PlanetContentManagerTree_Registration.Instance;
         ReadOnlyMemorySlice<Byte> NAM1 { get; }

@@ -2423,6 +2423,9 @@
     <Compile Include="Records\Major Records\PlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PlanetContentManagerBranchNode.cs">
+      <DependentUpon>PlanetContentManagerBranchNode.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PreferredPathing.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
@@ -6684,5 +6687,6 @@
     <Compile Include="Records\Major Records\PERSItems_Generated.cs">
       <DependentUpon>PERS.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IPlanetParentNode_Generated.cs" />
   </ItemGroup>
 </Project>

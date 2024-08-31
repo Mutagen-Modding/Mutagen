@@ -12689,6 +12689,11 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IPlanetContentManagerBranchNodeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IPlanetContentManagerContentNodeGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IPlanetParentNode":
+                case "IPlanetParentNodeGetter":
+                    Remove(obj, keys, typeof(IPlanetContentManagerBranchNodeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IPlanetContentManagerTreeGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "ISpellRecord":
                 case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
