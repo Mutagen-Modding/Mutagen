@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IMovementRotationDataGetter Pitch => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x40), _package, default(TypedParseParams));
         public IMovementRotationDataGetter Roll => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x50), _package, default(TypedParseParams));
         public IMovementRotationDataGetter Yaw => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x60), _package, default(TypedParseParams));
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x70, 0xC).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Length <= 0x70 ? UtilityTranslation.Zeros.Slice(12) : _structData.Span.Slice(0x70, 0xC).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
