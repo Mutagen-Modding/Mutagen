@@ -31,11 +31,6 @@ public sealed record BinaryWriteParameters
     public IEnumerable<ModKey>? ExtraIncludeMasters { get; init; }
 
     /// <summary>
-    /// Specifies a list of masters to override 
-    /// </summary>
-    public IEnumerable<ModKey>? OverrideMasters { get; init; }
-
-    /// <summary>
     /// Logic to use to keep a mod's record count in sync
     /// </summary>
     public RecordCountOption RecordCount = RecordCountOption.Iterate;

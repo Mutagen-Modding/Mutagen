@@ -1436,7 +1436,8 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             {
                 _param = _params._param with
                 {
-                    OverrideMasters = modKeys
+                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
         };
@@ -2051,7 +2052,8 @@ public record FileBinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    OverrideMasters = modKeys
+                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
         };
