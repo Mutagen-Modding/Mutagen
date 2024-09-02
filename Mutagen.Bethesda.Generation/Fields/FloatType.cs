@@ -53,6 +53,11 @@ public class FloatType : Loqui.Generation.FloatType
                     Max = $"{byte.MaxValue * Multiplier}f";
                     data.Length = 1;
                     break;
+                case FloatIntegerType.ByteHundred:
+                    Min = "0";
+                    Max = $"{100 * Multiplier}f";
+                    data.Length = 1;
+                    break;
                 default:
                     throw new NotImplementedException();
             }

@@ -660,6 +660,7 @@
   <xs:simpleType name="FloatIntegerType" final="restriction" >
     <xs:restriction base="xs:string">
       <xs:enumeration value="Byte" />
+      <xs:enumeration value="ByteHundred" />
       <xs:enumeration value="UInt" />
       <xs:enumeration value="UShort" />
     </xs:restriction>

@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PNAM,
-                RecordTypes.SNDR,
+                RecordTypes.SNAM,
                 RecordTypes.FNAM,
                 RecordTypes.VNAM);
             return new RecordTriggerSpecs(
@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Skyrim
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
-                header: translationParams.ConvertToCustom(RecordTypes.SNDR));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.PNAM = frame.ReadInt32();
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -2765,7 +2765,7 @@ namespace Mutagen.Bethesda.Skyrim
                     _PNAMLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     _LoopingSoundLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.LoopingSound;

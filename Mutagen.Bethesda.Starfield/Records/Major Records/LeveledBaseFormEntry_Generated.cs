@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Starfield
                 PercentBinaryTranslation.Write(
                     writer: writer,
                     item: item.ChanceNone,
-                    integerType: FloatIntegerType.Byte);
+                    integerType: FloatIntegerType.ByteHundred);
                 writer.Write(item.Unused2);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 1) return null;
                     item.ChanceNone = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
-                        integerType: FloatIntegerType.Byte);
+                        integerType: FloatIntegerType.ByteHundred);
                     if (dataFrame.Remaining < 1) return null;
                     item.Unused2 = dataFrame.ReadInt8();
                     return (int)LeveledBaseFormEntry_FieldIndex.Unused2;
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ChanceNone
         private int _ChanceNoneLocation => _LVLOLocation!.Value.Min + 0xA;
         private bool _ChanceNone_IsSet => _LVLOLocation.HasValue;
-        public Percent ChanceNone => _ChanceNone_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ChanceNoneLocation, 1), FloatIntegerType.Byte) : default(Percent);
+        public Percent ChanceNone => _ChanceNone_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ChanceNoneLocation, 1), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
         #region Unused2
         private int _Unused2Location => _LVLOLocation!.Value.Min + 0xB;

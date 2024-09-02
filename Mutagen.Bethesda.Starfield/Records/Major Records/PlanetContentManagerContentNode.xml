@@ -6,10 +6,12 @@
       <FormLink name="Content" recordType="PCCC" >
         <Interface>IPlanetContentTarget</Interface>
       </FormLink>
-      <Bool name="IOVR" recordType="IOVR" boolAsMarker="true" nullable="False" unknown="true" />
+      <Bool name="OverrideContentPlacementPropertiesAndConditions" recordType="IOVR" boolAsMarker="true" />
       <List name="Keywords" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
+      <FormLink name="ParentNode" refName="PlanetContentManagerBranchNode" recordType="PRTN" />
+      <FormLink name="PreviousNode" refName="PlanetContentManagerContentNode" recordType="PRVN" />
     </Fields>
     <LinkInterface>IPlanetNode</LinkInterface>
   </Object>

@@ -28,6 +28,7 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
             case FloatIntegerType.UShort:
                 return 2;
             case FloatIntegerType.Byte:
+            case FloatIntegerType.ByteHundred:
                 return 1;
             default:
                 throw new NotImplementedException();

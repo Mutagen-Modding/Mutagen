@@ -169,6 +169,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IPlanetNode
 - PlanetContentManagerBranchNode
 - PlanetContentManagerContentNode
+### IPlanetParentNode
+- PlanetContentManagerBranchNode
+- PlanetContentManagerTree
 ### IReferenceableObject
 - TextureSet
 ### IRelatable
@@ -377,8 +380,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - ITraversalTarget
 ### PlanetContentManagerBranchNode
 - IPlanetNode
+- IPlanetParentNode
 ### PlanetContentManagerContentNode
 - IPlanetNode
+### PlanetContentManagerTree
+- IPlanetParentNode
 ### ProjectedDecal
 - IBaseObject
 - IItem

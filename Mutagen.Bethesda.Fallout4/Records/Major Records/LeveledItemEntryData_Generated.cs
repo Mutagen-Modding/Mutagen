@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Fallout4
             PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
-                integerType: FloatIntegerType.Byte);
+                integerType: FloatIntegerType.ByteHundred);
             writer.Write(item.Unused2);
         }
 
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Count = frame.ReadInt16();
             item.ChanceNone = PercentBinaryTranslation.Parse(
                 reader: frame,
-                integerType: FloatIntegerType.Byte);
+                integerType: FloatIntegerType.ByteHundred);
             item.Unused2 = frame.ReadInt8();
         }
 
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         public IFormLinkGetter<IItemGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IItemGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
-        public Percent ChanceNone => PercentBinaryTranslation.GetPercent(_structData.Slice(0xA, 0x1), FloatIntegerType.Byte);
+        public Percent ChanceNone => PercentBinaryTranslation.GetPercent(_structData.Slice(0xA, 0x1), FloatIntegerType.ByteHundred);
         public SByte Unused2 => (sbyte)_structData.Slice(0xB, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,

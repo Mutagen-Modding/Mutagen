@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
@@ -209,8 +210,12 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
                 else if (data.Length.HasValue)
                 {
                     // Only support up to 8 with Zeros array
-                    if (data.IsAfterBreak && data.Length.Value < 8)
+                    if (data.IsAfterBreak)
                     {
+                        if (data.Length.Value > UtilityTranslation.Zeros.Length)
+                        {
+                            throw new NotImplementedException();
+                        }
                         sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Length <= {posStr} ? UtilityTranslation.Zeros.Slice({data.Length}) : {structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
                     }
                     else
@@ -220,7 +225,14 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
                 }
                 else
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                    if (data.IsAfterBreak)
+                    {
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Length <= {posStr} ? {(typeGen.Nullable ? "null" : "Array.Empty<byte>()")} : {structDataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                    }
                 }
             }
             else
