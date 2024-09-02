@@ -78,6 +78,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
         IEnumerable<ModKey> loadOrder);
 
     /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
+        params ModKey[] loadOrder);
+
+    /// <summary>
     /// Writes the mod with the load order found in mod header, and with given data folder as reference.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -237,6 +245,18 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         });
     }
     IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<ModKey> loadOrder) => WithLoadOrder(loadOrder);
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        params ModKey[] loadOrder)
+    {
+        return WithLoadOrder((IEnumerable<ModKey>)loadOrder);
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ModKey[] loadOrder) => WithLoadOrder(loadOrder);
 
     public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
     {
@@ -399,6 +419,17 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 };
             }
         });
+    }
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        params ModKey[] loadOrder)
+    {
+        return WithLoadOrder((IEnumerable<ModKey>)loadOrder);
     }
 
     public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
@@ -781,6 +812,13 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder WithExtraIncludedMasters(IEnumerable<ModKey> modKeys);
 
     /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithExtraIncludedMasters(params ModKey[] modKeys);
+
+    /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
     /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
@@ -788,6 +826,15 @@ public interface IFileBinaryModdedWriteBuilder
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
     IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(params ModKey[] modKeys);
 
     /// <summary>
     /// The Construction Kit complains when loading mods that do not have base masters listed. <br />
@@ -1354,6 +1401,27 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludedMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludedMasters(modKeys);
 
     /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                }
+            }
+        };
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludedMasters(params ModKey[] modKeys) => WithExtraIncludedMasters(modKeys);
+
+    /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
     /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
@@ -1374,6 +1442,19 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys) => WithExplicitOverridingMasterList(modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> WithExplicitOverridingMasterList(params ModKey[] modKeys)
+    {
+        return WithExplicitOverridingMasterList((IEnumerable<ModKey>)modKeys);
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(params ModKey[] modKeys) => WithExplicitOverridingMasterList(modKeys);
 
     /// <summary>
     /// The CK complains when loading mods that do not have base masters listed. <br />
@@ -1936,6 +2017,26 @@ public record FileBinaryWriteBuilder<TModGetter>
     }
 
     /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                }
+            }
+        };
+    }
+
+    /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
     /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
@@ -1954,6 +2055,18 @@ public record FileBinaryWriteBuilder<TModGetter>
                 }
             }
         };
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> WithExplicitOverridingMasterList(params ModKey[] modKeys)
+    {
+        return WithExplicitOverridingMasterList((IEnumerable<ModKey>)modKeys);
     }
     
     /// <summary>
