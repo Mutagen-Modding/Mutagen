@@ -23,6 +23,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal BinaryWriteParameters _param { get; init; } = BinaryWriteParameters.Default;
     internal FilePath? _path { get; init; }
     internal Stream? _stream { get; init; }
+    internal Func<BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
 }
@@ -844,7 +845,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// to avoid issues when loading the plugin in the Creation Kit.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder);
+    IFileBinaryModdedWriteBuilder WithAllParentMasters();
 
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1466,41 +1467,61 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// to avoid issues when loading the plugin in the Creation Kit.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder)
+    public FileBinaryModdedWriteBuilder<TModGetter> WithAllParentMasters()
     {
-        // Collect all transitive masters
-        var masters = new HashSet<ModKey>();
-        var remainingMasters = new Queue<IMasterReferenceGetter>(_mod.MasterReferences);
-        while (remainingMasters.Count > 0)
-        {
-            var master = remainingMasters.Dequeue();
-            masters.Add(master.Master);
-            loadOrder.AssertListsMod(master.Master);
-
-            var masterMod = loadOrder.ListedOrder.First(mod => mod.ModKey == master.Master).Mod ?? throw new MissingModException(master.Master);
-            foreach (var parent in masterMod.MasterReferences)
-            {
-                remainingMasters.Enqueue(parent);
-                masters.Add(parent.Master);
-            }
-        }
-
-        // Ensure the masters are in the same order as the load order
-        var modKeyOrder = loadOrder.ListedOrder.Select(listing => listing.ModKey);
-        var sortedMasters = masters.OrderBy(m => modKeyOrder.IndexOf(m));
-
         return this with
         {
             _params = _params with
             {
-                _param = _params._param with
+                _masterSyncAction = (p) =>
                 {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(sortedMasters).Distinct().ToArray()
-                }
+                    if (_mod.MasterReferences.Count == 0)
+                    {
+                        return p._param;
+                    }
+                    
+                    // Collect all transitive masters
+                    var masters = new HashSet<ModKey>();
+                    var remainingMasters = new Queue<IMasterReferenceGetter>(_mod.MasterReferences);
+
+                    if (p._param.LoadOrder == null)
+                    {
+                        throw new MissingLoadOrderException();
+                    }
+
+                    var dataFolder = p._dataFolderGetter?.Invoke(_mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                    
+                    while (remainingMasters.Count > 0)
+                    {
+                        var master = remainingMasters.Dequeue();
+                        masters.Add(master.Master);
+                        
+                        p._param.LoadOrder.AssertListsMod(master.Master);
+
+                        var modPath = Path.Combine(dataFolder, master.Master.FileName);
+
+                        var masterMod = ModInstantiator.ImportGetter(modPath, p._gameRelease);
+
+                        foreach (var parent in masterMod.MasterReferences)
+                        {
+                            remainingMasters.Enqueue(parent);
+                            masters.Add(parent.Master);
+                        }
+                    }
+
+                    // Ensure the masters are in the same order as the load order
+                    var modKeyOrder = p._param.LoadOrder.ListedOrder.Select(listing => listing.ModKey);
+                    var sortedMasters = masters.OrderBy(m => modKeyOrder.IndexOf(m));
+                    
+                    return p._param with
+                    {
+                        ExtraIncludeMasters = p._param.ExtraIncludeMasters.EmptyIfNull().And(sortedMasters).Distinct().ToArray()
+                    };
+                },
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithAllParentMasters(ILoadOrderGetter<IModListing<IModGetter>> loadOrder) => WithAllParentMasters(loadOrder);
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithAllParentMasters() => WithAllParentMasters();
 
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1513,6 +1534,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             _params = _params with
             {
                 _param = _params._loadOrderSetter(_mod, _params)
+            };
+        }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_params)
             };
         }
         await _params._writer.WriteAsync(_mod, _params);
@@ -1529,6 +1557,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             _params = _params with
             {
                 _param = _params._loadOrderSetter(_mod, _params)
+            };
+        }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_params)
             };
         }
         _params._writer.Write(_mod, _params);
@@ -2130,6 +2165,13 @@ public record FileBinaryWriteBuilder<TModGetter>
                 _param = _params._loadOrderSetter(mod, _params)
             };
         }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_params)
+            };
+        }
         await _params._writer.WriteAsync(mod, _params);
     }
     
@@ -2148,6 +2190,13 @@ public record FileBinaryWriteBuilder<TModGetter>
             _params = _params with
             {
                 _param = _params._loadOrderSetter(mod, _params)
+            };
+        }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_params)
             };
         }
         _params._writer.Write(mod, _params);

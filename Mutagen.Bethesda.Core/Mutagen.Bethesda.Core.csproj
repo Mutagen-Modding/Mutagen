@@ -275,6 +275,7 @@
         <Compile Include="Plugins\Exceptions\FormIDCompactionOutOfBoundsException.cs" />
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
+        <Compile Include="Plugins\Exceptions\MissingLoadOrderException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
         <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
         <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
