@@ -1428,7 +1428,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(System.Collections.Generic.IEnumerable{Mutagen.Bethesda.Plugins.ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1438,6 +1438,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         {
             _params = _params with
             {
+                _masterSyncAction = null,
                 _param = _params._param with
                 {
                     MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
@@ -1451,7 +1452,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -2108,7 +2109,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="P"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -2118,6 +2119,7 @@ public record FileBinaryWriteBuilder<TModGetter>
         {
             _params = _params with
             {
+                _masterSyncAction = null,
                 _param = _params._param with
                 {
                     MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
