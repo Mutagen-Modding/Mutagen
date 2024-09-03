@@ -98,4 +98,54 @@ public class WriteBuilderTests
         reimport.MasterReferences.Select(x => x.Master).Should()
             .Equal(masterMod, overrideMaster);
     }
+    
+    [Theory, MutagenAutoData]
+    public void WithAllParentMasters(
+        IFileSystem fileSystem,
+        ModKey transientMasterModKey,
+        ModKey masterModKey,
+        ModKey modKey,
+        DirectoryPath existingDir)
+    {
+        var transientMasterMod = new StarfieldMod(transientMasterModKey, StarfieldRelease.Starfield);
+        var transientMasterWeapon = transientMasterMod.Weapons.AddNew();
+        var transientMasterModPath = Path.Combine(existingDir, transientMasterMod.ModKey.FileName);
+        transientMasterMod.BeginWrite
+            .WithLoadOrderFromHeaderMasters()
+            .WithNoDataFolder()
+            .ToPath(transientMasterModPath)
+            .WithFileSystem(fileSystem)
+            .Write();
+        
+        var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
+        var masterWeapon = master.Weapons.AddNew();
+        master.Weapons.GetOrAddAsOverride(transientMasterWeapon);
+        var masterModPath = Path.Combine(existingDir, master.ModKey.FileName);
+        master.BeginWrite
+            .WithLoadOrderFromHeaderMasters()
+            .WithNoDataFolder()
+            .ToPath(masterModPath)
+            .WithFileSystem(fileSystem)
+            .Write();
+        
+        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
+        mod.Weapons.GetOrAddAsOverride(masterWeapon);
+        
+        var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .WithLoadOrder(transientMasterModKey, masterModKey)
+            .WithNoDataFolder()
+            .ToPath(modPath)
+            .WithFileSystem(fileSystem)
+            .WithAllParentMasters()
+            .Write();
+
+        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
+            new BinaryReadParameters()
+            {
+                FileSystem = fileSystem
+            });
+        reimport.MasterReferences.Select(x => x.Master).Should()
+            .Equal(transientMasterModKey, masterModKey);
+    }
 }
