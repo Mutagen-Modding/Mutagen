@@ -330,6 +330,7 @@
         <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
+        <Compile Include="Plugins\Masters\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
