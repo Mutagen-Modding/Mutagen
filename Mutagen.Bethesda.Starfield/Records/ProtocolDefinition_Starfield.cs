@@ -1290,6 +1290,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             UnknownConditionData_Registration.Instance,
             UnknownObjectModification_Registration.Instance,
             UseLeftSideCameraConditionData_Registration.Instance,
+            VehicleManagementComponent_Registration.Instance,
             VendorValues_Registration.Instance,
             VirtualMachineAdapter_Registration.Instance,
             VirtualMachineAdapterIndexed_Registration.Instance,

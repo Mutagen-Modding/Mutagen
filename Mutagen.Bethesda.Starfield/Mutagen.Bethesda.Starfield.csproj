@@ -6694,5 +6694,8 @@
     <Compile Include="Records\Major Records\AreaLight_Generated.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleManagementComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

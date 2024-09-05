@@ -73,6 +73,7 @@ public partial class AComponent
         BGSStarDataComponent_Component,
         BGSOrbitalDataComponent_Component,
         BGSCityMapsUsage_Component,
+        BGSVehicleManagement,
     }
 
     public static bool TryCreateFromBinary(
@@ -217,6 +218,8 @@ public partial class AComponent
                 return OrbitalDataComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSCityMapsUsage_Component:
                 return CityMapsUsageComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSVehicleManagement:
+                return VehicleManagementComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -321,6 +324,7 @@ partial class AComponentBinaryWriteTranslation
             IStarDataComponentGetter _ => AComponent.ComponentType.BGSStarDataComponent_Component,
             IOrbitalDataComponentGetter _ => AComponent.ComponentType.BGSOrbitalDataComponent_Component,
             ICityMapsUsageComponentGetter _ => AComponent.ComponentType.BGSCityMapsUsage_Component,
+            IVehicleManagementComponentGetter _ => AComponent.ComponentType.BGSVehicleManagement,
             _ => throw new NotImplementedException()
         };
 
@@ -463,6 +467,8 @@ partial class AComponentBinaryOverlay
                 return OrbitalDataComponentBinaryOverlay.OrbitalDataComponentFactory(stream, package);
             case AComponent.ComponentType.BGSCityMapsUsage_Component:
                 return CityMapsUsageComponentBinaryOverlay.CityMapsUsageComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSVehicleManagement:
+                return VehicleManagementComponentBinaryOverlay.VehicleManagementComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
