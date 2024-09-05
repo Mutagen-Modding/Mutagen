@@ -2069,6 +2069,9 @@
     <Compile Include="Records\Major Records\AQuestAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AreaLight.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -5920,9 +5923,6 @@
     <Compile Include="Records\Major Records\PlacedObjectVolumeData_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlacedObjectLightArea_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectShipArrival_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -5944,9 +5944,6 @@
     <Compile Include="Records\Major Records\ExternalEmittance_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlacedObjectLightRoundedness_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectLightBarndoorData_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -5960,9 +5957,6 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlacedObjectProjectedDecal_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LightGobo_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlacedObjectCollision_Generated.cs">
@@ -6688,5 +6682,17 @@
       <DependentUpon>PERS.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IPlanetParentNode_Generated.cs" />
+    <Compile Include="Records\Major Records\LightBarndoors_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LightRoundness_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LightGobo_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AreaLight_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

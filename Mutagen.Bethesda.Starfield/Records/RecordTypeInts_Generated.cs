@@ -505,6 +505,7 @@ public partial class RecordTypeInts
     public const int LLCT = 0x54434C4C;
     public const int LLKC = 0x434B4C4C;
     public const int LLLD = 0x444C4C4C;
+    public const int LLSH = 0x48534C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNA2 = 0x32414E4C;
     public const int LNAM = 0x4D414E4C;

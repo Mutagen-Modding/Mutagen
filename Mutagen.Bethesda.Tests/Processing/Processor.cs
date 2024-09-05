@@ -756,12 +756,19 @@ public abstract class Processor
         }
     }
 
-    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, int loc, byte length, byte importantBytes)
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length, byte importantBytes)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessBool(pin.Content.Slice(loc, length), longLoc, importantBytes);
+        loc += length;
         return true;
+    }
+
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, int loc, byte length, byte importantBytes)
+    {
+        int loc2 = loc;
+        return ProcessBool(pin, offsetLoc, ref loc2, length, importantBytes);
     }
 
     public void RemoveEndingBytes(SubrecordPinFrame subRec, long offsetLoc, int numBytes)

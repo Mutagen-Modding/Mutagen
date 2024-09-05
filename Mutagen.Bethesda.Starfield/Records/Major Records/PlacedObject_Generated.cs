@@ -237,14 +237,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LightArea
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlacedObjectLightArea? _LightArea;
-        public PlacedObjectLightArea? LightArea
+        private AreaLight? _LightArea;
+        public AreaLight? LightArea
         {
             get => _LightArea;
             set => _LightArea = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlacedObjectLightAreaGetter? IPlacedObjectGetter.LightArea => this.LightArea;
+        IAreaLightGetter? IPlacedObjectGetter.LightArea => this.LightArea;
         #endregion
         #region CurrentZoneCell
         private readonly IFormLinkNullable<ICellGetter> _CurrentZoneCell = new FormLinkNullable<ICellGetter>();
@@ -576,14 +576,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LightRoundedness
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlacedObjectLightRoundedness? _LightRoundedness;
-        public PlacedObjectLightRoundedness? LightRoundedness
+        private LightRoundness? _LightRoundedness;
+        public LightRoundness? LightRoundedness
         {
             get => _LightRoundedness;
             set => _LightRoundedness = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlacedObjectLightRoundednessGetter? IPlacedObjectGetter.LightRoundedness => this.LightRoundedness;
+        ILightRoundnessGetter? IPlacedObjectGetter.LightRoundedness => this.LightRoundedness;
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Radius = initialValue;
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(initialValue, new PlacedObjectLighting.Mask<TItem>(initialValue));
                 this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(initialValue, new PlacedObjectLightBarndoorData.Mask<TItem>(initialValue));
-                this.LightArea = new MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>(initialValue, new PlacedObjectLightArea.Mask<TItem>(initialValue));
+                this.LightArea = new MaskItem<TItem, AreaLight.Mask<TItem>?>(initialValue, new AreaLight.Mask<TItem>(initialValue));
                 this.CurrentZoneCell = initialValue;
                 this.XCZA = initialValue;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layer = initialValue;
                 this.Location = initialValue;
                 this.XTRI = initialValue;
-                this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(initialValue, new PlacedObjectLightRoundedness.Mask<TItem>(initialValue));
+                this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(initialValue, new LightRoundness.Mask<TItem>(initialValue));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = initialValue;
                 this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Radius = Radius;
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(Lighting, new PlacedObjectLighting.Mask<TItem>(Lighting));
                 this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(LightBarndoorData, new PlacedObjectLightBarndoorData.Mask<TItem>(LightBarndoorData));
-                this.LightArea = new MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>(LightArea, new PlacedObjectLightArea.Mask<TItem>(LightArea));
+                this.LightArea = new MaskItem<TItem, AreaLight.Mask<TItem>?>(LightArea, new AreaLight.Mask<TItem>(LightArea));
                 this.CurrentZoneCell = CurrentZoneCell;
                 this.XCZA = XCZA;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layer = Layer;
                 this.Location = Location;
                 this.XTRI = XTRI;
-                this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(LightRoundedness, new PlacedObjectLightRoundedness.Mask<TItem>(LightRoundedness));
+                this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(LightRoundedness, new LightRoundness.Mask<TItem>(LightRoundedness));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
                 this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(SnapLinks, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Radius;
             public MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>? Lighting { get; set; }
             public MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>? LightBarndoorData { get; set; }
-            public MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>? LightArea { get; set; }
+            public MaskItem<TItem, AreaLight.Mask<TItem>?>? LightArea { get; set; }
             public TItem CurrentZoneCell;
             public TItem XCZA;
             public MaskItem<TItem, Patrol.Mask<TItem>?>? Patrol { get; set; }
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Layer;
             public TItem Location;
             public TItem XTRI;
-            public MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>? LightRoundedness { get; set; }
+            public MaskItem<TItem, LightRoundness.Mask<TItem>?>? LightRoundedness { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
             public TItem IsLinkedRefTransient;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>? SnapLinks;
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Radius = eval(this.Radius);
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, PlacedObjectLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 obj.LightBarndoorData = this.LightBarndoorData == null ? null : new MaskItem<R, PlacedObjectLightBarndoorData.Mask<R>?>(eval(this.LightBarndoorData.Overall), this.LightBarndoorData.Specific?.Translate(eval));
-                obj.LightArea = this.LightArea == null ? null : new MaskItem<R, PlacedObjectLightArea.Mask<R>?>(eval(this.LightArea.Overall), this.LightArea.Specific?.Translate(eval));
+                obj.LightArea = this.LightArea == null ? null : new MaskItem<R, AreaLight.Mask<R>?>(eval(this.LightArea.Overall), this.LightArea.Specific?.Translate(eval));
                 obj.CurrentZoneCell = eval(this.CurrentZoneCell);
                 obj.XCZA = eval(this.XCZA);
                 obj.Patrol = this.Patrol == null ? null : new MaskItem<R, Patrol.Mask<R>?>(eval(this.Patrol.Overall), this.Patrol.Specific?.Translate(eval));
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Layer = eval(this.Layer);
                 obj.Location = eval(this.Location);
                 obj.XTRI = eval(this.XTRI);
-                obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, PlacedObjectLightRoundedness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
+                obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, LightRoundness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
                 if (LinkedReferences != null)
                 {
                     obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Radius;
             public MaskItem<Exception?, PlacedObjectLighting.ErrorMask?>? Lighting;
             public MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>? LightBarndoorData;
-            public MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>? LightArea;
+            public MaskItem<Exception?, AreaLight.ErrorMask?>? LightArea;
             public Exception? CurrentZoneCell;
             public Exception? XCZA;
             public MaskItem<Exception?, Patrol.ErrorMask?>? Patrol;
@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Layer;
             public Exception? Location;
             public Exception? XTRI;
-            public MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>? LightRoundedness;
+            public MaskItem<Exception?, LightRoundness.ErrorMask?>? LightRoundedness;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
             public Exception? IsLinkedRefTransient;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>? SnapLinks;
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LightBarndoorData = new MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.LightArea:
-                        this.LightArea = new MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>(ex, null);
+                        this.LightArea = new MaskItem<Exception?, AreaLight.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.CurrentZoneCell:
                         this.CurrentZoneCell = ex;
@@ -3122,7 +3122,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.XTRI = ex;
                         break;
                     case PlacedObject_FieldIndex.LightRoundedness:
-                        this.LightRoundedness = new MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>(ex, null);
+                        this.LightRoundedness = new MaskItem<Exception?, LightRoundness.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.LinkedReferences:
                         this.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ex, null);
@@ -3265,7 +3265,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LightBarndoorData = (MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.LightArea:
-                        this.LightArea = (MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>?)obj;
+                        this.LightArea = (MaskItem<Exception?, AreaLight.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.CurrentZoneCell:
                         this.CurrentZoneCell = (Exception?)obj;
@@ -3370,7 +3370,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.XTRI = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.LightRoundedness:
-                        this.LightRoundedness = (MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>?)obj;
+                        this.LightRoundedness = (MaskItem<Exception?, LightRoundness.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.LinkedReferences:
                         this.LinkedReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>)obj;
@@ -4048,7 +4048,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Radius;
             public PlacedObjectLighting.TranslationMask? Lighting;
             public PlacedObjectLightBarndoorData.TranslationMask? LightBarndoorData;
-            public PlacedObjectLightArea.TranslationMask? LightArea;
+            public AreaLight.TranslationMask? LightArea;
             public bool CurrentZoneCell;
             public bool XCZA;
             public Patrol.TranslationMask? Patrol;
@@ -4083,7 +4083,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Layer;
             public bool Location;
             public bool XTRI;
-            public PlacedObjectLightRoundedness.TranslationMask? LightRoundedness;
+            public LightRoundness.TranslationMask? LightRoundedness;
             public LinkedReferences.TranslationMask? LinkedReferences;
             public bool IsLinkedRefTransient;
             public SnapLink.TranslationMask? SnapLinks;
@@ -4432,7 +4432,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single? Radius { get; set; }
         new PlacedObjectLighting? Lighting { get; set; }
         new PlacedObjectLightBarndoorData? LightBarndoorData { get; set; }
-        new PlacedObjectLightArea? LightArea { get; set; }
+        new AreaLight? LightArea { get; set; }
         new IFormLinkNullable<ICellGetter> CurrentZoneCell { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
         new Patrol? Patrol { get; set; }
@@ -4467,7 +4467,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new UInt32? XTRI { get; set; }
-        new PlacedObjectLightRoundedness? LightRoundedness { get; set; }
+        new LightRoundness? LightRoundedness { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Boolean IsLinkedRefTransient { get; set; }
         new ExtendedList<SnapLink>? SnapLinks { get; set; }
@@ -4545,7 +4545,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? Radius { get; }
         IPlacedObjectLightingGetter? Lighting { get; }
         IPlacedObjectLightBarndoorDataGetter? LightBarndoorData { get; }
-        IPlacedObjectLightAreaGetter? LightArea { get; }
+        IAreaLightGetter? LightArea { get; }
         IFormLinkNullableGetter<ICellGetter> CurrentZoneCell { get; }
         ReadOnlyMemorySlice<Byte>? XCZA { get; }
         IPatrolGetter? Patrol { get; }
@@ -4580,7 +4580,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
         UInt32? XTRI { get; }
-        IPlacedObjectLightRoundednessGetter? LightRoundedness { get; }
+        ILightRoundnessGetter? LightRoundedness { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         Boolean IsLinkedRefTransient { get; }
         IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; }
@@ -6151,7 +6151,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LightArea, rhs.LightArea, out var lhsLightArea, out var rhsLightArea, out var isLightAreaEqual))
                 {
-                    if (!((PlacedObjectLightAreaCommon)((IPlacedObjectLightAreaGetter)lhsLightArea).CommonInstance()!).Equals(lhsLightArea, rhsLightArea, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightArea))) return false;
+                    if (!((AreaLightCommon)((IAreaLightGetter)lhsLightArea).CommonInstance()!).Equals(lhsLightArea, rhsLightArea, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightArea))) return false;
                 }
                 else if (!isLightAreaEqual) return false;
             }
@@ -6331,7 +6331,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LightRoundedness, rhs.LightRoundedness, out var lhsLightRoundedness, out var rhsLightRoundedness, out var isLightRoundednessEqual))
                 {
-                    if (!((PlacedObjectLightRoundednessCommon)((IPlacedObjectLightRoundednessGetter)lhsLightRoundedness).CommonInstance()!).Equals(lhsLightRoundedness, rhsLightRoundedness, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightRoundedness))) return false;
+                    if (!((LightRoundnessCommon)((ILightRoundnessGetter)lhsLightRoundedness).CommonInstance()!).Equals(lhsLightRoundedness, rhsLightRoundedness, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightRoundedness))) return false;
                 }
                 else if (!isLightRoundednessEqual) return false;
             }
@@ -8436,10 +8436,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (item.LightArea is {} LightAreaItem)
             {
-                ((PlacedObjectLightAreaBinaryWriteTranslation)((IBinaryItem)LightAreaItem).BinaryWriteTranslator).Write(
-                    item: LightAreaItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.XALD))
+                {
+                    ((AreaLightBinaryWriteTranslation)((IBinaryItem)LightAreaItem).BinaryWriteTranslator).Write(
+                        item: LightAreaItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -8546,10 +8549,13 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             if (item.LightGobo is {} LightGoboItem)
             {
-                ((LightGoboBinaryWriteTranslation)((IBinaryItem)LightGoboItem).BinaryWriteTranslator).Write(
-                    item: LightGoboItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.XLGD))
+                {
+                    ((LightGoboBinaryWriteTranslation)((IBinaryItem)LightGoboItem).BinaryWriteTranslator).Write(
+                        item: LightGoboItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             if (item.Collision is {} CollisionItem)
             {
@@ -8649,10 +8655,13 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.XTRI));
             if (item.LightRoundedness is {} LightRoundednessItem)
             {
-                ((PlacedObjectLightRoundednessBinaryWriteTranslation)((IBinaryItem)LightRoundednessItem).BinaryWriteTranslator).Write(
-                    item: LightRoundednessItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.XLRD))
+                {
+                    ((LightRoundnessBinaryWriteTranslation)((IBinaryItem)LightRoundednessItem).BinaryWriteTranslator).Write(
+                        item: LightRoundednessItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
                 writer: writer,
@@ -9009,7 +9018,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALD:
                 {
-                    item.LightArea = Mutagen.Bethesda.Starfield.PlacedObjectLightArea.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.LightArea = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.LightArea;
                 }
                 case RecordTypeInts.XCZC:
@@ -9130,6 +9140,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLGD:
                 {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.LightGobo = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.LightGobo;
                 }
@@ -9243,7 +9254,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRD:
                 {
-                    item.LightRoundedness = Mutagen.Bethesda.Starfield.PlacedObjectLightRoundedness.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.LightRoundedness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.LightRoundedness;
                 }
                 case RecordTypeInts.XLKR:
@@ -9538,10 +9550,7 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _LightBarndoorDataLocation;
         public IPlacedObjectLightBarndoorDataGetter? LightBarndoorData => _LightBarndoorDataLocation.HasValue ? PlacedObjectLightBarndoorDataBinaryOverlay.PlacedObjectLightBarndoorDataFactory(_recordData.Slice(_LightBarndoorDataLocation!.Value.Min), _package) : default;
         #endregion
-        #region LightArea
-        private RangeInt32? _LightAreaLocation;
-        public IPlacedObjectLightAreaGetter? LightArea => _LightAreaLocation.HasValue ? PlacedObjectLightAreaBinaryOverlay.PlacedObjectLightAreaFactory(_recordData.Slice(_LightAreaLocation!.Value.Min), _package) : default;
-        #endregion
+        public IAreaLightGetter? LightArea { get; private set; }
         #region CurrentZoneCell
         private int? _CurrentZoneCellLocation;
         public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CurrentZoneCellLocation);
@@ -9595,10 +9604,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FactionRankLocation;
         public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        #region LightGobo
-        private RangeInt32? _LightGoboLocation;
-        public ILightGoboGetter? LightGobo => _LightGoboLocation.HasValue ? LightGoboBinaryOverlay.LightGoboFactory(_recordData.Slice(_LightGoboLocation!.Value.Min), _package) : default;
-        #endregion
+        public ILightGoboGetter? LightGobo { get; private set; }
         #region Collision
         private RangeInt32? _CollisionLocation;
         public IPlacedObjectCollisionGetter? Collision => _CollisionLocation.HasValue ? PlacedObjectCollisionBinaryOverlay.PlacedObjectCollisionFactory(_recordData.Slice(_CollisionLocation!.Value.Min), _package) : default;
@@ -9648,10 +9654,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XTRILocation;
         public UInt32? XTRI => _XTRILocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XTRILocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region LightRoundedness
-        private RangeInt32? _LightRoundednessLocation;
-        public IPlacedObjectLightRoundednessGetter? LightRoundedness => _LightRoundednessLocation.HasValue ? PlacedObjectLightRoundednessBinaryOverlay.PlacedObjectLightRoundednessFactory(_recordData.Slice(_LightRoundednessLocation!.Value.Min), _package) : default;
-        #endregion
+        public ILightRoundnessGetter? LightRoundedness { get; private set; }
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
@@ -9919,7 +9922,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALD:
                 {
-                    _LightAreaLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.LightArea = AreaLightBinaryOverlay.AreaLightFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.LightArea;
                 }
                 case RecordTypeInts.XCZC:
@@ -10032,7 +10039,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLGD:
                 {
-                    _LightGoboLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.LightGobo = LightGoboBinaryOverlay.LightGoboFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.LightGobo;
                 }
                 case RecordTypeInts.XCOL:
@@ -10147,7 +10158,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRD:
                 {
-                    _LightRoundednessLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.LightRoundedness = LightRoundnessBinaryOverlay.LightRoundnessFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.LightRoundedness;
                 }
                 case RecordTypeInts.XLKR:

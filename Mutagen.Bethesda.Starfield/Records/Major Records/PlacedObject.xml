@@ -23,7 +23,7 @@
       <Float name="Radius" recordType="XRDS" />
       <RefDirect name="Lighting" refName="PlacedObjectLighting" />
       <RefDirect name="LightBarndoorData" refName="PlacedObjectLightBarndoorData" />
-      <RefDirect name="LightArea" refName="PlacedObjectLightArea" />
+      <RefDirect name="LightArea" refName="AreaLight" recordType="XALD" />
       <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
       <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
       <RefDirect name="Patrol" refName="Patrol" />
@@ -49,7 +49,7 @@
       <P3Float name="ConstrainedDecal" recordType="XCDD" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <RefDirect name="LightGobo" refName="LightGobo" />
+      <RefDirect name="LightGobo" refName="LightGobo" recordType="XLGD" />
       <RefDirect name="Collision" refName="PlacedObjectCollision" />
       <RefList name="PowerLinks" refName="PowerLink" />
       <Int32 name="Count" recordType="XCNT" />
@@ -66,7 +66,7 @@
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
       <UInt32 name="XTRI" recordType="XTRI" unknown="true" />
-      <RefDirect name="LightRoundedness" refName="PlacedObjectLightRoundedness" />
+      <RefDirect name="LightRoundedness" refName="LightRoundness" recordType="XLRD" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
       <RefList name="SnapLinks" refName="SnapLink" recordType="XSL1" />
@@ -143,11 +143,6 @@
       <Float name="Unknown20" />
     </Fields>
   </Object>
-  <Object name="PlacedObjectLightArea" objType="Subrecord" recordType="XALD" >
-    <Fields>
-      <ByteArray name="Data" byteLength="16" nullable="false" />
-    </Fields>
-  </Object>
   <Object name="PlacedObjectShipArrival" objType="Subrecord" recordType="XSAD" >
     <Fields>
       <ByteArray name="Data" byteLength="17" nullable="false" />
@@ -160,17 +155,22 @@
   </Object>
   <Object name="VolumeReflectionProbeOffsetIntensity" objType="Subrecord" recordType="XVOI" >
     <Fields>
-      <ByteArray name="Data" byteLength="16" nullable="false" />
-    </Fields>
-  </Object>
-  <Object name="PlacedObjectLightRoundedness" objType="Subrecord" recordType="XLRD" >
-    <Fields>
-      <ByteArray name="Data" byteLength="20" nullable="false" />
+      <Float name="Float1" />
+      <Float name="Float2" />
+      <Float name="Float3" />
+      <Float name="Float4" />
     </Fields>
   </Object>
   <Object name="PlacedObjectLightBarndoorData" objType="Subrecord" recordType="XLBD" >
     <Fields>
-      <ByteArray name="Data" byteLength="24" nullable="false" />
+      <Float name="Bottom" />
+      <Float name="Right" />
+      <Float name="Left" />
+      <Float name="Top" />
+      <Float name="FalloffIntensity" />
+      <Bool name="HasBarndoor" byteLength="1" />
+      <Bool name="HasFalloff" byteLength="1" />
+      <UInt16 name="Unused" />
     </Fields>
   </Object>
   <Object name="PlacedObjectDebugText" objType="Subrecord" >
@@ -225,11 +225,6 @@
       <Float name="HeightScale" />
       <Float name="UnknownFloat" />
       <UInt32 name="UnknownInt" />
-    </Fields>
-  </Object>
-  <Object name="LightGobo" objType="Subrecord" recordType="XLGD" >
-    <Fields>
-      <ByteArray name="Data" byteLength="88" nullable="false" />
     </Fields>
   </Object>
   <Object name="PlacedObjectCollision" objType="Subrecord" recordType="XCOL" >
