@@ -9,6 +9,8 @@
         <Interface>IPlaceableObject</Interface>
       </FormLink>
       <FormLink name="XMSP" refName="StarfieldMajorRecord" recordType="XMSP" unknown="true" />
+      <FormLink name="XPWR" refName="PlacedObject" recordType="XPWR" unknown="true" />
+      <FormLink name="XLTW" refName="PlacedObject" recordType="XLTW" unknown="true" />
       <RefDirect name="XTRV" refName="XTRV" />
       <RefDirect name="VolumeData" refName="PlacedObjectVolumeData" />
       <RefDirect name="ShipArrival" refName="PlacedObjectShipArrival" />

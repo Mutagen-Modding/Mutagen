@@ -1131,6 +1131,7 @@ public partial class RecordTypes
     public static readonly RecordType XLRL = new(0x4C524C58);
     public static readonly RecordType XLRT = new(0x54524C58);
     public static readonly RecordType XLSM = new(0x4D534C58);
+    public static readonly RecordType XLTW = new(0x57544C58);
     public static readonly RecordType XLVD = new(0x44564C58);
     public static readonly RecordType XLYR = new(0x52594C58);
     public static readonly RecordType XMPM = new(0x4D504D58);
@@ -1150,6 +1151,7 @@ public partial class RecordTypes
     public static readonly RecordType XPPS = new(0x53505058);
     public static readonly RecordType XPRD = new(0x44525058);
     public static readonly RecordType XPRM = new(0x4D525058);
+    public static readonly RecordType XPWR = new(0x52575058);
     public static readonly RecordType XRDS = new(0x53445258);
     public static readonly RecordType XRFG = new(0x47465258);
     public static readonly RecordType XRGB = new(0x42475258);

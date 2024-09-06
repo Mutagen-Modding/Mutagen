@@ -1129,6 +1129,7 @@ public partial class RecordTypeInts
     public const int XLRL = 0x4C524C58;
     public const int XLRT = 0x54524C58;
     public const int XLSM = 0x4D534C58;
+    public const int XLTW = 0x57544C58;
     public const int XLVD = 0x44564C58;
     public const int XLYR = 0x52594C58;
     public const int XMPM = 0x4D504D58;
@@ -1148,6 +1149,7 @@ public partial class RecordTypeInts
     public const int XPPS = 0x53505058;
     public const int XPRD = 0x44525058;
     public const int XPRM = 0x4D525058;
+    public const int XPWR = 0x52575058;
     public const int XRDS = 0x53445258;
     public const int XRFG = 0x47465258;
     public const int XRGB = 0x42475258;
