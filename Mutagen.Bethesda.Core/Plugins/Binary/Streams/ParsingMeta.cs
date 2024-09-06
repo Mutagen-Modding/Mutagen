@@ -63,7 +63,7 @@ public sealed class ParsingMeta
 
     public IFileSystem FileSystem { get; set; } = IFileSystemExt.DefaultFilesystem;
 
-    internal ParsingMeta(
+    public ParsingMeta(
         GameConstants constants,
         ModKey modKey,
         IReadOnlySeparatedMasterPackage masterReferences)
