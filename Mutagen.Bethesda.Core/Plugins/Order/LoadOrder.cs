@@ -900,6 +900,11 @@ public interface ILoadOrderGetter : IDisposable
     /// Number of listings on the Load Order
     /// </summary>
     int Count { get; }
+    
+    /// <summary>
+    /// Whether the contained items will be disposed with the load order
+    /// </summary>
+    bool DisposingItems { get; }
 
     /// <summary>
     /// Listings in the order they were listed
@@ -1001,10 +1006,11 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
 {
     private readonly List<ItemContainer> _byLoadOrder = new();
     private readonly Dictionary<ModKey, ItemContainer> _byModKey = new();
-    private readonly bool _disposeItems;
 
     /// <inheritdoc />
     public int Count => _byLoadOrder.Count;
+
+    public bool DisposingItems { get; }
 
     /// <inheritdoc />
     public TListing this[int index] => _byLoadOrder[index].Item;
@@ -1052,12 +1058,12 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
 
     public LoadOrder(bool disposeItems = true)
     {
-        _disposeItems = disposeItems;
+        DisposingItems = disposeItems;
     }
 
     public LoadOrder(IEnumerable<TListing> items, bool disposeItems = true)
     {
-        _disposeItems = disposeItems;
+        DisposingItems = disposeItems;
         int index = 0;
         _byLoadOrder.AddRange(items.Select(i => new ItemContainer(i, index++)));
         foreach (var item in _byLoadOrder)
@@ -1220,7 +1226,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
             _byLoadOrder[i].Index--;
         }
 
-        if (_disposeItems && item.Item is IDisposable disp)
+        if (DisposingItems && item.Item is IDisposable disp)
         {
             disp.Dispose();
         }
@@ -1237,7 +1243,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         var old = existing.Item;
         existing.Item = listing;
 
-        if (_disposeItems && old is IDisposable disp)
+        if (DisposingItems && old is IDisposable disp)
         {
             disp.Dispose();
         }
@@ -1264,7 +1270,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
     /// </summary>
     public void Dispose()
     {
-        if (!_disposeItems) return;
+        if (!DisposingItems) return;
         foreach (var item in _byLoadOrder)
         {
             if (item.Item is IDisposable disp)
@@ -1301,6 +1307,7 @@ internal class LoadOrderGetter : ILoadOrderGetter
     private readonly HashSet<ModKey> _byModKey;
 
     public int Count => _byLoadOrder.Count;
+    public bool DisposingItems => false;
 
     public IEnumerable<ModKey> ListedOrder => _byLoadOrder;
 

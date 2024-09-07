@@ -138,9 +138,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             {
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -185,12 +183,10 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);
-                LoadOrder<IModFlagsGetter>? modFlagsLo = null;
+                ILoadOrderGetter<IModFlagsGetter>? modFlagsLo = null;
                 if (GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
-                    modFlagsLo = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false);
+                    modFlagsLo = lo.ResolveAllModsExist(disposeItems: false);
                 }
                 return p._param with
                 {
@@ -234,9 +230,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         m.GameRelease, p._param.FileSystem);
                     return p._param with
                     {
-                        LoadOrder = new LoadOrder<IModFlagsGetter>(
-                            lo.ListedOrder.ResolveAllModsExist(),
-                            disposeItems: false),
+                        LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
@@ -281,9 +275,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         m.GameRelease, p._param.FileSystem);   
                     return p._param with
                     {
-                        LoadOrder = new LoadOrder<IModFlagsGetter>(
-                            lo.ListedOrder.ResolveAllModsExist(),
-                            disposeItems: false),
+                        LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
@@ -337,9 +329,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             {
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -384,9 +374,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
                 };
             }
@@ -411,9 +399,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
@@ -444,9 +430,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     m.GameRelease, p._param.FileSystem);   
                 return p._param with
                 {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
+                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
