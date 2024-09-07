@@ -134,19 +134,15 @@ internal sealed class ModHeaderWriteLogic
     private IReadOnlyMasterReferenceCollection ConstructWriteMasters(IModGetter mod)
     {
         MasterReferenceCollection ret = new MasterReferenceCollection(mod.ModKey);
-
-        foreach (var extraMaster in _params.ExtraIncludeMasters.EmptyIfNull())
-        {
-            if (!_modKeys.ContainsKey(extraMaster))
-            {
-                _modKeys[extraMaster] = null;
-            }
-        }
-        
         _modKeys.Remove(mod.ModKey);
         _modKeys.Remove(ModKey.Null);
         var modKeysList = _modKeys.Keys.ToList();
         SortMasters(modKeysList);
+        if (_params.MastersContentCustomOverride != null)
+        {
+            modKeysList = _params.MastersContentCustomOverride(modKeysList).ToList();
+            SortMasters(modKeysList);
+        }
         ret.SetTo(modKeysList.Select(m => new MasterReference()
         {
             Master = m,
@@ -201,36 +197,26 @@ internal sealed class ModHeaderWriteLogic
     {
         switch (_params.MastersListContent)
         {
-            case MastersListContentEnumOption enumOption:
-            {
-                switch (enumOption.Option)
+            case MastersListContentOption.NoCheck:
+                _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey?>(m.Master, FormKey.Null)));
+                break;
+            case MastersListContentOption.Iterate:
+                _recordIterationActions.Add(maj =>
                 {
-                    case MastersListContentOption.NoCheck:
-                        _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey?>(m.Master, FormKey.Null)));
-                        break;
-                    case MastersListContentOption.Iterate:
-                        _recordIterationActions.Add(maj =>
-                        {
-                            var formKey = maj.FormKey;
-                            if (mod.ModKey == formKey.ModKey) return;
-                            if (_params.CleanNulls && formKey.IsNull) return;
-                            _modKeys[formKey.ModKey] = formKey;
-                        });
-                        _formLinkIterationActions.Add((maj, formLink) =>
-                        {
-                            if (mod.ModKey == formLink.FormKey.ModKey) return;
-                            if (_params.CleanNulls && formLink.FormKey.IsNull) return;
-                            _modKeys[formLink.FormKey.ModKey] = maj;
-                        });
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
+                    var formKey = maj.FormKey;
+                    if (mod.ModKey == formKey.ModKey) return;
+                    if (_params.CleanNulls && formKey.IsNull) return;
+                    _modKeys[formKey.ModKey] = formKey;
+                });
+                _formLinkIterationActions.Add((maj, formLink) =>
+                {
+                    if (mod.ModKey == formLink.FormKey.ModKey) return;
+                    if (_params.CleanNulls && formLink.FormKey.IsNull) return;
+                    _modKeys[formLink.FormKey.ModKey] = maj;
+                });
                 break;
-            case MastersListContentOverrideOption overrideOption:
-                _modKeys.Set(overrideOption.ModKeys.Select(m => new KeyValuePair<ModKey, FormKey?>(m, FormKey.Null)));
-                break;
+            default:
+                throw new NotImplementedException();
         }
     }
 

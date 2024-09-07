@@ -205,16 +205,13 @@
         <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
         <Compile Include="Plugins\Binary\Overlay\ImmutableManyListWrapper.cs" />
         <Compile Include="Plugins\Binary\Parameters\ALowerRangeDisallowedHandlerOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\AMastersListContentOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryReadParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDCompactionOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\MastersListContentEnumOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\MastersListContentOverrideOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingEnumOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingOption.cs" />
@@ -275,6 +272,7 @@
         <Compile Include="Plugins\Exceptions\FormIDCompactionOutOfBoundsException.cs" />
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
+        <Compile Include="Plugins\Exceptions\MissingLoadOrderException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
         <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
         <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
@@ -329,6 +327,7 @@
         <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
+        <Compile Include="Plugins\Masters\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>

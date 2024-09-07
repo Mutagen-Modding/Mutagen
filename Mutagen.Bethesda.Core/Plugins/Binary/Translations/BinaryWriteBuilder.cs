@@ -22,6 +22,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal BinaryWriteParameters _param { get; init; } = BinaryWriteParameters.Default;
     internal FilePath? _path { get; init; }
     internal Stream? _stream { get; init; }
+    internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
     internal bool TrimLoadOrderAtSelf { get; init; } = true;
@@ -872,11 +873,12 @@ public interface IFileBinaryModdedWriteBuilder
     IFileBinaryModdedWriteBuilder WithExplicitOverridingMasterList(params ModKey[] modKeys);
 
     /// <summary>
-    /// The Construction Kit complains when loading mods that do not have base masters listed. <br />
-    /// This call includes base masters even if they are not needed by the mod's content
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithConstructionKitRequiredMasters();
+    IFileBinaryModdedWriteBuilder WithAllParentMasters();
 
     /// <summary>
     /// Load order is typically "trimmed" to not include anything after the mod being written. <br />
@@ -1429,16 +1431,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <returns>Builder object to continue customization</returns>
     public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
-        return this with
-        {
-            _params = _params with
-            {
-                _param = _params._param with
-                {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
-                }
-            }
-        };
+        return WithExtraIncludedMasters(modKeys.ToArray());
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludedMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludedMasters(modKeys);
 
@@ -1456,7 +1449,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
                 }
             }
         };
@@ -1466,7 +1465,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(System.Collections.Generic.IEnumerable{Mutagen.Bethesda.Plugins.ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1476,9 +1475,11 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         {
             _params = _params with
             {
+                _masterSyncAction = null,
                 _param = _params._param with
                 {
-                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
@@ -1489,7 +1490,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1500,17 +1501,38 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(params ModKey[] modKeys) => WithExplicitOverridingMasterList(modKeys);
 
     /// <summary>
-    /// The CK complains when loading mods that do not have base masters listed. <br />
-    /// This call includes base masters even if they are not needed by the mod's content
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithConstructionKitRequiredMasters()
+    public FileBinaryModdedWriteBuilder<TModGetter> WithAllParentMasters()
     {
-        var implicits = Implicits.Get(this._mod.GameRelease);
-        return this.WithExtraIncludedMasters(implicits.BaseMasters);
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = static (mod, p) =>
+                {
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+
+                    return p._param with
+                    {
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mods,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
+                    };
+                },
+            }
+        };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithConstructionKitRequiredMasters() => WithConstructionKitRequiredMasters();
-    
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithAllParentMasters() => WithAllParentMasters();
+
     /// <summary>
     /// Load order is typically "trimmed" to not include anything after the mod being written. <br />
     /// This turns that logic off, to include the full load order withing the write logic
@@ -1541,6 +1563,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
                 _param = _params._loadOrderSetter(_mod, _params)
             };
         }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_mod, _params)
+            };
+        }
         await _params._writer.WriteAsync(_mod, _params);
     }
     
@@ -1555,6 +1584,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             _params = _params with
             {
                 _param = _params._loadOrderSetter(_mod, _params)
+            };
+        }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(_mod, _params)
             };
         }
         _params._writer.Write(_mod, _params);
@@ -2064,16 +2100,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <returns>Builder object to continue customization</returns>
     public FileBinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
-        return this with
-        {
-            _params = _params with
-            {
-                _param = _params._param with
-                {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
-                }
-            }
-        };
+        return WithExtraIncludedMasters(modKeys.ToArray());
     }
 
     /// <summary>
@@ -2090,7 +2117,13 @@ public record FileBinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
                 }
             }
         };
@@ -2099,7 +2132,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="P"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -2109,9 +2142,11 @@ public record FileBinaryWriteBuilder<TModGetter>
         {
             _params = _params with
             {
+                _masterSyncAction = null,
                 _param = _params._param with
                 {
-                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
@@ -2131,14 +2166,35 @@ public record FileBinaryWriteBuilder<TModGetter>
     }
     
     /// <summary>
-    /// The CK complains when loading mods that do not have base masters listed. <br />
-    /// This call includes base masters even if they are not needed by the mod's content
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithConstructionKitRequiredMasters()
+    public FileBinaryWriteBuilder<TModGetter> WithAllParentMasters()
     {
-        var implicits = Implicits.Get(this._params._gameRelease);
-        return WithExtraIncludedMasters(implicits.BaseMasters);
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = static (mod, p) =>
+                {
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+
+                    return p._param with
+                    {
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mods,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
+                    };
+                },
+            }
+        };
     }
 
     /// <summary>
@@ -2171,6 +2227,13 @@ public record FileBinaryWriteBuilder<TModGetter>
                 _param = _params._loadOrderSetter(mod, _params)
             };
         }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(mod, _params)
+            };
+        }
         await _params._writer.WriteAsync(mod, _params);
     }
     
@@ -2189,6 +2252,13 @@ public record FileBinaryWriteBuilder<TModGetter>
             _params = _params with
             {
                 _param = _params._loadOrderSetter(mod, _params)
+            };
+        }
+        if (_params._masterSyncAction != null)
+        {
+            _params = _params with
+            {
+                _param = _params._masterSyncAction(mod, _params)
             };
         }
         _params._writer.Write(mod, _params);
