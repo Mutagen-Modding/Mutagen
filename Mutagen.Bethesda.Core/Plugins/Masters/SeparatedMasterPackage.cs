@@ -51,7 +51,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        ILoadOrderGetter<IModMasterFlagsGetter>? loadOrder)
     {
         var constants = GameConstants.Get(release);
         if (constants.SeparateMasterLoadOrders)
@@ -151,13 +151,13 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        ILoadOrderGetter<IModMasterFlagsGetter>? loadOrder)
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
         var light = new List<ModKey>();
 
-        void AddToList(IModFlagsGetter mod, ModKey modKey)
+        void AddToList(IModMasterFlagsGetter mod, ModKey modKey)
         {
             if (mod.IsMediumMaster)
             {

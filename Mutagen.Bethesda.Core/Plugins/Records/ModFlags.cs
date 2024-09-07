@@ -1,6 +1,6 @@
 ﻿namespace Mutagen.Bethesda.Plugins.Records;
 
-public interface IModFlagsGetter : IModKeyed
+public interface IModFlagsGetter : IModMasterFlagsGetter, IModKeyed
 {
     /// <summary>
     /// Whether a mod supports localization features
@@ -12,6 +12,14 @@ public interface IModFlagsGetter : IModKeyed
     /// </summary>
     bool UsingLocalization { get; }
     
+    /// <summary>
+    /// Whether a mod lists overridden forms in its header
+    /// </summary>
+    bool ListsOverriddenForms { get; }
+}
+
+public interface IModMasterFlagsGetter : IModKeyed
+{
     /// <summary>
     /// Whether a mod supports Small Master features
     /// </summary>
@@ -36,11 +44,6 @@ public interface IModFlagsGetter : IModKeyed
     /// Whether a mod has Master flag enabled
     /// </summary>
     bool IsMaster { get; }
-    
-    /// <summary>
-    /// Whether a mod lists overridden forms in its header
-    /// </summary>
-    bool ListsOverriddenForms { get; }
 }
 
 public record ModFlags : IModFlagsGetter

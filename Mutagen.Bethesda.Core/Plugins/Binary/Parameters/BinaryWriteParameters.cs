@@ -101,7 +101,7 @@ public sealed record BinaryWriteParameters
     /// <summary>
     /// Load order.  Required for games with Separated Load Order lists per master type
     /// </summary>
-    public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
+    public ILoadOrderGetter<IModMasterFlagsGetter>? LoadOrder { get; init; }
 
     /// <summary>
     /// Whether to use multithreading when possible

@@ -50,13 +50,13 @@ public abstract class AMod : IMod
     public abstract bool UsingLocalization { get; set; }
     bool IModFlagsGetter.UsingLocalization => throw new NotImplementedException();
     public abstract bool IsMaster { get; set; }
-    bool IModFlagsGetter.IsMaster => throw new NotImplementedException();
+    bool IModMasterFlagsGetter.IsMaster => throw new NotImplementedException();
     public abstract bool CanBeSmallMaster { get; }
     public abstract bool IsSmallMaster { get; set; }
-    bool IModFlagsGetter.IsSmallMaster => throw new NotImplementedException();
+    bool IModMasterFlagsGetter.IsSmallMaster => throw new NotImplementedException();
     public abstract bool CanBeMediumMaster { get; }
     public abstract bool IsMediumMaster { get; set; }
-    bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();
+    bool IModMasterFlagsGetter.IsMediumMaster => throw new NotImplementedException();
     public abstract bool ListsOverriddenForms { get; }
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
