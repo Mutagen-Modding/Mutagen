@@ -1,9 +1,7 @@
 using System.IO.Abstractions;
-using DynamicData;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
@@ -1433,16 +1431,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <returns>Builder object to continue customization</returns>
     public FileBinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
-        return this with
-        {
-            _params = _params with
-            {
-                _param = _params._param with
-                {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
-                }
-            }
-        };
+        return WithExtraIncludedMasters(modKeys.ToArray());
     }
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithExtraIncludedMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludedMasters(modKeys);
 
@@ -1460,7 +1449,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
                 }
             }
         };
@@ -1483,7 +1478,8 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
                 _masterSyncAction = null,
                 _param = _params._param with
                 {
-                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
@@ -1518,26 +1514,18 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    if (mod.MasterReferences.Count == 0)
-                    {
-                        return p._param;
-                    }
-                    
-                    if (p._param.LoadOrder == null)
-                    {
-                        throw new MissingLoadOrderException();
-                    }
-
                     var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
 
-                    var sortedMasters = TransitiveMasterLocator.GetAllMasters(
-                        mod,
-                        dataFolder,
-                        p._param.LoadOrder);
-                    
                     return p._param with
                     {
-                        ExtraIncludeMasters = p._param.ExtraIncludeMasters.EmptyIfNull().And(sortedMasters).Distinct().ToArray()
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mods,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
                     };
                 },
             }
@@ -2112,16 +2100,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <returns>Builder object to continue customization</returns>
     public FileBinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
     {
-        return this with
-        {
-            _params = _params with
-            {
-                _param = _params._param with
-                {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
-                }
-            }
-        };
+        return WithExtraIncludedMasters(modKeys.ToArray());
     }
 
     /// <summary>
@@ -2138,7 +2117,13 @@ public record FileBinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    ExtraIncludeMasters = _params._param.ExtraIncludeMasters.EmptyIfNull().And(modKeys).Distinct().ToArray()
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
                 }
             }
         };
@@ -2160,7 +2145,8 @@ public record FileBinaryWriteBuilder<TModGetter>
                 _masterSyncAction = null,
                 _param = _params._param with
                 {
-                    MastersListContent = new MastersListContentOverrideOption(modKeys.ToArray()),
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
                 }
             }
@@ -2193,26 +2179,18 @@ public record FileBinaryWriteBuilder<TModGetter>
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    if (mod.MasterReferences.Count == 0)
-                    {
-                        return p._param;
-                    }
-                    
-                    if (p._param.LoadOrder == null)
-                    {
-                        throw new MissingLoadOrderException();
-                    }
-
                     var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
 
-                    var sortedMasters = TransitiveMasterLocator.GetAllMasters(
-                        mod,
-                        dataFolder,
-                        p._param.LoadOrder);
-                    
                     return p._param with
                     {
-                        ExtraIncludeMasters = p._param.ExtraIncludeMasters.EmptyIfNull().And(sortedMasters).Distinct().ToArray()
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mods,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
                     };
                 },
             }

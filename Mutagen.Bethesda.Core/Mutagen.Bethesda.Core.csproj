@@ -205,16 +205,13 @@
         <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
         <Compile Include="Plugins\Binary\Overlay\ImmutableManyListWrapper.cs" />
         <Compile Include="Plugins\Binary\Parameters\ALowerRangeDisallowedHandlerOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\AMastersListContentOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\AMinimumFormIdOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryReadParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDCompactionOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\MastersListContentEnumOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
-        <Compile Include="Plugins\Binary\Parameters\MastersListContentOverrideOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingEnumOption.cs" />
         <Compile Include="Plugins\Binary\Parameters\MastersListOrderingOption.cs" />

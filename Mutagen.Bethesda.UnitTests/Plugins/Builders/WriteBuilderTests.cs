@@ -166,14 +166,14 @@ public class WriteBuilderTests
         ModKey transientMasterModKey,
         ModKey masterModKey,
         ModKey modKey,
-        DirectoryPath existingDir)
+        DirectoryPath existingDataDir)
     {
         var transientMasterMod = new StarfieldMod(transientMasterModKey, StarfieldRelease.Starfield);
         var transientMasterWeapon = transientMasterMod.Weapons.AddNew();
-        var transientMasterModPath = Path.Combine(existingDir, transientMasterMod.ModKey.FileName);
+        var transientMasterModPath = Path.Combine(existingDataDir, transientMasterMod.ModKey.FileName);
         transientMasterMod.BeginWrite
-            .WithLoadOrderFromHeaderMasters()
-            .WithNoDataFolder()
+            .WithLoadOrder(transientMasterModKey, masterModKey)
+            .WithDataFolder(existingDataDir)
             .ToPath(transientMasterModPath)
             .WithFileSystem(fileSystem)
             .Write();
@@ -181,10 +181,10 @@ public class WriteBuilderTests
         var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
         var masterWeapon = master.Weapons.AddNew();
         master.Weapons.GetOrAddAsOverride(transientMasterWeapon);
-        var masterModPath = Path.Combine(existingDir, master.ModKey.FileName);
+        var masterModPath = Path.Combine(existingDataDir, master.ModKey.FileName);
         master.BeginWrite
-            .WithLoadOrderFromHeaderMasters()
-            .WithNoDataFolder()
+            .WithLoadOrder(transientMasterModKey, masterModKey)
+            .WithDataFolder(existingDataDir)
             .ToPath(masterModPath)
             .WithFileSystem(fileSystem)
             .Write();
@@ -192,10 +192,10 @@ public class WriteBuilderTests
         var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         
-        var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
+        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
             .WithLoadOrder(transientMasterModKey, masterModKey)
-            .WithNoDataFolder()
+            .WithDataFolder(existingDataDir)
             .ToPath(modPath)
             .WithFileSystem(fileSystem)
             .WithAllParentMasters()

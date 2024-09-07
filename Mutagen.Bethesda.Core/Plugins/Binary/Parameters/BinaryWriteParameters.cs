@@ -8,6 +8,11 @@ using Noggog;
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 /// <summary>
+/// A transformer function to take in the typical given masters, and transform them to provide the masters for actual use
+/// </summary>
+public delegate IReadOnlyCollection<ModKey> MastersContentCustomOverride(IReadOnlyCollection<ModKey> inputMasters);
+
+/// <summary>
 /// Parameter object for customizing binary export job instructions
 /// </summary>
 public sealed record BinaryWriteParameters
@@ -17,23 +22,25 @@ public sealed record BinaryWriteParameters
     /// <summary>
     /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
-    public ModKeyOption ModKey = ModKeyOption.ThrowIfMisaligned;
+    public ModKeyOption ModKey { get; init; } = ModKeyOption.ThrowIfMisaligned;
 
     /// <summary>
     /// Logic to use to keep a mod's master list content in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
-    public AMastersListContentOption MastersListContent = MastersListContentOption.Iterate;
-
+    public MastersListContentOption MastersListContent { get; init; } = MastersListContentOption.Iterate;
+    
     /// <summary>
-    /// Specifies a list of masters to include if they are not included naturally
+    /// A transformer function to take in the typical given masters, and transform them to provide the masters for actual use </br>
+    /// The masters given as input will be the results of the <see cref="MastersListContent" /> parameter <br />
+    /// The results given by the override will be sorted by the sorting rules specified elsewhere
     /// </summary>
-    public IEnumerable<ModKey>? ExtraIncludeMasters { get; init; }
+    public MastersContentCustomOverride? MastersContentCustomOverride { get; init; }
 
     /// <summary>
     /// Logic to use to keep a mod's record count in sync
     /// </summary>
-    public RecordCountOption RecordCount = RecordCountOption.Iterate;
+    public RecordCountOption RecordCount { get; init; } = RecordCountOption.Iterate;
 
     /// <summary>
     /// Logic to use to keep a mod's master list ordering in sync<br/>
