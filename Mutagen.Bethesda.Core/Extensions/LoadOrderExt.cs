@@ -128,4 +128,25 @@ public static class LoadOrderExt
         listing = result;
         return true;
     }
+
+    public static LoadOrder<TListing> TrimAt<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
+        where TListing : IModKeyed
+    {
+        return new LoadOrder<TListing>(loadOrder.ListedOrder.TrimAt(modKey));
+    }
+
+    public static IEnumerable<TListing> TrimAt<TListing>(this IEnumerable<TListing> loadOrder, ModKey modKey)
+        where TListing : IModKeyed
+    {
+        return loadOrder.TakeWhile(x => x.ModKey != modKey);
+    }
+
+    public static LoadOrder<TRetListing> Transform<TListing, TRetListing>(this ILoadOrderGetter<TListing> loadOrder, Func<TListing, TRetListing> transformer)
+        where TListing : IModKeyed
+        where TRetListing : IModKeyed
+    {
+        return new LoadOrder<TRetListing>(
+            loadOrder.ListedOrder
+                .Select(transformer));
+    }
 }

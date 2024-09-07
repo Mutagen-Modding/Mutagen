@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -23,6 +24,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Stream? _stream { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
+    internal bool TrimLoadOrderAtSelf { get; init; } = true;
 }
 
 /// <summary>
@@ -136,6 +138,10 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    loadOrder = loadOrder.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
@@ -159,6 +165,10 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    loadOrder = loadOrder.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = loadOrder,
@@ -183,6 +193,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);
+                
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    lo = lo.TrimAt(m.ModKey);
+                }
                 ILoadOrderGetter<IModFlagsGetter>? modFlagsLo = null;
                 if (GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
@@ -211,9 +226,15 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         {
             _loadOrderSetter = (m, p) =>
             {
-                var loArray = loadOrder
-                    .Where(x => x != m.ModKey)
-                    .ToArray();
+                ModKey[] loArray;
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    loArray = loadOrder.TrimAt(m.ModKey).ToArray();
+                }
+                else
+                {
+                    loArray = loadOrder.ToArray();
+                }
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
                 if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
@@ -262,6 +283,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
                     var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
+                    
+                    if (p.TrimLoadOrderAtSelf)
+                    {
+                        lo = lo.TrimAt(m.ModKey).ToArray();
+                    }
                     return p._param with
                     {
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
@@ -272,7 +298,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 {
                     var lo = LoadOrder.Import<TModGetter>(
                         dataFolder.Value, _mod.MasterReferences.Select(x => x.Master),
-                        m.GameRelease, p._param.FileSystem);   
+                        m.GameRelease, p._param.FileSystem);  
+                    if (p.TrimLoadOrderAtSelf)
+                    {
+                        lo = lo.TrimAt(m.ModKey);
+                    } 
                     return p._param with
                     {
                         LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
@@ -327,6 +357,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         {
             _loadOrderSetter = (m, p) =>
             {
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    loadOrder = loadOrder.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
@@ -349,6 +383,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         {
             _loadOrderSetter = (m, p) =>
             {
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    loadOrder = loadOrder.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = loadOrder,
@@ -372,6 +410,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
+                
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    lo = lo.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
@@ -396,7 +439,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, loadOrder,
-                    m.GameRelease, p._param.FileSystem);   
+                    m.GameRelease, p._param.FileSystem);  
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    lo = lo.TrimAt(m.ModKey);
+                } 
                 return p._param with
                 {
                     LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
@@ -428,6 +475,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder, m.MasterReferences.Select(x => x.Master),
                     m.GameRelease, p._param.FileSystem);   
+                if (p.TrimLoadOrderAtSelf)
+                {
+                    lo = lo.TrimAt(m.ModKey);
+                }
                 return p._param with
                 {
                     LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
@@ -826,6 +877,13 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
     IFileBinaryModdedWriteBuilder WithConstructionKitRequiredMasters();
+
+    /// <summary>
+    /// Load order is typically "trimmed" to not include anything after the mod being written. <br />
+    /// This turns that logic off, to include the full load order withing the write logic
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IFileBinaryModdedWriteBuilder DoNotTrimLoadOrderAtSelf();
 
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1454,6 +1512,23 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithConstructionKitRequiredMasters() => WithConstructionKitRequiredMasters();
     
     /// <summary>
+    /// Load order is typically "trimmed" to not include anything after the mod being written. <br />
+    /// This turns that logic off, to include the full load order withing the write logic
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryModdedWriteBuilder<TModGetter> DoNotTrimLoadOrderAtSelf()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                TrimLoadOrderAtSelf = false,
+            }
+        };
+    }
+    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.DoNotTrimLoadOrderAtSelf() => DoNotTrimLoadOrderAtSelf();
+
+    /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
     /// <returns>A task to await for writing completion</returns>
@@ -2064,6 +2139,22 @@ public record FileBinaryWriteBuilder<TModGetter>
     {
         var implicits = Implicits.Get(this._params._gameRelease);
         return WithExtraIncludedMasters(implicits.BaseMasters);
+    }
+
+    /// <summary>
+    /// Load order is typically "trimmed" to not include anything after the mod being written. <br />
+    /// This turns that logic off, to include the full load order withing the write logic
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public FileBinaryWriteBuilder<TModGetter> DoNotTrimLoadOrderAtSelf()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                TrimLoadOrderAtSelf = false
+            }
+        };
     }
     
     /// <summary>
