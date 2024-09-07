@@ -37,27 +37,27 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class PlacedObjectLightBarndoorData :
-        IEquatable<IPlacedObjectLightBarndoorDataGetter>,
-        ILoquiObjectSetter<PlacedObjectLightBarndoorData>,
-        IPlacedObjectLightBarndoorData
+    public partial class LightBarndoors :
+        IEquatable<ILightBarndoorsGetter>,
+        ILightBarndoors,
+        ILoquiObjectSetter<LightBarndoors>
     {
         #region Ctor
-        public PlacedObjectLightBarndoorData()
+        public LightBarndoors()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Left
+        public Single Left { get; set; } = default(Single);
+        #endregion
         #region Bottom
         public Single Bottom { get; set; } = default(Single);
         #endregion
         #region Right
         public Single Right { get; set; } = default(Single);
-        #endregion
-        #region Left
-        public Single Left { get; set; } = default(Single);
         #endregion
         #region Top
         public Single Top { get; set; } = default(Single);
@@ -65,11 +65,11 @@ namespace Mutagen.Bethesda.Starfield
         #region FalloffIntensity
         public Single FalloffIntensity { get; set; } = default(Single);
         #endregion
-        #region HasBarndoor
-        public Boolean HasBarndoor { get; set; } = default(Boolean);
-        #endregion
         #region HasFalloff
         public Boolean HasFalloff { get; set; } = default(Boolean);
+        #endregion
+        #region HasBarndoor
+        public Boolean HasBarndoor { get; set; } = default(Boolean);
         #endregion
         #region Unused
         public UInt16 Unused { get; set; } = default(UInt16);
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectLightBarndoorDataMixIn.Print(
+            LightBarndoorsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -92,16 +92,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlacedObjectLightBarndoorDataGetter rhs) return false;
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILightBarndoorsGetter rhs) return false;
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlacedObjectLightBarndoorDataGetter? obj)
+        public bool Equals(ILightBarndoorsGetter? obj)
         {
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -113,33 +113,33 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Left = initialValue;
                 this.Bottom = initialValue;
                 this.Right = initialValue;
-                this.Left = initialValue;
                 this.Top = initialValue;
                 this.FalloffIntensity = initialValue;
-                this.HasBarndoor = initialValue;
                 this.HasFalloff = initialValue;
+                this.HasBarndoor = initialValue;
                 this.Unused = initialValue;
             }
 
             public Mask(
+                TItem Left,
                 TItem Bottom,
                 TItem Right,
-                TItem Left,
                 TItem Top,
                 TItem FalloffIntensity,
-                TItem HasBarndoor,
                 TItem HasFalloff,
+                TItem HasBarndoor,
                 TItem Unused)
             {
+                this.Left = Left;
                 this.Bottom = Bottom;
                 this.Right = Right;
-                this.Left = Left;
                 this.Top = Top;
                 this.FalloffIntensity = FalloffIntensity;
-                this.HasBarndoor = HasBarndoor;
                 this.HasFalloff = HasFalloff;
+                this.HasBarndoor = HasBarndoor;
                 this.Unused = Unused;
             }
 
@@ -152,13 +152,13 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Left;
             public TItem Bottom;
             public TItem Right;
-            public TItem Left;
             public TItem Top;
             public TItem FalloffIntensity;
-            public TItem HasBarndoor;
             public TItem HasFalloff;
+            public TItem HasBarndoor;
             public TItem Unused;
             #endregion
 
@@ -172,26 +172,26 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Left, rhs.Left)) return false;
                 if (!object.Equals(this.Bottom, rhs.Bottom)) return false;
                 if (!object.Equals(this.Right, rhs.Right)) return false;
-                if (!object.Equals(this.Left, rhs.Left)) return false;
                 if (!object.Equals(this.Top, rhs.Top)) return false;
                 if (!object.Equals(this.FalloffIntensity, rhs.FalloffIntensity)) return false;
-                if (!object.Equals(this.HasBarndoor, rhs.HasBarndoor)) return false;
                 if (!object.Equals(this.HasFalloff, rhs.HasFalloff)) return false;
+                if (!object.Equals(this.HasBarndoor, rhs.HasBarndoor)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Left);
                 hash.Add(this.Bottom);
                 hash.Add(this.Right);
-                hash.Add(this.Left);
                 hash.Add(this.Top);
                 hash.Add(this.FalloffIntensity);
-                hash.Add(this.HasBarndoor);
                 hash.Add(this.HasFalloff);
+                hash.Add(this.HasBarndoor);
                 hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
@@ -201,13 +201,13 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Left)) return false;
                 if (!eval(this.Bottom)) return false;
                 if (!eval(this.Right)) return false;
-                if (!eval(this.Left)) return false;
                 if (!eval(this.Top)) return false;
                 if (!eval(this.FalloffIntensity)) return false;
-                if (!eval(this.HasBarndoor)) return false;
                 if (!eval(this.HasFalloff)) return false;
+                if (!eval(this.HasBarndoor)) return false;
                 if (!eval(this.Unused)) return false;
                 return true;
             }
@@ -216,13 +216,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Left)) return true;
                 if (eval(this.Bottom)) return true;
                 if (eval(this.Right)) return true;
-                if (eval(this.Left)) return true;
                 if (eval(this.Top)) return true;
                 if (eval(this.FalloffIntensity)) return true;
-                if (eval(this.HasBarndoor)) return true;
                 if (eval(this.HasFalloff)) return true;
+                if (eval(this.HasBarndoor)) return true;
                 if (eval(this.Unused)) return true;
                 return false;
             }
@@ -231,20 +231,20 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PlacedObjectLightBarndoorData.Mask<R>();
+                var ret = new LightBarndoors.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Left = eval(this.Left);
                 obj.Bottom = eval(this.Bottom);
                 obj.Right = eval(this.Right);
-                obj.Left = eval(this.Left);
                 obj.Top = eval(this.Top);
                 obj.FalloffIntensity = eval(this.FalloffIntensity);
-                obj.HasBarndoor = eval(this.HasBarndoor);
                 obj.HasFalloff = eval(this.HasFalloff);
+                obj.HasBarndoor = eval(this.HasBarndoor);
                 obj.Unused = eval(this.Unused);
             }
             #endregion
@@ -252,18 +252,22 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            public string Print(LightBarndoors.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LightBarndoors.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PlacedObjectLightBarndoorData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LightBarndoors.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Left ?? true)
+                    {
+                        sb.AppendItem(Left, "Left");
+                    }
                     if (printMask?.Bottom ?? true)
                     {
                         sb.AppendItem(Bottom, "Bottom");
@@ -271,10 +275,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Right ?? true)
                     {
                         sb.AppendItem(Right, "Right");
-                    }
-                    if (printMask?.Left ?? true)
-                    {
-                        sb.AppendItem(Left, "Left");
                     }
                     if (printMask?.Top ?? true)
                     {
@@ -284,13 +284,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FalloffIntensity, "FalloffIntensity");
                     }
-                    if (printMask?.HasBarndoor ?? true)
-                    {
-                        sb.AppendItem(HasBarndoor, "HasBarndoor");
-                    }
                     if (printMask?.HasFalloff ?? true)
                     {
                         sb.AppendItem(HasFalloff, "HasFalloff");
+                    }
+                    if (printMask?.HasBarndoor ?? true)
+                    {
+                        sb.AppendItem(HasBarndoor, "HasBarndoor");
                     }
                     if (printMask?.Unused ?? true)
                     {
@@ -320,37 +320,37 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Left;
             public Exception? Bottom;
             public Exception? Right;
-            public Exception? Left;
             public Exception? Top;
             public Exception? FalloffIntensity;
-            public Exception? HasBarndoor;
             public Exception? HasFalloff;
+            public Exception? HasBarndoor;
             public Exception? Unused;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                PlacedObjectLightBarndoorData_FieldIndex enu = (PlacedObjectLightBarndoorData_FieldIndex)index;
+                LightBarndoors_FieldIndex enu = (LightBarndoors_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectLightBarndoorData_FieldIndex.Bottom:
-                        return Bottom;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Right:
-                        return Right;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Left:
+                    case LightBarndoors_FieldIndex.Left:
                         return Left;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Top:
+                    case LightBarndoors_FieldIndex.Bottom:
+                        return Bottom;
+                    case LightBarndoors_FieldIndex.Right:
+                        return Right;
+                    case LightBarndoors_FieldIndex.Top:
                         return Top;
-                    case PlacedObjectLightBarndoorData_FieldIndex.FalloffIntensity:
+                    case LightBarndoors_FieldIndex.FalloffIntensity:
                         return FalloffIntensity;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasBarndoor:
-                        return HasBarndoor;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasFalloff:
+                    case LightBarndoors_FieldIndex.HasFalloff:
                         return HasFalloff;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Unused:
+                    case LightBarndoors_FieldIndex.HasBarndoor:
+                        return HasBarndoor;
+                    case LightBarndoors_FieldIndex.Unused:
                         return Unused;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -359,31 +359,31 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                PlacedObjectLightBarndoorData_FieldIndex enu = (PlacedObjectLightBarndoorData_FieldIndex)index;
+                LightBarndoors_FieldIndex enu = (LightBarndoors_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectLightBarndoorData_FieldIndex.Bottom:
-                        this.Bottom = ex;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Right:
-                        this.Right = ex;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Left:
+                    case LightBarndoors_FieldIndex.Left:
                         this.Left = ex;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Top:
+                    case LightBarndoors_FieldIndex.Bottom:
+                        this.Bottom = ex;
+                        break;
+                    case LightBarndoors_FieldIndex.Right:
+                        this.Right = ex;
+                        break;
+                    case LightBarndoors_FieldIndex.Top:
                         this.Top = ex;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.FalloffIntensity:
+                    case LightBarndoors_FieldIndex.FalloffIntensity:
                         this.FalloffIntensity = ex;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasBarndoor:
-                        this.HasBarndoor = ex;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasFalloff:
+                    case LightBarndoors_FieldIndex.HasFalloff:
                         this.HasFalloff = ex;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Unused:
+                    case LightBarndoors_FieldIndex.HasBarndoor:
+                        this.HasBarndoor = ex;
+                        break;
+                    case LightBarndoors_FieldIndex.Unused:
                         this.Unused = ex;
                         break;
                     default:
@@ -393,31 +393,31 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                PlacedObjectLightBarndoorData_FieldIndex enu = (PlacedObjectLightBarndoorData_FieldIndex)index;
+                LightBarndoors_FieldIndex enu = (LightBarndoors_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedObjectLightBarndoorData_FieldIndex.Bottom:
-                        this.Bottom = (Exception?)obj;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Right:
-                        this.Right = (Exception?)obj;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Left:
+                    case LightBarndoors_FieldIndex.Left:
                         this.Left = (Exception?)obj;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Top:
+                    case LightBarndoors_FieldIndex.Bottom:
+                        this.Bottom = (Exception?)obj;
+                        break;
+                    case LightBarndoors_FieldIndex.Right:
+                        this.Right = (Exception?)obj;
+                        break;
+                    case LightBarndoors_FieldIndex.Top:
                         this.Top = (Exception?)obj;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.FalloffIntensity:
+                    case LightBarndoors_FieldIndex.FalloffIntensity:
                         this.FalloffIntensity = (Exception?)obj;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasBarndoor:
-                        this.HasBarndoor = (Exception?)obj;
-                        break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.HasFalloff:
+                    case LightBarndoors_FieldIndex.HasFalloff:
                         this.HasFalloff = (Exception?)obj;
                         break;
-                    case PlacedObjectLightBarndoorData_FieldIndex.Unused:
+                    case LightBarndoors_FieldIndex.HasBarndoor:
+                        this.HasBarndoor = (Exception?)obj;
+                        break;
+                    case LightBarndoors_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
                         break;
                     default:
@@ -428,13 +428,13 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Left != null) return true;
                 if (Bottom != null) return true;
                 if (Right != null) return true;
-                if (Left != null) return true;
                 if (Top != null) return true;
                 if (FalloffIntensity != null) return true;
-                if (HasBarndoor != null) return true;
                 if (HasFalloff != null) return true;
+                if (HasBarndoor != null) return true;
                 if (Unused != null) return true;
                 return false;
             }
@@ -462,13 +462,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Left, "Left");
+                }
+                {
                     sb.AppendItem(Bottom, "Bottom");
                 }
                 {
                     sb.AppendItem(Right, "Right");
-                }
-                {
-                    sb.AppendItem(Left, "Left");
                 }
                 {
                     sb.AppendItem(Top, "Top");
@@ -477,10 +477,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(FalloffIntensity, "FalloffIntensity");
                 }
                 {
-                    sb.AppendItem(HasBarndoor, "HasBarndoor");
+                    sb.AppendItem(HasFalloff, "HasFalloff");
                 }
                 {
-                    sb.AppendItem(HasFalloff, "HasFalloff");
+                    sb.AppendItem(HasBarndoor, "HasBarndoor");
                 }
                 {
                     sb.AppendItem(Unused, "Unused");
@@ -493,13 +493,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Left = this.Left.Combine(rhs.Left);
                 ret.Bottom = this.Bottom.Combine(rhs.Bottom);
                 ret.Right = this.Right.Combine(rhs.Right);
-                ret.Left = this.Left.Combine(rhs.Left);
                 ret.Top = this.Top.Combine(rhs.Top);
                 ret.FalloffIntensity = this.FalloffIntensity.Combine(rhs.FalloffIntensity);
-                ret.HasBarndoor = this.HasBarndoor.Combine(rhs.HasBarndoor);
                 ret.HasFalloff = this.HasFalloff.Combine(rhs.HasFalloff);
+                ret.HasBarndoor = this.HasBarndoor.Combine(rhs.HasBarndoor);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
@@ -524,13 +524,13 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Left;
             public bool Bottom;
             public bool Right;
-            public bool Left;
             public bool Top;
             public bool FalloffIntensity;
-            public bool HasBarndoor;
             public bool HasFalloff;
+            public bool HasBarndoor;
             public bool Unused;
             #endregion
 
@@ -541,13 +541,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Left = defaultOn;
                 this.Bottom = defaultOn;
                 this.Right = defaultOn;
-                this.Left = defaultOn;
                 this.Top = defaultOn;
                 this.FalloffIntensity = defaultOn;
-                this.HasBarndoor = defaultOn;
                 this.HasFalloff = defaultOn;
+                this.HasBarndoor = defaultOn;
                 this.Unused = defaultOn;
             }
 
@@ -564,13 +564,13 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Left, null));
                 ret.Add((Bottom, null));
                 ret.Add((Right, null));
-                ret.Add((Left, null));
                 ret.Add((Top, null));
                 ret.Add((FalloffIntensity, null));
-                ret.Add((HasBarndoor, null));
                 ret.Add((HasFalloff, null));
+                ret.Add((HasBarndoor, null));
                 ret.Add((Unused, null));
             }
 
@@ -584,25 +584,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlacedObjectLightBarndoorDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LightBarndoorsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlacedObjectLightBarndoorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LightBarndoorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static PlacedObjectLightBarndoorData CreateFromBinary(
+        public static LightBarndoors CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PlacedObjectLightBarndoorData();
-            ((PlacedObjectLightBarndoorDataSetterCommon)((IPlacedObjectLightBarndoorDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LightBarndoors();
+            ((LightBarndoorsSetterCommon)((ILightBarndoorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PlacedObjectLightBarndoorData item,
+            out LightBarndoors item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -628,36 +628,36 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((PlacedObjectLightBarndoorDataSetterCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LightBarndoorsSetterCommon)((ILightBarndoorsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static PlacedObjectLightBarndoorData GetNew()
+        internal static LightBarndoors GetNew()
         {
-            return new PlacedObjectLightBarndoorData();
+            return new LightBarndoors();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPlacedObjectLightBarndoorData :
-        ILoquiObjectSetter<IPlacedObjectLightBarndoorData>,
-        IPlacedObjectLightBarndoorDataGetter
+    public partial interface ILightBarndoors :
+        ILightBarndoorsGetter,
+        ILoquiObjectSetter<ILightBarndoors>
     {
+        new Single Left { get; set; }
         new Single Bottom { get; set; }
         new Single Right { get; set; }
-        new Single Left { get; set; }
         new Single Top { get; set; }
         new Single FalloffIntensity { get; set; }
-        new Boolean HasBarndoor { get; set; }
         new Boolean HasFalloff { get; set; }
+        new Boolean HasBarndoor { get; set; }
         new UInt16 Unused { get; set; }
     }
 
-    public partial interface IPlacedObjectLightBarndoorDataGetter :
+    public partial interface ILightBarndoorsGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPlacedObjectLightBarndoorDataGetter>
+        ILoquiObject<ILightBarndoorsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -665,14 +665,14 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => PlacedObjectLightBarndoorData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LightBarndoors_Registration.Instance;
+        Single Left { get; }
         Single Bottom { get; }
         Single Right { get; }
-        Single Left { get; }
         Single Top { get; }
         Single FalloffIntensity { get; }
-        Boolean HasBarndoor { get; }
         Boolean HasFalloff { get; }
+        Boolean HasBarndoor { get; }
         UInt16 Unused { get; }
 
     }
@@ -680,42 +680,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class PlacedObjectLightBarndoorDataMixIn
+    public static partial class LightBarndoorsMixIn
     {
-        public static void Clear(this IPlacedObjectLightBarndoorData item)
+        public static void Clear(this ILightBarndoors item)
         {
-            ((PlacedObjectLightBarndoorDataSetterCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LightBarndoorsSetterCommon)((ILightBarndoorsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlacedObjectLightBarndoorData.Mask<bool> GetEqualsMask(
-            this IPlacedObjectLightBarndoorDataGetter item,
-            IPlacedObjectLightBarndoorDataGetter rhs,
+        public static LightBarndoors.Mask<bool> GetEqualsMask(
+            this ILightBarndoorsGetter item,
+            ILightBarndoorsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPlacedObjectLightBarndoorDataGetter item,
+            this ILightBarndoorsGetter item,
             string? name = null,
-            PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            LightBarndoors.Mask<bool>? printMask = null)
         {
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).Print(
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPlacedObjectLightBarndoorDataGetter item,
+            this ILightBarndoorsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            LightBarndoors.Mask<bool>? printMask = null)
         {
-            ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).Print(
+            ((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -723,21 +723,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IPlacedObjectLightBarndoorDataGetter item,
-            IPlacedObjectLightBarndoorDataGetter rhs,
-            PlacedObjectLightBarndoorData.TranslationMask? equalsMask = null)
+            this ILightBarndoorsGetter item,
+            ILightBarndoorsGetter rhs,
+            LightBarndoors.TranslationMask? equalsMask = null)
         {
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).Equals(
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPlacedObjectLightBarndoorData lhs,
-            IPlacedObjectLightBarndoorDataGetter rhs)
+            this ILightBarndoors lhs,
+            ILightBarndoorsGetter rhs)
         {
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -746,11 +746,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlacedObjectLightBarndoorData lhs,
-            IPlacedObjectLightBarndoorDataGetter rhs,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+            this ILightBarndoors lhs,
+            ILightBarndoorsGetter rhs,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -759,28 +759,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlacedObjectLightBarndoorData lhs,
-            IPlacedObjectLightBarndoorDataGetter rhs,
-            out PlacedObjectLightBarndoorData.ErrorMask errorMask,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+            this ILightBarndoors lhs,
+            ILightBarndoorsGetter rhs,
+            out LightBarndoors.ErrorMask errorMask,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PlacedObjectLightBarndoorData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LightBarndoors.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPlacedObjectLightBarndoorData lhs,
-            IPlacedObjectLightBarndoorDataGetter rhs,
+            this ILightBarndoors lhs,
+            ILightBarndoorsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -788,32 +788,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static PlacedObjectLightBarndoorData DeepCopy(
-            this IPlacedObjectLightBarndoorDataGetter item,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+        public static LightBarndoors DeepCopy(
+            this ILightBarndoorsGetter item,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
-            return ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PlacedObjectLightBarndoorData DeepCopy(
-            this IPlacedObjectLightBarndoorDataGetter item,
-            out PlacedObjectLightBarndoorData.ErrorMask errorMask,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+        public static LightBarndoors DeepCopy(
+            this ILightBarndoorsGetter item,
+            out LightBarndoors.ErrorMask errorMask,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
-            return ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PlacedObjectLightBarndoorData DeepCopy(
-            this IPlacedObjectLightBarndoorDataGetter item,
+        public static LightBarndoors DeepCopy(
+            this ILightBarndoorsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -821,11 +821,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPlacedObjectLightBarndoorData item,
+            this ILightBarndoors item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PlacedObjectLightBarndoorDataSetterCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LightBarndoorsSetterCommon)((ILightBarndoorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -841,23 +841,23 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum PlacedObjectLightBarndoorData_FieldIndex
+    internal enum LightBarndoors_FieldIndex
     {
-        Bottom = 0,
-        Right = 1,
-        Left = 2,
+        Left = 0,
+        Bottom = 1,
+        Right = 2,
         Top = 3,
         FalloffIntensity = 4,
-        HasBarndoor = 5,
-        HasFalloff = 6,
+        HasFalloff = 5,
+        HasBarndoor = 6,
         Unused = 7,
     }
     #endregion
 
     #region Registration
-    internal partial class PlacedObjectLightBarndoorData_Registration : ILoquiRegistration
+    internal partial class LightBarndoors_Registration : ILoquiRegistration
     {
-        public static readonly PlacedObjectLightBarndoorData_Registration Instance = new PlacedObjectLightBarndoorData_Registration();
+        public static readonly LightBarndoors_Registration Instance = new LightBarndoors_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -865,23 +865,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(PlacedObjectLightBarndoorData.Mask<>);
+        public static readonly Type MaskType = typeof(LightBarndoors.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlacedObjectLightBarndoorData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LightBarndoors.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PlacedObjectLightBarndoorData);
+        public static readonly Type ClassType = typeof(LightBarndoors);
 
-        public static readonly Type GetterType = typeof(IPlacedObjectLightBarndoorDataGetter);
+        public static readonly Type GetterType = typeof(ILightBarndoorsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPlacedObjectLightBarndoorData);
+        public static readonly Type SetterType = typeof(ILightBarndoors);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.PlacedObjectLightBarndoorData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.LightBarndoors";
 
-        public const string Name = "PlacedObjectLightBarndoorData";
+        public const string Name = "LightBarndoors";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -889,14 +889,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.XLBD;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FLBD;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.XLBD);
+            var all = RecordCollection.Factory(RecordTypes.FLBD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectLightBarndoorDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LightBarndoorsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -927,27 +927,27 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class PlacedObjectLightBarndoorDataSetterCommon
+    internal partial class LightBarndoorsSetterCommon
     {
-        public static readonly PlacedObjectLightBarndoorDataSetterCommon Instance = new PlacedObjectLightBarndoorDataSetterCommon();
+        public static readonly LightBarndoorsSetterCommon Instance = new LightBarndoorsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPlacedObjectLightBarndoorData item)
+        public void Clear(ILightBarndoors item)
         {
             ClearPartial();
+            item.Left = default(Single);
             item.Bottom = default(Single);
             item.Right = default(Single);
-            item.Left = default(Single);
             item.Top = default(Single);
             item.FalloffIntensity = default(Single);
-            item.HasBarndoor = default(Boolean);
             item.HasFalloff = default(Boolean);
+            item.HasBarndoor = default(Boolean);
             item.Unused = default(UInt16);
         }
         
         #region Mutagen
-        public void RemapLinks(IPlacedObjectLightBarndoorData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILightBarndoors obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -955,35 +955,35 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPlacedObjectLightBarndoorData item,
+            ILightBarndoors item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.XLBD),
+                translationParams.ConvertToCustom(RecordTypes.FLBD),
                 translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlacedObjectLightBarndoorDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: LightBarndoorsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class PlacedObjectLightBarndoorDataCommon
+    internal partial class LightBarndoorsCommon
     {
-        public static readonly PlacedObjectLightBarndoorDataCommon Instance = new PlacedObjectLightBarndoorDataCommon();
+        public static readonly LightBarndoorsCommon Instance = new LightBarndoorsCommon();
 
-        public PlacedObjectLightBarndoorData.Mask<bool> GetEqualsMask(
-            IPlacedObjectLightBarndoorDataGetter item,
-            IPlacedObjectLightBarndoorDataGetter rhs,
+        public LightBarndoors.Mask<bool> GetEqualsMask(
+            ILightBarndoorsGetter item,
+            ILightBarndoorsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlacedObjectLightBarndoorData.Mask<bool>(false);
-            ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LightBarndoors.Mask<bool>(false);
+            ((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -992,25 +992,25 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IPlacedObjectLightBarndoorDataGetter item,
-            IPlacedObjectLightBarndoorDataGetter rhs,
-            PlacedObjectLightBarndoorData.Mask<bool> ret,
+            ILightBarndoorsGetter item,
+            ILightBarndoorsGetter rhs,
+            LightBarndoors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Left = item.Left.EqualsWithin(rhs.Left);
             ret.Bottom = item.Bottom.EqualsWithin(rhs.Bottom);
             ret.Right = item.Right.EqualsWithin(rhs.Right);
-            ret.Left = item.Left.EqualsWithin(rhs.Left);
             ret.Top = item.Top.EqualsWithin(rhs.Top);
             ret.FalloffIntensity = item.FalloffIntensity.EqualsWithin(rhs.FalloffIntensity);
-            ret.HasBarndoor = item.HasBarndoor == rhs.HasBarndoor;
             ret.HasFalloff = item.HasFalloff == rhs.HasFalloff;
+            ret.HasBarndoor = item.HasBarndoor == rhs.HasBarndoor;
             ret.Unused = item.Unused == rhs.Unused;
         }
         
         public string Print(
-            IPlacedObjectLightBarndoorDataGetter item,
+            ILightBarndoorsGetter item,
             string? name = null,
-            PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            LightBarndoors.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1022,18 +1022,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IPlacedObjectLightBarndoorDataGetter item,
+            ILightBarndoorsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            LightBarndoors.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PlacedObjectLightBarndoorData =>");
+                sb.AppendLine($"LightBarndoors =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PlacedObjectLightBarndoorData) =>");
+                sb.AppendLine($"{name} (LightBarndoors) =>");
             }
             using (sb.Brace())
             {
@@ -1045,10 +1045,14 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IPlacedObjectLightBarndoorDataGetter item,
+            ILightBarndoorsGetter item,
             StructuredStringBuilder sb,
-            PlacedObjectLightBarndoorData.Mask<bool>? printMask = null)
+            LightBarndoors.Mask<bool>? printMask = null)
         {
+            if (printMask?.Left ?? true)
+            {
+                sb.AppendItem(item.Left, "Left");
+            }
             if (printMask?.Bottom ?? true)
             {
                 sb.AppendItem(item.Bottom, "Bottom");
@@ -1056,10 +1060,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Right ?? true)
             {
                 sb.AppendItem(item.Right, "Right");
-            }
-            if (printMask?.Left ?? true)
-            {
-                sb.AppendItem(item.Left, "Left");
             }
             if (printMask?.Top ?? true)
             {
@@ -1069,13 +1069,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.FalloffIntensity, "FalloffIntensity");
             }
-            if (printMask?.HasBarndoor ?? true)
-            {
-                sb.AppendItem(item.HasBarndoor, "HasBarndoor");
-            }
             if (printMask?.HasFalloff ?? true)
             {
                 sb.AppendItem(item.HasFalloff, "HasFalloff");
+            }
+            if (printMask?.HasBarndoor ?? true)
+            {
+                sb.AppendItem(item.HasBarndoor, "HasBarndoor");
             }
             if (printMask?.Unused ?? true)
             {
@@ -1085,56 +1085,56 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlacedObjectLightBarndoorDataGetter? lhs,
-            IPlacedObjectLightBarndoorDataGetter? rhs,
+            ILightBarndoorsGetter? lhs,
+            ILightBarndoorsGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Bottom) ?? true))
-            {
-                if (!lhs.Bottom.EqualsWithin(rhs.Bottom)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Right) ?? true))
-            {
-                if (!lhs.Right.EqualsWithin(rhs.Right)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Left) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Left) ?? true))
             {
                 if (!lhs.Left.EqualsWithin(rhs.Left)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Top) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Bottom) ?? true))
+            {
+                if (!lhs.Bottom.EqualsWithin(rhs.Bottom)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Right) ?? true))
+            {
+                if (!lhs.Right.EqualsWithin(rhs.Right)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Top) ?? true))
             {
                 if (!lhs.Top.EqualsWithin(rhs.Top)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.FalloffIntensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.FalloffIntensity) ?? true))
             {
                 if (!lhs.FalloffIntensity.EqualsWithin(rhs.FalloffIntensity)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.HasBarndoor) ?? true))
-            {
-                if (lhs.HasBarndoor != rhs.HasBarndoor) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.HasFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.HasFalloff) ?? true))
             {
                 if (lhs.HasFalloff != rhs.HasFalloff) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.HasBarndoor) ?? true))
+            {
+                if (lhs.HasBarndoor != rhs.HasBarndoor) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPlacedObjectLightBarndoorDataGetter item)
+        public virtual int GetHashCode(ILightBarndoorsGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Left);
             hash.Add(item.Bottom);
             hash.Add(item.Right);
-            hash.Add(item.Left);
             hash.Add(item.Top);
             hash.Add(item.FalloffIntensity);
-            hash.Add(item.HasBarndoor);
             hash.Add(item.HasFalloff);
+            hash.Add(item.HasBarndoor);
             hash.Add(item.Unused);
             return hash.ToHashCode();
         }
@@ -1144,11 +1144,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return PlacedObjectLightBarndoorData.GetNew();
+            return LightBarndoors.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectLightBarndoorDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightBarndoorsGetter obj)
         {
             yield break;
         }
@@ -1156,47 +1156,47 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class PlacedObjectLightBarndoorDataSetterTranslationCommon
+    internal partial class LightBarndoorsSetterTranslationCommon
     {
-        public static readonly PlacedObjectLightBarndoorDataSetterTranslationCommon Instance = new PlacedObjectLightBarndoorDataSetterTranslationCommon();
+        public static readonly LightBarndoorsSetterTranslationCommon Instance = new LightBarndoorsSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPlacedObjectLightBarndoorData item,
-            IPlacedObjectLightBarndoorDataGetter rhs,
+            ILightBarndoors item,
+            ILightBarndoorsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Bottom) ?? true))
-            {
-                item.Bottom = rhs.Bottom;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Right) ?? true))
-            {
-                item.Right = rhs.Right;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Left) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Left) ?? true))
             {
                 item.Left = rhs.Left;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Top) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Bottom) ?? true))
+            {
+                item.Bottom = rhs.Bottom;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Right) ?? true))
+            {
+                item.Right = rhs.Right;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Top) ?? true))
             {
                 item.Top = rhs.Top;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.FalloffIntensity) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.FalloffIntensity) ?? true))
             {
                 item.FalloffIntensity = rhs.FalloffIntensity;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.HasBarndoor) ?? true))
-            {
-                item.HasBarndoor = rhs.HasBarndoor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.HasFalloff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.HasFalloff) ?? true))
             {
                 item.HasFalloff = rhs.HasFalloff;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectLightBarndoorData_FieldIndex.Unused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.HasBarndoor) ?? true))
+            {
+                item.HasBarndoor = rhs.HasBarndoor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightBarndoors_FieldIndex.Unused) ?? true))
             {
                 item.Unused = rhs.Unused;
             }
@@ -1204,12 +1204,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public PlacedObjectLightBarndoorData DeepCopy(
-            IPlacedObjectLightBarndoorDataGetter item,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+        public LightBarndoors DeepCopy(
+            ILightBarndoorsGetter item,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
-            PlacedObjectLightBarndoorData ret = (PlacedObjectLightBarndoorData)((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).GetNew();
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LightBarndoors ret = (LightBarndoors)((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).GetNew();
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1218,30 +1218,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public PlacedObjectLightBarndoorData DeepCopy(
-            IPlacedObjectLightBarndoorDataGetter item,
-            out PlacedObjectLightBarndoorData.ErrorMask errorMask,
-            PlacedObjectLightBarndoorData.TranslationMask? copyMask = null)
+        public LightBarndoors DeepCopy(
+            ILightBarndoorsGetter item,
+            out LightBarndoors.ErrorMask errorMask,
+            LightBarndoors.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlacedObjectLightBarndoorData ret = (PlacedObjectLightBarndoorData)((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).GetNew();
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LightBarndoors ret = (LightBarndoors)((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).GetNew();
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PlacedObjectLightBarndoorData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LightBarndoors.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PlacedObjectLightBarndoorData DeepCopy(
-            IPlacedObjectLightBarndoorDataGetter item,
+        public LightBarndoors DeepCopy(
+            ILightBarndoorsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PlacedObjectLightBarndoorData ret = (PlacedObjectLightBarndoorData)((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)item).CommonInstance()!).GetNew();
-            ((PlacedObjectLightBarndoorDataSetterTranslationCommon)((IPlacedObjectLightBarndoorDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LightBarndoors ret = (LightBarndoors)((LightBarndoorsCommon)((ILightBarndoorsGetter)item).CommonInstance()!).GetNew();
+            ((LightBarndoorsSetterTranslationCommon)((ILightBarndoorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1257,27 +1257,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlacedObjectLightBarndoorData
+    public partial class LightBarndoors
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlacedObjectLightBarndoorData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlacedObjectLightBarndoorData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LightBarndoors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightBarndoors_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlacedObjectLightBarndoorDataCommon.Instance;
+        protected object CommonInstance() => LightBarndoorsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return PlacedObjectLightBarndoorDataSetterCommon.Instance;
+            return LightBarndoorsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlacedObjectLightBarndoorDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LightBarndoorsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlacedObjectLightBarndoorDataGetter.CommonInstance() => this.CommonInstance();
+        object ILightBarndoorsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPlacedObjectLightBarndoorDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILightBarndoorsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPlacedObjectLightBarndoorDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILightBarndoorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1288,14 +1288,17 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlacedObjectLightBarndoorDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LightBarndoorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedObjectLightBarndoorDataBinaryWriteTranslation Instance = new();
+        public static readonly LightBarndoorsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IPlacedObjectLightBarndoorDataGetter item,
+            ILightBarndoorsGetter item,
             MutagenWriter writer)
         {
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Left);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Bottom);
@@ -1304,26 +1307,23 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Right);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Left);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
                 item: item.Top);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FalloffIntensity);
-            writer.Write(item.HasBarndoor);
             writer.Write(item.HasFalloff);
+            writer.Write(item.HasBarndoor);
             writer.Write(item.Unused);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPlacedObjectLightBarndoorDataGetter item,
+            ILightBarndoorsGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.XLBD),
+                record: translationParams.ConvertToCustom(RecordTypes.FLBD),
                 overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
@@ -1339,28 +1339,28 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPlacedObjectLightBarndoorDataGetter)item,
+                item: (ILightBarndoorsGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PlacedObjectLightBarndoorDataBinaryCreateTranslation
+    internal partial class LightBarndoorsBinaryCreateTranslation
     {
-        public static readonly PlacedObjectLightBarndoorDataBinaryCreateTranslation Instance = new PlacedObjectLightBarndoorDataBinaryCreateTranslation();
+        public static readonly LightBarndoorsBinaryCreateTranslation Instance = new LightBarndoorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPlacedObjectLightBarndoorData item,
+            ILightBarndoors item,
             MutagenFrame frame)
         {
+            item.Left = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Bottom = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Right = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Left = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Top = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FalloffIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.HasBarndoor = frame.ReadBoolean();
             item.HasFalloff = frame.ReadBoolean();
+            item.HasBarndoor = frame.ReadBoolean();
             item.Unused = frame.ReadUInt16();
         }
 
@@ -1370,14 +1370,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class PlacedObjectLightBarndoorDataBinaryTranslationMixIn
+    public static class LightBarndoorsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPlacedObjectLightBarndoorDataGetter item,
+            this ILightBarndoorsGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlacedObjectLightBarndoorDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LightBarndoorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1390,50 +1390,50 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class PlacedObjectLightBarndoorDataBinaryOverlay :
+    internal partial class LightBarndoorsBinaryOverlay :
         PluginBinaryOverlay,
-        IPlacedObjectLightBarndoorDataGetter
+        ILightBarndoorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlacedObjectLightBarndoorData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlacedObjectLightBarndoorData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LightBarndoors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightBarndoors_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlacedObjectLightBarndoorDataCommon.Instance;
+        protected object CommonInstance() => LightBarndoorsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlacedObjectLightBarndoorDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LightBarndoorsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlacedObjectLightBarndoorDataGetter.CommonInstance() => this.CommonInstance();
+        object ILightBarndoorsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPlacedObjectLightBarndoorDataGetter.CommonSetterInstance() => null;
+        object? ILightBarndoorsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPlacedObjectLightBarndoorDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILightBarndoorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlacedObjectLightBarndoorDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LightBarndoorsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlacedObjectLightBarndoorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LightBarndoorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Single Bottom => _structData.Slice(0x0, 0x4).Float();
-        public Single Right => _structData.Slice(0x4, 0x4).Float();
-        public Single Left => _structData.Slice(0x8, 0x4).Float();
+        public Single Left => _structData.Slice(0x0, 0x4).Float();
+        public Single Bottom => _structData.Slice(0x4, 0x4).Float();
+        public Single Right => _structData.Slice(0x8, 0x4).Float();
         public Single Top => _structData.Slice(0xC, 0x4).Float();
         public Single FalloffIntensity => _structData.Slice(0x10, 0x4).Float();
-        public Boolean HasBarndoor => _structData.Slice(0x14, 0x1)[0] >= 1;
-        public Boolean HasFalloff => _structData.Slice(0x15, 0x1)[0] >= 1;
+        public Boolean HasFalloff => _structData.Slice(0x14, 0x1)[0] >= 1;
+        public Boolean HasBarndoor => _structData.Slice(0x15, 0x1)[0] >= 1;
         public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x16, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected PlacedObjectLightBarndoorDataBinaryOverlay(
+        protected LightBarndoorsBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IPlacedObjectLightBarndoorDataGetter PlacedObjectLightBarndoorDataFactory(
+        public static ILightBarndoorsGetter LightBarndoorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0x18,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new PlacedObjectLightBarndoorDataBinaryOverlay(
+            var ret = new LightBarndoorsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
@@ -1474,12 +1474,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IPlacedObjectLightBarndoorDataGetter PlacedObjectLightBarndoorDataFactory(
+        public static ILightBarndoorsGetter LightBarndoorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PlacedObjectLightBarndoorDataFactory(
+            return LightBarndoorsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectLightBarndoorDataMixIn.Print(
+            LightBarndoorsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1502,16 +1502,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlacedObjectLightBarndoorDataGetter rhs) return false;
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILightBarndoorsGetter rhs) return false;
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlacedObjectLightBarndoorDataGetter? obj)
+        public bool Equals(ILightBarndoorsGetter? obj)
         {
-            return ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LightBarndoorsCommon)((ILightBarndoorsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

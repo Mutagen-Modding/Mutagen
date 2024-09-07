@@ -497,19 +497,4 @@ public static class HasModsMixIn
     {
         AssertModsExist(loadOrder, enabled, message: message, modKeys: modKeys.ToArray());
     }
-
-    public static IEnumerable<TModItem> ResolveAllModsExist<TModItem>(this IEnumerable<IModListingGetter<TModItem>> loadOrder)
-        where TModItem : class, IModKeyed
-    {
-        loadOrder = loadOrder.ToArray();
-        var missingMods = loadOrder.Where(x => x.Mod == null)
-            .ToArray();
-
-        if (missingMods.Length > 0)
-        {
-            throw new MissingModException(missingMods.Select(x => x.ModKey));
-        }
-
-        return loadOrder.Select(x => x.Mod!);
-    }
 }

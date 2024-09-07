@@ -4,24 +4,112 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" nullable="False" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <ByteArray name="DAT2" recordType="DAT2" unknown="true" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="DAT2" >
+        <Fields>
+          <Int32 name="Time" />
+          <Float name="Radius" />
+          <Color name="Color" binaryType="Alpha" />
+          <Enum name="Flags" enumName="Light.Flag" byteLength="4" />
+          <Float name="FalloffExponent" />
+          <Float name="FOV" />
+          <Float name="NearClip" />
+          <Float name="FlickerPeriod" />
+          <Float name="FlickerIntensityAmplitude" />
+          <Float name="FlickerMovementAmplitude" />
+          <Float name="ShadowOffset" />
+          <Float name="InnerFOV" />
+          <UInt32 name="PbrLightTemperatureK" />
+          <UInt32 name="PbrLuminousPowerLm" />
+          <Enum name="Type" enumName="Light.LightType" byteLength="1" />
+          <Enum name="FlickerEffect" enumName="Light.FlickerEffectOption" byteLength="1" />
+          <Bool name="UseAdaptiveLighting" byteLength="2" importantByteLength="1" />
+          <Float name="AdaptiveLightEc" />
+          <Float name="AdaptiveLightEv100Min" />
+          <Float name="AdaptiveLightEv100Max" />
+          <Float name="RadiusFalloutExponent" />
+        </Fields>
+      </Data>
       <String name="Gobo" recordType="NAM0" />
+      <RefDirect name="SoundReference" refName="SoundReference" recordType="LLSH" />
       <FormLink name="Lens" refName="LensFlare" recordType="LNAM" />
-      <ByteArray name="FLBD" recordType="FLBD" unknown="true" />
-      <ByteArray name="FLRD" recordType="FLRD" unknown="true" />
-      <ByteArray name="FLGD" recordType="FLGD" unknown="true" />
-      <ByteArray name="LLLD" recordType="LLLD" unknown="true" />
-      <ByteArray name="FLAD" recordType="FLAD" unknown="true" />
-      <Float name="FVLD" recordType="FVLD" />
+      <RefDirect name="Barndoors" refName="LightBarndoors" nullable="false" />
+      <RefDirect name="Roundness" refName="LightRoundness" recordType="FLRD" nullable="false" />
+      <RefDirect name="GoboData" refName="LightGobo" recordType="FLGD" nullable="false" />
+      <Enum name="Layer" enumName="Light.LightLayer" recordType="LLLD" nullable="false" byteLength="4" />
+      <RefDirect name="AreaLight" refName="AreaLight" recordType="FLAD" nullable="false" />
+      <Float name="VolumetricLightIntensityScale" recordType="FVLD" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
-    <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>d
+  </Object>
+  <Object name="LightBarndoors" objType="Subrecord" recordType="FLBD" >
+    <Fields>
+      <Float name="Left" />
+      <Float name="Bottom" />
+      <Float name="Right" />
+      <Float name="Top" />
+      <Float name="FalloffIntensity" />
+      <Bool name="HasFalloff" byteLength="1" />
+      <Bool name="HasBarndoor" byteLength="1" />
+      <UInt16 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="LightRoundness" objType="Subrecord"  >
+    <Fields>
+      <Float name="Width" />
+      <Float name="Height" />
+      <Float name="Roundness" />
+      <Float name="Falloff" />
+      <Bool name="UsesRoundness" byteLength="4" importantByteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="LightGobo" objType="Subrecord"  >
+    <Fields>
+      <Float name="StaticOffsetU" />
+      <Float name="StaticOffsetV" />
+      <Float name="RotationPivotU" />
+      <Float name="RotationPivotV" />
+      <Float name="StaticRotation" isRotation="true" />
+      <Float name="AnimatedRotationSpeed" />
+      <Float name="AnimatedWaveRotationSpeed" />
+      <Float name="AnimatedWaveRotation" isRotation="true" />
+      <Float name="StaticScaleU" />
+      <Float name="StaticScaleV" />
+      <Float name="WaveScalingSpeedU" />
+      <Float name="WaveScalingSpeedV" />
+      <Float name="WaveScalingAmountU" />
+      <Float name="WaveScalingAmountV" />
+      <Float name="ScrollSpeedU" />
+      <Float name="ScrollSpeedV" />
+      <Float name="WaveScrollSpeedU" />
+      <Float name="WaveScrollSpeedV" />
+      <Float name="WaveScrollAmountU" />
+      <Float name="WaveScrollAmountV" />
+      <Float name="RandomTimeOffsetRange" />
+      <Bool name="IsAnimated" byteLength="4" importantByteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="AreaLight" objType="Subrecord"  >
+    <Fields>
+      <Float name="Width" />
+      <Float name="Height" />
+      <Float name="Radius" />
+      <Enum name="Type" enumName="AreaLight.TypeOption" byteLength="1" />
+      <Bool name="IsDiffuse" byteLength="1" />
+      <UInt16 name="Unused" />
+    </Fields>
   </Object>
 </Loqui>

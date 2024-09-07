@@ -50,18 +50,46 @@ public static class LoadOrderExt
     /// <param name="loadOrder">Listings to convert</param>
     /// <exception cref="MissingModException">Thrown if a listing is missing its mod</exception>
     /// <returns>Mods contained in the listings</returns>
+    [Obsolete("Use ResolveAllModsExist instead")]
     public static IEnumerable<TMod> Resolve<TMod>(this IEnumerable<IModListingGetter<TMod>> loadOrder)
         where TMod : class, IModGetter
     {
-        return loadOrder
-            .Select(l =>
-            {
-                if (l.Mod == null)
-                {
-                    throw new MissingModException(l.ModKey);
-                }
-                return l.Mod;
-            });
+        return ResolveAllModsExist(loadOrder);
+    }
+
+    /// <summary>
+    /// Converts listings to Mods.  Will throw if any mods do not exist
+    /// </summary>
+    /// <param name="loadOrder">Listings to convert</param>
+    /// <exception cref="MissingModException">Thrown if a listing is missing its mod</exception>
+    /// <returns>Mods contained in the listings</returns>
+    public static IEnumerable<TModItem> ResolveAllModsExist<TModItem>(this IEnumerable<IModListingGetter<TModItem>> loadOrder)
+        where TModItem : class, IModKeyed
+    {
+        loadOrder = loadOrder.ToArray();
+        var missingMods = loadOrder.Where(x => x.Mod == null)
+            .ToArray();
+
+        if (missingMods.Length > 0)
+        {
+            throw new MissingModException(missingMods.Select(x => x.ModKey));
+        }
+
+        return loadOrder.Select(x => x.Mod!);
+    }
+
+    /// <summary>
+    /// Converts listings to Mods.  Will throw if any mods do not exist
+    /// </summary>
+    /// <param name="loadOrder">Listings to convert</param>
+    /// <exception cref="MissingModException">Thrown if a listing is missing its mod</exception>
+    /// <returns>Mods contained in the listings</returns>
+    public static LoadOrder<TModItem> ResolveAllModsExist<TModItem>(
+        this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder,
+        bool? disposeItems = null)
+        where TModItem : class, IModKeyed
+    {
+        return new LoadOrder<TModItem>(ResolveAllModsExist<TModItem>(loadOrder.ListedOrder), disposeItems: disposeItems ?? loadOrder.DisposingItems);
     }
 
     /// <summary>
@@ -99,5 +127,26 @@ public static class LoadOrderExt
 
         listing = result;
         return true;
+    }
+
+    public static LoadOrder<TListing> TrimAt<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
+        where TListing : IModKeyed
+    {
+        return new LoadOrder<TListing>(loadOrder.ListedOrder.TrimAt(modKey));
+    }
+
+    public static IEnumerable<TListing> TrimAt<TListing>(this IEnumerable<TListing> loadOrder, ModKey modKey)
+        where TListing : IModKeyed
+    {
+        return loadOrder.TakeWhile(x => x.ModKey != modKey);
+    }
+
+    public static LoadOrder<TRetListing> Transform<TListing, TRetListing>(this ILoadOrderGetter<TListing> loadOrder, Func<TListing, TRetListing> transformer)
+        where TListing : IModKeyed
+        where TRetListing : IModKeyed
+    {
+        return new LoadOrder<TRetListing>(
+            loadOrder.ListedOrder
+                .Select(transformer));
     }
 }

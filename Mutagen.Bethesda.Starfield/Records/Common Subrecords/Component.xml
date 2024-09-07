@@ -547,4 +547,8 @@
       <ByteArray name="MOD2" recordType="MOD2" unknown="true" />
     </Fields>
   </Object>
+  <Object name="VehicleManagementComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
 </Loqui>

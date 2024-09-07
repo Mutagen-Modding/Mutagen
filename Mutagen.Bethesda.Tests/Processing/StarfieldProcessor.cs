@@ -62,6 +62,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
         AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
+        AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -518,6 +519,16 @@ public class StarfieldProcessor : Processor
 
         ZeroXOWNBool(stream, majorFrame, fileOffset);
         ProcessXTV2(majorFrame, fileOffset);
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XLRD, out var xlrd))
+        {
+            ProcessBool(xlrd, fileOffset, 16, 4, 1);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XLGD, out var xlgd))
+        {
+            ProcessBool(xlgd, fileOffset, 0x54, 4, 1);
+        }
     }
 
     private void ProcessRagdollData(MajorRecordFrame majorFrame, long fileOffset)
@@ -1390,6 +1401,26 @@ public class StarfieldProcessor : Processor
                     ProcessFormIDOverflow(data, fileOffset, ref strLoc);
                 }
             }
+        }
+    }
+
+    private void ProcessLights(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.FLGD, out var flgd))
+        {
+            ProcessBool(flgd, fileOffset, 0x54, 4, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.DAT2, out var dat2))
+        {
+            int loc = 4;
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 1);
+            loc += 8;
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 8);
+            loc += 10;
+            ProcessBool(dat2, fileOffset, ref loc, 2, 1);
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 4);
         }
     }
 }
