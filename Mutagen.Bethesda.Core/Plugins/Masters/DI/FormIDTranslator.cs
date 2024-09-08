@@ -26,9 +26,7 @@ internal static class FormIDTranslator
         {
             throw new UnmappableFormIDException(
                 key,
-                masters.Raw.Masters
-                    .Select(x => x.Master)
-                    .ToArray());
+                masters);
         }
 
         return FormID.Factory(style, index, key.FormKey.ID);
