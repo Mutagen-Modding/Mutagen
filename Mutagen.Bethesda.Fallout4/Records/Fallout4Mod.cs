@@ -188,6 +188,8 @@ internal partial class Fallout4ModBinaryOverlay
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => true;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 

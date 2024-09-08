@@ -91,6 +91,8 @@ public abstract class AMod : IMod
     uint IModGetter.GetRecordCount()=> throw new NotImplementedException();
     #endregion
 
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+
     /// <inheritdoc />
     public FormKey GetNextFormKey()
     {

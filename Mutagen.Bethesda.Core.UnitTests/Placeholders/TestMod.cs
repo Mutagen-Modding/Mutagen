@@ -48,6 +48,8 @@ public class TestMod : ITestMod, IDisposable
     public bool IsMediumMaster { get; set; }
     public bool ListsOverriddenForms { get; }
 
+    public MasterStyle MasterStyle { get; }
+
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
         throw new NotImplementedException();
