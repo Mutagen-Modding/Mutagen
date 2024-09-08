@@ -51,7 +51,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        ILoadOrderGetter<IModMasterStyled>? loadOrder)
     {
         var constants = GameConstants.Get(release);
         if (constants.SeparateMasterLoadOrders)
@@ -151,25 +151,27 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        ILoadOrderGetter<IModMasterStyled>? loadOrder)
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
         var small = new List<ModKey>();
 
-        void AddToList(IModFlagsGetter mod, ModKey modKey)
+        void AddToList(IModMasterStyled mod, ModKey modKey)
         {
-            if (mod.IsMediumMaster)
+            switch (mod.MasterStyle)
             {
-                AddToListViaStyle(MasterStyle.Medium, modKey);
-            }
-            else if (mod.IsSmallMaster)
-            {
-                AddToListViaStyle(MasterStyle.Small, modKey);
-            }
-            else
-            {
-                AddToListViaStyle(MasterStyle.Full, modKey);
+                case MasterStyle.Full:
+                    AddToListViaStyle(MasterStyle.Full, modKey);
+                    break;
+                case MasterStyle.Small:
+                    AddToListViaStyle(MasterStyle.Small, modKey);
+                    break;
+                case MasterStyle.Medium:
+                    AddToListViaStyle(MasterStyle.Medium, modKey);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -199,12 +201,6 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 {
                     throw new MissingModException(master.Master,
                         "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
-                }
-
-                if (mod.IsSmallMaster && mod.IsMediumMaster)
-                {
-                    throw new ModHeaderMalformedException(mod.ModKey,
-                        "Mod had both Light and Medium master flags enabled");
                 }
 
                 AddToList(mod, master.Master);
