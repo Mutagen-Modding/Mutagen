@@ -155,7 +155,7 @@ internal sealed class ModHeaderWriteLogic
         MutagenWriter writer,
         IModGetter mod,
         IModHeaderCommon modHeader,
-        ILoadOrderGetter<IModMasterFlagsGetter>? loadOrder)
+        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
