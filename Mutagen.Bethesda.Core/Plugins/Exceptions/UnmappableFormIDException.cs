@@ -38,9 +38,9 @@ public class UnmappableFormIDException : Exception
             {
                 PrintMastersList(sb, separated.Medium, nameof(SeparatedMasterPackage.Medium));
             }
-            if (separated.Light.Count > 0)
+            if (separated.Small.Count > 0)
             {
-                PrintMastersList(sb, separated.Light, nameof(SeparatedMasterPackage.Light));
+                PrintMastersList(sb, separated.Small, nameof(SeparatedMasterPackage.Small));
             }
         }
 

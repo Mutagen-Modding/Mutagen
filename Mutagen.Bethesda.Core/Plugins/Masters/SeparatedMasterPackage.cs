@@ -21,8 +21,8 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     internal record MasterStyleIndex(uint Index, MasterStyle Style);
 
     public IReadOnlyList<ModKey> Full { get; private set; } = null!;
-    public IReadOnlyList<ModKey> Light { get; private set; } = null!;
     public IReadOnlyList<ModKey> Medium { get; private set; } = null!;
+    public IReadOnlyList<ModKey> Small { get; private set; } = null!;
     public ModKey CurrentMod { get; private set; }
     public IReadOnlyMasterReferenceCollection Raw { get; private set; } = null!;
 
@@ -155,7 +155,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
-        var light = new List<ModKey>();
+        var small = new List<ModKey>();
 
         void AddToList(IModMasterFlagsGetter mod, ModKey modKey)
         {
@@ -181,7 +181,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                     normal.Add(modKey);
                     break;
                 case MasterStyle.Small:
-                    light.Add(modKey);
+                    small.Add(modKey);
                     break;
                 case MasterStyle.Medium:
                     medium.Add(modKey);
@@ -231,13 +231,13 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         {
             Full = normal,
             Medium = medium,
-            Light = light,
+            Small = small,
             Raw = masters,
             CurrentMod = masters.CurrentMod,
         };
         var lookup = new Dictionary<ModKey, MasterStyleIndex>();
         FillLookup(ret.Full, lookup, MasterStyle.Full);
-        FillLookup(ret.Light, lookup, MasterStyle.Small);
+        FillLookup(ret.Small, lookup, MasterStyle.Small);
         FillLookup(ret.Medium, lookup, MasterStyle.Medium);
         ret._lookup = lookup;
         return ret;
@@ -297,7 +297,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 index = formId.LightMasterIndex;
                 id = formId.LightId;
                 style = MasterStyle.Small;
-                loadOrder = Light;
+                loadOrder = Small;
                 break;
             }
             case FormID.MediumMasterMarker:
