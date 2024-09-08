@@ -285,6 +285,94 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<ModKey>? loadOrder)
+    {
+        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<ModKey>());
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params ModKey[] loadOrder)
+    {
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = (param) =>
+            {
+                if (loadOrder.Length == 0)
+                {
+                    return Array.Empty<IModFlagsGetter>();
+                }
+                
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return Array.Empty<IModFlagsGetter>();
+                }
+                
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder.Value, loadOrder,
+                    param.GameRelease, param.Params.FileSystem);
+                return lo.ListedOrder.ResolveExistingMods();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<IModFlagsGetter>? loadOrder)
+    {
+        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<IModFlagsGetter>());
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params IModFlagsGetter[] loadOrder)
+    {
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = (param) =>
+            {
+                if (loadOrder.Length == 0)
+                {
+                    return Array.Empty<IModFlagsGetter>();
+                }
+                
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return Array.Empty<IModFlagsGetter>();
+                }
+                
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder.Value, loadOrder.Select(x => x.ModKey),
+                    param.GameRelease, param.Params.FileSystem);
+                return lo.ListedOrder.ResolveExistingMods();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
     public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModFlagsGetter>? loadOrder)
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(
