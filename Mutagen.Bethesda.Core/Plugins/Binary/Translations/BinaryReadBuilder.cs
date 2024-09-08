@@ -29,7 +29,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal TGroupMask? GroupMask { get; init; }
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
-    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, BinaryReadParameters>? _loadOrderSetter { get; init; }
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IEnumerable<IModMasterStyled>>? _loadOrderSetter { get; init; }
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
 }
 
@@ -273,12 +273,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                     dataFolder, 
                     param.GameRelease, 
                     param.Params.FileSystem);   
-                return param.Params with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                };
+                return lo.ListedOrder.ResolveExistingMods();
             }
         });
     }
@@ -326,7 +321,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var dataFolder = param._dataFolderGetter?.Invoke(param);
                 if (dataFolder == null)
                 {
-                    return param.Params;
+                    return Array.Empty<IModFlagsGetter>();
                 }
                 
                 ModHeaderFrame modHeader;
@@ -359,12 +354,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var lo = LoadOrder.Import<TModGetter>(
                     dataFolder.Value, masters.Masters.Select(x => x.Master),
                     param.GameRelease, param.Params.FileSystem);
-                return param.Params with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                };
+                return lo.ListedOrder.ResolveExistingMods();
             }
         });
     }
@@ -434,13 +424,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     /// <returns>A readonly mod object with minimal initial parsing done</returns>
     public TModGetter Construct()
     {
-        if (_param._loadOrderSetter != null)
-        {
-            _param = _param with
-            {
-                Params = _param._loadOrderSetter(_param)
-            };
-        }
+        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
         return _param._instantiator.Readonly(this);
     }
 
@@ -1061,13 +1045,37 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     /// <returns>A mutable mod object with all the data loaded</returns>
     public new TMod Construct()
     {
-        if (_param._loadOrderSetter != null)
-        {
-            _param = _param with
-            {
-                Params = _param._loadOrderSetter(_param)
-            };
-        }
+        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
         return _param._instantiator.Mutable(this);
+    }
+}
+
+internal static class BinaryReadBuilderHelper
+{
+    public static BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> RunLoadOrderSetter<TMod, TModGetter, TGroupMask>(
+        BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> p)
+        where TMod : IMod
+        where TModGetter : IModDisposeGetter
+    {
+        IReadOnlyCollection<IModMasterStyled> loadOrder = Array.Empty<IModMasterStyled>(); 
+        
+        if (p._loadOrderSetter != null)
+        {
+            loadOrder = p._loadOrderSetter(p).ToArray();
+        }
+
+        if (loadOrder.Count == 0)
+        {
+            return p;
+        }
+
+        return p with
+        {
+            Params = p.Params with
+            {
+                LoadOrder = new LoadOrder<IModMasterStyled>(
+                    loadOrder.Distinct(x => x.ModKey))
+            }
+        };
     }
 }
