@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Plugins.Records;
 
-public interface IModFlagsGetter : IModMasterStyled
+public interface IModFlagsGetter : IModMasterStyledGetter
 {
     /// <summary>
     /// Whether a mod supports localization features
@@ -43,7 +43,7 @@ public interface IModFlagsGetter : IModMasterStyled
     bool ListsOverriddenForms { get; }
 }
 
-public interface IModMasterStyled : IModKeyed
+public interface IModMasterStyledGetter : IModKeyed
 {
     MasterStyle MasterStyle { get; }
 }

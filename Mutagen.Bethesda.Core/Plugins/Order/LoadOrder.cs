@@ -922,7 +922,9 @@ public interface ILoadOrderGetter : IDisposable
     bool ContainsKey(ModKey key);
 }
 
-public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>,
+public interface ILoadOrderGetter<out TListing> : 
+    ILoadOrderGetter,
+    IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>, 
     IReadOnlyCache<TListing, ModKey>
     where TListing : IModKeyed
 {

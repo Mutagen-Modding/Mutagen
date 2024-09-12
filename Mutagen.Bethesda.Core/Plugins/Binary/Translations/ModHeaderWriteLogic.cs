@@ -155,7 +155,7 @@ internal sealed class ModHeaderWriteLogic
         MutagenWriter writer,
         IModGetter mod,
         IModHeaderCommon modHeader,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        IReadOnlyCache<IModFlagsGetter, ModKey>? masterFlagLookup)
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
@@ -164,7 +164,7 @@ internal sealed class ModHeaderWriteLogic
             mod.ModKey,
             mod.GetMasterStyle(),
             writer.MetaData.MasterReferences,
-            loadOrder);
+            masterFlagLookup);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {

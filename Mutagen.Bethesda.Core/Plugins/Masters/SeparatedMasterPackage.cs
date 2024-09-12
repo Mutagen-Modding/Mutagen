@@ -51,12 +51,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModMasterStyled>? loadOrder)
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
         var constants = GameConstants.Get(release);
         if (constants.SeparateMasterLoadOrders)
         {
-            return SeparatedMasterPackage.Separate(currentModKey, style, masters, loadOrder);
+            return SeparatedMasterPackage.Separate(currentModKey, style, masters, masterFlagLookup);
         }
         else
         {
@@ -67,12 +67,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
     public static IReadOnlySeparatedMasterPackage Factory(
         GameRelease release,
         ModPath modPath,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup,
         IFileSystem? fileSystem = null)
     {
         var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: fileSystem);
         var masters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
-        return Factory(release, modPath.ModKey, header.MasterStyle, masters, loadOrder);
+        return Factory(release, modPath.ModKey, header.MasterStyle, masters, masterFlagLookup);
     }
 
     internal class NotSeparatedMasterPackage : IReadOnlySeparatedMasterPackage
@@ -151,13 +151,13 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         ModKey currentModKey,
         MasterStyle style,
         IReadOnlyMasterReferenceCollection masters,
-        ILoadOrderGetter<IModMasterStyled>? loadOrder)
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
         var normal = new List<ModKey>();
         var medium = new List<ModKey>();
         var small = new List<ModKey>();
 
-        void AddToList(IModMasterStyled mod, ModKey modKey)
+        void AddToList(IModMasterStyledGetter mod, ModKey modKey)
         {
             switch (mod.MasterStyle)
             {
@@ -195,12 +195,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
         foreach (var master in masters.Masters)
         {
-            if (loadOrder != null)
+            if (masterFlagLookup != null)
             {
-                if (!loadOrder.TryGetValue(master.Master, out var mod))
+                if (!masterFlagLookup.TryGetValue(master.Master, out var mod))
                 {
                     throw new MissingModException(master.Master,
-                        "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
+                        "Mod was missing from master flag lookup when constructing the separate mod lists needed for FormID translation.");
                 }
 
                 AddToList(mod, master.Master);

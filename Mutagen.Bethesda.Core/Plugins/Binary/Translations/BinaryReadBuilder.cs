@@ -29,7 +29,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal TGroupMask? GroupMask { get; init; }
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
-    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IEnumerable<IModMasterStyled>>? _loadOrderSetter { get; init; }
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IEnumerable<IModMasterStyledGetter>>? _loadOrderSetter { get; init; }
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
 }
 
@@ -1145,7 +1145,7 @@ internal static class BinaryReadBuilderHelper
         where TMod : IMod
         where TModGetter : IModDisposeGetter
     {
-        IReadOnlyCollection<IModMasterStyled> loadOrder = Array.Empty<IModMasterStyled>(); 
+        IReadOnlyCollection<IModMasterStyledGetter> loadOrder = Array.Empty<IModMasterStyledGetter>(); 
         
         if (p._loadOrderSetter != null)
         {
@@ -1161,7 +1161,7 @@ internal static class BinaryReadBuilderHelper
         {
             Params = p.Params with
             {
-                MasterFlagsLookup = new LoadOrder<IModMasterStyled>(
+                MasterFlagsLookup = new LoadOrder<IModMasterStyledGetter>(
                     loadOrder.Distinct(x => x.ModKey))
             }
         };

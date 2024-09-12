@@ -29,7 +29,7 @@ public static class ModRecordAligner
         interest.InterestingTypes.Add("QUST");
         interest.InterestingTypes.Add("REFR");
         
-        var masters = SeparatedMasterPackage.Factory(gameMode, inputPath, loadOrder: null, fileSystem: null);
+        var masters = SeparatedMasterPackage.Factory(gameMode, inputPath, masterFlagLookup: null, fileSystem: null);
         var meta = new ParsingMeta(gameMode, inputPath.ModKey, masters);
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
