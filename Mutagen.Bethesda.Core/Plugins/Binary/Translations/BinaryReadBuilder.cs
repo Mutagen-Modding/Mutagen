@@ -380,7 +380,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
             {
                 Params = _param.Params with
                 {
-                    LoadOrder = loadOrder
+                    MasterFlagsLookup = loadOrder
                 }
             });
     }
@@ -1161,7 +1161,7 @@ internal static class BinaryReadBuilderHelper
         {
             Params = p.Params with
             {
-                LoadOrder = new LoadOrder<IModMasterStyled>(
+                MasterFlagsLookup = new LoadOrder<IModMasterStyled>(
                     loadOrder.Distinct(x => x.ModKey))
             }
         };

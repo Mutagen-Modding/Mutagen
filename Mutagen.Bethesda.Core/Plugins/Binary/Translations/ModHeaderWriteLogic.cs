@@ -59,7 +59,7 @@ internal sealed class ModHeaderWriteLogic
         modHeaderWriter.RunProcessors(mod);
         modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader, 
             modHeaderWriter._constants.SeparateMasterLoadOrders
-                ? param.LoadOrder 
+                ? param.MasterFlagsLookup 
                 : null);
         modHeader.WriteToBinary(writer);
     }

@@ -128,11 +128,11 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<IModGetter> Mod, bool Enabled)[loList.Count];
         param ??= BinaryReadParameters.Default;
-        if (param.LoadOrder == null)
+        if (param.MasterFlagsLookup == null)
         {
             param = param with
             {
-                LoadOrder = new LoadOrder<IModFlagsGetter>(loList
+                MasterFlagsLookup = new LoadOrder<IModFlagsGetter>(loList
                     .Select(listing =>
                     {
                         var modPath = new ModPath(listing.ModKey,

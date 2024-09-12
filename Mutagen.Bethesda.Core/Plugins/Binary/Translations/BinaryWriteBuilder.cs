@@ -145,7 +145,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 return p._param with
                 {
-                    LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
+                    MasterFlagsLookup = loadOrder.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -172,7 +172,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 return p._param with
                 {
-                    LoadOrder = loadOrder,
+                    MasterFlagsLookup = loadOrder,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -206,7 +206,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 return p._param with
                 {
-                    LoadOrder = modFlagsLo,
+                    MasterFlagsLookup = modFlagsLo,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
@@ -252,7 +252,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         m.GameRelease, p._param.FileSystem);
                     return p._param with
                     {
-                        LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
+                        MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
@@ -306,7 +306,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     } 
                     return p._param with
                     {
-                        LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
+                        MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
@@ -364,7 +364,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 }
                 return p._param with
                 {
-                    LoadOrder = loadOrder.ResolveAllModsExist(disposeItems: false),
+                    MasterFlagsLookup = loadOrder.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -390,7 +390,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 }
                 return p._param with
                 {
-                    LoadOrder = loadOrder,
+                    MasterFlagsLookup = loadOrder,
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
@@ -418,7 +418,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 }
                 return p._param with
                 {
-                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
+                    MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
                 };
             }
@@ -447,7 +447,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 } 
                 return p._param with
                 {
-                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
+                    MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
@@ -482,7 +482,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 }
                 return p._param with
                 {
-                    LoadOrder = lo.ResolveAllModsExist(disposeItems: false),
+                    MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };

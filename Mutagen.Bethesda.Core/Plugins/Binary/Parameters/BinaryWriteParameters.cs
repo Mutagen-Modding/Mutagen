@@ -99,9 +99,9 @@ public sealed record BinaryWriteParameters
     public ALowerRangeDisallowedHandlerOption LowerRangeDisallowedHandler { get; init; } = new AddPlaceholderMasterIfLowerRangeDisallowed();
 
     /// <summary>
-    /// Load order.  Required for games with Separated Load Order lists per master type
+    /// Required for games with Separated Load Order lists per master type
     /// </summary>
-    public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
+    public ILoadOrderGetter<IModFlagsGetter>? MasterFlagsLookup { get; init; }
 
     /// <summary>
     /// Whether to use multithreading when possible
