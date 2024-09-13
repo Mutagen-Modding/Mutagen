@@ -174,6 +174,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
                     }
+
+                    if (list.SubTypeGeneration is StringType)
+                    {
+                        args.Add("writeNullSuffix: true");
+                    }
                     break;
                 case ListBinaryType.CounterRecord:
                     var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
@@ -356,8 +361,13 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
 
         WrapSet(sb, itemAccessor, list, (wrapFg) =>
         {
+            var parseSuffix = recordPerItem ? "PerItem" : null;
+            if (list.SubTypeGeneration is StringType)
+            {
+                parseSuffix = "TrimNullEnding";
+            }
             using (var args = wrapFg.Call(
-                       $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
+                       $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{parseSuffix}",
                        suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}",
                        semiColon: false))
             {
@@ -1036,6 +1046,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         else
                         {
                             throw new NotImplementedException();
+                        }
+
+                        if (list.SubTypeGeneration is StringType)
+                        {
+                            args.Add("trimNullSuffix: true");
                         }
                     }
                 }

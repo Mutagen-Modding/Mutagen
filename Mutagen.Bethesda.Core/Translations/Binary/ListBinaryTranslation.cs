@@ -36,6 +36,25 @@ public class ListBinaryTranslation<TWriter, TReader, TItem>
         return ret;
     }
 
+    public ExtendedList<TItem> ParseTrimNullEnding(
+        TReader reader,
+        BinarySubParseDelegate<TReader, TItem> transl)
+    {
+        var ret = new ExtendedList<TItem>();
+        while (reader.Remaining > 1 || reader.GetUInt8() != 0)
+        {
+            if (transl(reader, out var subItem))
+            {
+                ret.Add(subItem);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return ret;
+    }
+
     public ExtendedList<TItem> Parse(
         TReader reader,
         BinarySubParseDelegate<IBinaryReadStream, TItem> transl)

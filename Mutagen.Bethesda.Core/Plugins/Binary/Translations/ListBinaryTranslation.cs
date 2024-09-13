@@ -862,7 +862,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         MutagenWriter writer, 
         IReadOnlyList<T>? items, 
         RecordType recordType, 
-        BinarySubWriteDelegate<MutagenWriter, T> transl) 
+        BinarySubWriteDelegate<MutagenWriter, T> transl,
+        bool writeNullSuffix = false) 
     { 
         if (items == null) return; 
         try 
@@ -874,7 +875,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                     foreach (var item in items) 
                     { 
                         transl(writer, item); 
-                    } 
+                    }
+
+                    if (writeNullSuffix)
+                    {
+                        writer.WriteZeros(1);
+                    }
                 } 
             } 
             catch (OverflowException overflow) 
