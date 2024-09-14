@@ -6,8 +6,9 @@ using static Mutagen.Bethesda.Plugins.Binary.Translations.PluginUtilityTranslati
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation; 
 using Mutagen.Bethesda.Translations.Binary; 
 using Mutagen.Bethesda.Plugins.Exceptions; 
-using Mutagen.Bethesda.Plugins.Internals; 
- 
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+
 namespace Mutagen.Bethesda.Plugins.Binary.Translations; 
  
 internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T> 
@@ -1421,24 +1422,42 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             using (HeaderExport.Subrecord(writer, endMarker.Value)) { } 
         } 
     } 
- 
-    #region Cache Helpers 
-    public void Parse<K>( 
-        MutagenFrame reader, 
-        ICache<T, K> item, 
-        RecordType triggeringRecord, 
-        BinarySubParseDelegate<MutagenFrame, T> transl) 
-    { 
+}
+
+internal static class ListBinaryTranslationExt
+{
+    #region Cache Helpers
+
+    public static void Parse<T, K>(
+        this ListBinaryTranslation<T> translation,
+        MutagenFrame reader,
+        ICache<T, K> item,
+        RecordType triggeringRecord,
+        BinarySubParseDelegate<MutagenFrame, T> transl)
+        where T : IMajorRecordGetter
+    {
         // Should normally be SetTo, but since we want duplicate groups to merge, we're doing an Add. 
         // A clear is assumed to be run by the caller ahead of time before starting to fill. 
-        item.Set( 
-            Parse( 
-                reader, 
-                triggeringRecord, 
-                transl: transl)); 
+        foreach (var entry in translation.Parse(
+                     reader,
+                     triggeringRecord,
+                     transl: transl))
+        {
+            try
+            {
+                item.Add(entry);
+            }
+            catch (ArgumentException)
+            {
+                throw new RecordCollisionException(
+                    reader.MetaData.ModKey,
+                    entry.FormKey, 
+                    typeof(T));
+            }
+        }
     } 
     #endregion 
-} 
+}
  
 internal sealed class PluginListAsyncBinaryTranslation<T> 
 { 
