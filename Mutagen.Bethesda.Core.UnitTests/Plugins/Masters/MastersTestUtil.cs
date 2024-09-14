@@ -13,6 +13,7 @@ internal static class MastersTestUtil
         modGetter.ModKey.Returns(modKey);
         modGetter.CanBeSmallMaster.Returns(true);
         modGetter.CanBeMediumMaster.Returns(true);
+        modGetter.MasterStyle.Returns(style);
         switch (style)
         {
             case MasterStyle.Full:

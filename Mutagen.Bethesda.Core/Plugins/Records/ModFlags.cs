@@ -1,6 +1,6 @@
-﻿namespace Mutagen.Bethesda.Plugins.Records;
+namespace Mutagen.Bethesda.Plugins.Records;
 
-public interface IModFlagsGetter : IModMasterFlagsGetter, IModKeyed
+public interface IModFlagsGetter : IModMasterStyledGetter
 {
     /// <summary>
     /// Whether a mod supports localization features
@@ -12,14 +12,6 @@ public interface IModFlagsGetter : IModMasterFlagsGetter, IModKeyed
     /// </summary>
     bool UsingLocalization { get; }
     
-    /// <summary>
-    /// Whether a mod lists overridden forms in its header
-    /// </summary>
-    bool ListsOverriddenForms { get; }
-}
-
-public interface IModMasterFlagsGetter : IModKeyed
-{
     /// <summary>
     /// Whether a mod supports Small Master features
     /// </summary>
@@ -44,6 +36,16 @@ public interface IModMasterFlagsGetter : IModKeyed
     /// Whether a mod has Master flag enabled
     /// </summary>
     bool IsMaster { get; }
+    
+    /// <summary>
+    /// Whether a mod lists overridden forms in its header
+    /// </summary>
+    bool ListsOverriddenForms { get; }
+}
+
+public interface IModMasterStyledGetter : IModKeyed
+{
+    MasterStyle MasterStyle { get; }
 }
 
 public record ModFlags : IModFlagsGetter
@@ -75,4 +77,6 @@ public record ModFlags : IModFlagsGetter
         IsMaster = flags.IsMaster;
         ListsOverriddenForms = flags.ListsOverriddenForms;
     }
+
+    public MasterStyle MasterStyle => this.GetMasterStyle();
 }

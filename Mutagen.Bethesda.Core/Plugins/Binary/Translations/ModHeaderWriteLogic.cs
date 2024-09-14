@@ -59,7 +59,7 @@ internal sealed class ModHeaderWriteLogic
         modHeaderWriter.RunProcessors(mod);
         modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader, 
             modHeaderWriter._constants.SeparateMasterLoadOrders
-                ? param.LoadOrder 
+                ? param.MasterFlagsLookup 
                 : null);
         modHeader.WriteToBinary(writer);
     }
@@ -155,7 +155,7 @@ internal sealed class ModHeaderWriteLogic
         MutagenWriter writer,
         IModGetter mod,
         IModHeaderCommon modHeader,
-        ILoadOrderGetter<IModMasterFlagsGetter>? loadOrder)
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
@@ -164,7 +164,7 @@ internal sealed class ModHeaderWriteLogic
             mod.ModKey,
             mod.GetMasterStyle(),
             writer.MetaData.MasterReferences,
-            loadOrder);
+            masterFlagLookup);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {

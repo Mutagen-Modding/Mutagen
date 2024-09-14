@@ -395,7 +395,7 @@ public static class LoadOrder
         IEnumerable<ModKey> loadOrder,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         return new LoadOrderImporter<TMod>(
@@ -419,7 +419,7 @@ public static class LoadOrder
         IEnumerable<ILoadOrderListingGetter> loadOrder,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         return new LoadOrderImporter<TMod>(
@@ -501,7 +501,7 @@ public static class LoadOrder
         GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
@@ -530,7 +530,7 @@ public static class LoadOrder
         GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
@@ -626,7 +626,7 @@ public static class LoadOrder
         GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
@@ -769,7 +769,7 @@ public static class LoadOrder
         GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
-        where TMod : class, IModGetter
+        where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
@@ -922,7 +922,9 @@ public interface ILoadOrderGetter : IDisposable
     bool ContainsKey(ModKey key);
 }
 
-public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>,
+public interface ILoadOrderGetter<out TListing> : 
+    ILoadOrderGetter,
+    IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>, 
     IReadOnlyCache<TListing, ModKey>
     where TListing : IModKeyed
 {

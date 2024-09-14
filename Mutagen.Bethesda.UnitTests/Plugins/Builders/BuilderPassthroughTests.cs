@@ -113,7 +113,7 @@ public class BuilderPassthroughTests
     }
 
     [Theory, MutagenAutoData]
-    public async Task Separated(
+    public async Task SeparatedCollision(
         Payload payload)
     {
         var normalMaster = new StarfieldMod(payload.NormalMasterKey, StarfieldRelease.Starfield)
@@ -158,16 +158,13 @@ public class BuilderPassthroughTests
         var modPath = await payload.WriteMod(
             originating,
             useDataFolder: false);
-        using var mod = StarfieldMod.Create(StarfieldRelease.Starfield)
-            .FromPath(modPath)
-            .WithLoadOrderFromHeaderMasters()
-            .WithNoDataFolder()
-            .WithFileSystem(payload.FileSystem)
-            .Construct();
-
-        Assert.Throws<RecordCollisionException>(() =>
+        Assert.Throws<MissingModMappingException>(() =>
         {
-            mod.Npcs.Should().HaveCount(4);
+            using var mod = StarfieldMod.Create(StarfieldRelease.Starfield)
+                .FromPath(modPath)
+                .WithNoLoadOrder()
+                .WithFileSystem(payload.FileSystem)
+                .Construct();
         });
     }
 

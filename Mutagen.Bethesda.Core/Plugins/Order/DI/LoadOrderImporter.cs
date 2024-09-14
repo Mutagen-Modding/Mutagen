@@ -20,7 +20,7 @@ public interface ILoadOrderImporter
 }
     
 public interface ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <summary>
     /// Returns a load order filled with mods constructed
@@ -29,7 +29,7 @@ public interface ILoadOrderImporter<TMod>
 }
 
 public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     private readonly IFileSystem _fileSystem;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
@@ -128,11 +128,11 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<IModGetter> Mod, bool Enabled)[loList.Count];
         param ??= BinaryReadParameters.Default;
-        if (param.LoadOrder == null)
+        if (param.MasterFlagsLookup == null)
         {
             param = param with
             {
-                LoadOrder = new LoadOrder<IModFlagsGetter>(loList
+                MasterFlagsLookup = new LoadOrder<IModFlagsGetter>(loList
                     .Select(listing =>
                     {
                         var modPath = new ModPath(listing.ModKey,

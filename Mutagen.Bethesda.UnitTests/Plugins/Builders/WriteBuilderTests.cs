@@ -24,140 +24,75 @@ public class WriteBuilderTests
         var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
-        mod.BeginWrite
-            .WithLoadOrderFromHeaderMasters()
-            .WithNoDataFolder()
-            .ToPath(modPath)
-            .WithFileSystem(fileSystem)
-            .Write();
-
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod);
+        Assert.Throws<MissingModMappingException>(() =>
+        {
+            mod.BeginWrite
+                .WithLoadOrderFromHeaderMasters()
+                .WithNoDataFolder()
+                .ToPath(modPath)
+                .WithFileSystem(fileSystem)
+                .Write();
+        });
     }
     
     [Theory, MutagenAutoData]
     public void ExtraIncludedMasters(
         IFileSystem fileSystem,
-        ModKey masterMod,
+        ModKey masterModKey,
         ModKey modKey,
-        ModKey extraMaster,
+        ModKey extraMasterKey,
         DirectoryPath existingDir)
     {
-        var master = new StarfieldMod(masterMod, StarfieldRelease.Starfield);
+        var extraMaster = new StarfieldMod(extraMasterKey, StarfieldRelease.Starfield);
+        var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
         var masterWeapon = master.Weapons.AddNew();
         var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(masterMod, extraMaster)
-            .WithNoDataFolder()
+            .WithLoadOrder(master, extraMaster)
             .ToPath(modPath)
             .WithFileSystem(fileSystem)
-            .WithExtraIncludedMasters(extraMaster)
+            .WithExtraIncludedMasters(extraMasterKey)
             .Write();
 
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        using var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithLoadOrder(master, extraMaster)
+            .WithFileSystem(fileSystem)
+            .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod, extraMaster);
+            .Equal(masterModKey, extraMasterKey);
     }
     
     [Theory, MutagenAutoData]
     public void OverrideMasters(
         IFileSystem fileSystem,
-        ModKey masterMod,
+        ModKey masterModKey,
         ModKey modKey,
-        ModKey overrideMaster,
+        ModKey overrideMasterKey,
         DirectoryPath existingDir)
     {
-        var master = new StarfieldMod(masterMod, StarfieldRelease.Starfield);
+        var overrideMod = new StarfieldMod(overrideMasterKey, StarfieldRelease.Starfield);
+        var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
         var masterWeapon = master.Weapons.AddNew();
         var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(masterMod, overrideMaster)
-            .WithNoDataFolder()
+            .WithLoadOrder(master, overrideMod)
             .ToPath(modPath)
             .WithFileSystem(fileSystem)
-            .WithExplicitOverridingMasterList(overrideMaster, masterMod)
+            .WithExplicitOverridingMasterList(overrideMasterKey, masterModKey)
             .Write();
 
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod, overrideMaster);
-    }
-    
-    [Theory, MutagenAutoData]
-    public void WithLoadOrderTrimsSelfMod(
-        IFileSystem fileSystem,
-        ModKey otherModKey,
-        ModKey modKey,
-        ModKey afterModKey,
-        DirectoryPath existingDataDir)
-    {
-        var master = new StarfieldMod(otherModKey, StarfieldRelease.Starfield);
-        var weapon = master.Weapons.AddNew();
-        var masterModPath = Path.Combine(existingDataDir, master.ModKey.FileName);
-        master.BeginWrite
-            .WithLoadOrder(otherModKey, modKey, afterModKey)
-            .WithDataFolder(existingDataDir)
-            .ToPath(masterModPath)
+        using var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithLoadOrder(master, overrideMod)
             .WithFileSystem(fileSystem)
-            .Write();
-        
-        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
-        mod.Weapons.GetOrAddAsOverride(weapon);
-        
-        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
-        mod.BeginWrite
-            .WithLoadOrder(otherModKey, modKey, afterModKey)
-            .WithDataFolder(existingDataDir)
-            .ToPath(modPath)
-            .WithFileSystem(fileSystem)
-            .Write();
-
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+            .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(otherModKey);
-    }
-    
-    [Theory, MutagenAutoData]
-    public void WithLoadOrderNoTrim(
-        IFileSystem fileSystem,
-        ModKey otherModKey,
-        ModKey modKey,
-        ModKey afterModKey,
-        DirectoryPath existingDataDir)
-    {
-        var master = new StarfieldMod(otherModKey, StarfieldRelease.Starfield);
-        var masterModPath = Path.Combine(existingDataDir, master.ModKey.FileName);
-        Assert.Throws<MissingModException>(() =>
-        {
-            master.BeginWrite
-                .WithLoadOrder(otherModKey, modKey, afterModKey)
-                .WithDataFolder(existingDataDir)
-                .ToPath(masterModPath)
-                .WithFileSystem(fileSystem)
-                .DoNotTrimLoadOrderAtSelf()
-                .Write();
-        });
+            .Equal(masterModKey, overrideMasterKey);
     }
     
     [Theory, MutagenAutoData]
@@ -201,11 +136,11 @@ public class WriteBuilderTests
             .WithAllParentMasters()
             .Write();
 
-        using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield,
-            new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
+        using var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithKnownMasters(transientMasterMod, master)
+            .WithFileSystem(fileSystem)
+            .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should()
             .Equal(transientMasterModKey, masterModKey);
     }

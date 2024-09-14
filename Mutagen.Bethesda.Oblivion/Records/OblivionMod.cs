@@ -177,6 +177,8 @@ internal partial class OblivionModBinaryOverlay
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => false;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 
     public IBinaryModdedWriteBuilderLoadOrderChoice 

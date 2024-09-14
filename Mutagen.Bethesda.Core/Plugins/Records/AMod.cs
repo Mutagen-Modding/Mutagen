@@ -50,13 +50,13 @@ public abstract class AMod : IMod
     public abstract bool UsingLocalization { get; set; }
     bool IModFlagsGetter.UsingLocalization => throw new NotImplementedException();
     public abstract bool IsMaster { get; set; }
-    bool IModMasterFlagsGetter.IsMaster => throw new NotImplementedException();
+    bool IModFlagsGetter.IsMaster => throw new NotImplementedException();
     public abstract bool CanBeSmallMaster { get; }
     public abstract bool IsSmallMaster { get; set; }
-    bool IModMasterFlagsGetter.IsSmallMaster => throw new NotImplementedException();
+    bool IModFlagsGetter.IsSmallMaster => throw new NotImplementedException();
     public abstract bool CanBeMediumMaster { get; }
     public abstract bool IsMediumMaster { get; set; }
-    bool IModMasterFlagsGetter.IsMediumMaster => throw new NotImplementedException();
+    bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();
     public abstract bool ListsOverriddenForms { get; }
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
@@ -90,6 +90,8 @@ public abstract class AMod : IMod
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts() => throw new NotImplementedException();
     uint IModGetter.GetRecordCount()=> throw new NotImplementedException();
     #endregion
+
+    public MasterStyle MasterStyle => this.GetMasterStyle();
 
     /// <inheritdoc />
     public FormKey GetNextFormKey()

@@ -195,6 +195,8 @@ internal partial class StarfieldModBinaryOverlay
     public bool CanBeMediumMaster => true;
     public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Medium);
     public bool ListsOverriddenForms => true;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
