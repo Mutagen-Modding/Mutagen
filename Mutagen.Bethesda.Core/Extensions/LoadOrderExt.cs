@@ -87,15 +87,6 @@ public static class LoadOrderExt
     public static IEnumerable<TModItem> ResolveExistingMods<TModItem>(this IEnumerable<IModListingGetter<TModItem>> loadOrder)
         where TModItem : class, IModKeyed
     {
-        loadOrder = loadOrder.ToArray();
-        var missingMods = loadOrder.Where(x => x.Mod == null)
-            .ToArray();
-
-        if (missingMods.Length > 0)
-        {
-            throw new MissingModException(missingMods.Select(x => x.ModKey));
-        }
-
         return loadOrder
             .Select(x => x.Mod)
             .NotNull();
@@ -113,6 +104,19 @@ public static class LoadOrderExt
         where TModItem : class, IModKeyed
     {
         return new LoadOrder<TModItem>(ResolveAllModsExist<TModItem>(loadOrder.ListedOrder), disposeItems: disposeItems ?? loadOrder.DisposingItems);
+    }
+
+    /// <summary>
+    /// Converts any listings that have mods into Mods.  Will not throw
+    /// </summary>
+    /// <param name="loadOrder">Listings to convert</param>
+    /// <returns>Mods contained in the listings that exist</returns>
+    public static LoadOrder<TModItem> ResolveExistingMods<TModItem>(
+        this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder,
+        bool? disposeItems = null)
+        where TModItem : class, IModKeyed
+    {
+        return new LoadOrder<TModItem>(ResolveExistingMods<TModItem>(loadOrder.ListedOrder), disposeItems: disposeItems ?? loadOrder.DisposingItems);
     }
 
     /// <summary>
