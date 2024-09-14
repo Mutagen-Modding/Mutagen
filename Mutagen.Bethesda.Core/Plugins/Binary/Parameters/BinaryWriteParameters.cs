@@ -101,7 +101,7 @@ public sealed record BinaryWriteParameters
     /// <summary>
     /// Required for games with Separated Load Order lists per master type
     /// </summary>
-    public IReadOnlyCache<IModFlagsGetter, ModKey>? MasterFlagsLookup { get; init; }
+    public IReadOnlyCache<IModMasterStyledGetter, ModKey>? MasterFlagsLookup { get; init; }
 
     /// <summary>
     /// Whether to use multithreading when possible

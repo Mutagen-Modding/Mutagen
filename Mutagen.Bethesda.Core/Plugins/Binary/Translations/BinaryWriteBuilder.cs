@@ -56,7 +56,7 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder);
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder);
 
     /// <summary>
     /// Writes the mod with given load order as reference
@@ -64,7 +64,7 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder);
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder);
 
     /// <summary>
     /// Writes the mod with the default load order and data folder as reference.
@@ -133,7 +133,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder)
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
     {
         return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
         {
@@ -152,7 +152,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder) => WithLoadOrder(loadOrder);
 
     /// <summary>
     /// Writes the mod with given load order as reference
@@ -160,7 +160,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder)
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
     {
         return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
         {
@@ -179,7 +179,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModFlagsGetter> loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
 
     /// <summary>
     /// Writes the mod with the default load order and data folder as reference.
@@ -199,7 +199,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 {
                     lo = lo.TrimAt(m.ModKey);
                 }
-                ILoadOrderGetter<IModFlagsGetter>? modFlagsLo = null;
+                ILoadOrderGetter<IModMasterStyledGetter>? modFlagsLo = null;
                 if (GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
                 {
                     modFlagsLo = lo.ResolveAllModsExist(disposeItems: false);
@@ -352,7 +352,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder)
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
     {
         return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
         {
@@ -378,7 +378,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder)
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
     {
         return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
         {

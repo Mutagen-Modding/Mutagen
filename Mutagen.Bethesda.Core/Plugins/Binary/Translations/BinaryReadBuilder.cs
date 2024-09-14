@@ -305,13 +305,13 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
             {
                 if (loadOrder.Length == 0)
                 {
-                    return Array.Empty<IModFlagsGetter>();
+                    return Array.Empty<IModMasterStyledGetter>();
                 }
                 
                 var dataFolder = param._dataFolderGetter?.Invoke(param);
                 if (dataFolder == null)
                 {
-                    return Array.Empty<IModFlagsGetter>();
+                    return Array.Empty<IModMasterStyledGetter>();
                 }
                 
                 var lo = LoadOrder.Import<TModGetter>(
@@ -329,9 +329,9 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<IModFlagsGetter>? loadOrder)
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<IModMasterStyledGetter>? loadOrder)
     {
-        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<IModFlagsGetter>());
+        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<IModMasterStyledGetter>());
     }
 
     /// <summary>
@@ -341,7 +341,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params IModFlagsGetter[] loadOrder)
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params IModMasterStyledGetter[] loadOrder)
     {
         return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
         {
@@ -349,13 +349,13 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
             {
                 if (loadOrder.Length == 0)
                 {
-                    return Array.Empty<IModFlagsGetter>();
+                    return Array.Empty<IModMasterStyledGetter>();
                 }
                 
                 var dataFolder = param._dataFolderGetter?.Invoke(param);
                 if (dataFolder == null)
                 {
-                    return Array.Empty<IModFlagsGetter>();
+                    return Array.Empty<IModMasterStyledGetter>();
                 }
                 
                 var lo = LoadOrder.Import<TModGetter>(
@@ -373,7 +373,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter>? loadOrder)
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(
             _param with
@@ -409,7 +409,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var dataFolder = param._dataFolderGetter?.Invoke(param);
                 if (dataFolder == null)
                 {
-                    return Array.Empty<IModFlagsGetter>();
+                    return Array.Empty<IModMasterStyledGetter>();
                 }
                 
                 ModHeaderFrame modHeader;
