@@ -61,7 +61,7 @@ public abstract class AMod : IMod
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => throw new NotImplementedException();
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => throw new NotImplementedException();
     IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => throw new NotImplementedException();

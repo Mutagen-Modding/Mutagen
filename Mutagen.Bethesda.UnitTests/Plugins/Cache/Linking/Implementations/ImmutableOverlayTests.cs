@@ -29,8 +29,8 @@ public class ImmutableOverlayTests : ALinkingTests
         var tempFile = new TempFile(extraDirectoryPaths: TestPathing.TempFolderPath);
         var path = new ModPath(mod.ModKey, tempFile.File.Path);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .Write();
         var overlay = SkyrimMod.CreateFromBinaryOverlay(path, SkyrimRelease.SkyrimLE);

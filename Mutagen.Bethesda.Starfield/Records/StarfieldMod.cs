@@ -171,14 +171,14 @@ public partial class StarfieldMod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> 
         BeginWrite => new(
         this, 
         StarfieldWriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder(StarfieldRelease release) => new(release.ToGameRelease(), StarfieldWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<IStarfieldModGetter> WriteBuilder(StarfieldRelease release) => new(release.ToGameRelease(), StarfieldWriteBuilderInstantiator.Instance);
 }
 
 internal partial class StarfieldModBinaryOverlay
@@ -200,8 +200,8 @@ internal partial class StarfieldModBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter>(
+    public IBinaryModdedWriteBuilderTargetChoice 
+        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter>(
         this, 
         StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
 }

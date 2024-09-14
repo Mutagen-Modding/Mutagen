@@ -163,14 +163,15 @@ public partial class Fallout4Mod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> 
         BeginWrite => new(
         this, 
         Fallout4WriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder(Fallout4Release release) => new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<IFallout4ModGetter> WriteBuilder(Fallout4Release release) =>
+        new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -193,8 +194,8 @@ internal partial class Fallout4ModBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter>(
+    public IBinaryModdedWriteBuilderTargetChoice
+        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
         this, 
         Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 }

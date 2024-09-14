@@ -33,7 +33,7 @@ public class TestMod : ITestMod, IDisposable
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
-    public IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite => throw new NotImplementedException();
+    public IBinaryModdedWriteBuilderTargetChoice BeginWrite => throw new NotImplementedException();
     public uint GetRecordCount()
     {
         throw new NotImplementedException();

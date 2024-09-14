@@ -38,6 +38,91 @@ internal interface IBinaryWriteBuilderWriter<TModGetter>
     void Write(TModGetter mod, BinaryWriteBuilderParams<TModGetter> param);
 }
 
+public interface IBinaryModdedWriteBuilderTargetChoice
+{
+    /// <summary>
+    /// Instructs the builder to target a path to write the mod
+    /// </summary>
+    /// <param name="path">Path to the intended mod file to eventually write to</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderLoadOrderChoice ToPath(FilePath path, IFileSystem? fileSystem = null);
+}
+
+public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWriteBuilderTargetChoice
+    where TModGetter : class, IModGetter
+{
+    internal BinaryWriteBuilderParams<TModGetter> _params;
+    internal TModGetter _mod { get; init; } = null!;
+
+    internal BinaryModdedWriteBuilderTargetChoice(
+        TModGetter mod,
+        IBinaryWriteBuilderWriter<TModGetter> writer)
+    {
+        _mod = mod;
+        _params = new BinaryWriteBuilderParams<TModGetter>()
+        {
+            _gameRelease = mod.GameRelease,
+            _writer = writer,
+        };
+    }
+
+    /// <summary>
+    /// Instructs the builder to target a path to write the mod
+    /// </summary>
+    /// <param name="path">Path to the intended mod file to eventually write to</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
+    {
+        return new BinaryModdedWriteBuilderLoadOrderChoice<TModGetter>(_mod, _params with
+        {
+            _path = path,
+            _param = _params._param with
+            {
+                FileSystem = fileSystem
+            }
+        });
+    }
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
+        ToPath(path, fileSystem);
+}
+
+public record BinaryWriteBuilderTargetChoice<TModGetter>
+    where TModGetter : class, IModGetter
+{
+    internal BinaryWriteBuilderParams<TModGetter> _params;
+    internal BinaryWriteBuilderTargetChoice(
+        GameRelease release,
+        IBinaryWriteBuilderWriter<TModGetter> writer)
+    {
+        _params = new BinaryWriteBuilderParams<TModGetter>()
+        {
+            _gameRelease = release,
+            _writer = writer,
+        };
+    }
+
+    /// <summary>
+    /// Instructs the builder to target a path to write the mod
+    /// </summary>
+    /// <param name="path">Path to the intended mod file to eventually write to</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilderLoadOrderChoice<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
+    {
+        return new BinaryWriteBuilderLoadOrderChoice<TModGetter>(_params with
+        {
+            _path = path,
+            _param = _params._param with
+            {
+                FileSystem = fileSystem
+            }
+        });
+    }
+}
+
 public interface IBinaryModdedWriteBuilderLoadOrderChoice
 {
     /// <summary>
@@ -48,14 +133,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// - Masters will be unordered and may not match the load order the mod is eventually run with
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithNoLoadOrder();
+    public IBinaryModdedWriteBuilder WithNoLoadOrder();
 
     /// <summary>
     /// Writes the mod with given load order as reference
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
+    public IBinaryModdedWriteBuilder WithLoadOrder(
         ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder);
 
     /// <summary>
@@ -63,7 +148,7 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
+    public IBinaryModdedWriteBuilder WithLoadOrder(
         ILoadOrderGetter<IModMasterStyledGetter> loadOrder);
 
     /// <summary>
@@ -71,7 +156,7 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
+    public IBinaryModdedWriteBuilder WithLoadOrder(
         IEnumerable<IModMasterStyledGetter> loadOrder);
 
     /// <summary>
@@ -79,14 +164,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
+    public IBinaryModdedWriteBuilder WithLoadOrder(
         params IModMasterStyledGetter[] loadOrder);
 
     /// <summary>
     /// Writes the mod with the default load order and data folder as reference.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithDefaultLoadOrder();
+    public IBinaryModdedWriteBuilder WithDefaultLoadOrder();
 
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
@@ -119,14 +204,10 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
 
     internal BinaryModdedWriteBuilderLoadOrderChoice(
         TModGetter mod,
-        IBinaryWriteBuilderWriter<TModGetter> writer)
+        BinaryWriteBuilderParams<TModGetter> @params)
     {
         _mod = mod;
-        _params = new BinaryWriteBuilderParams<TModGetter>()
-        {
-            _gameRelease = mod.GameRelease,
-            _writer = writer,
-        };
+        _params = @params;
     }
 
     /// <summary>
@@ -137,21 +218,21 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     /// - Masters will be unordered and may not match the load order the mod is eventually run with
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithNoLoadOrder()
+    public BinaryModdedWriteBuilder<TModGetter> WithNoLoadOrder()
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params);
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params);
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithNoLoadOrder() => WithNoLoadOrder(); 
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithNoLoadOrder() => WithNoLoadOrder(); 
     
     /// <summary>
     /// Writes the mod with given load order as reference
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
         ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
         {
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
@@ -166,17 +247,17 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder) => WithLoadOrder(loadOrder);
 
     /// <summary>
     /// Writes the mod with given load order as reference
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
         ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
         {
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
@@ -190,39 +271,39 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
     
     /// <summary>
     /// Writes the mod with given load order as reference
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
         params IModMasterStyledGetter[] loadOrder)
     {
         return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(params IModMasterStyledGetter[] loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(params IModMasterStyledGetter[] loadOrder) => WithLoadOrder(loadOrder);
     
     /// <summary>
     /// Writes the mod with given load order as reference
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
         IEnumerable<IModMasterStyledGetter> loadOrder)
     {
         return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
 
     /// <summary>
     /// Writes the mod with the default load order and data folder as reference.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDefaultLoadOrder()
+    public BinaryModdedWriteBuilder<TModGetter> WithDefaultLoadOrder()
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
         {
             _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
@@ -249,7 +330,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             }
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithDefaultLoadOrder() => WithDefaultLoadOrder();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithDefaultLoadOrder() => WithDefaultLoadOrder();
     
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
@@ -351,15 +432,9 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
 {
     internal BinaryWriteBuilderParams<TModGetter> _params;
 
-    internal BinaryWriteBuilderLoadOrderChoice(
-        GameRelease release,
-        IBinaryWriteBuilderWriter<TModGetter> writer)
+    internal BinaryWriteBuilderLoadOrderChoice(BinaryWriteBuilderParams<TModGetter> @params)
     {
-        _params = new BinaryWriteBuilderParams<TModGetter>()
-        {
-            _gameRelease = release,
-            _writer = writer,
-        };
+        _params = @params;
     }
 
     /// <summary>
@@ -370,9 +445,9 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// - Masters will be unordered and may not match the load order the mod is eventually run with
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithNoLoadOrder()
+    public BinaryWriteBuilder<TModGetter> WithNoLoadOrder()
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params);
+        return new BinaryWriteBuilder<TModGetter>(_params);
     }
     
     /// <summary>
@@ -380,10 +455,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
         ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
+        return new BinaryWriteBuilder<TModGetter>(_params with
         {
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
@@ -404,10 +479,10 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
         ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
+        return new BinaryWriteBuilder<TModGetter>(_params with
         {
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
@@ -427,7 +502,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
         params IModMasterStyledGetter[] loadOrder)
     {
         return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
@@ -438,7 +513,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
         IEnumerable<IModMasterStyledGetter> loadOrder)
     {
         return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
@@ -448,9 +523,9 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     /// Writes the mod with the default load order and data folder as reference.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithDefaultLoadOrder()
+    public BinaryWriteBuilder<TModGetter> WithDefaultLoadOrder()
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
+        return new BinaryWriteBuilder<TModGetter>(_params with
         {
             _dataFolderGetter = static (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = static (m, p, alreadyKnownMasters) =>
@@ -546,21 +621,21 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
         _param = @params;
     }
 
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithDefaultDataFolder()
+    public BinaryWriteBuilder<TModGetter> WithDefaultDataFolder()
     {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
+        return new BinaryWriteBuilder<TModGetter>(_param with
         {
             _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
         });
     }
     
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    public BinaryWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
     {
         if (dataFolder == null)
         {
-            return new BinaryWriteBuilderTargetChoice<TModGetter>(_param);
+            return new BinaryWriteBuilder<TModGetter>(_param);
         }
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
+        return new BinaryWriteBuilder<TModGetter>(_param with
         {
             _dataFolderGetter = (m, p) => dataFolder.Value
         });
@@ -573,7 +648,7 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
     /// </summary>
     /// <param name="knownMasters">Master information to hand provide</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
     {
         var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
             knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
@@ -582,7 +657,7 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
             throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
         }
 
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_param with
+        return new BinaryWriteBuilder<TModGetter>(_param with
         {
             KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
         });
@@ -595,7 +670,7 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
     /// </summary>
     /// <param name="knownMasters">Master information to hand provide</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
     {
         return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
     }
@@ -603,11 +678,11 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
 
 public interface IBinaryModdedWriteBuilderDataFolderChoice
 {
-    IBinaryModdedWriteBuilderTargetChoice WithDefaultDataFolder();
-    IBinaryModdedWriteBuilderTargetChoice WithDataFolder(DirectoryPath? dataFolder);
-    IBinaryModdedWriteBuilderTargetChoice WithNoDataFolder();
-    IBinaryModdedWriteBuilderTargetChoice WithKnownMasters(params IModMasterStyledGetter[] knownMasters);
-    IBinaryModdedWriteBuilderTargetChoice WithKnownMasters(params KeyedMasterStyle[] knownMasters);
+    IBinaryModdedWriteBuilder WithDefaultDataFolder();
+    IBinaryModdedWriteBuilder WithDataFolder(DirectoryPath? dataFolder);
+    IBinaryModdedWriteBuilder WithNoDataFolder();
+    IBinaryModdedWriteBuilder WithKnownMasters(params IModMasterStyledGetter[] knownMasters);
+    IBinaryModdedWriteBuilder WithKnownMasters(params KeyedMasterStyle[] knownMasters);
 }
 
 public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModdedWriteBuilderDataFolderChoice
@@ -622,38 +697,38 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
         _param = @params;
     }
 
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDefaultDataFolder()
+    public BinaryModdedWriteBuilder<TModGetter> WithDefaultDataFolder()
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
         {
             _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
         });
     }
 
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithDefaultDataFolder() =>
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithDefaultDataFolder() =>
         WithDefaultDataFolder();
     
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    public BinaryModdedWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
     {
         if (dataFolder == null)
         {
-            return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param);
+            return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param);
         }
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
         {
             _dataFolderGetter = (m, p) => dataFolder.Value
         });
     }
 
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithDataFolder(DirectoryPath? dataFolder) =>
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithDataFolder(DirectoryPath? dataFolder) =>
         WithDataFolder(dataFolder);
     
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithNoDataFolder()
+    public BinaryModdedWriteBuilder<TModGetter> WithNoDataFolder()
     {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param);
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param);
     }
 
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithNoDataFolder() =>
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithNoDataFolder() =>
         WithNoDataFolder();
     
     /// <summary>
@@ -663,7 +738,7 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
     /// </summary>
     /// <param name="knownMasters">Master information to hand provide</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
     {
         var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
             knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
@@ -672,12 +747,12 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
             throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
         }
 
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _param with
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
         {
             KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
         });
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params IModMasterStyledGetter[] knownMasters) =>
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params IModMasterStyledGetter[] knownMasters) =>
         WithKnownMasters(knownMasters);
 
     /// <summary>
@@ -687,88 +762,12 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
     /// </summary>
     /// <param name="knownMasters">Master information to hand provide</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
     {
         return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
     }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params KeyedMasterStyle[] knownMasters) =>
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params KeyedMasterStyle[] knownMasters) =>
         WithKnownMasters(knownMasters);
-}
-
-public interface IBinaryModdedWriteBuilderTargetChoice
-{
-    /// <summary>
-    /// Instructs the builder to target a path to write the mod
-    /// </summary>
-    /// <param name="path">Path to the intended mod file to eventually write to</param>
-    /// <param name="fileSystem">Filesystem to write mod file to</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilder ToPath(FilePath path, IFileSystem? fileSystem = null);
-}
-
-public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWriteBuilderTargetChoice
-    where TModGetter : class, IModGetter
-{
-    internal BinaryWriteBuilderParams<TModGetter> _params;
-    internal TModGetter _mod { get; init; } = null!;
-
-    internal BinaryModdedWriteBuilderTargetChoice(
-        TModGetter mod,
-        BinaryWriteBuilderParams<TModGetter> @params)
-    {
-        _mod = mod;
-        _params = @params;
-    }
-
-    /// <summary>
-    /// Instructs the builder to target a path to write the mod
-    /// </summary>
-    /// <param name="path">Path to the intended mod file to eventually write to</param>
-    /// <param name="fileSystem">Filesystem to write mod file to</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilder<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
-    {
-        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
-        {
-            _path = path,
-            _param = _params._param with
-            {
-                FileSystem = fileSystem
-            }
-        });
-    }
-
-    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
-        ToPath(path, fileSystem);
-}
-
-public record BinaryWriteBuilderTargetChoice<TModGetter>
-    where TModGetter : class, IModGetter
-{
-    internal BinaryWriteBuilderParams<TModGetter> _params;
-    internal BinaryWriteBuilderTargetChoice(
-        BinaryWriteBuilderParams<TModGetter> @params)
-    {
-        _params = @params;
-    }
-
-    /// <summary>
-    /// Instructs the builder to target a path to write the mod
-    /// </summary>
-    /// <param name="path">Path to the intended mod file to eventually write to</param>
-    /// <param name="fileSystem">Filesystem to write mod file to</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilder<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
-    {
-        return new BinaryWriteBuilder<TModGetter>(_params with
-        {
-            _path = path,
-            _param = _params._param with
-            {
-                FileSystem = fileSystem
-            }
-        });
-    }
 }
 
 public interface IBinaryModdedWriteBuilder

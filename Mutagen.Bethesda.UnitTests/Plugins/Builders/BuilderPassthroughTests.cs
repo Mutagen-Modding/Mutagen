@@ -46,6 +46,7 @@ public class BuilderPassthroughTests
         {
             var modPath = Path.Combine(DataFolder, mod.ModKey.ToString());
             await mod.BeginWrite
+                .ToPath(modPath)
                 .WithLoadOrder(new ModKey[]
                 {
                     NormalMasterKey,
@@ -53,7 +54,6 @@ public class BuilderPassthroughTests
                     SmallMasterKey
                 })
                 .WithDataFolder(DataFolder)
-                .ToPath(modPath)
                 .WithFileSystem(FileSystem)
                 .WriteAsync();
             return modPath;

@@ -175,8 +175,8 @@ public class ModFilesMoverTests
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
@@ -474,8 +474,8 @@ public class ModFilesMoverTests
         mod.UsingLocalization = false;
         ModPath modPath = Path.Combine(existingDirectoryPath, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);

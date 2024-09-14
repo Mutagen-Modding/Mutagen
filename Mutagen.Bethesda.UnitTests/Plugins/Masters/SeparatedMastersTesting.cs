@@ -58,8 +58,8 @@ public class SeparatedMastersTesting
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
         originating.BeginWrite
-            .WithLoadOrder(lo)
             .ToPath(modPath)
+            .WithLoadOrder(lo)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -165,8 +165,8 @@ public class SeparatedMastersTesting
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
         originating.BeginWrite
-            .WithLoadOrder(lo)
             .ToPath(modPath)
+            .WithLoadOrder(lo)
             .WithFileSystem(fileSystem)
             .Write();
 

@@ -49,8 +49,8 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master)
             .ToPath(modPath)
+            .WithLoadOrder(master)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -109,8 +109,8 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master)
             .ToPath(modPath)
+            .WithLoadOrder(master)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -150,8 +150,8 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master)
             .ToPath(modPath)
+            .WithLoadOrder(master)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -179,8 +179,8 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master)
             .ToPath(modPath)
+            .WithLoadOrder(master)
             .WithFileSystem(fileSystem)
             .Write();
         
@@ -223,8 +223,8 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master)
             .ToPath(modPath)
+            .WithLoadOrder(master)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -263,9 +263,9 @@ public class ReadBuilderTests
         mod.Weapons.GetOrAddAsOverride(master2Weapon);
         var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
+            .ToPath(modPath)
             .WithLoadOrder(masterMod, masterMod2)
             .WithDataFolder(existingDataDir)
-            .ToPath(modPath)
             .WithKnownMasters(master2)
             .WithFileSystem(fileSystem)
             .Write();

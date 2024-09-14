@@ -93,7 +93,7 @@ public interface IModGetter :
     /// <returns>Lowest suggested FormID given current mod header flags</returns>
     uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
     
-    IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite { get; }
+    IBinaryModdedWriteBuilderTargetChoice BeginWrite { get; }
 
     /// <summary>
     /// Calculates the record count by enumerating all records

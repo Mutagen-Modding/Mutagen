@@ -27,9 +27,9 @@ public class WriteBuilderTests
         Assert.Throws<MissingModMappingException>(() =>
         {
             mod.BeginWrite
+                .ToPath(modPath)
                 .WithLoadOrderFromHeaderMasters()
                 .WithNoDataFolder()
-                .ToPath(modPath)
                 .WithFileSystem(fileSystem)
                 .Write();
         });
@@ -50,8 +50,8 @@ public class WriteBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master, extraMaster)
             .ToPath(modPath)
+            .WithLoadOrder(master, extraMaster)
             .WithFileSystem(fileSystem)
             .WithExtraIncludedMasters(extraMasterKey)
             .Write();
@@ -80,8 +80,8 @@ public class WriteBuilderTests
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         var modPath = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithLoadOrder(master, overrideMod)
             .ToPath(modPath)
+            .WithLoadOrder(master, overrideMod)
             .WithFileSystem(fileSystem)
             .WithExplicitOverridingMasterList(overrideMasterKey, masterModKey)
             .Write();
@@ -107,9 +107,9 @@ public class WriteBuilderTests
         var transientMasterWeapon = transientMasterMod.Weapons.AddNew();
         var transientMasterModPath = Path.Combine(existingDataDir, transientMasterMod.ModKey.FileName);
         transientMasterMod.BeginWrite
+            .ToPath(transientMasterModPath)
             .WithLoadOrder(transientMasterModKey, masterModKey)
             .WithDataFolder(existingDataDir)
-            .ToPath(transientMasterModPath)
             .WithFileSystem(fileSystem)
             .Write();
         
@@ -118,9 +118,9 @@ public class WriteBuilderTests
         master.Weapons.GetOrAddAsOverride(transientMasterWeapon);
         var masterModPath = Path.Combine(existingDataDir, master.ModKey.FileName);
         master.BeginWrite
+            .ToPath(masterModPath)
             .WithLoadOrder(transientMasterModKey, masterModKey)
             .WithDataFolder(existingDataDir)
-            .ToPath(masterModPath)
             .WithFileSystem(fileSystem)
             .Write();
         
@@ -129,9 +129,9 @@ public class WriteBuilderTests
         
         var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
         mod.BeginWrite
+            .ToPath(modPath)
             .WithLoadOrder(transientMasterModKey, masterModKey)
             .WithDataFolder(existingDataDir)
-            .ToPath(modPath)
             .WithFileSystem(fileSystem)
             .WithAllParentMasters()
             .Write();

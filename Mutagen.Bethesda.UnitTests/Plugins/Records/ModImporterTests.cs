@@ -21,8 +21,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
@@ -39,8 +39,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
@@ -57,8 +57,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
@@ -75,8 +75,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
@@ -93,8 +93,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<ISkyrimModGetter>(path);
@@ -111,8 +111,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<ISkyrimMod>(path);
@@ -129,8 +129,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<SkyrimMod>(path);
@@ -147,8 +147,8 @@ public class ModImporterTests
     {
         var path = Path.Combine(existingDir, mod.ModKey.FileName);
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(path)
+            .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);

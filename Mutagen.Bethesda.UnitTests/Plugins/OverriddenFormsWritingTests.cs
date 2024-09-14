@@ -23,9 +23,9 @@ public class OverriddenFormsWritingTests
         params FormKey[] expectedFormkeys)
     {
         mod.BeginWrite
+            .ToPath(existingModPath)
             .WithLoadOrderFromHeaderMasters()
             .WithKnownMasters(master)
-            .ToPath(existingModPath)
             .WithFileSystem(fileSystem)
             .NoModKeySync()
             .WithOverriddenFormsOption(OverriddenFormsOption.Iterate)
@@ -94,9 +94,9 @@ public class OverriddenFormsWritingTests
         mod.ModHeader.OverriddenForms.Add(fk);
 
         mod.BeginWrite
+            .ToPath(existingModPath)
             .WithLoadOrderFromHeaderMasters()
             .WithKnownMasters(mod2)
-            .ToPath(existingModPath)
             .WithFileSystem(fileSystem)
             .NoModKeySync()
             .WithOverriddenFormsOption(OverriddenFormsOption.NoCheck)

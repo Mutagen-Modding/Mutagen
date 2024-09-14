@@ -34,8 +34,8 @@ public class GameEnvironmentBuilderTests
         {
             var mod = new SkyrimMod(m, SkyrimRelease.SkyrimSE);
             mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(Path.Combine(dataDirectoryProvider.Path, m.FileName))
+                .WithNoLoadOrder()
                 .WithFileSystem(fs)
                 .Write();
         });

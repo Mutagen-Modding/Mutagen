@@ -54,8 +54,8 @@ public class GameEnvironmentBuilder : ISpecimenBuilder
         mods.ForEach(m =>
         {
             m.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(Path.Combine(dataDirectoryProvider.Path, m.ModKey.FileName))
+                .WithNoLoadOrder()
                 .WithFileSystem(fs)
                 .Write();
         });

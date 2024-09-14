@@ -176,14 +176,14 @@ public partial class SkyrimMod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<ISkyrimModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> 
         BeginWrite => new(
         this, 
         SkyrimWriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<ISkyrimModGetter> WriteBuilder(SkyrimRelease release) => new(release.ToGameRelease(), SkyrimWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<ISkyrimModGetter> WriteBuilder(SkyrimRelease release) => new(release.ToGameRelease(), SkyrimWriteBuilderInstantiator.Instance);
 }
 
 internal partial class SkyrimModBinaryOverlay
@@ -206,8 +206,8 @@ internal partial class SkyrimModBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<ISkyrimModGetter>(
+    public IBinaryModdedWriteBuilderTargetChoice 
+        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
         this, 
         SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
 }
