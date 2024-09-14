@@ -187,7 +187,7 @@ public class SeparatedMastersTesting
             lightModBAim.FormKey, 
             mediumModBAim.FormKey);
         {
-            var meta = ParsingMeta.Factory(new BinaryReadParameters()
+            var meta = ParsingMeta.FactoryNoMasters(new BinaryReadParameters()
             {
                 FileSystem = fileSystem
             }, GameRelease.Starfield, modPath);

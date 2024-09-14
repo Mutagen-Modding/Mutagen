@@ -155,4 +155,14 @@ public sealed class ParsingMeta
         meta.Absorb(param);
         return meta;
     }
+
+    public static ParsingMeta FactoryNoMasters(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModKey modKey)
+    {
+        var meta = new ParsingMeta(GameConstants.Get(release), modKey, null!);
+        meta.Absorb(param);
+        return meta;
+    }
 }

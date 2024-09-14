@@ -193,25 +193,19 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             }
         }
 
-        foreach (var master in masters.Masters)
+        foreach (var master in masters.Masters.Select(x => x.          Master))
         {
-            if (masterFlagLookup != null)
+            if (masterFlagLookup == null)
             {
-                if (!masterFlagLookup.TryGetValue(master.Master, out var mod))
-                {
-                    throw new MissingModException(master.Master,
-                        "Mod was missing from master flag lookup when constructing the separate mod lists needed for FormID translation.");
-                }
+                throw new MissingModMappingException();
+            }
+            if (!masterFlagLookup.TryGetValue(master, out var mod))
+            {
+                throw new MissingModException(master,
+                    "Mod was missing from load order when constructing the separate mod lists needed for FormID translation.");
+            }
 
-                AddToList(mod, master.Master);
-            }
-            // Don't have a load order, assume normal
-            // Viewed as user error if this turns out to be wrong
-            // They should provide load order unless they're sure it's not needed
-            else
-            {
-                normal.Add(master.Master);
-            }
+            AddToList(mod, master);
         }
 
         if (_starfieldMasters.Contains(currentModKey))

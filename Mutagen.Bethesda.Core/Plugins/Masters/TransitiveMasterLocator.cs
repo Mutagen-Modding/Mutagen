@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -22,14 +23,11 @@ internal static class TransitiveMasterLocator
             var master = remainingMasters.Dequeue();
             masters.Add(master);
 
-            var modPath = Path.Combine(dataFolder, master.FileName);
+            var modPath = new ModPath(Path.Combine(dataFolder, master.FileName));
 
-            var masterMod = ModInstantiator.ImportGetter(modPath, release, new BinaryReadParameters()
-            {
-                FileSystem = fileSystem
-            });
-
-            foreach (var parent in masterMod.MasterReferences)
+            var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: fileSystem);
+            
+            foreach (var parent in header.Masters(modPath.ModKey))
             {
                 remainingMasters.Enqueue(parent.Master);
                 masters.Add(parent.Master);
