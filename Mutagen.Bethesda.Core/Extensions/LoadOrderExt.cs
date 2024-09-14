@@ -172,4 +172,12 @@ public static class LoadOrderExt
             loadOrder.ListedOrder
                 .Select(transformer));
     }
+
+    public static LoadOrder<TListing> Where<TListing>(this ILoadOrderGetter<TListing> loadOrder, Func<TListing, bool> filter)
+        where TListing : IModKeyed
+    {
+        return new LoadOrder<TListing>(
+            loadOrder.ListedOrder
+                .Where(filter));
+    }
 }
