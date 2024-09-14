@@ -269,9 +269,10 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
             _loadOrderSetter = static (param) =>
             {
                 var dataFolder = param._dataFolderGetter?.Invoke(param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder, 
                     param.GameRelease, 
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
                     param.Params.FileSystem);   
                 return lo.ListedOrder.ResolveExistingMods();
             }
@@ -314,9 +315,10 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                     return Array.Empty<IModMasterStyledGetter>();
                 }
                 
-                var lo = LoadOrder.Import<TModGetter>(
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder.Value, loadOrder,
-                    param.GameRelease, param.Params.FileSystem);
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
                 return lo.ListedOrder.ResolveExistingMods();
             }
         });
@@ -358,9 +360,11 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                     return Array.Empty<IModMasterStyledGetter>();
                 }
                 
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder.Value, loadOrder.Select(x => x.ModKey),
-                    param.GameRelease, param.Params.FileSystem);
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder.Value,
+                    loadOrder.Select(x => x.ModKey),
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
                 return lo.ListedOrder.ResolveExistingMods();
             }
         });
@@ -439,9 +443,11 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var masters = MasterReferenceCollection.FromModHeader(
                     param.ModKey,
                     modHeader);
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder.Value, masters.Masters.Select(x => x.Master),
-                    param.GameRelease, param.Params.FileSystem);
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder.Value, 
+                    masters.Masters.Select(x => x.Master),
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
                 return lo.ListedOrder.ResolveExistingMods();
             }
         });

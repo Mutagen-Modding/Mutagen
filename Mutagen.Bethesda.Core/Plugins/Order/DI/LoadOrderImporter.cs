@@ -20,7 +20,7 @@ public interface ILoadOrderImporter
 }
     
 public interface ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <summary>
     /// Returns a load order filled with mods constructed
@@ -29,7 +29,7 @@ public interface ILoadOrderImporter<TMod>
 }
 
 public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     private readonly IFileSystem _fileSystem;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;

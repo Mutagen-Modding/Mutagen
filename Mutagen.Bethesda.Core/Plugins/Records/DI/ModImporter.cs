@@ -13,7 +13,7 @@ public interface IModImporter
 }
     
 public interface IModImporter<TMod>
-    where TMod : IModGetter
+    where TMod : IModKeyed
 {
     TMod Import(ModPath modPath, BinaryReadParameters? param = null);
 }
@@ -85,7 +85,7 @@ public sealed class ModImporter<TMod> : IModImporter<TMod>
 }
 
 public sealed class ModImporterWrapper<TMod> : IModImporter<TMod>
-    where TMod : IModGetter
+    where TMod : IModKeyed
 {
     private readonly Func<ModPath, BinaryReadParameters?, TMod> _factory;
 

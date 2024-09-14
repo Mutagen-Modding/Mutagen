@@ -193,7 +193,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
             _loadOrderSetter = (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder,
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);
                 
                 if (p.TrimLoadOrderAtSelf)
                 {
@@ -247,9 +251,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 else
                 {
-                    var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder.Value, loArray,
-                        m.GameRelease, p._param.FileSystem);
+                    var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                        dataFolder.Value, 
+                        loArray,
+                        factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                        p._param.FileSystem);
                     return p._param with
                     {
                         MasterFlagsLookup = lo.ResolveAllModsExist(disposeItems: false),
@@ -297,9 +303,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 else
                 {
-                    var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder.Value, _mod.MasterReferences.Select(x => x.Master),
-                        m.GameRelease, p._param.FileSystem);  
+                    var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                        dataFolder.Value, 
+                        _mod.MasterReferences.Select(x => x.Master),
+                        factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                        p._param.FileSystem);  
                     if (p.TrimLoadOrderAtSelf)
                     {
                         lo = lo.TrimAt(m.ModKey);
@@ -410,7 +418,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             _loadOrderSetter = static (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, p._param.FileSystem);   
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder,
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);   
                 
                 if (p.TrimLoadOrderAtSelf)
                 {
@@ -438,9 +450,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             _loadOrderSetter = (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder, loadOrder,
-                    m.GameRelease, p._param.FileSystem);  
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder, 
+                    loadOrder,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);  
                 if (p.TrimLoadOrderAtSelf)
                 {
                     lo = lo.TrimAt(m.ModKey);
@@ -473,9 +487,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             _loadOrderSetter = static (m, p) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder, m.MasterReferences.Select(x => x.Master),
-                    m.GameRelease, p._param.FileSystem);   
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder, 
+                    m.MasterReferences.Select(x => x.Master),
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);   
                 if (p.TrimLoadOrderAtSelf)
                 {
                     lo = lo.TrimAt(m.ModKey);

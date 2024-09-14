@@ -498,6 +498,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\KeyedMasterStyle.cs" />
         <Compile Include="Plugins\Records\Loqui\IModRegistration.cs" />
         <Compile Include="Plugins\Records\Mapping\AbstractInterfaceMapping.cs">
             <CodeLanguage>cs</CodeLanguage>
