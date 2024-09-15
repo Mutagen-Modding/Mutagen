@@ -483,5 +483,5 @@ public class Fallout4PassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
 }

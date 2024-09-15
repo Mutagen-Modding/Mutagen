@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
@@ -27,8 +28,8 @@ public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => true;
 
-    public StarfieldProcessor(bool multithread) 
-        : base(multithread, GameRelease.Starfield)
+    public StarfieldProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Starfield, masterFlagLookup)
     {
     }
     

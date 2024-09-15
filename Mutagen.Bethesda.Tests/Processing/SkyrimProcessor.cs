@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
@@ -24,8 +25,8 @@ public class SkyrimProcessor : Processor
         };
     }
 
-    public SkyrimProcessor(bool multithread, GameRelease release)
-        : base(multithread, release)
+    public SkyrimProcessor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+        : base(multithread, release, masterFlagLookup)
     {
     }
 

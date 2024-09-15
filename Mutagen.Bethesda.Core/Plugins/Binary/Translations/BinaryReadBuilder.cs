@@ -321,6 +321,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder.Value,
                     loadOrder,
+                    param.GameRelease,
                     factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
                     param.Params.FileSystem);
                 return lo.ListedOrder
@@ -418,7 +419,6 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 {
                     modHeader = ModHeaderFrame.FromPath(
                         new ModPath(param.ModKey, param._path.Value), param.GameRelease,
-                        readSafe: true,
                         param.Params.FileSystem);
                 }
                 else if (param._stream != null)
@@ -443,6 +443,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
                 var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder.Value, 
                     masters.Masters.Select(x => x.Master),
+                    param.GameRelease,
                     factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
                     param.Params.FileSystem);
                 return lo.ListedOrder
@@ -1261,7 +1262,10 @@ internal static class BinaryReadBuilderHelper
         
         if (p._loadOrderSetter != null)
         {
-            loadOrder = p._loadOrderSetter(p, knownSet).ToArray();
+            loadOrder = p._loadOrderSetter(p, knownSet)
+                .And(p.KnownMasters)
+                .Distinct(x => x.ModKey)
+                .ToArray();
         }
         else if (p.KnownMasters.Length > 0)
         {

@@ -205,7 +205,11 @@ public sealed class GameEnvironmentState :
                             new CreationClubRawListingsReader())),
                     new ModImporter(
                         IFileSystemExt.DefaultFilesystem,
-                        gameReleaseInjection)),
+                        gameReleaseInjection),
+                    new MasterFlagsLookupProvider(
+                        gameReleaseInjection,
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
                 creationClubListingsPathProvider)
@@ -323,7 +327,11 @@ public sealed class GameEnvironmentState<TMod> :
                             new CreationClubRawListingsReader())),
                     new ModImporter<TMod>(
                         IFileSystemExt.DefaultFilesystem,
-                        gameReleaseInjection)),
+                        gameReleaseInjection),
+                    new MasterFlagsLookupProvider(
+                        gameReleaseInjection,
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
                 creationClubListingsPathProvider)
@@ -450,7 +458,11 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                             new CreationClubRawListingsReader())),
                     new ModImporter<TModGetter>(
                         IFileSystemExt.DefaultFilesystem,
-                        gameReleaseInjection)),
+                        gameReleaseInjection),
+                    new MasterFlagsLookupProvider(
+                        gameReleaseInjection,
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
                 creationClubListingsPathProvider)

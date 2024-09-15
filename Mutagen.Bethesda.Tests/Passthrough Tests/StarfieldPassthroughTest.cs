@@ -20,7 +20,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .WithNoLoadOrder()
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
             .Parallel(parallel: Settings.ParallelProcessingSteps)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
@@ -50,7 +50,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
     
     public override AlignmentRules GetAlignmentRules()
     {

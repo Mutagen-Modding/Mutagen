@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -17,8 +18,8 @@ public class Fallout4Processor : Processor
 {
     public override bool StrictStrings => true;
     
-    public Fallout4Processor(bool multithread) 
-        : base(multithread, GameRelease.Fallout4)
+    public Fallout4Processor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Fallout4, masterFlagLookup)
     {
     }
 

@@ -4,6 +4,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -35,7 +36,7 @@ public class LoadOrderImporterTests
 
         foreach (var modPath in modPaths)
         {
-            importer.Import(modPath)
+            importer.Import(modPath, Arg.Any<BinaryReadParameters>())
                 .Returns(new TestMod(modPath.ModKey));
         }
 
@@ -58,14 +59,15 @@ public class LoadOrderImporterTests
         var fs = Substitute.For<IFileSystem>();
         fs.File.Exists(Arg.Any<string>()).Returns(true);
         var importer = Substitute.For<IModImporter<TestMod>>();
-        importer.Import(Arg.Any<ModPath>()).Throws(new NotImplementedException());
+        importer.Import(Arg.Any<ModPath>(), Arg.Any<BinaryReadParameters>()).Throws(new NotImplementedException());
         Action a = () =>
         {
             new LoadOrderImporter<TestMod>(
                     fs,
                     new DataDirectoryInjection($"{PathingUtil.DrivePrefix}DataFolder"),
                     new LoadOrderListingsInjection(TestConstants.Dawnguard),
-                    importer)
+                    importer,
+                    Substitute.For<IMasterFlagsLookupProvider>())
                 .Import();
         };
         a.Should().Throw<AggregateException>()
@@ -87,15 +89,16 @@ public class LoadOrderImporterTests
         fs.File.Exists(Arg.Any<string>()).Returns(true);
         var importer = Substitute.For<IModImporter<IModDisposeGetter>>();
         var mod = Substitute.For<IModDisposeGetter>();
-        importer.Import(modPaths.First()).Returns(mod);
-        importer.Import(modPaths.Last()).Throws(new ArgumentException());
+        importer.Import(modPaths.First(), Arg.Any<BinaryReadParameters>()).Returns(mod);
+        importer.Import(modPaths.Last(), Arg.Any<BinaryReadParameters>()).Throws(new ArgumentException());
         Assert.Throws<AggregateException>(() =>
         {
             new LoadOrderImporter<IModDisposeGetter>(
                     fs,
                     new DataDirectoryInjection(dataFolder),
                     new LoadOrderListingsInjection(modPaths.Select(x => x.ModKey).ToArray()),
-                    importer)
+                    importer,
+                    Substitute.For<IMasterFlagsLookupProvider>())
                 .Import();
         });
         mod.Received().Dispose();
@@ -120,13 +123,14 @@ public class LoadOrderImporterTests
         var importer = Substitute.For<IModImporter<TestMod>>();
         foreach (var modPath in modPaths)
         {
-            importer.Import(modPath).Returns(new TestMod(modPath.ModKey));
+            importer.Import(modPath, Arg.Any<BinaryReadParameters>()).Returns(new TestMod(modPath.ModKey));
         }
         var lo = new LoadOrderImporter<TestMod>(
                 fs,
                 new DataDirectoryInjection(dataFolder),
                 new LoadOrderListingsInjection(modPaths.Select(x => x.ModKey).ToArray()),
-                importer)
+                importer,
+                Substitute.For<IMasterFlagsLookupProvider>())
             .Import();
         lo.Count.Should().Be(3);
         lo.First().Value.Mod.Should().BeNull();

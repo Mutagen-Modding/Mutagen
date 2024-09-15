@@ -345,13 +345,19 @@ public static class LoadOrder
         where TMod : class, IModGetter
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirInjection = new DataDirectoryInjection(dataFolder);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
-                new DataDirectoryInjection(dataFolder),
+                dataDirInjection,
                 new LoadOrderListingsInjection(loadOrder),
                 new ModImporter<TMod>(
                     fileSystem,
-                    new GameReleaseInjection(gameRelease)))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirInjection))
             .Import();
     }
 
@@ -372,14 +378,20 @@ public static class LoadOrder
         where TMod : class, IModGetter
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirInjection = new DataDirectoryInjection(dataFolder);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
-                new DataDirectoryInjection(dataFolder),
+                dataDirInjection,
                 new LoadOrderListingsInjection(
                     loadOrder.Select(x => new LoadOrderListing(x, true))),
                 new ModImporter<TMod>(
                     fileSystem,
-                    new GameReleaseInjection(gameRelease)))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirInjection))
             .Import();
     }
 
@@ -388,22 +400,30 @@ public static class LoadOrder
     /// </summary>
     /// <param name="dataFolder">Path data folder containing mods</param>
     /// <param name="loadOrder">Unique list of mod keys to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
     /// <param name="factory">Func to use to create a new mod from a path</param>
     /// <param name="fileSystem">Filesystem to use</param>
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
         DirectoryPath dataFolder,
         IEnumerable<ModKey> loadOrder,
+        GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirInjection = new DataDirectoryInjection(dataFolder);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
                 new DataDirectoryInjection(dataFolder),
                 new LoadOrderListingsInjection(
                     loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporterWrapper<TMod>(factory))
+                new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirInjection))
             .Import();
     }
 
@@ -417,16 +437,23 @@ public static class LoadOrder
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
         DirectoryPath dataFolder,
         IEnumerable<ILoadOrderListingGetter> loadOrder,
+        GameRelease gameRelease,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirInjection = new DataDirectoryInjection(dataFolder);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
-                new DataDirectoryInjection(dataFolder),
+                dataDirInjection,
                 new LoadOrderListingsInjection(loadOrder),
-                new ModImporterWrapper<TMod>(factory))
+                new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirInjection))
             .Import();
     }
 
@@ -454,7 +481,11 @@ public static class LoadOrder
                 new LoadOrderListingsInjection(loadOrder),
                 new ModImporter<TMod>(
                     fileSystem,
-                    gameReleaseInjection))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -483,7 +514,11 @@ public static class LoadOrder
                     loadOrder.Select(x => new LoadOrderListing(x, true))),
                 new ModImporter<TMod>(
                     fileSystem,
-                    gameReleaseInjection))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -512,7 +547,11 @@ public static class LoadOrder
                 dataDirectory,
                 new LoadOrderListingsInjection(
                     loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporterWrapper<TMod>(factory))
+                new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -540,7 +579,11 @@ public static class LoadOrder
                 fileSystem,
                 dataDirectory,
                 new LoadOrderListingsInjection(loadOrder),
-                new ModImporterWrapper<TMod>(factory))
+                new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    fileSystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -610,7 +653,11 @@ public static class LoadOrder
                 loadOrderProvider,
                 new ModImporter<TMod>(
                     fileSystem,
-                    gameReleaseInjection))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    IFileSystemExt.DefaultFilesystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -680,7 +727,11 @@ public static class LoadOrder
                 fileSystem,
                 dataDirectory,
                 loadOrderProvider,
-        new ModImporterWrapper<TMod>(factory))
+        new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    IFileSystemExt.DefaultFilesystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -751,7 +802,11 @@ public static class LoadOrder
                 loadOrderProvider,
                 new ModImporter<TMod>(
                     fileSystem,
-                    gameReleaseInjection))
+                    gameReleaseInjection),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    IFileSystemExt.DefaultFilesystem,
+                    dataDirectory))
             .Import();
     }
 
@@ -822,7 +877,11 @@ public static class LoadOrder
                 fileSystem,
                 dataDirectory,
                 loadOrderProvider,
-        new ModImporterWrapper<TMod>(factory))
+        new ModImporterWrapper<TMod>(factory),
+                new MasterFlagsLookupProvider(
+                    gameReleaseInjection,
+                    IFileSystemExt.DefaultFilesystem,
+                    dataDirectory))
             .Import();
     }
 

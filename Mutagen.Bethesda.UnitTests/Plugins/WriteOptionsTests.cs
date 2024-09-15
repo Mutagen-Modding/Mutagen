@@ -74,7 +74,7 @@ public class WriteOptionsTests
 
         // Check OnDisk FormIDs
         using var stream =
-            new MutagenBinaryReadStream(existingModPath, mod.GameRelease, loadOrder: null, fileSystem: fileSystem);
+            new MutagenBinaryReadStream(existingModPath, mod.GameRelease, masterFlagLookup: null, fileSystem: fileSystem);
         stream.ReadModHeaderFrame();
         while (stream.TryReadGroup(out var group))
         {

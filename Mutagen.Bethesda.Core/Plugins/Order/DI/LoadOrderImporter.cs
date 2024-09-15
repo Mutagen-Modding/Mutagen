@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Strings;
@@ -33,6 +34,7 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
 {
     private readonly IFileSystem _fileSystem;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IMasterFlagsLookupProvider _masterFlagsLookupProvider;
     public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
     public IModImporter<TMod> Importer { get; }
 
@@ -40,10 +42,12 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
         IFileSystem fileSystem,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider loadOrderListingsProvider,
-        IModImporter<TMod> importer)
+        IModImporter<TMod> importer,
+        IMasterFlagsLookupProvider masterFlagsLookupProvider)
     {
         _fileSystem = fileSystem;
         _dataDirectoryProvider = dataDirectoryProvider;
+        _masterFlagsLookupProvider = masterFlagsLookupProvider;
         LoadOrderListingsProvider = loadOrderListingsProvider;
         Importer = importer;
     }
@@ -51,6 +55,12 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
     public ILoadOrder<IModListing<TMod>> Import(BinaryReadParameters? param = null)
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
+        param ??= BinaryReadParameters.Default;
+        param = param with
+        {
+            MasterFlagsLookup = _masterFlagsLookupProvider.Get(loList)
+        };
+        
         var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
         try
         {

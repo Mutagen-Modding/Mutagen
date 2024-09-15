@@ -281,4 +281,39 @@ public class ReadBuilderTests
         reimport.MasterReferences.Select(x => x.Master).Should()
             .Equal(masterMod, masterMod2);
     }
+
+    [Theory, MutagenAutoData]
+    public void OnlyKnownMasterTests(
+        IFileSystem fileSystem,
+        ModKey masterMod,
+        ModKey masterMod2,
+        ModKey modKey,
+        DirectoryPath existingDataDir)
+    {
+        var master = new StarfieldMod(masterMod, StarfieldRelease.Starfield);
+        var masterWeapon = master.Weapons.AddNew();
+        var master2 = new StarfieldMod(masterMod2, StarfieldRelease.Starfield);
+        var master2Weapon = master2.Weapons.AddNew();
+        
+        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
+        mod.Weapons.GetOrAddAsOverride(masterWeapon);
+        mod.Weapons.GetOrAddAsOverride(master2Weapon);
+        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithNoLoadOrder()
+            .WithKnownMasters(master, master2)
+            .WithFileSystem(fileSystem)
+            .Write();
+
+        var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithNoLoadOrder()
+            .WithFileSystem(fileSystem)
+            .WithKnownMasters(master, master2)
+            .Mutable()
+            .Construct();
+        reimport.MasterReferences.Select(x => x.Master).Should()
+            .Equal(masterMod, masterMod2);
+    }
 }

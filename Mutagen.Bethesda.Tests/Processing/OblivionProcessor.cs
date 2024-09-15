@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 
@@ -15,8 +16,8 @@ public class OblivionProcessor : Processor
 {
     public override bool StrictStrings => true;
     
-    public OblivionProcessor(bool multithread) 
-        : base(multithread, GameRelease.Oblivion)
+    public OblivionProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Oblivion, masterFlagLookup)
     {
     }
 

@@ -246,7 +246,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter<TModGetter>(
                 fs,
-                Release));
+                Release),
+            new MasterFlagsLookupProvider(
+                Release,
+                fs,
+                dataDirectory));
 
         ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
         foreach (var filter in ModListingProcessors)

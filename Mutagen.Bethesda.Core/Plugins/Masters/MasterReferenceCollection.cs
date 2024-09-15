@@ -121,7 +121,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
-        var header = ModHeaderFrame.FromPath(path: path, release: release, readSafe: true,
+        var header = ModHeaderFrame.FromPath(path: path, release: release,
             fileSystem: fileSystem);
         return FromModHeader(path.ModKey, header);
     }

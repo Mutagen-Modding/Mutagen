@@ -359,6 +359,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     var lo = LoadOrder.Import<IModMasterStyledGetter>(
                         dataFolder.Value, 
                         loArray,
+                        p._gameRelease,
                         factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
                         p._param.FileSystem);
                     return p._param with

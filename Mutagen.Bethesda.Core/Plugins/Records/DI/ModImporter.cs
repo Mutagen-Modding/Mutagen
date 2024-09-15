@@ -34,25 +34,19 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
     public TMod Import<TMod>(ModPath modPath, BinaryReadParameters? param = null)
         where TMod : IModGetter
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 
     public IModGetter Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator.ImportGetter(modPath, _gameRelease.Release, param);
     }
 }
@@ -73,13 +67,10 @@ public sealed class ModImporter<TMod> : IModImporter<TMod>
 
     public TMod Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 }

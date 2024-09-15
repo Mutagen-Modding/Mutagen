@@ -23,6 +23,7 @@ namespace Mutagen.Bethesda.Tests;
 public abstract class Processor
 {
     public GameRelease GameRelease { get; }
+    public IReadOnlyCache<IModMasterStyledGetter, ModKey> MasterFlagLookup { get; }
     public readonly GameConstants Meta;
     protected RecordLocatorResults _alignedFileLocs;
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
@@ -50,9 +51,10 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread, GameRelease release)
+    public Processor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
     {
         GameRelease = release;
+        MasterFlagLookup = masterFlagLookup;
         Meta = GameConstants.Get(GameRelease);
         DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
@@ -70,7 +72,7 @@ public abstract class Processor
         Bundle = new ParsingMeta(GameRelease, ModKey, Masters);
         _numMasters = checked((byte)Masters.Raw.Masters.Count);
         var modPath = new ModPath(ModKey, previousPath);
-        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, loadOrder: null));
+        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, masterFlagLookup: MasterFlagLookup));
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))
         {
             lock (_lengthTracker)

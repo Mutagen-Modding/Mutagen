@@ -43,14 +43,14 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
     /// </summary>
     /// <param name="path">Path to read from</param>
     /// <param name="release">Game Release the stream is for</param>
-    /// <param name="loadOrder">Load Order for reference.  Required if Game has separated load order systems</param>
+    /// <param name="masterFlagLookup">Load Order for reference.  Required if Game has separated load order systems</param>
     /// <param name="bufferSize">Size of internal buffer</param>
     /// <param name="offsetReference">Optional offset reference position to use</param>
     /// <param name="fileSystem">FileSystem to read from</param>
     public MutagenBinaryReadStream(
         ModPath path,
         GameRelease release,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup,
         int bufferSize = 4096,
         long offsetReference = 0,
         IFileSystem? fileSystem = null)
@@ -59,7 +59,7 @@ public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStre
         MetaData = new ParsingMeta(
             release, 
             path.ModKey,
-            SeparatedMasterPackage.Factory(release, path, loadOrder, fileSystem));
+            SeparatedMasterPackage.Factory(release, path, masterFlagLookup, fileSystem));
         OffsetReference = offsetReference;
     }
 

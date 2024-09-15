@@ -424,6 +424,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\MasterFlagsLookupProvider.cs" />
         <Compile Include="Plugins\Order\DI\ModListingParser.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
