@@ -15,11 +15,10 @@ public class OblivionProcessor : Processor
 {
     public override bool StrictStrings => true;
     
-    public OblivionProcessor(bool multithread) : base(multithread)
+    public OblivionProcessor(bool multithread) 
+        : base(multithread, GameRelease.Oblivion)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Oblivion;
 
     #region Dynamic Processing
     /*

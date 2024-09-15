@@ -246,5 +246,5 @@ public class SkyrimPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new SkyrimProcessor(Settings.ParallelProcessingSteps, GameRelease);
 }

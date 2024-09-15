@@ -27,12 +27,11 @@ public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => true;
 
-    public StarfieldProcessor(bool multithread) : base(multithread)
+    public StarfieldProcessor(bool multithread) 
+        : base(multithread, GameRelease.Starfield)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Starfield;
-
+    
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();

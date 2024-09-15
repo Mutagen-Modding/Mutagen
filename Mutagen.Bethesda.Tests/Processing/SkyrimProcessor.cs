@@ -14,7 +14,6 @@ namespace Mutagen.Bethesda.Tests;
 
 public class SkyrimProcessor : Processor
 {
-    public override GameRelease GameRelease { get; }
     public override bool StrictStrings => true;
     
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
@@ -25,10 +24,9 @@ public class SkyrimProcessor : Processor
         };
     }
 
-    public SkyrimProcessor(GameRelease release, bool multithread)
-        : base(multithread)
+    public SkyrimProcessor(bool multithread, GameRelease release)
+        : base(multithread, release)
     {
-        GameRelease = release;
     }
 
     protected override void AddDynamicProcessorInstructions()

@@ -17,11 +17,10 @@ public class Fallout4Processor : Processor
 {
     public override bool StrictStrings => true;
     
-    public Fallout4Processor(bool multithread) : base(multithread)
+    public Fallout4Processor(bool multithread) 
+        : base(multithread, GameRelease.Fallout4)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Fallout4;
 
     protected override void AddDynamicProcessorInstructions()
     {

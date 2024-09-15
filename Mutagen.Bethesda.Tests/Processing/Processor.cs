@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests;
 
 public abstract class Processor
 {
-    public abstract GameRelease GameRelease { get; }
+    public GameRelease GameRelease { get; }
     public readonly GameConstants Meta;
     protected RecordLocatorResults _alignedFileLocs;
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
@@ -50,8 +50,9 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread)
+    public Processor(bool multithread, GameRelease release)
     {
+        GameRelease = release;
         Meta = GameConstants.Get(GameRelease);
         DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
