@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
@@ -11,12 +10,10 @@ namespace Mutagen.Bethesda.Tests;
 
 public class OblivionPassthroughTest : PassthroughTest
 {
-    public override GameRelease GameRelease => GameRelease.Oblivion;
-
     protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProcessingSteps);
 
     public OblivionPassthroughTest(PassthroughTestParams param)
-        : base(param)
+        : base(param, GameRelease.Oblivion)
     {
     }
 

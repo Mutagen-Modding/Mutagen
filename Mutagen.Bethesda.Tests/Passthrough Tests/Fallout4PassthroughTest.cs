@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -11,12 +10,9 @@ namespace Mutagen.Bethesda.Tests;
 
 public class Fallout4PassthroughTest : PassthroughTest
 {
-    public override GameRelease GameRelease { get; }
-
     public Fallout4PassthroughTest(PassthroughTestParams param)
-        : base(param)
+        : base(param, GameRelease.Fallout4)
     {
-        GameRelease = GameRelease.Fallout4;
     }
 
     public override AlignmentRules GetAlignmentRules()

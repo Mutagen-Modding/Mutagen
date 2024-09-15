@@ -44,7 +44,7 @@ public abstract class PassthroughTest
     public ModPath ProcessedPath(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Processed"));
     public ModKey ModKey => FilePath.ModKey;
     public DirectoryPath SourceDataFolder => FilePath.Path.Directory!.Value;
-    public abstract GameRelease GameRelease { get; }
+    public GameRelease GameRelease { get; }
     public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; } = null;
     public readonly GameConstants Meta;
 
@@ -57,10 +57,11 @@ public abstract class PassthroughTest
     
     public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
 
-    public PassthroughTest(PassthroughTestParams param)
+    public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
         var path = param.Target.Path;
         FilePath = path;
+        GameRelease = release;
         Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
         Settings = param.PassthroughSettings;
         Target = param.Target;
