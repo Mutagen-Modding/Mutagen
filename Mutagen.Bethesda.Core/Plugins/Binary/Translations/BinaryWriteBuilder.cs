@@ -883,7 +883,7 @@ public interface IBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="stringsWriter">StringsWriter to use when localizing</param>
     /// <returns>Builder object to continue customization</returns>
-    IBinaryModdedWriteBuilder WithStringsWriter(StringsWriter stringsWriter);
+    IBinaryModdedWriteBuilder WithStringsWriter(StringsWriter? stringsWriter);
 
     /// <summary>
     /// If writing a localizable mod that has localization off, which language to output as the embedded strings
@@ -1333,7 +1333,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="stringsWriter">StringsWriter to use when localizing</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilder<TModGetter> WithStringsWriter(StringsWriter stringsWriter)
+    public BinaryModdedWriteBuilder<TModGetter> WithStringsWriter(StringsWriter? stringsWriter)
     {
         return this with
         {
@@ -1346,7 +1346,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             }
         };
     }
-    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithStringsWriter(StringsWriter stringsWriter) => WithStringsWriter(stringsWriter);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithStringsWriter(StringsWriter? stringsWriter) => WithStringsWriter(stringsWriter);
 
     /// <summary>
     /// If writing a localizable mod that has localization off, which language to output as the embedded strings
