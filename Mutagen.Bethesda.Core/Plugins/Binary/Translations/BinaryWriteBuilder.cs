@@ -847,6 +847,18 @@ public interface IBinaryModdedWriteBuilder
         ILoadOrderGetter loadOrder);
 
     /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters);
+
+    /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1239,6 +1251,32 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
         };
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(ILoadOrderGetter loadOrder) => WithMastersListOrdering(loadOrder);
+
+    /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(otherMasters
+                        .Masters.Select(x => x.Master))
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(IReadOnlyMasterReferenceCollection otherMasters) => WithMastersListOrdering(otherMasters);
 
     /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
@@ -1934,6 +1972,31 @@ public record BinaryWriteBuilder<TModGetter>
                 _param = _params._param with
                 {
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder)
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(otherMasters
+                        .Masters.Select(x => x.Master))
                 }
             }
         };
