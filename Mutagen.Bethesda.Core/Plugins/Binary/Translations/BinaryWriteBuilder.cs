@@ -1830,7 +1830,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
 
                     return p._param with
                     {
@@ -1838,7 +1838,9 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
                         {
                             return TransitiveMasterLocator.GetAllMasters(
                                 p._gameRelease,
+                                mod.ModKey,
                                 mods,
+                                p._knownModLoadOrder,
                                 dataFolder,
                                 p._param.FileSystem);
                         }
@@ -2534,7 +2536,7 @@ public record BinaryWriteBuilder<TModGetter>
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
 
                     return p._param with
                     {
@@ -2542,7 +2544,9 @@ public record BinaryWriteBuilder<TModGetter>
                         {
                             return TransitiveMasterLocator.GetAllMasters(
                                 p._gameRelease,
+                                mod.ModKey,
                                 mods,
+                                p._knownModLoadOrder,
                                 dataFolder,
                                 p._param.FileSystem);
                         }

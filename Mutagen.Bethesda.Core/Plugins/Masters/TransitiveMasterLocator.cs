@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -10,8 +10,10 @@ internal static class TransitiveMasterLocator
 {
     public static IReadOnlyCollection<ModKey> GetAllMasters(
         GameRelease release,
+        ModKey self,
         IEnumerable<ModKey> mods,
-        DirectoryPath dataFolder,
+        IReadOnlyCache<IModListingGetter<IModGetter>, ModKey>? alreadyLocatedMods,
+        DirectoryPath? dataFolder,
         IFileSystem? fileSystem)
     {
         // Collect all transitive masters
@@ -23,14 +25,34 @@ internal static class TransitiveMasterLocator
             var master = remainingMasters.Dequeue();
             masters.Add(master);
 
-            var modPath = new ModPath(Path.Combine(dataFolder, master.FileName));
-
-            var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: fileSystem);
-            
-            foreach (var parent in header.Masters(modPath.ModKey))
+            IEnumerable<ModKey> mastersOfMod;
+            if (alreadyLocatedMods != null 
+                && alreadyLocatedMods.TryGetValue(master, out var locatedMod)
+                && locatedMod.Mod != null)
             {
-                remainingMasters.Enqueue(parent.Master);
-                masters.Add(parent.Master);
+                mastersOfMod = locatedMod.Mod.MasterReferences
+                    .Select(x => x.Master)
+                    .ToArray();
+            }
+            else
+            {
+                if (dataFolder == null)
+                {
+                    throw new ArgumentNullException("Data folder source was not set");
+                }
+                var modPath = new ModPath(Path.Combine(dataFolder, master.FileName));
+                var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: fileSystem);
+                mastersOfMod = header.Masters(master).Select(x => x.Master).ToArray();
+            }
+            
+            foreach (var parent in mastersOfMod)
+            {
+                var masterKey = parent;
+
+                if (masterKey != self && !masters.Add(parent))
+                {
+                    remainingMasters.Enqueue(parent);
+                }
             }
         }
 

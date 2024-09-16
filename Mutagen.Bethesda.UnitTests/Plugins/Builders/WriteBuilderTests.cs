@@ -3,6 +3,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
@@ -132,6 +133,88 @@ public class WriteBuilderTests
             .ToPath(modPath)
             .WithLoadOrder(transientMasterModKey, masterModKey)
             .WithDataFolder(existingDataDir)
+            .WithFileSystem(fileSystem)
+            .WithAllParentMasters()
+            .Write();
+
+        using var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithKnownMasters(transientMasterMod, master)
+            .WithFileSystem(fileSystem)
+            .Construct();
+        reimport.MasterReferences.Select(x => x.Master).Should()
+            .Equal(transientMasterModKey, masterModKey);
+    }
+    
+    [Theory, MutagenAutoData]
+    public void WithAllParentMastersNoDataFolder(
+        IFileSystem fileSystem,
+        ModKey transientMasterModKey,
+        ModKey masterModKey,
+        ModKey modKey,
+        DirectoryPath existingDataDir)
+    {
+        var transientMasterMod = new StarfieldMod(transientMasterModKey, StarfieldRelease.Starfield);
+        var transientMasterWeapon = transientMasterMod.Weapons.AddNew();
+        
+        var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
+        master.ModHeader.MasterReferences.Add(new MasterReference()
+        {
+            Master = transientMasterModKey
+        });
+        var masterWeapon = master.Weapons.AddNew();
+        master.Weapons.GetOrAddAsOverride(transientMasterWeapon);
+        
+        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
+        mod.Weapons.GetOrAddAsOverride(masterWeapon);
+        
+        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithLoadOrder(transientMasterMod, master)
+            .WithFileSystem(fileSystem)
+            .WithAllParentMasters()
+            .Write();
+
+        using var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithKnownMasters(transientMasterMod, master)
+            .WithFileSystem(fileSystem)
+            .Construct();
+        reimport.MasterReferences.Select(x => x.Master).Should()
+            .Equal(transientMasterModKey, masterModKey);
+    }
+    
+    [Theory, MutagenAutoData]
+    public void WithAllParentMastersCircular(
+        IFileSystem fileSystem,
+        ModKey transientMasterModKey,
+        ModKey masterModKey,
+        ModKey modKey,
+        DirectoryPath existingDataDir)
+    {
+        var transientMasterMod = new StarfieldMod(transientMasterModKey, StarfieldRelease.Starfield);
+        transientMasterMod.ModHeader.MasterReferences.Add(new MasterReference()
+        {
+            Master = modKey
+        });
+        var transientMasterWeapon = transientMasterMod.Weapons.AddNew();
+        
+        var master = new StarfieldMod(masterModKey, StarfieldRelease.Starfield);
+        master.ModHeader.MasterReferences.Add(new MasterReference()
+        {
+            Master = transientMasterModKey
+        });
+        var masterWeapon = master.Weapons.AddNew();
+        master.Weapons.GetOrAddAsOverride(transientMasterWeapon);
+        
+        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
+        mod.Weapons.GetOrAddAsOverride(masterWeapon);
+        
+        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithLoadOrder(transientMasterMod, master)
             .WithFileSystem(fileSystem)
             .WithAllParentMasters()
             .Write();
