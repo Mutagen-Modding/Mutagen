@@ -174,6 +174,11 @@ public partial class Fallout4Mod : AMod
         new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
 }
 
+public partial interface IFallout4ModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> BeginWrite { get; }
+}
+
 internal partial class Fallout4ModBinaryOverlay
 {
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
@@ -194,10 +199,16 @@ internal partial class Fallout4ModBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderTargetChoice
-        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
-        this, 
-        Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
+            this, 
+            Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
+            this, 
+            Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 }
 
 partial class Fallout4ModCommon

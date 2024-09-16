@@ -165,6 +165,11 @@ public partial class OblivionMod : AMod
         new(GameRelease.Oblivion, OblivionWriteBuilderInstantiator.Instance);
 }
 
+public partial interface IOblivionModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite { get; }
+}
+
 internal partial class OblivionModBinaryOverlay
 {
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
@@ -182,10 +187,15 @@ internal partial class OblivionModBinaryOverlay
     
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 
-    public IBinaryModdedWriteBuilderTargetChoice 
-        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
-        this, 
-        OblivionMod.OblivionWriteBuilderInstantiator.Instance);
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
 }
 
 partial class OblivionModCommon

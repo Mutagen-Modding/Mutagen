@@ -186,6 +186,11 @@ public partial class SkyrimMod : AMod
     public static BinaryWriteBuilderTargetChoice<ISkyrimModGetter> WriteBuilder(SkyrimRelease release) => new(release.ToGameRelease(), SkyrimWriteBuilderInstantiator.Instance);
 }
 
+public partial interface ISkyrimModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> BeginWrite { get; }
+}
+
 internal partial class SkyrimModBinaryOverlay
 {
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
@@ -206,10 +211,15 @@ internal partial class SkyrimModBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderTargetChoice 
-        BeginWrite => new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
-        this, 
-        SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
+            this, 
+            SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
+            this, 
+            SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
 }
 
 partial class SkyrimModSetterCommon
