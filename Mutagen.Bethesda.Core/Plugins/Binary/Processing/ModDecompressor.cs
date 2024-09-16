@@ -72,7 +72,6 @@ public static class ModDecompressor
 
             // Write major Meta
             var writableMajorMeta = inputStream.MetaData.Constants.MajorRecordHeaderWritable(majorMetaSpan.AsSpan());
-            writableMajorMeta.IsCompressed = false;
             writableMajorMeta.ContentLength = (uint)(len + lengthDiff);
             writer.Write(majorMetaSpan);
             writer.Write(decompressed.ReadRemainingSpan(readSafe: false));
