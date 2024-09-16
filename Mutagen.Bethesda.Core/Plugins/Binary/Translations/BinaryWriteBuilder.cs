@@ -1177,6 +1177,8 @@ public interface IBinaryModdedWriteBuilder
 
     internal IBinaryModdedWriteBuilder WithOverriddenFormsOption(OverriddenFormsOption option);
 
+    public IBinaryModdedWriteBuilder WithDataFolder(DirectoryPath? dataFolder);
+
     /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
@@ -1906,6 +1908,19 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
 
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithOverriddenFormsOption(OverriddenFormsOption option) => WithOverriddenFormsOption(option);
     
+    public BinaryModdedWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params);
+        }
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithDataFolder(DirectoryPath? dataFolder) => WithDataFolder(dataFolder);
+    
     /// <summary>
     /// Executes the instructions to write the mod.
     /// </summary>
@@ -2605,6 +2620,18 @@ public record BinaryWriteBuilder<TModGetter>
                 }
             }
         };
+    }
+    
+    public BinaryWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryWriteBuilder<TModGetter>(_params);
+        }
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
     }
     
     /// <summary>
