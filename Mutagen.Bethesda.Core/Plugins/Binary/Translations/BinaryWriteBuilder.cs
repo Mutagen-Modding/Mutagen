@@ -8,6 +8,8 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Noggog;
+// ReSharper disable InconsistentNaming
+// ReSharper disable WithExpressionModifiesAllMembers
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -25,7 +27,8 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, IReadOnlyCollection<ModKey>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
-    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>(); 
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>();
+    internal ILoadOrderGetter<IModListingGetter<TModGetter>>? _knownModLoadOrder { get; init; }
 }
 
 /// <summary>
@@ -297,6 +300,78 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
 
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _knownModLoadOrder = loadOrder,
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<TModGetter> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _knownModLoadOrder = loadOrder.Transform(x => new ModListing<TModGetter>(x)),
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        params TModGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<TModGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+
     /// <summary>
     /// Writes the mod with the default load order and data folder as reference.
     /// </summary>
@@ -518,6 +593,77 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
         IEnumerable<IModMasterStyledGetter> loadOrder)
     {
         return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _knownModLoadOrder = loadOrder,
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<TModGetter> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _knownModLoadOrder = loadOrder.Transform(x => new ModListing<TModGetter>(x)),
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        params TModGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<TModGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
     }
 
     /// <summary>
