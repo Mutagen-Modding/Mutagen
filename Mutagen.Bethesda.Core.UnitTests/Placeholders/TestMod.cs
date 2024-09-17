@@ -24,7 +24,7 @@ public class TestMod : ITestMod, IDisposable
     #region Interface
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => throw new NotImplementedException();
-    public ModKey ModKey { get; }
+    public ModKey ModKey { get; set; }
     public GameRelease GameRelease { get; }
 
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();

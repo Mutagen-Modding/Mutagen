@@ -14,8 +14,15 @@ namespace Mutagen.Bethesda.Plugins.Records;
 [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
 public abstract class AMod : IMod
 {
-    /// <inheritdoc />
-    public ModKey ModKey { get; }
+    private ModKey _modKey;
+    
+    public ModKey ModKey => _modKey;
+
+    ModKey IMod.ModKey
+    {
+        get => _modKey;
+        set => _modKey = value;
+    }
 
     /// <inheritdoc />
     public abstract GameRelease GameRelease { get; }
@@ -24,7 +31,7 @@ public abstract class AMod : IMod
 
     protected AMod()
     {
-        ModKey = ModKey.Null;
+        _modKey = ModKey.Null;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
@@ -34,7 +41,7 @@ public abstract class AMod : IMod
     /// <param name="modKey">Key to assign the mod</param> 
     public AMod(ModKey modKey)
     {
-        ModKey = modKey;
+        _modKey = modKey;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
