@@ -2,6 +2,66 @@
 charset = utf-8
 end_of_line = crlf
 
+# Microsoft .NET properties
+csharp_indent_braces = false
+csharp_new_line_before_catch = true
+csharp_new_line_before_else = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_before_open_brace = all
+csharp_preferred_modifier_order = internal, public, protected, new, file, required, private, override, static, async, sealed, abstract, extern, unsafe, volatile, readonly, virtual:suggestion
+csharp_preserve_single_line_blocks = true
+csharp_space_after_cast = false
+dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:none
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:none
+
+# ReSharper properties
+resharper_arguments_skip_single = true
+resharper_blank_lines_after_block_statements = 0
+resharper_blank_lines_after_start_comment = 0
+resharper_blank_lines_around_auto_property = 0
+resharper_blank_lines_around_property = 0
+resharper_blank_lines_around_single_line_type = 0
+resharper_braces_for_for = required_for_multiline
+resharper_braces_for_ifelse = not_required
+resharper_braces_redundant = false
+resharper_constructor_or_destructor_body = block_body
+resharper_csharp_allow_comment_after_lbrace = true
+resharper_csharp_blank_lines_around_field = 0
+resharper_csharp_blank_lines_around_invocable = 0
+resharper_csharp_blank_lines_around_region = 0
+resharper_csharp_blank_lines_inside_region = 0
+resharper_csharp_empty_block_style = multiline
+resharper_csharp_insert_final_newline = false
+resharper_csharp_max_line_length = 307
+resharper_csharp_remove_blank_lines_near_braces_in_code = false
+resharper_csharp_remove_blank_lines_near_braces_in_declarations = false
+resharper_csharp_wrap_multiple_type_parameter_constraints_style = wrap_if_long
+resharper_csharp_wrap_ternary_expr_style = wrap_if_long
+resharper_force_attribute_style = join
+resharper_indent_preprocessor_other = usual_indent
+resharper_indent_preprocessor_region = usual_indent
+resharper_keep_existing_declaration_parens_arrangement = true
+resharper_keep_existing_embedded_arrangement = true
+resharper_keep_existing_expr_member_arrangement = true
+resharper_method_or_operator_body = block_body
+resharper_parentheses_redundancy_style = remove
+resharper_parentheses_same_type_operations = true
+resharper_place_accessorholder_attribute_on_same_line = false
+resharper_place_expr_accessor_on_single_line = true
+resharper_place_expr_method_on_single_line = true
+resharper_place_expr_property_on_single_line = true
+resharper_place_simple_case_statement_on_same_line = false
+resharper_place_simple_initializer_on_single_line = false
+resharper_space_within_empty_braces = false
+resharper_trailing_comma_in_multiline_lists = false
+resharper_wrap_after_declaration_lpar = false
+resharper_wrap_arguments_style = wrap_if_long
+resharper_wrap_array_initializer_style = chop_always
+resharper_wrap_object_and_collection_initializer_style = chop_always
+resharper_wrap_parameters_style = wrap_if_long
+
 [*.cs]
 
 # CS4014: Task not awaited
