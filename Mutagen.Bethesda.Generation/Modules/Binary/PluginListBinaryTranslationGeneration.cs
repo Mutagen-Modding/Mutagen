@@ -362,7 +362,8 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         WrapSet(sb, itemAccessor, list, (wrapFg) =>
         {
             var parseSuffix = recordPerItem ? "PerItem" : null;
-            if (list.SubTypeGeneration is StringType)
+            if (list.SubTypeGeneration is StringType
+                && listBinaryType == ListBinaryType.Trigger)
             {
                 parseSuffix = "TrimNullEnding";
             }
