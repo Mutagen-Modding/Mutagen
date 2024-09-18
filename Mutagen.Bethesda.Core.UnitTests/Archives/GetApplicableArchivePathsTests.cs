@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using FluentAssertions;
 using Mutagen.Bethesda.Archives.DI;
@@ -17,17 +17,21 @@ namespace Mutagen.Bethesda.UnitTests.Archives;
 
 public class GetApplicableArchivePathsTests
 {
+    private static readonly string MyDocumentsPath = $"{PathingUtil.DrivePrefix}{Path.Combine("MyDocuments")}";
     private const string SomeExplicitListingBsa = "SomeExplicitListing.bsa";
     private const string UnusedExplicitListingBsa = "SomeExplicitListing2.bsa";
     private const string SkyrimBsa = "Skyrim.bsa";
     private const string MyModBsa = "MyMod.bsa";
-    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}BaseFolder";
+    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}{Path.Combine("Games", "Skyrim", "Data")}";
 
     private IFileSystem GetFileSystem()
     {
+        var path = new IniPathProvider(
+            new GameReleaseInjection(GameRelease.SkyrimSE),
+            new IniPathLookupInjection(MyDocumentsPath));
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
-            { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData($@"[Archive]
+            { path.Path, new MockFileData($@"[Archive]
 sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         });
         fs.Directory.CreateDirectory(BaseFolder);
@@ -44,8 +48,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
                 fs,
                 new IniPathProvider(
                     gameReleaseInjection,
-                    new IniPathLookup(
-                        GameLocator.Instance))),
+                    new IniPathLookupInjection(MyDocumentsPath))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),
@@ -81,7 +84,8 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         var get = GetClass(fs);
         var applicable = get.Get()
             .ToArray();
-        applicable.Should().StartWith(new FilePath(Path.Combine(BaseFolder, SomeExplicitListingBsa)));
+        applicable.Should().StartWith(new FilePath(
+            Path.Combine(BaseFolder, SomeExplicitListingBsa)));
         applicable.Should().BeEquivalentTo(new FilePath[]
         {
             Path.Combine(BaseFolder, SomeExplicitListingBsa),

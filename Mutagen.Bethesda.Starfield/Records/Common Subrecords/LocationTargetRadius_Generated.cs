@@ -1032,8 +1032,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CollectionIndex = rhs.CollectionIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationTargetRadius item,
+            ILocationTargetRadiusGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationTargetRadius DeepCopy(

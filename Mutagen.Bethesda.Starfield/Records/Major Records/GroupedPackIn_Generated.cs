@@ -1165,8 +1165,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.XGOM = rhs.XGOM;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGroupedPackIn item,
+            IGroupedPackInGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public GroupedPackIn DeepCopy(

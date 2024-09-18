@@ -860,8 +860,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Perk.SetTo(rhs.Perk.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBookPerk item,
+            IBookPerkGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IBookTeachTarget item,

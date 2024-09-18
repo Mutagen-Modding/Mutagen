@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
@@ -21,6 +21,7 @@
     <Compile Include="Assets\SkyrimBehaviorAssetType.cs" />
     <Compile Include="Assets\SkyrimBodyTextureAssetType.cs" />
     <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
+    <Compile Include="Assets\SkyrimInterfaceAssetType.cs" />
     <Compile Include="Assets\SkyrimModelAssetType.cs" />
     <Compile Include="Assets\SkyrimMusicAssetType.cs" />
     <Compile Include="Assets\SkyrimScriptCompiledAssetType.cs">

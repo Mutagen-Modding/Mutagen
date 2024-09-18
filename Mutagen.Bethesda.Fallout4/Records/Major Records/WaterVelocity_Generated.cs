@@ -1123,8 +1123,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown3 = rhs.Unknown3.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWaterVelocity item,
+            IWaterVelocityGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WaterVelocity DeepCopy(
@@ -1355,7 +1367,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _structData.Span.Slice(0x1C, 0x14).ToArray();
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _structData.Span.Slice(0x30, 0x10).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _structData.Span.Length <= 0x30 ? UtilityTranslation.Zeros.Slice(16) : _structData.Span.Slice(0x30, 0x10).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

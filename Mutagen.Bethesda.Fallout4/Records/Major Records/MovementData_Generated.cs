@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public MovementData.VersioningBreaks Versioning { get; set; } = default(MovementData.VersioningBreaks);
+        #endregion
         #region Left
         public MovementDirectionData Left { get; set; } = new MovementDirectionData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -136,6 +139,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Left = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(initialValue, new MovementDirectionData.Mask<TItem>(initialValue));
                 this.Right = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(initialValue, new MovementDirectionData.Mask<TItem>(initialValue));
                 this.Forward = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(initialValue, new MovementDirectionData.Mask<TItem>(initialValue));
@@ -147,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Left,
                 TItem Right,
                 TItem Forward,
@@ -156,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Yaw,
                 TItem Unused)
             {
+                this.Versioning = Versioning;
                 this.Left = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(Left, new MovementDirectionData.Mask<TItem>(Left));
                 this.Right = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(Right, new MovementDirectionData.Mask<TItem>(Right));
                 this.Forward = new MaskItem<TItem, MovementDirectionData.Mask<TItem>?>(Forward, new MovementDirectionData.Mask<TItem>(Forward));
@@ -175,6 +181,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public MaskItem<TItem, MovementDirectionData.Mask<TItem>?>? Left { get; set; }
             public MaskItem<TItem, MovementDirectionData.Mask<TItem>?>? Right { get; set; }
             public MaskItem<TItem, MovementDirectionData.Mask<TItem>?>? Forward { get; set; }
@@ -195,6 +202,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Left, rhs.Left)) return false;
                 if (!object.Equals(this.Right, rhs.Right)) return false;
                 if (!object.Equals(this.Forward, rhs.Forward)) return false;
@@ -208,6 +216,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Left);
                 hash.Add(this.Right);
                 hash.Add(this.Forward);
@@ -224,6 +233,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (Left != null)
                 {
                     if (!eval(this.Left.Overall)) return false;
@@ -267,6 +277,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (Left != null)
                 {
                     if (eval(this.Left.Overall)) return true;
@@ -317,6 +328,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Left = this.Left == null ? null : new MaskItem<R, MovementDirectionData.Mask<R>?>(eval(this.Left.Overall), this.Left.Specific?.Translate(eval));
                 obj.Right = this.Right == null ? null : new MaskItem<R, MovementDirectionData.Mask<R>?>(eval(this.Right.Overall), this.Right.Specific?.Translate(eval));
                 obj.Forward = this.Forward == null ? null : new MaskItem<R, MovementDirectionData.Mask<R>?>(eval(this.Forward.Overall), this.Forward.Specific?.Translate(eval));
@@ -343,6 +355,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(MovementData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Left?.Overall ?? true)
                     {
                         Left?.Print(sb);
@@ -399,6 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public MaskItem<Exception?, MovementDirectionData.ErrorMask?>? Left;
             public MaskItem<Exception?, MovementDirectionData.ErrorMask?>? Right;
             public MaskItem<Exception?, MovementDirectionData.ErrorMask?>? Forward;
@@ -415,6 +432,8 @@ namespace Mutagen.Bethesda.Fallout4
                 MovementData_FieldIndex enu = (MovementData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementData_FieldIndex.Versioning:
+                        return Versioning;
                     case MovementData_FieldIndex.Left:
                         return Left;
                     case MovementData_FieldIndex.Right:
@@ -441,6 +460,9 @@ namespace Mutagen.Bethesda.Fallout4
                 MovementData_FieldIndex enu = (MovementData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case MovementData_FieldIndex.Left:
                         this.Left = new MaskItem<Exception?, MovementDirectionData.ErrorMask?>(ex, null);
                         break;
@@ -475,6 +497,9 @@ namespace Mutagen.Bethesda.Fallout4
                 MovementData_FieldIndex enu = (MovementData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case MovementData_FieldIndex.Left:
                         this.Left = (MaskItem<Exception?, MovementDirectionData.ErrorMask?>?)obj;
                         break;
@@ -507,6 +532,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Left != null) return true;
                 if (Right != null) return true;
                 if (Forward != null) return true;
@@ -540,6 +566,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 Left?.Print(sb);
                 Right?.Print(sb);
                 Forward?.Print(sb);
@@ -558,6 +587,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Left = this.Left.Combine(rhs.Left, (l, r) => l.Combine(r));
                 ret.Right = this.Right.Combine(rhs.Right, (l, r) => l.Combine(r));
                 ret.Forward = this.Forward.Combine(rhs.Forward, (l, r) => l.Combine(r));
@@ -589,6 +619,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public MovementDirectionData.TranslationMask? Left;
             public MovementDirectionData.TranslationMask? Right;
             public MovementDirectionData.TranslationMask? Forward;
@@ -606,6 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Unused = defaultOn;
             }
 
@@ -622,6 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Left != null ? Left.OnOverall : DefaultOn, Left?.GetCrystal()));
                 ret.Add((Right != null ? Right.OnOverall : DefaultOn, Right?.GetCrystal()));
                 ret.Add((Forward != null ? Forward.OnOverall : DefaultOn, Forward?.GetCrystal()));
@@ -637,6 +670,14 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -702,6 +743,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IMovementData>,
         IMovementDataGetter
     {
+        new MovementData.VersioningBreaks Versioning { get; set; }
         new MovementDirectionData Left { get; set; }
         new MovementDirectionData Right { get; set; }
         new MovementDirectionData Forward { get; set; }
@@ -724,6 +766,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MovementData_Registration.Instance;
+        MovementData.VersioningBreaks Versioning { get; }
         IMovementDirectionDataGetter Left { get; }
         IMovementDirectionDataGetter Right { get; }
         IMovementDirectionDataGetter Forward { get; }
@@ -901,14 +944,15 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum MovementData_FieldIndex
     {
-        Left = 0,
-        Right = 1,
-        Forward = 2,
-        Back = 3,
-        Pitch = 4,
-        Roll = 5,
-        Yaw = 6,
-        Unused = 7,
+        Versioning = 0,
+        Left = 1,
+        Right = 2,
+        Forward = 3,
+        Back = 4,
+        Pitch = 5,
+        Roll = 6,
+        Yaw = 7,
+        Unused = 8,
     }
     #endregion
 
@@ -919,9 +963,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(MovementData.Mask<>);
 
@@ -947,6 +991,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SPED;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.SPED);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MovementDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -987,6 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMovementData item)
         {
             ClearPartial();
+            item.Versioning = default(MovementData.VersioningBreaks);
             item.Left.Clear();
             item.Right.Clear();
             item.Forward.Clear();
@@ -1010,6 +1062,10 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.SPED),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1044,6 +1100,7 @@ namespace Mutagen.Bethesda.Fallout4
             MovementData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Left = MaskItemExt.Factory(item.Left.GetEqualsMask(rhs.Left, include), include);
             ret.Right = MaskItemExt.Factory(item.Right.GetEqualsMask(rhs.Right, include), include);
             ret.Forward = MaskItemExt.Factory(item.Forward.GetEqualsMask(rhs.Forward, include), include);
@@ -1096,6 +1153,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             MovementData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Left?.Overall ?? true)
             {
                 item.Left?.Print(sb, "Left");
@@ -1137,6 +1198,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Left) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Left, rhs.Left, out var lhsLeft, out var rhsLeft, out var isLeftEqual))
@@ -1203,6 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IMovementDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Left);
             hash.Add(item.Right);
             hash.Add(item.Forward);
@@ -1243,6 +1309,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)MovementData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)MovementData_FieldIndex.Left) ?? true))
             {
                 errorMask?.PushIndex((int)MovementData_FieldIndex.Left);
@@ -1397,12 +1467,25 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if (rhs.Versioning.HasFlag(MovementData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MovementData_FieldIndex.Unused) ?? true))
             {
                 item.Unused = rhs.Unused.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMovementData item,
+            IMovementDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MovementData DeepCopy(
@@ -1525,9 +1608,12 @@ namespace Mutagen.Bethesda.Fallout4
             ((MovementRotationDataBinaryWriteTranslation)((IBinaryItem)YawItem).BinaryWriteTranslator).Write(
                 item: YawItem,
                 writer: writer);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            if (!item.Versioning.HasFlag(MovementData.VersioningBreaks.Break0))
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused);
+            }
         }
 
         public void Write(
@@ -1535,9 +1621,16 @@ namespace Mutagen.Bethesda.Fallout4
             IMovementDataGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Subrecord(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.SPED),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1568,6 +1661,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.Pitch = Mutagen.Bethesda.Fallout4.MovementRotationData.CreateFromBinary(frame: frame);
             item.Roll = Mutagen.Bethesda.Fallout4.MovementRotationData.CreateFromBinary(frame: frame);
             item.Yaw = Mutagen.Bethesda.Fallout4.MovementRotationData.CreateFromBinary(frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= MovementData.VersioningBreaks.Break0;
+                return;
+            }
             item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(12));
         }
 
@@ -1634,6 +1732,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
+        public MovementData.VersioningBreaks Versioning { get; private set; }
         public IMovementDirectionDataGetter Left => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData, _package, default(TypedParseParams));
         public IMovementDirectionDataGetter Right => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData.Slice(0x10), _package, default(TypedParseParams));
         public IMovementDirectionDataGetter Forward => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData.Slice(0x20), _package, default(TypedParseParams));
@@ -1641,7 +1740,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IMovementRotationDataGetter Pitch => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x40), _package, default(TypedParseParams));
         public IMovementRotationDataGetter Roll => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x50), _package, default(TypedParseParams));
         public IMovementRotationDataGetter Yaw => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x60), _package, default(TypedParseParams));
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x70, 0xC).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Length <= 0x70 ? UtilityTranslation.Zeros.Slice(12) : _structData.Span.Slice(0x70, 0xC).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1663,7 +1762,7 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordStructMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1673,7 +1772,10 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new MovementDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x7C;
+            if (ret._structData.Length <= 0x70)
+            {
+                ret.Versioning |= MovementData.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

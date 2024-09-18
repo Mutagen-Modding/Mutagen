@@ -863,8 +863,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHolotapeSound item,
+            IHolotapeSoundGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAHolotapeData item,

@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Flag = rhs.Flag;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpellData item,
+            ISpellDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SpellData DeepCopy(

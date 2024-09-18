@@ -3,6 +3,10 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 
@@ -602,7 +606,7 @@ public static class HeaderExt
         return RecordSpanExtensions.EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength);
     }
 
-    public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
+    public static IEnumerable<SubrecordPinFrame> MasterSubrecords(this ModHeaderFrame modHeader)
     {
         foreach (var pin in EnumerateSubrecords(modHeader))
         {
@@ -611,6 +615,27 @@ public static class HeaderExt
                 yield return pin;
             }
         }
+    }
+
+    public static IEnumerable<IMasterReferenceGetter> Masters(this ModHeaderFrame modHeader, ModKey modKey)
+    {
+        var package = new BinaryOverlayFactoryPackage(
+            new ParsingMeta(modHeader.Meta, modKey, masterReferences: null!));
+        return modHeader
+            .MasterSubrecords()
+            .Select(mastPin =>
+            {
+                return MasterReferenceBinaryOverlay.MasterReferenceFactory(
+                        mastPin.HeaderAndContentData,
+                        package)
+                    // In case not read safe
+                    .DeepCopy();
+            });
+    }
+
+    public static MasterReferenceCollection ToMasterReferenceCollection(this ModHeaderFrame modHeader, ModKey modKey)
+    {
+        return MasterReferenceCollection.FromModHeader(modKey, modHeader);
     }
 
     // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a GroupFrame's enumerator.

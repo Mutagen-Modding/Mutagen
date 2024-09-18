@@ -901,8 +901,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.RawVariableData = rhs.RawVariableData;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INoOwner item,
+            INoOwnerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IOwnerTarget item,

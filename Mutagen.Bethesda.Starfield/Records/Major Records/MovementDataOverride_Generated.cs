@@ -930,8 +930,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.SPED = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMovementDataOverride item,
+            IMovementDataOverrideGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MovementDataOverride DeepCopy(

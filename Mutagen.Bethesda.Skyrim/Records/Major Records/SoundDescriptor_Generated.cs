@@ -2081,8 +2081,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.StaticAttenuation = rhs.StaticAttenuation;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISoundDescriptor item,
+            ISoundDescriptorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -2258,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     StringBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem.RawPath,
+                        item: subItem.GivenPath,
                         header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                         binaryType: StringBinaryType.NullTerminate);
                 });

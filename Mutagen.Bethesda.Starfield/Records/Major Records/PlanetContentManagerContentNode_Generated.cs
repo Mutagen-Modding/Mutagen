@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlanetContentTargetGetter> IPlanetContentManagerContentNodeGetter.Content => this.Content;
         #endregion
-        #region IOVR
-        public Boolean IOVR { get; set; } = default(Boolean);
+        #region OverrideContentPlacementPropertiesAndConditions
+        public Boolean OverrideContentPlacementPropertiesAndConditions { get; set; } = default(Boolean);
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -104,6 +104,26 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
+        #endregion
+        #region ParentNode
+        private readonly IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> _ParentNode = new FormLinkNullable<IPlanetContentManagerBranchNodeGetter>();
+        public IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> ParentNode
+        {
+            get => _ParentNode;
+            set => _ParentNode.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> IPlanetContentManagerContentNodeGetter.ParentNode => this.ParentNode;
+        #endregion
+        #region PreviousNode
+        private readonly IFormLinkNullable<IPlanetContentManagerContentNodeGetter> _PreviousNode = new FormLinkNullable<IPlanetContentManagerContentNodeGetter>();
+        public IFormLinkNullable<IPlanetContentManagerContentNodeGetter> PreviousNode
+        {
+            get => _PreviousNode;
+            set => _PreviousNode.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlanetContentManagerContentNodeGetter> IPlanetContentManagerContentNodeGetter.PreviousNode => this.PreviousNode;
         #endregion
 
         #region To String
@@ -132,8 +152,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Content = initialValue;
-                this.IOVR = initialValue;
+                this.OverrideContentPlacementPropertiesAndConditions = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentNode = initialValue;
+                this.PreviousNode = initialValue;
             }
 
             public Mask(
@@ -146,8 +168,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
                 TItem Content,
-                TItem IOVR,
-                TItem Keywords)
+                TItem OverrideContentPlacementPropertiesAndConditions,
+                TItem Keywords,
+                TItem ParentNode,
+                TItem PreviousNode)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -159,8 +183,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Content = Content;
-                this.IOVR = IOVR;
+                this.OverrideContentPlacementPropertiesAndConditions = OverrideContentPlacementPropertiesAndConditions;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentNode = ParentNode;
+                this.PreviousNode = PreviousNode;
             }
 
             #pragma warning disable CS8618
@@ -174,8 +200,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Content;
-            public TItem IOVR;
+            public TItem OverrideContentPlacementPropertiesAndConditions;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem ParentNode;
+            public TItem PreviousNode;
             #endregion
 
             #region Equals
@@ -191,8 +219,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Content, rhs.Content)) return false;
-                if (!object.Equals(this.IOVR, rhs.IOVR)) return false;
+                if (!object.Equals(this.OverrideContentPlacementPropertiesAndConditions, rhs.OverrideContentPlacementPropertiesAndConditions)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.ParentNode, rhs.ParentNode)) return false;
+                if (!object.Equals(this.PreviousNode, rhs.PreviousNode)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -200,8 +230,10 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Components);
                 hash.Add(this.Content);
-                hash.Add(this.IOVR);
+                hash.Add(this.OverrideContentPlacementPropertiesAndConditions);
                 hash.Add(this.Keywords);
+                hash.Add(this.ParentNode);
+                hash.Add(this.PreviousNode);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -225,7 +257,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Content)) return false;
-                if (!eval(this.IOVR)) return false;
+                if (!eval(this.OverrideContentPlacementPropertiesAndConditions)) return false;
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -237,6 +269,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.ParentNode)) return false;
+                if (!eval(this.PreviousNode)) return false;
                 return true;
             }
             #endregion
@@ -258,7 +292,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Content)) return true;
-                if (eval(this.IOVR)) return true;
+                if (eval(this.OverrideContentPlacementPropertiesAndConditions)) return true;
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -270,6 +304,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.ParentNode)) return true;
+                if (eval(this.PreviousNode)) return true;
                 return false;
             }
             #endregion
@@ -301,7 +337,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Content = eval(this.Content);
-                obj.IOVR = eval(this.IOVR);
+                obj.OverrideContentPlacementPropertiesAndConditions = eval(this.OverrideContentPlacementPropertiesAndConditions);
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -316,6 +352,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.ParentNode = eval(this.ParentNode);
+                obj.PreviousNode = eval(this.PreviousNode);
             }
             #endregion
 
@@ -357,9 +395,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Content, "Content");
                     }
-                    if (printMask?.IOVR ?? true)
+                    if (printMask?.OverrideContentPlacementPropertiesAndConditions ?? true)
                     {
-                        sb.AppendItem(IOVR, "IOVR");
+                        sb.AppendItem(OverrideContentPlacementPropertiesAndConditions, "OverrideContentPlacementPropertiesAndConditions");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
@@ -382,6 +420,14 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.ParentNode ?? true)
+                    {
+                        sb.AppendItem(ParentNode, "ParentNode");
+                    }
+                    if (printMask?.PreviousNode ?? true)
+                    {
+                        sb.AppendItem(PreviousNode, "PreviousNode");
+                    }
                 }
             }
             #endregion
@@ -395,8 +441,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Content;
-            public Exception? IOVR;
+            public Exception? OverrideContentPlacementPropertiesAndConditions;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? ParentNode;
+            public Exception? PreviousNode;
             #endregion
 
             #region IErrorMask
@@ -409,10 +457,14 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case PlanetContentManagerContentNode_FieldIndex.Content:
                         return Content;
-                    case PlanetContentManagerContentNode_FieldIndex.IOVR:
-                        return IOVR;
+                    case PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions:
+                        return OverrideContentPlacementPropertiesAndConditions;
                     case PlanetContentManagerContentNode_FieldIndex.Keywords:
                         return Keywords;
+                    case PlanetContentManagerContentNode_FieldIndex.ParentNode:
+                        return ParentNode;
+                    case PlanetContentManagerContentNode_FieldIndex.PreviousNode:
+                        return PreviousNode;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -429,11 +481,17 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerContentNode_FieldIndex.Content:
                         this.Content = ex;
                         break;
-                    case PlanetContentManagerContentNode_FieldIndex.IOVR:
-                        this.IOVR = ex;
+                    case PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions:
+                        this.OverrideContentPlacementPropertiesAndConditions = ex;
                         break;
                     case PlanetContentManagerContentNode_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlanetContentManagerContentNode_FieldIndex.ParentNode:
+                        this.ParentNode = ex;
+                        break;
+                    case PlanetContentManagerContentNode_FieldIndex.PreviousNode:
+                        this.PreviousNode = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -452,11 +510,17 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerContentNode_FieldIndex.Content:
                         this.Content = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentNode_FieldIndex.IOVR:
-                        this.IOVR = (Exception?)obj;
+                    case PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions:
+                        this.OverrideContentPlacementPropertiesAndConditions = (Exception?)obj;
                         break;
                     case PlanetContentManagerContentNode_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlanetContentManagerContentNode_FieldIndex.ParentNode:
+                        this.ParentNode = (Exception?)obj;
+                        break;
+                    case PlanetContentManagerContentNode_FieldIndex.PreviousNode:
+                        this.PreviousNode = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -469,8 +533,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Components != null) return true;
                 if (Content != null) return true;
-                if (IOVR != null) return true;
+                if (OverrideContentPlacementPropertiesAndConditions != null) return true;
                 if (Keywords != null) return true;
+                if (ParentNode != null) return true;
+                if (PreviousNode != null) return true;
                 return false;
             }
             #endregion
@@ -519,7 +585,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Content, "Content");
                 }
                 {
-                    sb.AppendItem(IOVR, "IOVR");
+                    sb.AppendItem(OverrideContentPlacementPropertiesAndConditions, "OverrideContentPlacementPropertiesAndConditions");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
@@ -541,6 +607,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(ParentNode, "ParentNode");
+                }
+                {
+                    sb.AppendItem(PreviousNode, "PreviousNode");
+                }
             }
             #endregion
 
@@ -551,8 +623,10 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Content = this.Content.Combine(rhs.Content);
-                ret.IOVR = this.IOVR.Combine(rhs.IOVR);
+                ret.OverrideContentPlacementPropertiesAndConditions = this.OverrideContentPlacementPropertiesAndConditions.Combine(rhs.OverrideContentPlacementPropertiesAndConditions);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.ParentNode = this.ParentNode.Combine(rhs.ParentNode);
+                ret.PreviousNode = this.PreviousNode.Combine(rhs.PreviousNode);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -577,8 +651,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public AComponent.TranslationMask? Components;
             public bool Content;
-            public bool IOVR;
+            public bool OverrideContentPlacementPropertiesAndConditions;
             public bool Keywords;
+            public bool ParentNode;
+            public bool PreviousNode;
             #endregion
 
             #region Ctors
@@ -588,8 +664,10 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Content = defaultOn;
-                this.IOVR = defaultOn;
+                this.OverrideContentPlacementPropertiesAndConditions = defaultOn;
                 this.Keywords = defaultOn;
+                this.ParentNode = defaultOn;
+                this.PreviousNode = defaultOn;
             }
 
             #endregion
@@ -599,8 +677,10 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Content, null));
-                ret.Add((IOVR, null));
+                ret.Add((OverrideContentPlacementPropertiesAndConditions, null));
                 ret.Add((Keywords, null));
+                ret.Add((ParentNode, null));
+                ret.Add((PreviousNode, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -757,11 +837,13 @@ namespace Mutagen.Bethesda.Starfield
     {
         new ExtendedList<AComponent> Components { get; }
         new IFormLinkNullable<IPlanetContentTargetGetter> Content { get; set; }
-        new Boolean IOVR { get; set; }
+        new Boolean OverrideContentPlacementPropertiesAndConditions { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> ParentNode { get; set; }
+        new IFormLinkNullable<IPlanetContentManagerContentNodeGetter> PreviousNode { get; set; }
     }
 
     public partial interface IPlanetContentManagerContentNodeInternal :
@@ -785,13 +867,15 @@ namespace Mutagen.Bethesda.Starfield
         static new ILoquiRegistration StaticRegistration => PlanetContentManagerContentNode_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkNullableGetter<IPlanetContentTargetGetter> Content { get; }
-        Boolean IOVR { get; }
+        Boolean OverrideContentPlacementPropertiesAndConditions { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
+        IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> ParentNode { get; }
+        IFormLinkNullableGetter<IPlanetContentManagerContentNodeGetter> PreviousNode { get; }
 
     }
 
@@ -970,8 +1054,10 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         Components = 7,
         Content = 8,
-        IOVR = 9,
+        OverrideContentPlacementPropertiesAndConditions = 9,
         Keywords = 10,
+        ParentNode = 11,
+        PreviousNode = 12,
     }
     #endregion
 
@@ -982,9 +1068,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(PlanetContentManagerContentNode.Mask<>);
 
@@ -1021,7 +1107,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCE,
                 RecordTypes.PCCC,
                 RecordTypes.IOVR,
-                RecordTypes.KWDA);
+                RecordTypes.KWDA,
+                RecordTypes.PRTN,
+                RecordTypes.PRVN);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1068,8 +1156,10 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.Content.Clear();
-            item.IOVR = default(Boolean);
+            item.OverrideContentPlacementPropertiesAndConditions = default(Boolean);
             item.Keywords = null;
+            item.ParentNode.Clear();
+            item.PreviousNode.Clear();
             base.Clear(item);
         }
         
@@ -1090,6 +1180,8 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.Content.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.ParentNode.Relink(mapping);
+            obj.PreviousNode.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlanetContentManagerContentNode obj)
@@ -1186,11 +1278,13 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Content = item.Content.Equals(rhs.Content);
-            ret.IOVR = item.IOVR == rhs.IOVR;
+            ret.OverrideContentPlacementPropertiesAndConditions = item.OverrideContentPlacementPropertiesAndConditions == rhs.OverrideContentPlacementPropertiesAndConditions;
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.ParentNode = item.ParentNode.Equals(rhs.ParentNode);
+            ret.PreviousNode = item.PreviousNode.Equals(rhs.PreviousNode);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1258,9 +1352,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Content.FormKeyNullable, "Content");
             }
-            if (printMask?.IOVR ?? true)
+            if (printMask?.OverrideContentPlacementPropertiesAndConditions ?? true)
             {
-                sb.AppendItem(item.IOVR, "IOVR");
+                sb.AppendItem(item.OverrideContentPlacementPropertiesAndConditions, "OverrideContentPlacementPropertiesAndConditions");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
@@ -1276,6 +1370,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.ParentNode ?? true)
+            {
+                sb.AppendItem(item.ParentNode.FormKeyNullable, "ParentNode");
+            }
+            if (printMask?.PreviousNode ?? true)
+            {
+                sb.AppendItem(item.PreviousNode.FormKeyNullable, "PreviousNode");
             }
         }
         
@@ -1335,13 +1437,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Content.Equals(rhs.Content)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.IOVR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions) ?? true))
             {
-                if (lhs.IOVR != rhs.IOVR) return false;
+                if (lhs.OverrideContentPlacementPropertiesAndConditions != rhs.OverrideContentPlacementPropertiesAndConditions) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.ParentNode) ?? true))
+            {
+                if (!lhs.ParentNode.Equals(rhs.ParentNode)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.PreviousNode) ?? true))
+            {
+                if (!lhs.PreviousNode.Equals(rhs.PreviousNode)) return false;
             }
             return true;
         }
@@ -1373,8 +1483,10 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Components);
             hash.Add(item.Content);
-            hash.Add(item.IOVR);
+            hash.Add(item.OverrideContentPlacementPropertiesAndConditions);
             hash.Add(item.Keywords);
+            hash.Add(item.ParentNode);
+            hash.Add(item.PreviousNode);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1420,6 +1532,14 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.ParentNode, out var ParentNodeInfo))
+            {
+                yield return ParentNodeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PreviousNode, out var PreviousNodeInfo))
+            {
+                yield return PreviousNodeInfo;
+            }
             yield break;
         }
         
@@ -1429,13 +1549,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1539,9 +1656,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Content.SetTo(rhs.Content.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.IOVR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions) ?? true))
             {
-                item.IOVR = rhs.IOVR;
+                item.OverrideContentPlacementPropertiesAndConditions = rhs.OverrideContentPlacementPropertiesAndConditions;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.Keywords) ?? true))
             {
@@ -1570,8 +1687,28 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.ParentNode) ?? true))
+            {
+                item.ParentNode.SetTo(rhs.ParentNode.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentNode_FieldIndex.PreviousNode) ?? true))
+            {
+                item.PreviousNode.SetTo(rhs.PreviousNode.FormKeyNullable);
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetContentManagerContentNode item,
+            IPlanetContentManagerContentNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -1744,7 +1881,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.PCCC));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.IOVR,
+                item: item.OverrideContentPlacementPropertiesAndConditions,
                 header: translationParams.ConvertToCustom(RecordTypes.IOVR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
@@ -1756,6 +1893,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParentNode,
+                header: translationParams.ConvertToCustom(RecordTypes.PRTN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviousNode,
+                header: translationParams.ConvertToCustom(RecordTypes.PRVN));
         }
 
         public void Write(
@@ -1859,8 +2004,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.IOVR:
                 {
-                    item.IOVR = true;
-                    return (int)PlanetContentManagerContentNode_FieldIndex.IOVR;
+                    item.OverrideContentPlacementPropertiesAndConditions = true;
+                    return (int)PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions;
                 }
                 case RecordTypeInts.KWDA:
                 {
@@ -1871,6 +2016,18 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)PlanetContentManagerContentNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRTN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlanetContentManagerContentNode_FieldIndex.ParentNode;
+                }
+                case RecordTypeInts.PRVN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlanetContentManagerContentNode_FieldIndex.PreviousNode;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1937,13 +2094,21 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ContentLocation;
         public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentTargetGetter>(_package, _recordData, _ContentLocation);
         #endregion
-        #region IOVR
-        private int? _IOVRLocation;
-        public Boolean IOVR => _IOVRLocation.HasValue ? true : default(Boolean);
+        #region OverrideContentPlacementPropertiesAndConditions
+        private int? _OverrideContentPlacementPropertiesAndConditionsLocation;
+        public Boolean OverrideContentPlacementPropertiesAndConditions => _OverrideContentPlacementPropertiesAndConditionsLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region ParentNode
+        private int? _ParentNodeLocation;
+        public IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> ParentNode => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentManagerBranchNodeGetter>(_package, _recordData, _ParentNodeLocation);
+        #endregion
+        #region PreviousNode
+        private int? _PreviousNodeLocation;
+        public IFormLinkNullableGetter<IPlanetContentManagerContentNodeGetter> PreviousNode => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentManagerContentNodeGetter>(_package, _recordData, _PreviousNodeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2030,8 +2195,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.IOVR:
                 {
-                    _IOVRLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentNode_FieldIndex.IOVR;
+                    _OverrideContentPlacementPropertiesAndConditionsLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerContentNode_FieldIndex.OverrideContentPlacementPropertiesAndConditions;
                 }
                 case RecordTypeInts.KWDA:
                 {
@@ -2042,6 +2207,16 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)PlanetContentManagerContentNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRTN:
+                {
+                    _ParentNodeLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerContentNode_FieldIndex.ParentNode;
+                }
+                case RecordTypeInts.PRVN:
+                {
+                    _PreviousNodeLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerContentNode_FieldIndex.PreviousNode;
                 }
                 default:
                     return base.FillRecordType(

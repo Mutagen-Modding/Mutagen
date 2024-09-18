@@ -1021,8 +1021,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Icon = rhs.Icon;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFacePart item,
+            IFacePartGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FacePart DeepCopy(

@@ -1,6 +1,9 @@
 using System.IO.Abstractions;
 using Loqui.Internal;
+using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -26,6 +29,9 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal TGroupMask? GroupMask { get; init; }
     internal BinaryReadParameters Params { get; init; } = BinaryReadParameters.Default;
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IReadOnlyCollection<ModKey>, IEnumerable<IModMasterStyledGetter>>? _loadOrderSetter { get; init; }
+    internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>(); 
 }
 
 /// <summary>
@@ -176,7 +182,7 @@ public class BinaryReadBuilderSourceStreamFactoryChoice<TMod, TModGetter, TGroup
 /// </summary>
 public class BinaryReadBuilderSeparatedSourceChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly GameRelease _release;
     private readonly IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator;
@@ -240,7 +246,7 @@ public class BinaryReadBuilderSeparatedSourceChoice<TMod, TModGetter, TGroupMask
 /// </summary>
 public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param;
 
@@ -253,22 +259,134 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     /// <summary>
     /// Provides a load order of mod objects to look to. <br />
     /// This is used to construct the separated load order needed to interpret FormIDs. <br />
-    /// It is expected to contain all of the mods that this mod has as masters.
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultLoadOrder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease),
+            _loadOrderSetter = static (param, alreadyKnownMasters) =>
+            {
+                var dataFolder = param._dataFolderGetter?.Invoke(param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder, 
+                    param.GameRelease, 
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);   
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                    .ResolveExistingMods();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
     /// </summary>
     /// <param name="loadOrder">Load order to refer to when parsing</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<ModKey>? loadOrder)
     {
-        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(
-            _param with
-            {
-                Params = _param.Params with
-                {
-                    LoadOrder = loadOrder
-                }
-            });
+        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<ModKey>());
     }
-    
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params ModKey[] loadOrder)
+    {
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                if (loadOrder.Length == 0)
+                {
+                    return Array.Empty<IModMasterStyledGetter>();
+                }
+                
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return Array.Empty<IModMasterStyledGetter>();
+                }
+                
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder.Value,
+                    loadOrder,
+                    param.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                    .ResolveExistingMods();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<IModMasterStyledGetter>? loadOrder)
+    {
+        return WithLoadOrder(loadOrder?.ToArray() ?? Array.Empty<IModMasterStyledGetter>());
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(params IModMasterStyledGetter[] loadOrder)
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                var lo = new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false);
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey));
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the separated load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters. 
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter>? loadOrder)
+    {
+        if (loadOrder == null)
+        {
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+        }
+        
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                return loadOrder.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey));
+            }
+        });
+    }
+
     /// <summary>
     /// Opt to not provide a load order. <br />
     /// WARNING:  This can lead to corrupted content if the mod contains references to light or half masters.
@@ -279,13 +397,143 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
     }
+
+    /// <summary>
+    /// Writes the mod with the load order found in mod header, and with given data folder as reference.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrderFromHeaderMasters()
+    {
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _loadOrderSetter = static (param, alreadyKnownMasters) =>
+            {
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return Array.Empty<IModMasterStyledGetter>();
+                }
+                
+                ModHeaderFrame modHeader;
+                if (param._path != null)
+                {
+                    modHeader = ModHeaderFrame.FromPath(
+                        new ModPath(param.ModKey, param._path.Value), param.GameRelease,
+                        param.Params.FileSystem);
+                }
+                else if (param._stream != null)
+                {
+                    var pos = param._stream.Position;
+                    modHeader = ModHeaderFrame.FromStream(param._stream, param.ModKey, param.GameRelease);
+                    param._stream.Position = pos;
+                }
+                else if (param._streamFactory != null)
+                {
+                    using var stream = param._streamFactory();
+                    modHeader = ModHeaderFrame.FromStream(stream, param.ModKey, param.GameRelease);
+                }
+                else
+                {
+                    throw new ArgumentException("Parameters didn't define any filepath or streams");
+                }
+
+                var masters = MasterReferenceCollection.FromModHeader(
+                    param.ModKey,
+                    modHeader);
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder.Value, 
+                    masters.Masters.Select(x => x.Master),
+                    param.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                    .ResolveExistingMods();
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
+        });
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+}
+
+/// <summary>
+/// Choice of Data folder location
+/// </summary>
+public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
+    where TMod : IMod
+    where TModGetter : class, IModDisposeGetter
+{
+    private readonly BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param;
+
+    internal BinaryReadBuilderDataFolderChoice(
+        BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> param)
+    {
+        _param = param;
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+        });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+        }
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = (param) => dataFolder.Value
+        });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithNoDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+    }
 }
 
 public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     where TMod : IMod
     where TModGetter : IModDisposeGetter
 {
-    internal BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param { get; init; }
+    internal BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param { get; set; }
 
     internal BinaryReadBuilder(
         BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> param)
@@ -304,6 +552,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     /// <returns>A readonly mod object with minimal initial parsing done</returns>
     public TModGetter Construct()
     {
+        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
         return _param._instantiator.Readonly(this);
     }
 
@@ -553,13 +802,49 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
             }
         };
     }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+        return this with
+        {
+            _param = _param with
+            {
+                KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
+            }
+        };
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
     
     /// <summary>
     /// Sets the filesystem to use
     /// </summary>
     /// <param name="fileSystem">FileSystem to read from</param>
     /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithFileSystem(IFileSystem fileSystem)
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithFileSystem(IFileSystem? fileSystem)
     {
         return this with
         {
@@ -573,6 +858,26 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
         };
     }
 
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+        });
+    }
+    
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param);
+        }
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = (param) => dataFolder.Value
+        });
+    }
+    
     #endregion
 }
 
@@ -819,6 +1124,42 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
             }
         };
     }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+        return this with
+        {
+            _param = _param with
+            {
+                KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
+            }
+        };
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
     
     /// <summary>
     /// Sets the filesystem to use
@@ -839,6 +1180,26 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
         };
     }
 
+    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithDefaultDataFolder()
+    {
+        return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+        });
+    }
+    
+    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param);
+        }
+        return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _dataFolderGetter = (param) => dataFolder.Value
+        });
+    }
+    
     #endregion
     
     /// <summary>
@@ -884,6 +1245,42 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     /// <returns>A mutable mod object with all the data loaded</returns>
     public new TMod Construct()
     {
+        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
         return _param._instantiator.Mutable(this);
+    }
+}
+
+internal static class BinaryReadBuilderHelper
+{
+    public static BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> RunLoadOrderSetter<TMod, TModGetter, TGroupMask>(
+        BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> p)
+        where TMod : IMod
+        where TModGetter : IModDisposeGetter
+    {
+        var knownSet = new HashSet<ModKey>(p.KnownMasters.Select(x => x.ModKey));
+        IReadOnlyCollection<IModMasterStyledGetter>? loadOrder = null; 
+        
+        if (p._loadOrderSetter != null)
+        {
+            loadOrder = p._loadOrderSetter(p, knownSet)
+                .And(p.KnownMasters)
+                .Distinct(x => x.ModKey)
+                .ToArray();
+        }
+        else if (p.KnownMasters.Length > 0)
+        {
+            loadOrder = p.KnownMasters;
+        }
+
+        return p with
+        {
+            Params = p.Params with
+            {
+                MasterFlagsLookup = loadOrder != null && loadOrder.Count > 0
+                    ? new LoadOrder<IModMasterStyledGetter>(
+                        p.KnownMasters.And(loadOrder).Distinct(x => x.ModKey))
+                    : null
+            }
+        };
     }
 }

@@ -826,8 +826,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Size = rhs.Size;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcRaceOverrideSize item,
+            INpcRaceOverrideSizeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcRaceOverrideSize DeepCopy(

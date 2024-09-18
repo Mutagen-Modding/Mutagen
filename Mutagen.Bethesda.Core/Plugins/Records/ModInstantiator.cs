@@ -1,5 +1,6 @@
 using Noggog;
 using System.Linq.Expressions;
+using System.Reflection;
 using DynamicData;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -88,11 +89,31 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         static ModInstantiator()
         {
-            if (!LoquiRegistration.TryGetRegister(typeof(TMod), out var regis))
+            bool createActivator = true;
+            var type = typeof(TMod);
+            if (type.Name.EndsWith("DisposableGetter"))
+            {
+                var className = type.Name.TrimEnd("DisposableGetter") + "Getter";
+                type = Type.GetType($"{type.Namespace}.{className}, {type.Namespace}");
+                createActivator = false;
+            }
+            
+            if (type == null || !LoquiRegistration.TryGetRegister(type, out var regis))
             {
                 throw new ArgumentException();
             }
-            Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
+
+            if (createActivator)
+            {
+                Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
+            }
+            else
+            {
+                Activator = (Key, Release, Version, Ranges) =>
+                {
+                    throw new ArgumentException($"Cannot create a new mod of type {type}");
+                };
+            }
             if (typeof(TMod).InheritsFrom(typeof(IMod)))
             {
                 Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);

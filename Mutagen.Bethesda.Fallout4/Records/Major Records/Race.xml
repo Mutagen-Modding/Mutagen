@@ -213,10 +213,10 @@
   <Object name="MovementDataOverride" objType="Subrecord">
     <Fields>
       <FormLink name="MovementType" recordType="MTYP" refName="MovementType" />
-      <RefDirect name="MovementData" recordType="SPED" refName="MovementData" />
+      <RefDirect name="MovementData" refName="MovementData" />
     </Fields>
   </Object>
-  <Object name="MovementData" objType="Subrecord">
+  <Object name="MovementData" recordType="SPED" objType="Subrecord">
     <Fields>
       <RefDirect name="Left" refName="MovementDirectionData" />
       <RefDirect name="Right" refName="MovementDirectionData" />
@@ -225,6 +225,7 @@
       <RefDirect name="Pitch" refName="MovementRotationData" />
       <RefDirect name="Roll" refName="MovementRotationData" />
       <RefDirect name="Yaw" refName="MovementRotationData" />
+      <Break />
       <ByteArray name="Unused" byteLength="12" nullable="False" />
     </Fields>
   </Object>

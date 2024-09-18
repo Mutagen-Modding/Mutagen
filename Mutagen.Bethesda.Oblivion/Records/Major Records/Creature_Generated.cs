@@ -3349,8 +3349,20 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICreature item,
+            ICreatureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
@@ -3543,6 +3555,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.Models,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NIFZ),
+                writeNullSuffix: true,
                 transl: StringBinaryTranslation.Instance.Write);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -3595,6 +3608,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.Animations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KFFZ),
+                writeNullSuffix: true,
                 transl: StringBinaryTranslation.Instance.Write);
             if (item.Data is {} DataItem)
             {
@@ -3771,7 +3785,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Models = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
@@ -3835,7 +3849,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Animations = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
@@ -4165,7 +4179,8 @@ namespace Mutagen.Bethesda.Oblivion
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
+                        trimNullSuffix: true);
                     return (int)Creature_FieldIndex.Models;
                 }
                 case RecordTypeInts.NIFT:
@@ -4228,7 +4243,8 @@ namespace Mutagen.Bethesda.Oblivion
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
+                        trimNullSuffix: true);
                     return (int)Creature_FieldIndex.Animations;
                 }
                 case RecordTypeInts.DATA:

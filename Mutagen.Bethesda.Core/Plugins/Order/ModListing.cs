@@ -55,7 +55,7 @@ public sealed record ModListing : IModListingGetter
 /// <inheritdoc cref="IModListingGetter{TMod}" />
 [DebuggerDisplay("{ToString()}")]
 public sealed record ModListing<TMod> : IModListing<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <inheritdoc />
     public ModKey ModKey { get; init; }
@@ -145,7 +145,7 @@ public interface IModListingGetter<out TMod> : IModListingGetter, IDisposable
 
 /// <inheritdoc />
 public interface IModListing<TMod> : IModListingGetter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <summary>
     /// Mod object

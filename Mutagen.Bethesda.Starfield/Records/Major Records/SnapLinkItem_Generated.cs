@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LinkedNode = rhs.LinkedNode;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISnapLinkItem item,
+            ISnapLinkItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SnapLinkItem DeepCopy(

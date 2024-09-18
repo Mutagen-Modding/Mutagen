@@ -121,7 +121,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
-        var header = ModHeaderFrame.FromPath(path: path, release: release, readSafe: true,
+        var header = ModHeaderFrame.FromPath(path: path, release: release,
             fileSystem: fileSystem);
         return FromModHeader(path.ModKey, header);
     }
@@ -148,19 +148,8 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         ModKey modKey,
         ModHeaderFrame header)
     {
-        var package = new BinaryOverlayFactoryPackage(
-            new ParsingMeta(header.Meta, modKey, masterReferences: null!));
         return new MasterReferenceCollection(
             modKey,
-            header
-                .Masters()
-                .Select(mastPin =>
-                {
-                    return MasterReferenceBinaryOverlay.MasterReferenceFactory(
-                            mastPin.HeaderAndContentData,
-                            package)
-                        // In case not read safe
-                        .DeepCopy();
-                }));
+            header.Masters(modKey));
     }
 }

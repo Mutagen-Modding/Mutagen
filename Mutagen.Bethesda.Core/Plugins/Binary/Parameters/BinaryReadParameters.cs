@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 
@@ -15,9 +16,9 @@ public record BinaryReadParameters
     public StringsReadParameters? StringsParam { get; init; }
     
     /// <summary>
-    /// Load order.  Required for games with Separated Load Order lists per master type
+    /// Required for games with Separated Load Order lists per master type
     /// </summary>
-    public ILoadOrderGetter<IModFlagsGetter>? LoadOrder { get; init; }
+    public IReadOnlyCache<IModMasterStyledGetter, ModKey>? MasterFlagsLookup { get; init; }
 
     /// <summary>
     /// Whether to use multithreading when possible

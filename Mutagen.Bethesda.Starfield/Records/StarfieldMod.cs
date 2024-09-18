@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -171,14 +172,31 @@ public partial class StarfieldMod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> 
         BeginWrite => new(
         this, 
         StarfieldWriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IStarfieldModGetter> WriteBuilder => new(StarfieldWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<IStarfieldModGetter> WriteBuilder(StarfieldRelease release) => new(release.ToGameRelease(), StarfieldWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+}
+
+public partial interface IStarfieldModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> BeginWrite { get; }
+}
+
+partial class StarfieldModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IStarfieldMod item, IStarfieldModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class StarfieldModBinaryOverlay
@@ -195,13 +213,22 @@ internal partial class StarfieldModBinaryOverlay
     public bool CanBeMediumMaster => true;
     public bool IsMediumMaster => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Medium);
     public bool ListsOverriddenForms => true;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IStarfieldModGetter>(
-        this, 
-        StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter>(
+            this, 
+            StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter>(
+            this, 
+            StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class StarfieldModSetterCommon
@@ -488,5 +515,57 @@ partial class StarfieldModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
+    partial void GetCustomRecordCount(IStarfieldModGetter item, Action<uint> setter)
+    {
+        uint count = 0;
+        // Tally Cell Group counts
+        int cellSubGroupCount(ICellGetter cell)
+        {
+            int cellGroupCount = 0;
+            if ((cell.Temporary?.Count ?? 0) > 0
+                || cell.NavigationMeshes.Count > 0)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.Persistent?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if (cellGroupCount > 0)
+            {
+                cellGroupCount++;
+            }
+            return cellGroupCount;
+        }
+        count += (uint)item.Cells.Records.Count; // Block Count
+        count += (uint)item.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+        count += (uint)item.Cells.Records
+            .SelectMany(block => block.SubBlocks)
+            .SelectMany(subBlock => subBlock.Cells)
+            .Select(cellSubGroupCount)
+            .Sum();
+
+        // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .SelectMany(block => block.Items)
+            .SelectMany(subBlock => subBlock.Items)
+            .Sum(cellSubGroupCount); // Cell sub groups
+
+        // Tally Dialog Group Counts
+        var quests = item.Quests.ToArray();
+        count += (uint)quests.Length;
+        count += (uint)quests.SelectMany(x => x.DialogTopics)
+            .Select(x => x.Responses.Count > 0 ? 1 : 0)
+            .Sum();
+        
+        // Set count
+        setter(count);
     }
 }

@@ -359,7 +359,6 @@ public partial class RecordTypeInts
     public const int LVLN = 0x4E4C564C;
     public const int LVLO = 0x4F4C564C;
     public const int LVSG = 0x4753564C;
-    public const int LVSP = 0x5053564C;
     public const int MASE = 0x4553414D;
     public const int MAST = 0x5453414D;
     public const int MATO = 0x4F54414D;

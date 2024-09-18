@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -11,12 +10,9 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldPassthroughTest : PassthroughTest
 {
-    public override GameRelease GameRelease { get; }
-
     public StarfieldPassthroughTest(PassthroughTestParams param)
-        : base(param)
+        : base(param, GameRelease.Starfield)
     {
-        GameRelease = GameRelease.Starfield;
     }
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
@@ -24,7 +20,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .WithNoLoadOrder()
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
             .Parallel(parallel: Settings.ParallelProcessingSteps)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
@@ -36,7 +32,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .WithNoLoadOrder()
+            .WithDefaultLoadOrder()
             .Parallel(parallel: Settings.ParallelProcessingSteps)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
@@ -54,7 +50,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
     
     public override AlignmentRules GetAlignmentRules()
     {

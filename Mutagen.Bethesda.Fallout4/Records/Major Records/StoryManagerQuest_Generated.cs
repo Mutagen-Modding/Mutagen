@@ -975,8 +975,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.HoursUntilReset = rhs.HoursUntilReset;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStoryManagerQuest item,
+            IStoryManagerQuestGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public StoryManagerQuest DeepCopy(

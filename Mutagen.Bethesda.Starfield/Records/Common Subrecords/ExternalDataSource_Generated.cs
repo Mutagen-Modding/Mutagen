@@ -926,8 +926,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Source.SetTo(rhs.Source.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IExternalDataSource item,
+            IExternalDataSourceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ExternalDataSource DeepCopy(

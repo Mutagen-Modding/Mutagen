@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedTrap :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedTrapInternal>,
         IPlacedTrapGetter,
         IPositionRotation,
@@ -1270,8 +1271,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedTrap item,
+            IPlacedTrapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IAPlacedTrapInternal item,
             IAPlacedTrapGetter rhs,

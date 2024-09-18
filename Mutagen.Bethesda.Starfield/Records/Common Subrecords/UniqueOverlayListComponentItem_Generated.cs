@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Grid = rhs.Grid;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IUniqueOverlayListComponentItem item,
+            IUniqueOverlayListComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public UniqueOverlayListComponentItem DeepCopy(

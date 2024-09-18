@@ -866,8 +866,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownString2 = rhs.UnknownString2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IABoneModifierData item,
+            IABoneModifierDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ABoneModifierData DeepCopy(

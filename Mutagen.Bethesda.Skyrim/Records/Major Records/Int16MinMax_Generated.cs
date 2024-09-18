@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Max = rhs.Max;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IInt16MinMax item,
+            IInt16MinMaxGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Int16MinMax DeepCopy(

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
@@ -28,8 +29,14 @@ public class DuplicateMasterTesting
     [Fact]
     public void Separated()
     {
-        var mod = StarfieldMod.CreateFromBinaryOverlay(TestDataPathing.StarfieldDuplicateMasterListing,
-            StarfieldRelease.Starfield);
+        var mod = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(TestDataPathing.StarfieldDuplicateMasterListing)
+            .WithKnownMasters(
+                new KeyedMasterStyle(ModKey.FromFileName("DuplicateMasterListing.esp"), MasterStyle.Full),
+                new KeyedMasterStyle(ModKey.FromFileName("MasterA.esm"), MasterStyle.Full),
+                new KeyedMasterStyle(ModKey.FromFileName("MasterB.esm"), MasterStyle.Full),
+                new KeyedMasterStyle(ModKey.FromFileName("MasterA.esm"), MasterStyle.Full))
+            .Construct();
         mod.Npcs.Count.Should().Be(4);
         mod.Npcs.Records.First(n => n.EditorID == "Originating")
             .FormKey.ModKey.FileName.String.Should().Be("DuplicateMasterListing.esp");

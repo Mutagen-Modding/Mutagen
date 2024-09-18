@@ -17,7 +17,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
 {
     public override Accessor AccessorTransform(TypeGeneration typeGen, Accessor a)
     {
-        return $"{a}{typeGen.NullChar}.{nameof(IAssetLink.RawPath)}";
+        return $"{a}{typeGen.NullChar}.{nameof(IAssetLink.GivenPath)}";
     }
  
     public override bool AllowDirectParse( 

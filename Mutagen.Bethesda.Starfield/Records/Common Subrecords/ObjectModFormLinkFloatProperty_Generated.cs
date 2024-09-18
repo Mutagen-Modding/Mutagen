@@ -695,8 +695,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FunctionType = rhs.FunctionType;
             }
+            DeepCopyInCustom<T>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T>(
+            IObjectModFormLinkFloatProperty<T> item,
+            IObjectModFormLinkFloatPropertyGetter<T> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : struct, Enum;
         
         public override void DeepCopyIn<T>(
             IAObjectModProperty<T> item,

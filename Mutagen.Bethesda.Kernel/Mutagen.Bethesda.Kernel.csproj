@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+	<TargetFrameworks>net8.0</TargetFrameworks>
     <Description>A C# library containing the very minimal basics about Bethesda structures.  Meant to be a lightweight import with some basic definitions</Description>
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>

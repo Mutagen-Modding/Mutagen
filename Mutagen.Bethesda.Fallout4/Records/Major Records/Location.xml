@@ -15,7 +15,7 @@
         <FormLink refName="Npc" />
       </List>
       <RefList name="ActorCellStaticReferences" refName="LocationCellStaticReference" recordType="ACSR" />
-      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" />
+      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" overflowRecordType="XXXX" />
       <List name="ReferenceCellStaticReferences" recordType="RCSR">
         <FormLink>
           <Interface>IPlacedSimple</Interface>

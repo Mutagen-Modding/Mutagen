@@ -1216,8 +1216,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Keyword.SetTo(rhs.Keyword.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISnapTemplateBehaviorItem item,
+            ISnapTemplateBehaviorItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SnapTemplateBehaviorItem DeepCopy(

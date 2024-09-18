@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -19,13 +19,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="DotNetZip" />
         <PackageReference Include="ini-parser-netstandard" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" />
         <PackageReference Include="Loqui" />
         <PackageReference Include="Noggog.CSharpExt" />
         <PackageReference Include="SharpZipLib" />
         <PackageReference Include="System.Collections.Immutable" />
+        <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
@@ -72,7 +72,13 @@
         <Compile Include="Archives\IArchiveFile.cs" />
         <Compile Include="Archives\IArchiveFolder.cs" />
         <Compile Include="Archives\IArchiveReader.cs" />
+        <Compile Include="Assets\DataRelativePath.cs" />
         <Compile Include="Assets\AssetTypeLocator.cs" />
+        <Compile Include="Assets\DI\ArchiveAssetProvider.cs" />
+        <Compile Include="Assets\DI\AssetProviderMixIn.cs" />
+        <Compile Include="Assets\DI\DataDirectoryAssetProvider.cs" />
+        <Compile Include="Assets\DI\GameAssetProvider.cs" />
+        <Compile Include="Assets\DI\IAssetProvider.cs" />
         <Compile Include="Assets\IAssetType.cs" />
         <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
         <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
@@ -126,6 +132,10 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Fonts\DI\FontProvider.cs" />
+        <Compile Include="Fonts\DI\GetFontConfig.cs" />
+        <Compile Include="Fonts\DI\GetFontConfigListing.cs" />
+        <Compile Include="Fonts\FontMapping.cs" />
         <Compile Include="Inis\DI\IIniPathLookup.cs" />
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
         <Compile Include="Installs\DI\GameLocator.cs" />
@@ -262,6 +272,7 @@
         <Compile Include="Plugins\Exceptions\FormIDCompactionOutOfBoundsException.cs" />
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
+        <Compile Include="Plugins\Exceptions\MissingModMappingException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
         <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
         <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
@@ -316,6 +327,7 @@
         <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
+        <Compile Include="Plugins\Masters\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -412,6 +424,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\MasterFlagsLookupProvider.cs" />
         <Compile Include="Plugins\Order\DI\ModListingParser.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -486,6 +499,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\KeyedMasterStyle.cs" />
         <Compile Include="Plugins\Records\Loqui\IModRegistration.cs" />
         <Compile Include="Plugins\Records\Mapping\AbstractInterfaceMapping.cs">
             <CodeLanguage>cs</CodeLanguage>

@@ -1159,8 +1159,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Sky = rhs.Sky;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImageSpaceDepthOfField item,
+            IImageSpaceDepthOfFieldGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImageSpaceDepthOfField DeepCopy(

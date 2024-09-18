@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.OverrideActive = rhs.OverrideActive;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcRaceOverrideFlag item,
+            INpcRaceOverrideFlagGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcRaceOverrideFlag DeepCopy(

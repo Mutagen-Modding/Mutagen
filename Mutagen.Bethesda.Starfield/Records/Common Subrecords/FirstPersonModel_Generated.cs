@@ -1143,8 +1143,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFirstPersonModel item,
+            IFirstPersonModelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FirstPersonModel DeepCopy(
@@ -1242,7 +1254,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File?.RawPath,
+                item: item.File?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD4),
                 binaryType: StringBinaryType.NullTerminate);
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(

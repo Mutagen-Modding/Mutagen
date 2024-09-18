@@ -934,8 +934,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Fat = rhs.Fat;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeight item,
+            IWeightGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Weight DeepCopy(

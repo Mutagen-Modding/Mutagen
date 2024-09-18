@@ -961,8 +961,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.AttackEvent = rhs.AttackEvent;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAttack item,
+            IAttackGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Attack DeepCopy(

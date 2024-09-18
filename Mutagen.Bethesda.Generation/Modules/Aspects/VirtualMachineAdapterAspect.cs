@@ -17,10 +17,15 @@ public class VirtualMachineAdapterAspect : AspectFieldInterfaceDefinition
             new(LoquiInterfaceType.Direct, VirtualMachineMemberName, (o, tg, sb) =>
             {
                 sb.AppendLine($"IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.{VirtualMachineMemberName(o)};");
+                sb.AppendLine($"IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.{VirtualMachineMemberName(o)};");
             }),
             new(LoquiInterfaceType.IGetter, VirtualMachineMemberName, (o, tg, sb) =>
             {
                 sb.AppendLine($"IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.{VirtualMachineMemberName(o)};");
+            }),
+            new(LoquiInterfaceType.ISetter, VirtualMachineMemberName, (o, tg, sb) =>
+            {
+                sb.AppendLine($"IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.{VirtualMachineMemberName(o)};");
             })
         };
     }
@@ -29,7 +34,7 @@ public class VirtualMachineAdapterAspect : AspectFieldInterfaceDefinition
     {
         get
         {
-            // yield return ($"IHaveVirtualMachineAdapter", true);
+            yield return ($"IHaveVirtualMachineAdapter", true);
             yield return ($"IHaveVirtualMachineAdapterGetter", false);
         }
     }

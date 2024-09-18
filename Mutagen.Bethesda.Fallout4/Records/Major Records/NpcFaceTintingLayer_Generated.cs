@@ -1129,8 +1129,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TENDDataTypeState = rhs.TENDDataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcFaceTintingLayer item,
+            INpcFaceTintingLayerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcFaceTintingLayer DeepCopy(

@@ -921,8 +921,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActorValue.SetTo(rhs.ActorValue.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISecondaryDamageItem item,
+            ISecondaryDamageItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SecondaryDamageItem DeepCopy(

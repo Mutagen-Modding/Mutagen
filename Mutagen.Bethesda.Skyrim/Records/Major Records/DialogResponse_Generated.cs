@@ -1519,8 +1519,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ListenerIdleAnimation.SetTo(rhs.ListenerIdleAnimation.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponse item,
+            IDialogResponseGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponse DeepCopy(

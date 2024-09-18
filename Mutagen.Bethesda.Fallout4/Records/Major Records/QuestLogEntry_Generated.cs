@@ -1212,8 +1212,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NextQuest.SetTo(rhs.NextQuest.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestLogEntry item,
+            IQuestLogEntryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestLogEntry DeepCopy(

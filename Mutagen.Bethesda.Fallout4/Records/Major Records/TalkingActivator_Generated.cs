@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -71,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout4
         IVirtualMachineAdapterGetter? ITalkingActivatorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -992,6 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
         IModeled,
@@ -1006,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
@@ -1348,7 +1350,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PNAM,
-                RecordTypes.SNDR,
+                RecordTypes.SNAM,
                 RecordTypes.FNAM,
                 RecordTypes.VNAM);
             return new RecordTriggerSpecs(
@@ -2074,8 +2076,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITalkingActivator item,
+            ITalkingActivatorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -2282,7 +2296,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
-                header: translationParams.ConvertToCustom(RecordTypes.SNDR));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
@@ -2435,7 +2449,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.PNAM = frame.ReadInt32();
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -2691,7 +2705,7 @@ namespace Mutagen.Bethesda.Fallout4
                     _PNAMLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     _LoopingSoundLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.LoopingSound;

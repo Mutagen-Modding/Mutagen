@@ -1431,8 +1431,20 @@ namespace Mutagen.Bethesda.Pex
             {
                 rhs.UserFlags.Span.CopyTo(item.UserFlags.AsSpan());
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPexFile item,
+            IPexFileGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PexFile DeepCopy(

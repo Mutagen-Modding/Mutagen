@@ -192,6 +192,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - InstanceNamingRule
 - Key
 - Keyword
+- Light
 - Location
 - MagicEffect
 - MaterialType
@@ -608,6 +609,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
+- INamed
 - IObjectBounded
 - IScripted
 ### Location

@@ -11,7 +11,7 @@
         <FormLink refName="Keyword" />
       </List>
       <Int32 name="PNAM" recordType="PNAM" />
-      <FormLink name="LoopingSound" recordType="SNDR" refName="SoundMarker" />
+      <FormLink name="LoopingSound" recordType="SNAM" refName="SoundMarker" />
       <Int16 name="FNAM" recordType="FNAM" />
       <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
     </Fields>

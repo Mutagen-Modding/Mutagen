@@ -67,6 +67,7 @@ public class ModModule : GenerationModule
         sb.AppendLine($"IGroup? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}(Type type) => this.{nameof(IMod.TryGetTopLevelGroup)}(type);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
+        sb.AppendLine($"uint IModGetter.GetRecordCount() => this.GetRecordCount();");
         sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
 
         // Localization enabled member
@@ -192,36 +193,8 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("this.ModHeader.Stats.NumRecords = GetRecordCount();");
+            sb.AppendLine("this.ModHeader.Stats.NumRecords = this.GetRecordCount();");
         }
-        sb.AppendLine();
-
-        using (var args = sb.Function(
-                   "public uint GetRecordCount"))
-        {
-        }
-        using (sb.CurlyBrace())
-        {
-            sb.AppendLine("uint count = (uint)this.EnumerateMajorRecords().Count();");
-            foreach (var field in obj.IterateFields())
-            {
-                if (field is not LoquiType loqui) continue;
-                if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
-                {
-                    sb.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
-                }
-                else
-                {
-                    sb.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
-                }
-            }
-            sb.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
-            sb.AppendLine("return count;");
-        }
-        sb.AppendLine();
-
-        sb.AppendLine("partial void GetCustomRecordCount(Action<uint> setter);");
         sb.AppendLine();
 
         await base.GenerateInClass(obj, sb);
@@ -460,6 +433,21 @@ public class ModModule : GenerationModule
             }
         }
         sb.AppendLine();
+            
+        using (var args = sb.Function(
+                   $"public static uint {nameof(IModGetter.GetRecordCount)}"))
+        {
+            args.Add($"this {obj.Interface(getter: true)} item");
+        }
+        using (sb.CurlyBrace())
+        {
+            using (var args = sb.Call(
+                       $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetRecordCount"))
+            {
+                args.AddPassArg("item");
+            }
+        }
+        sb.AppendLine();
     }
 
     public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)
@@ -470,6 +458,7 @@ public class ModModule : GenerationModule
 
         GenerateGetGroup(obj, sb);
         GenerateWriteParallel(obj, sb);
+        GenerateGetRecordCount(obj, sb);
     }
 
     private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -643,6 +632,39 @@ public class ModModule : GenerationModule
             }
             sb.AppendLine();
         }
+    }
+
+    private void GenerateGetRecordCount(ObjectGeneration obj, StructuredStringBuilder sb)
+    {
+        if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
+        using (var args = sb.Function(
+                   "public uint GetRecordCount"))
+        {
+            args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
+        }
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("uint count = (uint)item.EnumerateMajorRecords().Count();");
+            foreach (var field in obj.IterateFields())
+            {
+                if (field is not LoquiType loqui) continue;
+                if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
+                {
+                    sb.AppendLine($"count += item.{field.Name}.Records.Count > 0 ? 1 : default(uint);");
+                }
+                else
+                {
+                    sb.AppendLine($"count += item.{field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
+                }
+            }
+            sb.AppendLine("GetCustomRecordCount(item, (customCount) => count += customCount);");
+            sb.AppendLine("return count;");
+        }
+        sb.AppendLine();
+
+        sb.AppendLine($"partial void GetCustomRecordCount({obj.Interface(getter: true, internalInterface: false)} item, Action<uint> setter);");
+        sb.AppendLine();
     }
 
     public override async Task PreLoad(ObjectGeneration obj)

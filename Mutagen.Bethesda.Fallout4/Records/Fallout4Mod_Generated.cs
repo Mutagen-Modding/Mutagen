@@ -5802,6 +5802,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -6480,143 +6481,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override void SyncRecordCount()
         {
-            this.ModHeader.Stats.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
-
-        public uint GetRecordCount()
-        {
-            uint count = (uint)this.EnumerateMajorRecords().Count();
-            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Transforms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Components.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DamageTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Spells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MovableStatics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Trees.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Holotapes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Terminals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weather.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Cells.Records.Count > 0 ? 1 : default(uint);
-            count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Relationships.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PackIns.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Zooms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AudioEffectChains.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SceneCollections.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AudioCategorySnapshots.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += NavigationMeshObstacleManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GodRays.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            GetCustomRecordCount((customCount) => count += customCount);
-            return count;
-        }
-
-        partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModSetterCommon.Instance.RemapLinks(this, mapping);
@@ -7339,6 +7205,11 @@ namespace Mutagen.Bethesda.Fallout4
             return (IGroup?)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
+        }
+
+        public static uint GetRecordCount(this IFallout4ModGetter item)
+        {
+            return ((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).GetRecordCount(item: item);
         }
 
         [DebuggerStepThrough]
@@ -9854,10 +9725,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ISpellRecord":
-                case "ISpellRecordGetter":
-                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IEmittance":
                 case "IEmittanceGetter":
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
@@ -9913,6 +9780,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundGetter":
                     Remove(obj, keys, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IStaticObject":
                 case "IStaticObjectGetter":
@@ -12673,6 +12544,141 @@ namespace Mutagen.Bethesda.Fallout4
             PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
+        
+        public uint GetRecordCount(IFallout4ModGetter item)
+        {
+            uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Transforms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Components.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DamageTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Doors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Lights.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MovableStatics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Trees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Florae.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keys.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Holotapes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hazards.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Terminals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weather.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Cells.Records.Count > 0 ? 1 : default(uint);
+            count += item.Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Explosions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Locations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Relationships.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Outfits.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Colors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PackIns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AimModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Layers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Zooms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AudioEffectChains.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SceneCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AudioCategorySnapshots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshObstacleManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GodRays.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            GetCustomRecordCount(item, (customCount) => count += customCount);
+            return count;
+        }
+        
+        partial void GetCustomRecordCount(IFallout4ModGetter item, Action<uint> setter);
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModGetter obj)
         {
@@ -18129,21 +18135,18 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4ModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
             {
-                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            }
+            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -20704,8 +20707,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout4Mod item,
+            IFallout4ModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Fallout4Mod DeepCopy(
@@ -24461,6 +24476,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);

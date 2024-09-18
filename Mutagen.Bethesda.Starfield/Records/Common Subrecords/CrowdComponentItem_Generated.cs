@@ -1279,8 +1279,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FLTV = rhs.FLTV;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICrowdComponentItem item,
+            ICrowdComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CrowdComponentItem DeepCopy(

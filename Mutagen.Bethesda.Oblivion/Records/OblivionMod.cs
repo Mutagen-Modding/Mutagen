@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -51,57 +52,6 @@ public partial class OblivionMod : AMod
             headerVersion: headerVersion,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
             constants: GameConstants.Get(GameRelease.Oblivion));
-    }
-
-    partial void GetCustomRecordCount(Action<uint> setter)
-    {
-        uint count = 0;
-        // Tally Cell Group counts
-        int cellSubGroupCount(Cell cell)
-        {
-            int cellGroupCount = 0;
-            if ((cell.Temporary?.Count ?? 0) > 0
-                || cell.PathGrid != null
-                || cell.Landscape != null)
-            {
-                cellGroupCount++;
-            }
-            if ((cell.Persistent?.Count ?? 0) > 0)
-            {
-                cellGroupCount++;
-            }
-            if ((cell.VisibleWhenDistant?.Count ?? 0) > 0)
-            {
-                cellGroupCount++;
-            }
-            if (cellGroupCount > 0)
-            {
-                cellGroupCount++;
-            }
-            return cellGroupCount;
-        }
-        count += (uint)this.Cells.Records.Count; // Block Count
-        count += (uint)this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
-        count += (uint)this.Cells.Records
-            .SelectMany(block => block.SubBlocks)
-            .SelectMany(subBlock => subBlock.Cells)
-            .Select(cellSubGroupCount)
-            .Sum();
-
-        // Tally Worldspace Group Counts
-        count += (uint)this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
-        count += (uint)this.Worldspaces
-            .SelectMany(wrld => wrld.SubCells)
-            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
-        count += (uint)this.Worldspaces
-            .SelectMany(wrld => wrld.SubCells)
-            .SelectMany(block => block.Items)
-            .SelectMany(subBlock => subBlock.Items)
-            .Sum(cellSubGroupCount); // Cell sub groups
-
-        // Tally Dialog Group Counts
-        count += (uint)this.DialogTopics.RecordCache.Count;
-        setter(count);
     }
 
     internal class OblivionCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
@@ -205,14 +155,32 @@ public partial class OblivionMod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> 
         BeginWrite => new(
         this, 
         OblivionWriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IOblivionModGetter> WriteBuilder => new(OblivionWriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<IOblivionModGetter> WriteBuilder() =>
+        new(GameRelease.Oblivion, OblivionWriteBuilderInstantiator.Instance);
+
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+}
+
+public partial interface IOblivionModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite { get; }
+}
+
+partial class OblivionModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IOblivionMod item, IOblivionModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class OblivionModBinaryOverlay
@@ -228,12 +196,20 @@ internal partial class OblivionModBinaryOverlay
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => false;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IOblivionModGetter>(
-        this, 
-        OblivionMod.OblivionWriteBuilderInstantiator.Instance);
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
 }
 
 partial class OblivionModCommon
@@ -492,5 +468,58 @@ partial class OblivionModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
+    partial void GetCustomRecordCount(IOblivionModGetter item, Action<uint> setter)
+    {
+        uint count = 0;
+        // Tally Cell Group counts
+        int cellSubGroupCount(ICellGetter cell)
+        {
+            int cellGroupCount = 0;
+            if ((cell.Temporary?.Count ?? 0) > 0
+                || cell.PathGrid != null
+                || cell.Landscape != null)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.Persistent?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.VisibleWhenDistant?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if (cellGroupCount > 0)
+            {
+                cellGroupCount++;
+            }
+            return cellGroupCount;
+        }
+        count += (uint)item.Cells.Records.Count; // Block Count
+        count += (uint)item.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+        count += (uint)item.Cells.Records
+            .SelectMany(block => block.SubBlocks)
+            .SelectMany(subBlock => subBlock.Cells)
+            .Select(cellSubGroupCount)
+            .Sum();
+
+        // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .SelectMany(block => block.Items)
+            .SelectMany(subBlock => subBlock.Items)
+            .Sum(cellSubGroupCount); // Cell sub groups
+
+        // Tally Dialog Group Counts
+        count += (uint)item.DialogTopics.RecordCache.Count;
+        
+        // Set count
+        setter(count);
     }
 }

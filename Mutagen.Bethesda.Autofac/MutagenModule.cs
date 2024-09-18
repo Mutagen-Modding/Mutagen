@@ -1,6 +1,8 @@
 using Autofac;
 using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Assets.DI;
 using Mutagen.Bethesda.Environments.DI;
+// using Mutagen.Bethesda.Fonts.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -20,6 +22,8 @@ public class MutagenModule : Module
         builder.RegisterAssemblyTypes(typeof(IArchiveReaderProvider).Assembly)
             .InNamespacesOf(
                 typeof(IArchiveReaderProvider),
+                // typeof(IGetFontConfig),
+                typeof(IAssetProvider),
                 typeof(IDataDirectoryLookup),
                 typeof(IImplicitBaseMasterProvider),
                 typeof(ILoadOrderWriter),

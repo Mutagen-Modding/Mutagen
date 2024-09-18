@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SpawnOnDestroy.SetTo(rhs.SpawnOnDestroy.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpawnOnDestroyComponent item,
+            ISpawnOnDestroyComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

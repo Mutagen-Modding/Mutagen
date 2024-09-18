@@ -2211,8 +2211,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MaleWrinkleMapPath = rhs.MaleWrinkleMapPath;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHeadData item,
+            IHeadDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public HeadData DeepCopy(

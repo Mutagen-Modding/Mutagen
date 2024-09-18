@@ -58,8 +58,8 @@ public class SeparatedMastersTesting
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
         originating.BeginWrite
-            .WithLoadOrder(lo)
             .ToPath(modPath)
+            .WithLoadOrder(lo)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -94,7 +94,7 @@ public class SeparatedMastersTesting
         using var reimport = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimSE, new BinaryReadParameters()
         {
             FileSystem = fileSystem,
-            LoadOrder = lo
+            MasterFlagsLookup = lo
         });
         reimport.Npcs.Select(x => x.FormKey).Should().Equal(modANpc.FormKey, originatingNpc.FormKey);
         var reimportNpc = reimport.Npcs[originatingNpc.FormKey];
@@ -165,8 +165,8 @@ public class SeparatedMastersTesting
 
         var modPath = Path.Combine(existingDir, originatingKey.FileName);
         originating.BeginWrite
-            .WithLoadOrder(lo)
             .ToPath(modPath)
+            .WithLoadOrder(lo)
             .WithFileSystem(fileSystem)
             .Write();
 
@@ -187,7 +187,7 @@ public class SeparatedMastersTesting
             lightModBAim.FormKey, 
             mediumModBAim.FormKey);
         {
-            var meta = ParsingMeta.Factory(new BinaryReadParameters()
+            var meta = ParsingMeta.FactoryNoMasters(new BinaryReadParameters()
             {
                 FileSystem = fileSystem
             }, GameRelease.Starfield, modPath);
@@ -255,7 +255,7 @@ public class SeparatedMastersTesting
         using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield, new BinaryReadParameters()
         {
             FileSystem = fileSystem,
-            LoadOrder = lo
+            MasterFlagsLookup = lo
         });
         reimport.Npcs.Select(x => x.FormKey).Should().Equal(
             modANpc.FormKey,

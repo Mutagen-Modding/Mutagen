@@ -1189,8 +1189,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.QSTADataTypeState = rhs.QSTADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestObjectiveTarget item,
+            IQuestObjectiveTargetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestObjectiveTarget DeepCopy(

@@ -13,7 +13,7 @@ public interface IModImporter
 }
     
 public interface IModImporter<TMod>
-    where TMod : IModGetter
+    where TMod : IModKeyed
 {
     TMod Import(ModPath modPath, BinaryReadParameters? param = null);
 }
@@ -34,25 +34,19 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
     public TMod Import<TMod>(ModPath modPath, BinaryReadParameters? param = null)
         where TMod : IModGetter
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 
     public IModGetter Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator.ImportGetter(modPath, _gameRelease.Release, param);
     }
 }
@@ -73,19 +67,16 @@ public sealed class ModImporter<TMod> : IModImporter<TMod>
 
     public TMod Import(ModPath modPath, BinaryReadParameters? param = null)
     {
-        if (param == null)
+        param = (param ?? BinaryReadParameters.Default) with
         {
-            param = BinaryReadParameters.Default with
-            {
-                FileSystem = _fileSystem
-            };
-        }
+            FileSystem = _fileSystem
+        };
         return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 }
 
 public sealed class ModImporterWrapper<TMod> : IModImporter<TMod>
-    where TMod : IModGetter
+    where TMod : IModKeyed
 {
     private readonly Func<ModPath, BinaryReadParameters?, TMod> _factory;
 

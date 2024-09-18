@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
@@ -27,12 +28,11 @@ public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => true;
 
-    public StarfieldProcessor(bool multithread) : base(multithread)
+    public StarfieldProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Starfield, masterFlagLookup)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Starfield;
-
+    
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();
@@ -62,6 +62,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
         AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
+        AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -75,6 +76,12 @@ public class StarfieldProcessor : Processor
     public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords => new KeyValuePair<RecordType, FormKey>[]
     {
         new(RecordTypes.GBFM, FormKey.Factory("2B3DDB:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
     };
 
     private void ProcessStaticCollections(
@@ -512,6 +519,16 @@ public class StarfieldProcessor : Processor
 
         ZeroXOWNBool(stream, majorFrame, fileOffset);
         ProcessXTV2(majorFrame, fileOffset);
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XLRD, out var xlrd))
+        {
+            ProcessBool(xlrd, fileOffset, 16, 4, 1);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XLGD, out var xlgd))
+        {
+            ProcessBool(xlgd, fileOffset, 0x54, 4, 1);
+        }
     }
 
     private void ProcessRagdollData(MajorRecordFrame majorFrame, long fileOffset)
@@ -1378,12 +1395,32 @@ public class StarfieldProcessor : Processor
                 var strLoc = 0;
                 while (true)
                 {
-                    var index = str.Substring(strLoc).IndexOf(target);
+                    var index = str.Substring(strLoc).IndexOf(target, StringComparison.InvariantCulture);
                     if (index == -1) break;
                     strLoc += index + 4;
                     ProcessFormIDOverflow(data, fileOffset, ref strLoc);
                 }
             }
+        }
+    }
+
+    private void ProcessLights(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.FLGD, out var flgd))
+        {
+            ProcessBool(flgd, fileOffset, 0x54, 4, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.DAT2, out var dat2))
+        {
+            int loc = 4;
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 1);
+            loc += 8;
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 8);
+            loc += 10;
+            ProcessBool(dat2, fileOffset, ref loc, 2, 1);
+            ProcessZeroFloats(dat2, fileOffset, ref loc, 4);
         }
     }
 }

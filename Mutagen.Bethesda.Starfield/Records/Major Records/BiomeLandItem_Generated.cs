@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.GroundCover.SetTo(rhs.GroundCover.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBiomeLandItem item,
+            IBiomeLandItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BiomeLandItem DeepCopy(

@@ -904,8 +904,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Label = rhs.Label?.DeepCopy();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFaceDial item,
+            IFaceDialGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FaceDial DeepCopy(

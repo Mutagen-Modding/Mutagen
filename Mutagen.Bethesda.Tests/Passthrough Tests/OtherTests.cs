@@ -29,7 +29,7 @@ public class OtherTests
         var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
         mod.WriteToBinary(oblivionOutputPath);
         var fileLocs = RecordLocator.GetLocations(
-            new MutagenBinaryReadStream(oblivionOutputPath, GameRelease.Oblivion, loadOrder: null));
+            new MutagenBinaryReadStream(oblivionOutputPath, GameRelease.Oblivion, masterFlagLookup: null));
         using var reader = new BinaryReadStream(oblivionOutputPath);
         foreach (var rec in fileLocs.ListedRecords.Keys)
         {
@@ -58,7 +58,7 @@ public class OtherTests
                 Npcs = true
             });
         var fileLocs = RecordLocator.GetLocations(
-            new MutagenBinaryReadStream(oblivionOutputPath, GameRelease.Oblivion, loadOrder: null));
+            new MutagenBinaryReadStream(oblivionOutputPath, GameRelease.Oblivion, masterFlagLookup: null));
         using var reader = new BinaryReadStream(oblivionOutputPath);
         foreach (var rec in fileLocs.ListedRecords.Keys)
         {

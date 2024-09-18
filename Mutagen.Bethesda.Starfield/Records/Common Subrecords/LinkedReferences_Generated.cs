@@ -920,8 +920,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Reference.SetTo(rhs.Reference.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILinkedReferences item,
+            ILinkedReferencesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LinkedReferences DeepCopy(

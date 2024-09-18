@@ -84,23 +84,23 @@ partial class ArmorAddonCommon
 
         if (obj.WorldModel?.Female != null)
         {
-            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Female.File.RawPath)) yield return assetLink;
+            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Female.File.GivenPath)) yield return assetLink;
         }
 
         if (obj.WorldModel?.Male != null)
         {
-            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Male.File.RawPath)) yield return assetLink;
+            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Male.File.GivenPath)) yield return assetLink;
         }
 
         if (obj.FirstPersonModel?.Female != null)
         {
-            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Female.File.RawPath))
+            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Female.File.GivenPath))
                 yield return assetLink;
         }
 
         if (obj.FirstPersonModel?.Male != null)
         {
-            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.RawPath))
+            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.GivenPath))
                 yield return assetLink;
         }
     }

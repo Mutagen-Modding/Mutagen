@@ -927,8 +927,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Global.SetTo(rhs.Global.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcOwner item,
+            INpcOwnerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IOwnerTarget item,

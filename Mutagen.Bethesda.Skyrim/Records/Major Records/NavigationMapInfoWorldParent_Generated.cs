@@ -918,8 +918,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParentWorldspaceCoord = rhs.ParentWorldspaceCoord;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavigationMapInfoWorldParent item,
+            INavigationMapInfoWorldParentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANavigationMapInfoParent item,

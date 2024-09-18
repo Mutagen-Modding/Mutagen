@@ -1035,8 +1035,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PcmTypeKeyword.SetTo(rhs.PcmTypeKeyword.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestLocationAliasALPS item,
+            IQuestLocationAliasALPSGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestLocationAliasALPS DeepCopy(

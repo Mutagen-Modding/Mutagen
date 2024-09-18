@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -35,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -61,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -72,6 +74,7 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? ILightGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -97,14 +100,50 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILightGetter.ODTY => this.ODTY;
+        public Single ODTY { get; set; } = default(Single);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
+        #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILightGetter.ODRT => this.ODRT;
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? ILightGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? ILightGetter.Transforms => this.Transforms;
+        #endregion
+        #region DefaultLayer
+        private readonly IFormLinkNullable<ILayerGetter> _DefaultLayer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> DefaultLayer
+        {
+            get => _DefaultLayer;
+            set => _DefaultLayer.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> ILightGetter.DefaultLayer => this.DefaultLayer;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.XALG => this.XALG;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -138,6 +177,17 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? ILightGetter.Destructible => this.Destructible;
+        #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
@@ -159,21 +209,134 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region DAT2
+        #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DAT2;
-        public MemorySlice<Byte>? DAT2
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
         {
-            get => this._DAT2;
-            set => this._DAT2 = value;
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? ILightGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ILightGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.DAT2 => this.DAT2;
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Time
+        public Int32 Time { get; set; } = default(Int32);
+        #endregion
+        #region Radius
+        public Single Radius { get; set; } = default(Single);
+        #endregion
+        #region Color
+        public Color Color { get; set; } = default(Color);
+        #endregion
+        #region Flags
+        public Light.Flag Flags { get; set; } = default(Light.Flag);
+        #endregion
+        #region FalloffExponent
+        public Single FalloffExponent { get; set; } = default(Single);
+        #endregion
+        #region FOV
+        public Single FOV { get; set; } = default(Single);
+        #endregion
+        #region NearClip
+        public Single NearClip { get; set; } = default(Single);
+        #endregion
+        #region FlickerPeriod
+        public Single FlickerPeriod { get; set; } = default(Single);
+        #endregion
+        #region FlickerIntensityAmplitude
+        public Single FlickerIntensityAmplitude { get; set; } = default(Single);
+        #endregion
+        #region FlickerMovementAmplitude
+        public Single FlickerMovementAmplitude { get; set; } = default(Single);
+        #endregion
+        #region ShadowOffset
+        public Single ShadowOffset { get; set; } = default(Single);
+        #endregion
+        #region InnerFOV
+        public Single InnerFOV { get; set; } = default(Single);
+        #endregion
+        #region PbrLightTemperatureK
+        public UInt32 PbrLightTemperatureK { get; set; } = default(UInt32);
+        #endregion
+        #region PbrLuminousPowerLm
+        public UInt32 PbrLuminousPowerLm { get; set; } = default(UInt32);
+        #endregion
+        #region Type
+        public Light.LightType Type { get; set; } = default(Light.LightType);
+        #endregion
+        #region FlickerEffect
+        public Light.FlickerEffectOption FlickerEffect { get; set; } = default(Light.FlickerEffectOption);
+        #endregion
+        #region UseAdaptiveLighting
+        public Boolean UseAdaptiveLighting { get; set; } = default(Boolean);
+        #endregion
+        #region AdaptiveLightEc
+        public Single AdaptiveLightEc { get; set; } = default(Single);
+        #endregion
+        #region AdaptiveLightEv100Min
+        public Single AdaptiveLightEv100Min { get; set; } = default(Single);
+        #endregion
+        #region AdaptiveLightEv100Max
+        public Single AdaptiveLightEv100Max { get; set; } = default(Single);
+        #endregion
+        #region RadiusFalloutExponent
+        public Single RadiusFalloutExponent { get; set; } = default(Single);
         #endregion
         #region Gobo
         public String? Gobo { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Gobo => this.Gobo;
+        #endregion
+        #region SoundReference
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _SoundReference;
+        public SoundReference? SoundReference
+        {
+            get => _SoundReference;
+            set => _SoundReference = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? ILightGetter.SoundReference => this.SoundReference;
         #endregion
         #region Lens
         private readonly IFormLinkNullable<ILensFlareGetter> _Lens = new FormLinkNullable<ILensFlareGetter>();
@@ -185,65 +348,33 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILensFlareGetter> ILightGetter.Lens => this.Lens;
         #endregion
-        #region FLBD
+        #region Barndoors
+        public LightBarndoors Barndoors { get; set; } = new LightBarndoors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLBD;
-        public MemorySlice<Byte>? FLBD
-        {
-            get => this._FLBD;
-            set => this._FLBD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.FLBD => this.FLBD;
+        ILightBarndoorsGetter ILightGetter.Barndoors => Barndoors;
         #endregion
-        #region FLRD
+        #region Roundness
+        public LightRoundness Roundness { get; set; } = new LightRoundness();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLRD;
-        public MemorySlice<Byte>? FLRD
-        {
-            get => this._FLRD;
-            set => this._FLRD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.FLRD => this.FLRD;
+        ILightRoundnessGetter ILightGetter.Roundness => Roundness;
         #endregion
-        #region FLGD
+        #region GoboData
+        public LightGobo GoboData { get; set; } = new LightGobo();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLGD;
-        public MemorySlice<Byte>? FLGD
-        {
-            get => this._FLGD;
-            set => this._FLGD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.FLGD => this.FLGD;
+        ILightGoboGetter ILightGetter.GoboData => GoboData;
         #endregion
-        #region LLLD
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _LLLD;
-        public MemorySlice<Byte>? LLLD
-        {
-            get => this._LLLD;
-            set => this._LLLD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.LLLD => this.LLLD;
+        #region Layer
+        public Light.LightLayer Layer { get; set; } = default(Light.LightLayer);
         #endregion
-        #region FLAD
+        #region AreaLight
+        public AreaLight AreaLight { get; set; } = new AreaLight();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLAD;
-        public MemorySlice<Byte>? FLAD
-        {
-            get => this._FLAD;
-            set => this._FLAD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILightGetter.FLAD => this.FLAD;
+        IAreaLightGetter ILightGetter.AreaLight => AreaLight;
         #endregion
-        #region FVLD
-        public Single? FVLD { get; set; }
+        #region VolumetricLightIntensityScale
+        public Single? VolumetricLightIntensityScale { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILightGetter.FVLD => this.FVLD;
+        Single? ILightGetter.VolumetricLightIntensityScale => this.VolumetricLightIntensityScale;
         #endregion
 
         #region To String
@@ -273,19 +404,46 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
-                this.ODRT = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.DefaultLayer = initialValue;
+                this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DAT2 = initialValue;
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Time = initialValue;
+                this.Radius = initialValue;
+                this.Color = initialValue;
+                this.Flags = initialValue;
+                this.FalloffExponent = initialValue;
+                this.FOV = initialValue;
+                this.NearClip = initialValue;
+                this.FlickerPeriod = initialValue;
+                this.FlickerIntensityAmplitude = initialValue;
+                this.FlickerMovementAmplitude = initialValue;
+                this.ShadowOffset = initialValue;
+                this.InnerFOV = initialValue;
+                this.PbrLightTemperatureK = initialValue;
+                this.PbrLuminousPowerLm = initialValue;
+                this.Type = initialValue;
+                this.FlickerEffect = initialValue;
+                this.UseAdaptiveLighting = initialValue;
+                this.AdaptiveLightEc = initialValue;
+                this.AdaptiveLightEv100Min = initialValue;
+                this.AdaptiveLightEv100Max = initialValue;
+                this.RadiusFalloutExponent = initialValue;
                 this.Gobo = initialValue;
+                this.SoundReference = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Lens = initialValue;
-                this.FLBD = initialValue;
-                this.FLRD = initialValue;
-                this.FLGD = initialValue;
-                this.LLLD = initialValue;
-                this.FLAD = initialValue;
-                this.FVLD = initialValue;
+                this.Barndoors = new MaskItem<TItem, LightBarndoors.Mask<TItem>?>(initialValue, new LightBarndoors.Mask<TItem>(initialValue));
+                this.Roundness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(initialValue, new LightRoundness.Mask<TItem>(initialValue));
+                this.GoboData = new MaskItem<TItem, LightGobo.Mask<TItem>?>(initialValue, new LightGobo.Mask<TItem>(initialValue));
+                this.Layer = initialValue;
+                this.AreaLight = new MaskItem<TItem, AreaLight.Mask<TItem>?>(initialValue, new AreaLight.Mask<TItem>(initialValue));
+                this.VolumetricLightIntensityScale = initialValue;
             }
 
             public Mask(
@@ -299,19 +457,46 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem ODTY,
-                TItem ODRT,
+                TItem ObjectPlacementDefaults,
+                TItem Transforms,
+                TItem DefaultLayer,
+                TItem XALG,
                 TItem Components,
                 TItem Model,
+                TItem Destructible,
                 TItem Keywords,
-                TItem DAT2,
+                TItem Properties,
+                TItem Name,
+                TItem Time,
+                TItem Radius,
+                TItem Color,
+                TItem Flags,
+                TItem FalloffExponent,
+                TItem FOV,
+                TItem NearClip,
+                TItem FlickerPeriod,
+                TItem FlickerIntensityAmplitude,
+                TItem FlickerMovementAmplitude,
+                TItem ShadowOffset,
+                TItem InnerFOV,
+                TItem PbrLightTemperatureK,
+                TItem PbrLuminousPowerLm,
+                TItem Type,
+                TItem FlickerEffect,
+                TItem UseAdaptiveLighting,
+                TItem AdaptiveLightEc,
+                TItem AdaptiveLightEv100Min,
+                TItem AdaptiveLightEv100Max,
+                TItem RadiusFalloutExponent,
                 TItem Gobo,
+                TItem SoundReference,
                 TItem Lens,
-                TItem FLBD,
-                TItem FLRD,
-                TItem FLGD,
-                TItem LLLD,
-                TItem FLAD,
-                TItem FVLD)
+                TItem Barndoors,
+                TItem Roundness,
+                TItem GoboData,
+                TItem Layer,
+                TItem AreaLight,
+                TItem VolumetricLightIntensityScale)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -324,19 +509,46 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
-                this.ODRT = ODRT;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.DefaultLayer = DefaultLayer;
+                this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DAT2 = DAT2;
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Time = Time;
+                this.Radius = Radius;
+                this.Color = Color;
+                this.Flags = Flags;
+                this.FalloffExponent = FalloffExponent;
+                this.FOV = FOV;
+                this.NearClip = NearClip;
+                this.FlickerPeriod = FlickerPeriod;
+                this.FlickerIntensityAmplitude = FlickerIntensityAmplitude;
+                this.FlickerMovementAmplitude = FlickerMovementAmplitude;
+                this.ShadowOffset = ShadowOffset;
+                this.InnerFOV = InnerFOV;
+                this.PbrLightTemperatureK = PbrLightTemperatureK;
+                this.PbrLuminousPowerLm = PbrLuminousPowerLm;
+                this.Type = Type;
+                this.FlickerEffect = FlickerEffect;
+                this.UseAdaptiveLighting = UseAdaptiveLighting;
+                this.AdaptiveLightEc = AdaptiveLightEc;
+                this.AdaptiveLightEv100Min = AdaptiveLightEv100Min;
+                this.AdaptiveLightEv100Max = AdaptiveLightEv100Max;
+                this.RadiusFalloutExponent = RadiusFalloutExponent;
                 this.Gobo = Gobo;
+                this.SoundReference = new MaskItem<TItem, SoundReference.Mask<TItem>?>(SoundReference, new SoundReference.Mask<TItem>(SoundReference));
                 this.Lens = Lens;
-                this.FLBD = FLBD;
-                this.FLRD = FLRD;
-                this.FLGD = FLGD;
-                this.LLLD = LLLD;
-                this.FLAD = FLAD;
-                this.FVLD = FVLD;
+                this.Barndoors = new MaskItem<TItem, LightBarndoors.Mask<TItem>?>(Barndoors, new LightBarndoors.Mask<TItem>(Barndoors));
+                this.Roundness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(Roundness, new LightRoundness.Mask<TItem>(Roundness));
+                this.GoboData = new MaskItem<TItem, LightGobo.Mask<TItem>?>(GoboData, new LightGobo.Mask<TItem>(GoboData));
+                this.Layer = Layer;
+                this.AreaLight = new MaskItem<TItem, AreaLight.Mask<TItem>?>(AreaLight, new AreaLight.Mask<TItem>(AreaLight));
+                this.VolumetricLightIntensityScale = VolumetricLightIntensityScale;
             }
 
             #pragma warning disable CS8618
@@ -351,19 +563,46 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
-            public TItem ODRT;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem DefaultLayer;
+            public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem DAT2;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public TItem Name;
+            public TItem Time;
+            public TItem Radius;
+            public TItem Color;
+            public TItem Flags;
+            public TItem FalloffExponent;
+            public TItem FOV;
+            public TItem NearClip;
+            public TItem FlickerPeriod;
+            public TItem FlickerIntensityAmplitude;
+            public TItem FlickerMovementAmplitude;
+            public TItem ShadowOffset;
+            public TItem InnerFOV;
+            public TItem PbrLightTemperatureK;
+            public TItem PbrLuminousPowerLm;
+            public TItem Type;
+            public TItem FlickerEffect;
+            public TItem UseAdaptiveLighting;
+            public TItem AdaptiveLightEc;
+            public TItem AdaptiveLightEv100Min;
+            public TItem AdaptiveLightEv100Max;
+            public TItem RadiusFalloutExponent;
             public TItem Gobo;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? SoundReference { get; set; }
             public TItem Lens;
-            public TItem FLBD;
-            public TItem FLRD;
-            public TItem FLGD;
-            public TItem LLLD;
-            public TItem FLAD;
-            public TItem FVLD;
+            public MaskItem<TItem, LightBarndoors.Mask<TItem>?>? Barndoors { get; set; }
+            public MaskItem<TItem, LightRoundness.Mask<TItem>?>? Roundness { get; set; }
+            public MaskItem<TItem, LightGobo.Mask<TItem>?>? GoboData { get; set; }
+            public TItem Layer;
+            public MaskItem<TItem, AreaLight.Mask<TItem>?>? AreaLight { get; set; }
+            public TItem VolumetricLightIntensityScale;
             #endregion
 
             #region Equals
@@ -380,19 +619,46 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.DefaultLayer, rhs.DefaultLayer)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.DAT2, rhs.DAT2)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Time, rhs.Time)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
+                if (!object.Equals(this.FOV, rhs.FOV)) return false;
+                if (!object.Equals(this.NearClip, rhs.NearClip)) return false;
+                if (!object.Equals(this.FlickerPeriod, rhs.FlickerPeriod)) return false;
+                if (!object.Equals(this.FlickerIntensityAmplitude, rhs.FlickerIntensityAmplitude)) return false;
+                if (!object.Equals(this.FlickerMovementAmplitude, rhs.FlickerMovementAmplitude)) return false;
+                if (!object.Equals(this.ShadowOffset, rhs.ShadowOffset)) return false;
+                if (!object.Equals(this.InnerFOV, rhs.InnerFOV)) return false;
+                if (!object.Equals(this.PbrLightTemperatureK, rhs.PbrLightTemperatureK)) return false;
+                if (!object.Equals(this.PbrLuminousPowerLm, rhs.PbrLuminousPowerLm)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.FlickerEffect, rhs.FlickerEffect)) return false;
+                if (!object.Equals(this.UseAdaptiveLighting, rhs.UseAdaptiveLighting)) return false;
+                if (!object.Equals(this.AdaptiveLightEc, rhs.AdaptiveLightEc)) return false;
+                if (!object.Equals(this.AdaptiveLightEv100Min, rhs.AdaptiveLightEv100Min)) return false;
+                if (!object.Equals(this.AdaptiveLightEv100Max, rhs.AdaptiveLightEv100Max)) return false;
+                if (!object.Equals(this.RadiusFalloutExponent, rhs.RadiusFalloutExponent)) return false;
                 if (!object.Equals(this.Gobo, rhs.Gobo)) return false;
+                if (!object.Equals(this.SoundReference, rhs.SoundReference)) return false;
                 if (!object.Equals(this.Lens, rhs.Lens)) return false;
-                if (!object.Equals(this.FLBD, rhs.FLBD)) return false;
-                if (!object.Equals(this.FLRD, rhs.FLRD)) return false;
-                if (!object.Equals(this.FLGD, rhs.FLGD)) return false;
-                if (!object.Equals(this.LLLD, rhs.LLLD)) return false;
-                if (!object.Equals(this.FLAD, rhs.FLAD)) return false;
-                if (!object.Equals(this.FVLD, rhs.FVLD)) return false;
+                if (!object.Equals(this.Barndoors, rhs.Barndoors)) return false;
+                if (!object.Equals(this.Roundness, rhs.Roundness)) return false;
+                if (!object.Equals(this.GoboData, rhs.GoboData)) return false;
+                if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.AreaLight, rhs.AreaLight)) return false;
+                if (!object.Equals(this.VolumetricLightIntensityScale, rhs.VolumetricLightIntensityScale)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -401,19 +667,46 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.DefaultLayer);
+                hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Model);
+                hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
-                hash.Add(this.DAT2);
+                hash.Add(this.Properties);
+                hash.Add(this.Name);
+                hash.Add(this.Time);
+                hash.Add(this.Radius);
+                hash.Add(this.Color);
+                hash.Add(this.Flags);
+                hash.Add(this.FalloffExponent);
+                hash.Add(this.FOV);
+                hash.Add(this.NearClip);
+                hash.Add(this.FlickerPeriod);
+                hash.Add(this.FlickerIntensityAmplitude);
+                hash.Add(this.FlickerMovementAmplitude);
+                hash.Add(this.ShadowOffset);
+                hash.Add(this.InnerFOV);
+                hash.Add(this.PbrLightTemperatureK);
+                hash.Add(this.PbrLuminousPowerLm);
+                hash.Add(this.Type);
+                hash.Add(this.FlickerEffect);
+                hash.Add(this.UseAdaptiveLighting);
+                hash.Add(this.AdaptiveLightEc);
+                hash.Add(this.AdaptiveLightEv100Min);
+                hash.Add(this.AdaptiveLightEv100Max);
+                hash.Add(this.RadiusFalloutExponent);
                 hash.Add(this.Gobo);
+                hash.Add(this.SoundReference);
                 hash.Add(this.Lens);
-                hash.Add(this.FLBD);
-                hash.Add(this.FLRD);
-                hash.Add(this.FLGD);
-                hash.Add(this.LLLD);
-                hash.Add(this.FLAD);
-                hash.Add(this.FVLD);
+                hash.Add(this.Barndoors);
+                hash.Add(this.Roundness);
+                hash.Add(this.GoboData);
+                hash.Add(this.Layer);
+                hash.Add(this.AreaLight);
+                hash.Add(this.VolumetricLightIntensityScale);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -435,7 +728,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.DefaultLayer)) return false;
+                if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -453,6 +757,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -464,15 +773,69 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.DAT2)) return false;
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Time)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Color)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.FalloffExponent)) return false;
+                if (!eval(this.FOV)) return false;
+                if (!eval(this.NearClip)) return false;
+                if (!eval(this.FlickerPeriod)) return false;
+                if (!eval(this.FlickerIntensityAmplitude)) return false;
+                if (!eval(this.FlickerMovementAmplitude)) return false;
+                if (!eval(this.ShadowOffset)) return false;
+                if (!eval(this.InnerFOV)) return false;
+                if (!eval(this.PbrLightTemperatureK)) return false;
+                if (!eval(this.PbrLuminousPowerLm)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.FlickerEffect)) return false;
+                if (!eval(this.UseAdaptiveLighting)) return false;
+                if (!eval(this.AdaptiveLightEc)) return false;
+                if (!eval(this.AdaptiveLightEv100Min)) return false;
+                if (!eval(this.AdaptiveLightEv100Max)) return false;
+                if (!eval(this.RadiusFalloutExponent)) return false;
                 if (!eval(this.Gobo)) return false;
+                if (SoundReference != null)
+                {
+                    if (!eval(this.SoundReference.Overall)) return false;
+                    if (this.SoundReference.Specific != null && !this.SoundReference.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Lens)) return false;
-                if (!eval(this.FLBD)) return false;
-                if (!eval(this.FLRD)) return false;
-                if (!eval(this.FLGD)) return false;
-                if (!eval(this.LLLD)) return false;
-                if (!eval(this.FLAD)) return false;
-                if (!eval(this.FVLD)) return false;
+                if (Barndoors != null)
+                {
+                    if (!eval(this.Barndoors.Overall)) return false;
+                    if (this.Barndoors.Specific != null && !this.Barndoors.Specific.All(eval)) return false;
+                }
+                if (Roundness != null)
+                {
+                    if (!eval(this.Roundness.Overall)) return false;
+                    if (this.Roundness.Specific != null && !this.Roundness.Specific.All(eval)) return false;
+                }
+                if (GoboData != null)
+                {
+                    if (!eval(this.GoboData.Overall)) return false;
+                    if (this.GoboData.Specific != null && !this.GoboData.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Layer)) return false;
+                if (AreaLight != null)
+                {
+                    if (!eval(this.AreaLight.Overall)) return false;
+                    if (this.AreaLight.Specific != null && !this.AreaLight.Specific.All(eval)) return false;
+                }
+                if (!eval(this.VolumetricLightIntensityScale)) return false;
                 return true;
             }
             #endregion
@@ -492,7 +855,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DefaultLayer)) return true;
+                if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -510,6 +884,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -521,15 +900,69 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.DAT2)) return true;
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Time)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Color)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.FalloffExponent)) return true;
+                if (eval(this.FOV)) return true;
+                if (eval(this.NearClip)) return true;
+                if (eval(this.FlickerPeriod)) return true;
+                if (eval(this.FlickerIntensityAmplitude)) return true;
+                if (eval(this.FlickerMovementAmplitude)) return true;
+                if (eval(this.ShadowOffset)) return true;
+                if (eval(this.InnerFOV)) return true;
+                if (eval(this.PbrLightTemperatureK)) return true;
+                if (eval(this.PbrLuminousPowerLm)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.FlickerEffect)) return true;
+                if (eval(this.UseAdaptiveLighting)) return true;
+                if (eval(this.AdaptiveLightEc)) return true;
+                if (eval(this.AdaptiveLightEv100Min)) return true;
+                if (eval(this.AdaptiveLightEv100Max)) return true;
+                if (eval(this.RadiusFalloutExponent)) return true;
                 if (eval(this.Gobo)) return true;
+                if (SoundReference != null)
+                {
+                    if (eval(this.SoundReference.Overall)) return true;
+                    if (this.SoundReference.Specific != null && this.SoundReference.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Lens)) return true;
-                if (eval(this.FLBD)) return true;
-                if (eval(this.FLRD)) return true;
-                if (eval(this.FLGD)) return true;
-                if (eval(this.LLLD)) return true;
-                if (eval(this.FLAD)) return true;
-                if (eval(this.FVLD)) return true;
+                if (Barndoors != null)
+                {
+                    if (eval(this.Barndoors.Overall)) return true;
+                    if (this.Barndoors.Specific != null && this.Barndoors.Specific.Any(eval)) return true;
+                }
+                if (Roundness != null)
+                {
+                    if (eval(this.Roundness.Overall)) return true;
+                    if (this.Roundness.Specific != null && this.Roundness.Specific.Any(eval)) return true;
+                }
+                if (GoboData != null)
+                {
+                    if (eval(this.GoboData.Overall)) return true;
+                    if (this.GoboData.Specific != null && this.GoboData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Layer)) return true;
+                if (AreaLight != null)
+                {
+                    if (eval(this.AreaLight.Overall)) return true;
+                    if (this.AreaLight.Specific != null && this.AreaLight.Specific.Any(eval)) return true;
+                }
+                if (eval(this.VolumetricLightIntensityScale)) return true;
                 return false;
             }
             #endregion
@@ -548,7 +981,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.DefaultLayer = eval(this.DefaultLayer);
+                obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -565,6 +1001,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -579,15 +1016,52 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.DAT2 = eval(this.DAT2);
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Time = eval(this.Time);
+                obj.Radius = eval(this.Radius);
+                obj.Color = eval(this.Color);
+                obj.Flags = eval(this.Flags);
+                obj.FalloffExponent = eval(this.FalloffExponent);
+                obj.FOV = eval(this.FOV);
+                obj.NearClip = eval(this.NearClip);
+                obj.FlickerPeriod = eval(this.FlickerPeriod);
+                obj.FlickerIntensityAmplitude = eval(this.FlickerIntensityAmplitude);
+                obj.FlickerMovementAmplitude = eval(this.FlickerMovementAmplitude);
+                obj.ShadowOffset = eval(this.ShadowOffset);
+                obj.InnerFOV = eval(this.InnerFOV);
+                obj.PbrLightTemperatureK = eval(this.PbrLightTemperatureK);
+                obj.PbrLuminousPowerLm = eval(this.PbrLuminousPowerLm);
+                obj.Type = eval(this.Type);
+                obj.FlickerEffect = eval(this.FlickerEffect);
+                obj.UseAdaptiveLighting = eval(this.UseAdaptiveLighting);
+                obj.AdaptiveLightEc = eval(this.AdaptiveLightEc);
+                obj.AdaptiveLightEv100Min = eval(this.AdaptiveLightEv100Min);
+                obj.AdaptiveLightEv100Max = eval(this.AdaptiveLightEv100Max);
+                obj.RadiusFalloutExponent = eval(this.RadiusFalloutExponent);
                 obj.Gobo = eval(this.Gobo);
+                obj.SoundReference = this.SoundReference == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.SoundReference.Overall), this.SoundReference.Specific?.Translate(eval));
                 obj.Lens = eval(this.Lens);
-                obj.FLBD = eval(this.FLBD);
-                obj.FLRD = eval(this.FLRD);
-                obj.FLGD = eval(this.FLGD);
-                obj.LLLD = eval(this.LLLD);
-                obj.FLAD = eval(this.FLAD);
-                obj.FVLD = eval(this.FVLD);
+                obj.Barndoors = this.Barndoors == null ? null : new MaskItem<R, LightBarndoors.Mask<R>?>(eval(this.Barndoors.Overall), this.Barndoors.Specific?.Translate(eval));
+                obj.Roundness = this.Roundness == null ? null : new MaskItem<R, LightRoundness.Mask<R>?>(eval(this.Roundness.Overall), this.Roundness.Specific?.Translate(eval));
+                obj.GoboData = this.GoboData == null ? null : new MaskItem<R, LightGobo.Mask<R>?>(eval(this.GoboData.Overall), this.GoboData.Specific?.Translate(eval));
+                obj.Layer = eval(this.Layer);
+                obj.AreaLight = this.AreaLight == null ? null : new MaskItem<R, AreaLight.Mask<R>?>(eval(this.AreaLight.Overall), this.AreaLight.Specific?.Translate(eval));
+                obj.VolumetricLightIntensityScale = eval(this.VolumetricLightIntensityScale);
             }
             #endregion
 
@@ -618,9 +1092,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ODTY, "ODTY");
                     }
-                    if (printMask?.ODRT ?? true)
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
                     {
-                        sb.AppendItem(ODRT, "ODRT");
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.DefaultLayer ?? true)
+                    {
+                        sb.AppendItem(DefaultLayer, "DefaultLayer");
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -645,6 +1131,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
@@ -666,41 +1156,148 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.DAT2 ?? true)
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
                     {
-                        sb.AppendItem(DAT2, "DAT2");
+                        sb.AppendLine("Properties =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Time ?? true)
+                    {
+                        sb.AppendItem(Time, "Time");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        sb.AppendItem(Color, "Color");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.FalloffExponent ?? true)
+                    {
+                        sb.AppendItem(FalloffExponent, "FalloffExponent");
+                    }
+                    if (printMask?.FOV ?? true)
+                    {
+                        sb.AppendItem(FOV, "FOV");
+                    }
+                    if (printMask?.NearClip ?? true)
+                    {
+                        sb.AppendItem(NearClip, "NearClip");
+                    }
+                    if (printMask?.FlickerPeriod ?? true)
+                    {
+                        sb.AppendItem(FlickerPeriod, "FlickerPeriod");
+                    }
+                    if (printMask?.FlickerIntensityAmplitude ?? true)
+                    {
+                        sb.AppendItem(FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+                    }
+                    if (printMask?.FlickerMovementAmplitude ?? true)
+                    {
+                        sb.AppendItem(FlickerMovementAmplitude, "FlickerMovementAmplitude");
+                    }
+                    if (printMask?.ShadowOffset ?? true)
+                    {
+                        sb.AppendItem(ShadowOffset, "ShadowOffset");
+                    }
+                    if (printMask?.InnerFOV ?? true)
+                    {
+                        sb.AppendItem(InnerFOV, "InnerFOV");
+                    }
+                    if (printMask?.PbrLightTemperatureK ?? true)
+                    {
+                        sb.AppendItem(PbrLightTemperatureK, "PbrLightTemperatureK");
+                    }
+                    if (printMask?.PbrLuminousPowerLm ?? true)
+                    {
+                        sb.AppendItem(PbrLuminousPowerLm, "PbrLuminousPowerLm");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.FlickerEffect ?? true)
+                    {
+                        sb.AppendItem(FlickerEffect, "FlickerEffect");
+                    }
+                    if (printMask?.UseAdaptiveLighting ?? true)
+                    {
+                        sb.AppendItem(UseAdaptiveLighting, "UseAdaptiveLighting");
+                    }
+                    if (printMask?.AdaptiveLightEc ?? true)
+                    {
+                        sb.AppendItem(AdaptiveLightEc, "AdaptiveLightEc");
+                    }
+                    if (printMask?.AdaptiveLightEv100Min ?? true)
+                    {
+                        sb.AppendItem(AdaptiveLightEv100Min, "AdaptiveLightEv100Min");
+                    }
+                    if (printMask?.AdaptiveLightEv100Max ?? true)
+                    {
+                        sb.AppendItem(AdaptiveLightEv100Max, "AdaptiveLightEv100Max");
+                    }
+                    if (printMask?.RadiusFalloutExponent ?? true)
+                    {
+                        sb.AppendItem(RadiusFalloutExponent, "RadiusFalloutExponent");
                     }
                     if (printMask?.Gobo ?? true)
                     {
                         sb.AppendItem(Gobo, "Gobo");
                     }
+                    if (printMask?.SoundReference?.Overall ?? true)
+                    {
+                        SoundReference?.Print(sb);
+                    }
                     if (printMask?.Lens ?? true)
                     {
                         sb.AppendItem(Lens, "Lens");
                     }
-                    if (printMask?.FLBD ?? true)
+                    if (printMask?.Barndoors?.Overall ?? true)
                     {
-                        sb.AppendItem(FLBD, "FLBD");
+                        Barndoors?.Print(sb);
                     }
-                    if (printMask?.FLRD ?? true)
+                    if (printMask?.Roundness?.Overall ?? true)
                     {
-                        sb.AppendItem(FLRD, "FLRD");
+                        Roundness?.Print(sb);
                     }
-                    if (printMask?.FLGD ?? true)
+                    if (printMask?.GoboData?.Overall ?? true)
                     {
-                        sb.AppendItem(FLGD, "FLGD");
+                        GoboData?.Print(sb);
                     }
-                    if (printMask?.LLLD ?? true)
+                    if (printMask?.Layer ?? true)
                     {
-                        sb.AppendItem(LLLD, "LLLD");
+                        sb.AppendItem(Layer, "Layer");
                     }
-                    if (printMask?.FLAD ?? true)
+                    if (printMask?.AreaLight?.Overall ?? true)
                     {
-                        sb.AppendItem(FLAD, "FLAD");
+                        AreaLight?.Print(sb);
                     }
-                    if (printMask?.FVLD ?? true)
+                    if (printMask?.VolumetricLightIntensityScale ?? true)
                     {
-                        sb.AppendItem(FVLD, "FVLD");
+                        sb.AppendItem(VolumetricLightIntensityScale, "VolumetricLightIntensityScale");
                     }
                 }
             }
@@ -716,19 +1313,46 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
-            public Exception? ODRT;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? DefaultLayer;
+            public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? DAT2;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public Exception? Name;
+            public Exception? Time;
+            public Exception? Radius;
+            public Exception? Color;
+            public Exception? Flags;
+            public Exception? FalloffExponent;
+            public Exception? FOV;
+            public Exception? NearClip;
+            public Exception? FlickerPeriod;
+            public Exception? FlickerIntensityAmplitude;
+            public Exception? FlickerMovementAmplitude;
+            public Exception? ShadowOffset;
+            public Exception? InnerFOV;
+            public Exception? PbrLightTemperatureK;
+            public Exception? PbrLuminousPowerLm;
+            public Exception? Type;
+            public Exception? FlickerEffect;
+            public Exception? UseAdaptiveLighting;
+            public Exception? AdaptiveLightEc;
+            public Exception? AdaptiveLightEv100Min;
+            public Exception? AdaptiveLightEv100Max;
+            public Exception? RadiusFalloutExponent;
             public Exception? Gobo;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? SoundReference;
             public Exception? Lens;
-            public Exception? FLBD;
-            public Exception? FLRD;
-            public Exception? FLGD;
-            public Exception? LLLD;
-            public Exception? FLAD;
-            public Exception? FVLD;
+            public MaskItem<Exception?, LightBarndoors.ErrorMask?>? Barndoors;
+            public MaskItem<Exception?, LightRoundness.ErrorMask?>? Roundness;
+            public MaskItem<Exception?, LightGobo.ErrorMask?>? GoboData;
+            public Exception? Layer;
+            public MaskItem<Exception?, AreaLight.ErrorMask?>? AreaLight;
+            public Exception? VolumetricLightIntensityScale;
             #endregion
 
             #region IErrorMask
@@ -743,32 +1367,86 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Light_FieldIndex.ODTY:
                         return ODTY;
-                    case Light_FieldIndex.ODRT:
-                        return ODRT;
+                    case Light_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case Light_FieldIndex.Transforms:
+                        return Transforms;
+                    case Light_FieldIndex.DefaultLayer:
+                        return DefaultLayer;
+                    case Light_FieldIndex.XALG:
+                        return XALG;
                     case Light_FieldIndex.Components:
                         return Components;
                     case Light_FieldIndex.Model:
                         return Model;
+                    case Light_FieldIndex.Destructible:
+                        return Destructible;
                     case Light_FieldIndex.Keywords:
                         return Keywords;
-                    case Light_FieldIndex.DAT2:
-                        return DAT2;
+                    case Light_FieldIndex.Properties:
+                        return Properties;
+                    case Light_FieldIndex.Name:
+                        return Name;
+                    case Light_FieldIndex.Time:
+                        return Time;
+                    case Light_FieldIndex.Radius:
+                        return Radius;
+                    case Light_FieldIndex.Color:
+                        return Color;
+                    case Light_FieldIndex.Flags:
+                        return Flags;
+                    case Light_FieldIndex.FalloffExponent:
+                        return FalloffExponent;
+                    case Light_FieldIndex.FOV:
+                        return FOV;
+                    case Light_FieldIndex.NearClip:
+                        return NearClip;
+                    case Light_FieldIndex.FlickerPeriod:
+                        return FlickerPeriod;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        return FlickerIntensityAmplitude;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        return FlickerMovementAmplitude;
+                    case Light_FieldIndex.ShadowOffset:
+                        return ShadowOffset;
+                    case Light_FieldIndex.InnerFOV:
+                        return InnerFOV;
+                    case Light_FieldIndex.PbrLightTemperatureK:
+                        return PbrLightTemperatureK;
+                    case Light_FieldIndex.PbrLuminousPowerLm:
+                        return PbrLuminousPowerLm;
+                    case Light_FieldIndex.Type:
+                        return Type;
+                    case Light_FieldIndex.FlickerEffect:
+                        return FlickerEffect;
+                    case Light_FieldIndex.UseAdaptiveLighting:
+                        return UseAdaptiveLighting;
+                    case Light_FieldIndex.AdaptiveLightEc:
+                        return AdaptiveLightEc;
+                    case Light_FieldIndex.AdaptiveLightEv100Min:
+                        return AdaptiveLightEv100Min;
+                    case Light_FieldIndex.AdaptiveLightEv100Max:
+                        return AdaptiveLightEv100Max;
+                    case Light_FieldIndex.RadiusFalloutExponent:
+                        return RadiusFalloutExponent;
                     case Light_FieldIndex.Gobo:
                         return Gobo;
+                    case Light_FieldIndex.SoundReference:
+                        return SoundReference;
                     case Light_FieldIndex.Lens:
                         return Lens;
-                    case Light_FieldIndex.FLBD:
-                        return FLBD;
-                    case Light_FieldIndex.FLRD:
-                        return FLRD;
-                    case Light_FieldIndex.FLGD:
-                        return FLGD;
-                    case Light_FieldIndex.LLLD:
-                        return LLLD;
-                    case Light_FieldIndex.FLAD:
-                        return FLAD;
-                    case Light_FieldIndex.FVLD:
-                        return FVLD;
+                    case Light_FieldIndex.Barndoors:
+                        return Barndoors;
+                    case Light_FieldIndex.Roundness:
+                        return Roundness;
+                    case Light_FieldIndex.GoboData:
+                        return GoboData;
+                    case Light_FieldIndex.Layer:
+                        return Layer;
+                    case Light_FieldIndex.AreaLight:
+                        return AreaLight;
+                    case Light_FieldIndex.VolumetricLightIntensityScale:
+                        return VolumetricLightIntensityScale;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -788,8 +1466,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Light_FieldIndex.ODTY:
                         this.ODTY = ex;
                         break;
-                    case Light_FieldIndex.ODRT:
-                        this.ODRT = ex;
+                    case Light_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = ex;
+                        break;
+                    case Light_FieldIndex.XALG:
+                        this.XALG = ex;
                         break;
                     case Light_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
@@ -797,35 +1484,107 @@ namespace Mutagen.Bethesda.Starfield
                     case Light_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
+                    case Light_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
                     case Light_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Light_FieldIndex.DAT2:
-                        this.DAT2 = ex;
+                    case Light_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Light_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Light_FieldIndex.Time:
+                        this.Time = ex;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = ex;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = ex;
+                        break;
+                    case Light_FieldIndex.NearClip:
+                        this.NearClip = ex;
+                        break;
+                    case Light_FieldIndex.FlickerPeriod:
+                        this.FlickerPeriod = ex;
+                        break;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        this.FlickerIntensityAmplitude = ex;
+                        break;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        this.FlickerMovementAmplitude = ex;
+                        break;
+                    case Light_FieldIndex.ShadowOffset:
+                        this.ShadowOffset = ex;
+                        break;
+                    case Light_FieldIndex.InnerFOV:
+                        this.InnerFOV = ex;
+                        break;
+                    case Light_FieldIndex.PbrLightTemperatureK:
+                        this.PbrLightTemperatureK = ex;
+                        break;
+                    case Light_FieldIndex.PbrLuminousPowerLm:
+                        this.PbrLuminousPowerLm = ex;
+                        break;
+                    case Light_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Light_FieldIndex.FlickerEffect:
+                        this.FlickerEffect = ex;
+                        break;
+                    case Light_FieldIndex.UseAdaptiveLighting:
+                        this.UseAdaptiveLighting = ex;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEc:
+                        this.AdaptiveLightEc = ex;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEv100Min:
+                        this.AdaptiveLightEv100Min = ex;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEv100Max:
+                        this.AdaptiveLightEv100Max = ex;
+                        break;
+                    case Light_FieldIndex.RadiusFalloutExponent:
+                        this.RadiusFalloutExponent = ex;
                         break;
                     case Light_FieldIndex.Gobo:
                         this.Gobo = ex;
                         break;
+                    case Light_FieldIndex.SoundReference:
+                        this.SoundReference = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
                     case Light_FieldIndex.Lens:
                         this.Lens = ex;
                         break;
-                    case Light_FieldIndex.FLBD:
-                        this.FLBD = ex;
+                    case Light_FieldIndex.Barndoors:
+                        this.Barndoors = new MaskItem<Exception?, LightBarndoors.ErrorMask?>(ex, null);
                         break;
-                    case Light_FieldIndex.FLRD:
-                        this.FLRD = ex;
+                    case Light_FieldIndex.Roundness:
+                        this.Roundness = new MaskItem<Exception?, LightRoundness.ErrorMask?>(ex, null);
                         break;
-                    case Light_FieldIndex.FLGD:
-                        this.FLGD = ex;
+                    case Light_FieldIndex.GoboData:
+                        this.GoboData = new MaskItem<Exception?, LightGobo.ErrorMask?>(ex, null);
                         break;
-                    case Light_FieldIndex.LLLD:
-                        this.LLLD = ex;
+                    case Light_FieldIndex.Layer:
+                        this.Layer = ex;
                         break;
-                    case Light_FieldIndex.FLAD:
-                        this.FLAD = ex;
+                    case Light_FieldIndex.AreaLight:
+                        this.AreaLight = new MaskItem<Exception?, AreaLight.ErrorMask?>(ex, null);
                         break;
-                    case Light_FieldIndex.FVLD:
-                        this.FVLD = ex;
+                    case Light_FieldIndex.VolumetricLightIntensityScale:
+                        this.VolumetricLightIntensityScale = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -847,8 +1606,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Light_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
+                    case Light_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
@@ -856,35 +1624,107 @@ namespace Mutagen.Bethesda.Starfield
                     case Light_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
+                    case Light_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
                     case Light_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Light_FieldIndex.DAT2:
-                        this.DAT2 = (Exception?)obj;
+                    case Light_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case Light_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Time:
+                        this.Time = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.NearClip:
+                        this.NearClip = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerPeriod:
+                        this.FlickerPeriod = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        this.FlickerIntensityAmplitude = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        this.FlickerMovementAmplitude = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.ShadowOffset:
+                        this.ShadowOffset = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.InnerFOV:
+                        this.InnerFOV = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.PbrLightTemperatureK:
+                        this.PbrLightTemperatureK = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.PbrLuminousPowerLm:
+                        this.PbrLuminousPowerLm = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerEffect:
+                        this.FlickerEffect = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.UseAdaptiveLighting:
+                        this.UseAdaptiveLighting = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEc:
+                        this.AdaptiveLightEc = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEv100Min:
+                        this.AdaptiveLightEv100Min = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.AdaptiveLightEv100Max:
+                        this.AdaptiveLightEv100Max = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.RadiusFalloutExponent:
+                        this.RadiusFalloutExponent = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Gobo:
                         this.Gobo = (Exception?)obj;
                         break;
+                    case Light_FieldIndex.SoundReference:
+                        this.SoundReference = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
                     case Light_FieldIndex.Lens:
                         this.Lens = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.FLBD:
-                        this.FLBD = (Exception?)obj;
+                    case Light_FieldIndex.Barndoors:
+                        this.Barndoors = (MaskItem<Exception?, LightBarndoors.ErrorMask?>?)obj;
                         break;
-                    case Light_FieldIndex.FLRD:
-                        this.FLRD = (Exception?)obj;
+                    case Light_FieldIndex.Roundness:
+                        this.Roundness = (MaskItem<Exception?, LightRoundness.ErrorMask?>?)obj;
                         break;
-                    case Light_FieldIndex.FLGD:
-                        this.FLGD = (Exception?)obj;
+                    case Light_FieldIndex.GoboData:
+                        this.GoboData = (MaskItem<Exception?, LightGobo.ErrorMask?>?)obj;
                         break;
-                    case Light_FieldIndex.LLLD:
-                        this.LLLD = (Exception?)obj;
+                    case Light_FieldIndex.Layer:
+                        this.Layer = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.FLAD:
-                        this.FLAD = (Exception?)obj;
+                    case Light_FieldIndex.AreaLight:
+                        this.AreaLight = (MaskItem<Exception?, AreaLight.ErrorMask?>?)obj;
                         break;
-                    case Light_FieldIndex.FVLD:
-                        this.FVLD = (Exception?)obj;
+                    case Light_FieldIndex.VolumetricLightIntensityScale:
+                        this.VolumetricLightIntensityScale = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -898,19 +1738,46 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
-                if (ODRT != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (DefaultLayer != null) return true;
+                if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Model != null) return true;
+                if (Destructible != null) return true;
                 if (Keywords != null) return true;
-                if (DAT2 != null) return true;
+                if (Properties != null) return true;
+                if (Name != null) return true;
+                if (Time != null) return true;
+                if (Radius != null) return true;
+                if (Color != null) return true;
+                if (Flags != null) return true;
+                if (FalloffExponent != null) return true;
+                if (FOV != null) return true;
+                if (NearClip != null) return true;
+                if (FlickerPeriod != null) return true;
+                if (FlickerIntensityAmplitude != null) return true;
+                if (FlickerMovementAmplitude != null) return true;
+                if (ShadowOffset != null) return true;
+                if (InnerFOV != null) return true;
+                if (PbrLightTemperatureK != null) return true;
+                if (PbrLuminousPowerLm != null) return true;
+                if (Type != null) return true;
+                if (FlickerEffect != null) return true;
+                if (UseAdaptiveLighting != null) return true;
+                if (AdaptiveLightEc != null) return true;
+                if (AdaptiveLightEv100Min != null) return true;
+                if (AdaptiveLightEv100Max != null) return true;
+                if (RadiusFalloutExponent != null) return true;
                 if (Gobo != null) return true;
+                if (SoundReference != null) return true;
                 if (Lens != null) return true;
-                if (FLBD != null) return true;
-                if (FLRD != null) return true;
-                if (FLGD != null) return true;
-                if (LLLD != null) return true;
-                if (FLAD != null) return true;
-                if (FVLD != null) return true;
+                if (Barndoors != null) return true;
+                if (Roundness != null) return true;
+                if (GoboData != null) return true;
+                if (Layer != null) return true;
+                if (AreaLight != null) return true;
+                if (VolumetricLightIntensityScale != null) return true;
                 return false;
             }
             #endregion
@@ -942,8 +1809,13 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
+                ObjectPlacementDefaults?.Print(sb);
+                Transforms?.Print(sb);
                 {
-                    sb.AppendItem(ODRT, "ODRT");
+                    sb.AppendItem(DefaultLayer, "DefaultLayer");
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
                 }
                 if (Components is {} ComponentsItem)
                 {
@@ -964,6 +1836,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 Model?.Print(sb);
+                Destructible?.Print(sb);
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
@@ -984,32 +1857,106 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (Properties is {} PropertiesItem)
                 {
-                    sb.AppendItem(DAT2, "DAT2");
+                    sb.AppendLine("Properties =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Time, "Time");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FalloffExponent, "FalloffExponent");
+                }
+                {
+                    sb.AppendItem(FOV, "FOV");
+                }
+                {
+                    sb.AppendItem(NearClip, "NearClip");
+                }
+                {
+                    sb.AppendItem(FlickerPeriod, "FlickerPeriod");
+                }
+                {
+                    sb.AppendItem(FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+                }
+                {
+                    sb.AppendItem(FlickerMovementAmplitude, "FlickerMovementAmplitude");
+                }
+                {
+                    sb.AppendItem(ShadowOffset, "ShadowOffset");
+                }
+                {
+                    sb.AppendItem(InnerFOV, "InnerFOV");
+                }
+                {
+                    sb.AppendItem(PbrLightTemperatureK, "PbrLightTemperatureK");
+                }
+                {
+                    sb.AppendItem(PbrLuminousPowerLm, "PbrLuminousPowerLm");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(FlickerEffect, "FlickerEffect");
+                }
+                {
+                    sb.AppendItem(UseAdaptiveLighting, "UseAdaptiveLighting");
+                }
+                {
+                    sb.AppendItem(AdaptiveLightEc, "AdaptiveLightEc");
+                }
+                {
+                    sb.AppendItem(AdaptiveLightEv100Min, "AdaptiveLightEv100Min");
+                }
+                {
+                    sb.AppendItem(AdaptiveLightEv100Max, "AdaptiveLightEv100Max");
+                }
+                {
+                    sb.AppendItem(RadiusFalloutExponent, "RadiusFalloutExponent");
                 }
                 {
                     sb.AppendItem(Gobo, "Gobo");
                 }
+                SoundReference?.Print(sb);
                 {
                     sb.AppendItem(Lens, "Lens");
                 }
+                Barndoors?.Print(sb);
+                Roundness?.Print(sb);
+                GoboData?.Print(sb);
                 {
-                    sb.AppendItem(FLBD, "FLBD");
+                    sb.AppendItem(Layer, "Layer");
                 }
+                AreaLight?.Print(sb);
                 {
-                    sb.AppendItem(FLRD, "FLRD");
-                }
-                {
-                    sb.AppendItem(FLGD, "FLGD");
-                }
-                {
-                    sb.AppendItem(LLLD, "LLLD");
-                }
-                {
-                    sb.AppendItem(FLAD, "FLAD");
-                }
-                {
-                    sb.AppendItem(FVLD, "FVLD");
+                    sb.AppendItem(VolumetricLightIntensityScale, "VolumetricLightIntensityScale");
                 }
             }
             #endregion
@@ -1022,19 +1969,46 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.DefaultLayer = this.DefaultLayer.Combine(rhs.DefaultLayer);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.DAT2 = this.DAT2.Combine(rhs.DAT2);
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Time = this.Time.Combine(rhs.Time);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Color = this.Color.Combine(rhs.Color);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
+                ret.FOV = this.FOV.Combine(rhs.FOV);
+                ret.NearClip = this.NearClip.Combine(rhs.NearClip);
+                ret.FlickerPeriod = this.FlickerPeriod.Combine(rhs.FlickerPeriod);
+                ret.FlickerIntensityAmplitude = this.FlickerIntensityAmplitude.Combine(rhs.FlickerIntensityAmplitude);
+                ret.FlickerMovementAmplitude = this.FlickerMovementAmplitude.Combine(rhs.FlickerMovementAmplitude);
+                ret.ShadowOffset = this.ShadowOffset.Combine(rhs.ShadowOffset);
+                ret.InnerFOV = this.InnerFOV.Combine(rhs.InnerFOV);
+                ret.PbrLightTemperatureK = this.PbrLightTemperatureK.Combine(rhs.PbrLightTemperatureK);
+                ret.PbrLuminousPowerLm = this.PbrLuminousPowerLm.Combine(rhs.PbrLuminousPowerLm);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.FlickerEffect = this.FlickerEffect.Combine(rhs.FlickerEffect);
+                ret.UseAdaptiveLighting = this.UseAdaptiveLighting.Combine(rhs.UseAdaptiveLighting);
+                ret.AdaptiveLightEc = this.AdaptiveLightEc.Combine(rhs.AdaptiveLightEc);
+                ret.AdaptiveLightEv100Min = this.AdaptiveLightEv100Min.Combine(rhs.AdaptiveLightEv100Min);
+                ret.AdaptiveLightEv100Max = this.AdaptiveLightEv100Max.Combine(rhs.AdaptiveLightEv100Max);
+                ret.RadiusFalloutExponent = this.RadiusFalloutExponent.Combine(rhs.RadiusFalloutExponent);
                 ret.Gobo = this.Gobo.Combine(rhs.Gobo);
+                ret.SoundReference = this.SoundReference.Combine(rhs.SoundReference, (l, r) => l.Combine(r));
                 ret.Lens = this.Lens.Combine(rhs.Lens);
-                ret.FLBD = this.FLBD.Combine(rhs.FLBD);
-                ret.FLRD = this.FLRD.Combine(rhs.FLRD);
-                ret.FLGD = this.FLGD.Combine(rhs.FLGD);
-                ret.LLLD = this.LLLD.Combine(rhs.LLLD);
-                ret.FLAD = this.FLAD.Combine(rhs.FLAD);
-                ret.FVLD = this.FVLD.Combine(rhs.FVLD);
+                ret.Barndoors = this.Barndoors.Combine(rhs.Barndoors, (l, r) => l.Combine(r));
+                ret.Roundness = this.Roundness.Combine(rhs.Roundness, (l, r) => l.Combine(r));
+                ret.GoboData = this.GoboData.Combine(rhs.GoboData, (l, r) => l.Combine(r));
+                ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.AreaLight = this.AreaLight.Combine(rhs.AreaLight, (l, r) => l.Combine(r));
+                ret.VolumetricLightIntensityScale = this.VolumetricLightIntensityScale.Combine(rhs.VolumetricLightIntensityScale);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1060,19 +2034,46 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
-            public bool ODRT;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool DefaultLayer;
+            public bool XALG;
             public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
             public bool Keywords;
-            public bool DAT2;
+            public ObjectProperty.TranslationMask? Properties;
+            public bool Name;
+            public bool Time;
+            public bool Radius;
+            public bool Color;
+            public bool Flags;
+            public bool FalloffExponent;
+            public bool FOV;
+            public bool NearClip;
+            public bool FlickerPeriod;
+            public bool FlickerIntensityAmplitude;
+            public bool FlickerMovementAmplitude;
+            public bool ShadowOffset;
+            public bool InnerFOV;
+            public bool PbrLightTemperatureK;
+            public bool PbrLuminousPowerLm;
+            public bool Type;
+            public bool FlickerEffect;
+            public bool UseAdaptiveLighting;
+            public bool AdaptiveLightEc;
+            public bool AdaptiveLightEv100Min;
+            public bool AdaptiveLightEv100Max;
+            public bool RadiusFalloutExponent;
             public bool Gobo;
+            public SoundReference.TranslationMask? SoundReference;
             public bool Lens;
-            public bool FLBD;
-            public bool FLRD;
-            public bool FLGD;
-            public bool LLLD;
-            public bool FLAD;
-            public bool FVLD;
+            public LightBarndoors.TranslationMask? Barndoors;
+            public LightRoundness.TranslationMask? Roundness;
+            public LightGobo.TranslationMask? GoboData;
+            public bool Layer;
+            public AreaLight.TranslationMask? AreaLight;
+            public bool VolumetricLightIntensityScale;
             #endregion
 
             #region Ctors
@@ -1082,17 +2083,35 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
+                this.DefaultLayer = defaultOn;
+                this.XALG = defaultOn;
                 this.Keywords = defaultOn;
-                this.DAT2 = defaultOn;
+                this.Name = defaultOn;
+                this.Time = defaultOn;
+                this.Radius = defaultOn;
+                this.Color = defaultOn;
+                this.Flags = defaultOn;
+                this.FalloffExponent = defaultOn;
+                this.FOV = defaultOn;
+                this.NearClip = defaultOn;
+                this.FlickerPeriod = defaultOn;
+                this.FlickerIntensityAmplitude = defaultOn;
+                this.FlickerMovementAmplitude = defaultOn;
+                this.ShadowOffset = defaultOn;
+                this.InnerFOV = defaultOn;
+                this.PbrLightTemperatureK = defaultOn;
+                this.PbrLuminousPowerLm = defaultOn;
+                this.Type = defaultOn;
+                this.FlickerEffect = defaultOn;
+                this.UseAdaptiveLighting = defaultOn;
+                this.AdaptiveLightEc = defaultOn;
+                this.AdaptiveLightEv100Min = defaultOn;
+                this.AdaptiveLightEv100Max = defaultOn;
+                this.RadiusFalloutExponent = defaultOn;
                 this.Gobo = defaultOn;
                 this.Lens = defaultOn;
-                this.FLBD = defaultOn;
-                this.FLRD = defaultOn;
-                this.FLGD = defaultOn;
-                this.LLLD = defaultOn;
-                this.FLAD = defaultOn;
-                this.FVLD = defaultOn;
+                this.Layer = defaultOn;
+                this.VolumetricLightIntensityScale = defaultOn;
             }
 
             #endregion
@@ -1103,19 +2122,46 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((DefaultLayer, null));
+                ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((DAT2, null));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Time, null));
+                ret.Add((Radius, null));
+                ret.Add((Color, null));
+                ret.Add((Flags, null));
+                ret.Add((FalloffExponent, null));
+                ret.Add((FOV, null));
+                ret.Add((NearClip, null));
+                ret.Add((FlickerPeriod, null));
+                ret.Add((FlickerIntensityAmplitude, null));
+                ret.Add((FlickerMovementAmplitude, null));
+                ret.Add((ShadowOffset, null));
+                ret.Add((InnerFOV, null));
+                ret.Add((PbrLightTemperatureK, null));
+                ret.Add((PbrLuminousPowerLm, null));
+                ret.Add((Type, null));
+                ret.Add((FlickerEffect, null));
+                ret.Add((UseAdaptiveLighting, null));
+                ret.Add((AdaptiveLightEc, null));
+                ret.Add((AdaptiveLightEv100Min, null));
+                ret.Add((AdaptiveLightEv100Max, null));
+                ret.Add((RadiusFalloutExponent, null));
                 ret.Add((Gobo, null));
+                ret.Add((SoundReference != null ? SoundReference.OnOverall : DefaultOn, SoundReference?.GetCrystal()));
                 ret.Add((Lens, null));
-                ret.Add((FLBD, null));
-                ret.Add((FLRD, null));
-                ret.Add((FLGD, null));
-                ret.Add((LLLD, null));
-                ret.Add((FLAD, null));
-                ret.Add((FVLD, null));
+                ret.Add((Barndoors != null ? Barndoors.OnOverall : DefaultOn, Barndoors?.GetCrystal()));
+                ret.Add((Roundness != null ? Roundness.OnOverall : DefaultOn, Roundness?.GetCrystal()));
+                ret.Add((GoboData != null ? GoboData.OnOverall : DefaultOn, GoboData?.GetCrystal()));
+                ret.Add((Layer, null));
+                ret.Add((AreaLight != null ? AreaLight.OnOverall : DefaultOn, AreaLight?.GetCrystal()));
+                ret.Add((VolumetricLightIntensityScale, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1271,42 +2317,77 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IEmittance,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
         IModeled,
+        INamed,
+        INamedRequired,
         IObjectBounded,
         IScripted,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
-        new Single? ODRT { get; set; }
+        new Single ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new IFormLinkNullable<ILayerGetter> DefaultLayer { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new MemorySlice<Byte>? DAT2 { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Int32 Time { get; set; }
+        new Single Radius { get; set; }
+        new Color Color { get; set; }
+        new Light.Flag Flags { get; set; }
+        new Single FalloffExponent { get; set; }
+        new Single FOV { get; set; }
+        new Single NearClip { get; set; }
+        new Single FlickerPeriod { get; set; }
+        new Single FlickerIntensityAmplitude { get; set; }
+        new Single FlickerMovementAmplitude { get; set; }
+        new Single ShadowOffset { get; set; }
+        new Single InnerFOV { get; set; }
+        new UInt32 PbrLightTemperatureK { get; set; }
+        new UInt32 PbrLuminousPowerLm { get; set; }
+        new Light.LightType Type { get; set; }
+        new Light.FlickerEffectOption FlickerEffect { get; set; }
+        new Boolean UseAdaptiveLighting { get; set; }
+        new Single AdaptiveLightEc { get; set; }
+        new Single AdaptiveLightEv100Min { get; set; }
+        new Single AdaptiveLightEv100Max { get; set; }
+        new Single RadiusFalloutExponent { get; set; }
         new String? Gobo { get; set; }
+        new SoundReference? SoundReference { get; set; }
         new IFormLinkNullable<ILensFlareGetter> Lens { get; set; }
-        new MemorySlice<Byte>? FLBD { get; set; }
-        new MemorySlice<Byte>? FLRD { get; set; }
-        new MemorySlice<Byte>? FLGD { get; set; }
-        new MemorySlice<Byte>? LLLD { get; set; }
-        new MemorySlice<Byte>? FLAD { get; set; }
-        new Single? FVLD { get; set; }
+        new LightBarndoors Barndoors { get; set; }
+        new LightRoundness Roundness { get; set; }
+        new LightGobo GoboData { get; set; }
+        new Light.LightLayer Layer { get; set; }
+        new AreaLight AreaLight { get; set; }
+        new Single? VolumetricLightIntensityScale { get; set; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1333,8 +2414,12 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<ILightGetter>,
         IMapsToGetter<ILightGetter>,
         IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
         IObjectBoundedGetter,
-        IScriptedGetter
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
         #region VirtualMachineAdapter
@@ -1349,8 +2434,11 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
-        Single? ODRT { get; }
+        Single ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        IFormLinkNullableGetter<ILayerGetter> DefaultLayer { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Model
         /// <summary>
@@ -1358,21 +2446,50 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        IDestructibleGetter? Destructible { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        ReadOnlyMemorySlice<Byte>? DAT2 { get; }
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Int32 Time { get; }
+        Single Radius { get; }
+        Color Color { get; }
+        Light.Flag Flags { get; }
+        Single FalloffExponent { get; }
+        Single FOV { get; }
+        Single NearClip { get; }
+        Single FlickerPeriod { get; }
+        Single FlickerIntensityAmplitude { get; }
+        Single FlickerMovementAmplitude { get; }
+        Single ShadowOffset { get; }
+        Single InnerFOV { get; }
+        UInt32 PbrLightTemperatureK { get; }
+        UInt32 PbrLuminousPowerLm { get; }
+        Light.LightType Type { get; }
+        Light.FlickerEffectOption FlickerEffect { get; }
+        Boolean UseAdaptiveLighting { get; }
+        Single AdaptiveLightEc { get; }
+        Single AdaptiveLightEv100Min { get; }
+        Single AdaptiveLightEv100Max { get; }
+        Single RadiusFalloutExponent { get; }
         String? Gobo { get; }
+        ISoundReferenceGetter? SoundReference { get; }
         IFormLinkNullableGetter<ILensFlareGetter> Lens { get; }
-        ReadOnlyMemorySlice<Byte>? FLBD { get; }
-        ReadOnlyMemorySlice<Byte>? FLRD { get; }
-        ReadOnlyMemorySlice<Byte>? FLGD { get; }
-        ReadOnlyMemorySlice<Byte>? LLLD { get; }
-        ReadOnlyMemorySlice<Byte>? FLAD { get; }
-        Single? FVLD { get; }
+        ILightBarndoorsGetter Barndoors { get; }
+        ILightRoundnessGetter Roundness { get; }
+        ILightGoboGetter GoboData { get; }
+        Light.LightLayer Layer { get; }
+        IAreaLightGetter AreaLight { get; }
+        Single? VolumetricLightIntensityScale { get; }
 
         #region Mutagen
         Light.MajorFlag MajorFlags { get; }
@@ -1556,19 +2673,46 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         ODTY = 9,
-        ODRT = 10,
-        Components = 11,
-        Model = 12,
-        Keywords = 13,
-        DAT2 = 14,
-        Gobo = 15,
-        Lens = 16,
-        FLBD = 17,
-        FLRD = 18,
-        FLGD = 19,
-        LLLD = 20,
-        FLAD = 21,
-        FVLD = 22,
+        ObjectPlacementDefaults = 10,
+        Transforms = 11,
+        DefaultLayer = 12,
+        XALG = 13,
+        Components = 14,
+        Model = 15,
+        Destructible = 16,
+        Keywords = 17,
+        Properties = 18,
+        Name = 19,
+        Time = 20,
+        Radius = 21,
+        Color = 22,
+        Flags = 23,
+        FalloffExponent = 24,
+        FOV = 25,
+        NearClip = 26,
+        FlickerPeriod = 27,
+        FlickerIntensityAmplitude = 28,
+        FlickerMovementAmplitude = 29,
+        ShadowOffset = 30,
+        InnerFOV = 31,
+        PbrLightTemperatureK = 32,
+        PbrLuminousPowerLm = 33,
+        Type = 34,
+        FlickerEffect = 35,
+        UseAdaptiveLighting = 36,
+        AdaptiveLightEc = 37,
+        AdaptiveLightEv100Min = 38,
+        AdaptiveLightEv100Max = 39,
+        RadiusFalloutExponent = 40,
+        Gobo = 41,
+        SoundReference = 42,
+        Lens = 43,
+        Barndoors = 44,
+        Roundness = 45,
+        GoboData = 46,
+        Layer = 47,
+        AreaLight = 48,
+        VolumetricLightIntensityScale = 49,
     }
     #endregion
 
@@ -1579,9 +2723,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 43;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 50;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -1618,7 +2762,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.DEFL,
+                RecordTypes.XALG,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.MODL,
@@ -1630,10 +2777,17 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.PRPS,
+                RecordTypes.FULL,
                 RecordTypes.DAT2,
                 RecordTypes.NAM0,
+                RecordTypes.LLSH,
                 RecordTypes.LNAM,
                 RecordTypes.FLBD,
                 RecordTypes.FLRD,
@@ -1687,20 +2841,47 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.ODTY = default;
-            item.ODRT = default;
+            item.ODTY = default(Single);
+            item.ObjectPlacementDefaults = null;
+            item.Transforms = null;
+            item.DefaultLayer.Clear();
+            item.XALG = default;
             item.Components.Clear();
             item.Model = null;
+            item.Destructible = null;
             item.Keywords = null;
-            item.DAT2 = default;
+            item.Properties = null;
+            item.Name = default;
+            item.Time = default(Int32);
+            item.Radius = default(Single);
+            item.Color = default(Color);
+            item.Flags = default(Light.Flag);
+            item.FalloffExponent = default(Single);
+            item.FOV = default(Single);
+            item.NearClip = default(Single);
+            item.FlickerPeriod = default(Single);
+            item.FlickerIntensityAmplitude = default(Single);
+            item.FlickerMovementAmplitude = default(Single);
+            item.ShadowOffset = default(Single);
+            item.InnerFOV = default(Single);
+            item.PbrLightTemperatureK = default(UInt32);
+            item.PbrLuminousPowerLm = default(UInt32);
+            item.Type = default(Light.LightType);
+            item.FlickerEffect = default(Light.FlickerEffectOption);
+            item.UseAdaptiveLighting = default(Boolean);
+            item.AdaptiveLightEc = default(Single);
+            item.AdaptiveLightEv100Min = default(Single);
+            item.AdaptiveLightEv100Max = default(Single);
+            item.RadiusFalloutExponent = default(Single);
             item.Gobo = default;
+            item.SoundReference = null;
             item.Lens.Clear();
-            item.FLBD = default;
-            item.FLRD = default;
-            item.FLGD = default;
-            item.LLLD = default;
-            item.FLAD = default;
-            item.FVLD = default;
+            item.Barndoors.Clear();
+            item.Roundness.Clear();
+            item.GoboData.Clear();
+            item.Layer = default(Light.LightLayer);
+            item.AreaLight.Clear();
+            item.VolumetricLightIntensityScale = default;
             base.Clear(item);
         }
         
@@ -1719,9 +2900,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.DefaultLayer.Relink(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.SoundReference?.RemapLinks(mapping);
             obj.Lens.Relink(mapping);
         }
         
@@ -1743,6 +2929,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1755,6 +2948,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1829,7 +3023,18 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DefaultLayer = item.DefaultLayer.Equals(rhs.DefaultLayer);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1839,19 +3044,54 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.DAT2 = MemorySliceExt.SequenceEqual(item.DAT2, rhs.DAT2);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Time = item.Time == rhs.Time;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.FalloffExponent = item.FalloffExponent.EqualsWithin(rhs.FalloffExponent);
+            ret.FOV = item.FOV.EqualsWithin(rhs.FOV);
+            ret.NearClip = item.NearClip.EqualsWithin(rhs.NearClip);
+            ret.FlickerPeriod = item.FlickerPeriod.EqualsWithin(rhs.FlickerPeriod);
+            ret.FlickerIntensityAmplitude = item.FlickerIntensityAmplitude.EqualsWithin(rhs.FlickerIntensityAmplitude);
+            ret.FlickerMovementAmplitude = item.FlickerMovementAmplitude.EqualsWithin(rhs.FlickerMovementAmplitude);
+            ret.ShadowOffset = item.ShadowOffset.EqualsWithin(rhs.ShadowOffset);
+            ret.InnerFOV = item.InnerFOV.EqualsWithin(rhs.InnerFOV);
+            ret.PbrLightTemperatureK = item.PbrLightTemperatureK == rhs.PbrLightTemperatureK;
+            ret.PbrLuminousPowerLm = item.PbrLuminousPowerLm == rhs.PbrLuminousPowerLm;
+            ret.Type = item.Type == rhs.Type;
+            ret.FlickerEffect = item.FlickerEffect == rhs.FlickerEffect;
+            ret.UseAdaptiveLighting = item.UseAdaptiveLighting == rhs.UseAdaptiveLighting;
+            ret.AdaptiveLightEc = item.AdaptiveLightEc.EqualsWithin(rhs.AdaptiveLightEc);
+            ret.AdaptiveLightEv100Min = item.AdaptiveLightEv100Min.EqualsWithin(rhs.AdaptiveLightEv100Min);
+            ret.AdaptiveLightEv100Max = item.AdaptiveLightEv100Max.EqualsWithin(rhs.AdaptiveLightEv100Max);
+            ret.RadiusFalloutExponent = item.RadiusFalloutExponent.EqualsWithin(rhs.RadiusFalloutExponent);
             ret.Gobo = string.Equals(item.Gobo, rhs.Gobo);
+            ret.SoundReference = EqualsMaskHelper.EqualsHelper(
+                item.SoundReference,
+                rhs.SoundReference,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Lens = item.Lens.Equals(rhs.Lens);
-            ret.FLBD = MemorySliceExt.SequenceEqual(item.FLBD, rhs.FLBD);
-            ret.FLRD = MemorySliceExt.SequenceEqual(item.FLRD, rhs.FLRD);
-            ret.FLGD = MemorySliceExt.SequenceEqual(item.FLGD, rhs.FLGD);
-            ret.LLLD = MemorySliceExt.SequenceEqual(item.LLLD, rhs.LLLD);
-            ret.FLAD = MemorySliceExt.SequenceEqual(item.FLAD, rhs.FLAD);
-            ret.FVLD = item.FVLD.EqualsWithin(rhs.FVLD);
+            ret.Barndoors = MaskItemExt.Factory(item.Barndoors.GetEqualsMask(rhs.Barndoors, include), include);
+            ret.Roundness = MaskItemExt.Factory(item.Roundness.GetEqualsMask(rhs.Roundness, include), include);
+            ret.GoboData = MaskItemExt.Factory(item.GoboData.GetEqualsMask(rhs.GoboData, include), include);
+            ret.Layer = item.Layer == rhs.Layer;
+            ret.AreaLight = MaskItemExt.Factory(item.AreaLight.GetEqualsMask(rhs.AreaLight, include), include);
+            ret.VolumetricLightIntensityScale = item.VolumetricLightIntensityScale.EqualsWithin(rhs.VolumetricLightIntensityScale);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1910,15 +3150,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.ODTY ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
+                sb.AppendItem(item.ODTY, "ODTY");
             }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
-                sb.AppendItem(ODRTItem, "ODRT");
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.DefaultLayer ?? true)
+            {
+                sb.AppendItem(item.DefaultLayer.FormKeyNullable, "DefaultLayer");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -1939,6 +3192,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
@@ -1954,49 +3212,148 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.DAT2 ?? true)
-                && item.DAT2 is {} DAT2Item)
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
             {
-                sb.AppendLine($"DAT2 => {SpanExt.ToHexString(DAT2Item)}");
+                sb.AppendLine("Properties =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Time ?? true)
+            {
+                sb.AppendItem(item.Time, "Time");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                sb.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.Color ?? true)
+            {
+                sb.AppendItem(item.Color, "Color");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.FalloffExponent ?? true)
+            {
+                sb.AppendItem(item.FalloffExponent, "FalloffExponent");
+            }
+            if (printMask?.FOV ?? true)
+            {
+                sb.AppendItem(item.FOV, "FOV");
+            }
+            if (printMask?.NearClip ?? true)
+            {
+                sb.AppendItem(item.NearClip, "NearClip");
+            }
+            if (printMask?.FlickerPeriod ?? true)
+            {
+                sb.AppendItem(item.FlickerPeriod, "FlickerPeriod");
+            }
+            if (printMask?.FlickerIntensityAmplitude ?? true)
+            {
+                sb.AppendItem(item.FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+            }
+            if (printMask?.FlickerMovementAmplitude ?? true)
+            {
+                sb.AppendItem(item.FlickerMovementAmplitude, "FlickerMovementAmplitude");
+            }
+            if (printMask?.ShadowOffset ?? true)
+            {
+                sb.AppendItem(item.ShadowOffset, "ShadowOffset");
+            }
+            if (printMask?.InnerFOV ?? true)
+            {
+                sb.AppendItem(item.InnerFOV, "InnerFOV");
+            }
+            if (printMask?.PbrLightTemperatureK ?? true)
+            {
+                sb.AppendItem(item.PbrLightTemperatureK, "PbrLightTemperatureK");
+            }
+            if (printMask?.PbrLuminousPowerLm ?? true)
+            {
+                sb.AppendItem(item.PbrLuminousPowerLm, "PbrLuminousPowerLm");
+            }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.FlickerEffect ?? true)
+            {
+                sb.AppendItem(item.FlickerEffect, "FlickerEffect");
+            }
+            if (printMask?.UseAdaptiveLighting ?? true)
+            {
+                sb.AppendItem(item.UseAdaptiveLighting, "UseAdaptiveLighting");
+            }
+            if (printMask?.AdaptiveLightEc ?? true)
+            {
+                sb.AppendItem(item.AdaptiveLightEc, "AdaptiveLightEc");
+            }
+            if (printMask?.AdaptiveLightEv100Min ?? true)
+            {
+                sb.AppendItem(item.AdaptiveLightEv100Min, "AdaptiveLightEv100Min");
+            }
+            if (printMask?.AdaptiveLightEv100Max ?? true)
+            {
+                sb.AppendItem(item.AdaptiveLightEv100Max, "AdaptiveLightEv100Max");
+            }
+            if (printMask?.RadiusFalloutExponent ?? true)
+            {
+                sb.AppendItem(item.RadiusFalloutExponent, "RadiusFalloutExponent");
             }
             if ((printMask?.Gobo ?? true)
                 && item.Gobo is {} GoboItem)
             {
                 sb.AppendItem(GoboItem, "Gobo");
             }
+            if ((printMask?.SoundReference?.Overall ?? true)
+                && item.SoundReference is {} SoundReferenceItem)
+            {
+                SoundReferenceItem?.Print(sb, "SoundReference");
+            }
             if (printMask?.Lens ?? true)
             {
                 sb.AppendItem(item.Lens.FormKeyNullable, "Lens");
             }
-            if ((printMask?.FLBD ?? true)
-                && item.FLBD is {} FLBDItem)
+            if (printMask?.Barndoors?.Overall ?? true)
             {
-                sb.AppendLine($"FLBD => {SpanExt.ToHexString(FLBDItem)}");
+                item.Barndoors?.Print(sb, "Barndoors");
             }
-            if ((printMask?.FLRD ?? true)
-                && item.FLRD is {} FLRDItem)
+            if (printMask?.Roundness?.Overall ?? true)
             {
-                sb.AppendLine($"FLRD => {SpanExt.ToHexString(FLRDItem)}");
+                item.Roundness?.Print(sb, "Roundness");
             }
-            if ((printMask?.FLGD ?? true)
-                && item.FLGD is {} FLGDItem)
+            if (printMask?.GoboData?.Overall ?? true)
             {
-                sb.AppendLine($"FLGD => {SpanExt.ToHexString(FLGDItem)}");
+                item.GoboData?.Print(sb, "GoboData");
             }
-            if ((printMask?.LLLD ?? true)
-                && item.LLLD is {} LLLDItem)
+            if (printMask?.Layer ?? true)
             {
-                sb.AppendLine($"LLLD => {SpanExt.ToHexString(LLLDItem)}");
+                sb.AppendItem(item.Layer, "Layer");
             }
-            if ((printMask?.FLAD ?? true)
-                && item.FLAD is {} FLADItem)
+            if (printMask?.AreaLight?.Overall ?? true)
             {
-                sb.AppendLine($"FLAD => {SpanExt.ToHexString(FLADItem)}");
+                item.AreaLight?.Print(sb, "AreaLight");
             }
-            if ((printMask?.FVLD ?? true)
-                && item.FVLD is {} FVLDItem)
+            if ((printMask?.VolumetricLightIntensityScale ?? true)
+                && item.VolumetricLightIntensityScale is {} VolumetricLightIntensityScaleItem)
             {
-                sb.AppendItem(FVLDItem, "FVLD");
+                sb.AppendItem(VolumetricLightIntensityScaleItem, "VolumetricLightIntensityScale");
             }
         }
         
@@ -2068,9 +3425,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ODRT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Light_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.DefaultLayer) ?? true))
+            {
+                if (!lhs.DefaultLayer.Equals(rhs.DefaultLayer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Components) ?? true))
             {
@@ -2084,45 +3461,165 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.DAT2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Properties) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DAT2, rhs.DAT2)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Properties)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+            {
+                if (lhs.Time != rhs.Time) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            {
+                if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            {
+                if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
+            {
+                if (!lhs.NearClip.EqualsWithin(rhs.NearClip)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
+            {
+                if (!lhs.FlickerPeriod.EqualsWithin(rhs.FlickerPeriod)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
+            {
+                if (!lhs.FlickerIntensityAmplitude.EqualsWithin(rhs.FlickerIntensityAmplitude)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
+            {
+                if (!lhs.FlickerMovementAmplitude.EqualsWithin(rhs.FlickerMovementAmplitude)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ShadowOffset) ?? true))
+            {
+                if (!lhs.ShadowOffset.EqualsWithin(rhs.ShadowOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.InnerFOV) ?? true))
+            {
+                if (!lhs.InnerFOV.EqualsWithin(rhs.InnerFOV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.PbrLightTemperatureK) ?? true))
+            {
+                if (lhs.PbrLightTemperatureK != rhs.PbrLightTemperatureK) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.PbrLuminousPowerLm) ?? true))
+            {
+                if (lhs.PbrLuminousPowerLm != rhs.PbrLuminousPowerLm) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerEffect) ?? true))
+            {
+                if (lhs.FlickerEffect != rhs.FlickerEffect) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.UseAdaptiveLighting) ?? true))
+            {
+                if (lhs.UseAdaptiveLighting != rhs.UseAdaptiveLighting) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEc) ?? true))
+            {
+                if (!lhs.AdaptiveLightEc.EqualsWithin(rhs.AdaptiveLightEc)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEv100Min) ?? true))
+            {
+                if (!lhs.AdaptiveLightEv100Min.EqualsWithin(rhs.AdaptiveLightEv100Min)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEv100Max) ?? true))
+            {
+                if (!lhs.AdaptiveLightEv100Max.EqualsWithin(rhs.AdaptiveLightEv100Max)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.RadiusFalloutExponent) ?? true))
+            {
+                if (!lhs.RadiusFalloutExponent.EqualsWithin(rhs.RadiusFalloutExponent)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
             {
                 if (!string.Equals(lhs.Gobo, rhs.Gobo)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.SoundReference) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundReference, rhs.SoundReference, out var lhsSoundReference, out var rhsSoundReference, out var isSoundReferenceEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSoundReference).CommonInstance()!).Equals(lhsSoundReference, rhsSoundReference, equalsMask?.GetSubCrystal((int)Light_FieldIndex.SoundReference))) return false;
+                }
+                else if (!isSoundReferenceEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
             {
                 if (!lhs.Lens.Equals(rhs.Lens)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLBD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Barndoors) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLBD, rhs.FLBD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Barndoors, rhs.Barndoors, out var lhsBarndoors, out var rhsBarndoors, out var isBarndoorsEqual))
+                {
+                    if (!((LightBarndoorsCommon)((ILightBarndoorsGetter)lhsBarndoors).CommonInstance()!).Equals(lhsBarndoors, rhsBarndoors, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Barndoors))) return false;
+                }
+                else if (!isBarndoorsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLRD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Roundness) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLRD, rhs.FLRD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Roundness, rhs.Roundness, out var lhsRoundness, out var rhsRoundness, out var isRoundnessEqual))
+                {
+                    if (!((LightRoundnessCommon)((ILightRoundnessGetter)lhsRoundness).CommonInstance()!).Equals(lhsRoundness, rhsRoundness, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Roundness))) return false;
+                }
+                else if (!isRoundnessEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLGD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.GoboData) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLGD, rhs.FLGD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.GoboData, rhs.GoboData, out var lhsGoboData, out var rhsGoboData, out var isGoboDataEqual))
+                {
+                    if (!((LightGoboCommon)((ILightGoboGetter)lhsGoboData).CommonInstance()!).Equals(lhsGoboData, rhsGoboData, equalsMask?.GetSubCrystal((int)Light_FieldIndex.GoboData))) return false;
+                }
+                else if (!isGoboDataEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.LLLD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Layer) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.LLLD, rhs.LLLD)) return false;
+                if (lhs.Layer != rhs.Layer) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLAD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.AreaLight) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLAD, rhs.FLAD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AreaLight, rhs.AreaLight, out var lhsAreaLight, out var rhsAreaLight, out var isAreaLightEqual))
+                {
+                    if (!((AreaLightCommon)((IAreaLightGetter)lhsAreaLight).CommonInstance()!).Equals(lhsAreaLight, rhsAreaLight, equalsMask?.GetSubCrystal((int)Light_FieldIndex.AreaLight))) return false;
+                }
+                else if (!isAreaLightEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FVLD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.VolumetricLightIntensityScale) ?? true))
             {
-                if (!lhs.FVLD.EqualsWithin(rhs.FVLD)) return false;
+                if (!lhs.VolumetricLightIntensityScale.EqualsWithin(rhs.VolumetricLightIntensityScale)) return false;
             }
             return true;
         }
@@ -2157,52 +3654,73 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
+            hash.Add(item.ODTY);
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
             {
-                hash.Add(ODTYitem);
+                hash.Add(ObjectPlacementDefaultsitem);
             }
-            if (item.ODRT is {} ODRTitem)
+            if (item.Transforms is {} Transformsitem)
             {
-                hash.Add(ODRTitem);
+                hash.Add(Transformsitem);
+            }
+            hash.Add(item.DefaultLayer);
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
             }
             hash.Add(item.Components);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.Keywords);
-            if (item.DAT2 is {} DAT2Item)
+            if (item.Destructible is {} Destructibleitem)
             {
-                hash.Add(DAT2Item);
+                hash.Add(Destructibleitem);
             }
+            hash.Add(item.Keywords);
+            hash.Add(item.Properties);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Time);
+            hash.Add(item.Radius);
+            hash.Add(item.Color);
+            hash.Add(item.Flags);
+            hash.Add(item.FalloffExponent);
+            hash.Add(item.FOV);
+            hash.Add(item.NearClip);
+            hash.Add(item.FlickerPeriod);
+            hash.Add(item.FlickerIntensityAmplitude);
+            hash.Add(item.FlickerMovementAmplitude);
+            hash.Add(item.ShadowOffset);
+            hash.Add(item.InnerFOV);
+            hash.Add(item.PbrLightTemperatureK);
+            hash.Add(item.PbrLuminousPowerLm);
+            hash.Add(item.Type);
+            hash.Add(item.FlickerEffect);
+            hash.Add(item.UseAdaptiveLighting);
+            hash.Add(item.AdaptiveLightEc);
+            hash.Add(item.AdaptiveLightEv100Min);
+            hash.Add(item.AdaptiveLightEv100Max);
+            hash.Add(item.RadiusFalloutExponent);
             if (item.Gobo is {} Goboitem)
             {
                 hash.Add(Goboitem);
             }
+            if (item.SoundReference is {} SoundReferenceitem)
+            {
+                hash.Add(SoundReferenceitem);
+            }
             hash.Add(item.Lens);
-            if (item.FLBD is {} FLBDItem)
+            hash.Add(item.Barndoors);
+            hash.Add(item.Roundness);
+            hash.Add(item.GoboData);
+            hash.Add(item.Layer);
+            hash.Add(item.AreaLight);
+            if (item.VolumetricLightIntensityScale is {} VolumetricLightIntensityScaleitem)
             {
-                hash.Add(FLBDItem);
-            }
-            if (item.FLRD is {} FLRDItem)
-            {
-                hash.Add(FLRDItem);
-            }
-            if (item.FLGD is {} FLGDItem)
-            {
-                hash.Add(FLGDItem);
-            }
-            if (item.LLLD is {} LLLDItem)
-            {
-                hash.Add(LLLDItem);
-            }
-            if (item.FLAD is {} FLADItem)
-            {
-                hash.Add(FLADItem);
-            }
-            if (item.FVLD is {} FVLDitem)
-            {
-                hash.Add(FVLDitem);
+                hash.Add(VolumetricLightIntensityScaleitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2240,6 +3758,17 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.DefaultLayer, out var DefaultLayerInfo))
+            {
+                yield return DefaultLayerInfo;
+            }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
@@ -2252,11 +3781,32 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.SoundReference is {} SoundReferenceItems)
+            {
+                foreach (var item in SoundReferenceItems.EnumerateFormLinks())
+                {
+                    yield return item;
                 }
             }
             if (FormLinkInformation.TryFactory(obj.Lens, out var LensInfo))
@@ -2272,19 +3822,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Model is {} ModelItems)
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -2413,9 +3967,72 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ODTY = rhs.ODTY;
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ODRT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectPlacementDefaults) ?? true))
             {
-                item.ODRT = rhs.ODRT;
+                errorMask?.PushIndex((int)Light_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DefaultLayer) ?? true))
+            {
+                item.DefaultLayer.SetTo(rhs.DefaultLayer.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Components) ?? true))
             {
@@ -2467,6 +4084,32 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Keywords);
@@ -2494,86 +4137,270 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DAT2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Properties) ?? true))
             {
-                if(rhs.DAT2 is {} DAT2rhs)
+                errorMask?.PushIndex((int)Light_FieldIndex.Properties);
+                try
                 {
-                    item.DAT2 = DAT2rhs.ToArray();
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.DAT2 = default;
+                    errorMask.ReportException(ex);
                 }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+            {
+                item.Time = rhs.Time;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+            {
+                item.Color = rhs.Color;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            {
+                item.FalloffExponent = rhs.FalloffExponent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            {
+                item.FOV = rhs.FOV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
+            {
+                item.NearClip = rhs.NearClip;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
+            {
+                item.FlickerPeriod = rhs.FlickerPeriod;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
+            {
+                item.FlickerIntensityAmplitude = rhs.FlickerIntensityAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
+            {
+                item.FlickerMovementAmplitude = rhs.FlickerMovementAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ShadowOffset) ?? true))
+            {
+                item.ShadowOffset = rhs.ShadowOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.InnerFOV) ?? true))
+            {
+                item.InnerFOV = rhs.InnerFOV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.PbrLightTemperatureK) ?? true))
+            {
+                item.PbrLightTemperatureK = rhs.PbrLightTemperatureK;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.PbrLuminousPowerLm) ?? true))
+            {
+                item.PbrLuminousPowerLm = rhs.PbrLuminousPowerLm;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerEffect) ?? true))
+            {
+                item.FlickerEffect = rhs.FlickerEffect;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.UseAdaptiveLighting) ?? true))
+            {
+                item.UseAdaptiveLighting = rhs.UseAdaptiveLighting;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEc) ?? true))
+            {
+                item.AdaptiveLightEc = rhs.AdaptiveLightEc;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEv100Min) ?? true))
+            {
+                item.AdaptiveLightEv100Min = rhs.AdaptiveLightEv100Min;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.AdaptiveLightEv100Max) ?? true))
+            {
+                item.AdaptiveLightEv100Max = rhs.AdaptiveLightEv100Max;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.RadiusFalloutExponent) ?? true))
+            {
+                item.RadiusFalloutExponent = rhs.RadiusFalloutExponent;
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
             {
                 item.Gobo = rhs.Gobo;
             }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.SoundReference) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.SoundReference);
+                try
+                {
+                    if(rhs.SoundReference is {} rhsSoundReference)
+                    {
+                        item.SoundReference = rhsSoundReference.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.SoundReference));
+                    }
+                    else
+                    {
+                        item.SoundReference = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
             {
                 item.Lens.SetTo(rhs.Lens.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLBD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Barndoors) ?? true))
             {
-                if(rhs.FLBD is {} FLBDrhs)
+                errorMask?.PushIndex((int)Light_FieldIndex.Barndoors);
+                try
                 {
-                    item.FLBD = FLBDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Barndoors) ?? true))
+                    {
+                        item.Barndoors = rhs.Barndoors.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.Barndoors),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLBD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLRD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Roundness) ?? true))
             {
-                if(rhs.FLRD is {} FLRDrhs)
+                errorMask?.PushIndex((int)Light_FieldIndex.Roundness);
+                try
                 {
-                    item.FLRD = FLRDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Roundness) ?? true))
+                    {
+                        item.Roundness = rhs.Roundness.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.Roundness),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLRD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLGD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.GoboData) ?? true))
             {
-                if(rhs.FLGD is {} FLGDrhs)
+                errorMask?.PushIndex((int)Light_FieldIndex.GoboData);
+                try
                 {
-                    item.FLGD = FLGDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.GoboData) ?? true))
+                    {
+                        item.GoboData = rhs.GoboData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.GoboData),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLGD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.LLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Layer) ?? true))
             {
-                if(rhs.LLLD is {} LLLDrhs)
+                item.Layer = rhs.Layer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.AreaLight) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.AreaLight);
+                try
                 {
-                    item.LLLD = LLLDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.AreaLight) ?? true))
+                    {
+                        item.AreaLight = rhs.AreaLight.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.AreaLight),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.LLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLAD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.VolumetricLightIntensityScale) ?? true))
             {
-                if(rhs.FLAD is {} FLADrhs)
-                {
-                    item.FLAD = FLADrhs.ToArray();
-                }
-                else
-                {
-                    item.FLAD = default;
-                }
+                item.VolumetricLightIntensityScale = rhs.VolumetricLightIntensityScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FVLD) ?? true))
-            {
-                item.FVLD = rhs.FVLD;
-            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILight item,
+            ILightGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -2741,14 +4568,32 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
+                item: item.DefaultLayer,
+                header: translationParams.ConvertToCustom(RecordTypes.DEFL));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -2767,6 +4612,13 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -2779,42 +4631,141 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
                 writer: writer,
-                item: item.DAT2,
-                header: translationParams.ConvertToCustom(RecordTypes.DAT2));
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DAT2)))
+            {
+                writer.Write(item.Time);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Radius);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Color);
+                EnumBinaryTranslation<Light.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FalloffExponent);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FOV);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NearClip);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerPeriod);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerIntensityAmplitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerMovementAmplitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ShadowOffset);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.InnerFOV);
+                writer.Write(item.PbrLightTemperatureK);
+                writer.Write(item.PbrLuminousPowerLm);
+                EnumBinaryTranslation<Light.LightType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 1);
+                EnumBinaryTranslation<Light.FlickerEffectOption, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.FlickerEffect,
+                    length: 1);
+                writer.Write(item.UseAdaptiveLighting, length: 2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdaptiveLightEc);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdaptiveLightEv100Min);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdaptiveLightEv100Max);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RadiusFalloutExponent);
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Gobo,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.SoundReference is {} SoundReferenceItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.LLSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)SoundReferenceItem).BinaryWriteTranslator).Write(
+                        item: SoundReferenceItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Lens,
                 header: translationParams.ConvertToCustom(RecordTypes.LNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            var BarndoorsItem = item.Barndoors;
+            ((LightBarndoorsBinaryWriteTranslation)((IBinaryItem)BarndoorsItem).BinaryWriteTranslator).Write(
+                item: BarndoorsItem,
                 writer: writer,
-                item: item.FLBD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLBD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLRD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLRD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLGD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLGD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.LLLD,
+                translationParams: translationParams);
+            var RoundnessItem = item.Roundness;
+            using (HeaderExport.Subrecord(writer, RecordTypes.FLRD))
+            {
+                ((LightRoundnessBinaryWriteTranslation)((IBinaryItem)RoundnessItem).BinaryWriteTranslator).Write(
+                    item: RoundnessItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            var GoboDataItem = item.GoboData;
+            using (HeaderExport.Subrecord(writer, RecordTypes.FLGD))
+            {
+                ((LightGoboBinaryWriteTranslation)((IBinaryItem)GoboDataItem).BinaryWriteTranslator).Write(
+                    item: GoboDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<Light.LightLayer, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Layer,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.LLLD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLAD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLAD));
+            var AreaLightItem = item.AreaLight;
+            using (HeaderExport.Subrecord(writer, RecordTypes.FLAD))
+            {
+                ((AreaLightBinaryWriteTranslation)((IBinaryItem)AreaLightItem).BinaryWriteTranslator).Write(
+                    item: AreaLightItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.FVLD,
+                item: item.VolumetricLightIntensityScale,
                 header: translationParams.ConvertToCustom(RecordTypes.FVLD));
         }
 
@@ -2919,11 +4870,27 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.ODTY;
                 }
-                case RecordTypeInts.ODRT:
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.DEFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.ODRT;
+                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Light_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -2950,6 +4917,16 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Light_FieldIndex.Model;
                 }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.Destructible;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -2963,11 +4940,81 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Light_FieldIndex.Keywords;
                 }
+                case RecordTypeInts.PRPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)Light_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Light_FieldIndex.Name;
+                }
                 case RecordTypeInts.DAT2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DAT2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.DAT2;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Time = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Color = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Light.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FalloffExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.NearClip = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FlickerPeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FlickerIntensityAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FlickerMovementAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ShadowOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.InnerFOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PbrLightTemperatureK = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PbrLuminousPowerLm = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Type = EnumBinaryTranslation<Light.LightType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.FlickerEffect = EnumBinaryTranslation<Light.FlickerEffectOption, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.UseAdaptiveLighting = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 2,
+                        importantByteLength: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdaptiveLightEc = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdaptiveLightEv100Min = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdaptiveLightEv100Max = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RadiusFalloutExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Light_FieldIndex.RadiusFalloutExponent;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -2977,6 +5024,12 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Light_FieldIndex.Gobo;
                 }
+                case RecordTypeInts.LLSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.SoundReference = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.SoundReference;
+                }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2985,39 +5038,40 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FLBD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLBD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.FLBD;
+                    item.Barndoors = Mutagen.Bethesda.Starfield.LightBarndoors.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.Barndoors;
                 }
                 case RecordTypeInts.FLRD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLRD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.FLRD;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Roundness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.Roundness;
                 }
                 case RecordTypeInts.FLGD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLGD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.FLGD;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.GoboData = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.GoboData;
                 }
                 case RecordTypeInts.LLLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.LLLD;
+                    item.Layer = EnumBinaryTranslation<Light.LightLayer, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Light_FieldIndex.Layer;
                 }
                 case RecordTypeInts.FLAD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLAD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.FLAD;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.AreaLight = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.AreaLight;
                 }
                 case RecordTypeInts.FVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FVLD = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Light_FieldIndex.FVLD;
+                    item.VolumetricLightIntensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.VolumetricLightIntensityScale;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -3098,53 +5152,183 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ODTY
         private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region DefaultLayer
+        private int? _DefaultLayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _DefaultLayerLocation);
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        #region DAT2
-        private int? _DAT2Location;
-        public ReadOnlyMemorySlice<Byte>? DAT2 => _DAT2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DAT2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        private RangeInt32? _DAT2Location;
+        #region Time
+        private int _TimeLocation => _DAT2Location!.Value.Min;
+        private bool _Time_IsSet => _DAT2Location.HasValue;
+        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TimeLocation, 4)) : default(Int32);
+        #endregion
+        #region Radius
+        private int _RadiusLocation => _DAT2Location!.Value.Min + 0x4;
+        private bool _Radius_IsSet => _DAT2Location.HasValue;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
+        #endregion
+        #region Color
+        private int _ColorLocation => _DAT2Location!.Value.Min + 0x8;
+        private bool _Color_IsSet => _DAT2Location.HasValue;
+        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DAT2Location!.Value.Min + 0xC;
+        private bool _Flags_IsSet => _DAT2Location.HasValue;
+        public Light.Flag Flags => _Flags_IsSet ? (Light.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region FalloffExponent
+        private int _FalloffExponentLocation => _DAT2Location!.Value.Min + 0x10;
+        private bool _FalloffExponent_IsSet => _DAT2Location.HasValue;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default(Single);
+        #endregion
+        #region FOV
+        private int _FOVLocation => _DAT2Location!.Value.Min + 0x14;
+        private bool _FOV_IsSet => _DAT2Location.HasValue;
+        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default(Single);
+        #endregion
+        #region NearClip
+        private int _NearClipLocation => _DAT2Location!.Value.Min + 0x18;
+        private bool _NearClip_IsSet => _DAT2Location.HasValue;
+        public Single NearClip => _NearClip_IsSet ? _recordData.Slice(_NearClipLocation, 4).Float() : default(Single);
+        #endregion
+        #region FlickerPeriod
+        private int _FlickerPeriodLocation => _DAT2Location!.Value.Min + 0x1C;
+        private bool _FlickerPeriod_IsSet => _DAT2Location.HasValue;
+        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _recordData.Slice(_FlickerPeriodLocation, 4).Float() : default(Single);
+        #endregion
+        #region FlickerIntensityAmplitude
+        private int _FlickerIntensityAmplitudeLocation => _DAT2Location!.Value.Min + 0x20;
+        private bool _FlickerIntensityAmplitude_IsSet => _DAT2Location.HasValue;
+        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _recordData.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default(Single);
+        #endregion
+        #region FlickerMovementAmplitude
+        private int _FlickerMovementAmplitudeLocation => _DAT2Location!.Value.Min + 0x24;
+        private bool _FlickerMovementAmplitude_IsSet => _DAT2Location.HasValue;
+        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _recordData.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default(Single);
+        #endregion
+        #region ShadowOffset
+        private int _ShadowOffsetLocation => _DAT2Location!.Value.Min + 0x28;
+        private bool _ShadowOffset_IsSet => _DAT2Location.HasValue;
+        public Single ShadowOffset => _ShadowOffset_IsSet ? _recordData.Slice(_ShadowOffsetLocation, 4).Float() : default(Single);
+        #endregion
+        #region InnerFOV
+        private int _InnerFOVLocation => _DAT2Location!.Value.Min + 0x2C;
+        private bool _InnerFOV_IsSet => _DAT2Location.HasValue;
+        public Single InnerFOV => _InnerFOV_IsSet ? _recordData.Slice(_InnerFOVLocation, 4).Float() : default(Single);
+        #endregion
+        #region PbrLightTemperatureK
+        private int _PbrLightTemperatureKLocation => _DAT2Location!.Value.Min + 0x30;
+        private bool _PbrLightTemperatureK_IsSet => _DAT2Location.HasValue;
+        public UInt32 PbrLightTemperatureK => _PbrLightTemperatureK_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_PbrLightTemperatureKLocation, 4)) : default(UInt32);
+        #endregion
+        #region PbrLuminousPowerLm
+        private int _PbrLuminousPowerLmLocation => _DAT2Location!.Value.Min + 0x34;
+        private bool _PbrLuminousPowerLm_IsSet => _DAT2Location.HasValue;
+        public UInt32 PbrLuminousPowerLm => _PbrLuminousPowerLm_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_PbrLuminousPowerLmLocation, 4)) : default(UInt32);
+        #endregion
+        #region Type
+        private int _TypeLocation => _DAT2Location!.Value.Min + 0x38;
+        private bool _Type_IsSet => _DAT2Location.HasValue;
+        public Light.LightType Type => _Type_IsSet ? (Light.LightType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        #endregion
+        #region FlickerEffect
+        private int _FlickerEffectLocation => _DAT2Location!.Value.Min + 0x39;
+        private bool _FlickerEffect_IsSet => _DAT2Location.HasValue;
+        public Light.FlickerEffectOption FlickerEffect => _FlickerEffect_IsSet ? (Light.FlickerEffectOption)_recordData.Span.Slice(_FlickerEffectLocation, 0x1)[0] : default;
+        #endregion
+        #region UseAdaptiveLighting
+        private int _UseAdaptiveLightingLocation => _DAT2Location!.Value.Min + 0x3A;
+        private bool _UseAdaptiveLighting_IsSet => _DAT2Location.HasValue;
+        public Boolean UseAdaptiveLighting => _UseAdaptiveLighting_IsSet ? _recordData.Slice(_UseAdaptiveLightingLocation, 2)[0] >= 1 : default(Boolean);
+        #endregion
+        #region AdaptiveLightEc
+        private int _AdaptiveLightEcLocation => _DAT2Location!.Value.Min + 0x3C;
+        private bool _AdaptiveLightEc_IsSet => _DAT2Location.HasValue;
+        public Single AdaptiveLightEc => _AdaptiveLightEc_IsSet ? _recordData.Slice(_AdaptiveLightEcLocation, 4).Float() : default(Single);
+        #endregion
+        #region AdaptiveLightEv100Min
+        private int _AdaptiveLightEv100MinLocation => _DAT2Location!.Value.Min + 0x40;
+        private bool _AdaptiveLightEv100Min_IsSet => _DAT2Location.HasValue;
+        public Single AdaptiveLightEv100Min => _AdaptiveLightEv100Min_IsSet ? _recordData.Slice(_AdaptiveLightEv100MinLocation, 4).Float() : default(Single);
+        #endregion
+        #region AdaptiveLightEv100Max
+        private int _AdaptiveLightEv100MaxLocation => _DAT2Location!.Value.Min + 0x44;
+        private bool _AdaptiveLightEv100Max_IsSet => _DAT2Location.HasValue;
+        public Single AdaptiveLightEv100Max => _AdaptiveLightEv100Max_IsSet ? _recordData.Slice(_AdaptiveLightEv100MaxLocation, 4).Float() : default(Single);
+        #endregion
+        #region RadiusFalloutExponent
+        private int _RadiusFalloutExponentLocation => _DAT2Location!.Value.Min + 0x48;
+        private bool _RadiusFalloutExponent_IsSet => _DAT2Location.HasValue;
+        public Single RadiusFalloutExponent => _RadiusFalloutExponent_IsSet ? _recordData.Slice(_RadiusFalloutExponentLocation, 4).Float() : default(Single);
         #endregion
         #region Gobo
         private int? _GoboLocation;
         public String? Gobo => _GoboLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoboLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
+        public ISoundReferenceGetter? SoundReference { get; private set; }
         #region Lens
         private int? _LensLocation;
         public IFormLinkNullableGetter<ILensFlareGetter> Lens => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _LensLocation);
         #endregion
-        #region FLBD
-        private int? _FLBDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLBD => _FLBDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLBDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Barndoors
+        private RangeInt32? _BarndoorsLocation;
+        private ILightBarndoorsGetter? _Barndoors => _BarndoorsLocation.HasValue ? LightBarndoorsBinaryOverlay.LightBarndoorsFactory(_recordData.Slice(_BarndoorsLocation!.Value.Min), _package) : default;
+        public ILightBarndoorsGetter Barndoors => _Barndoors ?? new LightBarndoors();
         #endregion
-        #region FLRD
-        private int? _FLRDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLRD => _FLRDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLRDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Roundness
+        private ILightRoundnessGetter? _Roundness;
+        public ILightRoundnessGetter Roundness => _Roundness ?? new LightRoundness();
         #endregion
-        #region FLGD
-        private int? _FLGDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLGD => _FLGDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLGDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region GoboData
+        private ILightGoboGetter? _GoboData;
+        public ILightGoboGetter GoboData => _GoboData ?? new LightGobo();
         #endregion
-        #region LLLD
-        private int? _LLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? LLLD => _LLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Layer
+        private int? _LayerLocation;
+        public Light.LightLayer Layer => _LayerLocation.HasValue ? (Light.LightLayer)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation!.Value, _package.MetaData.Constants)) : default(Light.LightLayer);
         #endregion
-        #region FLAD
-        private int? _FLADLocation;
-        public ReadOnlyMemorySlice<Byte>? FLAD => _FLADLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLADLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region AreaLight
+        private IAreaLightGetter? _AreaLight;
+        public IAreaLightGetter AreaLight => _AreaLight ?? new AreaLight();
         #endregion
-        #region FVLD
-        private int? _FVLDLocation;
-        public Single? FVLD => _FVLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FVLDLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region VolumetricLightIntensityScale
+        private int? _VolumetricLightIntensityScaleLocation;
+        public Single? VolumetricLightIntensityScale => _VolumetricLightIntensityScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VolumetricLightIntensityScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3235,10 +5419,25 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)Light_FieldIndex.ODTY;
                 }
-                case RecordTypeInts.ODRT:
+                case RecordTypeInts.OPDS:
                 {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.ODRT;
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Light_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Light_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.DEFL:
+                {
+                    _DefaultLayerLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -3265,6 +5464,17 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Light_FieldIndex.Model;
                 }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.Destructible;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -3278,15 +5488,39 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Light_FieldIndex.Keywords;
                 }
+                case RecordTypeInts.PRPS:
+                {
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 12,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    return (int)Light_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.Name;
+                }
                 case RecordTypeInts.DAT2:
                 {
-                    _DAT2Location = (stream.Position - offset);
-                    return (int)Light_FieldIndex.DAT2;
+                    _DAT2Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Light_FieldIndex.RadiusFalloutExponent;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     _GoboLocation = (stream.Position - offset);
                     return (int)Light_FieldIndex.Gobo;
+                }
+                case RecordTypeInts.LLSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.SoundReference = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.SoundReference;
                 }
                 case RecordTypeInts.LNAM:
                 {
@@ -3295,33 +5529,45 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FLBD:
                 {
-                    _FLBDLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.FLBD;
+                    _BarndoorsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Light_FieldIndex.Barndoors;
                 }
                 case RecordTypeInts.FLRD:
                 {
-                    _FLRDLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.FLRD;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this._Roundness = LightRoundnessBinaryOverlay.LightRoundnessFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.Roundness;
                 }
                 case RecordTypeInts.FLGD:
                 {
-                    _FLGDLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.FLGD;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this._GoboData = LightGoboBinaryOverlay.LightGoboFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.GoboData;
                 }
                 case RecordTypeInts.LLLD:
                 {
-                    _LLLDLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.LLLD;
+                    _LayerLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.Layer;
                 }
                 case RecordTypeInts.FLAD:
                 {
-                    _FLADLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.FLAD;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this._AreaLight = AreaLightBinaryOverlay.AreaLightFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.AreaLight;
                 }
                 case RecordTypeInts.FVLD:
                 {
-                    _FVLDLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.FVLD;
+                    _VolumetricLightIntensityScaleLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.VolumetricLightIntensityScale;
                 }
                 case RecordTypeInts.XXXX:
                 {

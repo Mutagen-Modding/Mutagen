@@ -1,4 +1,6 @@
 using System.Buffers.Binary;
+using DynamicData.Aggregation;
+using Loqui.Internal;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -162,14 +164,32 @@ public partial class Fallout4Mod : AMod
         }
     }
 
-    public BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter> 
+    public BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> 
         BeginWrite => new(
         this, 
         Fallout4WriteBuilderInstantiator.Instance);
 
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => this.BeginWrite;
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
-    public static BinaryWriteBuilderLoadOrderChoice<IFallout4ModGetter> WriteBuilder => new(Fallout4WriteBuilderInstantiator.Instance);
+    public static BinaryWriteBuilderTargetChoice<IFallout4ModGetter> WriteBuilder(Fallout4Release release) =>
+        new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+}
+
+public partial interface IFallout4ModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> BeginWrite { get; }
+}
+
+partial class Fallout4ModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IFallout4Mod item, IFallout4ModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -187,13 +207,23 @@ internal partial class Fallout4ModBinaryOverlay
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => true;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
         this.ModHeader.OverriddenForms;
 
-    public IBinaryModdedWriteBuilderLoadOrderChoice 
-        BeginWrite => new BinaryModdedWriteBuilderLoadOrderChoice<IFallout4ModGetter>(
-        this, 
-        Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
+            this, 
+            Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
+            this, 
+            Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class Fallout4ModCommon
@@ -463,5 +493,58 @@ partial class Fallout4ModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
+    partial void GetCustomRecordCount(IFallout4ModGetter item, Action<uint> setter)
+    {
+        uint count = 0;
+        // Tally Cell Group counts
+        int cellSubGroupCount(ICellGetter cell)
+        {
+            int cellGroupCount = 0;
+            if ((cell.Temporary?.Count ?? 0) > 0
+                || cell.NavigationMeshes.Count > 0
+                || cell.Landscape != null)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.Persistent?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if (cellGroupCount > 0)
+            {
+                cellGroupCount++;
+            }
+            return cellGroupCount;
+        }
+        count += (uint)item.Cells.Records.Count; // Block Count
+        count += (uint)item.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+        count += (uint)item.Cells.Records
+            .SelectMany(block => block.SubBlocks)
+            .SelectMany(subBlock => subBlock.Cells)
+            .Select(cellSubGroupCount)
+            .Sum();
+
+        // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .SelectMany(block => block.Items)
+            .SelectMany(subBlock => subBlock.Items)
+            .Sum(cellSubGroupCount); // Cell sub groups
+
+        // Tally Dialog Group Counts
+        var quests = item.Quests.ToArray();
+        count += (uint)quests.Length;
+        count += (uint)quests.SelectMany(x => x.DialogTopics)
+            .Select(x => x.Responses.Count > 0 ? 1 : 0)
+            .Sum();
+        
+        // Set count
+        setter(count);
     }
 }

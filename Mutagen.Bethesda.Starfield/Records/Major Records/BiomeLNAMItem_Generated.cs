@@ -1358,8 +1358,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MaskType5 = rhs.MaskType5;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBiomeLNAMItem item,
+            IBiomeLNAMItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BiomeLNAMItem DeepCopy(

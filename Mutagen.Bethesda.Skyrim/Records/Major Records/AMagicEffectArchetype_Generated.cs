@@ -814,8 +814,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ActorValue = rhs.ActorValue;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAMagicEffectArchetype item,
+            IAMagicEffectArchetypeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AMagicEffectArchetype DeepCopy(

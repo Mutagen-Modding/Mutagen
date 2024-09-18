@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Count = rhs.Count;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestStageReward item,
+            IQuestStageRewardGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestStageReward DeepCopy(

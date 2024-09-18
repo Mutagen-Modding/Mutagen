@@ -1002,8 +1002,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DoNotUseAll = rhs.DoNotUseAll;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IObjectModInclude item,
+            IObjectModIncludeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ObjectModInclude DeepCopy(

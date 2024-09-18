@@ -917,8 +917,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Head.SetTo(rhs.Head.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHeadPartReference item,
+            IHeadPartReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public HeadPartReference DeepCopy(

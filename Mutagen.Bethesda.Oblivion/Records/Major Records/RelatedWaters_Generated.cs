@@ -980,8 +980,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.RelatedWaterUnderwater.SetTo(rhs.RelatedWaterUnderwater.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRelatedWaters item,
+            IRelatedWatersGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RelatedWaters DeepCopy(

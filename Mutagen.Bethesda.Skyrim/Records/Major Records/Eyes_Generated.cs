@@ -1281,13 +1281,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Name = rhs.Name.DeepCopy();
             }
-            item.Icon.RawPath = rhs.Icon.RawPath;
+            item.Icon.GivenPath = rhs.Icon.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEyes item,
+            IEyesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -1451,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Icon.RawPath,
+                item: item.Icon.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<Eyes.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1556,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.Icon.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Eyes_FieldIndex.Icon;

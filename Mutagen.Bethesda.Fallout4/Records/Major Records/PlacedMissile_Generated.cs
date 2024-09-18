@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedMissile :
         IAPlacedTrapInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IPlacedMissileInternal>,
         IPlacedMissileGetter,
         IPositionRotation,
@@ -1310,8 +1311,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedMissile item,
+            IPlacedMissileGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IAPlacedTrapInternal item,
             IAPlacedTrapGetter rhs,

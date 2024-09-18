@@ -150,8 +150,8 @@
         </RecordTypeOverrides>
       </RefDirect>
       <AssetLink name="Rig" recordType="NAM5" assetType="StarfieldRig" />
-      <AssetLink name="AnimationText" recordType="NAM6" assetType="StarfieldAnimationText" />
-      <String name="DNAM" recordType="DNAM" unknown="true" />
+      <AssetLink name="AnimationRoot" recordType="NAM6" assetType="StarfieldAnimationText" />
+      <String name="Animations" recordType="DNAM" />
     </Fields>
   </Object>
   <Object name="BipedObjectData" objType="Subrecord">

@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Modifier = rhs.Modifier;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRaceRelation item,
+            IRaceRelationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RaceRelation DeepCopy(

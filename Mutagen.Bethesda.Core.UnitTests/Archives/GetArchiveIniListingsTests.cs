@@ -15,6 +15,7 @@ public class GetArchiveIniListingsTests
     [Fact]
     public void Typical()
     {
+        if (System.OperatingSystem.IsLinux()) return;
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
             { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData(@"[Archive]

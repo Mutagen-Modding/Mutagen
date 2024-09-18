@@ -964,8 +964,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Slot3 = rhs.Slot3;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpaceshipWeaponBindingsComponent item,
+            ISpaceshipWeaponBindingsComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

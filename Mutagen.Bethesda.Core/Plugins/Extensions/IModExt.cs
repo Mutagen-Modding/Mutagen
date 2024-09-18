@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Exceptions;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 

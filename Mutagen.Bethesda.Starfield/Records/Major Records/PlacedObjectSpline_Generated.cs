@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.IsWindDetachedEnd = rhs.IsWindDetachedEnd;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedObjectSpline item,
+            IPlacedObjectSplineGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlacedObjectSpline DeepCopy(

@@ -21,8 +21,8 @@ public class MasterSyncTests
         Assert.Throws<ArgumentException>(() =>
         {
             masterMod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(masterPath)
+                .WithNoLoadOrder()
                 .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                 .NoMastersListContentCheck()
                 .Write();
@@ -39,8 +39,8 @@ public class MasterSyncTests
         Assert.Throws<ArgumentException>(() =>
         {
             masterMod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(masterPath)
+                .WithNoLoadOrder()
                 .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                 .NoMastersListContentCheck()
                 .Write();
@@ -64,8 +64,8 @@ public class MasterSyncTests
         otherNpc.Race.FormKey = new FormKey(knights, 0x123456);
         var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .Write();
@@ -91,8 +91,8 @@ public class MasterSyncTests
         });
         var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .Write();
@@ -116,8 +116,8 @@ public class MasterSyncTests
         npc.Race.Clear();
         var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .Write();
@@ -142,8 +142,8 @@ public class MasterSyncTests
         mod.Npcs.RecordCache.Set(otherNpc);
         var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .Write();
@@ -172,8 +172,8 @@ public class MasterSyncTests
         mod.Npcs.RecordCache.Set(firstNpc);
         var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithMastersListOrdering(MastersListOrderingOption.MastersFirst)
@@ -208,8 +208,8 @@ public class MasterSyncTests
             esp,
         };
         mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithMastersListOrdering(loadOrder)

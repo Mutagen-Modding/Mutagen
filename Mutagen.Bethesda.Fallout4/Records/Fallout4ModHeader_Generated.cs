@@ -2104,8 +2104,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.INCC = rhs.INCC;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout4ModHeader item,
+            IFallout4ModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Fallout4ModHeader DeepCopy(

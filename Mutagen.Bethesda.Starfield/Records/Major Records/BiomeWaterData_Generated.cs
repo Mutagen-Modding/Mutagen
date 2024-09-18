@@ -975,8 +975,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.WaterMaterial = rhs.WaterMaterial;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBiomeWaterData item,
+            IBiomeWaterDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BiomeWaterData DeepCopy(

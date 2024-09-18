@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Grid = rhs.Grid;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationReference item,
+            ILocationReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationReference DeepCopy(

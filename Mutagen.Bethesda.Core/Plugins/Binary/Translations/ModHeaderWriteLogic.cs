@@ -59,7 +59,7 @@ internal sealed class ModHeaderWriteLogic
         modHeaderWriter.RunProcessors(mod);
         modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader, 
             modHeaderWriter._constants.SeparateMasterLoadOrders
-                ? param.LoadOrder 
+                ? param.MasterFlagsLookup 
                 : null);
         modHeader.WriteToBinary(writer);
     }
@@ -138,6 +138,11 @@ internal sealed class ModHeaderWriteLogic
         _modKeys.Remove(ModKey.Null);
         var modKeysList = _modKeys.Keys.ToList();
         SortMasters(modKeysList);
+        if (_params.MastersContentCustomOverride != null)
+        {
+            modKeysList = _params.MastersContentCustomOverride(modKeysList).ToList();
+            SortMasters(modKeysList);
+        }
         ret.SetTo(modKeysList.Select(m => new MasterReference()
         {
             Master = m,
@@ -150,7 +155,7 @@ internal sealed class ModHeaderWriteLogic
         MutagenWriter writer,
         IModGetter mod,
         IModHeaderCommon modHeader,
-        ILoadOrderGetter<IModFlagsGetter>? loadOrder)
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
         HandleDisallowedLowerFormIDs();
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
@@ -159,11 +164,12 @@ internal sealed class ModHeaderWriteLogic
             mod.ModKey,
             mod.GetMasterStyle(),
             writer.MetaData.MasterReferences,
-            loadOrder);
+            masterFlagLookup);
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
         if (_params.RecordCount != RecordCountOption.NoCheck)
         {
-            modHeader.NumRecords = _numRecords;
+            // Can't use raw count, as more gets considered in this tally
+            modHeader.NumRecords = mod.GetRecordCount();
         }
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {

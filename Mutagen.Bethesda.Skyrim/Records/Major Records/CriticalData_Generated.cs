@@ -1282,8 +1282,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unused4 = rhs.Unused4;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICriticalData item,
+            ICriticalDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CriticalData DeepCopy(

@@ -27,8 +27,8 @@ public class WriteOptionsTests
         var npc = mod.Npcs.AddNew();
         npc.FormKey.ID.Should().Be(nextId);
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithFileSystem(fileSystem)
             .WriteAsync();
@@ -51,8 +51,8 @@ public class WriteOptionsTests
         mod.ModKey.Should().NotBe(existingModPath.ModKey);
         npc.Race.SetTo(race);
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .WithModKeySync(ModKeyOption.CorrectToPath)
             .WithFileSystem(fileSystem)
             .WriteAsync();
@@ -74,7 +74,7 @@ public class WriteOptionsTests
 
         // Check OnDisk FormIDs
         using var stream =
-            new MutagenBinaryReadStream(existingModPath, mod.GameRelease, loadOrder: null, fileSystem: fileSystem);
+            new MutagenBinaryReadStream(existingModPath, mod.GameRelease, masterFlagLookup: null, fileSystem: fileSystem);
         stream.ReadModHeaderFrame();
         while (stream.TryReadGroup(out var group))
         {
@@ -114,12 +114,12 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(1);
+        npc.FormKey.ID.Should().Be(0);
         await Assert.ThrowsAsync<LowerFormKeyRangeDisallowedException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(existingModPath)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .ThrowIfLowerRangeDisallowed()
                 .WithFileSystem(fileSystem)
@@ -136,10 +136,10 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(1);
+        npc.FormKey.ID.Should().Be(0);
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithPlaceholderMasterIfLowerRangeDisallowed(modKey)
             .WithFileSystem(fileSystem)
@@ -159,15 +159,15 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(1);
+        npc.FormKey.ID.Should().Be(0);
 
         var lo = new LoadOrder<ModListing>();
 
         await Assert.ThrowsAsync<LowerFormKeyRangeDisallowedException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(existingModPath)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .WithPlaceholderMasterIfLowerRangeDisallowed(lo)
                 .WithFileSystem(fileSystem)
@@ -184,7 +184,7 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(1);
+        npc.FormKey.ID.Should().Be(0);
 
         var lo = new LoadOrder<ModListing>()
         {
@@ -195,8 +195,8 @@ public class WriteOptionsTests
         };
 
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithPlaceholderMasterIfLowerRangeDisallowed(lo)
             .WithFileSystem(fileSystem)
@@ -221,8 +221,8 @@ public class WriteOptionsTests
         await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(existingModPath)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
                 .WithFileSystem(fileSystem)
@@ -240,8 +240,8 @@ public class WriteOptionsTests
         mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .NoFormIDCompactnessCheck()
             .WithFileSystem(fileSystem)
@@ -261,8 +261,8 @@ public class WriteOptionsTests
         await Assert.ThrowsAsync<FormIDCompactionOutOfBoundsException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(existingModPath)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
                 .WithFileSystem(fileSystem)
@@ -280,8 +280,8 @@ public class WriteOptionsTests
         mod.IsSmallMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFFF));
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .NoFormIDCompactnessCheck()
             .WithFileSystem(fileSystem)
@@ -298,8 +298,8 @@ public class WriteOptionsTests
         mod.IsMediumMaster = true;
         mod.Npcs.AddNew(new FormKey(mod.ModKey, 0x1FFF));
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(existingModPath)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithFormIDCompactnessCheck(FormIDCompactionOption.Iterate)
             .WithFileSystem(fileSystem)

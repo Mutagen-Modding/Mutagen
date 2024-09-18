@@ -1,9 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
+using GameFinder.Common;
+using GameFinder.RegistryUtils;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
+using GameFinder.StoreHandlers.Steam.Models.ValueTypes;
 using Microsoft.Win32;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
+using FileSystem = NexusMods.Paths.FileSystem;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
@@ -11,13 +15,48 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
     internal static readonly GameLocator Instance = new();
 
-    private readonly Lazy<SteamHandler> _steamHandler;
-    private readonly Lazy<GOGHandler> _gogHandler;
+    private readonly Lazy<SteamHandler?> _steam;
+    private readonly Lazy<GOGHandler?> _gog;
+    private readonly Lazy<IEnumerable<AHandler>> _handlers;
 
     public GameLocator()
     {
-        _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
-        _gogHandler = new(() => new GOGHandler());
+        _steam = new Lazy<SteamHandler?>(() =>
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return new SteamHandler(FileSystem.Shared, WindowsRegistry.Shared);
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                return new SteamHandler(FileSystem.Shared, null);
+            }
+
+            return default;
+        });
+        _gog = new Lazy<GOGHandler?>(() =>
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return new GOGHandler(WindowsRegistry.Shared, FileSystem.Shared);
+            }
+
+            return default;
+        });
+        _handlers = new Lazy<IEnumerable<AHandler>>(() =>
+        {
+            var ret = new List<AHandler>();
+            if (_steam.Value != null)
+            {
+                ret.Add(_steam.Value);
+            }
+            if (_gog.Value != null)
+            {
+                ret.Add(_gog.Value);
+            }
+            return ret;
+        });
     }
 
     private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
@@ -89,14 +128,14 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
     private bool TryGetSteamGameFolder(SteamGameSource steamGameSource, out DirectoryPath directoryPath)
     {
-        foreach (var game in _steamHandler.Value.FindAllGames()
-                     .Where(x => x.Error.IsNullOrWhitespace())
-                     .Select(x => x.Game)
-                     .NotNull()
-                     .Where(x => x.AppId == steamGameSource.Id))
+        if (_steam.Value != null)
         {
-            directoryPath = game.Path;
-            return true;
+            var find = _steam.Value.FindOneGameById(AppId.From(steamGameSource.Id), out var err);
+            if (find != null)
+            {
+                directoryPath = find.Path.GetFullPath();
+                return true;
+            }
         }
 
         directoryPath = default;
@@ -105,14 +144,16 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
     private bool TryGetGogGameFolder(GogGameSource gogGameSource, out DirectoryPath directoryPath)
     {
-        foreach (var game in _gogHandler.Value.FindAllGames()
-                     .Where(x => x.Error.IsNullOrWhitespace())
-                     .Select(x => x.Game)
-                     .NotNull()
-                     .Where(x => x.Id == gogGameSource.Id))
+        if (gogGameSource.Id.HasValue && _gog.Value != null)
         {
-            directoryPath = game.Path;
-            return true;
+            var find = _gog.Value.FindOneGameById(
+                GOGGameId.From(gogGameSource.Id.Value),
+                out var err);
+            if (find != null)
+            {
+                directoryPath = find.Path.GetFullPath();
+                return true;
+            }
         }
 
         directoryPath = default;

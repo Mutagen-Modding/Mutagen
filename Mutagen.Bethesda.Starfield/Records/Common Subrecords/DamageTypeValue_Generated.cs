@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDamageTypeValue item,
+            IDamageTypeValueGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DamageTypeValue DeepCopy(

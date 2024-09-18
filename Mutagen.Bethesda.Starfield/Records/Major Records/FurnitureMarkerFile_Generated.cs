@@ -897,8 +897,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ModelFilename = rhs.ModelFilename;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFurnitureMarkerFile item,
+            IFurnitureMarkerFileGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FurnitureMarkerFile DeepCopy(

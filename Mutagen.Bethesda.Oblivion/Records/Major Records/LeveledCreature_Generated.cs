@@ -55,9 +55,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
-        public Byte? ChanceNone { get; set; }
+        public Percent? ChanceNone { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? ILeveledCreatureGetter.ChanceNone => this.ChanceNone;
+        Percent? ILeveledCreatureGetter.ChanceNone => this.ChanceNone;
         #endregion
         #region Flags
         public LeveledFlag? Flags { get; set; }
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawn,
         IOblivionMajorRecordInternal
     {
-        new Byte? ChanceNone { get; set; }
+        new Percent? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new ExtendedList<LeveledCreatureEntry> Entries { get; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawnGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
-        Byte? ChanceNone { get; }
+        Percent? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledCreature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Flags) ?? true))
             {
@@ -1427,8 +1427,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Template.SetTo(rhs.Template.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILeveledCreature item,
+            ILeveledCreatureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
@@ -1584,9 +1596,10 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1700,7 +1713,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
                     return (int)LeveledCreature_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1794,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Percent? ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

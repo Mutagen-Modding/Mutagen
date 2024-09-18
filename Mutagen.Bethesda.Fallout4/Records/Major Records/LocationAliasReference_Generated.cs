@@ -981,8 +981,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.RefType.SetTo(rhs.RefType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationAliasReference item,
+            ILocationAliasReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationAliasReference DeepCopy(

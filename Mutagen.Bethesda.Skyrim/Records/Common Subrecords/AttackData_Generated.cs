@@ -1379,8 +1379,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.StaminaMult = rhs.StaminaMult;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAttackData item,
+            IAttackDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AttackData DeepCopy(

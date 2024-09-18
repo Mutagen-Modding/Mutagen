@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledItem" baseClass="OblivionMajorRecord" objType="Record" recordType="LVLI">
     <Fields>
-      <UInt8 name="ChanceNone" recordType="LVLD" />
+      <Percent name="ChanceNone" recordType="LVLD" integerType="ByteHundred" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" binaryOverlay="Custom" />
       <RefList name="Entries" refName="LeveledItemEntry" />
       <CustomLogic name="Vestigial" recordType="DATA" />

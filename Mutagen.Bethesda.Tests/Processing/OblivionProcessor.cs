@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 
@@ -15,11 +16,10 @@ public class OblivionProcessor : Processor
 {
     public override bool StrictStrings => true;
     
-    public OblivionProcessor(bool multithread) : base(multithread)
+    public OblivionProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Oblivion, masterFlagLookup)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Oblivion;
 
     #region Dynamic Processing
     /*
@@ -46,6 +46,8 @@ public class OblivionProcessor : Processor
         AddDynamicProcessing(RecordTypes.BOOK, ProcessBooks);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
         AddDynamicProcessing(RecordTypes.SPEL, ProcessSpell);
+        AddDynamicProcessing(RecordTypes.LVLC, ProcessLeveledCreature);
+        AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItem);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -564,6 +566,32 @@ public class OblivionProcessor : Processor
         foreach (var scit in majorFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
         {
             ProcessFormIDOverflow(scit, fileOffset);
+        }
+    }
+
+    private void ProcessLeveledCreature(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLD))
+        {
+            if (subRec.Content[0] > 100)
+            {
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, 0);
+            }
+        }
+    }
+
+    private void ProcessLeveledItem(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLD))
+        {
+            if (subRec.Content[0] > 100)
+            {
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, 0);
+            }
         }
     }
     #endregion

@@ -1,11 +1,15 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Noggog;
+// ReSharper disable InconsistentNaming
+// ReSharper disable WithExpressionModifiesAllMembers
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -15,11 +19,16 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 internal record BinaryWriteBuilderParams<TModGetter>
     where TModGetter : class, IModGetter
 {
+    internal required GameRelease _gameRelease { get; init; }
     internal IBinaryWriteBuilderWriter<TModGetter> _writer { get; init; } = null!;
     internal BinaryWriteParameters _param { get; init; } = BinaryWriteParameters.Default;
     internal FilePath? _path { get; init; }
     internal Stream? _stream { get; init; }
-    internal Func<TModGetter, BinaryWriteParameters, BinaryWriteParameters>? _loadOrderSetter { get; init; }
+    internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
+    internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, IReadOnlyCollection<ModKey>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
+    internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>();
+    internal ILoadOrderGetter<IModListingGetter<TModGetter>>? _knownModLoadOrder { get; init; }
 }
 
 /// <summary>
@@ -32,370 +41,6 @@ internal interface IBinaryWriteBuilderWriter<TModGetter>
     void Write(TModGetter mod, BinaryWriteBuilderParams<TModGetter> param);
 }
 
-public interface IBinaryModdedWriteBuilderLoadOrderChoice
-{
-    /// <summary>
-    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
-    /// NOTE:  This will have the following negative consequences: <br />
-    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
-    /// if any light or medium flagged mods are referenced. <br />
-    /// - Masters will be unordered and may not match the load order the mod is eventually run with
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithNoLoadOrder();
-
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder);
-
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder);
-
-    /// <summary>
-    /// Writes the mod with the default load order and data folder as reference.
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithDefaultLoadOrder();
-
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        DirectoryPath dataFolder);
-
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <param name="loadOrder">Load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public IBinaryModdedWriteBuilderTargetChoice WithLoadOrder(
-        DirectoryPath dataFolder,
-        IEnumerable<ModKey> loadOrder);
-}
-
-public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModdedWriteBuilderLoadOrderChoice
-    where TModGetter : class, IModGetter
-{
-    internal TModGetter _mod { get; init; } = null!;
-    internal BinaryWriteBuilderParams<TModGetter> _params;
-
-    internal BinaryModdedWriteBuilderLoadOrderChoice(
-        TModGetter mod,
-        IBinaryWriteBuilderWriter<TModGetter> writer)
-    {
-        _mod = mod;
-        _params = new BinaryWriteBuilderParams<TModGetter>()
-        {
-            _writer = writer,
-        };
-    }
-
-    /// <summary>
-    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
-    /// NOTE:  This will have the following negative consequences: <br />
-    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
-    /// if any light or medium flagged mods are referenced. <br />
-    /// - Masters will be unordered and may not match the load order the mod is eventually run with
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithNoLoadOrder()
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params);
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithNoLoadOrder() => WithNoLoadOrder(); 
-    
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder)
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder) => WithLoadOrder(loadOrder);
-
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder)
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                return p with
-                {
-                    LoadOrder = loadOrder,
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModFlagsGetter> loadOrder) => WithLoadOrder(loadOrder);
-
-    /// <summary>
-    /// Writes the mod with the default load order and data folder as reference.
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithDefaultLoadOrder()
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var dataFolder = GameLocator.Instance.GetDataDirectory(m.GameRelease);
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithDefaultLoadOrder() => WithDefaultLoadOrder();
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder)
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(DirectoryPath dataFolder) => WithLoadOrder(dataFolder);
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <param name="loadOrder">Load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryModdedWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder,
-        IEnumerable<ModKey> loadOrder)
-    {
-        return new BinaryModdedWriteBuilderTargetChoice<TModGetter>(_mod, _params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder, loadOrder,
-                    m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-    IBinaryModdedWriteBuilderTargetChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(DirectoryPath dataFolder, IEnumerable<ModKey> loadOrder) => WithLoadOrder(dataFolder, loadOrder);
-}
-
-public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
-    where TModGetter : class, IModGetter
-{
-    internal BinaryWriteBuilderParams<TModGetter> _params;
-
-    internal BinaryWriteBuilderLoadOrderChoice(
-        IBinaryWriteBuilderWriter<TModGetter> writer)
-    {
-        _params = new BinaryWriteBuilderParams<TModGetter>()
-        {
-            _writer = writer,
-        };
-    }
-
-    /// <summary>
-    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
-    /// NOTE:  This will have the following negative consequences: <br />
-    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
-    /// if any light or medium flagged mods are referenced. <br />
-    /// - Masters will be unordered and may not match the load order the mod is eventually run with
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithNoLoadOrder()
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params);
-    }
-    
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModListingGetter<IModFlagsGetter>> loadOrder)
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        loadOrder.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
-                };
-            }
-        });
-    }
-    
-    /// <summary>
-    /// Writes the mod with given load order as reference
-    /// </summary>
-    /// <param name="loadOrder">Load order to reference</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        ILoadOrderGetter<IModFlagsGetter> loadOrder)
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                return p with
-                {
-                    LoadOrder = loadOrder,
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
-                };
-            }
-        });
-    }
-
-    /// <summary>
-    /// Writes the mod with the default load order and data folder as reference.
-    /// </summary>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithDefaultLoadOrder()
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var dataFolder = GameLocator.Instance.GetDataDirectory(m.GameRelease);
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
-                };
-            }
-        });
-    }
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder)
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(dataFolder, m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-    
-    /// <summary>
-    /// Writes the mod with the default load order and given data folder as reference.
-    /// </summary>
-    /// <param name="dataFolder">Data folder path to use when reading load order</param>
-    /// <param name="loadOrder">Load order</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryWriteBuilderTargetChoice<TModGetter> WithLoadOrder(
-        DirectoryPath dataFolder,
-        IEnumerable<ModKey> loadOrder)
-    {
-        return new BinaryWriteBuilderTargetChoice<TModGetter>(_params with
-        {
-            _loadOrderSetter = (m, p) =>
-            {
-                var lo = LoadOrder.Import<TModGetter>(
-                    dataFolder, loadOrder,
-                    m.GameRelease, _params._param.FileSystem);   
-                return p with
-                {
-                    LoadOrder = new LoadOrder<IModFlagsGetter>(
-                        lo.ListedOrder.ResolveAllModsExist(),
-                        disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
-                };
-            }
-        });
-    }
-}
-
 public interface IBinaryModdedWriteBuilderTargetChoice
 {
     /// <summary>
@@ -404,7 +49,7 @@ public interface IBinaryModdedWriteBuilderTargetChoice
     /// <param name="path">Path to the intended mod file to eventually write to</param>
     /// <param name="fileSystem">Filesystem to write mod file to</param>
     /// <returns>Builder object to continue customization</returns>
-    public IFileBinaryModdedWriteBuilder ToPath(FilePath path, IFileSystem? fileSystem = null);
+    public IBinaryModdedWriteBuilderLoadOrderChoice ToPath(FilePath path, IFileSystem? fileSystem = null);
 }
 
 public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWriteBuilderTargetChoice
@@ -415,10 +60,14 @@ public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWr
 
     internal BinaryModdedWriteBuilderTargetChoice(
         TModGetter mod,
-        BinaryWriteBuilderParams<TModGetter> @params)
+        IBinaryWriteBuilderWriter<TModGetter> writer)
     {
         _mod = mod;
-        _params = @params;
+        _params = new BinaryWriteBuilderParams<TModGetter>()
+        {
+            _gameRelease = mod.GameRelease,
+            _writer = writer,
+        };
     }
 
     /// <summary>
@@ -427,9 +76,9 @@ public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWr
     /// <param name="path">Path to the intended mod file to eventually write to</param>
     /// <param name="fileSystem">Filesystem to write mod file to</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
+    public BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
     {
-        return new FileBinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        return new BinaryModdedWriteBuilderLoadOrderChoice<TModGetter>(_mod, _params with
         {
             _path = path,
             _param = _params._param with
@@ -439,7 +88,7 @@ public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWr
         });
     }
 
-    IFileBinaryModdedWriteBuilder IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
+    IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
         ToPath(path, fileSystem);
 }
 
@@ -448,9 +97,14 @@ public record BinaryWriteBuilderTargetChoice<TModGetter>
 {
     internal BinaryWriteBuilderParams<TModGetter> _params;
     internal BinaryWriteBuilderTargetChoice(
-        BinaryWriteBuilderParams<TModGetter> @params)
+        GameRelease release,
+        IBinaryWriteBuilderWriter<TModGetter> writer)
     {
-        _params = @params;
+        _params = new BinaryWriteBuilderParams<TModGetter>()
+        {
+            _gameRelease = release,
+            _writer = writer,
+        };
     }
 
     /// <summary>
@@ -459,9 +113,9 @@ public record BinaryWriteBuilderTargetChoice<TModGetter>
     /// <param name="path">Path to the intended mod file to eventually write to</param>
     /// <param name="fileSystem">Filesystem to write mod file to</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
+    public BinaryWriteBuilderLoadOrderChoice<TModGetter> ToPath(FilePath path, IFileSystem? fileSystem = null)
     {
-        return new FileBinaryWriteBuilder<TModGetter>(_params with
+        return new BinaryWriteBuilderLoadOrderChoice<TModGetter>(_params with
         {
             _path = path,
             _param = _params._param with
@@ -472,46 +126,837 @@ public record BinaryWriteBuilderTargetChoice<TModGetter>
     }
 }
 
-public interface IFileBinaryModdedWriteBuilder
+public interface IBinaryModdedWriteBuilderLoadOrderChoice
+{
+    /// <summary>
+    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
+    /// NOTE:  This will have the following negative consequences: <br />
+    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
+    /// if any light or medium flagged mods are referenced. <br />
+    /// - Masters will be unordered and may not match the load order the mod is eventually run with
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithNoLoadOrder();
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithLoadOrder(
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithLoadOrder(
+        IEnumerable<IModMasterStyledGetter> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithLoadOrder(
+        params IModMasterStyledGetter[] loadOrder);
+
+    /// <summary>
+    /// Writes the mod with the default load order and data folder as reference.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithDefaultLoadOrder();
+
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
+        IEnumerable<ModKey> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
+        params ModKey[] loadOrder);
+
+    /// <summary>
+    /// Writes the mod with the load order found in mod header, and with given data folder as reference.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrderFromHeaderMasters();
+}
+
+public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModdedWriteBuilderLoadOrderChoice
+    where TModGetter : class, IModGetter
+{
+    internal TModGetter _mod { get; init; } = null!;    
+    internal BinaryWriteBuilderParams<TModGetter> _params;
+
+    internal BinaryModdedWriteBuilderLoadOrderChoice(
+        TModGetter mod,
+        BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _mod = mod;
+        _params = @params;
+    }
+
+    /// <summary>
+    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
+    /// NOTE:  This will have the following negative consequences: <br />
+    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
+    /// if any light or medium flagged mods are referenced. <br />
+    /// - Masters will be unordered and may not match the load order the mod is eventually run with
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithNoLoadOrder()
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params);
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithNoLoadOrder() => WithNoLoadOrder(); 
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder) => WithLoadOrder(loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        params IModMasterStyledGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(params IModMasterStyledGetter[] loadOrder) => WithLoadOrder(loadOrder);
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<IModMasterStyledGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _knownModLoadOrder = loadOrder,
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<TModGetter> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _knownModLoadOrder = loadOrder.Transform(x => new ModListing<TModGetter>(x)),
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        params TModGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<TModGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+
+    /// <summary>
+    /// Writes the mod with the default load order and data folder as reference.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithDefaultLoadOrder()
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder,
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);
+                
+                ILoadOrderGetter<IModMasterStyledGetter>? modFlagsLo = null;
+                if (GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
+                {
+                    modFlagsLo = lo
+                        .ResolveExistingMods(disposeItems: false);
+                }
+                return p._param with
+                {
+                    MasterFlagsLookup = modFlagsLo?.Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                };
+            }
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithDefaultLoadOrder() => WithDefaultLoadOrder();
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        IEnumerable<ModKey> loadOrder)
+    {
+        return new BinaryModdedWriteBuilderDataFolderChoice<TModGetter>(_mod, _params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                ModKey[] loArray = loadOrder.ToArray();
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
+                if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
+                {
+                    return p._param with
+                    {
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(loArray),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loArray)
+                    };
+                }
+                else
+                {
+                    var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                        dataFolder.Value, 
+                        loArray,
+                        p._gameRelease,
+                        factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                        p._param.FileSystem);
+                    return p._param with
+                    {
+                        MasterFlagsLookup = lo
+                            .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                            .ResolveExistingMods(),
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    };
+                }
+            }
+        });
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(IEnumerable<ModKey> loadOrder) => WithLoadOrder(loadOrder);
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        params ModKey[] loadOrder)
+    {
+        return WithLoadOrder((IEnumerable<ModKey>)loadOrder);
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ModKey[] loadOrder) => WithLoadOrder(loadOrder);
+
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
+    {
+        return new BinaryModdedWriteBuilderDataFolderChoice<TModGetter>(_mod, _params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param);
+                if (dataFolder == null || !GameConstants.Get(m.GameRelease).SeparateMasterLoadOrders)
+                {
+                    var lo = _mod.MasterReferences.Select(x => x.Master).ToArray();
+                    
+                    return p._param with
+                    {
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    };
+                }
+                else
+                {
+                    var lo = LoadOrder.Import<TModGetter>(
+                        dataFolder: dataFolder.Value, 
+                        loadOrder: _mod.MasterReferences.Select(x => x.Master),
+                        m.GameRelease,
+                        p._param.FileSystem);
+
+                    return p._param with
+                    {
+                        MasterFlagsLookup = lo
+                            .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                            .ResolveExistingMods(),
+                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    };
+                }
+            }
+        });
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrderFromHeaderMasters() => WithLoadOrderFromHeaderMasters();
+}
+
+public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
+    where TModGetter : class, IModGetter
+{
+    internal BinaryWriteBuilderParams<TModGetter> _params;
+
+    internal BinaryWriteBuilderLoadOrderChoice(BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _params = @params;
+    }
+
+    /// <summary>
+    /// Writes the mod with no load order as reference.  Avoid if possible.<br />
+    /// NOTE:  This will have the following negative consequences: <br />
+    /// - For games with seperated master concepts (Starfield), this will cause potential corruption
+    /// if any light or medium flagged mods are referenced. <br />
+    /// - Masters will be unordered and may not match the load order the mod is eventually run with
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithNoLoadOrder()
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params);
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModMasterStyledGetter> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        params IModMasterStyledGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<IModMasterStyledGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _knownModLoadOrder = loadOrder,
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<TModGetter> loadOrder)
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _knownModLoadOrder = loadOrder.Transform(x => new ModListing<TModGetter>(x)),
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        params TModGetter[] loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+    
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithLoadOrder(
+        IEnumerable<TModGetter> loadOrder)
+    {
+        return WithLoadOrder(new LoadOrder<TModGetter>(loadOrder, disposeItems: false));
+    }
+
+    /// <summary>
+    /// Writes the mod with the default load order and data folder as reference.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithDefaultLoadOrder()
+    {
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _dataFolderGetter = static (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
+            _loadOrderSetter = static (m, p, alreadyKnownMasters) =>
+            {
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder,
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, p._gameRelease, p._param.FileSystem),
+                    p._param.FileSystem);   
+                
+                return p._param with
+                {
+                    MasterFlagsLookup = lo
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        IEnumerable<ModKey> loadOrder)
+    {
+        return new BinaryWriteBuilderDataFolderChoice<TModGetter>(_params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, loadOrder,
+                    m.GameRelease, p._param.FileSystem);
+                return p._param with
+                {
+                    MasterFlagsLookup = lo
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                };
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Writes the mod with the default load order and given data folder as reference.
+    /// </summary>
+    /// <param name="loadOrder">Load order</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        params ModKey[] loadOrder)
+    {
+        return WithLoadOrder((IEnumerable<ModKey>)loadOrder);
+    }
+
+    public BinaryWriteBuilderDataFolderChoice<TModGetter> WithLoadOrderFromHeaderMasters()
+    {
+        return new BinaryWriteBuilderDataFolderChoice<TModGetter>(_params with
+        {
+            _loadOrderSetter = static (m, p, alreadyKnownMasters) =>
+            {
+                var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
+                var lo = LoadOrder.Import<TModGetter>(
+                    dataFolder, m.MasterReferences.Select(x => x.Master),
+                    m.GameRelease, p._param.FileSystem);   
+                
+                return p._param with
+                {
+                    MasterFlagsLookup = lo
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(disposeItems: false),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                };
+            }
+        });
+    }
+}
+
+public record BinaryWriteBuilderDataFolderChoice<TModGetter>
+    where TModGetter : class, IModGetter
+{
+    internal BinaryWriteBuilderParams<TModGetter> _param;
+
+    internal BinaryWriteBuilderDataFolderChoice(BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _param = @params;
+    }
+
+    public BinaryWriteBuilder<TModGetter> WithDefaultDataFolder()
+    {
+        return new BinaryWriteBuilder<TModGetter>(_param with
+        {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+        });
+    }
+    
+    public BinaryWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryWriteBuilder<TModGetter>(_param);
+        }
+        return new BinaryWriteBuilder<TModGetter>(_param with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+    
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+
+        return new BinaryWriteBuilder<TModGetter>(_param with
+        {
+            KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
+        });
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+}
+
+public interface IBinaryModdedWriteBuilderDataFolderChoice
+{
+    IBinaryModdedWriteBuilder WithDefaultDataFolder();
+    IBinaryModdedWriteBuilder WithDataFolder(DirectoryPath? dataFolder);
+    IBinaryModdedWriteBuilder WithNoDataFolder();
+    IBinaryModdedWriteBuilder WithKnownMasters(params IModMasterStyledGetter[] knownMasters);
+    IBinaryModdedWriteBuilder WithKnownMasters(params KeyedMasterStyle[] knownMasters);
+}
+
+public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModdedWriteBuilderDataFolderChoice
+    where TModGetter : class, IModGetter
+{
+    private readonly TModGetter _mod;
+    internal BinaryWriteBuilderParams<TModGetter> _param;
+
+    internal BinaryModdedWriteBuilderDataFolderChoice(TModGetter mod, BinaryWriteBuilderParams<TModGetter> @params)
+    {
+        _mod = mod;
+        _param = @params;
+    }
+
+    public BinaryModdedWriteBuilder<TModGetter> WithDefaultDataFolder()
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
+        {
+            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+        });
+    }
+
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithDefaultDataFolder() =>
+        WithDefaultDataFolder();
+    
+    public BinaryModdedWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param);
+        }
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithDataFolder(DirectoryPath? dataFolder) =>
+        WithDataFolder(dataFolder);
+    
+    public BinaryModdedWriteBuilder<TModGetter> WithNoDataFolder()
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param);
+    }
+
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithNoDataFolder() =>
+        WithNoDataFolder();
+    
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _param.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
+        {
+            KnownMasters = _param.KnownMasters.And(knownMasters).ToArray()
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params IModMasterStyledGetter[] knownMasters) =>
+        WithKnownMasters(knownMasters);
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderDataFolderChoice.WithKnownMasters(params KeyedMasterStyle[] knownMasters) =>
+        WithKnownMasters(knownMasters);
+}
+
+public interface IBinaryModdedWriteBuilder
 {
     /// <summary>
     /// Adjusts the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithModKeySync(ModKeyOption option);
+    IBinaryModdedWriteBuilder WithModKeySync(ModKeyOption option);
 
     /// <summary>
     /// Disables the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoModKeySync();
+    IBinaryModdedWriteBuilder NoModKeySync();
 
     /// <summary>
     /// Adjusts the filesystem to write to
     /// </summary>
     /// <param name="fileSystem">Filesystem to write to</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithFileSystem(IFileSystem fileSystem);
+    IBinaryModdedWriteBuilder WithFileSystem(IFileSystem? fileSystem);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list keys in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithMastersListContent(MastersListContentOption option);
+    IBinaryModdedWriteBuilder WithMastersListContent(MastersListContentOption option);
 
     /// <summary>
     /// Disables logic to use to keep a mod's master list keys in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoMastersListContentCheck();
+    IBinaryModdedWriteBuilder NoMastersListContentCheck();
 
     /// <summary>
     /// Specify logic to use to keep a mod's record count in sync
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithRecordCount(RecordCountOption option);
+    IBinaryModdedWriteBuilder WithRecordCount(RecordCountOption option);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
@@ -521,7 +966,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// will worsen the master ordering
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithMastersListOrdering(
+    IBinaryModdedWriteBuilder WithMastersListOrdering(
         MastersListOrderingOption option);
 
     /// <summary>
@@ -533,7 +978,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithMastersListOrdering(
+    IBinaryModdedWriteBuilder WithMastersListOrdering(
         IEnumerable<ModKey> loadOrder);
 
     /// <summary>
@@ -545,67 +990,79 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithMastersListOrdering(
+    IBinaryModdedWriteBuilder WithMastersListOrdering(
         ILoadOrderGetter loadOrder);
+
+    /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters);
 
     /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoNextFormIDProcessing();
+    IBinaryModdedWriteBuilder NoNextFormIDProcessing();
 
     /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool? useLowerRange);
+    IBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool? useLowerRange);
 
     /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoFormIDUniquenessCheck();
+    IBinaryModdedWriteBuilder NoFormIDUniquenessCheck();
 
     /// <summary>
     /// Turns off logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoFormIDCompactnessCheck();
+    IBinaryModdedWriteBuilder NoFormIDCompactnessCheck();
 
     /// <summary>
     /// Adjusts logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <param name="option">Logic to use for checking FormID compactness</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithFormIDCompactnessCheck(FormIDCompactionOption option);
+    IBinaryModdedWriteBuilder WithFormIDCompactnessCheck(FormIDCompactionOption option);
 
     /// <summary>
     /// StringsWriter override, for mods that are able to localize.
     /// </summary>
     /// <param name="stringsWriter">StringsWriter to use when localizing</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithStringsWriter(StringsWriter stringsWriter);
+    IBinaryModdedWriteBuilder WithStringsWriter(StringsWriter? stringsWriter);
 
     /// <summary>
     /// If writing a localizable mod that has localization off, which language to output as the embedded strings
     /// </summary>
     /// <param name="language">Language to output as the embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithTargetLanguage(Language language);
+    IBinaryModdedWriteBuilder WithTargetLanguage(Language language);
 
     /// <summary>
     /// Disables logic to zero out all null FormIDs
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoNullFormIDStandardization();
+    IBinaryModdedWriteBuilder NoNullFormIDStandardization();
 
     /// <summary>
     /// Encoding overrides to use for embedded strings
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle? encodingBundle);
+    IBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle? encodingBundle);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -614,7 +1071,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="placeholder">ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder);
+    IBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -623,7 +1080,7 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder);
+    IBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -632,33 +1089,95 @@ public interface IFileBinaryModdedWriteBuilder
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder);
+    IBinaryModdedWriteBuilder WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder);
 
     /// <summary>
     /// When lower formID ranges are used in a non-allowed way, set the system to throw an exception <br />
     /// Typically this occurs when the lower ranges are used without any masters present.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder ThrowIfLowerRangeDisallowed();
+    IBinaryModdedWriteBuilder ThrowIfLowerRangeDisallowed();
 
     /// <summary>
     /// Adjusts system to not check lower formID ranges are used in a non-allowed way
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder NoCheckIfLowerRangeDisallowed();
+    IBinaryModdedWriteBuilder NoCheckIfLowerRangeDisallowed();
 
     /// <summary>
     /// Sets rules to be used for determining how to parallelize writing
     /// </summary>
     /// <param name="parameters">Parameters to use for parallel writing</param>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder WithParallelWriteParameters(ParallelWriteParameters parameters);
+    IBinaryModdedWriteBuilder WithParallelWriteParameters(ParallelWriteParameters parameters);
 
     /// <summary>
     /// Sets writing to be done on current thread
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    IFileBinaryModdedWriteBuilder SingleThread();
+    IBinaryModdedWriteBuilder SingleThread();
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithExtraIncludedMasters(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithExtraIncludedMasters(params ModKey[] modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithExplicitOverridingMasterList(params ModKey[] modKeys);
+
+    /// <summary>
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithAllParentMasters();
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithKnownMasters(params IModMasterStyledGetter[] knownMasters);
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithKnownMasters(params KeyedMasterStyle[] knownMasters);
+
+    internal IBinaryModdedWriteBuilder WithOverriddenFormsOption(OverriddenFormsOption option);
+
+    public IBinaryModdedWriteBuilder WithDataFolder(DirectoryPath? dataFolder);
 
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -672,13 +1191,13 @@ public interface IFileBinaryModdedWriteBuilder
     Task WriteAsync();
 }
 
-public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteBuilder
+public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
     where TModGetter : class, IModGetter
 {
     internal BinaryWriteBuilderParams<TModGetter> _params;
     internal TModGetter _mod { get; init; } = null!;
 
-    internal FileBinaryModdedWriteBuilder(
+    internal BinaryModdedWriteBuilder(
         TModGetter mod,
         BinaryWriteBuilderParams<TModGetter> @params)
     {
@@ -690,7 +1209,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// Adjusts the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithModKeySync(ModKeyOption option)
+    public BinaryModdedWriteBuilder<TModGetter> WithModKeySync(ModKeyOption option)
     {
         return this with
         {
@@ -704,13 +1223,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
         };
     }
 
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithModKeySync(ModKeyOption option) => WithModKeySync(option);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithModKeySync(ModKeyOption option) => WithModKeySync(option);
     
     /// <summary>
     /// Disables the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoModKeySync()
+    public BinaryModdedWriteBuilder<TModGetter> NoModKeySync()
     {
         return this with
         {
@@ -723,14 +1242,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoModKeySync() => NoModKeySync();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoModKeySync() => NoModKeySync();
 
     /// <summary>
     /// Adjusts the filesystem to write to
     /// </summary>
     /// <param name="fileSystem">Filesystem to write to</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithFileSystem(IFileSystem fileSystem)
+    public BinaryModdedWriteBuilder<TModGetter> WithFileSystem(IFileSystem? fileSystem)
     {
         return this with
         {
@@ -743,14 +1262,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithFileSystem(IFileSystem fileSystem) => WithFileSystem(fileSystem);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithFileSystem(IFileSystem? fileSystem) => WithFileSystem(fileSystem);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list keys in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithMastersListContent(MastersListContentOption option)
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListContent(MastersListContentOption option)
     {
         return this with
         {
@@ -763,14 +1282,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithMastersListContent(MastersListContentOption option) => WithMastersListContent(option);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListContent(MastersListContentOption option) => WithMastersListContent(option);
 
     /// <summary>
     /// Disables logic to use to keep a mod's master list keys in sync<br/>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoMastersListContentCheck()
+    public BinaryModdedWriteBuilder<TModGetter> NoMastersListContentCheck()
     {
         return this with
         {
@@ -783,13 +1302,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoMastersListContentCheck() => NoMastersListContentCheck();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoMastersListContentCheck() => NoMastersListContentCheck();
 
     /// <summary>
     /// Specify logic to use to keep a mod's record count in sync
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithRecordCount(RecordCountOption option)
+    public BinaryModdedWriteBuilder<TModGetter> WithRecordCount(RecordCountOption option)
     {
         return this with
         {
@@ -802,7 +1321,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithRecordCount(RecordCountOption option) => WithRecordCount(option);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithRecordCount(RecordCountOption option) => WithRecordCount(option);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
@@ -813,7 +1332,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="option">Option to use</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
         MastersListOrderingOption option)
     {
         return this with
@@ -830,7 +1349,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithMastersListOrdering(MastersListOrderingOption option) => WithMastersListOrdering(option);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(MastersListOrderingOption option) => WithMastersListOrdering(option);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
@@ -841,7 +1360,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
         IEnumerable<ModKey> loadOrder)
     {
         return this with
@@ -855,7 +1374,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithMastersListOrdering(IEnumerable<ModKey> loadOrder) => WithMastersListOrdering(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(IEnumerable<ModKey> loadOrder) => WithMastersListOrdering(loadOrder);
 
     /// <summary>
     /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
@@ -866,7 +1385,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
         ILoadOrderGetter loadOrder)
     {
         return this with
@@ -880,13 +1399,39 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithMastersListOrdering(ILoadOrderGetter loadOrder) => WithMastersListOrdering(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(ILoadOrderGetter loadOrder) => WithMastersListOrdering(loadOrder);
+
+    /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(otherMasters
+                        .Masters.Select(x => x.Master))
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithMastersListOrdering(IReadOnlyMasterReferenceCollection otherMasters) => WithMastersListOrdering(otherMasters);
 
     /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoNextFormIDProcessing()
+    public BinaryModdedWriteBuilder<TModGetter> NoNextFormIDProcessing()
     {
         return this with
         {
@@ -899,14 +1444,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoNextFormIDProcessing() => NoNextFormIDProcessing();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoNextFormIDProcessing() => NoNextFormIDProcessing();
 
     /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
+    public BinaryModdedWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
     {
         return this with
         {
@@ -919,13 +1464,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool? useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool? useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
 
     /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoFormIDUniquenessCheck()
+    public BinaryModdedWriteBuilder<TModGetter> NoFormIDUniquenessCheck()
     {
         return this with
         {
@@ -938,24 +1483,24 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoFormIDUniquenessCheck() => NoFormIDUniquenessCheck();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoFormIDUniquenessCheck() => NoFormIDUniquenessCheck();
 
     /// <summary>
     /// Turns off logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoFormIDCompactnessCheck()
+    public BinaryModdedWriteBuilder<TModGetter> NoFormIDCompactnessCheck()
     {
         return WithFormIDCompactnessCheck(FormIDCompactionOption.NoCheck);
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoFormIDCompactnessCheck() => NoFormIDCompactnessCheck();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoFormIDCompactnessCheck() => NoFormIDCompactnessCheck();
 
     /// <summary>
     /// Adjusts logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <param name="option">Logic to use for checking FormID compactness</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithFormIDCompactnessCheck(FormIDCompactionOption option)
+    public BinaryModdedWriteBuilder<TModGetter> WithFormIDCompactnessCheck(FormIDCompactionOption option)
     {
         return this with
         {
@@ -968,14 +1513,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithFormIDCompactnessCheck(FormIDCompactionOption option) => WithFormIDCompactnessCheck(option);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithFormIDCompactnessCheck(FormIDCompactionOption option) => WithFormIDCompactnessCheck(option);
 
     /// <summary>
     /// StringsWriter override, for mods that are able to localize.
     /// </summary>
     /// <param name="stringsWriter">StringsWriter to use when localizing</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithStringsWriter(StringsWriter stringsWriter)
+    public BinaryModdedWriteBuilder<TModGetter> WithStringsWriter(StringsWriter? stringsWriter)
     {
         return this with
         {
@@ -988,14 +1533,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithStringsWriter(StringsWriter stringsWriter) => WithStringsWriter(stringsWriter);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithStringsWriter(StringsWriter? stringsWriter) => WithStringsWriter(stringsWriter);
 
     /// <summary>
     /// If writing a localizable mod that has localization off, which language to output as the embedded strings
     /// </summary>
     /// <param name="language">Language to output as the embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithTargetLanguage(Language language)
+    public BinaryModdedWriteBuilder<TModGetter> WithTargetLanguage(Language language)
     {
         return this with
         {
@@ -1008,13 +1553,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithTargetLanguage(Language language) => WithTargetLanguage(language);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithTargetLanguage(Language language) => WithTargetLanguage(language);
 
     /// <summary>
     /// Disables logic to zero out all null FormIDs
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoNullFormIDStandardization()
+    public BinaryModdedWriteBuilder<TModGetter> NoNullFormIDStandardization()
     {
         return this with
         {
@@ -1027,14 +1572,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoNullFormIDStandardization() => NoNullFormIDStandardization();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoNullFormIDStandardization() => NoNullFormIDStandardization();
 
     /// <summary>
     /// Encoding overrides to use for embedded strings
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
+    public BinaryModdedWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
     {
         return this with
         {
@@ -1047,7 +1592,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle? encodingBundle) => WithEmbeddedEncodings(encodingBundle);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle? encodingBundle) => WithEmbeddedEncodings(encodingBundle);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -1056,7 +1601,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="placeholder">ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder)
+    public BinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder)
     {
         return this with
         {
@@ -1069,7 +1614,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder) => WithPlaceholderMasterIfLowerRangeDisallowed(placeholder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder) => WithPlaceholderMasterIfLowerRangeDisallowed(placeholder);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -1078,7 +1623,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder)
+    public BinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder)
     {
         return this with
         {
@@ -1091,7 +1636,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder) => WithPlaceholderMasterIfLowerRangeDisallowed(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder) => WithPlaceholderMasterIfLowerRangeDisallowed(loadOrder);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -1100,7 +1645,7 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder)
+    public BinaryModdedWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder)
     {
         return this with
         {
@@ -1113,14 +1658,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder) => WithPlaceholderMasterIfLowerRangeDisallowed(loadOrder);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder) => WithPlaceholderMasterIfLowerRangeDisallowed(loadOrder);
 
     /// <summary>
     /// When lower formID ranges are used in a non-allowed way, set the system to throw an exception <br />
     /// Typically this occurs when the lower ranges are used without any masters present.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> ThrowIfLowerRangeDisallowed()
+    public BinaryModdedWriteBuilder<TModGetter> ThrowIfLowerRangeDisallowed()
     {
         return this with
         {
@@ -1133,13 +1678,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.ThrowIfLowerRangeDisallowed() => ThrowIfLowerRangeDisallowed();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.ThrowIfLowerRangeDisallowed() => ThrowIfLowerRangeDisallowed();
     
     /// <summary>
     /// Adjusts system to not check lower formID ranges are used in a non-allowed way
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> NoCheckIfLowerRangeDisallowed()
+    public BinaryModdedWriteBuilder<TModGetter> NoCheckIfLowerRangeDisallowed()
     {
         return this with
         {
@@ -1152,14 +1697,14 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.NoCheckIfLowerRangeDisallowed() => NoCheckIfLowerRangeDisallowed();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoCheckIfLowerRangeDisallowed() => NoCheckIfLowerRangeDisallowed();
 
     /// <summary>
     /// Sets rules to be used for determining how to parallelize writing
     /// </summary>
     /// <param name="parameters">Parameters to use for parallel writing</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> WithParallelWriteParameters(ParallelWriteParameters parameters)
+    public BinaryModdedWriteBuilder<TModGetter> WithParallelWriteParameters(ParallelWriteParameters parameters)
     {
         return this with
         {
@@ -1172,13 +1717,13 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.WithParallelWriteParameters(ParallelWriteParameters parameters) => WithParallelWriteParameters(parameters);
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithParallelWriteParameters(ParallelWriteParameters parameters) => WithParallelWriteParameters(parameters);
     
     /// <summary>
     /// Sets writing to be done on current thread
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryModdedWriteBuilder<TModGetter> SingleThread()
+    public BinaryModdedWriteBuilder<TModGetter> SingleThread()
     {
         return this with
         {
@@ -1194,7 +1739,187 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
             }
         };
     }
-    IFileBinaryModdedWriteBuilder IFileBinaryModdedWriteBuilder.SingleThread() => SingleThread();
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.SingleThread() => SingleThread();
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
+    {
+        return WithExtraIncludedMasters(modKeys.ToArray());
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithExtraIncludedMasters(IEnumerable<ModKey> modKeys) => WithExtraIncludedMasters(modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithExtraIncludedMasters(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithExtraIncludedMasters(params ModKey[] modKeys) => WithExtraIncludedMasters(modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters(System.Collections.Generic.IEnumerable{Mutagen.Bethesda.Plugins.ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = null,
+                _param = _params._param with
+                {
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys) => WithExplicitOverridingMasterList(modKeys);
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithExplicitOverridingMasterList(params ModKey[] modKeys)
+    {
+        return WithExplicitOverridingMasterList((IEnumerable<ModKey>)modKeys);
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithExplicitOverridingMasterList(params ModKey[] modKeys) => WithExplicitOverridingMasterList(modKeys);
+
+    /// <summary>
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithAllParentMasters()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = static (mod, p) =>
+                {
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
+
+                    return p._param with
+                    {
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mod.ModKey,
+                                mods,
+                                p._knownModLoadOrder,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
+                    };
+                },
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithAllParentMasters() => WithAllParentMasters();
+    
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _params.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+
+        return this with
+        {
+            _params = _params with
+            {
+                KnownMasters = _params.KnownMasters.And(knownMasters).ToArray()
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithKnownMasters(params IModMasterStyledGetter[] knownMasters) => WithKnownMasters(knownMasters);
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithKnownMasters(params KeyedMasterStyle[] knownMasters) => WithKnownMasters(knownMasters);
+    
+    internal BinaryModdedWriteBuilder<TModGetter> WithOverriddenFormsOption(OverriddenFormsOption option)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    OverriddenFormsOption = option
+                }
+            }
+        };
+    }
+
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithOverriddenFormsOption(OverriddenFormsOption option) => WithOverriddenFormsOption(option);
+    
+    public BinaryModdedWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params);
+        }
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithDataFolder(DirectoryPath? dataFolder) => WithDataFolder(dataFolder);
     
     /// <summary>
     /// Executes the instructions to write the mod.
@@ -1202,14 +1927,9 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <returns>A task to await for writing completion</returns>
     public async Task WriteAsync()
     {
-        if (_params._loadOrderSetter != null)
-        {
-            _params = _params with
-            {
-                _param = _params._loadOrderSetter(_mod, _params._param)
-            };
-        }
-        await _params._writer.WriteAsync(_mod, _params);
+        await _params._writer.WriteAsync(
+            _mod, 
+            BinaryWriteBuilderHelper.RunPreWriteSetters<TModGetter>(_mod, _params));
     }
     
     /// <summary>
@@ -1218,23 +1938,18 @@ public record FileBinaryModdedWriteBuilder<TModGetter> : IFileBinaryModdedWriteB
     /// <returns>A task to await for writing completion</returns>
     public void Write()
     {
-        if (_params._loadOrderSetter != null)
-        {
-            _params = _params with
-            {
-                _param = _params._loadOrderSetter(_mod, _params._param)
-            };
-        }
-        _params._writer.Write(_mod, _params);
+        _params._writer.Write(
+            _mod, 
+            BinaryWriteBuilderHelper.RunPreWriteSetters<TModGetter>(_mod, _params));
     }
 }
 
-public record FileBinaryWriteBuilder<TModGetter>
+public record BinaryWriteBuilder<TModGetter>
     where TModGetter : class, IModGetter
 {
     internal BinaryWriteBuilderParams<TModGetter> _params;
 
-    internal FileBinaryWriteBuilder(
+    internal BinaryWriteBuilder(
         BinaryWriteBuilderParams<TModGetter> @params)
     {
         _params = @params;
@@ -1244,7 +1959,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Adjusts the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithModKeySync(ModKeyOption option)
+    public BinaryWriteBuilder<TModGetter> WithModKeySync(ModKeyOption option)
     {
         return this with
         {
@@ -1262,7 +1977,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Disables the logic to use to keep a mod's ModKey in sync with its path
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoModKeySync()
+    public BinaryWriteBuilder<TModGetter> NoModKeySync()
     {
         return this with
         {
@@ -1281,7 +1996,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="fileSystem">Filesystem to write to</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithFileSystem(IFileSystem fileSystem)
+    public BinaryWriteBuilder<TModGetter> WithFileSystem(IFileSystem fileSystem)
     {
         return this with
         {
@@ -1300,7 +2015,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithMastersListContent(MastersListContentOption option)
+    public BinaryWriteBuilder<TModGetter> WithMastersListContent(MastersListContentOption option)
     {
         return this with
         {
@@ -1319,7 +2034,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// This setting is just used to sync the contents of the list, not the order
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoMastersListContentCheck()
+    public BinaryWriteBuilder<TModGetter> NoMastersListContentCheck()
     {
         return this with
         {
@@ -1337,7 +2052,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Specify logic to use to keep a mod's record count in sync
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithRecordCount(RecordCountOption option)
+    public BinaryWriteBuilder<TModGetter> WithRecordCount(RecordCountOption option)
     {
         return this with
         {
@@ -1360,7 +2075,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="option">Option to use</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryWriteBuilder<TModGetter> WithMastersListOrdering(
         MastersListOrderingOption option)
     {
         return this with
@@ -1387,7 +2102,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryWriteBuilder<TModGetter> WithMastersListOrdering(
         IEnumerable<ModKey> loadOrder)
     {
         return this with
@@ -1411,7 +2126,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="loadOrder">Load order to use for ordering masters</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithMastersListOrdering(
+    public BinaryWriteBuilder<TModGetter> WithMastersListOrdering(
         ILoadOrderGetter loadOrder)
     {
         return this with
@@ -1427,10 +2142,35 @@ public record FileBinaryWriteBuilder<TModGetter>
     }
 
     /// <summary>
+    /// Specify what logic to use to keep a mod's master list ordering in sync<br/>
+    /// This setting is just used to sync the order of the list, not the content<br />
+    /// <br />
+    /// NOTE: If you provided a load order then setting this is unnecessary and
+    /// will worsen the master ordering
+    /// </summary>
+    /// <param name="otherMasters">Other masters to use for ordering masters</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithMastersListOrdering(
+        IReadOnlyMasterReferenceCollection otherMasters)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(otherMasters
+                        .Masters.Select(x => x.Master))
+                }
+            }
+        };
+    }
+
+    /// <summary>
     /// Turns off logic to adjust the Next FormID automatically.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoNextFormIDProcessing()
+    public BinaryWriteBuilder<TModGetter> NoNextFormIDProcessing()
     {
         return this with
         {
@@ -1449,7 +2189,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="useLowerRange">Force the lower FormID range usage on or off</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
+    public BinaryWriteBuilder<TModGetter> WithForcedLowerFormIdRangeUsage(bool? useLowerRange)
     {
         return this with
         {
@@ -1467,7 +2207,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoFormIDUniquenessCheck()
+    public BinaryWriteBuilder<TModGetter> NoFormIDUniquenessCheck()
     {
         return this with
         {
@@ -1485,7 +2225,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Turns off logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoFormIDCompactnessCheck()
+    public BinaryWriteBuilder<TModGetter> NoFormIDCompactnessCheck()
     {
         return WithFormIDCompactnessCheck(FormIDCompactionOption.NoCheck);
     }
@@ -1495,7 +2235,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="option">Logic to use for checking FormID compactness</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithFormIDCompactnessCheck(FormIDCompactionOption option)
+    public BinaryWriteBuilder<TModGetter> WithFormIDCompactnessCheck(FormIDCompactionOption option)
     {
         return this with
         {
@@ -1514,7 +2254,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="stringsWriter">StringsWriter to use when localizing</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithStringsWriter(StringsWriter stringsWriter)
+    public BinaryWriteBuilder<TModGetter> WithStringsWriter(StringsWriter stringsWriter)
     {
         return this with
         {
@@ -1533,7 +2273,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="language">Language to output as the embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithTargetLanguage(Language language)
+    public BinaryWriteBuilder<TModGetter> WithTargetLanguage(Language language)
     {
         return this with
         {
@@ -1551,7 +2291,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Disables logic to zero out all null FormIDs
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoNullFormIDStandardization()
+    public BinaryWriteBuilder<TModGetter> NoNullFormIDStandardization()
     {
         return this with
         {
@@ -1570,7 +2310,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
+    public BinaryWriteBuilder<TModGetter> WithEmbeddedEncodings(EncodingBundle? encodingBundle)
     {
         return this with
         {
@@ -1591,7 +2331,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="placeholder">ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder)
+    public BinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ModKey placeholder)
     {
         return this with
         {
@@ -1612,7 +2352,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder)
+    public BinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(ILoadOrderGetter loadOrder)
     {
         return this with
         {
@@ -1633,7 +2373,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="loadOrder">LoadOrder to look to for a ModKey to add as a master if lower range FormIDs are used without any other masters present</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder)
+    public BinaryWriteBuilder<TModGetter> WithPlaceholderMasterIfLowerRangeDisallowed(IEnumerable<ModKey> loadOrder)
     {
         return this with
         {
@@ -1652,7 +2392,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Typically this occurs when the lower ranges are used without any masters present.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> ThrowIfLowerRangeDisallowed()
+    public BinaryWriteBuilder<TModGetter> ThrowIfLowerRangeDisallowed()
     {
         return this with
         {
@@ -1670,7 +2410,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Adjusts system to not check lower formID ranges are used in a non-allowed way
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> NoCheckIfLowerRangeDisallowed()
+    public BinaryWriteBuilder<TModGetter> NoCheckIfLowerRangeDisallowed()
     {
         return this with
         {
@@ -1689,7 +2429,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// </summary>
     /// <param name="parameters">Parameters to use for parallel writing</param>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> WithParallelWriteParameters(ParallelWriteParameters parameters)
+    public BinaryWriteBuilder<TModGetter> WithParallelWriteParameters(ParallelWriteParameters parameters)
     {
         return this with
         {
@@ -1707,7 +2447,7 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// Sets writing to be done on current thread
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
-    public FileBinaryWriteBuilder<TModGetter> SingleThread()
+    public BinaryWriteBuilder<TModGetter> SingleThread()
     {
         return this with
         {
@@ -1723,6 +2463,176 @@ public record FileBinaryWriteBuilder<TModGetter>
             }
         };
     }
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(IEnumerable<ModKey> modKeys)
+    {
+        return WithExtraIncludedMasters(modKeys.ToArray());
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to include if they are not included naturally <br/>
+    /// If called several times, the extra ModKeys will accumulate.
+    /// </summary>
+    /// <param name="modKeys">Extra ModKeys to include</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithExtraIncludedMasters(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    MastersContentCustomOverride = (mods) =>
+                    {
+                        return (_params._param.MastersContentCustomOverride?.Invoke(mods) ?? mods)
+                            .And(modKeys)
+                            .Distinct()
+                            .ToArray();
+                    }
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="P"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithExplicitOverridingMasterList(IEnumerable<ModKey> modKeys)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = null,
+                _param = _params._param with
+                {
+                    MastersListContent = MastersListContentOption.NoCheck,
+                    MastersContentCustomOverride = (mods) => modKeys.ToArray(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(modKeys.ToArray())
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Specifies a list of masters to set the mod to contain. <br />
+    /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
+    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// </summary>
+    /// <param name="modKeys">ModKeys to have the mod contain</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithExplicitOverridingMasterList(params ModKey[] modKeys)
+    {
+        return WithExplicitOverridingMasterList((IEnumerable<ModKey>)modKeys);
+    }
+    
+    /// <summary>
+    /// The Creation Kit complains when loading mods without all transitive masters listed. <br />
+    /// This call makes sure to include all transitive masters, even if they are not needed by the mod's content
+    /// to avoid issues when loading the plugin in the Creation Kit.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithAllParentMasters()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _masterSyncAction = static (mod, p) =>
+                {
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
+
+                    return p._param with
+                    {
+                        MastersContentCustomOverride = (mods) =>
+                        {
+                            return TransitiveMasterLocator.GetAllMasters(
+                                p._gameRelease,
+                                mod.ModKey,
+                                mods,
+                                p._knownModLoadOrder,
+                                dataFolder,
+                                p._param.FileSystem);
+                        }
+                    };
+                },
+            }
+        };
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params IModMasterStyledGetter[] knownMasters)
+    {
+        var match = _params.KnownMasters.FirstOrDefault(existingKnownMaster =>
+            knownMasters.Any(x => x.ModKey == existingKnownMaster.ModKey));
+        if (match != null)
+        {
+            throw new ArgumentException($"ModKey was already added as a known master: {match.ModKey}");
+        }
+
+        return this with
+        {
+            _params = _params with
+            {
+                KnownMasters = _params.KnownMasters.And(knownMasters).ToArray()
+            }
+        };
+    }
+
+    /// <summary>
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
+    /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
+    /// </summary>
+    /// <param name="knownMasters">Master information to hand provide</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
+    {
+        return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+    
+    internal BinaryWriteBuilder<TModGetter> WithOverriddenFormsOption(OverriddenFormsOption option)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    OverriddenFormsOption = option
+                }
+            }
+        };
+    }
+    
+    public BinaryWriteBuilder<TModGetter> WithDataFolder(DirectoryPath? dataFolder)
+    {
+        if (dataFolder == null)
+        {
+            return new BinaryWriteBuilder<TModGetter>(_params);
+        }
+        return new BinaryWriteBuilder<TModGetter>(_params with
+        {
+            _dataFolderGetter = (m, p) => dataFolder.Value
+        });
+    }
     
     /// <summary>
     /// Executes the instructions to write a mod.
@@ -1731,14 +2641,9 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <returns>A task to await for writing completion</returns>
     public async Task WriteAsync(TModGetter mod)
     {
-        if (_params._loadOrderSetter != null)
-        {
-            _params = _params with
-            {
-                _param = _params._loadOrderSetter(mod, _params._param)
-            };
-        }
-        await _params._writer.WriteAsync(mod, _params);
+        await _params._writer.WriteAsync(
+            mod, 
+            BinaryWriteBuilderHelper.RunPreWriteSetters<TModGetter>(mod, _params));
     }
     
     /// <summary>
@@ -1747,13 +2652,73 @@ public record FileBinaryWriteBuilder<TModGetter>
     /// <returns>A task to await for writing completion</returns>
     public void Write(TModGetter mod)
     {
-        if (_params._loadOrderSetter != null)
+        _params._writer.Write(
+            mod, 
+            BinaryWriteBuilderHelper.RunPreWriteSetters<TModGetter>(mod, _params));
+    }
+}
+
+internal static class BinaryWriteBuilderHelper
+{
+    public static BinaryWriteBuilderParams<TModGetter> RunPreWriteSetters<TModGetter>(
+        TModGetter mod,
+        BinaryWriteBuilderParams<TModGetter> p)
+        where TModGetter : class, IModGetter
+    {
+        var knownSet = new HashSet<ModKey>(p.KnownMasters.Select(x => x.ModKey));
+        if (p._gameRelease != mod.GameRelease)
         {
-            _params = _params with
+            throw new ArgumentException($"GameRelease did not match provided mod: {p._gameRelease} != {mod.GameRelease}");
+        }
+        if (p._loadOrderSetter != null)
+        {
+            p = p with
             {
-                _param = _params._loadOrderSetter(mod, _params._param)
+                _param = p._loadOrderSetter(mod, p, knownSet)
             };
         }
-        _params._writer.Write(mod, _params);
+
+        
+        if (p._param.MasterFlagsLookup != null)
+        {
+            Cache<IModMasterStyledGetter, ModKey>? masterFlagsLookup = new(x => x.ModKey);
+            masterFlagsLookup.SetTo(p._param.MasterFlagsLookup.Items);
+            p.KnownMasters.ForEach(x => masterFlagsLookup.Add(x));
+
+            if (masterFlagsLookup.Count == 0)
+            {
+                masterFlagsLookup = null;
+            }
+            
+            p = p with
+            {
+                _param = p._param with
+                {
+                    MasterFlagsLookup = masterFlagsLookup
+                }
+            };
+        }
+        else if (p.KnownMasters.Length > 0)
+        {
+            Cache<IModMasterStyledGetter, ModKey> masterFlagsLookup = new(x => x.ModKey);
+            masterFlagsLookup.SetTo(p.KnownMasters);
+            p = p with
+            {
+                _param = p._param with
+                {
+                    MasterFlagsLookup = masterFlagsLookup
+                }
+            };
+        }
+        
+        if (p._masterSyncAction != null)
+        {
+            p = p with
+            {
+                _param = p._masterSyncAction(mod, p)
+            };
+        }
+
+        return p;
     }
 }

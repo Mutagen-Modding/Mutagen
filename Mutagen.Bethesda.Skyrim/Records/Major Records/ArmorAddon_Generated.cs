@@ -2070,21 +2070,18 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.WorldModel is {} WorldModelItem)
             {
-                if (obj.WorldModel is {} WorldModelItem)
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
-                    foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.FirstPersonModel is {} FirstPersonModelItem)
+            }
+            if (obj.FirstPersonModel is {} FirstPersonModelItem)
+            {
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
-                    foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -2288,8 +2285,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IArmorAddon item,
+            IArmorAddonGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,

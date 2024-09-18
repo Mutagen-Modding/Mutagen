@@ -1040,8 +1040,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Link4.SetTo(rhs.Link4.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImpactHNAM item,
+            IImpactHNAMGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImpactHNAM DeepCopy(

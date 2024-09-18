@@ -909,8 +909,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Destination.SetTo(rhs.Destination.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPortal item,
+            IPortalGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Portal DeepCopy(

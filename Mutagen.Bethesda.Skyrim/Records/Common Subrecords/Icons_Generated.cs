@@ -943,10 +943,22 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            item.LargeIconFilename.RawPath = rhs.LargeIconFilename.RawPath;
+            item.LargeIconFilename.GivenPath = rhs.LargeIconFilename.GivenPath;
             item.SmallIconFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SmallIconFilename, rhs.SmallIconFilename);
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IIcons item,
+            IIconsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Icons DeepCopy(
@@ -1044,12 +1056,12 @@ namespace Mutagen.Bethesda.Skyrim
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LargeIconFilename.RawPath,
+                item: item.LargeIconFilename.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SmallIconFilename?.RawPath,
+                item: item.SmallIconFilename?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MICO),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1098,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LargeIconFilename.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.LargeIconFilename.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Icons_FieldIndex.LargeIconFilename;

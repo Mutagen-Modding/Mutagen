@@ -14,8 +14,15 @@ namespace Mutagen.Bethesda.Plugins.Records;
 [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
 public abstract class AMod : IMod
 {
-    /// <inheritdoc />
-    public ModKey ModKey { get; }
+    private ModKey _modKey;
+    
+    public ModKey ModKey => _modKey;
+
+    ModKey IMod.ModKey
+    {
+        get => _modKey;
+        set => _modKey = value;
+    }
 
     /// <inheritdoc />
     public abstract GameRelease GameRelease { get; }
@@ -24,7 +31,7 @@ public abstract class AMod : IMod
 
     protected AMod()
     {
-        ModKey = ModKey.Null;
+        _modKey = ModKey.Null;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
@@ -34,7 +41,7 @@ public abstract class AMod : IMod
     /// <param name="modKey">Key to assign the mod</param> 
     public AMod(ModKey modKey)
     {
-        ModKey = modKey;
+        _modKey = modKey;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
@@ -61,7 +68,7 @@ public abstract class AMod : IMod
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
-    IBinaryModdedWriteBuilderLoadOrderChoice IModGetter.BeginWrite => throw new NotImplementedException();
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => throw new NotImplementedException();
     IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => throw new NotImplementedException();
@@ -88,7 +95,11 @@ public abstract class AMod : IMod
     IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts() => throw new NotImplementedException();
+    uint IModGetter.GetRecordCount() => throw new NotImplementedException();
+    IMod IModGetter.DeepCopy() => throw new NotImplementedException();
     #endregion
+
+    public MasterStyle MasterStyle => this.GetMasterStyle();
 
     /// <inheritdoc />
     public FormKey GetNextFormKey()

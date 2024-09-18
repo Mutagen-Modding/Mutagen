@@ -953,8 +953,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Value.SetTo(rhs.Value.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetVATSValueCriticalEffectConditionData item,
+            IGetVATSValueCriticalEffectConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAGetVATSValueConditionData item,

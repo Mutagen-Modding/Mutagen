@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Frequency = rhs.Frequency;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetFlora item,
+            IPlanetFloraGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlanetFlora DeepCopy(

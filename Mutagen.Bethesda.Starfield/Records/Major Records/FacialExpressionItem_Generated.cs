@@ -903,8 +903,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MWGT = rhs.MWGT;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFacialExpressionItem item,
+            IFacialExpressionItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FacialExpressionItem DeepCopy(

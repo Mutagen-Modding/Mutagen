@@ -786,6 +786,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IPlanetContentManagerTreeInternal>,
         IPlanetContentManagerTreeGetter,
+        IPlanetParentNode,
         IStarfieldMajorRecordInternal
     {
         new MemorySlice<Byte> NAM1 { get; set; }
@@ -808,7 +809,8 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlanetContentManagerTreeGetter>,
-        IMapsToGetter<IPlanetContentManagerTreeGetter>
+        IMapsToGetter<IPlanetContentManagerTreeGetter>,
+        IPlanetParentNodeGetter
     {
         static new ILoquiRegistration StaticRegistration => PlanetContentManagerTree_Registration.Instance;
         ReadOnlyMemorySlice<Byte> NAM1 { get; }
@@ -1566,8 +1568,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetContentManagerTree item,
+            IPlanetContentManagerTreeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,

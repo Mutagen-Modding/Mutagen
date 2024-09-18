@@ -161,6 +161,7 @@ public partial class RecordTypeInts
     public const int PCON = 0x4E4F4350;
     public const int PDCL = 0x4C434450;
     public const int PERK = 0x4B524550;
+    public const int PERS = 0x53524550;
     public const int PFLA = 0x414C4650;
     public const int PGRD = 0x44524750;
     public const int PGRE = 0x45524750;

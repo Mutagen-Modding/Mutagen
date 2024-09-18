@@ -178,8 +178,7 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
 
     public static ModHeaderFrame FromPath(
         ModPath path, 
-        GameRelease release, 
-        bool readSafe = true,
+        GameRelease release,
         IFileSystem? fileSystem = null)
     {
         var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
@@ -188,7 +187,7 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
                 release, 
                 path.ModKey,
                 masterReferences: null!));
-        return stream.ReadModHeaderFrame(readSafe: readSafe);
+        return stream.ReadModHeaderFrame(readSafe: true);
     }
 
     public static ModHeaderFrame FromStream(
@@ -201,7 +200,8 @@ public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
             new ParsingMeta(
                 release, 
                 modKey,
-                masterReferences: null!));
+                masterReferences: null!),
+            dispose: false);
         return mutStream.ReadModHeaderFrame(readSafe: readSafe);
     }
 }

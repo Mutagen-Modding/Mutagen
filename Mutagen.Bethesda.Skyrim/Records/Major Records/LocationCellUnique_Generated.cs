@@ -969,8 +969,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Location.SetTo(rhs.Location.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationCellUnique item,
+            ILocationCellUniqueGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationCellUnique DeepCopy(

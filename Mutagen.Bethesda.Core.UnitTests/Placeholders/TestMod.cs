@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
@@ -24,7 +22,7 @@ public class TestMod : ITestMod, IDisposable
     #region Interface
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => throw new NotImplementedException();
-    public ModKey ModKey { get; }
+    public ModKey ModKey { get; set; }
     public GameRelease GameRelease { get; }
 
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
@@ -33,7 +31,16 @@ public class TestMod : ITestMod, IDisposable
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
 
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
-    public IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite => throw new NotImplementedException();
+    public IBinaryModdedWriteBuilderTargetChoice BeginWrite => throw new NotImplementedException();
+    public uint GetRecordCount()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMod DeepCopy()
+    {
+        throw new NotImplementedException();
+    }
 
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }
@@ -43,6 +50,8 @@ public class TestMod : ITestMod, IDisposable
     public bool CanBeMediumMaster { get; }
     public bool IsMediumMaster { get; set; }
     public bool ListsOverriddenForms { get; }
+
+    public MasterStyle MasterStyle { get; }
 
     IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
@@ -182,17 +191,7 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
-    {
-        throw new NotImplementedException();
-    }
-
     public void WriteToBinary(Stream stream, BinaryWriteParameters? param = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null)
     {
         throw new NotImplementedException();
     }

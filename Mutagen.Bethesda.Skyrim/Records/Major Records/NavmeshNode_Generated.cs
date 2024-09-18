@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NodeIndex = rhs.NodeIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavmeshNode item,
+            INavmeshNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavmeshNode DeepCopy(

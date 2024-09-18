@@ -93,7 +93,15 @@ public interface IModGetter :
     /// <returns>Lowest suggested FormID given current mod header flags</returns>
     uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
     
-    IBinaryModdedWriteBuilderLoadOrderChoice BeginWrite { get; }
+    IBinaryModdedWriteBuilderTargetChoice BeginWrite { get; }
+
+    /// <summary>
+    /// Calculates the record count by enumerating all records
+    /// </summary>
+    /// <returns>Calculated record count of the contained records</returns>
+    uint GetRecordCount();
+
+    IMod DeepCopy();
 }
 
 /// <summary>
@@ -101,6 +109,11 @@ public interface IModGetter :
 /// </summary>
 public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, IFormLinkContainer
 {
+    /// <summary>
+    /// The associated ModKey
+    /// </summary>
+    new ModKey ModKey { get; internal set; }
+    
     /// <summary>
     /// List of master references.
     /// </summary>

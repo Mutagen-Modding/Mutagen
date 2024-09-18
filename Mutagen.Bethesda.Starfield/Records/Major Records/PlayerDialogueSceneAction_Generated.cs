@@ -1449,8 +1449,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.JAIL = rhs.JAIL;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlayerDialogueSceneAction item,
+            IPlayerDialogueSceneActionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IASceneAction item,

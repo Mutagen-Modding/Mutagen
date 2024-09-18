@@ -897,8 +897,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Weight = rhs.Weight;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IClothingData item,
+            IClothingDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ClothingData DeepCopy(

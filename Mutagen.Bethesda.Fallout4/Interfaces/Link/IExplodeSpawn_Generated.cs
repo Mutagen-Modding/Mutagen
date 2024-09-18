@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, ArtObject, BendableSpline, Book, Component, Container, Door, DualCastData, Explosion, Flora, Furniture, Grass, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, Npc, ObjectEffect, PlacedObject, Projectile, SoundMarker, Spell, Static, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, ArtObject, BendableSpline, Book, Component, Container, Door, DualCastData, Explosion, Flora, Furniture, Grass, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, Light, MiscItem, MovableStatic, Npc, ObjectEffect, PlacedObject, Projectile, SoundMarker, Spell, Static, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
     /// </summary>
     public partial interface IExplodeSpawn :
         IExplodeSpawnGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, ArtObject, BendableSpline, Book, Component, Container, Door, DualCastData, Explosion, Flora, Furniture, Grass, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, Npc, ObjectEffect, PlacedObject, Projectile, SoundMarker, Spell, Static, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, ArtObject, BendableSpline, Book, Component, Container, Door, DualCastData, Explosion, Flora, Furniture, Grass, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, Light, MiscItem, MovableStatic, Npc, ObjectEffect, PlacedObject, Projectile, SoundMarker, Spell, Static, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
     /// </summary>
     public partial interface IExplodeSpawnGetter : IFallout4MajorRecordGetter
     {

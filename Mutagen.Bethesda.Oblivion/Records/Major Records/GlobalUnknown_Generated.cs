@@ -1182,8 +1182,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Data = rhs.Data;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGlobalUnknown item,
+            IGlobalUnknownGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IGlobalInternal item,
             IGlobalGetter rhs,

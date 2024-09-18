@@ -2,8 +2,6 @@ using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
@@ -15,7 +13,7 @@ public static class ModRecordAligner
     public static void Align( 
         ModPath inputPath, 
         FilePath outputPath, 
-        GameRelease gameMode, 
+        ParsingMeta meta, 
         AlignmentRules alignmentRules, 
         DirectoryPath temp) 
     { 
@@ -28,36 +26,33 @@ public static class ModRecordAligner
         interest.InterestingTypes.Add("WRLD");
         interest.InterestingTypes.Add("QUST");
         interest.InterestingTypes.Add("REFR");
-        
-        var masters = SeparatedMasterPackage.Factory(gameMode, inputPath, loadOrder: null, fileSystem: null);
-        var meta = new ParsingMeta(gameMode, inputPath.ModKey, masters);
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
         {
-            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, masters, interest);
+            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
             var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
-            using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
+            using var writer = new MutagenWriter(alignedMajorRecordsFile, meta.Constants);
             AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
             inputPath = alignedMajorRecordsFile;
         }
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
         {
-            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, masters);
+            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences);
             var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
-            using var writer = new MutagenWriter(alignedGroupsFile, gameMode);
+            using var writer = new MutagenWriter(alignedGroupsFile, meta.Constants);
             AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
             inputPath = alignedGroupsFile;
         }
         
-        if (gameMode is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
+        if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
         {
-            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, masters, interest);
+            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
             
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, meta))
             {
-                using var writer = new MutagenWriter(alignedCellsFile, gameMode);
+                using var writer = new MutagenWriter(alignedCellsFile, meta.Constants);
                 foreach (var grup in fileLocs.GrupLocations.Keys)
                 {
                     if (grup <= mutaReader.Position) continue;
@@ -79,13 +74,13 @@ public static class ModRecordAligner
             inputPath = alignedCellsFile;
         }
 
-        if (gameMode is GameRelease.Oblivion)
+        if (meta.Constants.Release is GameRelease.Oblivion)
         {
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedWorldspaces"));
-            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, masters, interest); 
+            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest); 
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, meta)) 
             { 
-                using var writer = new MutagenWriter(alignedCellsFile, gameMode); 
+                using var writer = new MutagenWriter(alignedCellsFile, meta.Constants); 
                 foreach (var grup in fileLocs.GrupLocations.Keys) 
                 { 
                     if (grup <= mutaReader.Position) continue; 

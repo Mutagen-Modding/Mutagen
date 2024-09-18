@@ -981,8 +981,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Latitude = rhs.Latitude;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IUniquePatternPlacementInfoComponent item,
+            IUniquePatternPlacementInfoComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

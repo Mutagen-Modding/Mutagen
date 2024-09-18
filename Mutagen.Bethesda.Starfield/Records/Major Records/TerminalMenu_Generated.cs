@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda.Starfield
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapterIndexed? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public VirtualMachineAdapterIndexed? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -66,7 +69,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterIndexedGetter? ITerminalMenuGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         /// <summary>
@@ -104,38 +110,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region TMVT
+        #region ShowBodyText
+        public TerminalMenu.ShowBodyTextOption? ShowBodyText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _TMVT;
-        public MemorySlice<Byte>? TMVT
-        {
-            get => this._TMVT;
-            set => this._TMVT = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.TMVT => this.TMVT;
+        TerminalMenu.ShowBodyTextOption? ITerminalMenuGetter.ShowBodyText => this.ShowBodyText;
         #endregion
-        #region DNAM
+        #region MenuButtonStyle
+        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DNAM;
-        public MemorySlice<Byte>? DNAM
-        {
-            get => this._DNAM;
-            set => this._DNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.DNAM => this.DNAM;
+        TerminalMenu.MenuButtonStyleOption? ITerminalMenuGetter.MenuButtonStyle => this.MenuButtonStyle;
         #endregion
-        #region SNAM
+        #region Style
+        public TerminalMenu.StyleOption? Style { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _SNAM;
-        public MemorySlice<Byte>? SNAM
-        {
-            get => this._SNAM;
-            set => this._SNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.SNAM => this.SNAM;
+        TerminalMenu.StyleOption? ITerminalMenuGetter.Style => this.Style;
         #endregion
         #region INAM
         public TranslatedString? INAM { get; set; }
@@ -197,9 +185,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>(initialValue, new VirtualMachineAdapterIndexed.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.TMVT = initialValue;
-                this.DNAM = initialValue;
-                this.SNAM = initialValue;
+                this.ShowBodyText = initialValue;
+                this.MenuButtonStyle = initialValue;
+                this.Style = initialValue;
                 this.INAM = initialValue;
                 this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
                 this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
@@ -215,9 +203,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
-                TItem TMVT,
-                TItem DNAM,
-                TItem SNAM,
+                TItem ShowBodyText,
+                TItem MenuButtonStyle,
+                TItem Style,
                 TItem INAM,
                 TItem BodyTexts,
                 TItem MenuItems)
@@ -232,9 +220,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapterIndexed.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
-                this.TMVT = TMVT;
-                this.DNAM = DNAM;
-                this.SNAM = SNAM;
+                this.ShowBodyText = ShowBodyText;
+                this.MenuButtonStyle = MenuButtonStyle;
+                this.Style = Style;
                 this.INAM = INAM;
                 this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(BodyTexts, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
                 this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
@@ -251,9 +239,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Name;
-            public TItem TMVT;
-            public TItem DNAM;
-            public TItem SNAM;
+            public TItem ShowBodyText;
+            public TItem MenuButtonStyle;
+            public TItem Style;
             public TItem INAM;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>? BodyTexts;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>? MenuItems;
@@ -272,9 +260,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.TMVT, rhs.TMVT)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
-                if (!object.Equals(this.SNAM, rhs.SNAM)) return false;
+                if (!object.Equals(this.ShowBodyText, rhs.ShowBodyText)) return false;
+                if (!object.Equals(this.MenuButtonStyle, rhs.MenuButtonStyle)) return false;
+                if (!object.Equals(this.Style, rhs.Style)) return false;
                 if (!object.Equals(this.INAM, rhs.INAM)) return false;
                 if (!object.Equals(this.BodyTexts, rhs.BodyTexts)) return false;
                 if (!object.Equals(this.MenuItems, rhs.MenuItems)) return false;
@@ -285,9 +273,9 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Name);
-                hash.Add(this.TMVT);
-                hash.Add(this.DNAM);
-                hash.Add(this.SNAM);
+                hash.Add(this.ShowBodyText);
+                hash.Add(this.MenuButtonStyle);
+                hash.Add(this.Style);
                 hash.Add(this.INAM);
                 hash.Add(this.BodyTexts);
                 hash.Add(this.MenuItems);
@@ -307,9 +295,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.TMVT)) return false;
-                if (!eval(this.DNAM)) return false;
-                if (!eval(this.SNAM)) return false;
+                if (!eval(this.ShowBodyText)) return false;
+                if (!eval(this.MenuButtonStyle)) return false;
+                if (!eval(this.Style)) return false;
                 if (!eval(this.INAM)) return false;
                 if (this.BodyTexts != null)
                 {
@@ -349,9 +337,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.TMVT)) return true;
-                if (eval(this.DNAM)) return true;
-                if (eval(this.SNAM)) return true;
+                if (eval(this.ShowBodyText)) return true;
+                if (eval(this.MenuButtonStyle)) return true;
+                if (eval(this.Style)) return true;
                 if (eval(this.INAM)) return true;
                 if (this.BodyTexts != null)
                 {
@@ -394,9 +382,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapterIndexed.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.TMVT = eval(this.TMVT);
-                obj.DNAM = eval(this.DNAM);
-                obj.SNAM = eval(this.SNAM);
+                obj.ShowBodyText = eval(this.ShowBodyText);
+                obj.MenuButtonStyle = eval(this.MenuButtonStyle);
+                obj.Style = eval(this.Style);
                 obj.INAM = eval(this.INAM);
                 if (BodyTexts != null)
                 {
@@ -454,17 +442,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.TMVT ?? true)
+                    if (printMask?.ShowBodyText ?? true)
                     {
-                        sb.AppendItem(TMVT, "TMVT");
+                        sb.AppendItem(ShowBodyText, "ShowBodyText");
                     }
-                    if (printMask?.DNAM ?? true)
+                    if (printMask?.MenuButtonStyle ?? true)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(MenuButtonStyle, "MenuButtonStyle");
                     }
-                    if (printMask?.SNAM ?? true)
+                    if (printMask?.Style ?? true)
                     {
-                        sb.AppendItem(SNAM, "SNAM");
+                        sb.AppendItem(Style, "Style");
                     }
                     if (printMask?.INAM ?? true)
                     {
@@ -521,9 +509,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapterIndexed.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Name;
-            public Exception? TMVT;
-            public Exception? DNAM;
-            public Exception? SNAM;
+            public Exception? ShowBodyText;
+            public Exception? MenuButtonStyle;
+            public Exception? Style;
             public Exception? INAM;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>? BodyTexts;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>? MenuItems;
@@ -539,12 +527,12 @@ namespace Mutagen.Bethesda.Starfield
                         return VirtualMachineAdapter;
                     case TerminalMenu_FieldIndex.Name:
                         return Name;
-                    case TerminalMenu_FieldIndex.TMVT:
-                        return TMVT;
-                    case TerminalMenu_FieldIndex.DNAM:
-                        return DNAM;
-                    case TerminalMenu_FieldIndex.SNAM:
-                        return SNAM;
+                    case TerminalMenu_FieldIndex.ShowBodyText:
+                        return ShowBodyText;
+                    case TerminalMenu_FieldIndex.MenuButtonStyle:
+                        return MenuButtonStyle;
+                    case TerminalMenu_FieldIndex.Style:
+                        return Style;
                     case TerminalMenu_FieldIndex.INAM:
                         return INAM;
                     case TerminalMenu_FieldIndex.BodyTexts:
@@ -567,14 +555,14 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenu_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case TerminalMenu_FieldIndex.TMVT:
-                        this.TMVT = ex;
+                    case TerminalMenu_FieldIndex.ShowBodyText:
+                        this.ShowBodyText = ex;
                         break;
-                    case TerminalMenu_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case TerminalMenu_FieldIndex.MenuButtonStyle:
+                        this.MenuButtonStyle = ex;
                         break;
-                    case TerminalMenu_FieldIndex.SNAM:
-                        this.SNAM = ex;
+                    case TerminalMenu_FieldIndex.Style:
+                        this.Style = ex;
                         break;
                     case TerminalMenu_FieldIndex.INAM:
                         this.INAM = ex;
@@ -602,14 +590,14 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenu_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case TerminalMenu_FieldIndex.TMVT:
-                        this.TMVT = (Exception?)obj;
+                    case TerminalMenu_FieldIndex.ShowBodyText:
+                        this.ShowBodyText = (Exception?)obj;
                         break;
-                    case TerminalMenu_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case TerminalMenu_FieldIndex.MenuButtonStyle:
+                        this.MenuButtonStyle = (Exception?)obj;
                         break;
-                    case TerminalMenu_FieldIndex.SNAM:
-                        this.SNAM = (Exception?)obj;
+                    case TerminalMenu_FieldIndex.Style:
+                        this.Style = (Exception?)obj;
                         break;
                     case TerminalMenu_FieldIndex.INAM:
                         this.INAM = (Exception?)obj;
@@ -631,9 +619,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (Name != null) return true;
-                if (TMVT != null) return true;
-                if (DNAM != null) return true;
-                if (SNAM != null) return true;
+                if (ShowBodyText != null) return true;
+                if (MenuButtonStyle != null) return true;
+                if (Style != null) return true;
                 if (INAM != null) return true;
                 if (BodyTexts != null) return true;
                 if (MenuItems != null) return true;
@@ -668,13 +656,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Name, "Name");
                 }
                 {
-                    sb.AppendItem(TMVT, "TMVT");
+                    sb.AppendItem(ShowBodyText, "ShowBodyText");
                 }
                 {
-                    sb.AppendItem(DNAM, "DNAM");
+                    sb.AppendItem(MenuButtonStyle, "MenuButtonStyle");
                 }
                 {
-                    sb.AppendItem(SNAM, "SNAM");
+                    sb.AppendItem(Style, "Style");
                 }
                 {
                     sb.AppendItem(INAM, "INAM");
@@ -725,9 +713,9 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.TMVT = this.TMVT.Combine(rhs.TMVT);
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
-                ret.SNAM = this.SNAM.Combine(rhs.SNAM);
+                ret.ShowBodyText = this.ShowBodyText.Combine(rhs.ShowBodyText);
+                ret.MenuButtonStyle = this.MenuButtonStyle.Combine(rhs.MenuButtonStyle);
+                ret.Style = this.Style.Combine(rhs.Style);
                 ret.INAM = this.INAM.Combine(rhs.INAM);
                 ret.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyTexts?.Overall, rhs.BodyTexts?.Overall), Noggog.ExceptionExt.Combine(this.BodyTexts?.Specific, rhs.BodyTexts?.Specific));
                 ret.MenuItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuItems?.Overall, rhs.MenuItems?.Overall), Noggog.ExceptionExt.Combine(this.MenuItems?.Specific, rhs.MenuItems?.Specific));
@@ -755,9 +743,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public VirtualMachineAdapterIndexed.TranslationMask? VirtualMachineAdapter;
             public bool Name;
-            public bool TMVT;
-            public bool DNAM;
-            public bool SNAM;
+            public bool ShowBodyText;
+            public bool MenuButtonStyle;
+            public bool Style;
             public bool INAM;
             public TerminalMenuBodyText.TranslationMask? BodyTexts;
             public TerminalMenuItem.TranslationMask? MenuItems;
@@ -770,9 +758,9 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.TMVT = defaultOn;
-                this.DNAM = defaultOn;
-                this.SNAM = defaultOn;
+                this.ShowBodyText = defaultOn;
+                this.MenuButtonStyle = defaultOn;
+                this.Style = defaultOn;
                 this.INAM = defaultOn;
             }
 
@@ -783,9 +771,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((TMVT, null));
-                ret.Add((DNAM, null));
-                ret.Add((SNAM, null));
+                ret.Add((ShowBodyText, null));
+                ret.Add((MenuButtonStyle, null));
+                ret.Add((Style, null));
                 ret.Add((INAM, null));
                 ret.Add((BodyTexts == null ? DefaultOn : !BodyTexts.GetCrystal().CopyNothing, BodyTexts?.GetCrystal()));
                 ret.Add((MenuItems == null ? DefaultOn : !MenuItems.GetCrystal().CopyNothing, MenuItems?.GetCrystal()));
@@ -932,6 +920,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ITerminalMenu :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<ITerminalMenuInternal>,
         INamed,
         INamedRequired,
@@ -940,14 +929,17 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new VirtualMachineAdapterIndexed? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new MemorySlice<Byte>? TMVT { get; set; }
-        new MemorySlice<Byte>? DNAM { get; set; }
-        new MemorySlice<Byte>? SNAM { get; set; }
+        new TerminalMenu.ShowBodyTextOption? ShowBodyText { get; set; }
+        new TerminalMenu.MenuButtonStyleOption? MenuButtonStyle { get; set; }
+        new TerminalMenu.StyleOption? Style { get; set; }
         new TranslatedString? INAM { get; set; }
         new ExtendedList<TerminalMenuBodyText>? BodyTexts { get; set; }
         new ExtendedList<TerminalMenuItem>? MenuItems { get; set; }
@@ -986,9 +978,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        ReadOnlyMemorySlice<Byte>? TMVT { get; }
-        ReadOnlyMemorySlice<Byte>? DNAM { get; }
-        ReadOnlyMemorySlice<Byte>? SNAM { get; }
+        TerminalMenu.ShowBodyTextOption? ShowBodyText { get; }
+        TerminalMenu.MenuButtonStyleOption? MenuButtonStyle { get; }
+        TerminalMenu.StyleOption? Style { get; }
         ITranslatedStringGetter? INAM { get; }
         IReadOnlyList<ITerminalMenuBodyTextGetter>? BodyTexts { get; }
         IReadOnlyList<ITerminalMenuItemGetter>? MenuItems { get; }
@@ -1170,9 +1162,9 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
         Name = 8,
-        TMVT = 9,
-        DNAM = 10,
-        SNAM = 11,
+        ShowBodyText = 9,
+        MenuButtonStyle = 10,
+        Style = 11,
         INAM = 12,
         BodyTexts = 13,
         MenuItems = 14,
@@ -1241,8 +1233,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ISET,
                 RecordTypes.ITID,
                 RecordTypes.XLOC,
+                RecordTypes.UNAM,
                 RecordTypes.TNAM,
-                RecordTypes.UNAM);
+                RecordTypes.BNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1289,9 +1282,9 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.TMVT = default;
-            item.DNAM = default;
-            item.SNAM = default;
+            item.ShowBodyText = default;
+            item.MenuButtonStyle = default;
+            item.Style = default;
             item.INAM = default;
             item.BodyTexts = null;
             item.MenuItems = null;
@@ -1388,9 +1381,9 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.TMVT = MemorySliceExt.SequenceEqual(item.TMVT, rhs.TMVT);
-            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
-            ret.SNAM = MemorySliceExt.SequenceEqual(item.SNAM, rhs.SNAM);
+            ret.ShowBodyText = item.ShowBodyText == rhs.ShowBodyText;
+            ret.MenuButtonStyle = item.MenuButtonStyle == rhs.MenuButtonStyle;
+            ret.Style = item.Style == rhs.Style;
             ret.INAM = object.Equals(item.INAM, rhs.INAM);
             ret.BodyTexts = item.BodyTexts.CollectionEqualsHelper(
                 rhs.BodyTexts,
@@ -1459,20 +1452,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.TMVT ?? true)
-                && item.TMVT is {} TMVTItem)
+            if ((printMask?.ShowBodyText ?? true)
+                && item.ShowBodyText is {} ShowBodyTextItem)
             {
-                sb.AppendLine($"TMVT => {SpanExt.ToHexString(TMVTItem)}");
+                sb.AppendItem(ShowBodyTextItem, "ShowBodyText");
             }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
+            if ((printMask?.MenuButtonStyle ?? true)
+                && item.MenuButtonStyle is {} MenuButtonStyleItem)
             {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendItem(MenuButtonStyleItem, "MenuButtonStyle");
             }
-            if ((printMask?.SNAM ?? true)
-                && item.SNAM is {} SNAMItem)
+            if ((printMask?.Style ?? true)
+                && item.Style is {} StyleItem)
             {
-                sb.AppendLine($"SNAM => {SpanExt.ToHexString(SNAMItem)}");
+                sb.AppendItem(StyleItem, "Style");
             }
             if ((printMask?.INAM ?? true)
                 && item.INAM is {} INAMItem)
@@ -1571,17 +1564,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.ShowBodyText) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.TMVT, rhs.TMVT)) return false;
+                if (lhs.ShowBodyText != rhs.ShowBodyText) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.MenuButtonStyle) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
+                if (lhs.MenuButtonStyle != rhs.MenuButtonStyle) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.Style) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.SNAM, rhs.SNAM)) return false;
+                if (lhs.Style != rhs.Style) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
             {
@@ -1631,17 +1624,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
-            if (item.TMVT is {} TMVTItem)
+            if (item.ShowBodyText is {} ShowBodyTextitem)
             {
-                hash.Add(TMVTItem);
+                hash.Add(ShowBodyTextitem);
             }
-            if (item.DNAM is {} DNAMItem)
+            if (item.MenuButtonStyle is {} MenuButtonStyleitem)
             {
-                hash.Add(DNAMItem);
+                hash.Add(MenuButtonStyleitem);
             }
-            if (item.SNAM is {} SNAMItem)
+            if (item.Style is {} Styleitem)
             {
-                hash.Add(SNAMItem);
+                hash.Add(Styleitem);
             }
             if (item.INAM is {} INAMitem)
             {
@@ -1694,7 +1687,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.MenuItems is {} MenuItemsItem)
             {
-                foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in MenuItemsItem.WhereCastable<ITerminalMenuItemGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1803,38 +1797,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.ShowBodyText) ?? true))
             {
-                if(rhs.TMVT is {} TMVTrhs)
-                {
-                    item.TMVT = TMVTrhs.ToArray();
-                }
-                else
-                {
-                    item.TMVT = default;
-                }
+                item.ShowBodyText = rhs.ShowBodyText;
             }
-            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.MenuButtonStyle) ?? true))
             {
-                if(rhs.DNAM is {} DNAMrhs)
-                {
-                    item.DNAM = DNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.DNAM = default;
-                }
+                item.MenuButtonStyle = rhs.MenuButtonStyle;
             }
-            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.Style) ?? true))
             {
-                if(rhs.SNAM is {} SNAMrhs)
-                {
-                    item.SNAM = SNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.SNAM = default;
-                }
+                item.Style = rhs.Style;
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
             {
@@ -1904,8 +1877,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITerminalMenu item,
+            ITerminalMenuGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -2074,17 +2059,20 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.TMVT,
+            EnumBinaryTranslation<TerminalMenu.ShowBodyTextOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.ShowBodyText,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.TMVT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DNAM,
+            EnumBinaryTranslation<TerminalMenu.MenuButtonStyleOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.MenuButtonStyle,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SNAM,
+            EnumBinaryTranslation<TerminalMenu.StyleOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Style,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2222,20 +2210,26 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TMVT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TMVT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)TerminalMenu_FieldIndex.TMVT;
+                    item.ShowBodyText = EnumBinaryTranslation<TerminalMenu.ShowBodyTextOption, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)TerminalMenu_FieldIndex.ShowBodyText;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)TerminalMenu_FieldIndex.DNAM;
+                    item.MenuButtonStyle = EnumBinaryTranslation<TerminalMenu.MenuButtonStyleOption, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)TerminalMenu_FieldIndex.MenuButtonStyle;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)TerminalMenu_FieldIndex.SNAM;
+                    item.Style = EnumBinaryTranslation<TerminalMenu.StyleOption, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)TerminalMenu_FieldIndex.Style;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -2354,17 +2348,17 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        #region TMVT
-        private int? _TMVTLocation;
-        public ReadOnlyMemorySlice<Byte>? TMVT => _TMVTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TMVTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ShowBodyText
+        private int? _ShowBodyTextLocation;
+        public TerminalMenu.ShowBodyTextOption? ShowBodyText => _ShowBodyTextLocation.HasValue ? (TerminalMenu.ShowBodyTextOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShowBodyTextLocation!.Value, _package.MetaData.Constants)) : default(TerminalMenu.ShowBodyTextOption?);
         #endregion
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region MenuButtonStyle
+        private int? _MenuButtonStyleLocation;
+        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle => _MenuButtonStyleLocation.HasValue ? (TerminalMenu.MenuButtonStyleOption)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuButtonStyleLocation!.Value, _package.MetaData.Constants)[0] : default(TerminalMenu.MenuButtonStyleOption?);
         #endregion
-        #region SNAM
-        private int? _SNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? SNAM => _SNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Style
+        private int? _StyleLocation;
+        public TerminalMenu.StyleOption? Style => _StyleLocation.HasValue ? (TerminalMenu.StyleOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StyleLocation!.Value, _package.MetaData.Constants)) : default(TerminalMenu.StyleOption?);
         #endregion
         #region INAM
         private int? _INAMLocation;
@@ -2458,18 +2452,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TMVT:
                 {
-                    _TMVTLocation = (stream.Position - offset);
-                    return (int)TerminalMenu_FieldIndex.TMVT;
+                    _ShowBodyTextLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.ShowBodyText;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)TerminalMenu_FieldIndex.DNAM;
+                    _MenuButtonStyleLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.MenuButtonStyle;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SNAMLocation = (stream.Position - offset);
-                    return (int)TerminalMenu_FieldIndex.SNAM;
+                    _StyleLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.Style;
                 }
                 case RecordTypeInts.INAM:
                 {

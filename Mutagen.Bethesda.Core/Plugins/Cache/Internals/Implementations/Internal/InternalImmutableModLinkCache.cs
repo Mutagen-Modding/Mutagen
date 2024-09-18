@@ -274,14 +274,16 @@ internal sealed class InternalImmutableModLinkCache
 
     public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolve(formKey, types, out var commonRec, out matchedType!, target)) return commonRec!;
-        throw new MissingRecordException(formKey, types.ToArray());
+        var typesArr = types.ToArray();
+        if (TryResolve(formKey, typesArr, out var commonRec, out matchedType!, target)) return commonRec!;
+        throw new MissingRecordException(formKey, typesArr);
     }
 
     public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType)
     {
-        if (TryResolve(editorId, types, out var commonRec, out matchedType!)) return commonRec!;
-        throw new MissingRecordException(editorId, types.ToArray());
+        var typesArr = types.ToArray();
+        if (TryResolve(editorId, typesArr, out var commonRec, out matchedType!)) return commonRec!;
+        throw new MissingRecordException(editorId, typesArr);
     }
 
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)

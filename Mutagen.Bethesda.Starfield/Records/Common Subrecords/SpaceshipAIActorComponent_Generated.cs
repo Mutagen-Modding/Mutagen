@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SpaceshipAIActor.SetTo(rhs.SpaceshipAIActor.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpaceshipAIActorComponent item,
+            ISpaceshipAIActorComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

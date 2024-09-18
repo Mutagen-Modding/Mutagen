@@ -41,7 +41,7 @@
             <Interface>IItem</Interface>
           </FormLink>
           <Int16 name="Count" />
-          <Percent name="ChanceNone" integerType="Byte" />
+          <Percent name="ChanceNone" integerType="ByteHundred" />
           <Int8 name="Unused2" />
         </Fields>
       </Data>

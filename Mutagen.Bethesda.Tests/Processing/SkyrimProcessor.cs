@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
@@ -14,7 +15,6 @@ namespace Mutagen.Bethesda.Tests;
 
 public class SkyrimProcessor : Processor
 {
-    public override GameRelease GameRelease { get; }
     public override bool StrictStrings => true;
     
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
@@ -25,10 +25,9 @@ public class SkyrimProcessor : Processor
         };
     }
 
-    public SkyrimProcessor(GameRelease release, bool multithread)
-        : base(multithread)
+    public SkyrimProcessor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+        : base(multithread, release, masterFlagLookup)
     {
-        GameRelease = release;
     }
 
     protected override void AddDynamicProcessorInstructions()

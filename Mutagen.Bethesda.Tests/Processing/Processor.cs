@@ -22,7 +22,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public abstract class Processor
 {
-    public abstract GameRelease GameRelease { get; }
+    public GameRelease GameRelease { get; }
+    public IReadOnlyCache<IModMasterStyledGetter, ModKey> MasterFlagLookup { get; }
     public readonly GameConstants Meta;
     protected RecordLocatorResults _alignedFileLocs;
     public BinaryFileProcessor.ConfigConstructor Instructions = new();
@@ -50,8 +51,10 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread)
+    public Processor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
     {
+        GameRelease = release;
+        MasterFlagLookup = masterFlagLookup;
         Meta = GameConstants.Get(GameRelease);
         DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
@@ -69,7 +72,7 @@ public abstract class Processor
         Bundle = new ParsingMeta(GameRelease, ModKey, Masters);
         _numMasters = checked((byte)Masters.Raw.Masters.Count);
         var modPath = new ModPath(ModKey, previousPath);
-        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, loadOrder: null));
+        _alignedFileLocs = RecordLocator.GetLocations(new MutagenBinaryReadStream(modPath, GameRelease, masterFlagLookup: MasterFlagLookup));
         using (var stream = new MutagenBinaryReadStream(File.OpenRead(previousPath), Bundle))
         {
             lock (_lengthTracker)
@@ -756,12 +759,19 @@ public abstract class Processor
         }
     }
 
-    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, int loc, byte length, byte importantBytes)
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length, byte importantBytes)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessBool(pin.Content.Slice(loc, length), longLoc, importantBytes);
+        loc += length;
         return true;
+    }
+
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, int loc, byte length, byte importantBytes)
+    {
+        int loc2 = loc;
+        return ProcessBool(pin, offsetLoc, ref loc2, length, importantBytes);
     }
 
     public void RemoveEndingBytes(SubrecordPinFrame subRec, long offsetLoc, int numBytes)

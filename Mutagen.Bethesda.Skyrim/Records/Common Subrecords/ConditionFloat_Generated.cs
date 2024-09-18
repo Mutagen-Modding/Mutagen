@@ -889,8 +889,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ComparisonValue = rhs.ComparisonValue;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IConditionFloat item,
+            IConditionFloatGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             ICondition item,

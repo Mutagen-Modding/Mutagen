@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Global.SetTo(rhs.Global.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IClimateWeatherSettings item,
+            IClimateWeatherSettingsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ClimateWeatherSettings DeepCopy(

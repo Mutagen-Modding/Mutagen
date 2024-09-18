@@ -936,8 +936,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unused = rhs.Unused;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetVATSValueTargetDistanceConditionData item,
+            IGetVATSValueTargetDistanceConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAGetVATSValueConditionData item,

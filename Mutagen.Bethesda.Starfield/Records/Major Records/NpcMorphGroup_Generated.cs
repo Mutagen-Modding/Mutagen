@@ -895,8 +895,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.BlendIntensity = rhs.BlendIntensity;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcMorphGroup item,
+            INpcMorphGroupGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcMorphGroup DeepCopy(

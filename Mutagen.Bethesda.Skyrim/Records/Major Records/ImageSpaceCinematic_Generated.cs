@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Contrast = rhs.Contrast;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImageSpaceCinematic item,
+            IImageSpaceCinematicGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImageSpaceCinematic DeepCopy(

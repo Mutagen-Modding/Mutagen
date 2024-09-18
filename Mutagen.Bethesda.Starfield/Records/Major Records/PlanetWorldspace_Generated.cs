@@ -951,8 +951,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Planet.SetTo(rhs.Planet.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetWorldspace item,
+            IPlanetWorldspaceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlanetWorldspace DeepCopy(

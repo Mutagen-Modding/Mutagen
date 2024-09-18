@@ -1355,8 +1355,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Color = rhs.Color;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDecal item,
+            IDecalGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Decal DeepCopy(

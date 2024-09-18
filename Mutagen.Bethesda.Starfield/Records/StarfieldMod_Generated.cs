@@ -234,6 +234,7 @@ namespace Mutagen.Bethesda.Starfield
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
+            _PERS_Object = new StarfieldGroup<PERS>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1464,6 +1465,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IFacialExpressionGetter> IStarfieldModGetter.FacialExpressions => _FacialExpressions_Object;
         #endregion
+        #region PERS
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<PERS> _PERS_Object;
+        public StarfieldGroup<PERS> PERS => _PERS_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IPERSGetter> IStarfieldModGetter.PERS => _PERS_Object;
+        #endregion
 
         #region To String
 
@@ -1678,6 +1686,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1855,7 +1864,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem TimeOfDays,
                 TItem ActorValueModulations,
                 TItem Challenges,
-                TItem FacialExpressions)
+                TItem FacialExpressions,
+                TItem PERS)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -2032,6 +2042,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Challenges, new StarfieldGroup.Mask<TItem>(Challenges));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FacialExpressions, new StarfieldGroup.Mask<TItem>(FacialExpressions));
+                this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PERS, new StarfieldGroup.Mask<TItem>(PERS));
             }
 
             #pragma warning disable CS8618
@@ -2218,6 +2229,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Challenges { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FacialExpressions { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PERS { get; set; }
             #endregion
 
             #region Equals
@@ -2405,6 +2417,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
                 if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 if (!object.Equals(this.FacialExpressions, rhs.FacialExpressions)) return false;
+                if (!object.Equals(this.PERS, rhs.PERS)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -2585,6 +2598,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ActorValueModulations);
                 hash.Add(this.Challenges);
                 hash.Add(this.FacialExpressions);
+                hash.Add(this.PERS);
                 return hash.ToHashCode();
             }
 
@@ -3468,6 +3482,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.FacialExpressions.Overall)) return false;
                     if (this.FacialExpressions.Specific != null && !this.FacialExpressions.Specific.All(eval)) return false;
                 }
+                if (PERS != null)
+                {
+                    if (!eval(this.PERS.Overall)) return false;
+                    if (this.PERS.Specific != null && !this.PERS.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -4350,6 +4369,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.FacialExpressions.Overall)) return true;
                     if (this.FacialExpressions.Specific != null && this.FacialExpressions.Specific.Any(eval)) return true;
                 }
+                if (PERS != null)
+                {
+                    if (eval(this.PERS.Overall)) return true;
+                    if (this.PERS.Specific != null && this.PERS.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -4539,6 +4563,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
                 obj.Challenges = this.Challenges == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
                 obj.FacialExpressions = this.FacialExpressions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FacialExpressions.Overall), this.FacialExpressions.Specific?.Translate(eval));
+                obj.PERS = this.PERS == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PERS.Overall), this.PERS.Specific?.Translate(eval));
             }
             #endregion
 
@@ -5257,6 +5282,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         FacialExpressions?.Print(sb);
                     }
+                    if (printMask?.PERS?.Overall ?? true)
+                    {
+                        PERS?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -5456,6 +5485,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>? FacialExpressions;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>? PERS;
             #endregion
 
             #region IErrorMask
@@ -5814,6 +5844,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Challenges;
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         return FacialExpressions;
+                    case StarfieldMod_FieldIndex.PERS:
+                        return PERS;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -6348,6 +6380,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         this.FacialExpressions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.PERS:
+                        this.PERS = new MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -6884,6 +6919,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.FacialExpressions:
                         this.FacialExpressions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.PERS:
+                        this.PERS = (MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -7067,6 +7105,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ActorValueModulations != null) return true;
                 if (Challenges != null) return true;
                 if (FacialExpressions != null) return true;
+                if (PERS != null) return true;
                 return false;
             }
             #endregion
@@ -7267,6 +7306,7 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulations?.Print(sb);
                 Challenges?.Print(sb);
                 FacialExpressions?.Print(sb);
+                PERS?.Print(sb);
             }
             #endregion
 
@@ -7450,6 +7490,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
                 ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 ret.FacialExpressions = this.FacialExpressions.Combine(rhs.FacialExpressions, (l, r) => l.Combine(r));
+                ret.PERS = this.PERS.Combine(rhs.PERS, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -7648,6 +7689,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
             public StarfieldGroup.TranslationMask<Challenge.TranslationMask>? Challenges;
             public StarfieldGroup.TranslationMask<FacialExpression.TranslationMask>? FacialExpressions;
+            public StarfieldGroup.TranslationMask<PERS.TranslationMask>? PERS;
             #endregion
 
             #region Ctors
@@ -7847,6 +7889,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
                 ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
                 ret.Add((FacialExpressions != null ? FacialExpressions.OnOverall : DefaultOn, FacialExpressions?.GetCrystal()));
+                ret.Add((PERS != null ? PERS.OnOverall : DefaultOn, PERS?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -7866,6 +7909,7 @@ namespace Mutagen.Bethesda.Starfield
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => StarfieldModMixIn.GetEqualsMask(this, (IStarfieldModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -8075,6 +8119,7 @@ namespace Mutagen.Bethesda.Starfield
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
+            _PERS_Object = new StarfieldGroup<PERS>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -8780,195 +8825,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FacialExpressions.RecordCache.Set(rhsMod.FacialExpressions.RecordCache.Items);
             }
+            if (mask?.PERS ?? true)
+            {
+                this.PERS.RecordCache.Set(rhsMod.PERS.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
         {
-            this.ModHeader.Stats.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
-
-        public uint GetRecordCount()
-        {
-            uint count = (uint)this.EnumerateMajorRecords().Count();
-            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FFKW.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Transforms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DamageTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AffinityEvents.RecordCache.Count > 0 ? 1 : default(uint);
-            count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundEchoMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ProjectedDecals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Spells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CurveTables.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Curve3Ds.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PackIns.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledPackIns.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BiomeMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Notes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Terminals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GenericBaseFormTemplates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GenericBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += WeatherSettings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Cells.Records.Count > 0 ? 1 : default(uint);
-            count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MeleeAimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Zooms.RecordCache.Count > 0 ? 1 : default(uint);
-            count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Biomes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += NavigationMeshObstacleCoverManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SnapTemplateNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SnapTemplates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GroundCovers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MorphableObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Traversals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ResourceGenerationData.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Atmospheres.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledSpaceCells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SpeechChallenges.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AimAssistPoses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SurfaceBlocks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SurfacePatternConfigs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PlanetContentManagerTrees.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BoneModifiers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SnapTemplateBehaviors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PlanetContentManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PlanetContentManagerContentNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Stars.RecordCache.Count > 0 ? 1 : default(uint);
-            count += WWiseEventDatas.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ResearchProjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AimOpticalSightMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AmbienceSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += WeaponBarrelModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LayeredMaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ForceDatas.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EffectSequences.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SecondaryDamageLists.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialPaths.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Clouds.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FogVolumes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += WWiseKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ParticleSystemDefineCollisions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SunPresets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += PhotoModeFeatures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GameplayOptions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += GameplayOptionsGroups.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TimeOfDays.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Challenges.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FacialExpressions.RecordCache.Count > 0 ? 1 : default(uint);
-            GetCustomRecordCount((customCount) => count += customCount);
-            return count;
-        }
-
-        partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StarfieldModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StarfieldModSetterCommon.Instance.RemapLinks(this, mapping);
@@ -9411,6 +9277,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
         new StarfieldGroup<Challenge> Challenges { get; }
         new StarfieldGroup<FacialExpression> FacialExpressions { get; }
+        new StarfieldGroup<PERS> PERS { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -9605,6 +9472,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
         IStarfieldGroupGetter<IChallengeGetter> Challenges { get; }
         IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions { get; }
+        IStarfieldGroupGetter<IPERSGetter> PERS { get; }
 
         #region Mutagen
         StarfieldRelease StarfieldRelease { get; }
@@ -9787,6 +9655,11 @@ namespace Mutagen.Bethesda.Starfield
             return (IGroup?)((StarfieldModCommon)((IStarfieldModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
+        }
+
+        public static uint GetRecordCount(this IStarfieldModGetter item)
+        {
+            return ((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetRecordCount(item: item);
         }
 
         [DebuggerStepThrough]
@@ -10330,6 +10203,7 @@ namespace Mutagen.Bethesda.Starfield
         ActorValueModulations = 172,
         Challenges = 173,
         FacialExpressions = 174,
+        PERS = 175,
     }
     #endregion
 
@@ -10340,9 +10214,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 175;
+        public const ushort AdditionalFieldCount = 176;
 
-        public const ushort FieldCount = 175;
+        public const ushort FieldCount = 176;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10582,6 +10456,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ActorValueModulations.Clear();
             item.Challenges.Clear();
             item.FacialExpressions.Clear();
+            item.PERS.Clear();
         }
         
         #region Mutagen
@@ -10726,6 +10601,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.TimeOfDays.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
             obj.Challenges.RemapLinks(mapping);
+            obj.PERS.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -10934,6 +10810,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ActorValueModulations.Remove(keys);
             obj.Challenges.Remove(keys);
             obj.FacialExpressions.Remove(keys);
+            obj.PERS.Remove(keys);
         }
         
         public void Remove(
@@ -12385,6 +12262,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    obj.PERS.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -12803,6 +12688,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlanetNodeGetter":
                     Remove(obj, keys, typeof(IPlanetContentManagerBranchNodeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IPlanetContentManagerContentNodeGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IPlanetParentNode":
+                case "IPlanetParentNodeGetter":
+                    Remove(obj, keys, typeof(IPlanetContentManagerBranchNodeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IPlanetContentManagerTreeGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "ISpellRecord":
                 case "ISpellRecordGetter":
@@ -13679,6 +13569,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
             ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
             ret.FacialExpressions = MaskItemExt.Factory(item.FacialExpressions.GetEqualsMask(rhs.FacialExpressions, include), include);
+            ret.PERS = MaskItemExt.Factory(item.PERS.GetEqualsMask(rhs.PERS, include), include);
         }
         
         public string Print(
@@ -14422,6 +14313,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.FacialExpressions?.Overall ?? true)
             {
                 item.FacialExpressions?.Print(sb, "FacialExpressions");
+            }
+            if (printMask?.PERS?.Overall ?? true)
+            {
+                item.PERS?.Print(sb, "PERS");
             }
         }
         
@@ -15832,6 +15727,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isFacialExpressionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.PERS) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PERS, rhs.PERS, out var lhsPERS, out var rhsPERS, out var isPERSEqual))
+                {
+                    if (!object.Equals(lhsPERS, rhsPERS)) return false;
+                }
+                else if (!isPERSEqual) return false;
+            }
             return true;
         }
         
@@ -16013,6 +15916,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ActorValueModulations);
             hash.Add(item.Challenges);
             hash.Add(item.FacialExpressions);
+            hash.Add(item.PERS);
             return hash.ToHashCode();
         }
         
@@ -16900,6 +16804,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IFacialExpression":
                 case "IFacialExpressionInternal":
                     return obj.FacialExpressions;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    return obj.PERS;
                 default:
                     return null;
             }
@@ -16917,7 +16826,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[174];
+            Stream[] outputStreams = new Stream[175];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -17093,6 +17002,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 171, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Challenges, 172, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 173, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PERS, 174, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -17134,6 +17044,190 @@ namespace Mutagen.Bethesda.Starfield
             PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
+        
+        public uint GetRecordCount(IStarfieldModGetter item)
+        {
+            uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FFKW.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Transforms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DamageTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AffinityEvents.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundEchoMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ProjectedDecals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CurveTables.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Curve3Ds.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Doors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Lights.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PackIns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Florae.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledPackIns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keys.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BiomeMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Notes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hazards.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Terminals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GenericBaseFormTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GenericBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.WeatherSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Cells.Records.Count > 0 ? 1 : default(uint);
+            count += item.Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Explosions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Locations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Outfits.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Colors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AimModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MeleeAimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Layers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Zooms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Resources.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Biomes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshObstacleCoverManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SnapTemplateNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SnapTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GroundCovers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MorphableObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Traversals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ResourceGenerationData.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Atmospheres.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledSpaceCells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SpeechChallenges.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AimAssistPoses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SurfaceBlocks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SurfacePatternConfigs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PlanetContentManagerTrees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BoneModifiers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SnapTemplateBehaviors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Planets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PlanetContentManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PlanetContentManagerContentNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Stars.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.WWiseEventDatas.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ResearchProjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AimOpticalSightMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AmbienceSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.WeaponBarrelModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LayeredMaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ForceDatas.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectSequences.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SecondaryDamageLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Clouds.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FogVolumes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.WWiseKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ParticleSystemDefineCollisions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SunPresets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PhotoModeFeatures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GameplayOptions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GameplayOptionsGroups.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TimeOfDays.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Challenges.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FacialExpressions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PERS.RecordCache.Count > 0 ? 1 : default(uint);
+            GetCustomRecordCount(item, (customCount) => count += customCount);
+            return count;
+        }
+        
+        partial void GetCustomRecordCount(IStarfieldModGetter item, Action<uint> setter);
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStarfieldModGetter obj)
         {
@@ -17728,6 +17822,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.PERS.EnumerateFormLinks())
+            {
+                yield return item;
             }
             yield break;
         }
@@ -18427,6 +18525,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.FacialExpressions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PERS.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -20018,6 +20120,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IFacialExpression":
                 case "IFacialExpressionInternal":
                     foreach (var item in obj.FacialExpressions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    foreach (var item in obj.PERS.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -21734,6 +21845,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.FacialExpressions,
                 groupGetter: (m) => m.FacialExpressions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, PERS, IPERSGetter>(
+                srcGroup: obj.PERS,
+                type: typeof(IPERSGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.PERS,
+                groupGetter: (m) => m.PERS))
             {
                 yield return item;
             }
@@ -24190,6 +24310,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "PERS":
+                case "IPERSGetter":
+                case "IPERS":
+                case "IPERSInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, PERS, IPERSGetter>(
+                        srcGroup: obj.PERS,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.PERS,
+                        groupGetter: (m) => m.PERS))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -24450,511 +24584,508 @@ namespace Mutagen.Bethesda.Starfield
                     yield return additional;
                 }
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
             {
-                if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
-                {
-                    foreach (var item in KeywordslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
-                {
-                    foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
-                {
-                    foreach (var item in GlobalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
-                {
-                    foreach (var item in FactionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
-                {
-                    foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in KeywordslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
+            {
+                foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
-                {
-                    foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
-                {
-                    foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
-                {
-                    foreach (var item in ArmorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
-                {
-                    foreach (var item in BookslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
-                {
-                    foreach (var item in ContainerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
-                {
-                    foreach (var item in DoorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Lights is IAssetLinkContainerGetter LightslinkCont)
-                {
-                    foreach (var item in LightslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
-                {
-                    foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Statics is IAssetLinkContainerGetter StaticslinkCont)
-                {
-                    foreach (var item in StaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
-                {
-                    foreach (var item in StaticCollectionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PackIns is IAssetLinkContainerGetter PackInslinkCont)
-                {
-                    foreach (var item in PackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.MoveableStatics is IAssetLinkContainerGetter MoveableStaticslinkCont)
-                {
-                    foreach (var item in MoveableStaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Grasses is IAssetLinkContainerGetter GrasseslinkCont)
-                {
-                    foreach (var item in GrasseslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Florae is IAssetLinkContainerGetter FloraelinkCont)
-                {
-                    foreach (var item in FloraelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
-                {
-                    foreach (var item in FurniturelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
-                {
-                    foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
+            {
+                foreach (var item in GlobalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Npcs is IAssetLinkContainerGetter NpcslinkCont)
-                {
-                    foreach (var item in NpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledNpcs is IAssetLinkContainerGetter LeveledNpcslinkCont)
-                {
-                    foreach (var item in LeveledNpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledPackIns is IAssetLinkContainerGetter LeveledPackInslinkCont)
-                {
-                    foreach (var item in LeveledPackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
+            {
+                foreach (var item in FactionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
-                {
-                    foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
+            {
+                foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
-                {
-                    foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Notes is IAssetLinkContainerGetter NoteslinkCont)
-                {
-                    foreach (var item in NoteslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
-                {
-                    foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Hazards is IAssetLinkContainerGetter HazardslinkCont)
-                {
-                    foreach (var item in HazardslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.BendableSplines is IAssetLinkContainerGetter BendableSplineslinkCont)
-                {
-                    foreach (var item in BendableSplineslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Terminals is IAssetLinkContainerGetter TerminalslinkCont)
-                {
-                    foreach (var item in TerminalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
-                {
-                    foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.GenericBaseForms is IAssetLinkContainerGetter GenericBaseFormslinkCont)
-                {
-                    foreach (var item in GenericBaseFormslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.LeveledBaseForms.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
+            {
+                foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
+            {
+                foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
-                {
-                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
-                {
-                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
-                {
-                    foreach (var item in QuestslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
-                {
-                    foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
-                {
-                    foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
-                {
-                    foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
+            {
+                foreach (var item in ArmorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
-                {
-                    foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
+            {
+                foreach (var item in BookslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
+            {
+                foreach (var item in ContainerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
-                {
-                    foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
+            {
+                foreach (var item in DoorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Lights is IAssetLinkContainerGetter LightslinkCont)
+            {
+                foreach (var item in LightslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
-                {
-                    foreach (var item in ImpactslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
-                {
-                    foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
-                {
-                    foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
-                {
-                    foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Layers is IAssetLinkContainerGetter LayerslinkCont)
-                {
-                    foreach (var item in LayerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
-                {
-                    foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.ObjectModifications is IAssetLinkContainerGetter ObjectModificationslinkCont)
-                {
-                    foreach (var item in ObjectModificationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplateNodes is IAssetLinkContainerGetter SnapTemplateNodeslinkCont)
-                {
-                    foreach (var item in SnapTemplateNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplates is IAssetLinkContainerGetter SnapTemplateslinkCont)
-                {
-                    foreach (var item in SnapTemplateslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.GroundCovers is IAssetLinkContainerGetter GroundCoverslinkCont)
-                {
-                    foreach (var item in GroundCoverslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
+            {
+                foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
-                {
-                    foreach (var item in SurfaceBlockslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SurfacePatterns is IAssetLinkContainerGetter SurfacePatternslinkCont)
-                {
-                    foreach (var item in SurfacePatternslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SurfaceTrees is IAssetLinkContainerGetter SurfaceTreeslinkCont)
-                {
-                    foreach (var item in SurfaceTreeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.BoneModifiers is IAssetLinkContainerGetter BoneModifierslinkCont)
-                {
-                    foreach (var item in BoneModifierslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.SnapTemplateBehaviors is IAssetLinkContainerGetter SnapTemplateBehaviorslinkCont)
-                {
-                    foreach (var item in SnapTemplateBehaviorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
-                {
-                    foreach (var item in PlanetslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PlanetContentManagerBranchNodes is IAssetLinkContainerGetter PlanetContentManagerBranchNodeslinkCont)
-                {
-                    foreach (var item in PlanetContentManagerBranchNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.PlanetContentManagerContentNodes is IAssetLinkContainerGetter PlanetContentManagerContentNodeslinkCont)
-                {
-                    foreach (var item in PlanetContentManagerContentNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Stars is IAssetLinkContainerGetter StarslinkCont)
-                {
-                    foreach (var item in StarslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.LayeredMaterialSwaps is IAssetLinkContainerGetter LayeredMaterialSwapslinkCont)
-                {
-                    foreach (var item in LayeredMaterialSwapslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            }
+            if (obj.Statics is IAssetLinkContainerGetter StaticslinkCont)
+            {
+                foreach (var item in StaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
+            }
+            if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
+            {
+                foreach (var item in StaticCollectionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in TimeOfDayslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
+            }
+            if (obj.PackIns is IAssetLinkContainerGetter PackInslinkCont)
+            {
+                foreach (var item in PackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
-                if (obj.Challenges is IAssetLinkContainerGetter ChallengeslinkCont)
+            }
+            if (obj.MoveableStatics is IAssetLinkContainerGetter MoveableStaticslinkCont)
+            {
+                foreach (var item in MoveableStaticslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ChallengeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is IAssetLinkContainerGetter GrasseslinkCont)
+            {
+                foreach (var item in GrasseslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Florae is IAssetLinkContainerGetter FloraelinkCont)
+            {
+                foreach (var item in FloraelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
+            {
+                foreach (var item in FurniturelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
+            {
+                foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Npcs is IAssetLinkContainerGetter NpcslinkCont)
+            {
+                foreach (var item in NpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledNpcs is IAssetLinkContainerGetter LeveledNpcslinkCont)
+            {
+                foreach (var item in LeveledNpcslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledPackIns is IAssetLinkContainerGetter LeveledPackInslinkCont)
+            {
+                foreach (var item in LeveledPackInslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
+            {
+                foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.BiomeMarkers is IAssetLinkContainerGetter BiomeMarkerslinkCont)
+            {
+                foreach (var item in BiomeMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Notes is IAssetLinkContainerGetter NoteslinkCont)
+            {
+                foreach (var item in NoteslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
+            {
+                foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Hazards is IAssetLinkContainerGetter HazardslinkCont)
+            {
+                foreach (var item in HazardslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BendableSplines is IAssetLinkContainerGetter BendableSplineslinkCont)
+            {
+                foreach (var item in BendableSplineslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Terminals is IAssetLinkContainerGetter TerminalslinkCont)
+            {
+                foreach (var item in TerminalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
+            {
+                foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.GenericBaseForms is IAssetLinkContainerGetter GenericBaseFormslinkCont)
+            {
+                foreach (var item in GenericBaseFormslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.LeveledBaseForms.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
+            {
+                foreach (var item in QuestslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
+            {
+                foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
+            {
+                foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
+            {
+                foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
+            {
+                foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
+            {
+                foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
+            {
+                foreach (var item in ImpactslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
+            {
+                foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
+            {
+                foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
+            {
+                foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Layers is IAssetLinkContainerGetter LayerslinkCont)
+            {
+                foreach (var item in LayerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
+            {
+                foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ObjectModifications is IAssetLinkContainerGetter ObjectModificationslinkCont)
+            {
+                foreach (var item in ObjectModificationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplateNodes is IAssetLinkContainerGetter SnapTemplateNodeslinkCont)
+            {
+                foreach (var item in SnapTemplateNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplates is IAssetLinkContainerGetter SnapTemplateslinkCont)
+            {
+                foreach (var item in SnapTemplateslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.GroundCovers is IAssetLinkContainerGetter GroundCoverslinkCont)
+            {
+                foreach (var item in GroundCoverslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.MorphableObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.SurfaceBlocks is IAssetLinkContainerGetter SurfaceBlockslinkCont)
+            {
+                foreach (var item in SurfaceBlockslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SurfacePatterns is IAssetLinkContainerGetter SurfacePatternslinkCont)
+            {
+                foreach (var item in SurfacePatternslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SurfaceTrees is IAssetLinkContainerGetter SurfaceTreeslinkCont)
+            {
+                foreach (var item in SurfaceTreeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BoneModifiers is IAssetLinkContainerGetter BoneModifierslinkCont)
+            {
+                foreach (var item in BoneModifierslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SnapTemplateBehaviors is IAssetLinkContainerGetter SnapTemplateBehaviorslinkCont)
+            {
+                foreach (var item in SnapTemplateBehaviorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
+            {
+                foreach (var item in PlanetslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PlanetContentManagerBranchNodes is IAssetLinkContainerGetter PlanetContentManagerBranchNodeslinkCont)
+            {
+                foreach (var item in PlanetContentManagerBranchNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PlanetContentManagerContentNodes is IAssetLinkContainerGetter PlanetContentManagerContentNodeslinkCont)
+            {
+                foreach (var item in PlanetContentManagerContentNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Stars is IAssetLinkContainerGetter StarslinkCont)
+            {
+                foreach (var item in StarslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LayeredMaterialSwaps is IAssetLinkContainerGetter LayeredMaterialSwapslinkCont)
+            {
+                foreach (var item in LayeredMaterialSwapslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
+            {
+                foreach (var item in TimeOfDayslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
+            {
+                foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Challenges is IAssetLinkContainerGetter ChallengeslinkCont)
+            {
+                foreach (var item in ChallengeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -28475,8 +28606,40 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.PERS) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.PERS);
+                try
+                {
+                    item.PERS.DeepCopyIn(
+                        rhs: rhs.PERS,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.PERS));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStarfieldMod item,
+            IStarfieldModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public StarfieldMod DeepCopy(
@@ -28739,6 +28902,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ActorValueModulations;
         public bool Challenges;
         public bool FacialExpressions;
+        public bool PERS;
         public GroupMask()
         {
         }
@@ -28918,6 +29082,7 @@ namespace Mutagen.Bethesda.Starfield
             ActorValueModulations = defaultValue;
             Challenges = defaultValue;
             FacialExpressions = defaultValue;
+            PERS = defaultValue;
         }
     }
 
@@ -30887,6 +31052,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FacialExpressionsItem).BinaryWriteTranslator).Write<IFacialExpressionGetter>(
                         item: FacialExpressionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.PERS ?? true)
+            {
+                var PERSItem = item.PERS;
+                if (PERSItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PERSItem).BinaryWriteTranslator).Write<IPERSGetter>(
+                        item: PERSItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -33397,6 +33573,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.FacialExpressions;
                 }
+                case RecordTypeInts.PERS:
+                {
+                    if (importMask?.PERS ?? true)
+                    {
+                        item.PERS.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.PERS;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -33525,6 +33715,7 @@ namespace Mutagen.Bethesda.Starfield
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(StarfieldModHeader.HeaderFlag.Localized);
@@ -34431,6 +34622,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _FacialExpressionsLocations;
         private IStarfieldGroupGetter<IFacialExpressionGetter>? _FacialExpressions => _FacialExpressionsLocations != null ? StarfieldGroupBinaryOverlay<IFacialExpressionGetter>.StarfieldGroupFactory(_stream, _FacialExpressionsLocations, _package) : default;
         public IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions => _FacialExpressions ?? new StarfieldGroup<FacialExpression>(this);
+        #endregion
+        #region PERS
+        private List<RangeInt64>? _PERSLocations;
+        private IStarfieldGroupGetter<IPERSGetter>? _PERS => _PERSLocations != null ? StarfieldGroupBinaryOverlay<IPERSGetter>.StarfieldGroupFactory(_stream, _PERSLocations, _package) : default;
+        public IStarfieldGroupGetter<IPERSGetter> PERS => _PERS ?? new StarfieldGroup<PERS>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
@@ -35557,6 +35753,12 @@ namespace Mutagen.Bethesda.Starfield
                     _FacialExpressionsLocations ??= new();
                     _FacialExpressionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.FacialExpressions;
+                }
+                case RecordTypeInts.PERS:
+                {
+                    _PERSLocations ??= new();
+                    _PERSLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.PERS;
                 }
                 default:
                     return default(int?);

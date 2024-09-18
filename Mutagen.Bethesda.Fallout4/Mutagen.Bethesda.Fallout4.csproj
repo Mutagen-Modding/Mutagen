@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Fallout4 mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
@@ -960,9 +960,6 @@
     </Compile>
     <Compile Include="Records\Major Records\ImpactDataSet_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LeveledSpell_Generated.cs">
-      <DependentUpon>LeveledSpell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MaterialSwap_Generated.cs">
       <DependentUpon>MaterialSwap.xml</DependentUpon>

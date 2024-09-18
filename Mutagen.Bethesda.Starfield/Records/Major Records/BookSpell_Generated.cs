@@ -860,8 +860,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Spell.SetTo(rhs.Spell.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBookSpell item,
+            IBookSpellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IBookTeachTarget item,

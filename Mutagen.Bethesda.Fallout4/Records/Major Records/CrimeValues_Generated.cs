@@ -1364,8 +1364,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.WerewolfUnused = rhs.WerewolfUnused;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICrimeValues item,
+            ICrimeValuesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CrimeValues DeepCopy(

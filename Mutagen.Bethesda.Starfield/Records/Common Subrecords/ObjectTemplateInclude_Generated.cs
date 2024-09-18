@@ -1002,8 +1002,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DontUseAll = rhs.DontUseAll;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IObjectTemplateInclude item,
+            IObjectTemplateIncludeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ObjectTemplateInclude DeepCopy(

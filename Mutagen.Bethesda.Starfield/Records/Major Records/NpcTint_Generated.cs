@@ -1104,8 +1104,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TintIntensity = rhs.TintIntensity;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcTint item,
+            INpcTintGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcTint DeepCopy(

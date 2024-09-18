@@ -959,8 +959,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMovementDataOverride item,
+            IMovementDataOverrideGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MovementDataOverride DeepCopy(
@@ -1062,13 +1074,10 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.MTYP));
             if (item.MovementData is {} MovementDataItem)
             {
-                using (HeaderExport.Subrecord(writer, RecordTypes.SPED))
-                {
-                    ((MovementDataBinaryWriteTranslation)((IBinaryItem)MovementDataItem).BinaryWriteTranslator).Write(
-                        item: MovementDataItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
+                ((MovementDataBinaryWriteTranslation)((IBinaryItem)MovementDataItem).BinaryWriteTranslator).Write(
+                    item: MovementDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
             }
         }
 
@@ -1122,7 +1131,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SPED:
                 {
                     if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.MovementData = Mutagen.Bethesda.Fallout4.MovementData.CreateFromBinary(frame: frame);
                     return (int)MovementDataOverride_FieldIndex.MovementData;
                 }
@@ -1199,7 +1207,10 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _MovementTypeLocation;
         public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _MovementTypeLocation);
         #endregion
-        public IMovementDataGetter? MovementData { get; private set; }
+        #region MovementData
+        private RangeInt32? _MovementDataLocation;
+        public IMovementDataGetter? MovementData => _MovementDataLocation.HasValue ? MovementDataBinaryOverlay.MovementDataFactory(_recordData.Slice(_MovementDataLocation!.Value.Min), _package) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1272,11 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SPED:
                 {
                     if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
-                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.MovementData = MovementDataBinaryOverlay.MovementDataFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    _MovementDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)MovementDataOverride_FieldIndex.MovementData;
                 }
                 default:

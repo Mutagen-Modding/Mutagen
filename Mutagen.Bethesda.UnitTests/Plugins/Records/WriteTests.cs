@@ -30,8 +30,8 @@ public class WriteTests
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var weap = mod.Weapons.AddNew();
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .NoMastersListContentCheck()
             .SingleThread()
@@ -45,8 +45,8 @@ public class WriteTests
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var weap = mod.Weapons.AddNew();
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .NoMastersListContentCheck()
             .WriteAsync();
@@ -61,8 +61,8 @@ public class WriteTests
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(tmp.File.Path)
+                .WithNoLoadOrder()
                 .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                 .NoMastersListContentCheck()
                 .WriteAsync();
@@ -79,8 +79,8 @@ public class WriteTests
             async () =>
             {
                 await mod.BeginWrite
-                    .WithNoLoadOrder()
                     .ToPath(tmp.File.Path)
+                    .WithNoLoadOrder()
                     .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                     .NoMastersListContentCheck()
                     .WriteAsync();
@@ -98,8 +98,8 @@ public class WriteTests
             async () =>
             {
                 await mod.BeginWrite
-                    .WithNoLoadOrder()
                     .ToPath(tmp.File.Path)
+                    .WithNoLoadOrder()
                     .NoModKeySync()
                     .NoMastersListContentCheck()
                     .WriteAsync();
@@ -119,8 +119,8 @@ public class WriteTests
                 try
                 {
                     await mod.BeginWrite
-                        .WithNoLoadOrder()
                         .ToPath(tmp.File.Path)
+                        .WithNoLoadOrder()
                         .NoModKeySync()
                         .NoMastersListContentCheck()
                         .SingleThread()
@@ -142,8 +142,8 @@ public class WriteTests
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WriteAsync();
     }
@@ -156,8 +156,8 @@ public class WriteTests
         mod.Weapons.RecordCache.Set(
             new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .SingleThread()
@@ -176,8 +176,8 @@ public class WriteTests
         await Assert.ThrowsAsync<MissingModException>(async () =>
         {
             await mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(tmp.File)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .WithMastersListContent(MastersListContentOption.Iterate)
                 .WithMastersListOrdering(Constants.Skyrim.AsEnumerable())
@@ -191,9 +191,9 @@ public class WriteTests
         using var tmp = GetFile();
         var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
         var armor = mod.Armors.AddNew();
-        var writer = SkyrimMod.WriteBuilder
-            .WithNoLoadOrder()
+        var writer = SkyrimMod.WriteBuilder(SkyrimRelease.SkyrimLE)
             .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate);
         await writer.WriteAsync(mod);
@@ -208,11 +208,27 @@ public class WriteTests
         Assert.Throws<AggregateException>(() =>
         {
             mod.BeginWrite
-                .WithNoLoadOrder()
                 .ToPath(tmp.File.Path)
+                .WithNoLoadOrder()
                 .NoModKeySync()
                 .WithMastersListContent(MastersListContentOption.Iterate)
                 .Write();
+        });
+    }
+
+    [Fact]
+    public async Task WriteWithMisalignedGameRelease()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+        var writer = SkyrimMod.WriteBuilder(SkyrimRelease.SkyrimSE)
+            .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate);
+        Assert.Throws<ArgumentException>(() =>
+        {
+            writer.Write(mod);
         });
     }
 
@@ -228,8 +244,8 @@ public class WriteTests
         mod.UsingLocalization = true;
         mod.ModKey.Should().NotBe(modPath.ModKey);
         await mod.BeginWrite
-            .WithNoLoadOrder()
             .ToPath(modPath)
+            .WithNoLoadOrder()
             .WithModKeySync(ModKeyOption.CorrectToPath)
             .WithFileSystem(fileSystem)
             .WriteAsync();

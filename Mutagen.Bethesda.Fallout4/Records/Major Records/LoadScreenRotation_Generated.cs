@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Max = rhs.Max;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILoadScreenRotation item,
+            ILoadScreenRotationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LoadScreenRotation DeepCopy(

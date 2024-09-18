@@ -962,8 +962,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Radius = rhs.Radius;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAIPackageLocation item,
+            IAIPackageLocationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AIPackageLocation DeepCopy(

@@ -3,8 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -65,7 +63,7 @@ public sealed class ParsingMeta
 
     public IFileSystem FileSystem { get; set; } = IFileSystemExt.DefaultFilesystem;
 
-    internal ParsingMeta(
+    public ParsingMeta(
         GameConstants constants,
         ModKey modKey,
         IReadOnlySeparatedMasterPackage masterReferences)
@@ -137,7 +135,7 @@ public sealed class ParsingMeta
     {
         var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: param.FileSystem);
         var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
-        var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.LoadOrder);
+        var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
         meta.Absorb(param);
         return meta;
@@ -152,8 +150,18 @@ public sealed class ParsingMeta
         var header = ModHeaderFrame.FromStream(stream, modKey, release);
         var rawMasters = MasterReferenceCollection.FromModHeader(modKey, header);
         stream.Position = 0;
-        var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.LoadOrder);
+        var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
+        meta.Absorb(param);
+        return meta;
+    }
+
+    public static ParsingMeta FactoryNoMasters(
+        BinaryReadParameters param,
+        GameRelease release,
+        ModKey modKey)
+    {
+        var meta = new ParsingMeta(GameConstants.Get(release), modKey, null!);
         meta.Absorb(param);
         return meta;
     }

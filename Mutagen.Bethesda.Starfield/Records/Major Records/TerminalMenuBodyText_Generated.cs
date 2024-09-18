@@ -1081,8 +1081,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UseTemplatedText = rhs.UseTemplatedText;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITerminalMenuBodyText item,
+            ITerminalMenuBodyTextGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TerminalMenuBodyText DeepCopy(

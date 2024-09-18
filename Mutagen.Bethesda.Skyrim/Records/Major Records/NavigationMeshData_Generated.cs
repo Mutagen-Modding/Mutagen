@@ -1952,8 +1952,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NavmeshGrid = rhs.NavmeshGrid.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavigationMeshData item,
+            INavigationMeshDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavigationMeshData DeepCopy(

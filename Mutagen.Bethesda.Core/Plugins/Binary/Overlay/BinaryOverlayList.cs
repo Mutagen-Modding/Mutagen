@@ -590,14 +590,23 @@ internal abstract class BinaryOverlayList
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         int finalPos,
-        PluginBinaryOverlay.Factory<T> getter)
+        PluginBinaryOverlay.Factory<T> getter,
+        bool trimNullSuffix = false)
     {
         var subMeta = stream.ReadSubrecordHeader();
         var subLen = finalPos - stream.Position;
+        var mem = stream.RemainingMemory.Slice(0, subLen);
+
+        if (trimNullSuffix && mem.Length > 0 && mem[^1] == 0)
+        {
+            mem = mem.Slice(0, mem.Length - 1);
+        }
+        
         var ret = FactoryByLazyParse<T>(
-            stream.RemainingMemory.Slice(0, subLen),
+            mem,
             package,
             getter);
+        
         stream.Position += subLen;
         return ret;
     }

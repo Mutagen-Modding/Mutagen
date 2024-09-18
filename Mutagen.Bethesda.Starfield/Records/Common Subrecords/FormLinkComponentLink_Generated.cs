@@ -923,8 +923,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LinkedForm.SetTo(rhs.LinkedForm.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFormLinkComponentLink item,
+            IFormLinkComponentLinkGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FormLinkComponentLink DeepCopy(

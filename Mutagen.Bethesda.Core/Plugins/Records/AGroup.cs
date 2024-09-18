@@ -312,7 +312,10 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                     }
                     catch (ArgumentException)
                     {
-                        throw new RecordCollisionException(formKey, typeof(T));
+                        throw new RecordCollisionException(
+                            stream.MetaData.ModKey,
+                            formKey, 
+                            typeof(T));
                     }
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
@@ -332,7 +335,10 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
                 }
                 catch (ArgumentException)
                 {
-                    throw new RecordCollisionException(formKey, typeof(T));
+                    throw new RecordCollisionException(
+                        stream.MetaData.ModKey,
+                        formKey,
+                        typeof(T));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
                 lastParsed = formKey;

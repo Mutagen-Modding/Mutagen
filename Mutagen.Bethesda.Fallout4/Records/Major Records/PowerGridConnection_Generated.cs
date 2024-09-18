@@ -980,8 +980,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Line.SetTo(rhs.Line.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPowerGridConnection item,
+            IPowerGridConnectionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PowerGridConnection DeepCopy(

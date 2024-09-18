@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Restitution = rhs.Restitution;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHavokData item,
+            IHavokDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public HavokData DeepCopy(

@@ -71,11 +71,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region NAM1
-        public Int32 NAM1 { get; set; } = default(Int32);
+        #region NodeType
+        public PlanetContentManagerBranchNode.NodeTypeOption? NodeType { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        PlanetContentManagerBranchNode.NodeTypeOption? IPlanetContentManagerBranchNodeGetter.NodeType => this.NodeType;
         #endregion
-        #region NAM2
-        public Int32 NAM2 { get; set; } = default(Int32);
+        #region ChildSelection
+        public Int32 ChildSelection { get; set; } = default(Int32);
         #endregion
         #region CountCurve
         private readonly IFormLinkNullable<ICurveTableGetter> _CountCurve = new FormLinkNullable<ICurveTableGetter>();
@@ -97,8 +99,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICurveTableGetter> IPlanetContentManagerBranchNodeGetter.DistributionCurve => this.DistributionCurve;
         #endregion
-        #region NAM5
-        public Boolean NAM5 { get; set; } = default(Boolean);
+        #region ConsumeRequestEvenOnFailure
+        public Boolean? ConsumeRequestEvenOnFailure { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IPlanetContentManagerBranchNodeGetter.ConsumeRequestEvenOnFailure => this.ConsumeRequestEvenOnFailure;
         #endregion
         #region Nodes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -149,6 +153,26 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
+        #region ParentNode
+        private readonly IFormLinkNullable<IPlanetParentNodeGetter> _ParentNode = new FormLinkNullable<IPlanetParentNodeGetter>();
+        public IFormLinkNullable<IPlanetParentNodeGetter> ParentNode
+        {
+            get => _ParentNode;
+            set => _ParentNode.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlanetParentNodeGetter> IPlanetContentManagerBranchNodeGetter.ParentNode => this.ParentNode;
+        #endregion
+        #region PreviousNode
+        private readonly IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> _PreviousNode = new FormLinkNullable<IPlanetContentManagerBranchNodeGetter>();
+        public IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> PreviousNode
+        {
+            get => _PreviousNode;
+            set => _PreviousNode.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> IPlanetContentManagerBranchNodeGetter.PreviousNode => this.PreviousNode;
+        #endregion
 
         #region To String
 
@@ -175,14 +199,16 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.NAM1 = initialValue;
-                this.NAM2 = initialValue;
+                this.NodeType = initialValue;
+                this.ChildSelection = initialValue;
                 this.CountCurve = initialValue;
                 this.DistributionCurve = initialValue;
-                this.NAM5 = initialValue;
+                this.ConsumeRequestEvenOnFailure = initialValue;
                 this.Nodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentNode = initialValue;
+                this.PreviousNode = initialValue;
             }
 
             public Mask(
@@ -194,14 +220,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
-                TItem NAM1,
-                TItem NAM2,
+                TItem NodeType,
+                TItem ChildSelection,
                 TItem CountCurve,
                 TItem DistributionCurve,
-                TItem NAM5,
+                TItem ConsumeRequestEvenOnFailure,
                 TItem Nodes,
                 TItem Conditions,
-                TItem Keywords)
+                TItem Keywords,
+                TItem ParentNode,
+                TItem PreviousNode)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -212,14 +240,16 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.NAM1 = NAM1;
-                this.NAM2 = NAM2;
+                this.NodeType = NodeType;
+                this.ChildSelection = ChildSelection;
                 this.CountCurve = CountCurve;
                 this.DistributionCurve = DistributionCurve;
-                this.NAM5 = NAM5;
+                this.ConsumeRequestEvenOnFailure = ConsumeRequestEvenOnFailure;
                 this.Nodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Nodes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentNode = ParentNode;
+                this.PreviousNode = PreviousNode;
             }
 
             #pragma warning disable CS8618
@@ -232,14 +262,16 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
-            public TItem NAM1;
-            public TItem NAM2;
+            public TItem NodeType;
+            public TItem ChildSelection;
             public TItem CountCurve;
             public TItem DistributionCurve;
-            public TItem NAM5;
+            public TItem ConsumeRequestEvenOnFailure;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Nodes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem ParentNode;
+            public TItem PreviousNode;
             #endregion
 
             #region Equals
@@ -254,28 +286,32 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
-                if (!object.Equals(this.NAM1, rhs.NAM1)) return false;
-                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.NodeType, rhs.NodeType)) return false;
+                if (!object.Equals(this.ChildSelection, rhs.ChildSelection)) return false;
                 if (!object.Equals(this.CountCurve, rhs.CountCurve)) return false;
                 if (!object.Equals(this.DistributionCurve, rhs.DistributionCurve)) return false;
-                if (!object.Equals(this.NAM5, rhs.NAM5)) return false;
+                if (!object.Equals(this.ConsumeRequestEvenOnFailure, rhs.ConsumeRequestEvenOnFailure)) return false;
                 if (!object.Equals(this.Nodes, rhs.Nodes)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.ParentNode, rhs.ParentNode)) return false;
+                if (!object.Equals(this.PreviousNode, rhs.PreviousNode)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Components);
-                hash.Add(this.NAM1);
-                hash.Add(this.NAM2);
+                hash.Add(this.NodeType);
+                hash.Add(this.ChildSelection);
                 hash.Add(this.CountCurve);
                 hash.Add(this.DistributionCurve);
-                hash.Add(this.NAM5);
+                hash.Add(this.ConsumeRequestEvenOnFailure);
                 hash.Add(this.Nodes);
                 hash.Add(this.Conditions);
                 hash.Add(this.Keywords);
+                hash.Add(this.ParentNode);
+                hash.Add(this.PreviousNode);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -298,11 +334,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.NAM1)) return false;
-                if (!eval(this.NAM2)) return false;
+                if (!eval(this.NodeType)) return false;
+                if (!eval(this.ChildSelection)) return false;
                 if (!eval(this.CountCurve)) return false;
                 if (!eval(this.DistributionCurve)) return false;
-                if (!eval(this.NAM5)) return false;
+                if (!eval(this.ConsumeRequestEvenOnFailure)) return false;
                 if (this.Nodes != null)
                 {
                     if (!eval(this.Nodes.Overall)) return false;
@@ -337,6 +373,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.ParentNode)) return false;
+                if (!eval(this.PreviousNode)) return false;
                 return true;
             }
             #endregion
@@ -357,11 +395,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.NAM1)) return true;
-                if (eval(this.NAM2)) return true;
+                if (eval(this.NodeType)) return true;
+                if (eval(this.ChildSelection)) return true;
                 if (eval(this.CountCurve)) return true;
                 if (eval(this.DistributionCurve)) return true;
-                if (eval(this.NAM5)) return true;
+                if (eval(this.ConsumeRequestEvenOnFailure)) return true;
                 if (this.Nodes != null)
                 {
                     if (eval(this.Nodes.Overall)) return true;
@@ -396,6 +434,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.ParentNode)) return true;
+                if (eval(this.PreviousNode)) return true;
                 return false;
             }
             #endregion
@@ -426,11 +466,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.NAM1 = eval(this.NAM1);
-                obj.NAM2 = eval(this.NAM2);
+                obj.NodeType = eval(this.NodeType);
+                obj.ChildSelection = eval(this.ChildSelection);
                 obj.CountCurve = eval(this.CountCurve);
                 obj.DistributionCurve = eval(this.DistributionCurve);
-                obj.NAM5 = eval(this.NAM5);
+                obj.ConsumeRequestEvenOnFailure = eval(this.ConsumeRequestEvenOnFailure);
                 if (Nodes != null)
                 {
                     obj.Nodes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Nodes.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -474,6 +514,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.ParentNode = eval(this.ParentNode);
+                obj.PreviousNode = eval(this.PreviousNode);
             }
             #endregion
 
@@ -511,13 +553,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.NAM1 ?? true)
+                    if (printMask?.NodeType ?? true)
                     {
-                        sb.AppendItem(NAM1, "NAM1");
+                        sb.AppendItem(NodeType, "NodeType");
                     }
-                    if (printMask?.NAM2 ?? true)
+                    if (printMask?.ChildSelection ?? true)
                     {
-                        sb.AppendItem(NAM2, "NAM2");
+                        sb.AppendItem(ChildSelection, "ChildSelection");
                     }
                     if (printMask?.CountCurve ?? true)
                     {
@@ -527,9 +569,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DistributionCurve, "DistributionCurve");
                     }
-                    if (printMask?.NAM5 ?? true)
+                    if (printMask?.ConsumeRequestEvenOnFailure ?? true)
                     {
-                        sb.AppendItem(NAM5, "NAM5");
+                        sb.AppendItem(ConsumeRequestEvenOnFailure, "ConsumeRequestEvenOnFailure");
                     }
                     if ((printMask?.Nodes?.Overall ?? true)
                         && Nodes is {} NodesItem)
@@ -592,6 +634,14 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.ParentNode ?? true)
+                    {
+                        sb.AppendItem(ParentNode, "ParentNode");
+                    }
+                    if (printMask?.PreviousNode ?? true)
+                    {
+                        sb.AppendItem(PreviousNode, "PreviousNode");
+                    }
                 }
             }
             #endregion
@@ -604,14 +654,16 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
-            public Exception? NAM1;
-            public Exception? NAM2;
+            public Exception? NodeType;
+            public Exception? ChildSelection;
             public Exception? CountCurve;
             public Exception? DistributionCurve;
-            public Exception? NAM5;
+            public Exception? ConsumeRequestEvenOnFailure;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Nodes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? ParentNode;
+            public Exception? PreviousNode;
             #endregion
 
             #region IErrorMask
@@ -622,22 +674,26 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PlanetContentManagerBranchNode_FieldIndex.Components:
                         return Components;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM1:
-                        return NAM1;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM2:
-                        return NAM2;
+                    case PlanetContentManagerBranchNode_FieldIndex.NodeType:
+                        return NodeType;
+                    case PlanetContentManagerBranchNode_FieldIndex.ChildSelection:
+                        return ChildSelection;
                     case PlanetContentManagerBranchNode_FieldIndex.CountCurve:
                         return CountCurve;
                     case PlanetContentManagerBranchNode_FieldIndex.DistributionCurve:
                         return DistributionCurve;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM5:
-                        return NAM5;
+                    case PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure:
+                        return ConsumeRequestEvenOnFailure;
                     case PlanetContentManagerBranchNode_FieldIndex.Nodes:
                         return Nodes;
                     case PlanetContentManagerBranchNode_FieldIndex.Conditions:
                         return Conditions;
                     case PlanetContentManagerBranchNode_FieldIndex.Keywords:
                         return Keywords;
+                    case PlanetContentManagerBranchNode_FieldIndex.ParentNode:
+                        return ParentNode;
+                    case PlanetContentManagerBranchNode_FieldIndex.PreviousNode:
+                        return PreviousNode;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -651,11 +707,11 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerBranchNode_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM1:
-                        this.NAM1 = ex;
+                    case PlanetContentManagerBranchNode_FieldIndex.NodeType:
+                        this.NodeType = ex;
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM2:
-                        this.NAM2 = ex;
+                    case PlanetContentManagerBranchNode_FieldIndex.ChildSelection:
+                        this.ChildSelection = ex;
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.CountCurve:
                         this.CountCurve = ex;
@@ -663,8 +719,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerBranchNode_FieldIndex.DistributionCurve:
                         this.DistributionCurve = ex;
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM5:
-                        this.NAM5 = ex;
+                    case PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure:
+                        this.ConsumeRequestEvenOnFailure = ex;
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.Nodes:
                         this.Nodes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -674,6 +730,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlanetContentManagerBranchNode_FieldIndex.ParentNode:
+                        this.ParentNode = ex;
+                        break;
+                    case PlanetContentManagerBranchNode_FieldIndex.PreviousNode:
+                        this.PreviousNode = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -689,11 +751,11 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerBranchNode_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM1:
-                        this.NAM1 = (Exception?)obj;
+                    case PlanetContentManagerBranchNode_FieldIndex.NodeType:
+                        this.NodeType = (Exception?)obj;
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM2:
-                        this.NAM2 = (Exception?)obj;
+                    case PlanetContentManagerBranchNode_FieldIndex.ChildSelection:
+                        this.ChildSelection = (Exception?)obj;
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.CountCurve:
                         this.CountCurve = (Exception?)obj;
@@ -701,8 +763,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetContentManagerBranchNode_FieldIndex.DistributionCurve:
                         this.DistributionCurve = (Exception?)obj;
                         break;
-                    case PlanetContentManagerBranchNode_FieldIndex.NAM5:
-                        this.NAM5 = (Exception?)obj;
+                    case PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure:
+                        this.ConsumeRequestEvenOnFailure = (Exception?)obj;
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.Nodes:
                         this.Nodes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -712,6 +774,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlanetContentManagerBranchNode_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlanetContentManagerBranchNode_FieldIndex.ParentNode:
+                        this.ParentNode = (Exception?)obj;
+                        break;
+                    case PlanetContentManagerBranchNode_FieldIndex.PreviousNode:
+                        this.PreviousNode = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -723,14 +791,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Components != null) return true;
-                if (NAM1 != null) return true;
-                if (NAM2 != null) return true;
+                if (NodeType != null) return true;
+                if (ChildSelection != null) return true;
                 if (CountCurve != null) return true;
                 if (DistributionCurve != null) return true;
-                if (NAM5 != null) return true;
+                if (ConsumeRequestEvenOnFailure != null) return true;
                 if (Nodes != null) return true;
                 if (Conditions != null) return true;
                 if (Keywords != null) return true;
+                if (ParentNode != null) return true;
+                if (PreviousNode != null) return true;
                 return false;
             }
             #endregion
@@ -776,10 +846,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(NAM1, "NAM1");
+                    sb.AppendItem(NodeType, "NodeType");
                 }
                 {
-                    sb.AppendItem(NAM2, "NAM2");
+                    sb.AppendItem(ChildSelection, "ChildSelection");
                 }
                 {
                     sb.AppendItem(CountCurve, "CountCurve");
@@ -788,7 +858,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(DistributionCurve, "DistributionCurve");
                 }
                 {
-                    sb.AppendItem(NAM5, "NAM5");
+                    sb.AppendItem(ConsumeRequestEvenOnFailure, "ConsumeRequestEvenOnFailure");
                 }
                 if (Nodes is {} NodesItem)
                 {
@@ -848,6 +918,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(ParentNode, "ParentNode");
+                }
+                {
+                    sb.AppendItem(PreviousNode, "PreviousNode");
+                }
             }
             #endregion
 
@@ -857,14 +933,16 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
-                ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
-                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
+                ret.NodeType = this.NodeType.Combine(rhs.NodeType);
+                ret.ChildSelection = this.ChildSelection.Combine(rhs.ChildSelection);
                 ret.CountCurve = this.CountCurve.Combine(rhs.CountCurve);
                 ret.DistributionCurve = this.DistributionCurve.Combine(rhs.DistributionCurve);
-                ret.NAM5 = this.NAM5.Combine(rhs.NAM5);
+                ret.ConsumeRequestEvenOnFailure = this.ConsumeRequestEvenOnFailure.Combine(rhs.ConsumeRequestEvenOnFailure);
                 ret.Nodes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Nodes?.Overall, rhs.Nodes?.Overall), Noggog.ExceptionExt.Combine(this.Nodes?.Specific, rhs.Nodes?.Specific));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.ParentNode = this.ParentNode.Combine(rhs.ParentNode);
+                ret.PreviousNode = this.PreviousNode.Combine(rhs.PreviousNode);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -888,14 +966,16 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AComponent.TranslationMask? Components;
-            public bool NAM1;
-            public bool NAM2;
+            public bool NodeType;
+            public bool ChildSelection;
             public bool CountCurve;
             public bool DistributionCurve;
-            public bool NAM5;
+            public bool ConsumeRequestEvenOnFailure;
             public bool Nodes;
             public Condition.TranslationMask? Conditions;
             public bool Keywords;
+            public bool ParentNode;
+            public bool PreviousNode;
             #endregion
 
             #region Ctors
@@ -904,13 +984,15 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.NAM1 = defaultOn;
-                this.NAM2 = defaultOn;
+                this.NodeType = defaultOn;
+                this.ChildSelection = defaultOn;
                 this.CountCurve = defaultOn;
                 this.DistributionCurve = defaultOn;
-                this.NAM5 = defaultOn;
+                this.ConsumeRequestEvenOnFailure = defaultOn;
                 this.Nodes = defaultOn;
                 this.Keywords = defaultOn;
+                this.ParentNode = defaultOn;
+                this.PreviousNode = defaultOn;
             }
 
             #endregion
@@ -919,14 +1001,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
-                ret.Add((NAM1, null));
-                ret.Add((NAM2, null));
+                ret.Add((NodeType, null));
+                ret.Add((ChildSelection, null));
                 ret.Add((CountCurve, null));
                 ret.Add((DistributionCurve, null));
-                ret.Add((NAM5, null));
+                ret.Add((ConsumeRequestEvenOnFailure, null));
                 ret.Add((Nodes, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Keywords, null));
+                ret.Add((ParentNode, null));
+                ret.Add((PreviousNode, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1079,20 +1163,23 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IPlanetContentManagerBranchNodeInternal>,
         IPlanetContentManagerBranchNodeGetter,
         IPlanetNode,
+        IPlanetParentNode,
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<AComponent> Components { get; }
-        new Int32 NAM1 { get; set; }
-        new Int32 NAM2 { get; set; }
+        new PlanetContentManagerBranchNode.NodeTypeOption? NodeType { get; set; }
+        new Int32 ChildSelection { get; set; }
         new IFormLinkNullable<ICurveTableGetter> CountCurve { get; set; }
         new IFormLinkNullable<ICurveTableGetter> DistributionCurve { get; set; }
-        new Boolean NAM5 { get; set; }
+        new Boolean? ConsumeRequestEvenOnFailure { get; set; }
         new ExtendedList<IFormLinkGetter<IPlanetNodeGetter>> Nodes { get; }
         new ExtendedList<Condition>? Conditions { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IPlanetParentNodeGetter> ParentNode { get; set; }
+        new IFormLinkNullable<IPlanetContentManagerBranchNodeGetter> PreviousNode { get; set; }
     }
 
     public partial interface IPlanetContentManagerBranchNodeInternal :
@@ -1111,15 +1198,16 @@ namespace Mutagen.Bethesda.Starfield
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IPlanetContentManagerBranchNodeGetter>,
         IMapsToGetter<IPlanetContentManagerBranchNodeGetter>,
-        IPlanetNodeGetter
+        IPlanetNodeGetter,
+        IPlanetParentNodeGetter
     {
         static new ILoquiRegistration StaticRegistration => PlanetContentManagerBranchNode_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
-        Int32 NAM1 { get; }
-        Int32 NAM2 { get; }
+        PlanetContentManagerBranchNode.NodeTypeOption? NodeType { get; }
+        Int32 ChildSelection { get; }
         IFormLinkNullableGetter<ICurveTableGetter> CountCurve { get; }
         IFormLinkNullableGetter<ICurveTableGetter> DistributionCurve { get; }
-        Boolean NAM5 { get; }
+        Boolean? ConsumeRequestEvenOnFailure { get; }
         IReadOnlyList<IFormLinkGetter<IPlanetNodeGetter>> Nodes { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
         #region Keywords
@@ -1128,6 +1216,8 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
+        IFormLinkNullableGetter<IPlanetParentNodeGetter> ParentNode { get; }
+        IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> PreviousNode { get; }
 
     }
 
@@ -1305,14 +1395,16 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Components = 7,
-        NAM1 = 8,
-        NAM2 = 9,
+        NodeType = 8,
+        ChildSelection = 9,
         CountCurve = 10,
         DistributionCurve = 11,
-        NAM5 = 12,
+        ConsumeRequestEvenOnFailure = 12,
         Nodes = 13,
         Conditions = 14,
         Keywords = 15,
+        ParentNode = 16,
+        PreviousNode = 17,
     }
     #endregion
 
@@ -1323,9 +1415,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(PlanetContentManagerBranchNode.Mask<>);
 
@@ -1370,7 +1462,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.KWDA);
+                RecordTypes.KWDA,
+                RecordTypes.PRTN,
+                RecordTypes.PRVN);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1416,14 +1510,16 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.NAM1 = default(Int32);
-            item.NAM2 = default(Int32);
+            item.NodeType = default;
+            item.ChildSelection = default(Int32);
             item.CountCurve.Clear();
             item.DistributionCurve.Clear();
-            item.NAM5 = default(Boolean);
+            item.ConsumeRequestEvenOnFailure = default;
             item.Nodes.Clear();
             item.Conditions = null;
             item.Keywords = null;
+            item.ParentNode.Clear();
+            item.PreviousNode.Clear();
             base.Clear(item);
         }
         
@@ -1447,6 +1543,8 @@ namespace Mutagen.Bethesda.Starfield
             obj.Nodes.RemapLinks(mapping);
             obj.Conditions?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.ParentNode.Relink(mapping);
+            obj.PreviousNode.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlanetContentManagerBranchNode obj)
@@ -1542,11 +1640,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.NAM1 = item.NAM1 == rhs.NAM1;
-            ret.NAM2 = item.NAM2 == rhs.NAM2;
+            ret.NodeType = item.NodeType == rhs.NodeType;
+            ret.ChildSelection = item.ChildSelection == rhs.ChildSelection;
             ret.CountCurve = item.CountCurve.Equals(rhs.CountCurve);
             ret.DistributionCurve = item.DistributionCurve.Equals(rhs.DistributionCurve);
-            ret.NAM5 = item.NAM5 == rhs.NAM5;
+            ret.ConsumeRequestEvenOnFailure = item.ConsumeRequestEvenOnFailure == rhs.ConsumeRequestEvenOnFailure;
             ret.Nodes = item.Nodes.CollectionEqualsHelper(
                 rhs.Nodes,
                 (l, r) => object.Equals(l, r),
@@ -1559,6 +1657,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.ParentNode = item.ParentNode.Equals(rhs.ParentNode);
+            ret.PreviousNode = item.PreviousNode.Equals(rhs.PreviousNode);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1622,13 +1722,14 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.NAM1 ?? true)
+            if ((printMask?.NodeType ?? true)
+                && item.NodeType is {} NodeTypeItem)
             {
-                sb.AppendItem(item.NAM1, "NAM1");
+                sb.AppendItem(NodeTypeItem, "NodeType");
             }
-            if (printMask?.NAM2 ?? true)
+            if (printMask?.ChildSelection ?? true)
             {
-                sb.AppendItem(item.NAM2, "NAM2");
+                sb.AppendItem(item.ChildSelection, "ChildSelection");
             }
             if (printMask?.CountCurve ?? true)
             {
@@ -1638,9 +1739,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DistributionCurve.FormKeyNullable, "DistributionCurve");
             }
-            if (printMask?.NAM5 ?? true)
+            if ((printMask?.ConsumeRequestEvenOnFailure ?? true)
+                && item.ConsumeRequestEvenOnFailure is {} ConsumeRequestEvenOnFailureItem)
             {
-                sb.AppendItem(item.NAM5, "NAM5");
+                sb.AppendItem(ConsumeRequestEvenOnFailureItem, "ConsumeRequestEvenOnFailure");
             }
             if (printMask?.Nodes?.Overall ?? true)
             {
@@ -1685,6 +1787,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.ParentNode ?? true)
+            {
+                sb.AppendItem(item.ParentNode.FormKeyNullable, "ParentNode");
+            }
+            if (printMask?.PreviousNode ?? true)
+            {
+                sb.AppendItem(item.PreviousNode.FormKeyNullable, "PreviousNode");
             }
         }
         
@@ -1740,13 +1850,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlanetContentManagerBranchNode_FieldIndex.Components)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NodeType) ?? true))
             {
-                if (lhs.NAM1 != rhs.NAM1) return false;
+                if (lhs.NodeType != rhs.NodeType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection) ?? true))
             {
-                if (lhs.NAM2 != rhs.NAM2) return false;
+                if (lhs.ChildSelection != rhs.ChildSelection) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.CountCurve) ?? true))
             {
@@ -1756,9 +1866,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DistributionCurve.Equals(rhs.DistributionCurve)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure) ?? true))
             {
-                if (lhs.NAM5 != rhs.NAM5) return false;
+                if (lhs.ConsumeRequestEvenOnFailure != rhs.ConsumeRequestEvenOnFailure) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.Nodes) ?? true))
             {
@@ -1771,6 +1881,14 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ParentNode) ?? true))
+            {
+                if (!lhs.ParentNode.Equals(rhs.ParentNode)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode) ?? true))
+            {
+                if (!lhs.PreviousNode.Equals(rhs.PreviousNode)) return false;
             }
             return true;
         }
@@ -1801,14 +1919,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Components);
-            hash.Add(item.NAM1);
-            hash.Add(item.NAM2);
+            if (item.NodeType is {} NodeTypeitem)
+            {
+                hash.Add(NodeTypeitem);
+            }
+            hash.Add(item.ChildSelection);
             hash.Add(item.CountCurve);
             hash.Add(item.DistributionCurve);
-            hash.Add(item.NAM5);
+            if (item.ConsumeRequestEvenOnFailure is {} ConsumeRequestEvenOnFailureitem)
+            {
+                hash.Add(ConsumeRequestEvenOnFailureitem);
+            }
             hash.Add(item.Nodes);
             hash.Add(item.Conditions);
             hash.Add(item.Keywords);
+            hash.Add(item.ParentNode);
+            hash.Add(item.PreviousNode);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1869,6 +1995,14 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.ParentNode, out var ParentNodeInfo))
+            {
+                yield return ParentNodeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PreviousNode, out var PreviousNodeInfo))
+            {
+                yield return PreviousNodeInfo;
+            }
             yield break;
         }
         
@@ -1878,13 +2012,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1984,13 +2115,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NodeType) ?? true))
             {
-                item.NAM1 = rhs.NAM1;
+                item.NodeType = rhs.NodeType;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection) ?? true))
             {
-                item.NAM2 = rhs.NAM2;
+                item.ChildSelection = rhs.ChildSelection;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.CountCurve) ?? true))
             {
@@ -2000,9 +2131,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DistributionCurve.SetTo(rhs.DistributionCurve.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.NAM5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure) ?? true))
             {
-                item.NAM5 = rhs.NAM5;
+                item.ConsumeRequestEvenOnFailure = rhs.ConsumeRequestEvenOnFailure;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.Nodes) ?? true))
             {
@@ -2082,8 +2213,28 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.ParentNode) ?? true))
+            {
+                item.ParentNode.SetTo(rhs.ParentNode.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode) ?? true))
+            {
+                item.PreviousNode.SetTo(rhs.PreviousNode.FormKeyNullable);
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetContentManagerBranchNode item,
+            IPlanetContentManagerBranchNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -2250,13 +2401,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.NAM1,
+            EnumBinaryTranslation<PlanetContentManagerBranchNode.NodeTypeOption, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.NodeType,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.NAM2,
+                item: item.ChildSelection,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2266,9 +2418,9 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.DistributionCurve,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM4));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM5,
+                item: item.ConsumeRequestEvenOnFailure,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM5));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlanetNodeGetter>>.Instance.Write(
                 writer: writer,
@@ -2303,6 +2455,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParentNode,
+                header: translationParams.ConvertToCustom(RecordTypes.PRTN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviousNode,
+                header: translationParams.ConvertToCustom(RecordTypes.PRVN));
         }
 
         public void Write(
@@ -2401,14 +2561,16 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM1 = frame.ReadInt32();
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM1;
+                    item.NodeType = EnumBinaryTranslation<PlanetContentManagerBranchNode.NodeTypeOption, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.NodeType;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2 = frame.ReadInt32();
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM2;
+                    item.ChildSelection = frame.ReadInt32();
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -2425,8 +2587,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM5 = frame.ReadBoolean();
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM5;
+                    item.ConsumeRequestEvenOnFailure = frame.ReadBoolean();
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure;
                 }
                 case RecordTypeInts.PCCB:
                 {
@@ -2460,6 +2622,18 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)PlanetContentManagerBranchNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRTN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ParentNode;
+                }
+                case RecordTypeInts.PRVN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2522,13 +2696,13 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        #region NAM1
-        private int? _NAM1Location;
-        public Int32 NAM1 => _NAM1Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM1Location.Value, _package.MetaData.Constants)) : default(Int32);
+        #region NodeType
+        private int? _NodeTypeLocation;
+        public PlanetContentManagerBranchNode.NodeTypeOption? NodeType => _NodeTypeLocation.HasValue ? (PlanetContentManagerBranchNode.NodeTypeOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeTypeLocation!.Value, _package.MetaData.Constants)) : default(PlanetContentManagerBranchNode.NodeTypeOption?);
         #endregion
-        #region NAM2
-        private int? _NAM2Location;
-        public Int32 NAM2 => _NAM2Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants)) : default(Int32);
+        #region ChildSelection
+        private int? _ChildSelectionLocation;
+        public Int32 ChildSelection => _ChildSelectionLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChildSelectionLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region CountCurve
         private int? _CountCurveLocation;
@@ -2538,15 +2712,23 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DistributionCurveLocation;
         public IFormLinkNullableGetter<ICurveTableGetter> DistributionCurve => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurveTableGetter>(_package, _recordData, _DistributionCurveLocation);
         #endregion
-        #region NAM5
-        private int? _NAM5Location;
-        public Boolean NAM5 => _NAM5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
+        #region ConsumeRequestEvenOnFailure
+        private int? _ConsumeRequestEvenOnFailureLocation;
+        public Boolean? ConsumeRequestEvenOnFailure => _ConsumeRequestEvenOnFailureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConsumeRequestEvenOnFailureLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPlanetNodeGetter>> Nodes { get; private set; } = Array.Empty<IFormLinkGetter<IPlanetNodeGetter>>();
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region ParentNode
+        private int? _ParentNodeLocation;
+        public IFormLinkNullableGetter<IPlanetParentNodeGetter> ParentNode => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetParentNodeGetter>(_package, _recordData, _ParentNodeLocation);
+        #endregion
+        #region PreviousNode
+        private int? _PreviousNodeLocation;
+        public IFormLinkNullableGetter<IPlanetContentManagerBranchNodeGetter> PreviousNode => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentManagerBranchNodeGetter>(_package, _recordData, _PreviousNodeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2628,13 +2810,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _NAM1Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM1;
+                    _NodeTypeLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.NodeType;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _NAM2Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM2;
+                    _ChildSelectionLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -2648,8 +2830,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _NAM5Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerBranchNode_FieldIndex.NAM5;
+                    _ConsumeRequestEvenOnFailureLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure;
                 }
                 case RecordTypeInts.PCCB:
                 {
@@ -2688,6 +2870,16 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)PlanetContentManagerBranchNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRTN:
+                {
+                    _ParentNodeLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.ParentNode;
+                }
+                case RecordTypeInts.PRVN:
+                {
+                    _PreviousNodeLocation = (stream.Position - offset);
+                    return (int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode;
                 }
                 default:
                     return base.FillRecordType(

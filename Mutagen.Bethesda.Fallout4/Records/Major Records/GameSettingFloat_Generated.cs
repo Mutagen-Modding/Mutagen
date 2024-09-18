@@ -1161,8 +1161,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Data = rhs.Data;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGameSettingFloat item,
+            IGameSettingFloatGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IGameSettingInternal item,
             IGameSettingGetter rhs,
