@@ -432,6 +432,12 @@ public abstract class PassthroughTest
                     {
                         try
                         {
+                            var dup = wrapper.DeepCopy();
+                            foreach (var record in dup.EnumerateMajorRecords())
+                            {
+                                record.IsCompressed = false;
+                            }
+                            
                             doStrings = wrapper.UsingLocalization;
                             using (var stringsWriter = doStrings
                                        ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir,
@@ -439,7 +445,7 @@ public abstract class PassthroughTest
                                        : null)
                             {
                                 await BuildWriter(
-                                        wrapper.BeginWrite
+                                        dup.BeginWrite
                                             .ToPath(binaryOverlayPath)
                                             .WithDefaultLoadOrder(),
                                         masterRefs,

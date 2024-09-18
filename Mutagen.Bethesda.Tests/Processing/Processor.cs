@@ -175,6 +175,7 @@ public abstract class Processor
     {
         AddDynamicProcessing(RecordType.Null, ProcessEDID);
         AddDynamicProcessing(RecordType.Null, ProcessMajorRecordFormIDOverflow);
+        AddDynamicProcessing(RecordType.Null, ProcessCompression);
     }
 
     protected void AddDynamicProcessing(RecordType type, DynamicProcessor processor)
@@ -284,10 +285,24 @@ public abstract class Processor
         return false;
     }
 
+    public void ProcessCompression(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.IsCompressed) return;
+        var flags = BinaryPrimitives.ReadInt32LittleEndian(
+            majorFrame.HeaderData.Slice(Meta.MajorConstants.FlagLocationOffset));
+        flags &= ~Constants.CompressedFlag;
+        byte[] b = new byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(b, flags);
+        Instructions.SetSubstitution(
+            fileOffset + Meta.MajorConstants.FlagLocationOffset,
+            b);
+    }
+
     private bool CheckIsFormIDOverflow(FormID formID)
     {
         if (formID.FullMasterIndex <= _numMasters) return false;
-        // if (IsStarfieldMaster(ModKey)) return true;
         if (formID.FullMasterIndex == FormID.SmallMasterMarker && Meta.SmallMasterFlag != null) return false; 
         if (formID.FullMasterIndex == FormID.MediumMasterMarker && Meta.MediumMasterFlag != null) return false; 
         return true;
