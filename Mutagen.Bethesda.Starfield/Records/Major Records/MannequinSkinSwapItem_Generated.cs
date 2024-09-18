@@ -930,8 +930,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMannequinSkinSwapItem item,
+            IMannequinSkinSwapItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MannequinSkinSwapItem DeepCopy(

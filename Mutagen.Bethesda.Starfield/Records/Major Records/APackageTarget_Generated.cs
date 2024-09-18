@@ -817,8 +817,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CountOrDistance = rhs.CountOrDistance;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAPackageTarget item,
+            IAPackageTargetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public APackageTarget DeepCopy(

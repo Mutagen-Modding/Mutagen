@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -163,11 +164,23 @@ public partial class OblivionMod : AMod
 
     public static BinaryWriteBuilderTargetChoice<IOblivionModGetter> WriteBuilder() =>
         new(GameRelease.Oblivion, OblivionWriteBuilderInstantiator.Instance);
+
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 public partial interface IOblivionModGetter
 {
     BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite { get; }
+}
+
+partial class OblivionModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IOblivionMod item, IOblivionModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class OblivionModBinaryOverlay
@@ -184,6 +197,7 @@ internal partial class OblivionModBinaryOverlay
     public bool IsMediumMaster => false;
     public bool ListsOverriddenForms => false;
     public MasterStyle MasterStyle => this.GetMasterStyle();
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
     
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
 

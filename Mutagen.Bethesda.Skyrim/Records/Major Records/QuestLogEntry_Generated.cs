@@ -1368,8 +1368,20 @@ namespace Mutagen.Bethesda.Skyrim
                     item.QNAM = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestLogEntry item,
+            IQuestLogEntryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestLogEntry DeepCopy(

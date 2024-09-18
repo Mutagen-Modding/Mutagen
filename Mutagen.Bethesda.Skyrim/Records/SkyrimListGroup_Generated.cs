@@ -1194,8 +1194,22 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            ISkyrimListGroup<T> item,
+            ISkyrimListGroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, ICellBlock, IBinaryItem
+            where TGetter : class, ICellBlockGetter, IBinaryItem;
         #endregion
         
         public SkyrimListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(

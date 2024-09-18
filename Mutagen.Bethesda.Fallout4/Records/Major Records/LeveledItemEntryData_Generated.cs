@@ -1115,8 +1115,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unused2 = rhs.Unused2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILeveledItemEntryData item,
+            ILeveledItemEntryDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LeveledItemEntryData DeepCopy(

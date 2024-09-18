@@ -2519,8 +2519,20 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             item.ModelFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ModelFilename, rhs.ModelFilename);
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFurniture item,
+            IFurnitureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,

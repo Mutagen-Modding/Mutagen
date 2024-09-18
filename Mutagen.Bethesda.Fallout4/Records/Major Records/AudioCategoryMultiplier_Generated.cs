@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Multiplier = rhs.Multiplier;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAudioCategoryMultiplier item,
+            IAudioCategoryMultiplierGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AudioCategoryMultiplier DeepCopy(

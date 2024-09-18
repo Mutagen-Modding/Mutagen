@@ -958,8 +958,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.NoCrime = rhs.NoCrime;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IOwnership item,
+            IOwnershipGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Ownership DeepCopy(

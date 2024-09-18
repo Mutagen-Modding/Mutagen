@@ -1013,8 +1013,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.LayerNumber = rhs.LayerNumber;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILayerHeader item,
+            ILayerHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LayerHeader DeepCopy(

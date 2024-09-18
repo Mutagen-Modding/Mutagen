@@ -917,8 +917,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Node = rhs.Node;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEquipmentSlot item,
+            IEquipmentSlotGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public EquipmentSlot DeepCopy(

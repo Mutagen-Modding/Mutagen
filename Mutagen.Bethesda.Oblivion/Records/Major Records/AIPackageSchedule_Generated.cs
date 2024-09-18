@@ -1047,8 +1047,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Duration = rhs.Duration;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAIPackageSchedule item,
+            IAIPackageScheduleGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AIPackageSchedule DeepCopy(

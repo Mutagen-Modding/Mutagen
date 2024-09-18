@@ -2016,8 +2016,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Rings = rhs.Rings;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetDetails item,
+            IPlanetDetailsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlanetDetails DeepCopy(

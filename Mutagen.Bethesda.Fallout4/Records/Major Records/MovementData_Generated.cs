@@ -1472,8 +1472,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unused = rhs.Unused.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMovementData item,
+            IMovementDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MovementData DeepCopy(

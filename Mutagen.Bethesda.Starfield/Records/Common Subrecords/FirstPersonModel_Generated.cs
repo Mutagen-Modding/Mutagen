@@ -1143,8 +1143,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFirstPersonModel item,
+            IFirstPersonModelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FirstPersonModel DeepCopy(

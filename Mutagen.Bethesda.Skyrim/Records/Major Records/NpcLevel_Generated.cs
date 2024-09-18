@@ -838,8 +838,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Level = rhs.Level;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcLevel item,
+            INpcLevelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANpcLevel item,

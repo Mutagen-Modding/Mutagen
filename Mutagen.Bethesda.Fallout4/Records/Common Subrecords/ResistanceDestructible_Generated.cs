@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Value = rhs.Value;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IResistanceDestructible item,
+            IResistanceDestructibleGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ResistanceDestructible DeepCopy(

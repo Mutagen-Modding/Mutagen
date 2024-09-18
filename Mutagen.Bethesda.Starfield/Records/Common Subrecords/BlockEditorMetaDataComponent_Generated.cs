@@ -1433,8 +1433,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownEnding = rhs.UnknownEnding.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBlockEditorMetaDataComponent item,
+            IBlockEditorMetaDataComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

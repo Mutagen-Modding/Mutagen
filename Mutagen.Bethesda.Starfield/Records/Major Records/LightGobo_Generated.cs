@@ -1903,8 +1903,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.IsAnimated = rhs.IsAnimated;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILightGobo item,
+            ILightGoboGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LightGobo DeepCopy(

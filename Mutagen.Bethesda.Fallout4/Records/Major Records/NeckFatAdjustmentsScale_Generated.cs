@@ -934,8 +934,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Y = rhs.Y;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INeckFatAdjustmentsScale item,
+            INeckFatAdjustmentsScaleGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NeckFatAdjustmentsScale DeepCopy(

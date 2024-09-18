@@ -2708,8 +2708,20 @@ namespace Mutagen.Bethesda.Oblivion
                 item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
             }
             if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4)) return;
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICombatStyleData item,
+            ICombatStyleDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CombatStyleData DeepCopy(

@@ -1195,8 +1195,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DialogueSubtype.SetTo(rhs.DialogueSubtype.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRadioSceneAction item,
+            IRadioSceneActionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IASceneAction item,

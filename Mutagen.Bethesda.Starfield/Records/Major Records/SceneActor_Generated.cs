@@ -947,8 +947,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.BehaviorFlags = rhs.BehaviorFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISceneActor item,
+            ISceneActorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SceneActor DeepCopy(

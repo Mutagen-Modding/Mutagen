@@ -1379,8 +1379,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Description = rhs.Description.DeepCopy();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkRank item,
+            IPerkRankGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PerkRank DeepCopy(

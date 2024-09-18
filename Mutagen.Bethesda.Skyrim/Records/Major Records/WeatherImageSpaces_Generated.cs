@@ -1040,8 +1040,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Night.SetTo(rhs.Night.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherImageSpaces item,
+            IWeatherImageSpacesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherImageSpaces DeepCopy(

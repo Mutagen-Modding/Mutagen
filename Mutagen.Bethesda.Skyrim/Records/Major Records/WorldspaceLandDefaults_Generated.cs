@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.DefaultWaterHeight = rhs.DefaultWaterHeight;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceLandDefaults item,
+            IWorldspaceLandDefaultsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorldspaceLandDefaults DeepCopy(

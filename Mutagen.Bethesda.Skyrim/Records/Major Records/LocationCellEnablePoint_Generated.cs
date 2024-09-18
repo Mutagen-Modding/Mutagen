@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Grid = rhs.Grid;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationCellEnablePoint item,
+            ILocationCellEnablePointGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationCellEnablePoint DeepCopy(

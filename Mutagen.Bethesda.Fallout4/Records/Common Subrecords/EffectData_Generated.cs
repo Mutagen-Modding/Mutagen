@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Duration = rhs.Duration;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEffectData item,
+            IEffectDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public EffectData DeepCopy(

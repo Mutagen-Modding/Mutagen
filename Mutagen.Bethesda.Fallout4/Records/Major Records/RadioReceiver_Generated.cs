@@ -1121,8 +1121,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NoSignalStatic = rhs.NoSignalStatic;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRadioReceiver item,
+            IRadioReceiverGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RadioReceiver DeepCopy(

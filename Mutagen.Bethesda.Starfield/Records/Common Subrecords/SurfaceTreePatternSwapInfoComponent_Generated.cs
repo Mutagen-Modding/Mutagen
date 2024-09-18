@@ -874,8 +874,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.DAT2 = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISurfaceTreePatternSwapInfoComponent item,
+            ISurfaceTreePatternSwapInfoComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

@@ -1167,8 +1167,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Animations = rhs.Animations;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkeletalModel item,
+            ISkeletalModelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SkeletalModel DeepCopy(

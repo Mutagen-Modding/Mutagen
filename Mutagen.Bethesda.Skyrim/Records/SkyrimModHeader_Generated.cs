@@ -1854,8 +1854,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.INCC = rhs.INCC;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkyrimModHeader item,
+            ISkyrimModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SkyrimModHeader DeepCopy(

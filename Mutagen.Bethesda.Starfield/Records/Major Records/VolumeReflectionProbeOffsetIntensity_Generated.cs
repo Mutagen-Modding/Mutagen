@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Float4 = rhs.Float4;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IVolumeReflectionProbeOffsetIntensity item,
+            IVolumeReflectionProbeOffsetIntensityGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public VolumeReflectionProbeOffsetIntensity DeepCopy(

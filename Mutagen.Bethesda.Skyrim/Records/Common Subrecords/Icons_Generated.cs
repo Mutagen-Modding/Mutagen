@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Skyrim
         {
             item.LargeIconFilename.GivenPath = rhs.LargeIconFilename.GivenPath;
             item.SmallIconFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SmallIconFilename, rhs.SmallIconFilename);
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IIcons item,
+            IIconsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Icons DeepCopy(

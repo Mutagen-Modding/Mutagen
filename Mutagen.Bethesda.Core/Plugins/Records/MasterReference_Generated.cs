@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 item.FileSize = rhs.FileSize;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMasterReference item,
+            IMasterReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MasterReference DeepCopy(

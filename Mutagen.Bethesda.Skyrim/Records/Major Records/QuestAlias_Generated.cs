@@ -3240,8 +3240,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.VoiceTypes.SetTo(rhs.VoiceTypes.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestAlias item,
+            IQuestAliasGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestAlias DeepCopy(

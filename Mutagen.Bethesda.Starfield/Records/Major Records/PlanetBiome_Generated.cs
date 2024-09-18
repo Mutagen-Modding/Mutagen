@@ -1460,8 +1460,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown4 = rhs.Unknown4.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetBiome item,
+            IPlanetBiomeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlanetBiome DeepCopy(

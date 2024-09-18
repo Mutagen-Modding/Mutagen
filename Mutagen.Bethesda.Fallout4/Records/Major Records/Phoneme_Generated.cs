@@ -3039,8 +3039,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FLAP = rhs.FLAP;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPhoneme item,
+            IPhonemeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Phoneme DeepCopy(

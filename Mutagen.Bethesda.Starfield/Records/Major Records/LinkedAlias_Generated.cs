@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AliasID = rhs.AliasID;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILinkedAlias item,
+            ILinkedAliasGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LinkedAlias DeepCopy(

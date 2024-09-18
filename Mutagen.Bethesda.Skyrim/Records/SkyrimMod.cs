@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -191,6 +192,16 @@ public partial interface ISkyrimModGetter
     BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> BeginWrite { get; }
 }
 
+partial class SkyrimModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(ISkyrimMod item, ISkyrimModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
+}
+
 internal partial class SkyrimModBinaryOverlay
 {
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
@@ -220,6 +231,8 @@ internal partial class SkyrimModBinaryOverlay
         new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
             this, 
             SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class SkyrimModSetterCommon

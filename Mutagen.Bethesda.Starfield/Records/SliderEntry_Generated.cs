@@ -1068,8 +1068,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.XpMultiplier = rhs.XpMultiplier;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISliderEntry item,
+            ISliderEntryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SliderEntry DeepCopy(

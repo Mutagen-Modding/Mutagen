@@ -917,8 +917,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Chance = rhs.Chance;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISoundItem item,
+            ISoundItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SoundItem DeepCopy(

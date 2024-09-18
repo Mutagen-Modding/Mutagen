@@ -971,8 +971,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.GridPoint = rhs.GridPoint;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILoadScreenLocation item,
+            ILoadScreenLocationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LoadScreenLocation DeepCopy(

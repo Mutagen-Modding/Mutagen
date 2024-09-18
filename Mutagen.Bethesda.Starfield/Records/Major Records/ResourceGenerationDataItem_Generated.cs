@@ -920,8 +920,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Floats = rhs.Floats.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IResourceGenerationDataItem item,
+            IResourceGenerationDataItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ResourceGenerationDataItem DeepCopy(

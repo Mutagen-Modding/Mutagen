@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Value = rhs.Value;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IKeyFrame item,
+            IKeyFrameGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public KeyFrame DeepCopy(

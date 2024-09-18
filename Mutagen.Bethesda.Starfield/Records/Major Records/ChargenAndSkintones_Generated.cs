@@ -1135,8 +1135,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FaceSkinTones = rhs.FaceSkinTones;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IChargenAndSkintones item,
+            IChargenAndSkintonesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ChargenAndSkintones DeepCopy(

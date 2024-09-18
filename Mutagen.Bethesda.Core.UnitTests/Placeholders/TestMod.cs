@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
@@ -35,6 +33,11 @@ public class TestMod : ITestMod, IDisposable
     public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => throw new NotImplementedException();
     public IBinaryModdedWriteBuilderTargetChoice BeginWrite => throw new NotImplementedException();
     public uint GetRecordCount()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMod DeepCopy()
     {
         throw new NotImplementedException();
     }

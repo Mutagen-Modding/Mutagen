@@ -100,6 +100,8 @@ public interface IModGetter :
     /// </summary>
     /// <returns>Calculated record count of the contained records</returns>
     uint GetRecordCount();
+
+    IMod DeepCopy();
 }
 
 /// <summary>

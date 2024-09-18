@@ -1020,8 +1020,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Preset = rhs.Preset;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITintLayer item,
+            ITintLayerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TintLayer DeepCopy(

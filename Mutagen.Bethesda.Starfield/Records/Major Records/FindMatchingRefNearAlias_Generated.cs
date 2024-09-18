@@ -975,8 +975,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.RefType.SetTo(rhs.RefType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFindMatchingRefNearAlias item,
+            IFindMatchingRefNearAliasGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FindMatchingRefNearAlias DeepCopy(

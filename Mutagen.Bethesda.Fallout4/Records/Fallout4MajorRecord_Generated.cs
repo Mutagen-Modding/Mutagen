@@ -1501,8 +1501,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Fallout4MajorRecordFlags = rhs.Fallout4MajorRecordFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout4MajorRecord item,
+            IFallout4MajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,

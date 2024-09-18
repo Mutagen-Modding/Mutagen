@@ -985,8 +985,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown4 = rhs.Unknown4;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanetModelComponentXMPMSubItem item,
+            IPlanetModelComponentXMPMSubItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlanetModelComponentXMPMSubItem DeepCopy(

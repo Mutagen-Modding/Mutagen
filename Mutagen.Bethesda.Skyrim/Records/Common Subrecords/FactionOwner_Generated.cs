@@ -918,8 +918,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.RequiredRank = rhs.RequiredRank;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFactionOwner item,
+            IFactionOwnerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IOwnerTarget item,

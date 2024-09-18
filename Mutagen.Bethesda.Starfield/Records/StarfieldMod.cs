@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -179,11 +180,23 @@ public partial class StarfieldMod : AMod
     IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
 
     public static BinaryWriteBuilderTargetChoice<IStarfieldModGetter> WriteBuilder(StarfieldRelease release) => new(release.ToGameRelease(), StarfieldWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 public partial interface IStarfieldModGetter
 {
     BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> BeginWrite { get; }
+}
+
+partial class StarfieldModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IStarfieldMod item, IStarfieldModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class StarfieldModBinaryOverlay
@@ -214,6 +227,8 @@ internal partial class StarfieldModBinaryOverlay
         new BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter>(
             this, 
             StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class StarfieldModSetterCommon

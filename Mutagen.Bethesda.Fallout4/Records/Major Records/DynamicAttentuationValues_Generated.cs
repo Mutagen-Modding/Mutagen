@@ -1404,8 +1404,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FadeOutCurveValue4 = rhs.FadeOutCurveValue4;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDynamicAttentuationValues item,
+            IDynamicAttentuationValuesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DynamicAttentuationValues DeepCopy(

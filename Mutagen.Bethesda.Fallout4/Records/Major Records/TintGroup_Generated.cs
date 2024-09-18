@@ -1142,8 +1142,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.CategoryIndex = rhs.CategoryIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITintGroup item,
+            ITintGroupGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TintGroup DeepCopy(

@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using DynamicData.Aggregation;
+using Loqui.Internal;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -172,11 +173,23 @@ public partial class Fallout4Mod : AMod
 
     public static BinaryWriteBuilderTargetChoice<IFallout4ModGetter> WriteBuilder(Fallout4Release release) =>
         new(release.ToGameRelease(), Fallout4WriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 public partial interface IFallout4ModGetter
 {
     BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> BeginWrite { get; }
+}
+
+partial class Fallout4ModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IFallout4Mod item, IFallout4ModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        item.ModKey = rhs.ModKey;
+    }
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -209,6 +222,8 @@ internal partial class Fallout4ModBinaryOverlay
         new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(
             this, 
             Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class Fallout4ModCommon

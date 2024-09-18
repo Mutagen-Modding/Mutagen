@@ -953,8 +953,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CellData = rhs.CellData.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceMaxHeight item,
+            IWorldspaceMaxHeightGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorldspaceMaxHeight DeepCopy(

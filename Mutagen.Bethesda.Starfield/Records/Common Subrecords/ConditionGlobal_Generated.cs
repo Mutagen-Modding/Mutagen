@@ -906,8 +906,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ComparisonValue.SetTo(rhs.ComparisonValue.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IConditionGlobal item,
+            IConditionGlobalGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             ICondition item,

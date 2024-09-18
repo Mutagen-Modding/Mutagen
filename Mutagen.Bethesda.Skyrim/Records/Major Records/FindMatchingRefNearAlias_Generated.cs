@@ -903,8 +903,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Type = rhs.Type;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFindMatchingRefNearAlias item,
+            IFindMatchingRefNearAliasGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FindMatchingRefNearAlias DeepCopy(

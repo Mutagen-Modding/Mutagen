@@ -965,8 +965,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Rotation = rhs.Rotation;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITeleportDestination item,
+            ITeleportDestinationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TeleportDestination DeepCopy(

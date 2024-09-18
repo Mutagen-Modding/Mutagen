@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LegendaryModifier.SetTo(rhs.LegendaryModifier.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILegendaryMod item,
+            ILegendaryModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LegendaryMod DeepCopy(

@@ -1011,8 +1011,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EventMapping.SetTo(rhs.EventMapping.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISoundReference item,
+            ISoundReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SoundReference DeepCopy(

@@ -884,8 +884,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Color = rhs.Color;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IColorFrame item,
+            IColorFrameGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ColorFrame DeepCopy(

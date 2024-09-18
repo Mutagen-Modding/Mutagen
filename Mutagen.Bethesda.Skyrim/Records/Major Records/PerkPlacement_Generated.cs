@@ -970,8 +970,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkPlacement item,
+            IPerkPlacementGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PerkPlacement DeepCopy(

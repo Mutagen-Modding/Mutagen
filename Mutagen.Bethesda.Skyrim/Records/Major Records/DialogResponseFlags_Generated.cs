@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ResetHours = rhs.ResetHours;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponseFlags item,
+            IDialogResponseFlagsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponseFlags DeepCopy(

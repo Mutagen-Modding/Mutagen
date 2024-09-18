@@ -1204,8 +1204,22 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IStarfieldGroup<T> item,
+            IStarfieldGroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IStarfieldMajorRecordInternal, IBinaryItem
+            where TGetter : class, IStarfieldMajorRecordGetter, IBinaryItem;
         #endregion
         
         public StarfieldGroup<T> DeepCopy<T, TGetter, T_TranslMask>(

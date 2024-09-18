@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MaterialType.SetTo(rhs.MaterialType.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedObjectCollision item,
+            IPlacedObjectCollisionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlacedObjectCollision DeepCopy(

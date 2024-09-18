@@ -1183,8 +1183,22 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IOblivionGroup<T> item,
+            IOblivionGroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem;
         #endregion
         
         public OblivionGroup<T> DeepCopy<T, TGetter, T_TranslMask>(

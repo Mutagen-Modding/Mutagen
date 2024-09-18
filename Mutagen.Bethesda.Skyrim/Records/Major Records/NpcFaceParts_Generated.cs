@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Mouth = rhs.Mouth;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcFaceParts item,
+            INpcFacePartsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcFaceParts DeepCopy(

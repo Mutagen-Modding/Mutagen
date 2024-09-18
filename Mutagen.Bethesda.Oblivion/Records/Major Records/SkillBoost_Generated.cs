@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Boost = rhs.Boost;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkillBoost item,
+            ISkillBoostGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SkillBoost DeepCopy(

@@ -870,8 +870,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Submenu.SetTo(rhs.Submenu.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITerminalMenuItemSubmenu item,
+            ITerminalMenuItemSubmenuGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IATerminalMenuItemTarget item,

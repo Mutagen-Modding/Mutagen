@@ -1019,8 +1019,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.WTMX = rhs.WTMX;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAimAssistPosePoint item,
+            IAimAssistPosePointGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AimAssistPosePoint DeepCopy(

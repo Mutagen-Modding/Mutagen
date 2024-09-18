@@ -1013,8 +1013,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownDATA2 = rhs.UnknownDATA2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationFaction item,
+            ILocationFactionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationFaction DeepCopy(

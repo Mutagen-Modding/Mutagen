@@ -863,8 +863,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Terminal.SetTo(rhs.Terminal.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHolotapeTerminal item,
+            IHolotapeTerminalGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAHolotapeData item,

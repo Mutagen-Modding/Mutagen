@@ -1557,8 +1557,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Luck = rhs.Luck;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICreatureData item,
+            ICreatureDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CreatureData DeepCopy(

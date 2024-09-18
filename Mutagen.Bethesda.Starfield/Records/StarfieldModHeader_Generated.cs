@@ -2246,8 +2246,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.CHGL = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStarfieldModHeader item,
+            IStarfieldModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public StarfieldModHeader DeepCopy(

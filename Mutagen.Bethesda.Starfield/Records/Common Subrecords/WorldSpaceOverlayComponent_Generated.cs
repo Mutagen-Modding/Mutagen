@@ -1024,8 +1024,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SurfaceBlock.SetTo(rhs.SurfaceBlock.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldSpaceOverlayComponent item,
+            IWorldSpaceOverlayComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

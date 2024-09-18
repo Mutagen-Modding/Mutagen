@@ -937,8 +937,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Scale = rhs.Scale;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStaticPlacement item,
+            IStaticPlacementGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public StaticPlacement DeepCopy(

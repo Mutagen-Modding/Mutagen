@@ -1047,8 +1047,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.UseValueSecond = rhs.UseValueSecond;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkillData item,
+            ISkillDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SkillData DeepCopy(

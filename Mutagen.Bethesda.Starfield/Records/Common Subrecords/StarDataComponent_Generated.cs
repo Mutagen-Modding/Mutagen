@@ -1270,8 +1270,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TemperatureInK = rhs.TemperatureInK;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStarDataComponent item,
+            IStarDataComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

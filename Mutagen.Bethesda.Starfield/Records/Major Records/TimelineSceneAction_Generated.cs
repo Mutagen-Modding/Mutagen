@@ -1138,8 +1138,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CNAM = rhs.CNAM;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITimelineSceneAction item,
+            ITimelineSceneActionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IASceneAction item,

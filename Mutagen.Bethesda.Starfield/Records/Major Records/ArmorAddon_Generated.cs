@@ -2764,8 +2764,20 @@ namespace Mutagen.Bethesda.Starfield
             item.BoneDataModifiers = new GenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>>(
                 male: rhs.BoneDataModifiers.Male.Select(x => new FormLink<IBoneModifierGetter>(x.FormKey)).ToExtendedList<IFormLinkGetter<IBoneModifierGetter>>(),
                 female: rhs.BoneDataModifiers.Female.Select(x => new FormLink<IBoneModifierGetter>(x.FormKey)).ToExtendedList<IFormLinkGetter<IBoneModifierGetter>>());
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IArmorAddon item,
+            IArmorAddonGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,

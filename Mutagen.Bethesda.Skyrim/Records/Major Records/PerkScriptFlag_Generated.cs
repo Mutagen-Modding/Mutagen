@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FragmentIndex = rhs.FragmentIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkScriptFlag item,
+            IPerkScriptFlagGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PerkScriptFlag DeepCopy(

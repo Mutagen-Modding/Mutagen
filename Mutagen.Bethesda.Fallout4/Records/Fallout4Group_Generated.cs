@@ -1204,8 +1204,22 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IFallout4Group<T> item,
+            IFallout4GroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
+            where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem;
         #endregion
         
         public Fallout4Group<T> DeepCopy<T, TGetter, T_TranslMask>(

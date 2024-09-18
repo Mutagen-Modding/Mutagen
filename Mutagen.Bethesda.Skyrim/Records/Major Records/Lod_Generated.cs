@@ -1037,8 +1037,20 @@ namespace Mutagen.Bethesda.Skyrim
             item.Level1.GivenPath = rhs.Level1.GivenPath;
             item.Level2.GivenPath = rhs.Level2.GivenPath;
             item.Level3.GivenPath = rhs.Level3.GivenPath;
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILod item,
+            ILodGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Lod DeepCopy(

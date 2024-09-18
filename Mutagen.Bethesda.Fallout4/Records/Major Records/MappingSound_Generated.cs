@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Descriptor.SetTo(rhs.Descriptor.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMappingSound item,
+            IMappingSoundGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MappingSound DeepCopy(

@@ -971,8 +971,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.RecoveryTime = rhs.RecoveryTime;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IShoutWord item,
+            IShoutWordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ShoutWord DeepCopy(

@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownFloat = rhs.UnknownFloat;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponseTROT item,
+            IDialogResponseTROTGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponseTROT DeepCopy(

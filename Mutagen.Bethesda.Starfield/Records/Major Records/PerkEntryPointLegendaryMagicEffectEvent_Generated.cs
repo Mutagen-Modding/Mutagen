@@ -952,8 +952,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkEntryPointLegendaryMagicEffectEvent item,
+            IPerkEntryPointLegendaryMagicEffectEventGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPerkEntryPointEffect item,

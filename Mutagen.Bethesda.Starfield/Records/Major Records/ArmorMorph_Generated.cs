@@ -923,8 +923,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FirstPersonMorph.SetTo(rhs.FirstPersonMorph.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IArmorMorph item,
+            IArmorMorphGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ArmorMorph DeepCopy(

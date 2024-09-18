@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.RotationSpeed = rhs.RotationSpeed;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAnimationChangeThresholds item,
+            IAnimationChangeThresholdsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AnimationChangeThresholds DeepCopy(

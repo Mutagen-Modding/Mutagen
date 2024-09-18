@@ -1338,8 +1338,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Type = rhs.Type;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStoryManagerEventNode item,
+            IStoryManagerEventNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IAStoryManagerNodeInternal item,
             IAStoryManagerNodeGetter rhs,

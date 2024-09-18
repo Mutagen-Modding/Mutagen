@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Door.SetTo(rhs.Door.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILinkedDoor item,
+            ILinkedDoorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LinkedDoor DeepCopy(

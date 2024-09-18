@@ -1184,8 +1184,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EndPhase = rhs.EndPhase;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IASceneAction item,
+            IASceneActionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ASceneAction DeepCopy(

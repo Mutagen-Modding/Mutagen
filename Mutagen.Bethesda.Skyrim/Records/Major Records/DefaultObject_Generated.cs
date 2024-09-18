@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Object.SetTo(rhs.Object.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDefaultObject item,
+            IDefaultObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DefaultObject DeepCopy(

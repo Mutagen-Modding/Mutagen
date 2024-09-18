@@ -1501,8 +1501,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.StarfieldMajorRecordFlags = rhs.StarfieldMajorRecordFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStarfieldMajorRecord item,
+            IStarfieldMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,

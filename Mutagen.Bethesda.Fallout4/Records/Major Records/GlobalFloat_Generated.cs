@@ -1212,8 +1212,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.OutputChar = rhs.OutputChar;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGlobalFloat item,
+            IGlobalFloatGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IGlobalInternal item,
             IGlobalGetter rhs,

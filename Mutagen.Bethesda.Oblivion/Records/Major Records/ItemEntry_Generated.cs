@@ -917,8 +917,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Count = rhs.Count;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IItemEntry item,
+            IItemEntryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ItemEntry DeepCopy(

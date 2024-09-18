@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Object.SetTo(rhs.Object.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDefaultObjectUse item,
+            IDefaultObjectUseGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DefaultObjectUse DeepCopy(

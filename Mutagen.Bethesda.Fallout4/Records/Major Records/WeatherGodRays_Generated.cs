@@ -1280,8 +1280,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.GodRayLateSunset.SetTo(rhs.GodRayLateSunset.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherGodRays item,
+            IWeatherGodRaysGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherGodRays DeepCopy(

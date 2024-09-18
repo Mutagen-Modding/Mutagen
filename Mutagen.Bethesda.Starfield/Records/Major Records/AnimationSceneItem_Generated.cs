@@ -1918,8 +1918,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ACEP = rhs.ACEP;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAnimationSceneItem item,
+            IAnimationSceneItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AnimationSceneItem DeepCopy(

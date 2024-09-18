@@ -1103,8 +1103,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.PNAM = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHnamHnam item,
+            IHnamHnamGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public HnamHnam DeepCopy(

@@ -1226,8 +1226,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.DebrisCount = rhs.DebrisCount;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDestructionStageData item,
+            IDestructionStageDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DestructionStageData DeepCopy(

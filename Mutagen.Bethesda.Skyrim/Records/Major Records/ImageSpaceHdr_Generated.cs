@@ -1251,8 +1251,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.EyeAdaptStrength = rhs.EyeAdaptStrength;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImageSpaceHdr item,
+            IImageSpaceHdrGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImageSpaceHdr DeepCopy(
