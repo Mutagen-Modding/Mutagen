@@ -401,7 +401,7 @@
                                         HorizontalAlignment="Right"
                                         Command="{TemplateBinding DeleteSelectedItemsCommand}"
                                         ToolTip="Delete selected items">
-                                        <icon:PackIconFontAwesome Kind="BackspaceSolid" />
+                                        <icon:PackIconFontAwesome Kind="BackwardSolid" />
                                     </Button>
                                 </Grid>
                             </Border>
@@ -629,7 +629,7 @@
                                                                 <icon:PackIconFontAwesome
                                                                     Height="12"
                                                                     Margin="0,0,4,0"
-                                                                    Kind="SearchSolid"
+                                                                    Kind="MagnifyingGlassSolid"
                                                                     ToolTip="Search records" />
                                                             </Setter.Value>
                                                         </Setter>
@@ -910,7 +910,7 @@
                                         HorizontalAlignment="Right"
                                         Command="{TemplateBinding DeleteSelectedItemsCommand}"
                                         ToolTip="Delete selected items">
-                                        <icon:PackIconFontAwesome Kind="BackspaceSolid" />
+                                        <icon:PackIconFontAwesome Kind="BackwardSolid" />
                                     </Button>
                                 </Grid>
                             </Border>
@@ -1033,7 +1033,7 @@
                                                                 <icon:PackIconFontAwesome
                                                                     Height="12"
                                                                     Margin="0,0,4,0"
-                                                                    Kind="SearchSolid"
+                                                                    Kind="MagnifyingGlassSolid"
                                                                     ToolTip="Search records" />
                                                             </Setter.Value>
                                                         </Setter>
