@@ -179,7 +179,11 @@ partial class OblivionModSetterTranslationCommon
         TranslationCrystal? copyMask, bool deepCopy)
     {
         if (!deepCopy) return;
-        item.ModKey = rhs.ModKey;
+        if (item is not AMod mod)
+        {
+            throw new NotImplementedException();
+        }
+        mod.SetModKey(rhs.ModKey);
     }
 }
 

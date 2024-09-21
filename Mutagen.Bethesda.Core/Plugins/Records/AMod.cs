@@ -18,12 +18,11 @@ public abstract class AMod : IMod
     
     public ModKey ModKey => _modKey;
 
-    ModKey IMod.ModKey
+    internal void SetModKey(ModKey modKey)
     {
-        get => _modKey;
-        set => _modKey = value;
+        _modKey = modKey;
     }
-
+    
     /// <inheritdoc />
     public abstract GameRelease GameRelease { get; }
 

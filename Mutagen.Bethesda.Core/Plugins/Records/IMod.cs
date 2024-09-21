@@ -110,11 +110,6 @@ public interface IModGetter :
 public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, IFormLinkContainer
 {
     /// <summary>
-    /// The associated ModKey
-    /// </summary>
-    new ModKey ModKey { get; internal set; }
-    
-    /// <summary>
     /// List of master references.
     /// </summary>
     /// <returns>List of master references</returns>
