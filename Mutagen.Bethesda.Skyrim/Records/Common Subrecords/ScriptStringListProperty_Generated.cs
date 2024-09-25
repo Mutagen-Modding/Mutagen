@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame);
             item.Data.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                     {

@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.PrependLength);
                     item.UnknownInts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int32>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     if (dataFrame.Remaining < 4) return null;

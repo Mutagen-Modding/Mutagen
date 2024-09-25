@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Starfield
                 swapCoords: true);
             item.References.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: WorldspaceReference.TryCreateFromBinary));
         }

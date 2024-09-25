@@ -1652,13 +1652,13 @@ namespace Mutagen.Bethesda.Starfield
             item.ResourceGenOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Fauna.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.Unknown3 = frame.ReadInt32();
             item.Flora.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetFlora>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     expectedLengthLength: 4,
                     expectedLength: 9,
                     reader: frame,
