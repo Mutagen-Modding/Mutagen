@@ -6697,5 +6697,29 @@
     <Compile Include="Records\Common Subrecords\VehicleManagementComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleConfigComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleConfigData_Generated.cs">
+      <DependentUpon>VehicleConfigData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleMaterialTable_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleAudioRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleVfxRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleFrictionRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleWeaponData_Generated.cs">
+      <DependentUpon>VehicleWeaponData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleWWiseData_Generated.cs">
+      <DependentUpon>VehicleWWiseData.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

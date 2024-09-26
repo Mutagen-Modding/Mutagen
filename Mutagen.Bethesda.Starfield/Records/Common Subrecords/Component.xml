@@ -551,4 +551,16 @@
     <Fields>
     </Fields>
   </Object>
+  <Object name="VehicleConfigComponent" objType="Subrecord" baseClass="AComponent" >
+    <Fields>
+      <List name="SuspensionBoneModifiers" recordType="VCSB" >
+        <FormLink refName="BoneModifier" />
+      </List>
+      <RefDirect name="Config" refName="VehicleConfigData" />
+      <FormLink name="MountedWeapon" refName="Weapon" recordType="VCMT" />
+      <RefDirect name="Weapon" refName="VehicleWeaponData" />
+      <RefDirect name="WWise" refName="VehicleWWiseData" />
+      <RefDirect name="Material" refName="VehicleMaterialTable" />
+    </Fields>
+  </Object>
 </Loqui>

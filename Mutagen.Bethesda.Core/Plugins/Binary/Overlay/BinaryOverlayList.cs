@@ -122,6 +122,7 @@ internal abstract class BinaryOverlayList
                 1 => initialHeader.Content[0],
                 2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
                 4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content)),
+                8 => checked((int)BinaryPrimitives.ReadUInt64LittleEndian(initialHeader.Content)),
                 _ => throw new NotImplementedException(),
             };
             stream.Position += initialHeader.TotalLength;
@@ -157,6 +158,7 @@ internal abstract class BinaryOverlayList
             1 => (int)stream.ReadUInt8(),
             2 => (int)stream.ReadUInt16(),
             4 => checked((int)stream.ReadUInt32()),
+            8 => checked((int)stream.ReadUInt64()),
             _ => throw new NotImplementedException(),
         };
         List<T> ret = new();

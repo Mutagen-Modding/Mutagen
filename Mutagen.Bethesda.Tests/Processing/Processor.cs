@@ -274,6 +274,7 @@ public abstract class Processor
             case "OldMars.esm":
             case "Constellation.esm":
             case "SFBGS003.esm":
+            case "SFBGS004.esm":
             case "SFBGS006.esm":
             case "SFBGS007.esm":
             case "SFBGS008.esm":
