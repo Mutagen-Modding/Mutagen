@@ -3,14 +3,14 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
-        <VersionPrefix>0.46</VersionPrefix>
+        <VersionPrefix>0.46.1</VersionPrefix>
         <ImplicitUsings>true</ImplicitUsings>
         <IsPackable>false</IsPackable>
         <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
         <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-        <Copyright>2023</Copyright>
+        <Copyright>2024</Copyright>
         <Company>Mutagen</Company>
         <Product>Mutagen</Product>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
