@@ -121,6 +121,17 @@ var npcLink = formKey.ToLink<INpcGetter>();
 
 [:octicons-arrow-right-24: FormLinks](plugins/ModKey, FormKey, FormLink.md#formlink)
 
+## Check if FormLink is Pointing to a Null record
+``` { .cs hl_lines="2" }
+Npc npc = ...;
+if (!npc.Race.IsNull)
+{
+   // ...
+}
+```
+
+[:octicons-arrow-right-24: FormLink Nullability](best-practices/FormLink-Nullability.md/#checking-if-formlink-is-null)
+
 ## Convert FormLink to NullableFormLink
 === SetTo
     ``` { .cs hl_lines="4" }

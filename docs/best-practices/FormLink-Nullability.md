@@ -1,4 +1,31 @@
-# FormLink vs FormLinkNullable
+# FormLink Nullability
+
+## Checking if FormLink is Null
+FormIDs can all point to "no" record by containing all zeros.  This is referred to as being null.
+
+However, this is NOT the same as being a null object in C#.  FormLink members on Mutagen objects are never themselves null objects.
+
+!!! bug "Improper FormLink Null Checks"
+    ```cs
+	if (npc.Race == null) { ... }
+	if (npc.Race != null) { ... }
+	if (npc.Race is null) { ... }
+	if (npc.Race is not null) { ... }
+	```
+	IDEs will warn that these expressions will "always be true/false".  This is because the FormLink member itself is never null, so this check is not really checking anything.
+	
+	This is proper API for many other members that are [nullable fields](../familiar/Nullability-to-Indicate-Record-Presence.md).  But FormLink fields are not marked as nullable, in the C# language null object sense.
+	
+	
+!!! tip "Proper FormLink Null Checks"
+    ```cs
+	if (!npc.Race.IsNull) { ... }
+	if (npc.Race.IsNull) { ... }
+	```
+	This is calling a member ON FormLink called `IsNull`, which checks many various ways that a FormID can be null.  
+
+
+## FormLink vs FormLinkNullable
 FormLinks are used widely as a strongly typed identifier of a record, as an alternative to FormID, EditorID, or even FormKey.
 
 When using them, though, there are two variants:
@@ -6,12 +33,12 @@ When using them, though, there are two variants:
 - `FormLink`
 - `FormLinkNullable`
 
-## Which You Should Use
+### Which You Should Use
 Generally, the answer is you should always use `FormLink`, rather than `FormLinkNullable`.
 
 Mutagen exposes `FormLinkNullable` in certain areas, but you yourself should rarely if ever decide to create a `FormLinkNullable` when writing your own code.
 
-## What is FormLinkNullable
+### What is FormLinkNullable
 If you shouldn't use it, what is `FormLinkNullable` for?
 
 It is used by Mutagen itself to expose a very specific difference in how FormIDs can be null within a binary file on the disk.
