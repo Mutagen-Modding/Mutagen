@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.GridPosition = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.References.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: WorldspaceReference.TryCreateFromBinary));
         }

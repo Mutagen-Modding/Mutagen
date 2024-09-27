@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VehicleConfigData" objType="Subrecord" recordType="VCCD">
+    <Fields>
+      <String name="NodeNamesSuspensionFrontLeft" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesSuspensionFrontRight" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesSuspensionRearLeft" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesSuspensionRearRight" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesWheelFrontLeft" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesWheelFrontRight" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesWheelRearLeft" binaryType="PrependLengthWithNullIfContent" />
+      <String name="NodeNamesWheelRearRight" binaryType="PrependLengthWithNullIfContent" />
+      <UInt32 name="ChassisForwardAxis" />
+      <UInt32 name="ChassisUpAxis" />
+      <Float name="ChassisVehicleMass" />
+      <Float name="ChassisFrictionEqualizer" />
+      <Float name="ChassisTorqueRoll" />
+      <Float name="ChassisTorquePitch" />
+      <Float name="ChassisTorqueYaw" />
+      <Float name="ChassisInertiaYaw" />
+      <Float name="ChassisInertiaRoll" />
+      <Float name="ChassisInertialPitch" />
+      <Float name="ChassisExtraTorque" />
+      <Float name="ChassisMaxVelocityPositionalFriction" />
+      <Float name="ChassisFriction" />
+      <Float name="ChassisRestitution" />
+      <Float name="ChassisComOffsetForward" />
+      <Float name="ChassisComOffsetUp" />
+      <Float name="WheelSlipAngle" />
+      <Float name="WheelFriction" />
+      <Float name="WheelScale" />
+      <Float name="WheelMass" />
+      <Float name="WheelViscosityFriction" />
+      <Int32 name="WheelCastType" />
+      <Float name="SuspensionStrength" />
+      <Float name="SuspensionDampingCompression" />
+      <Float name="SuspensionDampingRelaxation" />
+      <Float name="SuspensionLength" />
+      <Float name="SuspensionOffsetsUpFront" />
+      <Float name="SuspensionOffsetsUpBack" />
+      <Float name="SuspensionOffsetsFront" />
+      <Float name="SuspensionOffsetsBack" />
+      <Float name="SuspensionOffsetsLateral" />
+      <Float name="SteeringMaxAngle" />
+      <Float name="SteeringMaxAngleAtSpeed" />
+      <Float name="EngineMaxSpeed" />
+      <Float name="EngineMaxTorque" />
+      <Float name="EngineMinRpm" />
+      <Float name="EngineMaxRpm" />
+      <Float name="EngineOptRpm" />
+      <Float name="EngineTorqueMinRpm" />
+      <Float name="EngineTorqueMaxRpm" />
+      <Float name="EngineResistanceMinRpm" />
+      <Float name="EngineResistanceMaxRpm" />
+      <Float name="EngineResistanceOptRpm" />
+      <Float name="TransmissionDownshiftRpm" />
+      <Float name="TransmissionUpshiftRpm" />
+      <Float name="TransmissionClutchDelayTime" />
+      <Float name="TransmissionGearRatioReverse" />
+      <Float name="TransmissionGearRatioFirst" />
+      <Float name="TransmissionGearRatioSecond" />
+      <Float name="TransmissionGearRatioThird" />
+      <Float name="TransmissionGearRatioFourth" />
+      <Float name="TransmissionTorqueRatioFrontWheels" />
+      <Float name="TransmissionTorqueRatioBackWheels" />
+      <Float name="BrakesMaxTorque" />
+      <Float name="BrakesMinPedalInputToBlock" />
+      <Float name="BrakesWheelsMinTimeToBlock" />
+      <Float name="AerodynamicsAirDensity" />
+      <Float name="AerodynamicsFrontArea" />
+      <Float name="AerodynamicsDragCoefficient" />
+      <Float name="AerodynamicsLiftCoefficient" />
+      <Float name="AerodynamicsExtraGravityMultiplier" />
+      <Float name="VelocityDampingNormalSpin" />
+      <Float name="VelocityDampingCollisionSpin" />
+      <Float name="VelocityDampingCollisionThreshold" />
+      <Float name="HandlingReorientStrength" />
+      <Float name="HandlingReorientDamping" />
+      <Float name="HandlingVerticalBoostForce" />
+      <Float name="HandlingForwardBoostForce" />
+      <Float name="HandlingBoostMaxVelocity" />
+      <Float name="HandlingBoostDuration" />
+      <Float name="HandlingVerticalBoostDuration" />
+      <Float name="HandlingBoostRechargeDelay" />
+      <Float name="HandlingBoostRechargeDuration" />
+      <Float name="WaterStrengthFront" />
+      <Float name="WaterStrengthBack" />
+      <Float name="WaterDampFront" />
+      <Float name="WaterDampBack" />
+      <Float name="WaterDrive" />
+      <Float name="WaterRotationDamp" />
+      <Bool name="BumperEnable" byteLength="1" />
+      <Float name="BumperForward" />
+      <Float name="BumperUp" />
+      <Float name="BumperWidth" />
+      <Float name="BumperRadius" />
+      <Float name="CollisionDampingAngular" />
+      <Float name="CollisionMinSlopeCos" />
+      <Float name="ControlsSteeringPidThirdPersonPValue" />
+      <Float name="ControlsSteeringPidThirdPersonIValue" />
+      <Float name="ControlsSteeringPidThirdPersonDValue" />
+      <Float name="ControlsSteeringPidFirstPersonPValue" />
+      <Float name="ControlsSteeringPidFirstPersonIValue" />
+      <Float name="ControlsSteeringPidFirstPersonDValue" />
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <Float name="CameraBaseZoomFirstPerson" />
+      <Float name="CameraBaseZoomThirdPersonNear" />
+      <Float name="CameraBaseZoomThirdPersonFar" />
+      <Float name="CameraBaseHeightFirstPerson" />
+      <Float name="CameraBaseHeightThirdPersonNear" />
+      <Float name="CameraBaseHeightThirdPersonFar" />
+      <Float name="CameraBaseFovFirstPerson" />
+      <Float name="CameraBaseFovThirdPersonNear" />
+      <Float name="CameraBaseFovThirdPersonFar" />
+      <Float name="CameraBoostFovOffsetNear" />
+      <Float name="CameraBoostFovOffsetFar" />
+      <Float name="CameraSpeedRatioZoomOffsetThirdPersonNear" />
+      <Float name="CameraSpeedRatioZoomOffsetThirdPersonFar" />
+      <Float name="CameraSpeedPidPValue" />
+      <Float name="CameraSpeedPidIValue" />
+      <Float name="CameraSpeedPidDValue" />
+      <Float name="CameraFovBlendFactorAiming" />
+      <Float name="CameraFovBlendFactorBoosting" />
+      <Float name="CameraPositionBlendFilteringFactor" />
+      <Float name="CameraPositionRLOffsetFirstPerson" />
+      <Float name="HandlingForwardBoostForceInWater" />
+      <Float name="WaterLinDamp" />
+      <Float name="WheelMaxFriction" />
+      <Float name="WaterBobAccelerationDeadZone" />
+      <Float name="WaterBobAccelerationPitch" />
+      <Float name="WaterBobAccelerationRoll" />
+      <Float name="WaterBobNaturalPitchPeriod" />
+      <Float name="WaterBobNaturalRollPeriod" />
+      <Float name="WaterBobNaturalAmplitude" />
+      <Float name="WaterBobTorquePitch" />
+      <Float name="WaterBobTorqueRoll" />
+      <Float name="ChassisLinearDamping" />
+      <Float name="SuspensionMaxVisualSpeedCompression" />
+      <Float name="SuspensionMaxVisualSpeedRelaxation" />
+      <Float name="SlideFactorGainGreaterThanThreshold" />
+      <Float name="SlideFactorLostLessThanOrEqualThreshold" />
+      <Float name="SlideFactorThreshold" />
+      <Float name="SlideFactorFrictionAtMax" />
+      <Float name="SlideFactorViscosityFrictionAtMax" />
+    </Fields>
+  </Object>
+</Loqui>

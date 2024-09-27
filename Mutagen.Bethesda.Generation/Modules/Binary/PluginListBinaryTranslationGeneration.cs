@@ -216,6 +216,9 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         case 4:
                             args.Add("countLengthLength: 4");
                             break;
+                        case 8:
+                            args.Add("countLengthLength: 8");
+                            break;
                         default:
                             throw new NotImplementedException();
                     }
@@ -468,7 +471,10 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                     args.Add("amount: frame.ReadUInt16()");
                                     break;
                                 case 4:
-                                    args.Add("amount: frame.ReadInt32()");
+                                    args.Add("amount: checked((int)frame.ReadUInt32())");
+                                    break;
+                                case 8:
+                                    args.Add("amount: checked((int)frame.ReadUInt64())");
                                     break;
                                 default:
                                     throw new NotImplementedException();

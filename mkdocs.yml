@@ -107,7 +107,7 @@ nav:
     - Accessing Known Records: best-practices/Accessing-Known-Records.md
     - FormLinks Target Getter Interfaces: best-practices/FormLinks-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
-    - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
+    - FormLink Nullability: best-practices/FormLink-Nullability.md
     # - FormLinks vs FormID/FormKey as Identifiers:
     # - Reference FormLinks By EditorID:
     # - LinkCache Resolution Type Choice:

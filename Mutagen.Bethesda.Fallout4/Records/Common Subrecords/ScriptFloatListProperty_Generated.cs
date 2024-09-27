@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
             item.Data.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }

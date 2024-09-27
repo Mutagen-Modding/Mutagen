@@ -74,6 +74,7 @@ public partial class AComponent
         BGSOrbitalDataComponent_Component,
         BGSCityMapsUsage_Component,
         BGSVehicleManagement,
+        BGSVehicleConfig,
     }
 
     public static bool TryCreateFromBinary(
@@ -220,6 +221,8 @@ public partial class AComponent
                 return CityMapsUsageComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSVehicleManagement:
                 return VehicleManagementComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSVehicleConfig:
+                return VehicleConfigComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -325,6 +328,7 @@ partial class AComponentBinaryWriteTranslation
             IOrbitalDataComponentGetter _ => AComponent.ComponentType.BGSOrbitalDataComponent_Component,
             ICityMapsUsageComponentGetter _ => AComponent.ComponentType.BGSCityMapsUsage_Component,
             IVehicleManagementComponentGetter _ => AComponent.ComponentType.BGSVehicleManagement,
+            IVehicleConfigComponentGetter _ => AComponent.ComponentType.BGSVehicleConfig,
             _ => throw new NotImplementedException()
         };
 
@@ -469,6 +473,8 @@ partial class AComponentBinaryOverlay
                 return CityMapsUsageComponentBinaryOverlay.CityMapsUsageComponentFactory(stream, package);
             case AComponent.ComponentType.BGSVehicleManagement:
                 return VehicleManagementComponentBinaryOverlay.VehicleManagementComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSVehicleConfig:
+                return VehicleConfigComponentBinaryOverlay.VehicleConfigComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

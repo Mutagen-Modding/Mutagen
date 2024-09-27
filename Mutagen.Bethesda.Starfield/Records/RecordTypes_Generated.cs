@@ -934,7 +934,11 @@ public partial class RecordTypes
     public static readonly RecordType VAIX = new(0x58494156);
     public static readonly RecordType VAVN = new(0x4E564156);
     public static readonly RecordType VAVX = new(0x58564156);
+    public static readonly RecordType VCCD = new(0x44434356);
     public static readonly RecordType VCLR = new(0x524C4356);
+    public static readonly RecordType VCMT = new(0x544D4356);
+    public static readonly RecordType VCSB = new(0x42534356);
+    public static readonly RecordType VCTT = new(0x54544356);
     public static readonly RecordType VDAC = new(0x43414456);
     public static readonly RecordType VDDC = new(0x43444456);
     public static readonly RecordType VDIN = new(0x4E494456);
@@ -947,6 +951,7 @@ public partial class RecordTypes
     public static readonly RecordType VISI = new(0x49534956);
     public static readonly RecordType VLMS = new(0x534D4C56);
     public static readonly RecordType VMAD = new(0x44414D56);
+    public static readonly RecordType VMRT = new(0x54524D56);
     public static readonly RecordType VNAM = new(0x4D414E56);
     public static readonly RecordType VNML = new(0x4C4D4E56);
     public static readonly RecordType VOLI = new(0x494C4F56);
@@ -957,6 +962,7 @@ public partial class RecordTypes
     public static readonly RecordType VTXT = new(0x54585456);
     public static readonly RecordType VTYP = new(0x50595456);
     public static readonly RecordType VUSE = new(0x45535556);
+    public static readonly RecordType VWWD = new(0x44575756);
     public static readonly RecordType VX00 = new(0x30305856);
     public static readonly RecordType WABB = new(0x42424157);
     public static readonly RecordType WABS = new(0x53424157);

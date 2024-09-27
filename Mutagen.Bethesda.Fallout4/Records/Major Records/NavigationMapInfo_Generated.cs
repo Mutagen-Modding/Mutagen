@@ -1969,17 +1969,17 @@ namespace Mutagen.Bethesda.Fallout4
             item.UnknownFloat = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.MergedTo.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.LinkedDoors.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: LinkedDoor.TryCreateFromBinary));
             if (frame.Complete) return;

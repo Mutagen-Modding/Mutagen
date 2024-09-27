@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame);
             item.Objects.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: ScriptObjectProperty.TryCreateFromBinary));
         }

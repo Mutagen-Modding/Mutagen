@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.Navmeshes.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }

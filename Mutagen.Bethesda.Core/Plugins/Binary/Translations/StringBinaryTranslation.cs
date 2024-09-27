@@ -85,17 +85,22 @@ public sealed class StringBinaryTranslation
                 }
             case StringBinaryType.PrependLength:
             {
-                var len = reader.ReadInt32();
-                return BinaryStringUtility.ToZString(reader.ReadMemory(len), encoding);
+                var len = reader.ReadUInt32();
+                return BinaryStringUtility.ToZString(reader.ReadMemory(checked((int)len)), encoding);
             }
             case StringBinaryType.PrependLengthWithNullIfContent:
             {
-                var len = reader.ReadInt32();
-                return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(len), encoding);
+                var len = reader.ReadUInt32();
+                return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(checked((int)len)), encoding);
             }
             case StringBinaryType.PrependLengthUShort:
             {
-                var len = reader.ReadInt16();
+                var len = reader.ReadUInt16();
+                return BinaryStringUtility.ToZString(reader.ReadMemory(len), encoding);
+            }
+            case StringBinaryType.PrependLengthUInt8:
+            {
+                var len = reader.ReadUInt8();
                 return BinaryStringUtility.ToZString(reader.ReadMemory(len), encoding);
             }
             default:

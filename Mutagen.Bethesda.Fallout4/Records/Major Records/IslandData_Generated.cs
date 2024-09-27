@@ -1354,12 +1354,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.Max = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Vertices.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }

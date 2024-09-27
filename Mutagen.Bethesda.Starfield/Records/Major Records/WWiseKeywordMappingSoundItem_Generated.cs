@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
             item.GuidPairs.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WWiseKeywordMappingSoundItemGuidPair>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: WWiseKeywordMappingSoundItemGuidPair.TryCreateFromBinary));
         }

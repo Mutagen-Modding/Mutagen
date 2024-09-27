@@ -1107,6 +1107,9 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                 case 4: 
                     writer.Write(items.Count); 
                     break; 
+                case 8: 
+                    writer.Write((long)items.Count); 
+                    break; 
                 default: 
                     throw new NotImplementedException(); 
             } 

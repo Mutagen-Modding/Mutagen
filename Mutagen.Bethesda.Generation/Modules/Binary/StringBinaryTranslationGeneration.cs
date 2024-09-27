@@ -251,6 +251,8 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 case StringBinaryType.PrependLengthUShort:  
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                case StringBinaryType.PrependLengthUInt8:  
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 1, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 default:  
                     throw new NotImplementedException();  
             }  
@@ -275,6 +277,9 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                 break;  
             case StringBinaryType.PrependLengthUShort:  
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;");  
+                break;  
+            case StringBinaryType.PrependLengthUInt8:  
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}[0] + 1;");  
                 break;  
             case StringBinaryType.NullTerminate:  
                 sb.AppendLine($"ret.{AccessorTransform(typeGen, typeGen.Name)} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)});");  

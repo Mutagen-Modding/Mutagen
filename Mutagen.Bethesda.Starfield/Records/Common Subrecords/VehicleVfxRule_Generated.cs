@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -39,32 +38,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ScriptEntryStructs :
-        IEquatable<IScriptEntryStructsGetter>,
-        ILoquiObjectSetter<ScriptEntryStructs>,
-        IScriptEntryStructs
+    public partial class VehicleVfxRule :
+        IEquatable<IVehicleVfxRuleGetter>,
+        ILoquiObjectSetter<VehicleVfxRule>,
+        IVehicleVfxRule
     {
         #region Ctor
-        public ScriptEntryStructs()
+        public VehicleVfxRule()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptProperty> _Members = new ExtendedList<ScriptProperty>();
-        public ExtendedList<ScriptProperty> Members
-        {
-            get => this._Members;
-            init => this._Members = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptPropertyGetter> IScriptEntryStructsGetter.Members => _Members;
+        #region Rule
+        public String Rule { get; set; } = string.Empty;
         #endregion
-
+        #region BoundObject
+        private readonly IFormLink<IStarfieldMajorRecordGetter> _BoundObject = new FormLink<IStarfieldMajorRecordGetter>();
+        public IFormLink<IStarfieldMajorRecordGetter> BoundObject
+        {
+            get => _BoundObject;
+            set => _BoundObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IStarfieldMajorRecordGetter> IVehicleVfxRuleGetter.BoundObject => this.BoundObject;
         #endregion
 
         #region To String
@@ -73,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptEntryStructsMixIn.Print(
+            VehicleVfxRuleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -84,16 +82,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IScriptEntryStructsGetter rhs) return false;
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IVehicleVfxRuleGetter rhs) return false;
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IScriptEntryStructsGetter? obj)
+        public bool Equals(IVehicleVfxRuleGetter? obj)
         {
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -103,9 +101,18 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem Members)
+            public Mask(TItem initialValue)
             {
-                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(Members, Enumerable.Empty<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>());
+                this.Rule = initialValue;
+                this.BoundObject = initialValue;
+            }
+
+            public Mask(
+                TItem Rule,
+                TItem BoundObject)
+            {
+                this.Rule = Rule;
+                this.BoundObject = BoundObject;
             }
 
             #pragma warning disable CS8618
@@ -117,7 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>? Members;
+            public TItem Rule;
+            public TItem BoundObject;
             #endregion
 
             #region Equals
@@ -130,13 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Members, rhs.Members)) return false;
+                if (!object.Equals(this.Rule, rhs.Rule)) return false;
+                if (!object.Equals(this.BoundObject, rhs.BoundObject)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Members);
+                hash.Add(this.Rule);
+                hash.Add(this.BoundObject);
                 return hash.ToHashCode();
             }
 
@@ -145,18 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (this.Members != null)
-                {
-                    if (!eval(this.Members.Overall)) return false;
-                    if (this.Members.Specific != null)
-                    {
-                        foreach (var item in this.Members.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.Rule)) return false;
+                if (!eval(this.BoundObject)) return false;
                 return true;
             }
             #endregion
@@ -164,18 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (this.Members != null)
-                {
-                    if (eval(this.Members.Overall)) return true;
-                    if (this.Members.Specific != null)
-                    {
-                        foreach (var item in this.Members.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (eval(this.Rule)) return true;
+                if (eval(this.BoundObject)) return true;
                 return false;
             }
             #endregion
@@ -183,64 +173,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ScriptEntryStructs.Mask<R>();
+                var ret = new VehicleVfxRule.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                if (Members != null)
-                {
-                    obj.Members = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>?>(eval(this.Members.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>());
-                    if (Members.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>();
-                        obj.Members.Specific = l;
-                        foreach (var item in Members.Specific)
-                        {
-                            MaskItemIndexed<R, ScriptProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScriptProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.Rule = eval(this.Rule);
+                obj.BoundObject = eval(this.BoundObject);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ScriptEntryStructs.Mask<bool>? printMask = null)
+            public string Print(VehicleVfxRule.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ScriptEntryStructs.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VehicleVfxRule.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ScriptEntryStructs.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(VehicleVfxRule.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.Members?.Overall ?? true)
-                        && Members is {} MembersItem)
+                    if (printMask?.Rule ?? true)
                     {
-                        sb.AppendLine("Members =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(MembersItem.Overall);
-                            if (MembersItem.Specific != null)
-                            {
-                                foreach (var subItem in MembersItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(Rule, "Rule");
+                    }
+                    if (printMask?.BoundObject ?? true)
+                    {
+                        sb.AppendItem(BoundObject, "BoundObject");
                     }
                 }
             }
@@ -266,17 +232,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>? Members;
+            public Exception? Rule;
+            public Exception? BoundObject;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ScriptEntryStructs_FieldIndex enu = (ScriptEntryStructs_FieldIndex)index;
+                VehicleVfxRule_FieldIndex enu = (VehicleVfxRule_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEntryStructs_FieldIndex.Members:
-                        return Members;
+                    case VehicleVfxRule_FieldIndex.Rule:
+                        return Rule;
+                    case VehicleVfxRule_FieldIndex.BoundObject:
+                        return BoundObject;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -284,11 +253,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ScriptEntryStructs_FieldIndex enu = (ScriptEntryStructs_FieldIndex)index;
+                VehicleVfxRule_FieldIndex enu = (VehicleVfxRule_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEntryStructs_FieldIndex.Members:
-                        this.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(ex, null);
+                    case VehicleVfxRule_FieldIndex.Rule:
+                        this.Rule = ex;
+                        break;
+                    case VehicleVfxRule_FieldIndex.BoundObject:
+                        this.BoundObject = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -297,11 +269,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ScriptEntryStructs_FieldIndex enu = (ScriptEntryStructs_FieldIndex)index;
+                VehicleVfxRule_FieldIndex enu = (VehicleVfxRule_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEntryStructs_FieldIndex.Members:
-                        this.Members = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>)obj;
+                    case VehicleVfxRule_FieldIndex.Rule:
+                        this.Rule = (Exception?)obj;
+                        break;
+                    case VehicleVfxRule_FieldIndex.BoundObject:
+                        this.BoundObject = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -311,7 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Members != null) return true;
+                if (Rule != null) return true;
+                if (BoundObject != null) return true;
                 return false;
             }
             #endregion
@@ -337,23 +313,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                if (Members is {} MembersItem)
                 {
-                    sb.AppendLine("Members =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(MembersItem.Overall);
-                        if (MembersItem.Specific != null)
-                        {
-                            foreach (var subItem in MembersItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(Rule, "Rule");
+                }
+                {
+                    sb.AppendItem(BoundObject, "BoundObject");
                 }
             }
             #endregion
@@ -363,7 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Members?.Overall, rhs.Members?.Overall), Noggog.ExceptionExt.Combine(this.Members?.Specific, rhs.Members?.Specific));
+                ret.Rule = this.Rule.Combine(rhs.Rule);
+                ret.BoundObject = this.BoundObject.Combine(rhs.BoundObject);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -387,7 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public ScriptProperty.TranslationMask? Members;
+            public bool Rule;
+            public bool BoundObject;
             #endregion
 
             #region Ctors
@@ -397,6 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Rule = defaultOn;
+                this.BoundObject = defaultOn;
             }
 
             #endregion
@@ -412,7 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Members == null ? DefaultOn : !Members.GetCrystal().CopyNothing, Members?.GetCrystal()));
+                ret.Add((Rule, null));
+                ret.Add((BoundObject, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -423,27 +392,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleVfxRuleCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VehicleVfxRuleSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptEntryStructsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => VehicleVfxRuleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptEntryStructsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((VehicleVfxRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ScriptEntryStructs CreateFromBinary(
+        public static VehicleVfxRule CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ScriptEntryStructs();
-            ((ScriptEntryStructsSetterCommon)((IScriptEntryStructsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new VehicleVfxRule();
+            ((VehicleVfxRuleSetterCommon)((IVehicleVfxRuleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -454,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ScriptEntryStructs item,
+            out VehicleVfxRule item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -469,29 +443,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ScriptEntryStructsSetterCommon)((IScriptEntryStructsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((VehicleVfxRuleSetterCommon)((IVehicleVfxRuleGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ScriptEntryStructs GetNew()
+        internal static VehicleVfxRule GetNew()
         {
-            return new ScriptEntryStructs();
+            return new VehicleVfxRule();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IScriptEntryStructs :
-        ILoquiObjectSetter<IScriptEntryStructs>,
-        IScriptEntryStructsGetter
+    public partial interface IVehicleVfxRule :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IVehicleVfxRule>,
+        IVehicleVfxRuleGetter
     {
-        new ExtendedList<ScriptProperty> Members { get; }
+        new String Rule { get; set; }
+        new IFormLink<IStarfieldMajorRecordGetter> BoundObject { get; set; }
     }
 
-    public partial interface IScriptEntryStructsGetter :
+    public partial interface IVehicleVfxRuleGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IScriptEntryStructsGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IVehicleVfxRuleGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -499,50 +476,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ScriptEntryStructs_Registration.Instance;
-        IReadOnlyList<IScriptPropertyGetter> Members { get; }
+        static ILoquiRegistration StaticRegistration => VehicleVfxRule_Registration.Instance;
+        String Rule { get; }
+        IFormLinkGetter<IStarfieldMajorRecordGetter> BoundObject { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ScriptEntryStructsMixIn
+    public static partial class VehicleVfxRuleMixIn
     {
-        public static void Clear(this IScriptEntryStructs item)
+        public static void Clear(this IVehicleVfxRule item)
         {
-            ((ScriptEntryStructsSetterCommon)((IScriptEntryStructsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((VehicleVfxRuleSetterCommon)((IVehicleVfxRuleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptEntryStructs.Mask<bool> GetEqualsMask(
-            this IScriptEntryStructsGetter item,
-            IScriptEntryStructsGetter rhs,
+        public static VehicleVfxRule.Mask<bool> GetEqualsMask(
+            this IVehicleVfxRuleGetter item,
+            IVehicleVfxRuleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IScriptEntryStructsGetter item,
+            this IVehicleVfxRuleGetter item,
             string? name = null,
-            ScriptEntryStructs.Mask<bool>? printMask = null)
+            VehicleVfxRule.Mask<bool>? printMask = null)
         {
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).Print(
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IScriptEntryStructsGetter item,
+            this IVehicleVfxRuleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ScriptEntryStructs.Mask<bool>? printMask = null)
+            VehicleVfxRule.Mask<bool>? printMask = null)
         {
-            ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).Print(
+            ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -550,21 +528,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IScriptEntryStructsGetter item,
-            IScriptEntryStructsGetter rhs,
-            ScriptEntryStructs.TranslationMask? equalsMask = null)
+            this IVehicleVfxRuleGetter item,
+            IVehicleVfxRuleGetter rhs,
+            VehicleVfxRule.TranslationMask? equalsMask = null)
         {
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).Equals(
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IScriptEntryStructs lhs,
-            IScriptEntryStructsGetter rhs)
+            this IVehicleVfxRule lhs,
+            IVehicleVfxRuleGetter rhs)
         {
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -573,11 +551,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IScriptEntryStructs lhs,
-            IScriptEntryStructsGetter rhs,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+            this IVehicleVfxRule lhs,
+            IVehicleVfxRuleGetter rhs,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -586,28 +564,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IScriptEntryStructs lhs,
-            IScriptEntryStructsGetter rhs,
-            out ScriptEntryStructs.ErrorMask errorMask,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+            this IVehicleVfxRule lhs,
+            IVehicleVfxRuleGetter rhs,
+            out VehicleVfxRule.ErrorMask errorMask,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ScriptEntryStructs.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VehicleVfxRule.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IScriptEntryStructs lhs,
-            IScriptEntryStructsGetter rhs,
+            this IVehicleVfxRule lhs,
+            IVehicleVfxRuleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -615,32 +593,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ScriptEntryStructs DeepCopy(
-            this IScriptEntryStructsGetter item,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+        public static VehicleVfxRule DeepCopy(
+            this IVehicleVfxRuleGetter item,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
-            return ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ScriptEntryStructs DeepCopy(
-            this IScriptEntryStructsGetter item,
-            out ScriptEntryStructs.ErrorMask errorMask,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+        public static VehicleVfxRule DeepCopy(
+            this IVehicleVfxRuleGetter item,
+            out VehicleVfxRule.ErrorMask errorMask,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
-            return ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ScriptEntryStructs DeepCopy(
-            this IScriptEntryStructsGetter item,
+        public static VehicleVfxRule DeepCopy(
+            this IVehicleVfxRuleGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -648,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IScriptEntryStructs item,
+            this IVehicleVfxRule item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ScriptEntryStructsSetterCommon)((IScriptEntryStructsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((VehicleVfxRuleSetterCommon)((IVehicleVfxRuleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -668,40 +646,41 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ScriptEntryStructs_FieldIndex
+    internal enum VehicleVfxRule_FieldIndex
     {
-        Members = 0,
+        Rule = 0,
+        BoundObject = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ScriptEntryStructs_Registration : ILoquiRegistration
+    internal partial class VehicleVfxRule_Registration : ILoquiRegistration
     {
-        public static readonly ScriptEntryStructs_Registration Instance = new ScriptEntryStructs_Registration();
+        public static readonly VehicleVfxRule_Registration Instance = new VehicleVfxRule_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ScriptEntryStructs.Mask<>);
+        public static readonly Type MaskType = typeof(VehicleVfxRule.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptEntryStructs.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(VehicleVfxRule.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ScriptEntryStructs);
+        public static readonly Type ClassType = typeof(VehicleVfxRule);
 
-        public static readonly Type GetterType = typeof(IScriptEntryStructsGetter);
+        public static readonly Type GetterType = typeof(IVehicleVfxRuleGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IScriptEntryStructs);
+        public static readonly Type SetterType = typeof(IVehicleVfxRule);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ScriptEntryStructs";
+        public const string FullName = "Mutagen.Bethesda.Starfield.VehicleVfxRule";
 
-        public const string Name = "ScriptEntryStructs";
+        public const string Name = "VehicleVfxRule";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -709,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ScriptEntryStructsBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(VehicleVfxRuleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -740,29 +719,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ScriptEntryStructsSetterCommon
+    internal partial class VehicleVfxRuleSetterCommon
     {
-        public static readonly ScriptEntryStructsSetterCommon Instance = new ScriptEntryStructsSetterCommon();
+        public static readonly VehicleVfxRuleSetterCommon Instance = new VehicleVfxRuleSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IScriptEntryStructs item)
+        public void Clear(IVehicleVfxRule item)
         {
             ClearPartial();
-            item.Members.Clear();
+            item.Rule = string.Empty;
+            item.BoundObject.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IScriptEntryStructs obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IVehicleVfxRule obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Members.RemapLinks(mapping);
+            obj.BoundObject.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IScriptEntryStructs item,
+            IVehicleVfxRule item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -770,23 +750,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ScriptEntryStructsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: VehicleVfxRuleBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ScriptEntryStructsCommon
+    internal partial class VehicleVfxRuleCommon
     {
-        public static readonly ScriptEntryStructsCommon Instance = new ScriptEntryStructsCommon();
+        public static readonly VehicleVfxRuleCommon Instance = new VehicleVfxRuleCommon();
 
-        public ScriptEntryStructs.Mask<bool> GetEqualsMask(
-            IScriptEntryStructsGetter item,
-            IScriptEntryStructsGetter rhs,
+        public VehicleVfxRule.Mask<bool> GetEqualsMask(
+            IVehicleVfxRuleGetter item,
+            IVehicleVfxRuleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptEntryStructs.Mask<bool>(false);
-            ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new VehicleVfxRule.Mask<bool>(false);
+            ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -795,21 +775,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IScriptEntryStructsGetter item,
-            IScriptEntryStructsGetter rhs,
-            ScriptEntryStructs.Mask<bool> ret,
+            IVehicleVfxRuleGetter item,
+            IVehicleVfxRuleGetter rhs,
+            VehicleVfxRule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Members = item.Members.CollectionEqualsHelper(
-                rhs.Members,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.Rule = string.Equals(item.Rule, rhs.Rule);
+            ret.BoundObject = item.BoundObject.Equals(rhs.BoundObject);
         }
         
         public string Print(
-            IScriptEntryStructsGetter item,
+            IVehicleVfxRuleGetter item,
             string? name = null,
-            ScriptEntryStructs.Mask<bool>? printMask = null)
+            VehicleVfxRule.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -821,18 +799,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IScriptEntryStructsGetter item,
+            IVehicleVfxRuleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ScriptEntryStructs.Mask<bool>? printMask = null)
+            VehicleVfxRule.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ScriptEntryStructs =>");
+                sb.AppendLine($"VehicleVfxRule =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ScriptEntryStructs) =>");
+                sb.AppendLine($"{name} (VehicleVfxRule) =>");
             }
             using (sb.Brace())
             {
@@ -844,44 +822,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IScriptEntryStructsGetter item,
+            IVehicleVfxRuleGetter item,
             StructuredStringBuilder sb,
-            ScriptEntryStructs.Mask<bool>? printMask = null)
+            VehicleVfxRule.Mask<bool>? printMask = null)
         {
-            if (printMask?.Members?.Overall ?? true)
+            if (printMask?.Rule ?? true)
             {
-                sb.AppendLine("Members =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.Members)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                sb.AppendItem(item.Rule, "Rule");
+            }
+            if (printMask?.BoundObject ?? true)
+            {
+                sb.AppendItem(item.BoundObject.FormKey, "BoundObject");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptEntryStructsGetter? lhs,
-            IScriptEntryStructsGetter? rhs,
+            IVehicleVfxRuleGetter? lhs,
+            IVehicleVfxRuleGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ScriptEntryStructs_FieldIndex.Members) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VehicleVfxRule_FieldIndex.Rule) ?? true))
             {
-                if (!lhs.Members.SequenceEqual(rhs.Members, (l, r) => ((ScriptPropertyCommon)((IScriptPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScriptEntryStructs_FieldIndex.Members)))) return false;
+                if (!string.Equals(lhs.Rule, rhs.Rule)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)VehicleVfxRule_FieldIndex.BoundObject) ?? true))
+            {
+                if (!lhs.BoundObject.Equals(rhs.BoundObject)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IScriptEntryStructsGetter item)
+        public virtual int GetHashCode(IVehicleVfxRuleGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Members);
+            hash.Add(item.Rule);
+            hash.Add(item.BoundObject);
             return hash.ToHashCode();
         }
         
@@ -890,58 +867,38 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ScriptEntryStructs.GetNew();
+            return VehicleVfxRule.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptEntryStructsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVehicleVfxRuleGetter obj)
         {
-            foreach (var item in obj.Members.WhereCastable<IScriptPropertyGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
-            {
-                yield return FormLinkInformation.Factory(item);
-            }
+            yield return FormLinkInformation.Factory(obj.BoundObject);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class ScriptEntryStructsSetterTranslationCommon
+    internal partial class VehicleVfxRuleSetterTranslationCommon
     {
-        public static readonly ScriptEntryStructsSetterTranslationCommon Instance = new ScriptEntryStructsSetterTranslationCommon();
+        public static readonly VehicleVfxRuleSetterTranslationCommon Instance = new VehicleVfxRuleSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IScriptEntryStructs item,
-            IScriptEntryStructsGetter rhs,
+            IVehicleVfxRule item,
+            IVehicleVfxRuleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptEntryStructs_FieldIndex.Members) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)VehicleVfxRule_FieldIndex.Rule) ?? true))
             {
-                errorMask?.PushIndex((int)ScriptEntryStructs_FieldIndex.Members);
-                try
-                {
-                    item.Members.SetTo(
-                        rhs.Members
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rule = rhs.Rule;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VehicleVfxRule_FieldIndex.BoundObject) ?? true))
+            {
+                item.BoundObject.SetTo(rhs.BoundObject.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -952,19 +909,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IScriptEntryStructs item,
-            IScriptEntryStructsGetter rhs,
+            IVehicleVfxRule item,
+            IVehicleVfxRuleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public ScriptEntryStructs DeepCopy(
-            IScriptEntryStructsGetter item,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+        public VehicleVfxRule DeepCopy(
+            IVehicleVfxRuleGetter item,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
-            ScriptEntryStructs ret = (ScriptEntryStructs)((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).GetNew();
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VehicleVfxRule ret = (VehicleVfxRule)((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).GetNew();
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -973,30 +930,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ScriptEntryStructs DeepCopy(
-            IScriptEntryStructsGetter item,
-            out ScriptEntryStructs.ErrorMask errorMask,
-            ScriptEntryStructs.TranslationMask? copyMask = null)
+        public VehicleVfxRule DeepCopy(
+            IVehicleVfxRuleGetter item,
+            out VehicleVfxRule.ErrorMask errorMask,
+            VehicleVfxRule.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptEntryStructs ret = (ScriptEntryStructs)((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).GetNew();
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VehicleVfxRule ret = (VehicleVfxRule)((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).GetNew();
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ScriptEntryStructs.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VehicleVfxRule.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ScriptEntryStructs DeepCopy(
-            IScriptEntryStructsGetter item,
+        public VehicleVfxRule DeepCopy(
+            IVehicleVfxRuleGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ScriptEntryStructs ret = (ScriptEntryStructs)((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)item).CommonInstance()!).GetNew();
-            ((ScriptEntryStructsSetterTranslationCommon)((IScriptEntryStructsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VehicleVfxRule ret = (VehicleVfxRule)((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)item).CommonInstance()!).GetNew();
+            ((VehicleVfxRuleSetterTranslationCommon)((IVehicleVfxRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1012,27 +969,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ScriptEntryStructs
+    public partial class VehicleVfxRule
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptEntryStructs_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ScriptEntryStructs_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => VehicleVfxRule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => VehicleVfxRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptEntryStructsCommon.Instance;
+        protected object CommonInstance() => VehicleVfxRuleCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ScriptEntryStructsSetterCommon.Instance;
+            return VehicleVfxRuleSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptEntryStructsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => VehicleVfxRuleSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptEntryStructsGetter.CommonInstance() => this.CommonInstance();
+        object IVehicleVfxRuleGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IScriptEntryStructsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IVehicleVfxRuleGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IScriptEntryStructsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IVehicleVfxRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1043,31 +1000,26 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ScriptEntryStructsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class VehicleVfxRuleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptEntryStructsBinaryWriteTranslation Instance = new();
+        public static readonly VehicleVfxRuleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IScriptEntryStructsGetter item,
+            IVehicleVfxRuleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScriptPropertyGetter>.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                items: item.Members,
-                countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IScriptPropertyGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((ScriptPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item.Rule,
+                binaryType: StringBinaryType.PrependLengthUInt8);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.BoundObject);
         }
 
         public void Write(
             MutagenWriter writer,
-            IScriptEntryStructsGetter item,
+            IVehicleVfxRuleGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1081,26 +1033,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IScriptEntryStructsGetter)item,
+                item: (IVehicleVfxRuleGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ScriptEntryStructsBinaryCreateTranslation
+    internal partial class VehicleVfxRuleBinaryCreateTranslation
     {
-        public static readonly ScriptEntryStructsBinaryCreateTranslation Instance = new ScriptEntryStructsBinaryCreateTranslation();
+        public static readonly VehicleVfxRuleBinaryCreateTranslation Instance = new VehicleVfxRuleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IScriptEntryStructs item,
+            IVehicleVfxRule item,
             MutagenFrame frame)
         {
-            item.Members.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptProperty>.Instance.Parse(
-                    amount: checked((int)frame.ReadUInt32()),
-                    reader: frame,
-                    transl: ScriptProperty.TryCreateFromBinary));
+            item.Rule = StringBinaryTranslation.Instance.Parse(
+                reader: frame,
+                stringBinaryType: StringBinaryType.PrependLengthUInt8);
+            item.BoundObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1109,14 +1060,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ScriptEntryStructsBinaryTranslationMixIn
+    public static class VehicleVfxRuleBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IScriptEntryStructsGetter item,
+            this IVehicleVfxRuleGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptEntryStructsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((VehicleVfxRuleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1129,55 +1080,56 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ScriptEntryStructsBinaryOverlay :
+    internal partial class VehicleVfxRuleBinaryOverlay :
         PluginBinaryOverlay,
-        IScriptEntryStructsGetter
+        IVehicleVfxRuleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptEntryStructs_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ScriptEntryStructs_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => VehicleVfxRule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => VehicleVfxRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptEntryStructsCommon.Instance;
+        protected object CommonInstance() => VehicleVfxRuleCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptEntryStructsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => VehicleVfxRuleSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptEntryStructsGetter.CommonInstance() => this.CommonInstance();
+        object IVehicleVfxRuleGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IScriptEntryStructsGetter.CommonSetterInstance() => null;
+        object? IVehicleVfxRuleGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IScriptEntryStructsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IVehicleVfxRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEntryStructsCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleVfxRuleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptEntryStructsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => VehicleVfxRuleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptEntryStructsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((VehicleVfxRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Members
-        public IReadOnlyList<IScriptPropertyGetter> Members => BinaryOverlayList.FactoryByCountLength<IScriptPropertyGetter>(_structData, _package, 0, countLength: 4, (s, p) => ScriptPropertyBinaryOverlay.ScriptPropertyFactory(s, p));
-        protected int MembersEndingPos;
+        #region Rule
+        public String Rule => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 1, encoding: _package.MetaData.Encodings.NonTranslated);
+        protected int RuleEndingPos;
         #endregion
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> BoundObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(RuleEndingPos, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ScriptEntryStructsBinaryOverlay(
+        protected VehicleVfxRuleBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1187,14 +1139,14 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static void ScriptEntryStructsParseEndingPositions(
-            ScriptEntryStructsBinaryOverlay ret,
+        public static void VehicleVfxRuleParseEndingPositions(
+            VehicleVfxRuleBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
-            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 0 + 4;
+            ret.RuleEndingPos = ret._structData[0] + 1;
         }
 
-        public static IScriptEntryStructsGetter ScriptEntryStructsFactory(
+        public static IVehicleVfxRuleGetter VehicleVfxRuleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1206,11 +1158,11 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ScriptEntryStructsBinaryOverlay(
+            var ret = new VehicleVfxRuleBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ScriptEntryStructsParseEndingPositions(ret, package);
-            stream.Position += ret.MembersEndingPos;
+            VehicleVfxRuleParseEndingPositions(ret, package);
+            stream.Position += ret.RuleEndingPos + 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1218,12 +1170,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IScriptEntryStructsGetter ScriptEntryStructsFactory(
+        public static IVehicleVfxRuleGetter VehicleVfxRuleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ScriptEntryStructsFactory(
+            return VehicleVfxRuleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1235,7 +1187,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptEntryStructsMixIn.Print(
+            VehicleVfxRuleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1246,16 +1198,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IScriptEntryStructsGetter rhs) return false;
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IVehicleVfxRuleGetter rhs) return false;
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IScriptEntryStructsGetter? obj)
+        public bool Equals(IVehicleVfxRuleGetter? obj)
         {
-            return ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ScriptEntryStructsCommon)((IScriptEntryStructsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((VehicleVfxRuleCommon)((IVehicleVfxRuleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -3785,6 +3785,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "VehicleManagementComponent":
                 case "IVehicleManagementComponentGetter":
                 case "IVehicleManagementComponent":
+                case "VehicleConfigComponent":
+                case "IVehicleConfigComponentGetter":
+                case "IVehicleConfigComponent":
                     break;
                 case "CellXCLAItem":
                 case "ICellXCLAItemGetter":

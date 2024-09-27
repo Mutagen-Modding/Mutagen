@@ -932,7 +932,11 @@ public partial class RecordTypeInts
     public const int VAIX = 0x58494156;
     public const int VAVN = 0x4E564156;
     public const int VAVX = 0x58564156;
+    public const int VCCD = 0x44434356;
     public const int VCLR = 0x524C4356;
+    public const int VCMT = 0x544D4356;
+    public const int VCSB = 0x42534356;
+    public const int VCTT = 0x54544356;
     public const int VDAC = 0x43414456;
     public const int VDDC = 0x43444456;
     public const int VDIN = 0x4E494456;
@@ -945,6 +949,7 @@ public partial class RecordTypeInts
     public const int VISI = 0x49534956;
     public const int VLMS = 0x534D4C56;
     public const int VMAD = 0x44414D56;
+    public const int VMRT = 0x54524D56;
     public const int VNAM = 0x4D414E56;
     public const int VNML = 0x4C4D4E56;
     public const int VOLI = 0x494C4F56;
@@ -955,6 +960,7 @@ public partial class RecordTypeInts
     public const int VTXT = 0x54585456;
     public const int VTYP = 0x50595456;
     public const int VUSE = 0x45535556;
+    public const int VWWD = 0x44575756;
     public const int VX00 = 0x30305856;
     public const int WABB = 0x42424157;
     public const int WABS = 0x53424157;

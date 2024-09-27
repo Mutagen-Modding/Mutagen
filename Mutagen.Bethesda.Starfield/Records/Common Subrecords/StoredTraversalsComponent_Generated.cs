@@ -1366,12 +1366,12 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Traversals.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TraversalReference>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: TraversalReference.TryCreateFromBinary));
                     item.ActivatorTraversals.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<StoredTraversalsComponentItem>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: StoredTraversalsComponentItem.TryCreateFromBinary));
                     return (int)StoredTraversalsComponent_FieldIndex.ActivatorTraversals;

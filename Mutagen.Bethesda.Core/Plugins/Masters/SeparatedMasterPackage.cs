@@ -37,6 +37,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         "OldMars.esm", 
         "Constellation.esm", 
         "SFBGS003.esm", 
+        "SFBGS004.esm", 
         "SFBGS006.esm", 
         "SFBGS007.esm", 
         "SFBGS008.esm"

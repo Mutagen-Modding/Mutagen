@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Starfield
                 frame: frame);
             item.Data.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Boolean>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: BooleanBinaryTranslation<MutagenFrame>.Instance.Parse));
         }
