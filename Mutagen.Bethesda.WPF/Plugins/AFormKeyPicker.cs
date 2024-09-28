@@ -637,7 +637,7 @@ public class AFormKeyPicker : NoggogControl
             .ObserveOn(RxApp.TaskpoolScheduler)
             .Select(x =>
             {
-                return Observable.Create<IMajorRecordIdentifier>(async (obs, cancel) =>
+                return Observable.Create<IMajorRecordIdentifierGetter>(async (obs, cancel) =>
                 {
                     try
                     {
@@ -659,7 +659,7 @@ public class AFormKeyPicker : NoggogControl
                     obs.OnCompleted();
                 });
             })
-            .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
+            .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifierGetter>())
             .ObserveOn(RxApp.TaskpoolScheduler)
             .Select(x => x.ToObservableChangeSet())
             .Switch()
@@ -674,12 +674,12 @@ public class AFormKeyPicker : NoggogControl
                     switch (x.SearchMode)
                     {
                         case FormKeyPickerSearchMode.None:
-                            return Observable.Return<Func<IMajorRecordIdentifier, bool>>(x => false);
+                            return Observable.Return<Func<IMajorRecordIdentifierGetter, bool>>(x => false);
                         case FormKeyPickerSearchMode.EditorID:
                             return this.WhenAnyValue(x => x.EditorID)
                                 .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
                                 .ObserveOn(RxApp.TaskpoolScheduler)
-                                .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                .Select<string, Func<IMajorRecordIdentifierGetter, bool>>(term => (ident) =>
                                 {
                                     var edid = ident.EditorID;
                                     return term.IsNullOrWhitespace() ? true : edid != null && edid.ContainsInsensitive(term);
@@ -701,7 +701,7 @@ public class AFormKeyPicker : NoggogControl
                                 {
                                     return (RawStr: RawStr, FormKey: FormKey.TryFactory(RawStr), FormID: FormID.TryFactory(RawStr, strictLength: false));
                                 })
-                                .Select<(string RawStr, FormKey? FormKey, FormID? ID), Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                .Select<(string RawStr, FormKey? FormKey, FormID? ID), Func<IMajorRecordIdentifierGetter, bool>>(term => (ident) =>
                                 {
                                     var fk = ident.FormKey;
                                     if (fk == term.FormKey) return true;
