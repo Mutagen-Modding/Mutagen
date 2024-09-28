@@ -266,7 +266,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease),
+            _dataFolderGetter = static (param) => GameLocatorLookupCache.Instance.GetDataDirectory(param.GameRelease),
             _loadOrderSetter = static (param, alreadyKnownMasters) =>
             {
                 var dataFolder = param._dataFolderGetter?.Invoke(param) ?? throw new ArgumentNullException("Data folder source was not set");
@@ -507,7 +507,7 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocatorLookupCache.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     
@@ -862,7 +862,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     {
         return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocatorLookupCache.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     
@@ -1184,7 +1184,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     {
         return new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask>(_param with
         {
-            _dataFolderGetter = static (param) => GameLocator.Instance.GetDataDirectory(param.GameRelease)
+            _dataFolderGetter = static (param) => GameLocatorLookupCache.Instance.GetDataDirectory(param.GameRelease)
         });
     }
     

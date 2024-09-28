@@ -3,7 +3,7 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
-        <VersionPrefix>0.46.2</VersionPrefix>
+        <VersionPrefix>0.46.2.1</VersionPrefix>
         <ImplicitUsings>true</ImplicitUsings>
         <IsPackable>false</IsPackable>
         <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>

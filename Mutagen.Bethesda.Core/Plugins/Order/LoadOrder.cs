@@ -474,7 +474,7 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
                 dataDirectory,
@@ -506,7 +506,7 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
                 dataDirectory,
@@ -541,7 +541,7 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
                 dataDirectory,
@@ -574,7 +574,7 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameReleaseInjection = new GameReleaseInjection(gameRelease);
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         return new LoadOrderImporter<TMod>(
                 fileSystem,
                 dataDirectory,
@@ -604,7 +604,7 @@ public static class LoadOrder
         var category = new GameCategoryContext(gameReleaseInjection);
 
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
@@ -616,7 +616,7 @@ public static class LoadOrder
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
             gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -680,7 +680,7 @@ public static class LoadOrder
         var category = new GameCategoryContext(gameReleaseInjection);
 
         var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocator.Instance);
+            GameLocatorLookupCache.Instance);
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
@@ -692,7 +692,7 @@ public static class LoadOrder
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
             gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -765,7 +765,7 @@ public static class LoadOrder
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
             gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -842,7 +842,7 @@ public static class LoadOrder
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
             gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(

@@ -110,7 +110,7 @@ public class MainVM : ViewModel
                     else
                     {
                         var gameReleases = Enum.GetValues<GameRelease>();
-                        var locator = new GameLocator();
+                        var locator = new GameLocatorLookupCache();
                         
                         // Data folder locations
                         var dataFolderLocations = new DataFolderLocations();
@@ -205,10 +205,7 @@ public class MainVM : ViewModel
                         if (mutagenFolder is not null)
                         {
                             var testsFolder = Path.Combine(mutagenFolder, "Mutagen.Bethesda.Tests");
-                            if (testsFolder is not null)
-                            {
-                                p.Path = SelectedConfigPath.TargetPath = Path.Combine(testsFolder, "TestingSettings.json");
-                            }
+                            p.Path = SelectedConfigPath.TargetPath = Path.Combine(testsFolder, "TestingSettings.json");
                         }
                     }
 

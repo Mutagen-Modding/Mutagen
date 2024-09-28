@@ -169,11 +169,10 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
 
-        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,
-                gameLocator.Value), 
+                GameLocatorLookupCache.Instance), 
             DataDirectoryProvider);
 
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
@@ -191,7 +190,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                     new CreationClubEnabledProvider(category),
                     new GameDirectoryProvider(
                         Release,
-                        gameLocator.Value));
+                        GameLocatorLookupCache.Instance));
             },
             CccListingsPathProvider);
 
@@ -424,11 +423,10 @@ public sealed record GameEnvironmentBuilder
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
         
-        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,
-                gameLocator.Value), 
+                GameLocatorLookupCache.Instance), 
             DataDirectoryProvider);
         
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
@@ -446,7 +444,7 @@ public sealed record GameEnvironmentBuilder
                     new CreationClubEnabledProvider(category),
                     new GameDirectoryProvider(
                         Release,
-                        gameLocator.Value));
+                        GameLocatorLookupCache.Instance));
             },
             CccListingsPathProvider);
 

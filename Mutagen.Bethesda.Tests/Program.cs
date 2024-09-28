@@ -45,7 +45,7 @@ class Program
     {
         try
         {
-            var locator = GameLocator.Instance;
+            var locator = GameLocatorLookupCache.Instance;
             var dataDir = locator.GetDataDirectory(cmd.Release);
             var settings = new TestingSettings()
             {
