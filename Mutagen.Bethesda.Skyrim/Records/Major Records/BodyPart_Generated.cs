@@ -3069,12 +3069,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0xC;
         private bool _ExplodableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _BPNDLocation!.Value.Min + 0x10;
         private bool _ExplodableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region TrackingMaxAngle
         private int _TrackingMaxAngleLocation => _BPNDLocation!.Value.Min + 0x14;
@@ -3094,12 +3094,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region SeverableDebris
         private int _SeverableDebrisLocation => _BPNDLocation!.Value.Min + 0x20;
         private bool _SeverableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_SeverableDebrisLocation, 0x4), isSet: _SeverableDebris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_SeverableDebrisLocation, 0x4), isSet: _SeverableDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _BPNDLocation!.Value.Min + 0x24;
         private bool _SeverableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_SeverableExplosionLocation, 0x4), isSet: _SeverableExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_SeverableExplosionLocation, 0x4), isSet: _SeverableExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x28;
@@ -3119,12 +3119,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region SeverableImpactData
         private int _SeverableImpactDataLocation => _BPNDLocation!.Value.Min + 0x44;
         private bool _SeverableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_SeverableImpactDataLocation, 0x4), isSet: _SeverableImpactData_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => _SeverableImpactData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_SeverableImpactDataLocation, 0x4), isSet: _SeverableImpactData_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableImpactData
         private int _ExplodableImpactDataLocation => _BPNDLocation!.Value.Min + 0x48;
         private bool _ExplodableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ExplodableImpactDataLocation, 0x4), isSet: _ExplodableImpactData_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => _ExplodableImpactData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ExplodableImpactDataLocation, 0x4), isSet: _ExplodableImpactData_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4C;

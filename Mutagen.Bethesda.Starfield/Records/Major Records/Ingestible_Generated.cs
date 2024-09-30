@@ -4182,7 +4182,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Addiction
         private int _AddictionLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _Addiction_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> Addiction => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_AddictionLocation, 0x4), isSet: _Addiction_IsSet);
+        public IFormLinkGetter<ISpellGetter> Addiction => _Addiction_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_AddictionLocation, 0x4), isSet: _Addiction_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value.Min + 0xC;

@@ -8111,7 +8111,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value.Min + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> AddonModels => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_AddonModelsLocation, 0x4), isSet: _AddonModels_IsSet);
+        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_AddonModelsLocation, 0x4), isSet: _AddonModels_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value.Min + 0xF8;
@@ -8191,7 +8191,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value.Min + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public IFormLinkGetter<ISoundGetter> AmbientSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet);
+        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DATALocation!.Value.Min + 0x138;

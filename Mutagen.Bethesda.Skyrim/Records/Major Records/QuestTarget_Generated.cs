@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         private int _TargetLocation => _QSTALocation!.Value.Min;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLinkGetter<IPlacedGetter> Target => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _recordData.Span.Slice(_TargetLocation, 0x4), isSet: _Target_IsSet);
+        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _recordData.Span.Slice(_TargetLocation, 0x4), isSet: _Target_IsSet) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;

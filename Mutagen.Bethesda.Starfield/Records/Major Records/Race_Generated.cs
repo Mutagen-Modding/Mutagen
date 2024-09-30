@@ -6982,17 +6982,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Explosion
         private int _ExplosionLocation => _DAT2Location!.Value.Min + 0x8C;
         private bool _Explosion_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Debris
         private int _DebrisLocation => _DAT2Location!.Value.Min + 0x90;
         private bool _Debris_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IDebrisGetter> Debris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DAT2Location!.Value.Min + 0x94;
         private bool _ImpactDataSet_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OrientationLimitsPitch
         private int _OrientationLimitsPitchLocation => _DAT2Location!.Value.Min + 0x98;

@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<IKeywordGetter> Emotion => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet);
+        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet) : FormLink<IKeywordGetter>.Null;
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDALocation!.Value.Min + 0x4;
@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Sound
         private int _SoundLocation => _TRDALocation!.Value.Min + 0x5;
         private bool _Sound_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Unknown
         private int _UnknownLocation => _TRDALocation!.Value.Min + 0x9;

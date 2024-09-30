@@ -1843,12 +1843,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value.Min;
         private bool _Owner_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => FormLinkBinaryTranslation.Instance.OverlayFactory<IOwnerGetter>(_package, _recordData.Span.Slice(_OwnerLocation, 0x4), isSet: _Owner_IsSet);
+        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IOwnerGetter>(_package, _recordData.Span.Slice(_OwnerLocation, 0x4), isSet: _Owner_IsSet) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Location
         private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _recordData.Span.Slice(_LocationLocation, 0x4), isSet: _Location_IsSet);
+        public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _recordData.Span.Slice(_LocationLocation, 0x4), isSet: _Location_IsSet) : FormLink<ILocationGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;

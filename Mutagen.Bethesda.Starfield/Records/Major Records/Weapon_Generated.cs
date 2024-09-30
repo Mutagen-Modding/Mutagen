@@ -12776,12 +12776,12 @@ namespace Mutagen.Bethesda.Starfield
         #region AimDownSightTemplate
         private int _AimDownSightTemplateLocation => _WAIMLocation!.Value.Min + 0x4;
         private bool _AimDownSightTemplate_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IZoomGetter> AimDownSightTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<IZoomGetter>(_package, _recordData.Span.Slice(_AimDownSightTemplateLocation, 0x4), isSet: _AimDownSightTemplate_IsSet);
+        public IFormLinkGetter<IZoomGetter> AimDownSightTemplate => _AimDownSightTemplate_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IZoomGetter>(_package, _recordData.Span.Slice(_AimDownSightTemplateLocation, 0x4), isSet: _AimDownSightTemplate_IsSet) : FormLink<IZoomGetter>.Null;
         #endregion
         #region AimModel
         private int _AimModelLocation => _WAIMLocation!.Value.Min + 0x8;
         private bool _AimModel_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IAimModelGetter> AimModel => FormLinkBinaryTranslation.Instance.OverlayFactory<IAimModelGetter>(_package, _recordData.Span.Slice(_AimModelLocation, 0x4), isSet: _AimModel_IsSet);
+        public IFormLinkGetter<IAimModelGetter> AimModel => _AimModel_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAimModelGetter>(_package, _recordData.Span.Slice(_AimModelLocation, 0x4), isSet: _AimModel_IsSet) : FormLink<IAimModelGetter>.Null;
         #endregion
         #region AccuracyBonus
         private int _AccuracyBonusLocation => _WAIMLocation!.Value.Min + 0xC;
@@ -12796,17 +12796,17 @@ namespace Mutagen.Bethesda.Starfield
         #region AimAssistTemplate
         private int _AimAssistTemplateLocation => _WAIMLocation!.Value.Min + 0xE;
         private bool _AimAssistTemplate_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IAimAssistModelGetter> AimAssistTemplate => FormLinkBinaryTranslation.Instance.OverlayFactory<IAimAssistModelGetter>(_package, _recordData.Span.Slice(_AimAssistTemplateLocation, 0x4), isSet: _AimAssistTemplate_IsSet);
+        public IFormLinkGetter<IAimAssistModelGetter> AimAssistTemplate => _AimAssistTemplate_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAimAssistModelGetter>(_package, _recordData.Span.Slice(_AimAssistTemplateLocation, 0x4), isSet: _AimAssistTemplate_IsSet) : FormLink<IAimAssistModelGetter>.Null;
         #endregion
         #region AimOpticalSightModel
         private int _AimOpticalSightModelLocation => _WAIMLocation!.Value.Min + 0x12;
         private bool _AimOpticalSightModel_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IAimOpticalSightMarkerGetter> AimOpticalSightModel => FormLinkBinaryTranslation.Instance.OverlayFactory<IAimOpticalSightMarkerGetter>(_package, _recordData.Span.Slice(_AimOpticalSightModelLocation, 0x4), isSet: _AimOpticalSightModel_IsSet);
+        public IFormLinkGetter<IAimOpticalSightMarkerGetter> AimOpticalSightModel => _AimOpticalSightModel_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAimOpticalSightMarkerGetter>(_package, _recordData.Span.Slice(_AimOpticalSightModelLocation, 0x4), isSet: _AimOpticalSightModel_IsSet) : FormLink<IAimOpticalSightMarkerGetter>.Null;
         #endregion
         #region MeleeAimAssistModel
         private int _MeleeAimAssistModelLocation => _WAIMLocation!.Value.Min + 0x16;
         private bool _MeleeAimAssistModel_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModel => FormLinkBinaryTranslation.Instance.OverlayFactory<IMeleeAimAssistModelGetter>(_package, _recordData.Span.Slice(_MeleeAimAssistModelLocation, 0x4), isSet: _MeleeAimAssistModel_IsSet);
+        public IFormLinkGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModel => _MeleeAimAssistModel_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IMeleeAimAssistModelGetter>(_package, _recordData.Span.Slice(_MeleeAimAssistModelLocation, 0x4), isSet: _MeleeAimAssistModel_IsSet) : FormLink<IMeleeAimAssistModelGetter>.Null;
         #endregion
         #region WAIMUnknown1
         private int _WAIMUnknown1Location => _WAIMLocation!.Value.Min + 0x1A;
@@ -12842,7 +12842,7 @@ namespace Mutagen.Bethesda.Starfield
         #region AmmoType
         private int _AmmoTypeLocation => _WAM2Location!.Value.Min;
         private bool _AmmoType_IsSet => _WAM2Location.HasValue;
-        public IFormLinkGetter<IAmmunitionGetter> AmmoType => FormLinkBinaryTranslation.Instance.OverlayFactory<IAmmunitionGetter>(_package, _recordData.Span.Slice(_AmmoTypeLocation, 0x4), isSet: _AmmoType_IsSet);
+        public IFormLinkGetter<IAmmunitionGetter> AmmoType => _AmmoType_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAmmunitionGetter>(_package, _recordData.Span.Slice(_AmmoTypeLocation, 0x4), isSet: _AmmoType_IsSet) : FormLink<IAmmunitionGetter>.Null;
         #endregion
         #region AmmoCapacity
         private int _AmmoCapacityLocation => _WAM2Location!.Value.Min + 0x4;
@@ -12852,17 +12852,17 @@ namespace Mutagen.Bethesda.Starfield
         #region AmmoList
         private int _AmmoListLocation => _WAM2Location!.Value.Min + 0x8;
         private bool _AmmoList_IsSet => _WAM2Location.HasValue;
-        public IFormLinkGetter<ILeveledItemGetter> AmmoList => FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledItemGetter>(_package, _recordData.Span.Slice(_AmmoListLocation, 0x4), isSet: _AmmoList_IsSet);
+        public IFormLinkGetter<ILeveledItemGetter> AmmoList => _AmmoList_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledItemGetter>(_package, _recordData.Span.Slice(_AmmoListLocation, 0x4), isSet: _AmmoList_IsSet) : FormLink<ILeveledItemGetter>.Null;
         #endregion
         #region OverrideProjectile
         private int _OverrideProjectileLocation => _WAM2Location!.Value.Min + 0xC;
         private bool _OverrideProjectile_IsSet => _WAM2Location.HasValue;
-        public IFormLinkGetter<IProjectileGetter> OverrideProjectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_OverrideProjectileLocation, 0x4), isSet: _OverrideProjectile_IsSet);
+        public IFormLinkGetter<IProjectileGetter> OverrideProjectile => _OverrideProjectile_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_OverrideProjectileLocation, 0x4), isSet: _OverrideProjectile_IsSet) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region OverrideShellCasing
         private int _OverrideShellCasingLocation => _WAM2Location!.Value.Min + 0x10;
         private bool _OverrideShellCasing_IsSet => _WAM2Location.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> OverrideShellCasing => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_OverrideShellCasingLocation, 0x4), isSet: _OverrideShellCasing_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> OverrideShellCasing => _OverrideShellCasing_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_OverrideShellCasingLocation, 0x4), isSet: _OverrideShellCasing_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ProjectilesCount
         private int _ProjectilesCountLocation => _WAM2Location!.Value.Min + 0x14;
@@ -12995,7 +12995,7 @@ namespace Mutagen.Bethesda.Starfield
         #region CriticalHitSpell
         private int _CriticalHitSpellLocation => _WDMGLocation!.Value.Min + 0x14;
         private bool _CriticalHitSpell_IsSet => _WDMGLocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> CriticalHitSpell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_CriticalHitSpellLocation, 0x4), isSet: _CriticalHitSpell_IsSet);
+        public IFormLinkGetter<ISpellGetter> CriticalHitSpell => _CriticalHitSpell_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_CriticalHitSpellLocation, 0x4), isSet: _CriticalHitSpell_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region CritEffectOnDeathOnly
         private int _CritEffectOnDeathOnlyLocation => _WDMGLocation!.Value.Min + 0x18;
@@ -13010,12 +13010,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Resistance
         private int _ResistanceLocation => _WDMGLocation!.Value.Min + 0x1A;
         private bool _Resistance_IsSet => _WDMGLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> Resistance => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistanceLocation, 0x4), isSet: _Resistance_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> Resistance => _Resistance_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistanceLocation, 0x4), isSet: _Resistance_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region Skill
         private int _SkillLocation => _WDMGLocation!.Value.Min + 0x1E;
         private bool _Skill_IsSet => _WDMGLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> Skill => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SkillLocation, 0x4), isSet: _Skill_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> Skill => _Skill_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SkillLocation, 0x4), isSet: _Skill_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region WDMGUnknown4
         private int _WDMGUnknown4Location => _WDMGLocation!.Value.Min + 0x22;
@@ -13234,7 +13234,7 @@ namespace Mutagen.Bethesda.Starfield
         #region WeaponBarrel
         private int _WeaponBarrelLocation => _WGENLocation!.Value.Min + 0x14;
         private bool _WeaponBarrel_IsSet => _WGENLocation.HasValue;
-        public IFormLinkGetter<IWeaponBarrelModelGetter> WeaponBarrel => FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponBarrelModelGetter>(_package, _recordData.Span.Slice(_WeaponBarrelLocation, 0x4), isSet: _WeaponBarrel_IsSet);
+        public IFormLinkGetter<IWeaponBarrelModelGetter> WeaponBarrel => _WeaponBarrel_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponBarrelModelGetter>(_package, _recordData.Span.Slice(_WeaponBarrelLocation, 0x4), isSet: _WeaponBarrel_IsSet) : FormLink<IWeaponBarrelModelGetter>.Null;
         #endregion
         #region General
         private int? _GeneralLocation;
@@ -13265,7 +13265,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Power
         private int _PowerLocation => _QNAMLocation!.Value.Min;
         private bool _Power_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> Power => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_PowerLocation, 0x4), isSet: _Power_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> Power => _Power_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_PowerLocation, 0x4), isSet: _Power_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region PowerRechargeTime
         private int _PowerRechargeTimeLocation => _QNAMLocation!.Value.Min + 0x4;
@@ -13285,7 +13285,7 @@ namespace Mutagen.Bethesda.Starfield
         #region PowerBonus
         private int _PowerBonusLocation => _QNAMLocation!.Value.Min + 0xD;
         private bool _PowerBonus_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> PowerBonus => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_PowerBonusLocation, 0x4), isSet: _PowerBonus_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> PowerBonus => _PowerBonus_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_PowerBonusLocation, 0x4), isSet: _PowerBonus_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region UsePower
         private int _UsePowerLocation => _QNAMLocation!.Value.Min + 0x11;
@@ -13310,7 +13310,7 @@ namespace Mutagen.Bethesda.Starfield
         #region QNAMUnknown4
         private int _QNAMUnknown4Location => _QNAMLocation!.Value.Min + 0x18;
         private bool _QNAMUnknown4_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkGetter<ICurveTableGetter> QNAMUnknown4 => FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _recordData.Span.Slice(_QNAMUnknown4Location, 0x4), isSet: _QNAMUnknown4_IsSet);
+        public IFormLinkGetter<ICurveTableGetter> QNAMUnknown4 => _QNAMUnknown4_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _recordData.Span.Slice(_QNAMUnknown4Location, 0x4), isSet: _QNAMUnknown4_IsSet) : FormLink<ICurveTableGetter>.Null;
         #endregion
         #region QNAMUnknown5
         private int _QNAMUnknown5Location => _QNAMLocation!.Value.Min + 0x1C;
@@ -13320,7 +13320,7 @@ namespace Mutagen.Bethesda.Starfield
         #region PowerConsumption
         private int _PowerConsumptionLocation => _QNAMLocation!.Value.Min + 0x20;
         private bool _PowerConsumption_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkGetter<ICurveTableGetter> PowerConsumption => FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _recordData.Span.Slice(_PowerConsumptionLocation, 0x4), isSet: _PowerConsumption_IsSet);
+        public IFormLinkGetter<ICurveTableGetter> PowerConsumption => _PowerConsumption_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _recordData.Span.Slice(_PowerConsumptionLocation, 0x4), isSet: _PowerConsumption_IsSet) : FormLink<ICurveTableGetter>.Null;
         #endregion
         private RangeInt32? _WRLOLocation;
         #region WRLOUnknown1
@@ -13433,7 +13433,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _WVISLocation!.Value.Min + 0xC;
         private bool _ImpactDataSet_IsSet => _WVISLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ColorRemappingIndex
         private int _ColorRemappingIndexLocation => _WVISLocation!.Value.Min + 0x10;
@@ -13443,7 +13443,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ImageSpaceAdapter
         private int _ImageSpaceAdapterLocation => _WVISLocation!.Value.Min + 0x14;
         private bool _ImageSpaceAdapter_IsSet => _WVISLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceAdapterLocation, 0x4), isSet: _ImageSpaceAdapter_IsSet);
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => _ImageSpaceAdapter_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceAdapterLocation, 0x4), isSet: _ImageSpaceAdapter_IsSet) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         private RangeInt32? _WTRMLocation;
         #region WTRMUnknown1

@@ -7124,7 +7124,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Ammo
         private int _AmmoLocation => _DNAMLocation!.Value.Min;
         private bool _Ammo_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IAmmunitionGetter> Ammo => FormLinkBinaryTranslation.Instance.OverlayFactory<IAmmunitionGetter>(_package, _recordData.Span.Slice(_AmmoLocation, 0x4), isSet: _Ammo_IsSet);
+        public IFormLinkGetter<IAmmunitionGetter> Ammo => _Ammo_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAmmunitionGetter>(_package, _recordData.Span.Slice(_AmmoLocation, 0x4), isSet: _Ammo_IsSet) : FormLink<IAmmunitionGetter>.Null;
         #endregion
         #region Speed
         private int _SpeedLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -7174,12 +7174,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Skill
         private int _SkillLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _Skill_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> Skill => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SkillLocation, 0x4), isSet: _Skill_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> Skill => _Skill_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SkillLocation, 0x4), isSet: _Skill_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region Resist
         private int _ResistLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _Resist_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> Resist => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistLocation, 0x4), isSet: _Resist_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> Resist => _Resist_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistLocation, 0x4), isSet: _Resist_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x30;
@@ -7224,42 +7224,42 @@ namespace Mutagen.Bethesda.Fallout4
         #region AttackSound
         private int _AttackSoundLocation => _DNAMLocation!.Value.Min + 0x49;
         private bool _AttackSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> AttackSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackSoundLocation, 0x4), isSet: _AttackSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> AttackSound => _AttackSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackSoundLocation, 0x4), isSet: _AttackSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Attack2dSound
         private int _Attack2dSoundLocation => _DNAMLocation!.Value.Min + 0x4D;
         private bool _Attack2dSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Attack2dSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Attack2dSoundLocation, 0x4), isSet: _Attack2dSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Attack2dSound => _Attack2dSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Attack2dSoundLocation, 0x4), isSet: _Attack2dSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackLoopSound
         private int _AttackLoopSoundLocation => _DNAMLocation!.Value.Min + 0x51;
         private bool _AttackLoopSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> AttackLoopSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackLoopSoundLocation, 0x4), isSet: _AttackLoopSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackLoopSoundLocation, 0x4), isSet: _AttackLoopSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackFailSound
         private int _AttackFailSoundLocation => _DNAMLocation!.Value.Min + 0x55;
         private bool _AttackFailSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> AttackFailSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackFailSoundLocation, 0x4), isSet: _AttackFailSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> AttackFailSound => _AttackFailSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_AttackFailSoundLocation, 0x4), isSet: _AttackFailSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region IdleSound
         private int _IdleSoundLocation => _DNAMLocation!.Value.Min + 0x59;
         private bool _IdleSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> IdleSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_IdleSoundLocation, 0x4), isSet: _IdleSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> IdleSound => _IdleSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_IdleSoundLocation, 0x4), isSet: _IdleSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region EquipSound
         private int _EquipSoundLocation => _DNAMLocation!.Value.Min + 0x5D;
         private bool _EquipSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> EquipSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_EquipSoundLocation, 0x4), isSet: _EquipSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> EquipSound => _EquipSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_EquipSoundLocation, 0x4), isSet: _EquipSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region UnequipSound
         private int _UnequipSoundLocation => _DNAMLocation!.Value.Min + 0x61;
         private bool _UnequipSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> UnequipSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_UnequipSoundLocation, 0x4), isSet: _UnequipSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> UnequipSound => _UnequipSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_UnequipSoundLocation, 0x4), isSet: _UnequipSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region FastEquipSound
         private int _FastEquipSoundLocation => _DNAMLocation!.Value.Min + 0x65;
         private bool _FastEquipSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> FastEquipSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_FastEquipSoundLocation, 0x4), isSet: _FastEquipSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> FastEquipSound => _FastEquipSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_FastEquipSoundLocation, 0x4), isSet: _FastEquipSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region AccuracyBonus
         private int _AccuracyBonusLocation => _DNAMLocation!.Value.Min + 0x69;
@@ -7319,7 +7319,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CritEffect
         private int _CritEffectLocation => _CRDTLocation!.Value.Min + 0x8;
         private bool _CritEffect_IsSet => _CRDTLocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> CritEffect => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_CritEffectLocation, 0x4), isSet: _CritEffect_IsSet);
+        public IFormLinkGetter<ISpellGetter> CritEffect => _CritEffect_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_CritEffectLocation, 0x4), isSet: _CritEffect_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;

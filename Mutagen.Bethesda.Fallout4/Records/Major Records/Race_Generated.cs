@@ -9535,32 +9535,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x92;
         private bool _SeverableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_SeverableExplosionLocation, 0x4), isSet: _SeverableExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_SeverableExplosionLocation, 0x4), isSet: _SeverableExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x96;
         private bool _SeverableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_SeverableDebrisLocation, 0x4), isSet: _SeverableDebris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_SeverableDebrisLocation, 0x4), isSet: _SeverableDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableImpactDataSet
         private int _SeverableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9A;
         private bool _SeverableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_SeverableImpactDataSetLocation, 0x4), isSet: _SeverableImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_SeverableImpactDataSetLocation, 0x4), isSet: _SeverableImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9E;
         private bool _ExplodableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA2;
         private bool _ExplodableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableImpactDataSet
         private int _ExplodableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA6;
         private bool _ExplodableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ExplodableImpactDataSetLocation, 0x4), isSet: _ExplodableImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ExplodableImpactDataSetLocation, 0x4), isSet: _ExplodableImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xAA;
@@ -9583,25 +9583,25 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleExplosion
         private int _OnCrippleExplosionLocation => _DATALocation!.Value.Min + OnCrippleDecalCountVersioningOffset + 0xB0;
         private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4), isSet: _OnCrippleExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4), isSet: _OnCrippleExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         int OnCrippleExplosionVersioningOffset => OnCrippleDecalCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebris
         private int _OnCrippleDebrisLocation => _DATALocation!.Value.Min + OnCrippleExplosionVersioningOffset + 0xB4;
         private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4), isSet: _OnCrippleDebris_IsSet);
+        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4), isSet: _OnCrippleDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         int OnCrippleDebrisVersioningOffset => OnCrippleExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleImpactDataSet
         private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value.Min + OnCrippleDebrisVersioningOffset + 0xB8;
         private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4), isSet: _OnCrippleImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4), isSet: _OnCrippleImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         int OnCrippleImpactDataSetVersioningOffset => OnCrippleDebrisVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region ExplodableSubsegmentExplosion
         private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value.Min + OnCrippleImpactDataSetVersioningOffset + 0xBC;
         private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 118;
-        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4), isSet: _ExplodableSubsegmentExplosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4), isSet: _ExplodableSubsegmentExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         int ExplodableSubsegmentExplosionVersioningOffset => OnCrippleImpactDataSetVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 118 ? -4 : 0);
         #endregion
         #region OrientationLimitsPitch

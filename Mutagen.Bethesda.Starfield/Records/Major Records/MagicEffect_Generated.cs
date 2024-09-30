@@ -4348,87 +4348,87 @@ namespace Mutagen.Bethesda.Starfield
         #region ActorValue1
         private int _ActorValue1Location => _DATALocation!.Value.Min + 0x4;
         private bool _ActorValue1_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue1 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue1Location, 0x4), isSet: _ActorValue1_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue1 => _ActorValue1_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue1Location, 0x4), isSet: _ActorValue1_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value.Min + 0x8;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> CastingArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_CastingArtLocation, 0x4), isSet: _CastingArt_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_CastingArtLocation, 0x4), isSet: _CastingArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region MovementType
         private int _MovementTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MovementType_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IMovementTypeGetter> MovementType => FormLinkBinaryTranslation.Instance.OverlayFactory<IMovementTypeGetter>(_package, _recordData.Span.Slice(_MovementTypeLocation, 0x4), isSet: _MovementType_IsSet);
+        public IFormLinkGetter<IMovementTypeGetter> MovementType => _MovementType_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IMovementTypeGetter>(_package, _recordData.Span.Slice(_MovementTypeLocation, 0x4), isSet: _MovementType_IsSet) : FormLink<IMovementTypeGetter>.Null;
         #endregion
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value.Min + 0x10;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> HitShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_HitShaderLocation, 0x4), isSet: _HitShader_IsSet);
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_HitShaderLocation, 0x4), isSet: _HitShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantShader
         private int _EnchantShaderLocation => _DATALocation!.Value.Min + 0x14;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EnchantShaderLocation, 0x4), isSet: _EnchantShader_IsSet);
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EnchantShaderLocation, 0x4), isSet: _EnchantShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x18;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> EnchantArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_EnchantArtLocation, 0x4), isSet: _EnchantArt_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_EnchantArtLocation, 0x4), isSet: _EnchantArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region EquipAbility
         private int _EquipAbilityLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> EquipAbility => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_EquipAbilityLocation, 0x4), isSet: _EquipAbility_IsSet);
+        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_EquipAbilityLocation, 0x4), isSet: _EquipAbility_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x20;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0x24;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_HitEffectArtLocation, 0x4), isSet: _HitEffectArt_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_HitEffectArtLocation, 0x4), isSet: _HitEffectArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int _ImageSpaceModifierLocation => _DATALocation!.Value.Min + 0x28;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4), isSet: _ImageSpaceModifier_IsSet);
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4), isSet: _ImageSpaceModifier_IsSet) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region ImpactData
         private int _ImpactDataLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataLocation, 0x4), isSet: _ImpactData_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataLocation, 0x4), isSet: _ImpactData_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region CastingLight
         private int _CastingLightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> CastingLight => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_CastingLightLocation, 0x4), isSet: _CastingLight_IsSet);
+        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_CastingLightLocation, 0x4), isSet: _CastingLight_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region PerkToApply
         private int _PerkToApplyLocation => _DATALocation!.Value.Min + 0x34;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> PerkToApply => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_PerkToApplyLocation, 0x4), isSet: _PerkToApply_IsSet);
+        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_PerkToApplyLocation, 0x4), isSet: _PerkToApply_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
         #region ActorValue2
         private int _ActorValue2Location => _DATALocation!.Value.Min + 0x38;
         private bool _ActorValue2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue2 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue2Location, 0x4), isSet: _ActorValue2_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue2 => _ActorValue2_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue2Location, 0x4), isSet: _ActorValue2_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet);
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region ResistValue
         private int _ResistValueLocation => _DATALocation!.Value.Min + 0x40;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistValueLocation, 0x4), isSet: _ResistValue_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => _ResistValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistValueLocation, 0x4), isSet: _ResistValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region ActorValue3
         private int _ActorValue3Location => _DATALocation!.Value.Min + 0x44;
         private bool _ActorValue3_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue3Location, 0x4), isSet: _ActorValue3_IsSet);
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => _ActorValue3_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue3Location, 0x4), isSet: _ActorValue3_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region UnkownFloat1
         private int _UnkownFloat1Location => _DATALocation!.Value.Min + 0x48;

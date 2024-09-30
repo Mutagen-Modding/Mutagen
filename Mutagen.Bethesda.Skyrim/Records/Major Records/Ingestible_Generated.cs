@@ -3236,7 +3236,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Addiction
         private int _AddictionLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _Addiction_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Addiction => FormLinkBinaryTranslation.Instance.OverlayFactory<ISkyrimMajorRecordGetter>(_package, _recordData.Span.Slice(_AddictionLocation, 0x4), isSet: _Addiction_IsSet);
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Addiction => _Addiction_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISkyrimMajorRecordGetter>(_package, _recordData.Span.Slice(_AddictionLocation, 0x4), isSet: _Addiction_IsSet) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value.Min + 0xC;
@@ -3246,7 +3246,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ConsumeSound
         private int _ConsumeSoundLocation => _ENITLocation!.Value.Min + 0x10;
         private bool _ConsumeSound_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_ConsumeSoundLocation, 0x4), isSet: _ConsumeSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound => _ConsumeSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_ConsumeSoundLocation, 0x4), isSet: _ConsumeSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(

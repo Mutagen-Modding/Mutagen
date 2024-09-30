@@ -2261,7 +2261,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Light
         private int _LightLocation => NodeNameEndingPos + 0x8;
         private bool _Light_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region Unknown1
         private int _Unknown1Location => NodeNameEndingPos + 0xC;
@@ -2281,12 +2281,12 @@ namespace Mutagen.Bethesda.Starfield
         #region BeamArtObject
         private int _BeamArtObjectLocation => NodeNameEndingPos + 0x18;
         private bool _BeamArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_BeamArtObjectLocation, 0x4), isSet: _BeamArtObject_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => _BeamArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_BeamArtObjectLocation, 0x4), isSet: _BeamArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region DotArtObject
         private int _DotArtObjectLocation => NodeNameEndingPos + 0x1C;
         private bool _DotArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> DotArtObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_DotArtObjectLocation, 0x4), isSet: _DotArtObject_IsSet);
+        public IFormLinkGetter<IArtObjectGetter> DotArtObject => _DotArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_DotArtObjectLocation, 0x4), isSet: _DotArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Unknown3
         private int _Unknown3Location => NodeNameEndingPos + 0x20;

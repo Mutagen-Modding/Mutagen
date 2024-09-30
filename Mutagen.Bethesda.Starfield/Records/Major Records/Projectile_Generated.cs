@@ -5183,12 +5183,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Light
         private int _LightLocation => _PRODLocation!.Value.Min + 0x10;
         private bool _Light_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
         private int _MuzzleFlashLocation => _PRODLocation!.Value.Min + 0x14;
         private bool _MuzzleFlash_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> MuzzleFlash => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLocation, 0x4), isSet: _MuzzleFlash_IsSet);
+        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLocation, 0x4), isSet: _MuzzleFlash_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _PRODLocation!.Value.Min + 0x18;
@@ -5203,7 +5203,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Explosion
         private int _ExplosionLocation => _PRODLocation!.Value.Min + 0x20;
         private bool _Explosion_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _PRODLocation!.Value.Min + 0x24;
@@ -5223,7 +5223,7 @@ namespace Mutagen.Bethesda.Starfield
         #region DefaultWeaponSource
         private int _DefaultWeaponSourceLocation => _PRODLocation!.Value.Min + 0x30;
         private bool _DefaultWeaponSource_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet);
+        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
         private int _ConeSpreadLocation => _PRODLocation!.Value.Min + 0x34;
@@ -5248,12 +5248,12 @@ namespace Mutagen.Bethesda.Starfield
         #region DecalData
         private int _DecalDataLocation => _PRODLocation!.Value.Min + 0x44;
         private bool _DecalData_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<ITextureSetGetter> DecalData => FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _recordData.Span.Slice(_DecalDataLocation, 0x4), isSet: _DecalData_IsSet);
+        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _recordData.Span.Slice(_DecalDataLocation, 0x4), isSet: _DecalData_IsSet) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
         private int _CollisionLayerLocation => _PRODLocation!.Value.Min + 0x48;
         private bool _CollisionLayer_IsSet => _PRODLocation.HasValue;
-        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(_package, _recordData.Span.Slice(_CollisionLayerLocation, 0x4), isSet: _CollisionLayer_IsSet);
+        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(_package, _recordData.Span.Slice(_CollisionLayerLocation, 0x4), isSet: _CollisionLayer_IsSet) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
         #region TracerFrequency
         private int _TracerFrequencyLocation => _PRODLocation!.Value.Min + 0x4C;

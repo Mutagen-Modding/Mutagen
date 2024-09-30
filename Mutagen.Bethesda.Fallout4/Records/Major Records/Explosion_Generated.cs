@@ -3092,32 +3092,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Light
         private int _LightLocation => _DATALocation!.Value.Min;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region Sound1
         private int _Sound1Location => _DATALocation!.Value.Min + 0x4;
         private bool _Sound1_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound1 => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Sound1Location, 0x4), isSet: _Sound1_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound1 => _Sound1_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Sound1Location, 0x4), isSet: _Sound1_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Sound2
         private int _Sound2Location => _DATALocation!.Value.Min + 0x8;
         private bool _Sound2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound2 => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Sound2Location, 0x4), isSet: _Sound2_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound2 => _Sound2_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_Sound2Location, 0x4), isSet: _Sound2_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region PlacedObject
         private int _PlacedObjectLocation => _DATALocation!.Value.Min + 0x10;
         private bool _PlacedObject_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplodeSpawnGetter>(_package, _recordData.Span.Slice(_PlacedObjectLocation, 0x4), isSet: _PlacedObject_IsSet);
+        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => _PlacedObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplodeSpawnGetter>(_package, _recordData.Span.Slice(_PlacedObjectLocation, 0x4), isSet: _PlacedObject_IsSet) : FormLink<IExplodeSpawnGetter>.Null;
         #endregion
         #region SpawnProjectile
         private int _SpawnProjectileLocation => _DATALocation!.Value.Min + 0x14;
         private bool _SpawnProjectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_SpawnProjectileLocation, 0x4), isSet: _SpawnProjectile_IsSet);
+        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_SpawnProjectileLocation, 0x4), isSet: _SpawnProjectile_IsSet) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Force
         private int _ForceLocation => _DATALocation!.Value.Min + 0x18;

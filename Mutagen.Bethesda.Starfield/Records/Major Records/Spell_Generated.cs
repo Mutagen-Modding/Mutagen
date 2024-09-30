@@ -3291,7 +3291,7 @@ namespace Mutagen.Bethesda.Starfield
         #region CastingPerk
         private int _CastingPerkLocation => _SPITLocation!.Value.Min + 0x17;
         private bool _CastingPerk_IsSet => _SPITLocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> CastingPerk => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_CastingPerkLocation, 0x4), isSet: _CastingPerk_IsSet);
+        public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_CastingPerkLocation, 0x4), isSet: _CastingPerk_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
         #region MAGF
         private int? _MAGFLocation;

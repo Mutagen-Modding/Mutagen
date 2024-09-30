@@ -4727,7 +4727,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AmbientSound
         private int _AmbientSoundLocation => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x131;
         private bool _AmbientSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundGetter> AmbientSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet);
+        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x135;

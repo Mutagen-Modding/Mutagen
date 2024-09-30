@@ -2650,22 +2650,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region Effect
         private int _EffectLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _Effect_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IEffectRecordGetter> Effect => FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectRecordGetter>(_package, _recordData.Span.Slice(_EffectLocation, 0x4), isSet: _Effect_IsSet);
+        public IFormLinkGetter<IEffectRecordGetter> Effect => _Effect_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectRecordGetter>(_package, _recordData.Span.Slice(_EffectLocation, 0x4), isSet: _Effect_IsSet) : FormLink<IEffectRecordGetter>.Null;
         #endregion
         #region Light
         private int _LightLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _Light_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _ImpactDataSet_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet);
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Sound
         private int _SoundLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _Sound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region TaperFullEffectRadius
         private int _TaperFullEffectRadiusLocation => _DNAMLocation!.Value.Min + 0x28;

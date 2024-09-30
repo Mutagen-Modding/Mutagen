@@ -1736,12 +1736,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Parent
         private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Parent => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ParentLocation, 0x4), isSet: _Parent_IsSet);
+        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ParentLocation, 0x4), isSet: _Parent_IsSet) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Child => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ChildLocation, 0x4), isSet: _Child_IsSet);
+        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ChildLocation, 0x4), isSet: _Child_IsSet) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => FormLinkBinaryTranslation.Instance.OverlayFactory<IAssociationTypeGetter>(_package, _recordData.Span.Slice(_AssociationTypeLocation, 0x4), isSet: _AssociationType_IsSet);
+        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAssociationTypeGetter>(_package, _recordData.Span.Slice(_AssociationTypeLocation, 0x4), isSet: _AssociationType_IsSet) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
