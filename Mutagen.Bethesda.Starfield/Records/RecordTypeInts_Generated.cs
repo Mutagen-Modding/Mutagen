@@ -1105,6 +1105,7 @@ public partial class RecordTypeInts
     public const int XCWT = 0x54574358;
     public const int XCZA = 0x415A4358;
     public const int XCZC = 0x435A4358;
+    public const int XCZR = 0x525A4358;
     public const int XDTF = 0x46544458;
     public const int XDTS = 0x53544458;
     public const int XEED = 0x44454558;

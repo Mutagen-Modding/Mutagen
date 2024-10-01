@@ -196,6 +196,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPlacedPrimitiveGetter? IPlacedObjectGetter.Primitive => this.Primitive;
         #endregion
+        #region XCZR
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _XCZR = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> XCZR
+        {
+            get => _XCZR;
+            set => _XCZR.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.XCZR => this.XCZR;
+        #endregion
         #region VolumeReflectionProbeOffsetIntensity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VolumeReflectionProbeOffsetIntensity? _VolumeReflectionProbeOffsetIntensity;
@@ -579,6 +589,22 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayerGetter> IPlacedObjectGetter.Layer => this.Layer;
         #endregion
+        #region XWCN
+        public Int32? XWCN { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.XWCN => this.XWCN;
+        #endregion
+        #region XWCU
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XWCU;
+        public MemorySlice<Byte>? XWCU
+        {
+            get => this._XWCU;
+            set => this._XWCU = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XWCU => this.XWCU;
+        #endregion
         #region Location
         private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> Location
@@ -848,6 +874,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LevelModifier = initialValue;
                 this.Action = initialValue;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
+                this.XCZR = initialValue;
                 this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(initialValue, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(initialValue));
                 this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(initialValue, new PlacedObjectDebugText.Mask<TItem>(initialValue));
                 this.Emittance = initialValue;
@@ -887,6 +914,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
                 this.BlueprintPartOrigin = initialValue;
                 this.Layer = initialValue;
+                this.XWCN = initialValue;
+                this.XWCU = initialValue;
                 this.Location = initialValue;
                 this.XTRI = initialValue;
                 this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(initialValue, new LightRoundness.Mask<TItem>(initialValue));
@@ -939,6 +968,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LevelModifier,
                 TItem Action,
                 TItem Primitive,
+                TItem XCZR,
                 TItem VolumeReflectionProbeOffsetIntensity,
                 TItem DebugText,
                 TItem Emittance,
@@ -978,6 +1008,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GroupedPackIn,
                 TItem BlueprintPartOrigin,
                 TItem Layer,
+                TItem XWCN,
+                TItem XWCU,
                 TItem Location,
                 TItem XTRI,
                 TItem LightRoundedness,
@@ -1029,6 +1061,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LevelModifier = LevelModifier;
                 this.Action = Action;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
+                this.XCZR = XCZR;
                 this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(VolumeReflectionProbeOffsetIntensity, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(VolumeReflectionProbeOffsetIntensity));
                 this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(DebugText, new PlacedObjectDebugText.Mask<TItem>(DebugText));
                 this.Emittance = Emittance;
@@ -1068,6 +1101,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
                 this.BlueprintPartOrigin = BlueprintPartOrigin;
                 this.Layer = Layer;
+                this.XWCN = XWCN;
+                this.XWCU = XWCU;
                 this.Location = Location;
                 this.XTRI = XTRI;
                 this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(LightRoundedness, new LightRoundness.Mask<TItem>(LightRoundedness));
@@ -1121,6 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem LevelModifier;
             public TItem Action;
             public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
+            public TItem XCZR;
             public MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>? VolumeReflectionProbeOffsetIntensity { get; set; }
             public MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>? DebugText { get; set; }
             public TItem Emittance;
@@ -1160,6 +1196,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
             public TItem BlueprintPartOrigin;
             public TItem Layer;
+            public TItem XWCN;
+            public TItem XWCU;
             public TItem Location;
             public TItem XTRI;
             public MaskItem<TItem, LightRoundness.Mask<TItem>?>? LightRoundedness { get; set; }
@@ -1215,6 +1253,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
                 if (!object.Equals(this.Action, rhs.Action)) return false;
                 if (!object.Equals(this.Primitive, rhs.Primitive)) return false;
+                if (!object.Equals(this.XCZR, rhs.XCZR)) return false;
                 if (!object.Equals(this.VolumeReflectionProbeOffsetIntensity, rhs.VolumeReflectionProbeOffsetIntensity)) return false;
                 if (!object.Equals(this.DebugText, rhs.DebugText)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
@@ -1254,6 +1293,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
                 if (!object.Equals(this.BlueprintPartOrigin, rhs.BlueprintPartOrigin)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
+                if (!object.Equals(this.XWCU, rhs.XWCU)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.XTRI, rhs.XTRI)) return false;
                 if (!object.Equals(this.LightRoundedness, rhs.LightRoundedness)) return false;
@@ -1301,6 +1342,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LevelModifier);
                 hash.Add(this.Action);
                 hash.Add(this.Primitive);
+                hash.Add(this.XCZR);
                 hash.Add(this.VolumeReflectionProbeOffsetIntensity);
                 hash.Add(this.DebugText);
                 hash.Add(this.Emittance);
@@ -1340,6 +1382,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GroupedPackIn);
                 hash.Add(this.BlueprintPartOrigin);
                 hash.Add(this.Layer);
+                hash.Add(this.XWCN);
+                hash.Add(this.XWCU);
                 hash.Add(this.Location);
                 hash.Add(this.XTRI);
                 hash.Add(this.LightRoundedness);
@@ -1423,6 +1467,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Primitive.Overall)) return false;
                     if (this.Primitive.Specific != null && !this.Primitive.Specific.All(eval)) return false;
                 }
+                if (!eval(this.XCZR)) return false;
                 if (VolumeReflectionProbeOffsetIntensity != null)
                 {
                     if (!eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return false;
@@ -1581,6 +1626,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.BlueprintPartOrigin)) return false;
                 if (!eval(this.Layer)) return false;
+                if (!eval(this.XWCN)) return false;
+                if (!eval(this.XWCU)) return false;
                 if (!eval(this.Location)) return false;
                 if (!eval(this.XTRI)) return false;
                 if (LightRoundedness != null)
@@ -1730,6 +1777,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Primitive.Overall)) return true;
                     if (this.Primitive.Specific != null && this.Primitive.Specific.Any(eval)) return true;
                 }
+                if (eval(this.XCZR)) return true;
                 if (VolumeReflectionProbeOffsetIntensity != null)
                 {
                     if (eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return true;
@@ -1888,6 +1936,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.BlueprintPartOrigin)) return true;
                 if (eval(this.Layer)) return true;
+                if (eval(this.XWCN)) return true;
+                if (eval(this.XWCU)) return true;
                 if (eval(this.Location)) return true;
                 if (eval(this.XTRI)) return true;
                 if (LightRoundedness != null)
@@ -2027,6 +2077,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LevelModifier = eval(this.LevelModifier);
                 obj.Action = eval(this.Action);
                 obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
+                obj.XCZR = eval(this.XCZR);
                 obj.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity == null ? null : new MaskItem<R, VolumeReflectionProbeOffsetIntensity.Mask<R>?>(eval(this.VolumeReflectionProbeOffsetIntensity.Overall), this.VolumeReflectionProbeOffsetIntensity.Specific?.Translate(eval));
                 obj.DebugText = this.DebugText == null ? null : new MaskItem<R, PlacedObjectDebugText.Mask<R>?>(eval(this.DebugText.Overall), this.DebugText.Specific?.Translate(eval));
                 obj.Emittance = eval(this.Emittance);
@@ -2147,6 +2198,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GroupedPackIn = this.GroupedPackIn == null ? null : new MaskItem<R, GroupedPackIn.Mask<R>?>(eval(this.GroupedPackIn.Overall), this.GroupedPackIn.Specific?.Translate(eval));
                 obj.BlueprintPartOrigin = eval(this.BlueprintPartOrigin);
                 obj.Layer = eval(this.Layer);
+                obj.XWCN = eval(this.XWCN);
+                obj.XWCU = eval(this.XWCU);
                 obj.Location = eval(this.Location);
                 obj.XTRI = eval(this.XTRI);
                 obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, LightRoundness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
@@ -2316,6 +2369,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Primitive?.Overall ?? true)
                     {
                         Primitive?.Print(sb);
+                    }
+                    if (printMask?.XCZR ?? true)
+                    {
+                        sb.AppendItem(XCZR, "XCZR");
                     }
                     if (printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
                     {
@@ -2569,6 +2626,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Layer, "Layer");
                     }
+                    if (printMask?.XWCN ?? true)
+                    {
+                        sb.AppendItem(XWCN, "XWCN");
+                    }
+                    if (printMask?.XWCU ?? true)
+                    {
+                        sb.AppendItem(XWCU, "XWCU");
+                    }
                     if (printMask?.Location ?? true)
                     {
                         sb.AppendItem(Location, "Location");
@@ -2769,6 +2834,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? LevelModifier;
             public Exception? Action;
             public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
+            public Exception? XCZR;
             public MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>? VolumeReflectionProbeOffsetIntensity;
             public MaskItem<Exception?, PlacedObjectDebugText.ErrorMask?>? DebugText;
             public Exception? Emittance;
@@ -2808,6 +2874,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
             public Exception? BlueprintPartOrigin;
             public Exception? Layer;
+            public Exception? XWCN;
+            public Exception? XWCU;
             public Exception? Location;
             public Exception? XTRI;
             public MaskItem<Exception?, LightRoundness.ErrorMask?>? LightRoundedness;
@@ -2871,6 +2939,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Action;
                     case PlacedObject_FieldIndex.Primitive:
                         return Primitive;
+                    case PlacedObject_FieldIndex.XCZR:
+                        return XCZR;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         return VolumeReflectionProbeOffsetIntensity;
                     case PlacedObject_FieldIndex.DebugText:
@@ -2949,6 +3019,10 @@ namespace Mutagen.Bethesda.Starfield
                         return BlueprintPartOrigin;
                     case PlacedObject_FieldIndex.Layer:
                         return Layer;
+                    case PlacedObject_FieldIndex.XWCN:
+                        return XWCN;
+                    case PlacedObject_FieldIndex.XWCU:
+                        return XWCU;
                     case PlacedObject_FieldIndex.Location:
                         return Location;
                     case PlacedObject_FieldIndex.XTRI:
@@ -3055,6 +3129,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = new MaskItem<Exception?, PlacedPrimitive.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.XCZR:
+                        this.XCZR = ex;
                         break;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         this.VolumeReflectionProbeOffsetIntensity = new MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>(ex, null);
@@ -3172,6 +3249,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XWCN:
+                        this.XWCN = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XWCU:
+                        this.XWCU = ex;
                         break;
                     case PlacedObject_FieldIndex.Location:
                         this.Location = ex;
@@ -3310,6 +3393,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = (MaskItem<Exception?, PlacedPrimitive.ErrorMask?>?)obj;
                         break;
+                    case PlacedObject_FieldIndex.XCZR:
+                        this.XCZR = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         this.VolumeReflectionProbeOffsetIntensity = (MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>?)obj;
                         break;
@@ -3427,6 +3513,12 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.XWCN:
+                        this.XWCN = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XWCU:
+                        this.XWCU = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.Location:
                         this.Location = (Exception?)obj;
                         break;
@@ -3536,6 +3628,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LevelModifier != null) return true;
                 if (Action != null) return true;
                 if (Primitive != null) return true;
+                if (XCZR != null) return true;
                 if (VolumeReflectionProbeOffsetIntensity != null) return true;
                 if (DebugText != null) return true;
                 if (Emittance != null) return true;
@@ -3575,6 +3668,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (GroupedPackIn != null) return true;
                 if (BlueprintPartOrigin != null) return true;
                 if (Layer != null) return true;
+                if (XWCN != null) return true;
+                if (XWCU != null) return true;
                 if (Location != null) return true;
                 if (XTRI != null) return true;
                 if (LightRoundedness != null) return true;
@@ -3674,6 +3769,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Action, "Action");
                 }
                 Primitive?.Print(sb);
+                {
+                    sb.AppendItem(XCZR, "XCZR");
+                }
                 VolumeReflectionProbeOffsetIntensity?.Print(sb);
                 DebugText?.Print(sb);
                 {
@@ -3860,6 +3958,12 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Layer, "Layer");
                 }
                 {
+                    sb.AppendItem(XWCN, "XWCN");
+                }
+                {
+                    sb.AppendItem(XWCU, "XWCU");
+                }
+                {
                     sb.AppendItem(Location, "Location");
                 }
                 {
@@ -4015,6 +4119,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
+                ret.XCZR = this.XCZR.Combine(rhs.XCZR);
                 ret.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity.Combine(rhs.VolumeReflectionProbeOffsetIntensity, (l, r) => l.Combine(r));
                 ret.DebugText = this.DebugText.Combine(rhs.DebugText, (l, r) => l.Combine(r));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
@@ -4054,6 +4159,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
                 ret.BlueprintPartOrigin = this.BlueprintPartOrigin.Combine(rhs.BlueprintPartOrigin);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.XWCN = this.XWCN.Combine(rhs.XWCN);
+                ret.XWCU = this.XWCU.Combine(rhs.XWCU);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.XTRI = this.XTRI.Combine(rhs.XTRI);
                 ret.LightRoundedness = this.LightRoundedness.Combine(rhs.LightRoundedness, (l, r) => l.Combine(r));
@@ -4118,6 +4225,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool LevelModifier;
             public bool Action;
             public PlacedPrimitive.TranslationMask? Primitive;
+            public bool XCZR;
             public VolumeReflectionProbeOffsetIntensity.TranslationMask? VolumeReflectionProbeOffsetIntensity;
             public PlacedObjectDebugText.TranslationMask? DebugText;
             public bool Emittance;
@@ -4157,6 +4265,8 @@ namespace Mutagen.Bethesda.Starfield
             public GroupedPackIn.TranslationMask? GroupedPackIn;
             public bool BlueprintPartOrigin;
             public bool Layer;
+            public bool XWCN;
+            public bool XWCU;
             public bool Location;
             public bool XTRI;
             public LightRoundness.TranslationMask? LightRoundedness;
@@ -4201,6 +4311,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.XLTW = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.Action = defaultOn;
+                this.XCZR = defaultOn;
                 this.Emittance = defaultOn;
                 this.Radius = defaultOn;
                 this.CurrentZoneCell = defaultOn;
@@ -4223,6 +4334,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightVolumetricData = defaultOn;
                 this.BlueprintPartOrigin = defaultOn;
                 this.Layer = defaultOn;
+                this.XWCN = defaultOn;
+                this.XWCU = defaultOn;
                 this.Location = defaultOn;
                 this.XTRI = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
@@ -4262,6 +4375,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LevelModifier, null));
                 ret.Add((Action, null));
                 ret.Add((Primitive != null ? Primitive.OnOverall : DefaultOn, Primitive?.GetCrystal()));
+                ret.Add((XCZR, null));
                 ret.Add((VolumeReflectionProbeOffsetIntensity != null ? VolumeReflectionProbeOffsetIntensity.OnOverall : DefaultOn, VolumeReflectionProbeOffsetIntensity?.GetCrystal()));
                 ret.Add((DebugText != null ? DebugText.OnOverall : DefaultOn, DebugText?.GetCrystal()));
                 ret.Add((Emittance, null));
@@ -4301,6 +4415,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
                 ret.Add((BlueprintPartOrigin, null));
                 ret.Add((Layer, null));
+                ret.Add((XWCN, null));
+                ret.Add((XWCU, null));
                 ret.Add((Location, null));
                 ret.Add((XTRI, null));
                 ret.Add((LightRoundedness != null ? LightRoundedness.OnOverall : DefaultOn, LightRoundedness?.GetCrystal()));
@@ -4508,6 +4624,7 @@ namespace Mutagen.Bethesda.Starfield
         new Level? LevelModifier { get; set; }
         new PlacedObject.ActionFlag? Action { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> XCZR { get; set; }
         new VolumeReflectionProbeOffsetIntensity? VolumeReflectionProbeOffsetIntensity { get; set; }
         new PlacedObjectDebugText? DebugText { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
@@ -4547,6 +4664,8 @@ namespace Mutagen.Bethesda.Starfield
         new GroupedPackIn? GroupedPackIn { get; set; }
         new UInt32? BlueprintPartOrigin { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new Int32? XWCN { get; set; }
+        new MemorySlice<Byte>? XWCU { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new UInt32? XTRI { get; set; }
         new LightRoundness? LightRoundedness { get; set; }
@@ -4623,6 +4742,7 @@ namespace Mutagen.Bethesda.Starfield
         Level? LevelModifier { get; }
         PlacedObject.ActionFlag? Action { get; }
         IPlacedPrimitiveGetter? Primitive { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> XCZR { get; }
         IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity { get; }
         IPlacedObjectDebugTextGetter? DebugText { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
@@ -4662,6 +4782,8 @@ namespace Mutagen.Bethesda.Starfield
         IGroupedPackInGetter? GroupedPackIn { get; }
         UInt32? BlueprintPartOrigin { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        Int32? XWCN { get; }
+        ReadOnlyMemorySlice<Byte>? XWCU { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
         UInt32? XTRI { get; }
         ILightRoundnessGetter? LightRoundedness { get; }
@@ -4880,74 +5002,77 @@ namespace Mutagen.Bethesda.Starfield
         LevelModifier = 17,
         Action = 18,
         Primitive = 19,
-        VolumeReflectionProbeOffsetIntensity = 20,
-        DebugText = 21,
-        Emittance = 22,
-        Radius = 23,
-        Lighting = 24,
-        LightBarndoorData = 25,
-        LightArea = 26,
-        CurrentZoneCell = 27,
-        XCZA = 28,
-        Patrol = 29,
-        RagdollData = 30,
-        TeleportDestination = 31,
-        TeleportName = 32,
-        ReferenceGroup = 33,
-        LocationRefTypes = 34,
-        LayeredMaterialSwaps = 35,
-        XPCK = 36,
-        SourcePackIn = 37,
-        PersistentLocation = 38,
-        ProjectedDecal = 39,
-        ProjectedDecalReferences = 40,
-        ConstrainedDecal = 41,
-        IsIgnoredBySandbox = 42,
-        FactionRank = 43,
-        LightGobo = 44,
-        Collision = 45,
-        PowerLinks = 46,
-        Count = 47,
-        XFLG = 48,
-        LightFlicker = 49,
-        MapMarker = 50,
-        LightLayerData = 51,
-        LightStaticShadowMap = 52,
-        LightVolumetricData = 53,
-        Ownership = 54,
-        LightColors = 55,
-        GroupedPackIn = 56,
-        BlueprintPartOrigin = 57,
-        Layer = 58,
-        Location = 59,
-        XTRI = 60,
-        LightRoundedness = 61,
-        LinkedReferences = 62,
-        IsLinkedRefTransient = 63,
-        SnapLinks = 64,
-        EncounterZone = 65,
-        GeometryDirtinessScale = 66,
-        Lock = 67,
-        Properties = 68,
-        ExternalEmittance = 69,
-        HeadTrackingWeight = 70,
-        BOLV = 71,
-        Spline = 72,
-        XNSE = 73,
-        AttachRef = 74,
-        RagdollBipedRotation = 75,
-        HealthPercent = 76,
-        TimeOfDay = 77,
-        EnableParent = 78,
-        Traversals = 79,
-        NumTraversalFluffBytes = 80,
-        NavigationDoorLink = 81,
-        IsActivationPoint = 82,
-        Scale = 83,
-        OpenByDefault = 84,
-        Position = 85,
-        Rotation = 86,
-        Comments = 87,
+        XCZR = 20,
+        VolumeReflectionProbeOffsetIntensity = 21,
+        DebugText = 22,
+        Emittance = 23,
+        Radius = 24,
+        Lighting = 25,
+        LightBarndoorData = 26,
+        LightArea = 27,
+        CurrentZoneCell = 28,
+        XCZA = 29,
+        Patrol = 30,
+        RagdollData = 31,
+        TeleportDestination = 32,
+        TeleportName = 33,
+        ReferenceGroup = 34,
+        LocationRefTypes = 35,
+        LayeredMaterialSwaps = 36,
+        XPCK = 37,
+        SourcePackIn = 38,
+        PersistentLocation = 39,
+        ProjectedDecal = 40,
+        ProjectedDecalReferences = 41,
+        ConstrainedDecal = 42,
+        IsIgnoredBySandbox = 43,
+        FactionRank = 44,
+        LightGobo = 45,
+        Collision = 46,
+        PowerLinks = 47,
+        Count = 48,
+        XFLG = 49,
+        LightFlicker = 50,
+        MapMarker = 51,
+        LightLayerData = 52,
+        LightStaticShadowMap = 53,
+        LightVolumetricData = 54,
+        Ownership = 55,
+        LightColors = 56,
+        GroupedPackIn = 57,
+        BlueprintPartOrigin = 58,
+        Layer = 59,
+        XWCN = 60,
+        XWCU = 61,
+        Location = 62,
+        XTRI = 63,
+        LightRoundedness = 64,
+        LinkedReferences = 65,
+        IsLinkedRefTransient = 66,
+        SnapLinks = 67,
+        EncounterZone = 68,
+        GeometryDirtinessScale = 69,
+        Lock = 70,
+        Properties = 71,
+        ExternalEmittance = 72,
+        HeadTrackingWeight = 73,
+        BOLV = 74,
+        Spline = 75,
+        XNSE = 76,
+        AttachRef = 77,
+        RagdollBipedRotation = 78,
+        HealthPercent = 79,
+        TimeOfDay = 80,
+        EnableParent = 81,
+        Traversals = 82,
+        NumTraversalFluffBytes = 83,
+        NavigationDoorLink = 84,
+        IsActivationPoint = 85,
+        Scale = 86,
+        OpenByDefault = 87,
+        Position = 88,
+        Rotation = 89,
+        Comments = 90,
     }
     #endregion
 
@@ -4958,9 +5083,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 81;
+        public const ushort AdditionalFieldCount = 84;
 
-        public const ushort FieldCount = 88;
+        public const ushort FieldCount = 91;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -5008,6 +5133,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XLCM,
                 RecordTypes.XACT,
                 RecordTypes.XPRM,
+                RecordTypes.XCZR,
                 RecordTypes.XVOI,
                 RecordTypes.XDTS,
                 RecordTypes.XDTF,
@@ -5048,6 +5174,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XWPK,
                 RecordTypes.XBPO,
                 RecordTypes.XLYR,
+                RecordTypes.XWCN,
+                RecordTypes.XWCU,
                 RecordTypes.XLRL,
                 RecordTypes.XTRI,
                 RecordTypes.XLRD,
@@ -5132,6 +5260,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LevelModifier = default;
             item.Action = default;
             item.Primitive = null;
+            item.XCZR.Clear();
             item.VolumeReflectionProbeOffsetIntensity = null;
             item.DebugText = null;
             item.Emittance.Clear();
@@ -5171,6 +5300,8 @@ namespace Mutagen.Bethesda.Starfield
             item.GroupedPackIn = null;
             item.BlueprintPartOrigin = default;
             item.Layer.Clear();
+            item.XWCN = default;
+            item.XWCU = default;
             item.Location.Clear();
             item.XTRI = default;
             item.LightRoundedness = null;
@@ -5225,6 +5356,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.XLTW.Relink(mapping);
             obj.XTRV?.RemapLinks(mapping);
             obj.VolumeData?.RemapLinks(mapping);
+            obj.XCZR.Relink(mapping);
             obj.Emittance.Relink(mapping);
             obj.CurrentZoneCell.Relink(mapping);
             obj.Patrol?.RemapLinks(mapping);
@@ -5380,6 +5512,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Primitive,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.XCZR = item.XCZR.Equals(rhs.XCZR);
             ret.VolumeReflectionProbeOffsetIntensity = EqualsMaskHelper.EqualsHelper(
                 item.VolumeReflectionProbeOffsetIntensity,
                 rhs.VolumeReflectionProbeOffsetIntensity,
@@ -5493,6 +5626,8 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
             ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.XWCN = item.XWCN == rhs.XWCN;
+            ret.XWCU = MemorySliceExt.SequenceEqual(item.XWCU, rhs.XWCU);
             ret.Location = item.Location.Equals(rhs.Location);
             ret.XTRI = item.XTRI == rhs.XTRI;
             ret.LightRoundedness = EqualsMaskHelper.EqualsHelper(
@@ -5676,6 +5811,10 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Primitive is {} PrimitiveItem)
             {
                 PrimitiveItem?.Print(sb, "Primitive");
+            }
+            if (printMask?.XCZR ?? true)
+            {
+                sb.AppendItem(item.XCZR.FormKeyNullable, "XCZR");
             }
             if ((printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
                 && item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
@@ -5920,6 +6059,16 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Layer ?? true)
             {
                 sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
+            }
+            if ((printMask?.XWCN ?? true)
+                && item.XWCN is {} XWCNItem)
+            {
+                sb.AppendItem(XWCNItem, "XWCN");
+            }
+            if ((printMask?.XWCU ?? true)
+                && item.XWCU is {} XWCUItem)
+            {
+                sb.AppendLine($"XWCU => {SpanExt.ToHexString(XWCUItem)}");
             }
             if (printMask?.Location ?? true)
             {
@@ -6217,6 +6366,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPrimitiveEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
+            {
+                if (!lhs.XCZR.Equals(rhs.XCZR)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VolumeReflectionProbeOffsetIntensity, rhs.VolumeReflectionProbeOffsetIntensity, out var lhsVolumeReflectionProbeOffsetIntensity, out var rhsVolumeReflectionProbeOffsetIntensity, out var isVolumeReflectionProbeOffsetIntensityEqual))
@@ -6429,6 +6582,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
+            {
+                if (lhs.XWCN != rhs.XWCN) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCU) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCU, rhs.XWCU)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
@@ -6634,6 +6795,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Primitiveitem);
             }
+            hash.Add(item.XCZR);
             if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityitem)
             {
                 hash.Add(VolumeReflectionProbeOffsetIntensityitem);
@@ -6745,6 +6907,14 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(BlueprintPartOriginitem);
             }
             hash.Add(item.Layer);
+            if (item.XWCN is {} XWCNitem)
+            {
+                hash.Add(XWCNitem);
+            }
+            if (item.XWCU is {} XWCUItem)
+            {
+                hash.Add(XWCUItem);
+            }
             hash.Add(item.Location);
             if (item.XTRI is {} XTRIitem)
             {
@@ -6886,6 +7056,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.XCZR, out var XCZRInfo))
+            {
+                yield return XCZRInfo;
             }
             if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
@@ -7317,6 +7491,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
+            {
+                item.XCZR.SetTo(rhs.XCZR.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
             {
@@ -7933,6 +8111,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
+            {
+                item.XWCN = rhs.XWCN;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCU) ?? true))
+            {
+                if(rhs.XWCU is {} XWCUrhs)
+                {
+                    item.XWCU = XWCUrhs.ToArray();
+                }
+                else
+                {
+                    item.XWCU = default;
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
             {
                 item.Location.SetTo(rhs.Location.FormKeyNullable);
@@ -8546,6 +8739,10 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.XCZR,
+                header: translationParams.ConvertToCustom(RecordTypes.XCZR));
             if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
             {
                 ((VolumeReflectionProbeOffsetIntensityBinaryWriteTranslation)((IBinaryItem)VolumeReflectionProbeOffsetIntensityItem).BinaryWriteTranslator).Write(
@@ -8793,6 +8990,14 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Layer,
                 header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XWCN,
+                header: translationParams.ConvertToCustom(RecordTypes.XWCN));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XWCU,
+                header: translationParams.ConvertToCustom(RecordTypes.XWCU));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Location,
@@ -9141,6 +9346,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Primitive = Mutagen.Bethesda.Starfield.PlacedPrimitive.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.Primitive;
                 }
+                case RecordTypeInts.XCZR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.XCZR;
+                }
                 case RecordTypeInts.XVOI:
                 {
                     item.VolumeReflectionProbeOffsetIntensity = Mutagen.Bethesda.Starfield.VolumeReflectionProbeOffsetIntensity.CreateFromBinary(frame: frame);
@@ -9399,6 +9610,18 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XWCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XWCN = frame.ReadInt32();
+                    return (int)PlacedObject_FieldIndex.XWCN;
+                }
+                case RecordTypeInts.XWCU:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XWCU = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XWCU;
                 }
                 case RecordTypeInts.XLRL:
                 {
@@ -9697,6 +9920,10 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _PrimitiveLocation;
         public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(_recordData.Slice(_PrimitiveLocation!.Value.Min), _package) : default;
         #endregion
+        #region XCZR
+        private int? _XCZRLocation;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _XCZRLocation);
+        #endregion
         #region VolumeReflectionProbeOffsetIntensity
         private RangeInt32? _VolumeReflectionProbeOffsetIntensityLocation;
         public IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity => _VolumeReflectionProbeOffsetIntensityLocation.HasValue ? VolumeReflectionProbeOffsetIntensityBinaryOverlay.VolumeReflectionProbeOffsetIntensityFactory(_recordData.Slice(_VolumeReflectionProbeOffsetIntensityLocation!.Value.Min), _package) : default;
@@ -9813,6 +10040,14 @@ namespace Mutagen.Bethesda.Starfield
         #region Layer
         private int? _LayerLocation;
         public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
+        #endregion
+        #region XWCN
+        private int? _XWCNLocation;
+        public Int32? XWCN => _XWCNLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XWCNLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region XWCU
+        private int? _XWCULocation;
+        public ReadOnlyMemorySlice<Byte>? XWCU => _XWCULocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XWCULocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Location
         private int? _LocationLocation;
@@ -10063,6 +10298,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Primitive;
+                }
+                case RecordTypeInts.XCZR:
+                {
+                    _XCZRLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XVOI:
                 {
@@ -10323,6 +10563,16 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _LayerLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XWCN:
+                {
+                    _XWCNLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XWCN;
+                }
+                case RecordTypeInts.XWCU:
+                {
+                    _XWCULocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XWCU;
                 }
                 case RecordTypeInts.XLRL:
                 {

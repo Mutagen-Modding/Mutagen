@@ -1107,6 +1107,7 @@ public partial class RecordTypes
     public static readonly RecordType XCWT = new(0x54574358);
     public static readonly RecordType XCZA = new(0x415A4358);
     public static readonly RecordType XCZC = new(0x435A4358);
+    public static readonly RecordType XCZR = new(0x525A4358);
     public static readonly RecordType XDTF = new(0x46544458);
     public static readonly RecordType XDTS = new(0x53544458);
     public static readonly RecordType XEED = new(0x44454558);

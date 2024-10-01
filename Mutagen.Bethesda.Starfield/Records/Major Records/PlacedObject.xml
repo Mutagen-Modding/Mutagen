@@ -17,6 +17,7 @@
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <FormLink name="XCZR" recordType="XCZR" unknown="true" refName="PlacedObject" />
       <RefDirect name="VolumeReflectionProbeOffsetIntensity" refName="VolumeReflectionProbeOffsetIntensity" />
       <RefDirect name="DebugText" refName="PlacedObjectDebugText" />
       <FormLink name="Emittance" recordType="XEMI">
@@ -66,6 +67,8 @@
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <Int32 name="XWCN" recordType="XWCN" unknown="true" />
+      <ByteArray name="XWCU" recordType="XWCU" unknown="true" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
       <UInt32 name="XTRI" recordType="XTRI" unknown="true" />
       <RefDirect name="LightRoundedness" refName="LightRoundness" recordType="XLRD" />
