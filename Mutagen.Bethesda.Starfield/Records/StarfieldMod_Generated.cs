@@ -12759,8 +12759,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Races is IAssetLinkContainer RaceslinkCont)
             {
-                foreach (var item in obj.Races.EnumerateListedAssetLinks())
+                foreach (var item in RaceslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -24619,9 +24620,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            if (obj.Races is IAssetLinkContainerGetter RaceslinkCont)
             {
-                yield return item;
+                foreach (var item in RaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
