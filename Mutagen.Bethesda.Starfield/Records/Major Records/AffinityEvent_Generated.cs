@@ -134,6 +134,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> IAffinityEventGetter.Faction => this.Faction;
         #endregion
+        #region PNAM
+        private readonly IFormLinkNullable<IAffinityEventGetter> _PNAM = new FormLinkNullable<IAffinityEventGetter>();
+        public IFormLinkNullable<IAffinityEventGetter> PNAM
+        {
+            get => _PNAM;
+            set => _PNAM.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAffinityEventGetter> IAffinityEventGetter.PNAM => this.PNAM;
+        #endregion
 
         #region To String
 
@@ -167,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Distance = initialValue;
                 this.Cooldown = initialValue;
                 this.Faction = initialValue;
+                this.PNAM = initialValue;
             }
 
             public Mask(
@@ -184,7 +195,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Size,
                 TItem Distance,
                 TItem Cooldown,
-                TItem Faction)
+                TItem Faction,
+                TItem PNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -202,6 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Distance = Distance;
                 this.Cooldown = Cooldown;
                 this.Faction = Faction;
+                this.PNAM = PNAM;
             }
 
             #pragma warning disable CS8618
@@ -221,6 +234,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Distance;
             public TItem Cooldown;
             public TItem Faction;
+            public TItem PNAM;
             #endregion
 
             #region Equals
@@ -242,6 +256,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Distance, rhs.Distance)) return false;
                 if (!object.Equals(this.Cooldown, rhs.Cooldown)) return false;
                 if (!object.Equals(this.Faction, rhs.Faction)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -255,6 +270,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Distance);
                 hash.Add(this.Cooldown);
                 hash.Add(this.Faction);
+                hash.Add(this.PNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -284,6 +300,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Distance)) return false;
                 if (!eval(this.Cooldown)) return false;
                 if (!eval(this.Faction)) return false;
+                if (!eval(this.PNAM)) return false;
                 return true;
             }
             #endregion
@@ -311,6 +328,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Distance)) return true;
                 if (eval(this.Cooldown)) return true;
                 if (eval(this.Faction)) return true;
+                if (eval(this.PNAM)) return true;
                 return false;
             }
             #endregion
@@ -348,6 +366,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Distance = eval(this.Distance);
                 obj.Cooldown = eval(this.Cooldown);
                 obj.Faction = eval(this.Faction);
+                obj.PNAM = eval(this.PNAM);
             }
             #endregion
 
@@ -413,6 +432,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Faction, "Faction");
                     }
+                    if (printMask?.PNAM ?? true)
+                    {
+                        sb.AppendItem(PNAM, "PNAM");
+                    }
                 }
             }
             #endregion
@@ -432,6 +455,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Distance;
             public Exception? Cooldown;
             public Exception? Faction;
+            public Exception? PNAM;
             #endregion
 
             #region IErrorMask
@@ -456,6 +480,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Cooldown;
                     case AffinityEvent_FieldIndex.Faction:
                         return Faction;
+                    case AffinityEvent_FieldIndex.PNAM:
+                        return PNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -489,6 +515,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AffinityEvent_FieldIndex.Faction:
                         this.Faction = ex;
+                        break;
+                    case AffinityEvent_FieldIndex.PNAM:
+                        this.PNAM = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -525,6 +554,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AffinityEvent_FieldIndex.Faction:
                         this.Faction = (Exception?)obj;
                         break;
+                    case AffinityEvent_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -542,6 +574,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Distance != null) return true;
                 if (Cooldown != null) return true;
                 if (Faction != null) return true;
+                if (PNAM != null) return true;
                 return false;
             }
             #endregion
@@ -607,6 +640,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Faction, "Faction");
                 }
+                {
+                    sb.AppendItem(PNAM, "PNAM");
+                }
             }
             #endregion
 
@@ -623,6 +659,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Distance = this.Distance.Combine(rhs.Distance);
                 ret.Cooldown = this.Cooldown.Combine(rhs.Cooldown);
                 ret.Faction = this.Faction.Combine(rhs.Faction);
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -653,6 +690,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Distance;
             public bool Cooldown;
             public bool Faction;
+            public bool PNAM;
             #endregion
 
             #region Ctors
@@ -668,6 +706,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Distance = defaultOn;
                 this.Cooldown = defaultOn;
                 this.Faction = defaultOn;
+                this.PNAM = defaultOn;
             }
 
             #endregion
@@ -683,6 +722,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Distance, null));
                 ret.Add((Cooldown, null));
                 ret.Add((Faction, null));
+                ret.Add((PNAM, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -838,6 +878,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IGlobalGetter> Distance { get; set; }
         new IFormLinkNullable<IGlobalGetter> Cooldown { get; set; }
         new IFormLinkNullable<IFactionGetter> Faction { get; set; }
+        new IFormLinkNullable<IAffinityEventGetter> PNAM { get; set; }
     }
 
     public partial interface IAffinityEventInternal :
@@ -864,6 +905,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IGlobalGetter> Distance { get; }
         IFormLinkNullableGetter<IGlobalGetter> Cooldown { get; }
         IFormLinkNullableGetter<IFactionGetter> Faction { get; }
+        IFormLinkNullableGetter<IAffinityEventGetter> PNAM { get; }
 
     }
 
@@ -1048,6 +1090,7 @@ namespace Mutagen.Bethesda.Starfield
         Distance = 12,
         Cooldown = 13,
         Faction = 14,
+        PNAM = 15,
     }
     #endregion
 
@@ -1058,9 +1101,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(AffinityEvent.Mask<>);
 
@@ -1101,7 +1144,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ENAM,
                 RecordTypes.DNAM,
                 RecordTypes.CNAM,
-                RecordTypes.BNAM);
+                RecordTypes.BNAM,
+                RecordTypes.PNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1154,6 +1198,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Distance.Clear();
             item.Cooldown.Clear();
             item.Faction.Clear();
+            item.PNAM.Clear();
             base.Clear(item);
         }
         
@@ -1177,6 +1222,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Distance.Relink(mapping);
             obj.Cooldown.Relink(mapping);
             obj.Faction.Relink(mapping);
+            obj.PNAM.Relink(mapping);
         }
         
         #endregion
@@ -1255,6 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Distance = item.Distance.Equals(rhs.Distance);
             ret.Cooldown = item.Cooldown.Equals(rhs.Cooldown);
             ret.Faction = item.Faction.Equals(rhs.Faction);
+            ret.PNAM = item.PNAM.Equals(rhs.PNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1347,6 +1394,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Faction.FormKeyNullable, "Faction");
             }
+            if (printMask?.PNAM ?? true)
+            {
+                sb.AppendItem(item.PNAM.FormKeyNullable, "PNAM");
+            }
         }
         
         public static AffinityEvent_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1429,6 +1480,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Faction.Equals(rhs.Faction)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.PNAM) ?? true))
+            {
+                if (!lhs.PNAM.Equals(rhs.PNAM)) return false;
+            }
             return true;
         }
         
@@ -1468,6 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Distance);
             hash.Add(item.Cooldown);
             hash.Add(item.Faction);
+            hash.Add(item.PNAM);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1520,6 +1576,10 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.Faction, out var FactionInfo))
             {
                 yield return FactionInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PNAM, out var PNAMInfo))
+            {
+                yield return PNAMInfo;
             }
             yield break;
         }
@@ -1646,6 +1706,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Faction) ?? true))
             {
                 item.Faction.SetTo(rhs.Faction.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.PNAM) ?? true))
+            {
+                item.PNAM.SetTo(rhs.PNAM.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1856,6 +1920,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Faction,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
         public void Write(
@@ -1996,6 +2064,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AffinityEvent_FieldIndex.Faction;
                 }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.PNAM;
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2083,6 +2157,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Faction
         private int? _FactionLocation;
         public IFormLinkNullableGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FactionLocation);
+        #endregion
+        #region PNAM
+        private int? _PNAMLocation;
+        public IFormLinkNullableGetter<IAffinityEventGetter> PNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _PNAMLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2197,6 +2275,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _FactionLocation = (stream.Position - offset);
                     return (int)AffinityEvent_FieldIndex.Faction;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _PNAMLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.PNAM;
                 }
                 default:
                     return base.FillRecordType(
