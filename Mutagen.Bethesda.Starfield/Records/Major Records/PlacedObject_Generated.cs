@@ -589,6 +589,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayerGetter> IPlacedObjectGetter.Layer => this.Layer;
         #endregion
+        #region BOLV
+        public UInt16? BOLV { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IPlacedObjectGetter.BOLV => this.BOLV;
+        #endregion
         #region XWCN
         public Int32? XWCN { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -717,11 +722,6 @@ namespace Mutagen.Bethesda.Starfield
         public Single? HeadTrackingWeight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.HeadTrackingWeight => this.HeadTrackingWeight;
-        #endregion
-        #region BOLV
-        public UInt16? BOLV { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IPlacedObjectGetter.BOLV => this.BOLV;
         #endregion
         #region Spline
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -914,6 +914,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
                 this.BlueprintPartOrigin = initialValue;
                 this.Layer = initialValue;
+                this.BOLV = initialValue;
                 this.XWCN = initialValue;
                 this.XWCU = initialValue;
                 this.Location = initialValue;
@@ -928,7 +929,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(initialValue, new ExternalEmittance.Mask<TItem>(initialValue));
                 this.HeadTrackingWeight = initialValue;
-                this.BOLV = initialValue;
                 this.Spline = new MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>(initialValue, new PlacedObjectSpline.Mask<TItem>(initialValue));
                 this.XNSE = initialValue;
                 this.AttachRef = initialValue;
@@ -1008,6 +1008,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GroupedPackIn,
                 TItem BlueprintPartOrigin,
                 TItem Layer,
+                TItem BOLV,
                 TItem XWCN,
                 TItem XWCU,
                 TItem Location,
@@ -1022,7 +1023,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Properties,
                 TItem ExternalEmittance,
                 TItem HeadTrackingWeight,
-                TItem BOLV,
                 TItem Spline,
                 TItem XNSE,
                 TItem AttachRef,
@@ -1101,6 +1101,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
                 this.BlueprintPartOrigin = BlueprintPartOrigin;
                 this.Layer = Layer;
+                this.BOLV = BOLV;
                 this.XWCN = XWCN;
                 this.XWCU = XWCU;
                 this.Location = Location;
@@ -1115,7 +1116,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(ExternalEmittance, new ExternalEmittance.Mask<TItem>(ExternalEmittance));
                 this.HeadTrackingWeight = HeadTrackingWeight;
-                this.BOLV = BOLV;
                 this.Spline = new MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>(Spline, new PlacedObjectSpline.Mask<TItem>(Spline));
                 this.XNSE = XNSE;
                 this.AttachRef = AttachRef;
@@ -1196,6 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
             public TItem BlueprintPartOrigin;
             public TItem Layer;
+            public TItem BOLV;
             public TItem XWCN;
             public TItem XWCU;
             public TItem Location;
@@ -1210,7 +1211,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, ExternalEmittance.Mask<TItem>?>? ExternalEmittance { get; set; }
             public TItem HeadTrackingWeight;
-            public TItem BOLV;
             public MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>? Spline { get; set; }
             public TItem XNSE;
             public TItem AttachRef;
@@ -1293,6 +1293,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
                 if (!object.Equals(this.BlueprintPartOrigin, rhs.BlueprintPartOrigin)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.BOLV, rhs.BOLV)) return false;
                 if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
                 if (!object.Equals(this.XWCU, rhs.XWCU)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
@@ -1307,7 +1308,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.ExternalEmittance, rhs.ExternalEmittance)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
-                if (!object.Equals(this.BOLV, rhs.BOLV)) return false;
                 if (!object.Equals(this.Spline, rhs.Spline)) return false;
                 if (!object.Equals(this.XNSE, rhs.XNSE)) return false;
                 if (!object.Equals(this.AttachRef, rhs.AttachRef)) return false;
@@ -1382,6 +1382,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GroupedPackIn);
                 hash.Add(this.BlueprintPartOrigin);
                 hash.Add(this.Layer);
+                hash.Add(this.BOLV);
                 hash.Add(this.XWCN);
                 hash.Add(this.XWCU);
                 hash.Add(this.Location);
@@ -1396,7 +1397,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Properties);
                 hash.Add(this.ExternalEmittance);
                 hash.Add(this.HeadTrackingWeight);
-                hash.Add(this.BOLV);
                 hash.Add(this.Spline);
                 hash.Add(this.XNSE);
                 hash.Add(this.AttachRef);
@@ -1626,6 +1626,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.BlueprintPartOrigin)) return false;
                 if (!eval(this.Layer)) return false;
+                if (!eval(this.BOLV)) return false;
                 if (!eval(this.XWCN)) return false;
                 if (!eval(this.XWCU)) return false;
                 if (!eval(this.Location)) return false;
@@ -1685,7 +1686,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ExternalEmittance.Specific != null && !this.ExternalEmittance.Specific.All(eval)) return false;
                 }
                 if (!eval(this.HeadTrackingWeight)) return false;
-                if (!eval(this.BOLV)) return false;
                 if (Spline != null)
                 {
                     if (!eval(this.Spline.Overall)) return false;
@@ -1936,6 +1936,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.BlueprintPartOrigin)) return true;
                 if (eval(this.Layer)) return true;
+                if (eval(this.BOLV)) return true;
                 if (eval(this.XWCN)) return true;
                 if (eval(this.XWCU)) return true;
                 if (eval(this.Location)) return true;
@@ -1995,7 +1996,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ExternalEmittance.Specific != null && this.ExternalEmittance.Specific.Any(eval)) return true;
                 }
                 if (eval(this.HeadTrackingWeight)) return true;
-                if (eval(this.BOLV)) return true;
                 if (Spline != null)
                 {
                     if (eval(this.Spline.Overall)) return true;
@@ -2198,6 +2198,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GroupedPackIn = this.GroupedPackIn == null ? null : new MaskItem<R, GroupedPackIn.Mask<R>?>(eval(this.GroupedPackIn.Overall), this.GroupedPackIn.Specific?.Translate(eval));
                 obj.BlueprintPartOrigin = eval(this.BlueprintPartOrigin);
                 obj.Layer = eval(this.Layer);
+                obj.BOLV = eval(this.BOLV);
                 obj.XWCN = eval(this.XWCN);
                 obj.XWCU = eval(this.XWCU);
                 obj.Location = eval(this.Location);
@@ -2254,7 +2255,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.ExternalEmittance = this.ExternalEmittance == null ? null : new MaskItem<R, ExternalEmittance.Mask<R>?>(eval(this.ExternalEmittance.Overall), this.ExternalEmittance.Specific?.Translate(eval));
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
-                obj.BOLV = eval(this.BOLV);
                 obj.Spline = this.Spline == null ? null : new MaskItem<R, PlacedObjectSpline.Mask<R>?>(eval(this.Spline.Overall), this.Spline.Specific?.Translate(eval));
                 obj.XNSE = eval(this.XNSE);
                 obj.AttachRef = eval(this.AttachRef);
@@ -2626,6 +2626,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Layer, "Layer");
                     }
+                    if (printMask?.BOLV ?? true)
+                    {
+                        sb.AppendItem(BOLV, "BOLV");
+                    }
                     if (printMask?.XWCN ?? true)
                     {
                         sb.AppendItem(XWCN, "XWCN");
@@ -2726,10 +2730,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
                         sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
-                    }
-                    if (printMask?.BOLV ?? true)
-                    {
-                        sb.AppendItem(BOLV, "BOLV");
                     }
                     if (printMask?.Spline?.Overall ?? true)
                     {
@@ -2874,6 +2874,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
             public Exception? BlueprintPartOrigin;
             public Exception? Layer;
+            public Exception? BOLV;
             public Exception? XWCN;
             public Exception? XWCU;
             public Exception? Location;
@@ -2888,7 +2889,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, ExternalEmittance.ErrorMask?>? ExternalEmittance;
             public Exception? HeadTrackingWeight;
-            public Exception? BOLV;
             public MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>? Spline;
             public Exception? XNSE;
             public Exception? AttachRef;
@@ -3019,6 +3019,8 @@ namespace Mutagen.Bethesda.Starfield
                         return BlueprintPartOrigin;
                     case PlacedObject_FieldIndex.Layer:
                         return Layer;
+                    case PlacedObject_FieldIndex.BOLV:
+                        return BOLV;
                     case PlacedObject_FieldIndex.XWCN:
                         return XWCN;
                     case PlacedObject_FieldIndex.XWCU:
@@ -3047,8 +3049,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ExternalEmittance;
                     case PlacedObject_FieldIndex.HeadTrackingWeight:
                         return HeadTrackingWeight;
-                    case PlacedObject_FieldIndex.BOLV:
-                        return BOLV;
                     case PlacedObject_FieldIndex.Spline:
                         return Spline;
                     case PlacedObject_FieldIndex.XNSE:
@@ -3250,6 +3250,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = ex;
                         break;
+                    case PlacedObject_FieldIndex.BOLV:
+                        this.BOLV = ex;
+                        break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = ex;
                         break;
@@ -3291,9 +3294,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = ex;
-                        break;
-                    case PlacedObject_FieldIndex.BOLV:
-                        this.BOLV = ex;
                         break;
                     case PlacedObject_FieldIndex.Spline:
                         this.Spline = new MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>(ex, null);
@@ -3513,6 +3513,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.BOLV:
+                        this.BOLV = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = (Exception?)obj;
                         break;
@@ -3554,9 +3557,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = (Exception?)obj;
-                        break;
-                    case PlacedObject_FieldIndex.BOLV:
-                        this.BOLV = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.Spline:
                         this.Spline = (MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>?)obj;
@@ -3668,6 +3668,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (GroupedPackIn != null) return true;
                 if (BlueprintPartOrigin != null) return true;
                 if (Layer != null) return true;
+                if (BOLV != null) return true;
                 if (XWCN != null) return true;
                 if (XWCU != null) return true;
                 if (Location != null) return true;
@@ -3682,7 +3683,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Properties != null) return true;
                 if (ExternalEmittance != null) return true;
                 if (HeadTrackingWeight != null) return true;
-                if (BOLV != null) return true;
                 if (Spline != null) return true;
                 if (XNSE != null) return true;
                 if (AttachRef != null) return true;
@@ -3958,6 +3958,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Layer, "Layer");
                 }
                 {
+                    sb.AppendItem(BOLV, "BOLV");
+                }
+                {
                     sb.AppendItem(XWCN, "XWCN");
                 }
                 {
@@ -4037,9 +4040,6 @@ namespace Mutagen.Bethesda.Starfield
                 ExternalEmittance?.Print(sb);
                 {
                     sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
-                }
-                {
-                    sb.AppendItem(BOLV, "BOLV");
                 }
                 Spline?.Print(sb);
                 {
@@ -4159,6 +4159,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
                 ret.BlueprintPartOrigin = this.BlueprintPartOrigin.Combine(rhs.BlueprintPartOrigin);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.BOLV = this.BOLV.Combine(rhs.BOLV);
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.XWCU = this.XWCU.Combine(rhs.XWCU);
                 ret.Location = this.Location.Combine(rhs.Location);
@@ -4173,7 +4174,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.ExternalEmittance = this.ExternalEmittance.Combine(rhs.ExternalEmittance, (l, r) => l.Combine(r));
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
-                ret.BOLV = this.BOLV.Combine(rhs.BOLV);
                 ret.Spline = this.Spline.Combine(rhs.Spline, (l, r) => l.Combine(r));
                 ret.XNSE = this.XNSE.Combine(rhs.XNSE);
                 ret.AttachRef = this.AttachRef.Combine(rhs.AttachRef);
@@ -4265,6 +4265,7 @@ namespace Mutagen.Bethesda.Starfield
             public GroupedPackIn.TranslationMask? GroupedPackIn;
             public bool BlueprintPartOrigin;
             public bool Layer;
+            public bool BOLV;
             public bool XWCN;
             public bool XWCU;
             public bool Location;
@@ -4279,7 +4280,6 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectProperty.TranslationMask? Properties;
             public ExternalEmittance.TranslationMask? ExternalEmittance;
             public bool HeadTrackingWeight;
-            public bool BOLV;
             public PlacedObjectSpline.TranslationMask? Spline;
             public bool XNSE;
             public bool AttachRef;
@@ -4334,6 +4334,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightVolumetricData = defaultOn;
                 this.BlueprintPartOrigin = defaultOn;
                 this.Layer = defaultOn;
+                this.BOLV = defaultOn;
                 this.XWCN = defaultOn;
                 this.XWCU = defaultOn;
                 this.Location = defaultOn;
@@ -4342,7 +4343,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.EncounterZone = defaultOn;
                 this.GeometryDirtinessScale = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
-                this.BOLV = defaultOn;
                 this.XNSE = defaultOn;
                 this.AttachRef = defaultOn;
                 this.RagdollBipedRotation = defaultOn;
@@ -4415,6 +4415,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
                 ret.Add((BlueprintPartOrigin, null));
                 ret.Add((Layer, null));
+                ret.Add((BOLV, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCU, null));
                 ret.Add((Location, null));
@@ -4429,7 +4430,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((ExternalEmittance != null ? ExternalEmittance.OnOverall : DefaultOn, ExternalEmittance?.GetCrystal()));
                 ret.Add((HeadTrackingWeight, null));
-                ret.Add((BOLV, null));
                 ret.Add((Spline != null ? Spline.OnOverall : DefaultOn, Spline?.GetCrystal()));
                 ret.Add((XNSE, null));
                 ret.Add((AttachRef, null));
@@ -4664,6 +4664,7 @@ namespace Mutagen.Bethesda.Starfield
         new GroupedPackIn? GroupedPackIn { get; set; }
         new UInt32? BlueprintPartOrigin { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new UInt16? BOLV { get; set; }
         new Int32? XWCN { get; set; }
         new MemorySlice<Byte>? XWCU { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
@@ -4678,7 +4679,6 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExternalEmittance? ExternalEmittance { get; set; }
         new Single? HeadTrackingWeight { get; set; }
-        new UInt16? BOLV { get; set; }
         new PlacedObjectSpline? Spline { get; set; }
         new MemorySlice<Byte>? XNSE { get; set; }
         new IFormLinkNullable<ILinkedReferenceGetter> AttachRef { get; set; }
@@ -4782,6 +4782,7 @@ namespace Mutagen.Bethesda.Starfield
         IGroupedPackInGetter? GroupedPackIn { get; }
         UInt32? BlueprintPartOrigin { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        UInt16? BOLV { get; }
         Int32? XWCN { get; }
         ReadOnlyMemorySlice<Byte>? XWCU { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
@@ -4796,7 +4797,6 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IExternalEmittanceGetter? ExternalEmittance { get; }
         Single? HeadTrackingWeight { get; }
-        UInt16? BOLV { get; }
         IPlacedObjectSplineGetter? Spline { get; }
         ReadOnlyMemorySlice<Byte>? XNSE { get; }
         IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef { get; }
@@ -5042,21 +5042,21 @@ namespace Mutagen.Bethesda.Starfield
         GroupedPackIn = 57,
         BlueprintPartOrigin = 58,
         Layer = 59,
-        XWCN = 60,
-        XWCU = 61,
-        Location = 62,
-        XTRI = 63,
-        LightRoundedness = 64,
-        LinkedReferences = 65,
-        IsLinkedRefTransient = 66,
-        SnapLinks = 67,
-        EncounterZone = 68,
-        GeometryDirtinessScale = 69,
-        Lock = 70,
-        Properties = 71,
-        ExternalEmittance = 72,
-        HeadTrackingWeight = 73,
-        BOLV = 74,
+        BOLV = 60,
+        XWCN = 61,
+        XWCU = 62,
+        Location = 63,
+        XTRI = 64,
+        LightRoundedness = 65,
+        LinkedReferences = 66,
+        IsLinkedRefTransient = 67,
+        SnapLinks = 68,
+        EncounterZone = 69,
+        GeometryDirtinessScale = 70,
+        Lock = 71,
+        Properties = 72,
+        ExternalEmittance = 73,
+        HeadTrackingWeight = 74,
         Spline = 75,
         XNSE = 76,
         AttachRef = 77,
@@ -5174,6 +5174,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XWPK,
                 RecordTypes.XBPO,
                 RecordTypes.XLYR,
+                RecordTypes.BOLV,
                 RecordTypes.XWCN,
                 RecordTypes.XWCU,
                 RecordTypes.XLRL,
@@ -5188,7 +5189,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XPPS,
                 RecordTypes.XEED,
                 RecordTypes.XHTW,
-                RecordTypes.BOLV,
                 RecordTypes.XBSD,
                 RecordTypes.XNSE,
                 RecordTypes.XATR,
@@ -5300,6 +5300,7 @@ namespace Mutagen.Bethesda.Starfield
             item.GroupedPackIn = null;
             item.BlueprintPartOrigin = default;
             item.Layer.Clear();
+            item.BOLV = default;
             item.XWCN = default;
             item.XWCU = default;
             item.Location.Clear();
@@ -5314,7 +5315,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Properties = null;
             item.ExternalEmittance = null;
             item.HeadTrackingWeight = default;
-            item.BOLV = default;
             item.Spline = null;
             item.XNSE = default;
             item.AttachRef.Clear();
@@ -5626,6 +5626,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
             ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.BOLV = item.BOLV == rhs.BOLV;
             ret.XWCN = item.XWCN == rhs.XWCN;
             ret.XWCU = MemorySliceExt.SequenceEqual(item.XWCU, rhs.XWCU);
             ret.Location = item.Location.Equals(rhs.Location);
@@ -5661,7 +5662,6 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
-            ret.BOLV = item.BOLV == rhs.BOLV;
             ret.Spline = EqualsMaskHelper.EqualsHelper(
                 item.Spline,
                 rhs.Spline,
@@ -6060,6 +6060,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
             }
+            if ((printMask?.BOLV ?? true)
+                && item.BOLV is {} BOLVItem)
+            {
+                sb.AppendItem(BOLVItem, "BOLV");
+            }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN is {} XWCNItem)
             {
@@ -6155,11 +6160,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
             {
                 sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
-            }
-            if ((printMask?.BOLV ?? true)
-                && item.BOLV is {} BOLVItem)
-            {
-                sb.AppendItem(BOLVItem, "BOLV");
             }
             if ((printMask?.Spline?.Overall ?? true)
                 && item.Spline is {} SplineItem)
@@ -6582,6 +6582,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
+            {
+                if (lhs.BOLV != rhs.BOLV) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
                 if (lhs.XWCN != rhs.XWCN) return false;
@@ -6649,10 +6653,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
-            {
-                if (lhs.BOLV != rhs.BOLV) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Spline) ?? true))
             {
@@ -6907,6 +6907,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(BlueprintPartOriginitem);
             }
             hash.Add(item.Layer);
+            if (item.BOLV is {} BOLVitem)
+            {
+                hash.Add(BOLVitem);
+            }
             if (item.XWCN is {} XWCNitem)
             {
                 hash.Add(XWCNitem);
@@ -6944,10 +6948,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
                 hash.Add(HeadTrackingWeightitem);
-            }
-            if (item.BOLV is {} BOLVitem)
-            {
-                hash.Add(BOLVitem);
             }
             if (item.Spline is {} Splineitem)
             {
@@ -8111,6 +8111,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
+            {
+                item.BOLV = rhs.BOLV;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
                 item.XWCN = rhs.XWCN;
@@ -8315,10 +8319,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 item.HeadTrackingWeight = rhs.HeadTrackingWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
-            {
-                item.BOLV = rhs.BOLV;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Spline) ?? true))
             {
@@ -8990,6 +8990,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Layer,
                 header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BOLV,
+                header: translationParams.ConvertToCustom(RecordTypes.BOLV));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XWCN,
@@ -9081,10 +9085,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.HeadTrackingWeight,
                 header: translationParams.ConvertToCustom(RecordTypes.XHTW));
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.BOLV,
-                header: translationParams.ConvertToCustom(RecordTypes.BOLV));
             if (item.Spline is {} SplineItem)
             {
                 ((PlacedObjectSplineBinaryWriteTranslation)((IBinaryItem)SplineItem).BinaryWriteTranslator).Write(
@@ -9611,6 +9611,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
+                case RecordTypeInts.BOLV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BOLV = frame.ReadUInt16();
+                    return (int)PlacedObject_FieldIndex.BOLV;
+                }
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -9703,12 +9709,6 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
-                }
-                case RecordTypeInts.BOLV:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BOLV = frame.ReadUInt16();
-                    return (int)PlacedObject_FieldIndex.BOLV;
                 }
                 case RecordTypeInts.XBSD:
                 {
@@ -10041,6 +10041,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _LayerLocation;
         public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
         #endregion
+        #region BOLV
+        private int? _BOLVLocation;
+        public UInt16? BOLV => _BOLVLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BOLVLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
         #region XWCN
         private int? _XWCNLocation;
         public Int32? XWCN => _XWCNLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XWCNLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -10084,10 +10088,6 @@ namespace Mutagen.Bethesda.Starfield
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
         public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region BOLV
-        private int? _BOLVLocation;
-        public UInt16? BOLV => _BOLVLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BOLVLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region Spline
         private RangeInt32? _SplineLocation;
@@ -10564,6 +10564,11 @@ namespace Mutagen.Bethesda.Starfield
                     _LayerLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
+                case RecordTypeInts.BOLV:
+                {
+                    _BOLVLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.BOLV;
+                }
                 case RecordTypeInts.XWCN:
                 {
                     _XWCNLocation = (stream.Position - offset);
@@ -10656,11 +10661,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _HeadTrackingWeightLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
-                }
-                case RecordTypeInts.BOLV:
-                {
-                    _BOLVLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.BOLV;
                 }
                 case RecordTypeInts.XBSD:
                 {

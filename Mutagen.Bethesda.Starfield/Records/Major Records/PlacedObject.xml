@@ -67,6 +67,7 @@
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
       <Int32 name="XWCN" recordType="XWCN" unknown="true" />
       <ByteArray name="XWCU" recordType="XWCU" unknown="true" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
@@ -81,7 +82,6 @@
       <RefList name="Properties" refName="ObjectProperty" recordType="XPPS" />
       <RefDirect name="ExternalEmittance" refName="ExternalEmittance" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
-      <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
       <RefDirect name="Spline" refName="PlacedObjectSpline" />
       <ByteArray name="XNSE" recordType="XNSE" unknown="true" />
       <FormLink name="AttachRef" recordType="XATR">
