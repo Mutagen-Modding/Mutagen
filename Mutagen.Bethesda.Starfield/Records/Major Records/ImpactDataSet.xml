@@ -4,6 +4,7 @@
     <Fields>
       <RefList name="Impacts" refName="ImpactData" />
       <FormLink name="IPDS" refName="ImpactDataSet" recordType="IPDS" />
+      <FormLink name="ENAM" refName="ImpactDataSet" recordType="ENAM" />
     </Fields>
   </Object>
   <Object name="ImpactData" objType="Subrecord" recordType="PNAM">
