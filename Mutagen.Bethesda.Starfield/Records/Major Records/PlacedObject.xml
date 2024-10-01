@@ -68,14 +68,14 @@
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
       <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
-      <Int32 name="XWCN" recordType="XWCN" unknown="true" />
+      <FormLink name="XWCN" recordType="XWCN" refName="Static" unknown="true" />
       <ByteArray name="XWCU" recordType="XWCU" unknown="true" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
       <UInt32 name="XTRI" recordType="XTRI" unknown="true" />
       <RefDirect name="LightRoundedness" refName="LightRoundness" recordType="XLRD" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
-      <Float name="XLIB" recordType="XLIB" unknown="true" />
+      <FormLink name="XLIB" recordType="XLIB" refName="LeveledItem" unknown="true" />
       <RefList name="SnapLinks" refName="SnapLink" recordType="XSL1" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
       <Float name="GeometryDirtinessScale" recordType="XGDS" />

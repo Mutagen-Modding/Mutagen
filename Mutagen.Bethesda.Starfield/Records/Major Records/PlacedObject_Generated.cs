@@ -595,9 +595,14 @@ namespace Mutagen.Bethesda.Starfield
         UInt16? IPlacedObjectGetter.BOLV => this.BOLV;
         #endregion
         #region XWCN
-        public Int32? XWCN { get; set; }
+        private readonly IFormLinkNullable<IStaticGetter> _XWCN = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> XWCN
+        {
+            get => _XWCN;
+            set => _XWCN.SetTo(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IPlacedObjectGetter.XWCN => this.XWCN;
+        IFormLinkNullableGetter<IStaticGetter> IPlacedObjectGetter.XWCN => this.XWCN;
         #endregion
         #region XWCU
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -654,9 +659,14 @@ namespace Mutagen.Bethesda.Starfield
         public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
         #region XLIB
-        public Single? XLIB { get; set; }
+        private readonly IFormLinkNullable<ILeveledItemGetter> _XLIB = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> XLIB
+        {
+            get => _XLIB;
+            set => _XLIB.SetTo(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IPlacedObjectGetter.XLIB => this.XLIB;
+        IFormLinkNullableGetter<ILeveledItemGetter> IPlacedObjectGetter.XLIB => this.XLIB;
         #endregion
         #region SnapLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4700,14 +4710,14 @@ namespace Mutagen.Bethesda.Starfield
         new UInt32? BlueprintPartOrigin { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
         new UInt16? BOLV { get; set; }
-        new Int32? XWCN { get; set; }
+        new IFormLinkNullable<IStaticGetter> XWCN { get; set; }
         new MemorySlice<Byte>? XWCU { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new UInt32? XTRI { get; set; }
         new LightRoundness? LightRoundedness { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Boolean IsLinkedRefTransient { get; set; }
-        new Single? XLIB { get; set; }
+        new IFormLinkNullable<ILeveledItemGetter> XLIB { get; set; }
         new ExtendedList<SnapLink>? SnapLinks { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterZone { get; set; }
         new Single? GeometryDirtinessScale { get; set; }
@@ -4819,14 +4829,14 @@ namespace Mutagen.Bethesda.Starfield
         UInt32? BlueprintPartOrigin { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
         UInt16? BOLV { get; }
-        Int32? XWCN { get; }
+        IFormLinkNullableGetter<IStaticGetter> XWCN { get; }
         ReadOnlyMemorySlice<Byte>? XWCU { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
         UInt32? XTRI { get; }
         ILightRoundnessGetter? LightRoundedness { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         Boolean IsLinkedRefTransient { get; }
-        Single? XLIB { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> XLIB { get; }
         IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterZone { get; }
         Single? GeometryDirtinessScale { get; }
@@ -5340,14 +5350,14 @@ namespace Mutagen.Bethesda.Starfield
             item.BlueprintPartOrigin = default;
             item.Layer.Clear();
             item.BOLV = default;
-            item.XWCN = default;
+            item.XWCN.Clear();
             item.XWCU = default;
             item.Location.Clear();
             item.XTRI = default;
             item.LightRoundedness = null;
             item.LinkedReferences.Clear();
             item.IsLinkedRefTransient = default(Boolean);
-            item.XLIB = default;
+            item.XLIB.Clear();
             item.SnapLinks = null;
             item.EncounterZone.Clear();
             item.GeometryDirtinessScale = default;
@@ -5414,8 +5424,10 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ownership?.RemapLinks(mapping);
             obj.GroupedPackIn?.RemapLinks(mapping);
             obj.Layer.Relink(mapping);
+            obj.XWCN.Relink(mapping);
             obj.Location.Relink(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
+            obj.XLIB.Relink(mapping);
             obj.SnapLinks?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
             obj.Lock?.RemapLinks(mapping);
@@ -5667,7 +5679,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
             ret.Layer = item.Layer.Equals(rhs.Layer);
             ret.BOLV = item.BOLV == rhs.BOLV;
-            ret.XWCN = item.XWCN == rhs.XWCN;
+            ret.XWCN = item.XWCN.Equals(rhs.XWCN);
             ret.XWCU = MemorySliceExt.SequenceEqual(item.XWCU, rhs.XWCU);
             ret.Location = item.Location.Equals(rhs.Location);
             ret.XTRI = item.XTRI == rhs.XTRI;
@@ -5681,7 +5693,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
-            ret.XLIB = item.XLIB.EqualsWithin(rhs.XLIB);
+            ret.XLIB = item.XLIB.Equals(rhs.XLIB);
             ret.SnapLinks = item.SnapLinks.CollectionEqualsHelper(
                 rhs.SnapLinks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -6106,10 +6118,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(BOLVItem, "BOLV");
             }
-            if ((printMask?.XWCN ?? true)
-                && item.XWCN is {} XWCNItem)
+            if (printMask?.XWCN ?? true)
             {
-                sb.AppendItem(XWCNItem, "XWCN");
+                sb.AppendItem(item.XWCN.FormKeyNullable, "XWCN");
             }
             if ((printMask?.XWCU ?? true)
                 && item.XWCU is {} XWCUItem)
@@ -6148,10 +6159,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.IsLinkedRefTransient, "IsLinkedRefTransient");
             }
-            if ((printMask?.XLIB ?? true)
-                && item.XLIB is {} XLIBItem)
+            if (printMask?.XLIB ?? true)
             {
-                sb.AppendItem(XLIBItem, "XLIB");
+                sb.AppendItem(item.XLIB.FormKeyNullable, "XLIB");
             }
             if ((printMask?.SnapLinks?.Overall ?? true)
                 && item.SnapLinks is {} SnapLinksItem)
@@ -6634,7 +6644,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                if (lhs.XWCN != rhs.XWCN) return false;
+                if (!lhs.XWCN.Equals(rhs.XWCN)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCU) ?? true))
             {
@@ -6666,7 +6676,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XLIB) ?? true))
             {
-                if (!lhs.XLIB.EqualsWithin(rhs.XLIB)) return false;
+                if (!lhs.XLIB.Equals(rhs.XLIB)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
             {
@@ -6961,10 +6971,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(BOLVitem);
             }
-            if (item.XWCN is {} XWCNitem)
-            {
-                hash.Add(XWCNitem);
-            }
+            hash.Add(item.XWCN);
             if (item.XWCU is {} XWCUItem)
             {
                 hash.Add(XWCUItem);
@@ -6980,10 +6987,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.LinkedReferences);
             hash.Add(item.IsLinkedRefTransient);
-            if (item.XLIB is {} XLIBitem)
-            {
-                hash.Add(XLIBitem);
-            }
+            hash.Add(item.XLIB);
             hash.Add(item.SnapLinks);
             hash.Add(item.EncounterZone);
             if (item.GeometryDirtinessScale is {} GeometryDirtinessScaleitem)
@@ -7207,6 +7211,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return LayerInfo;
             }
+            if (FormLinkInformation.TryFactory(obj.XWCN, out var XWCNInfo))
+            {
+                yield return XWCNInfo;
+            }
             if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
             {
                 yield return LocationInfo;
@@ -7214,6 +7222,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.XLIB, out var XLIBInfo))
+            {
+                yield return XLIBInfo;
             }
             if (obj.SnapLinks is {} SnapLinksItem)
             {
@@ -8171,7 +8183,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                item.XWCN = rhs.XWCN;
+                item.XWCN.SetTo(rhs.XWCN.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCU) ?? true))
             {
@@ -8248,7 +8260,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XLIB) ?? true))
             {
-                item.XLIB = rhs.XLIB;
+                item.XLIB.SetTo(rhs.XLIB.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
             {
@@ -9052,7 +9064,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.BOLV,
                 header: translationParams.ConvertToCustom(RecordTypes.BOLV));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.XWCN,
                 header: translationParams.ConvertToCustom(RecordTypes.XWCN));
@@ -9093,7 +9105,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.IsLinkedRefTransient,
                 header: translationParams.ConvertToCustom(RecordTypes.XLKT));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.XLIB,
                 header: translationParams.ConvertToCustom(RecordTypes.XLIB));
@@ -9682,7 +9694,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XWCN = frame.ReadInt32();
+                    item.XWCN.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCU:
@@ -9727,7 +9739,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLIB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XLIB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XLIB.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.XLIB;
                 }
                 case RecordTypeInts.XSL1:
@@ -10115,7 +10127,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region XWCN
         private int? _XWCNLocation;
-        public Int32? XWCN => _XWCNLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XWCNLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public IFormLinkNullableGetter<IStaticGetter> XWCN => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _XWCNLocation);
         #endregion
         #region XWCU
         private int? _XWCULocation;
@@ -10137,7 +10149,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region XLIB
         private int? _XLIBLocation;
-        public Single? XLIB => _XLIBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XLIBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public IFormLinkNullableGetter<ILeveledItemGetter> XLIB => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _XLIBLocation);
         #endregion
         public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
         #region EncounterZone
