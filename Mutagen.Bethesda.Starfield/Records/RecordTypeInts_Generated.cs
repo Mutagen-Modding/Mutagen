@@ -1126,6 +1126,7 @@ public partial class RecordTypeInts
     public const int XLCN = 0x4E434C58;
     public const int XLFD = 0x44464C58;
     public const int XLGD = 0x44474C58;
+    public const int XLIB = 0x42494C58;
     public const int XLIG = 0x47494C58;
     public const int XLKR = 0x524B4C58;
     public const int XLKT = 0x544B4C58;

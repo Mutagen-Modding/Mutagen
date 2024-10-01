@@ -1128,6 +1128,7 @@ public partial class RecordTypes
     public static readonly RecordType XLCN = new(0x4E434C58);
     public static readonly RecordType XLFD = new(0x44464C58);
     public static readonly RecordType XLGD = new(0x44474C58);
+    public static readonly RecordType XLIB = new(0x42494C58);
     public static readonly RecordType XLIG = new(0x47494C58);
     public static readonly RecordType XLKR = new(0x524B4C58);
     public static readonly RecordType XLKT = new(0x544B4C58);

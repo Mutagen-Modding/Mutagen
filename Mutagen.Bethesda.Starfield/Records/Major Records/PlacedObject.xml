@@ -75,6 +75,7 @@
       <RefDirect name="LightRoundedness" refName="LightRoundness" recordType="XLRD" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <Float name="XLIB" recordType="XLIB" unknown="true" />
       <RefList name="SnapLinks" refName="SnapLink" recordType="XSL1" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
       <Float name="GeometryDirtinessScale" recordType="XGDS" />

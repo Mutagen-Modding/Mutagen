@@ -653,6 +653,11 @@ namespace Mutagen.Bethesda.Starfield
         #region IsLinkedRefTransient
         public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
+        #region XLIB
+        public Single? XLIB { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.XLIB => this.XLIB;
+        #endregion
         #region SnapLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<SnapLink>? _SnapLinks;
@@ -922,6 +927,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(initialValue, new LightRoundness.Mask<TItem>(initialValue));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = initialValue;
+                this.XLIB = initialValue;
                 this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
                 this.EncounterZone = initialValue;
                 this.GeometryDirtinessScale = initialValue;
@@ -1016,6 +1022,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LightRoundedness,
                 TItem LinkedReferences,
                 TItem IsLinkedRefTransient,
+                TItem XLIB,
                 TItem SnapLinks,
                 TItem EncounterZone,
                 TItem GeometryDirtinessScale,
@@ -1109,6 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightRoundedness = new MaskItem<TItem, LightRoundness.Mask<TItem>?>(LightRoundedness, new LightRoundness.Mask<TItem>(LightRoundedness));
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
+                this.XLIB = XLIB;
                 this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(SnapLinks, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
                 this.EncounterZone = EncounterZone;
                 this.GeometryDirtinessScale = GeometryDirtinessScale;
@@ -1204,6 +1212,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, LightRoundness.Mask<TItem>?>? LightRoundedness { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
             public TItem IsLinkedRefTransient;
+            public TItem XLIB;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>? SnapLinks;
             public TItem EncounterZone;
             public TItem GeometryDirtinessScale;
@@ -1301,6 +1310,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LightRoundedness, rhs.LightRoundedness)) return false;
                 if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
                 if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
+                if (!object.Equals(this.XLIB, rhs.XLIB)) return false;
                 if (!object.Equals(this.SnapLinks, rhs.SnapLinks)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
                 if (!object.Equals(this.GeometryDirtinessScale, rhs.GeometryDirtinessScale)) return false;
@@ -1390,6 +1400,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LightRoundedness);
                 hash.Add(this.LinkedReferences);
                 hash.Add(this.IsLinkedRefTransient);
+                hash.Add(this.XLIB);
                 hash.Add(this.SnapLinks);
                 hash.Add(this.EncounterZone);
                 hash.Add(this.GeometryDirtinessScale);
@@ -1649,6 +1660,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.IsLinkedRefTransient)) return false;
+                if (!eval(this.XLIB)) return false;
                 if (this.SnapLinks != null)
                 {
                     if (!eval(this.SnapLinks.Overall)) return false;
@@ -1959,6 +1971,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.IsLinkedRefTransient)) return true;
+                if (eval(this.XLIB)) return true;
                 if (this.SnapLinks != null)
                 {
                     if (eval(this.SnapLinks.Overall)) return true;
@@ -2220,6 +2233,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.IsLinkedRefTransient = eval(this.IsLinkedRefTransient);
+                obj.XLIB = eval(this.XLIB);
                 if (SnapLinks != null)
                 {
                     obj.SnapLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapLink.Mask<R>?>>?>(eval(this.SnapLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapLink.Mask<R>?>>());
@@ -2673,6 +2687,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
                     }
+                    if (printMask?.XLIB ?? true)
+                    {
+                        sb.AppendItem(XLIB, "XLIB");
+                    }
                     if ((printMask?.SnapLinks?.Overall ?? true)
                         && SnapLinks is {} SnapLinksItem)
                     {
@@ -2882,6 +2900,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, LightRoundness.ErrorMask?>? LightRoundedness;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
             public Exception? IsLinkedRefTransient;
+            public Exception? XLIB;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>? SnapLinks;
             public Exception? EncounterZone;
             public Exception? GeometryDirtinessScale;
@@ -3035,6 +3054,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LinkedReferences;
                     case PlacedObject_FieldIndex.IsLinkedRefTransient:
                         return IsLinkedRefTransient;
+                    case PlacedObject_FieldIndex.XLIB:
+                        return XLIB;
                     case PlacedObject_FieldIndex.SnapLinks:
                         return SnapLinks;
                     case PlacedObject_FieldIndex.EncounterZone:
@@ -3273,6 +3294,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.IsLinkedRefTransient:
                         this.IsLinkedRefTransient = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XLIB:
+                        this.XLIB = ex;
                         break;
                     case PlacedObject_FieldIndex.SnapLinks:
                         this.SnapLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>(ex, null);
@@ -3537,6 +3561,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.IsLinkedRefTransient:
                         this.IsLinkedRefTransient = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.XLIB:
+                        this.XLIB = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.SnapLinks:
                         this.SnapLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>)obj;
                         break;
@@ -3676,6 +3703,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LightRoundedness != null) return true;
                 if (LinkedReferences != null) return true;
                 if (IsLinkedRefTransient != null) return true;
+                if (XLIB != null) return true;
                 if (SnapLinks != null) return true;
                 if (EncounterZone != null) return true;
                 if (GeometryDirtinessScale != null) return true;
@@ -3994,6 +4022,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
                 }
+                {
+                    sb.AppendItem(XLIB, "XLIB");
+                }
                 if (SnapLinks is {} SnapLinksItem)
                 {
                     sb.AppendLine("SnapLinks =>");
@@ -4167,6 +4198,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LightRoundedness = this.LightRoundedness.Combine(rhs.LightRoundedness, (l, r) => l.Combine(r));
                 ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
+                ret.XLIB = this.XLIB.Combine(rhs.XLIB);
                 ret.SnapLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SnapLinks?.Overall, rhs.SnapLinks?.Overall), Noggog.ExceptionExt.Combine(this.SnapLinks?.Specific, rhs.SnapLinks?.Specific));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.GeometryDirtinessScale = this.GeometryDirtinessScale.Combine(rhs.GeometryDirtinessScale);
@@ -4273,6 +4305,7 @@ namespace Mutagen.Bethesda.Starfield
             public LightRoundness.TranslationMask? LightRoundedness;
             public LinkedReferences.TranslationMask? LinkedReferences;
             public bool IsLinkedRefTransient;
+            public bool XLIB;
             public SnapLink.TranslationMask? SnapLinks;
             public bool EncounterZone;
             public bool GeometryDirtinessScale;
@@ -4340,6 +4373,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Location = defaultOn;
                 this.XTRI = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
+                this.XLIB = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.GeometryDirtinessScale = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
@@ -4423,6 +4457,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LightRoundedness != null ? LightRoundedness.OnOverall : DefaultOn, LightRoundedness?.GetCrystal()));
                 ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
                 ret.Add((IsLinkedRefTransient, null));
+                ret.Add((XLIB, null));
                 ret.Add((SnapLinks == null ? DefaultOn : !SnapLinks.GetCrystal().CopyNothing, SnapLinks?.GetCrystal()));
                 ret.Add((EncounterZone, null));
                 ret.Add((GeometryDirtinessScale, null));
@@ -4672,6 +4707,7 @@ namespace Mutagen.Bethesda.Starfield
         new LightRoundness? LightRoundedness { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Boolean IsLinkedRefTransient { get; set; }
+        new Single? XLIB { get; set; }
         new ExtendedList<SnapLink>? SnapLinks { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterZone { get; set; }
         new Single? GeometryDirtinessScale { get; set; }
@@ -4790,6 +4826,7 @@ namespace Mutagen.Bethesda.Starfield
         ILightRoundnessGetter? LightRoundedness { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         Boolean IsLinkedRefTransient { get; }
+        Single? XLIB { get; }
         IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterZone { get; }
         Single? GeometryDirtinessScale { get; }
@@ -5050,29 +5087,30 @@ namespace Mutagen.Bethesda.Starfield
         LightRoundedness = 65,
         LinkedReferences = 66,
         IsLinkedRefTransient = 67,
-        SnapLinks = 68,
-        EncounterZone = 69,
-        GeometryDirtinessScale = 70,
-        Lock = 71,
-        Properties = 72,
-        ExternalEmittance = 73,
-        HeadTrackingWeight = 74,
-        Spline = 75,
-        XNSE = 76,
-        AttachRef = 77,
-        RagdollBipedRotation = 78,
-        HealthPercent = 79,
-        TimeOfDay = 80,
-        EnableParent = 81,
-        Traversals = 82,
-        NumTraversalFluffBytes = 83,
-        NavigationDoorLink = 84,
-        IsActivationPoint = 85,
-        Scale = 86,
-        OpenByDefault = 87,
-        Position = 88,
-        Rotation = 89,
-        Comments = 90,
+        XLIB = 68,
+        SnapLinks = 69,
+        EncounterZone = 70,
+        GeometryDirtinessScale = 71,
+        Lock = 72,
+        Properties = 73,
+        ExternalEmittance = 74,
+        HeadTrackingWeight = 75,
+        Spline = 76,
+        XNSE = 77,
+        AttachRef = 78,
+        RagdollBipedRotation = 79,
+        HealthPercent = 80,
+        TimeOfDay = 81,
+        EnableParent = 82,
+        Traversals = 83,
+        NumTraversalFluffBytes = 84,
+        NavigationDoorLink = 85,
+        IsActivationPoint = 86,
+        Scale = 87,
+        OpenByDefault = 88,
+        Position = 89,
+        Rotation = 90,
+        Comments = 91,
     }
     #endregion
 
@@ -5083,9 +5121,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 84;
+        public const ushort AdditionalFieldCount = 85;
 
-        public const ushort FieldCount = 91;
+        public const ushort FieldCount = 92;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -5182,6 +5220,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XLRD,
                 RecordTypes.XLKR,
                 RecordTypes.XLKT,
+                RecordTypes.XLIB,
                 RecordTypes.XSL1,
                 RecordTypes.XEZN,
                 RecordTypes.XGDS,
@@ -5308,6 +5347,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LightRoundedness = null;
             item.LinkedReferences.Clear();
             item.IsLinkedRefTransient = default(Boolean);
+            item.XLIB = default;
             item.SnapLinks = null;
             item.EncounterZone.Clear();
             item.GeometryDirtinessScale = default;
@@ -5641,6 +5681,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
+            ret.XLIB = item.XLIB.EqualsWithin(rhs.XLIB);
             ret.SnapLinks = item.SnapLinks.CollectionEqualsHelper(
                 rhs.SnapLinks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -6106,6 +6147,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.IsLinkedRefTransient ?? true)
             {
                 sb.AppendItem(item.IsLinkedRefTransient, "IsLinkedRefTransient");
+            }
+            if ((printMask?.XLIB ?? true)
+                && item.XLIB is {} XLIBItem)
+            {
+                sb.AppendItem(XLIBItem, "XLIB");
             }
             if ((printMask?.SnapLinks?.Overall ?? true)
                 && item.SnapLinks is {} SnapLinksItem)
@@ -6618,6 +6664,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.IsLinkedRefTransient != rhs.IsLinkedRefTransient) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XLIB) ?? true))
+            {
+                if (!lhs.XLIB.EqualsWithin(rhs.XLIB)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
             {
                 if (!lhs.SnapLinks.SequenceEqualNullable(rhs.SnapLinks, (l, r) => ((SnapLinkCommon)((ISnapLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.SnapLinks)))) return false;
@@ -6930,6 +6980,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.LinkedReferences);
             hash.Add(item.IsLinkedRefTransient);
+            if (item.XLIB is {} XLIBitem)
+            {
+                hash.Add(XLIBitem);
+            }
             hash.Add(item.SnapLinks);
             hash.Add(item.EncounterZone);
             if (item.GeometryDirtinessScale is {} GeometryDirtinessScaleitem)
@@ -8192,6 +8246,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.IsLinkedRefTransient = rhs.IsLinkedRefTransient;
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XLIB) ?? true))
+            {
+                item.XLIB = rhs.XLIB;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.SnapLinks);
@@ -9035,6 +9093,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.IsLinkedRefTransient,
                 header: translationParams.ConvertToCustom(RecordTypes.XLKT));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XLIB,
+                header: translationParams.ConvertToCustom(RecordTypes.XLIB));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISnapLinkGetter>.Instance.Write(
                 writer: writer,
                 items: item.SnapLinks,
@@ -9662,6 +9724,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.IsLinkedRefTransient = true;
                     return (int)PlacedObject_FieldIndex.IsLinkedRefTransient;
                 }
+                case RecordTypeInts.XLIB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XLIB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XLIB;
+                }
                 case RecordTypeInts.XSL1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -10066,6 +10134,10 @@ namespace Mutagen.Bethesda.Starfield
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
         public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);
+        #endregion
+        #region XLIB
+        private int? _XLIBLocation;
+        public Single? XLIB => _XLIBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XLIBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
         #region EncounterZone
@@ -10617,6 +10689,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _IsLinkedRefTransientLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.IsLinkedRefTransient;
+                }
+                case RecordTypeInts.XLIB:
+                {
+                    _XLIBLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XLIB;
                 }
                 case RecordTypeInts.XSL1:
                 {
