@@ -172,6 +172,7 @@
   <Object name="PackageTargetUnknown" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <Int32 name="Data" />
+      <Int32 name="Type" />
     </Fields>
   </Object>
   <Object name="PackageBranch" objType="Subrecord">
