@@ -3,6 +3,7 @@
   <Object name="ImpactDataSet" recordType="IPDS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Impacts" refName="ImpactData" />
+      <FormLink name="IPDS" refName="ImpactDataSet" recordType="IPDS" />
     </Fields>
   </Object>
   <Object name="ImpactData" objType="Subrecord" recordType="PNAM">

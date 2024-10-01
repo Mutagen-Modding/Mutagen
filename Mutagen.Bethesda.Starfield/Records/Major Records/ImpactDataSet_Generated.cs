@@ -68,6 +68,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region IPDS
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _IPDS = new FormLinkNullable<IImpactDataSetGetter>();
+        public IFormLinkNullable<IImpactDataSetGetter> IPDS
+        {
+            get => _IPDS;
+            set => _IPDS.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImpactDataSetGetter> IImpactDataSetGetter.IPDS => this.IPDS;
+        #endregion
 
         #region To String
 
@@ -94,6 +104,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
+                this.IPDS = initialValue;
             }
 
             public Mask(
@@ -104,7 +115,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Impacts)
+                TItem Impacts,
+                TItem IPDS)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -115,6 +127,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
+                this.IPDS = IPDS;
             }
 
             #pragma warning disable CS8618
@@ -127,6 +140,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>? Impacts;
+            public TItem IPDS;
             #endregion
 
             #region Equals
@@ -141,12 +155,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
+                if (!object.Equals(this.IPDS, rhs.IPDS)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Impacts);
+                hash.Add(this.IPDS);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -169,6 +185,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.IPDS)) return false;
                 return true;
             }
             #endregion
@@ -189,6 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.IPDS)) return true;
                 return false;
             }
             #endregion
@@ -219,6 +237,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.IPDS = eval(this.IPDS);
             }
             #endregion
 
@@ -256,6 +275,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.IPDS ?? true)
+                    {
+                        sb.AppendItem(IPDS, "IPDS");
+                    }
                 }
             }
             #endregion
@@ -268,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>? Impacts;
+            public Exception? IPDS;
             #endregion
 
             #region IErrorMask
@@ -278,6 +302,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ImpactDataSet_FieldIndex.Impacts:
                         return Impacts;
+                    case ImpactDataSet_FieldIndex.IPDS:
+                        return IPDS;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -290,6 +316,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ImpactDataSet_FieldIndex.Impacts:
                         this.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImpactDataSet_FieldIndex.IPDS:
+                        this.IPDS = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -305,6 +334,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ImpactDataSet_FieldIndex.Impacts:
                         this.Impacts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>)obj;
                         break;
+                    case ImpactDataSet_FieldIndex.IPDS:
+                        this.IPDS = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -315,6 +347,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Impacts != null) return true;
+                if (IPDS != null) return true;
                 return false;
             }
             #endregion
@@ -359,6 +392,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(IPDS, "IPDS");
+                }
             }
             #endregion
 
@@ -368,6 +404,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Impacts?.Overall, rhs.Impacts?.Overall), Noggog.ExceptionExt.Combine(this.Impacts?.Specific, rhs.Impacts?.Specific));
+                ret.IPDS = this.IPDS.Combine(rhs.IPDS);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -391,6 +428,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public ImpactData.TranslationMask? Impacts;
+            public bool IPDS;
             #endregion
 
             #region Ctors
@@ -399,6 +437,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.IPDS = defaultOn;
             }
 
             #endregion
@@ -407,6 +446,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Impacts == null ? DefaultOn : !Impacts.GetCrystal().CopyNothing, Impacts?.GetCrystal()));
+                ret.Add((IPDS, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -555,6 +595,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<ImpactData> Impacts { get; }
+        new IFormLinkNullable<IImpactDataSetGetter> IPDS { get; set; }
     }
 
     public partial interface IImpactDataSetInternal :
@@ -574,6 +615,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         IReadOnlyList<IImpactDataGetter> Impacts { get; }
+        IFormLinkNullableGetter<IImpactDataSetGetter> IPDS { get; }
 
     }
 
@@ -751,6 +793,7 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Impacts = 7,
+        IPDS = 8,
     }
     #endregion
 
@@ -761,9 +804,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
@@ -842,6 +885,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Impacts.Clear();
+            item.IPDS.Clear();
             base.Clear(item);
         }
         
@@ -860,6 +904,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Impacts.RemapLinks(mapping);
+            obj.IPDS.Relink(mapping);
         }
         
         #endregion
@@ -931,6 +976,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Impacts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.IPDS = item.IPDS.Equals(rhs.IPDS);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -994,6 +1040,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.IPDS ?? true)
+            {
+                sb.AppendItem(item.IPDS.FormKeyNullable, "IPDS");
+            }
         }
         
         public static ImpactDataSet_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1048,6 +1098,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Impacts.SequenceEqual(rhs.Impacts, (l, r) => ((ImpactDataCommon)((IImpactDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Impacts)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.IPDS) ?? true))
+            {
+                if (!lhs.IPDS.Equals(rhs.IPDS)) return false;
+            }
             return true;
         }
         
@@ -1077,6 +1131,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Impacts);
+            hash.Add(item.IPDS);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1109,6 +1164,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.Impacts.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.IPDS, out var IPDSInfo))
+            {
+                yield return IPDSInfo;
             }
             yield break;
         }
@@ -1207,6 +1266,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.IPDS) ?? true))
+            {
+                item.IPDS.SetTo(rhs.IPDS.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1388,6 +1451,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.IPDS,
+                header: translationParams.ConvertToCustom(RecordTypes.IPDS));
         }
 
         public void Write(
@@ -1483,6 +1550,12 @@ namespace Mutagen.Bethesda.Starfield
                             transl: ImpactData.TryCreateFromBinary));
                     return (int)ImpactDataSet_FieldIndex.Impacts;
                 }
+                case RecordTypeInts.IPDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IPDS.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ImpactDataSet_FieldIndex.IPDS;
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1543,6 +1616,10 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
+        #region IPDS
+        private int? _IPDSLocation;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> IPDS => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _IPDSLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1626,6 +1703,11 @@ namespace Mutagen.Bethesda.Starfield
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)ImpactDataSet_FieldIndex.Impacts;
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    _IPDSLocation = (stream.Position - offset);
+                    return (int)ImpactDataSet_FieldIndex.IPDS;
                 }
                 default:
                     return base.FillRecordType(
