@@ -26,10 +26,10 @@
       <FormLink name="NativeTerminal" recordType="NTRM" refName="TerminalMenu" />
       <Color name="MarkerColor" recordType="PNAM" />
       <String name="WaterMaterial" recordType="WMAT" />
-      <FormLink name="Water" refName="Water" recordType="WTFM" />
       <RefDirect name="LoopingSound" refName="SoundReference" recordType="ALSH" />
       <RefDirect name="ActivateSound" refName="SoundReference" recordType="ACSH" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <FormLink name="Water" refName="Water" recordType="WTFM" />
       <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
       <UInt16 name="ActivationAngle" recordType="JNAM" />
       <ByteArray name="INAM" recordType="INAM" />
