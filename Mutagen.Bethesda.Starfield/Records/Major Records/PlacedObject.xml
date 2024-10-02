@@ -17,7 +17,7 @@
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
-      <FormLink name="XCZR" recordType="XCZR" unknown="true" refName="PlacedObject" />
+      <RefList name="PlacedObjectXCZRXCZA" refName="PlacedObjectXCZRXCZA" />
       <RefDirect name="VolumeReflectionProbeOffsetIntensity" refName="VolumeReflectionProbeOffsetIntensity" />
       <RefDirect name="DebugText" refName="PlacedObjectDebugText" />
       <FormLink name="Emittance" recordType="XEMI">
@@ -27,8 +27,7 @@
       <RefDirect name="Lighting" refName="PlacedObjectLighting" />
       <RefDirect name="LightBarndoorData" refName="PlacedObjectLightBarndoorData" />
       <RefDirect name="LightArea" refName="AreaLight" recordType="XALD" />
-      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
-      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
+      <RefDirect name="CurrentZoneCell" refName="PlacedObjectCurrentZoneCell" />
       <RefDirect name="Patrol" refName="Patrol" />
       <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
@@ -317,6 +316,18 @@
       <Float name="WaveScrollAmountV" />
       <Float name="RandomTimeOffsetRange" />
       <Bool name="IsAnimated" byteLength="4" importantByteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectXCZRXCZA" objType="Subrecord" >
+    <Fields>
+      <FormLink name="XCZR" recordType="XCZR" unknown="true" refName="PlacedObject" nullable="False" />
+      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectCurrentZoneCell" objType="Subrecord" >
+    <Fields>
+      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
+      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

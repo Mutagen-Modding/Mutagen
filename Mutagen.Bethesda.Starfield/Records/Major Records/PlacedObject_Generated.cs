@@ -196,15 +196,19 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPlacedPrimitiveGetter? IPlacedObjectGetter.Primitive => this.Primitive;
         #endregion
-        #region XCZR
-        private readonly IFormLinkNullable<IPlacedObjectGetter> _XCZR = new FormLinkNullable<IPlacedObjectGetter>();
-        public IFormLinkNullable<IPlacedObjectGetter> XCZR
-        {
-            get => _XCZR;
-            set => _XCZR.SetTo(value);
-        }
+        #region PlacedObjectXCZRXCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.XCZR => this.XCZR;
+        private ExtendedList<PlacedObjectXCZRXCZA> _PlacedObjectXCZRXCZA = new ExtendedList<PlacedObjectXCZRXCZA>();
+        public ExtendedList<PlacedObjectXCZRXCZA> PlacedObjectXCZRXCZA
+        {
+            get => this._PlacedObjectXCZRXCZA;
+            init => this._PlacedObjectXCZRXCZA = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedObjectXCZRXCZAGetter> IPlacedObjectGetter.PlacedObjectXCZRXCZA => _PlacedObjectXCZRXCZA;
+        #endregion
+
         #endregion
         #region VolumeReflectionProbeOffsetIntensity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -277,25 +281,15 @@ namespace Mutagen.Bethesda.Starfield
         IAreaLightGetter? IPlacedObjectGetter.LightArea => this.LightArea;
         #endregion
         #region CurrentZoneCell
-        private readonly IFormLinkNullable<ICellGetter> _CurrentZoneCell = new FormLinkNullable<ICellGetter>();
-        public IFormLinkNullable<ICellGetter> CurrentZoneCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectCurrentZoneCell? _CurrentZoneCell;
+        public PlacedObjectCurrentZoneCell? CurrentZoneCell
         {
             get => _CurrentZoneCell;
-            set => _CurrentZoneCell.SetTo(value);
+            set => _CurrentZoneCell = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ICellGetter> IPlacedObjectGetter.CurrentZoneCell => this.CurrentZoneCell;
-        #endregion
-        #region XCZA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XCZA;
-        public MemorySlice<Byte>? XCZA
-        {
-            get => this._XCZA;
-            set => this._XCZA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
+        IPlacedObjectCurrentZoneCellGetter? IPlacedObjectGetter.CurrentZoneCell => this.CurrentZoneCell;
         #endregion
         #region Patrol
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -889,7 +883,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LevelModifier = initialValue;
                 this.Action = initialValue;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
-                this.XCZR = initialValue;
+                this.PlacedObjectXCZRXCZA = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectXCZRXCZA.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectXCZRXCZA.Mask<TItem>?>>());
                 this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(initialValue, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(initialValue));
                 this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(initialValue, new PlacedObjectDebugText.Mask<TItem>(initialValue));
                 this.Emittance = initialValue;
@@ -897,8 +891,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(initialValue, new PlacedObjectLighting.Mask<TItem>(initialValue));
                 this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(initialValue, new PlacedObjectLightBarndoorData.Mask<TItem>(initialValue));
                 this.LightArea = new MaskItem<TItem, AreaLight.Mask<TItem>?>(initialValue, new AreaLight.Mask<TItem>(initialValue));
-                this.CurrentZoneCell = initialValue;
-                this.XCZA = initialValue;
+                this.CurrentZoneCell = new MaskItem<TItem, PlacedObjectCurrentZoneCell.Mask<TItem>?>(initialValue, new PlacedObjectCurrentZoneCell.Mask<TItem>(initialValue));
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
                 this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
@@ -984,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LevelModifier,
                 TItem Action,
                 TItem Primitive,
-                TItem XCZR,
+                TItem PlacedObjectXCZRXCZA,
                 TItem VolumeReflectionProbeOffsetIntensity,
                 TItem DebugText,
                 TItem Emittance,
@@ -993,7 +986,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LightBarndoorData,
                 TItem LightArea,
                 TItem CurrentZoneCell,
-                TItem XCZA,
                 TItem Patrol,
                 TItem RagdollData,
                 TItem TeleportDestination,
@@ -1078,7 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LevelModifier = LevelModifier;
                 this.Action = Action;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
-                this.XCZR = XCZR;
+                this.PlacedObjectXCZRXCZA = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectXCZRXCZA.Mask<TItem>?>>?>(PlacedObjectXCZRXCZA, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectXCZRXCZA.Mask<TItem>?>>());
                 this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(VolumeReflectionProbeOffsetIntensity, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(VolumeReflectionProbeOffsetIntensity));
                 this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(DebugText, new PlacedObjectDebugText.Mask<TItem>(DebugText));
                 this.Emittance = Emittance;
@@ -1086,8 +1078,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(Lighting, new PlacedObjectLighting.Mask<TItem>(Lighting));
                 this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(LightBarndoorData, new PlacedObjectLightBarndoorData.Mask<TItem>(LightBarndoorData));
                 this.LightArea = new MaskItem<TItem, AreaLight.Mask<TItem>?>(LightArea, new AreaLight.Mask<TItem>(LightArea));
-                this.CurrentZoneCell = CurrentZoneCell;
-                this.XCZA = XCZA;
+                this.CurrentZoneCell = new MaskItem<TItem, PlacedObjectCurrentZoneCell.Mask<TItem>?>(CurrentZoneCell, new PlacedObjectCurrentZoneCell.Mask<TItem>(CurrentZoneCell));
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
                 this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
@@ -1174,7 +1165,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem LevelModifier;
             public TItem Action;
             public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
-            public TItem XCZR;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectXCZRXCZA.Mask<TItem>?>>?>? PlacedObjectXCZRXCZA;
             public MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>? VolumeReflectionProbeOffsetIntensity { get; set; }
             public MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>? DebugText { get; set; }
             public TItem Emittance;
@@ -1182,8 +1173,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>? Lighting { get; set; }
             public MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>? LightBarndoorData { get; set; }
             public MaskItem<TItem, AreaLight.Mask<TItem>?>? LightArea { get; set; }
-            public TItem CurrentZoneCell;
-            public TItem XCZA;
+            public MaskItem<TItem, PlacedObjectCurrentZoneCell.Mask<TItem>?>? CurrentZoneCell { get; set; }
             public MaskItem<TItem, Patrol.Mask<TItem>?>? Patrol { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>? RagdollData;
             public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
@@ -1272,7 +1262,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
                 if (!object.Equals(this.Action, rhs.Action)) return false;
                 if (!object.Equals(this.Primitive, rhs.Primitive)) return false;
-                if (!object.Equals(this.XCZR, rhs.XCZR)) return false;
+                if (!object.Equals(this.PlacedObjectXCZRXCZA, rhs.PlacedObjectXCZRXCZA)) return false;
                 if (!object.Equals(this.VolumeReflectionProbeOffsetIntensity, rhs.VolumeReflectionProbeOffsetIntensity)) return false;
                 if (!object.Equals(this.DebugText, rhs.DebugText)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
@@ -1281,7 +1271,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LightBarndoorData, rhs.LightBarndoorData)) return false;
                 if (!object.Equals(this.LightArea, rhs.LightArea)) return false;
                 if (!object.Equals(this.CurrentZoneCell, rhs.CurrentZoneCell)) return false;
-                if (!object.Equals(this.XCZA, rhs.XCZA)) return false;
                 if (!object.Equals(this.Patrol, rhs.Patrol)) return false;
                 if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
                 if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
@@ -1362,7 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LevelModifier);
                 hash.Add(this.Action);
                 hash.Add(this.Primitive);
-                hash.Add(this.XCZR);
+                hash.Add(this.PlacedObjectXCZRXCZA);
                 hash.Add(this.VolumeReflectionProbeOffsetIntensity);
                 hash.Add(this.DebugText);
                 hash.Add(this.Emittance);
@@ -1371,7 +1360,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LightBarndoorData);
                 hash.Add(this.LightArea);
                 hash.Add(this.CurrentZoneCell);
-                hash.Add(this.XCZA);
                 hash.Add(this.Patrol);
                 hash.Add(this.RagdollData);
                 hash.Add(this.TeleportDestination);
@@ -1488,7 +1476,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Primitive.Overall)) return false;
                     if (this.Primitive.Specific != null && !this.Primitive.Specific.All(eval)) return false;
                 }
-                if (!eval(this.XCZR)) return false;
+                if (this.PlacedObjectXCZRXCZA != null)
+                {
+                    if (!eval(this.PlacedObjectXCZRXCZA.Overall)) return false;
+                    if (this.PlacedObjectXCZRXCZA.Specific != null)
+                    {
+                        foreach (var item in this.PlacedObjectXCZRXCZA.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (VolumeReflectionProbeOffsetIntensity != null)
                 {
                     if (!eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return false;
@@ -1516,8 +1515,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.LightArea.Overall)) return false;
                     if (this.LightArea.Specific != null && !this.LightArea.Specific.All(eval)) return false;
                 }
-                if (!eval(this.CurrentZoneCell)) return false;
-                if (!eval(this.XCZA)) return false;
+                if (CurrentZoneCell != null)
+                {
+                    if (!eval(this.CurrentZoneCell.Overall)) return false;
+                    if (this.CurrentZoneCell.Specific != null && !this.CurrentZoneCell.Specific.All(eval)) return false;
+                }
                 if (Patrol != null)
                 {
                     if (!eval(this.Patrol.Overall)) return false;
@@ -1799,7 +1801,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Primitive.Overall)) return true;
                     if (this.Primitive.Specific != null && this.Primitive.Specific.Any(eval)) return true;
                 }
-                if (eval(this.XCZR)) return true;
+                if (this.PlacedObjectXCZRXCZA != null)
+                {
+                    if (eval(this.PlacedObjectXCZRXCZA.Overall)) return true;
+                    if (this.PlacedObjectXCZRXCZA.Specific != null)
+                    {
+                        foreach (var item in this.PlacedObjectXCZRXCZA.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (VolumeReflectionProbeOffsetIntensity != null)
                 {
                     if (eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return true;
@@ -1827,8 +1840,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.LightArea.Overall)) return true;
                     if (this.LightArea.Specific != null && this.LightArea.Specific.Any(eval)) return true;
                 }
-                if (eval(this.CurrentZoneCell)) return true;
-                if (eval(this.XCZA)) return true;
+                if (CurrentZoneCell != null)
+                {
+                    if (eval(this.CurrentZoneCell.Overall)) return true;
+                    if (this.CurrentZoneCell.Specific != null && this.CurrentZoneCell.Specific.Any(eval)) return true;
+                }
                 if (Patrol != null)
                 {
                     if (eval(this.Patrol.Overall)) return true;
@@ -2100,7 +2116,21 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LevelModifier = eval(this.LevelModifier);
                 obj.Action = eval(this.Action);
                 obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
-                obj.XCZR = eval(this.XCZR);
+                if (PlacedObjectXCZRXCZA != null)
+                {
+                    obj.PlacedObjectXCZRXCZA = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlacedObjectXCZRXCZA.Mask<R>?>>?>(eval(this.PlacedObjectXCZRXCZA.Overall), Enumerable.Empty<MaskItemIndexed<R, PlacedObjectXCZRXCZA.Mask<R>?>>());
+                    if (PlacedObjectXCZRXCZA.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PlacedObjectXCZRXCZA.Mask<R>?>>();
+                        obj.PlacedObjectXCZRXCZA.Specific = l;
+                        foreach (var item in PlacedObjectXCZRXCZA.Specific)
+                        {
+                            MaskItemIndexed<R, PlacedObjectXCZRXCZA.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PlacedObjectXCZRXCZA.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity == null ? null : new MaskItem<R, VolumeReflectionProbeOffsetIntensity.Mask<R>?>(eval(this.VolumeReflectionProbeOffsetIntensity.Overall), this.VolumeReflectionProbeOffsetIntensity.Specific?.Translate(eval));
                 obj.DebugText = this.DebugText == null ? null : new MaskItem<R, PlacedObjectDebugText.Mask<R>?>(eval(this.DebugText.Overall), this.DebugText.Specific?.Translate(eval));
                 obj.Emittance = eval(this.Emittance);
@@ -2108,8 +2138,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, PlacedObjectLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 obj.LightBarndoorData = this.LightBarndoorData == null ? null : new MaskItem<R, PlacedObjectLightBarndoorData.Mask<R>?>(eval(this.LightBarndoorData.Overall), this.LightBarndoorData.Specific?.Translate(eval));
                 obj.LightArea = this.LightArea == null ? null : new MaskItem<R, AreaLight.Mask<R>?>(eval(this.LightArea.Overall), this.LightArea.Specific?.Translate(eval));
-                obj.CurrentZoneCell = eval(this.CurrentZoneCell);
-                obj.XCZA = eval(this.XCZA);
+                obj.CurrentZoneCell = this.CurrentZoneCell == null ? null : new MaskItem<R, PlacedObjectCurrentZoneCell.Mask<R>?>(eval(this.CurrentZoneCell.Overall), this.CurrentZoneCell.Specific?.Translate(eval));
                 obj.Patrol = this.Patrol == null ? null : new MaskItem<R, Patrol.Mask<R>?>(eval(this.Patrol.Overall), this.Patrol.Specific?.Translate(eval));
                 if (RagdollData != null)
                 {
@@ -2394,9 +2423,24 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Primitive?.Print(sb);
                     }
-                    if (printMask?.XCZR ?? true)
+                    if ((printMask?.PlacedObjectXCZRXCZA?.Overall ?? true)
+                        && PlacedObjectXCZRXCZA is {} PlacedObjectXCZRXCZAItem)
                     {
-                        sb.AppendItem(XCZR, "XCZR");
+                        sb.AppendLine("PlacedObjectXCZRXCZA =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PlacedObjectXCZRXCZAItem.Overall);
+                            if (PlacedObjectXCZRXCZAItem.Specific != null)
+                            {
+                                foreach (var subItem in PlacedObjectXCZRXCZAItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
                     {
@@ -2426,13 +2470,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         LightArea?.Print(sb);
                     }
-                    if (printMask?.CurrentZoneCell ?? true)
+                    if (printMask?.CurrentZoneCell?.Overall ?? true)
                     {
-                        sb.AppendItem(CurrentZoneCell, "CurrentZoneCell");
-                    }
-                    if (printMask?.XCZA ?? true)
-                    {
-                        sb.AppendItem(XCZA, "XCZA");
+                        CurrentZoneCell?.Print(sb);
                     }
                     if (printMask?.Patrol?.Overall ?? true)
                     {
@@ -2862,7 +2902,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? LevelModifier;
             public Exception? Action;
             public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
-            public Exception? XCZR;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectXCZRXCZA.ErrorMask?>>?>? PlacedObjectXCZRXCZA;
             public MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>? VolumeReflectionProbeOffsetIntensity;
             public MaskItem<Exception?, PlacedObjectDebugText.ErrorMask?>? DebugText;
             public Exception? Emittance;
@@ -2870,8 +2910,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, PlacedObjectLighting.ErrorMask?>? Lighting;
             public MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>? LightBarndoorData;
             public MaskItem<Exception?, AreaLight.ErrorMask?>? LightArea;
-            public Exception? CurrentZoneCell;
-            public Exception? XCZA;
+            public MaskItem<Exception?, PlacedObjectCurrentZoneCell.ErrorMask?>? CurrentZoneCell;
             public MaskItem<Exception?, Patrol.ErrorMask?>? Patrol;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>? RagdollData;
             public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
@@ -2968,8 +3007,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Action;
                     case PlacedObject_FieldIndex.Primitive:
                         return Primitive;
-                    case PlacedObject_FieldIndex.XCZR:
-                        return XCZR;
+                    case PlacedObject_FieldIndex.PlacedObjectXCZRXCZA:
+                        return PlacedObjectXCZRXCZA;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         return VolumeReflectionProbeOffsetIntensity;
                     case PlacedObject_FieldIndex.DebugText:
@@ -2986,8 +3025,6 @@ namespace Mutagen.Bethesda.Starfield
                         return LightArea;
                     case PlacedObject_FieldIndex.CurrentZoneCell:
                         return CurrentZoneCell;
-                    case PlacedObject_FieldIndex.XCZA:
-                        return XCZA;
                     case PlacedObject_FieldIndex.Patrol:
                         return Patrol;
                     case PlacedObject_FieldIndex.RagdollData:
@@ -3161,8 +3198,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = new MaskItem<Exception?, PlacedPrimitive.ErrorMask?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.XCZR:
-                        this.XCZR = ex;
+                    case PlacedObject_FieldIndex.PlacedObjectXCZRXCZA:
+                        this.PlacedObjectXCZRXCZA = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectXCZRXCZA.ErrorMask?>>?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         this.VolumeReflectionProbeOffsetIntensity = new MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>(ex, null);
@@ -3186,10 +3223,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LightArea = new MaskItem<Exception?, AreaLight.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.CurrentZoneCell:
-                        this.CurrentZoneCell = ex;
-                        break;
-                    case PlacedObject_FieldIndex.XCZA:
-                        this.XCZA = ex;
+                        this.CurrentZoneCell = new MaskItem<Exception?, PlacedObjectCurrentZoneCell.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.Patrol:
                         this.Patrol = new MaskItem<Exception?, Patrol.ErrorMask?>(ex, null);
@@ -3427,8 +3461,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = (MaskItem<Exception?, PlacedPrimitive.ErrorMask?>?)obj;
                         break;
-                    case PlacedObject_FieldIndex.XCZR:
-                        this.XCZR = (Exception?)obj;
+                    case PlacedObject_FieldIndex.PlacedObjectXCZRXCZA:
+                        this.PlacedObjectXCZRXCZA = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectXCZRXCZA.ErrorMask?>>?>)obj;
                         break;
                     case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
                         this.VolumeReflectionProbeOffsetIntensity = (MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>?)obj;
@@ -3452,10 +3486,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LightArea = (MaskItem<Exception?, AreaLight.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.CurrentZoneCell:
-                        this.CurrentZoneCell = (Exception?)obj;
-                        break;
-                    case PlacedObject_FieldIndex.XCZA:
-                        this.XCZA = (Exception?)obj;
+                        this.CurrentZoneCell = (MaskItem<Exception?, PlacedObjectCurrentZoneCell.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.Patrol:
                         this.Patrol = (MaskItem<Exception?, Patrol.ErrorMask?>?)obj;
@@ -3665,7 +3696,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LevelModifier != null) return true;
                 if (Action != null) return true;
                 if (Primitive != null) return true;
-                if (XCZR != null) return true;
+                if (PlacedObjectXCZRXCZA != null) return true;
                 if (VolumeReflectionProbeOffsetIntensity != null) return true;
                 if (DebugText != null) return true;
                 if (Emittance != null) return true;
@@ -3674,7 +3705,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (LightBarndoorData != null) return true;
                 if (LightArea != null) return true;
                 if (CurrentZoneCell != null) return true;
-                if (XCZA != null) return true;
                 if (Patrol != null) return true;
                 if (RagdollData != null) return true;
                 if (TeleportDestination != null) return true;
@@ -3807,8 +3837,23 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Action, "Action");
                 }
                 Primitive?.Print(sb);
+                if (PlacedObjectXCZRXCZA is {} PlacedObjectXCZRXCZAItem)
                 {
-                    sb.AppendItem(XCZR, "XCZR");
+                    sb.AppendLine("PlacedObjectXCZRXCZA =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PlacedObjectXCZRXCZAItem.Overall);
+                        if (PlacedObjectXCZRXCZAItem.Specific != null)
+                        {
+                            foreach (var subItem in PlacedObjectXCZRXCZAItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 VolumeReflectionProbeOffsetIntensity?.Print(sb);
                 DebugText?.Print(sb);
@@ -3821,12 +3866,7 @@ namespace Mutagen.Bethesda.Starfield
                 Lighting?.Print(sb);
                 LightBarndoorData?.Print(sb);
                 LightArea?.Print(sb);
-                {
-                    sb.AppendItem(CurrentZoneCell, "CurrentZoneCell");
-                }
-                {
-                    sb.AppendItem(XCZA, "XCZA");
-                }
+                CurrentZoneCell?.Print(sb);
                 Patrol?.Print(sb);
                 if (RagdollData is {} RagdollDataItem)
                 {
@@ -4160,7 +4200,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
-                ret.XCZR = this.XCZR.Combine(rhs.XCZR);
+                ret.PlacedObjectXCZRXCZA = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectXCZRXCZA.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PlacedObjectXCZRXCZA?.Overall, rhs.PlacedObjectXCZRXCZA?.Overall), Noggog.ExceptionExt.Combine(this.PlacedObjectXCZRXCZA?.Specific, rhs.PlacedObjectXCZRXCZA?.Specific));
                 ret.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity.Combine(rhs.VolumeReflectionProbeOffsetIntensity, (l, r) => l.Combine(r));
                 ret.DebugText = this.DebugText.Combine(rhs.DebugText, (l, r) => l.Combine(r));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
@@ -4168,8 +4208,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
                 ret.LightBarndoorData = this.LightBarndoorData.Combine(rhs.LightBarndoorData, (l, r) => l.Combine(r));
                 ret.LightArea = this.LightArea.Combine(rhs.LightArea, (l, r) => l.Combine(r));
-                ret.CurrentZoneCell = this.CurrentZoneCell.Combine(rhs.CurrentZoneCell);
-                ret.XCZA = this.XCZA.Combine(rhs.XCZA);
+                ret.CurrentZoneCell = this.CurrentZoneCell.Combine(rhs.CurrentZoneCell, (l, r) => l.Combine(r));
                 ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
                 ret.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RagdollData?.Overall, rhs.RagdollData?.Overall), Noggog.ExceptionExt.Combine(this.RagdollData?.Specific, rhs.RagdollData?.Specific));
                 ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
@@ -4267,7 +4306,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool LevelModifier;
             public bool Action;
             public PlacedPrimitive.TranslationMask? Primitive;
-            public bool XCZR;
+            public PlacedObjectXCZRXCZA.TranslationMask? PlacedObjectXCZRXCZA;
             public VolumeReflectionProbeOffsetIntensity.TranslationMask? VolumeReflectionProbeOffsetIntensity;
             public PlacedObjectDebugText.TranslationMask? DebugText;
             public bool Emittance;
@@ -4275,8 +4314,7 @@ namespace Mutagen.Bethesda.Starfield
             public PlacedObjectLighting.TranslationMask? Lighting;
             public PlacedObjectLightBarndoorData.TranslationMask? LightBarndoorData;
             public AreaLight.TranslationMask? LightArea;
-            public bool CurrentZoneCell;
-            public bool XCZA;
+            public PlacedObjectCurrentZoneCell.TranslationMask? CurrentZoneCell;
             public Patrol.TranslationMask? Patrol;
             public RagdollData.TranslationMask? RagdollData;
             public TeleportDestination.TranslationMask? TeleportDestination;
@@ -4354,11 +4392,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.XLTW = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.Action = defaultOn;
-                this.XCZR = defaultOn;
                 this.Emittance = defaultOn;
                 this.Radius = defaultOn;
-                this.CurrentZoneCell = defaultOn;
-                this.XCZA = defaultOn;
                 this.TeleportName = defaultOn;
                 this.ReferenceGroup = defaultOn;
                 this.LocationRefTypes = defaultOn;
@@ -4419,7 +4454,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LevelModifier, null));
                 ret.Add((Action, null));
                 ret.Add((Primitive != null ? Primitive.OnOverall : DefaultOn, Primitive?.GetCrystal()));
-                ret.Add((XCZR, null));
+                ret.Add((PlacedObjectXCZRXCZA == null ? DefaultOn : !PlacedObjectXCZRXCZA.GetCrystal().CopyNothing, PlacedObjectXCZRXCZA?.GetCrystal()));
                 ret.Add((VolumeReflectionProbeOffsetIntensity != null ? VolumeReflectionProbeOffsetIntensity.OnOverall : DefaultOn, VolumeReflectionProbeOffsetIntensity?.GetCrystal()));
                 ret.Add((DebugText != null ? DebugText.OnOverall : DefaultOn, DebugText?.GetCrystal()));
                 ret.Add((Emittance, null));
@@ -4427,8 +4462,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((LightBarndoorData != null ? LightBarndoorData.OnOverall : DefaultOn, LightBarndoorData?.GetCrystal()));
                 ret.Add((LightArea != null ? LightArea.OnOverall : DefaultOn, LightArea?.GetCrystal()));
-                ret.Add((CurrentZoneCell, null));
-                ret.Add((XCZA, null));
+                ret.Add((CurrentZoneCell != null ? CurrentZoneCell.OnOverall : DefaultOn, CurrentZoneCell?.GetCrystal()));
                 ret.Add((Patrol != null ? Patrol.OnOverall : DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((RagdollData == null ? DefaultOn : !RagdollData.GetCrystal().CopyNothing, RagdollData?.GetCrystal()));
                 ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
@@ -4669,7 +4703,7 @@ namespace Mutagen.Bethesda.Starfield
         new Level? LevelModifier { get; set; }
         new PlacedObject.ActionFlag? Action { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> XCZR { get; set; }
+        new ExtendedList<PlacedObjectXCZRXCZA> PlacedObjectXCZRXCZA { get; }
         new VolumeReflectionProbeOffsetIntensity? VolumeReflectionProbeOffsetIntensity { get; set; }
         new PlacedObjectDebugText? DebugText { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
@@ -4677,8 +4711,7 @@ namespace Mutagen.Bethesda.Starfield
         new PlacedObjectLighting? Lighting { get; set; }
         new PlacedObjectLightBarndoorData? LightBarndoorData { get; set; }
         new AreaLight? LightArea { get; set; }
-        new IFormLinkNullable<ICellGetter> CurrentZoneCell { get; set; }
-        new MemorySlice<Byte>? XCZA { get; set; }
+        new PlacedObjectCurrentZoneCell? CurrentZoneCell { get; set; }
         new Patrol? Patrol { get; set; }
         new ExtendedList<RagdollData>? RagdollData { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
@@ -4788,7 +4821,7 @@ namespace Mutagen.Bethesda.Starfield
         Level? LevelModifier { get; }
         PlacedObject.ActionFlag? Action { get; }
         IPlacedPrimitiveGetter? Primitive { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> XCZR { get; }
+        IReadOnlyList<IPlacedObjectXCZRXCZAGetter> PlacedObjectXCZRXCZA { get; }
         IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity { get; }
         IPlacedObjectDebugTextGetter? DebugText { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
@@ -4796,8 +4829,7 @@ namespace Mutagen.Bethesda.Starfield
         IPlacedObjectLightingGetter? Lighting { get; }
         IPlacedObjectLightBarndoorDataGetter? LightBarndoorData { get; }
         IAreaLightGetter? LightArea { get; }
-        IFormLinkNullableGetter<ICellGetter> CurrentZoneCell { get; }
-        ReadOnlyMemorySlice<Byte>? XCZA { get; }
+        IPlacedObjectCurrentZoneCellGetter? CurrentZoneCell { get; }
         IPatrolGetter? Patrol { get; }
         IReadOnlyList<IRagdollDataGetter>? RagdollData { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
@@ -5049,7 +5081,7 @@ namespace Mutagen.Bethesda.Starfield
         LevelModifier = 17,
         Action = 18,
         Primitive = 19,
-        XCZR = 20,
+        PlacedObjectXCZRXCZA = 20,
         VolumeReflectionProbeOffsetIntensity = 21,
         DebugText = 22,
         Emittance = 23,
@@ -5058,69 +5090,68 @@ namespace Mutagen.Bethesda.Starfield
         LightBarndoorData = 26,
         LightArea = 27,
         CurrentZoneCell = 28,
-        XCZA = 29,
-        Patrol = 30,
-        RagdollData = 31,
-        TeleportDestination = 32,
-        TeleportName = 33,
-        ReferenceGroup = 34,
-        LocationRefTypes = 35,
-        LayeredMaterialSwaps = 36,
-        XPCK = 37,
-        SourcePackIn = 38,
-        PersistentLocation = 39,
-        ProjectedDecal = 40,
-        ProjectedDecalReferences = 41,
-        ConstrainedDecal = 42,
-        IsIgnoredBySandbox = 43,
-        FactionRank = 44,
-        GoboAnimatedProperties = 45,
-        Collision = 46,
-        PowerLinks = 47,
-        Count = 48,
-        XFLG = 49,
-        LightFlicker = 50,
-        MapMarker = 51,
-        LightLayerData = 52,
-        LightStaticShadowMap = 53,
-        LightVolumetricData = 54,
-        Ownership = 55,
-        LightColors = 56,
-        GroupedPackIn = 57,
-        BlueprintPartOrigin = 58,
-        Layer = 59,
-        BOLV = 60,
-        XWCN = 61,
-        XWCU = 62,
-        Location = 63,
-        XTRI = 64,
-        LightRoundedness = 65,
-        LinkedReferences = 66,
-        IsLinkedRefTransient = 67,
-        XLIB = 68,
-        SnapLinks = 69,
-        EncounterZone = 70,
-        GeometryDirtinessScale = 71,
-        Lock = 72,
-        Properties = 73,
-        ExternalEmittance = 74,
-        HeadTrackingWeight = 75,
-        Spline = 76,
-        XNSE = 77,
-        AttachRef = 78,
-        RagdollBipedRotation = 79,
-        HealthPercent = 80,
-        TimeOfDay = 81,
-        EnableParent = 82,
-        Traversals = 83,
-        NumTraversalFluffBytes = 84,
-        NavigationDoorLink = 85,
-        IsActivationPoint = 86,
-        Scale = 87,
-        OpenByDefault = 88,
-        Position = 89,
-        Rotation = 90,
-        Comments = 91,
+        Patrol = 29,
+        RagdollData = 30,
+        TeleportDestination = 31,
+        TeleportName = 32,
+        ReferenceGroup = 33,
+        LocationRefTypes = 34,
+        LayeredMaterialSwaps = 35,
+        XPCK = 36,
+        SourcePackIn = 37,
+        PersistentLocation = 38,
+        ProjectedDecal = 39,
+        ProjectedDecalReferences = 40,
+        ConstrainedDecal = 41,
+        IsIgnoredBySandbox = 42,
+        FactionRank = 43,
+        GoboAnimatedProperties = 44,
+        Collision = 45,
+        PowerLinks = 46,
+        Count = 47,
+        XFLG = 48,
+        LightFlicker = 49,
+        MapMarker = 50,
+        LightLayerData = 51,
+        LightStaticShadowMap = 52,
+        LightVolumetricData = 53,
+        Ownership = 54,
+        LightColors = 55,
+        GroupedPackIn = 56,
+        BlueprintPartOrigin = 57,
+        Layer = 58,
+        BOLV = 59,
+        XWCN = 60,
+        XWCU = 61,
+        Location = 62,
+        XTRI = 63,
+        LightRoundedness = 64,
+        LinkedReferences = 65,
+        IsLinkedRefTransient = 66,
+        XLIB = 67,
+        SnapLinks = 68,
+        EncounterZone = 69,
+        GeometryDirtinessScale = 70,
+        Lock = 71,
+        Properties = 72,
+        ExternalEmittance = 73,
+        HeadTrackingWeight = 74,
+        Spline = 75,
+        XNSE = 76,
+        AttachRef = 77,
+        RagdollBipedRotation = 78,
+        HealthPercent = 79,
+        TimeOfDay = 80,
+        EnableParent = 81,
+        Traversals = 82,
+        NumTraversalFluffBytes = 83,
+        NavigationDoorLink = 84,
+        IsActivationPoint = 85,
+        Scale = 86,
+        OpenByDefault = 87,
+        Position = 88,
+        Rotation = 89,
+        Comments = 90,
     }
     #endregion
 
@@ -5131,9 +5162,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 85;
+        public const ushort AdditionalFieldCount = 84;
 
-        public const ushort FieldCount = 92;
+        public const ushort FieldCount = 91;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -5182,6 +5213,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XACT,
                 RecordTypes.XPRM,
                 RecordTypes.XCZR,
+                RecordTypes.XCZA,
                 RecordTypes.XVOI,
                 RecordTypes.XDTS,
                 RecordTypes.XDTF,
@@ -5191,7 +5223,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XLBD,
                 RecordTypes.XALD,
                 RecordTypes.XCZC,
-                RecordTypes.XCZA,
                 RecordTypes.XPRD,
                 RecordTypes.XRGD,
                 RecordTypes.XTEL,
@@ -5309,7 +5340,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LevelModifier = default;
             item.Action = default;
             item.Primitive = null;
-            item.XCZR.Clear();
+            item.PlacedObjectXCZRXCZA.Clear();
             item.VolumeReflectionProbeOffsetIntensity = null;
             item.DebugText = null;
             item.Emittance.Clear();
@@ -5317,8 +5348,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Lighting = null;
             item.LightBarndoorData = null;
             item.LightArea = null;
-            item.CurrentZoneCell.Clear();
-            item.XCZA = default;
+            item.CurrentZoneCell = null;
             item.Patrol = null;
             item.RagdollData = null;
             item.TeleportDestination = null;
@@ -5406,9 +5436,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.XLTW.Relink(mapping);
             obj.XTRV?.RemapLinks(mapping);
             obj.VolumeData?.RemapLinks(mapping);
-            obj.XCZR.Relink(mapping);
+            obj.PlacedObjectXCZRXCZA.RemapLinks(mapping);
             obj.Emittance.Relink(mapping);
-            obj.CurrentZoneCell.Relink(mapping);
+            obj.CurrentZoneCell?.RemapLinks(mapping);
             obj.Patrol?.RemapLinks(mapping);
             obj.TeleportDestination?.RemapLinks(mapping);
             obj.TeleportName.Relink(mapping);
@@ -5564,7 +5594,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Primitive,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XCZR = item.XCZR.Equals(rhs.XCZR);
+            ret.PlacedObjectXCZRXCZA = item.PlacedObjectXCZRXCZA.CollectionEqualsHelper(
+                rhs.PlacedObjectXCZRXCZA,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.VolumeReflectionProbeOffsetIntensity = EqualsMaskHelper.EqualsHelper(
                 item.VolumeReflectionProbeOffsetIntensity,
                 rhs.VolumeReflectionProbeOffsetIntensity,
@@ -5592,8 +5625,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.LightArea,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.CurrentZoneCell = item.CurrentZoneCell.Equals(rhs.CurrentZoneCell);
-            ret.XCZA = MemorySliceExt.SequenceEqual(item.XCZA, rhs.XCZA);
+            ret.CurrentZoneCell = EqualsMaskHelper.EqualsHelper(
+                item.CurrentZoneCell,
+                rhs.CurrentZoneCell,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
                 item.Patrol,
                 rhs.Patrol,
@@ -5865,9 +5901,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 PrimitiveItem?.Print(sb, "Primitive");
             }
-            if (printMask?.XCZR ?? true)
+            if (printMask?.PlacedObjectXCZRXCZA?.Overall ?? true)
             {
-                sb.AppendItem(item.XCZR.FormKeyNullable, "XCZR");
+                sb.AppendLine("PlacedObjectXCZRXCZA =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.PlacedObjectXCZRXCZA)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
                 && item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
@@ -5903,14 +5949,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 LightAreaItem?.Print(sb, "LightArea");
             }
-            if (printMask?.CurrentZoneCell ?? true)
+            if ((printMask?.CurrentZoneCell?.Overall ?? true)
+                && item.CurrentZoneCell is {} CurrentZoneCellItem)
             {
-                sb.AppendItem(item.CurrentZoneCell.FormKeyNullable, "CurrentZoneCell");
-            }
-            if ((printMask?.XCZA ?? true)
-                && item.XCZA is {} XCZAItem)
-            {
-                sb.AppendLine($"XCZA => {SpanExt.ToHexString(XCZAItem)}");
+                CurrentZoneCellItem?.Print(sb, "CurrentZoneCell");
             }
             if ((printMask?.Patrol?.Overall ?? true)
                 && item.Patrol is {} PatrolItem)
@@ -6422,9 +6464,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPrimitiveEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA) ?? true))
             {
-                if (!lhs.XCZR.Equals(rhs.XCZR)) return false;
+                if (!lhs.PlacedObjectXCZRXCZA.SequenceEqual(rhs.PlacedObjectXCZRXCZA, (l, r) => ((PlacedObjectXCZRXCZACommon)((IPlacedObjectXCZRXCZAGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
             {
@@ -6476,11 +6518,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CurrentZoneCell) ?? true))
             {
-                if (!lhs.CurrentZoneCell.Equals(rhs.CurrentZoneCell)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.XCZA, rhs.XCZA)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CurrentZoneCell, rhs.CurrentZoneCell, out var lhsCurrentZoneCell, out var rhsCurrentZoneCell, out var isCurrentZoneCellEqual))
+                {
+                    if (!((PlacedObjectCurrentZoneCellCommon)((IPlacedObjectCurrentZoneCellGetter)lhsCurrentZoneCell).CommonInstance()!).Equals(lhsCurrentZoneCell, rhsCurrentZoneCell, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.CurrentZoneCell))) return false;
+                }
+                else if (!isCurrentZoneCellEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
             {
@@ -6855,7 +6897,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Primitiveitem);
             }
-            hash.Add(item.XCZR);
+            hash.Add(item.PlacedObjectXCZRXCZA);
             if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityitem)
             {
                 hash.Add(VolumeReflectionProbeOffsetIntensityitem);
@@ -6881,10 +6923,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(LightAreaitem);
             }
-            hash.Add(item.CurrentZoneCell);
-            if (item.XCZA is {} XCZAItem)
+            if (item.CurrentZoneCell is {} CurrentZoneCellitem)
             {
-                hash.Add(XCZAItem);
+                hash.Add(CurrentZoneCellitem);
             }
             if (item.Patrol is {} Patrolitem)
             {
@@ -7115,17 +7156,20 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.XCZR, out var XCZRInfo))
+            foreach (var item in obj.PlacedObjectXCZRXCZA.SelectMany(f => f.EnumerateFormLinks()))
             {
-                yield return XCZRInfo;
+                yield return FormLinkInformation.Factory(item);
             }
             if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
                 yield return EmittanceInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.CurrentZoneCell, out var CurrentZoneCellInfo))
+            if (obj.CurrentZoneCell is {} CurrentZoneCellItems)
             {
-                yield return CurrentZoneCellInfo;
+                foreach (var item in CurrentZoneCellItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.Patrol is {} PatrolItems)
             {
@@ -7558,9 +7602,29 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA) ?? true))
             {
-                item.XCZR.SetTo(rhs.XCZR.FormKeyNullable);
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA);
+                try
+                {
+                    item.PlacedObjectXCZRXCZA.SetTo(
+                        rhs.PlacedObjectXCZRXCZA
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
             {
@@ -7702,17 +7766,28 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CurrentZoneCell) ?? true))
             {
-                item.CurrentZoneCell.SetTo(rhs.CurrentZoneCell.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
-            {
-                if(rhs.XCZA is {} XCZArhs)
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.CurrentZoneCell);
+                try
                 {
-                    item.XCZA = XCZArhs.ToArray();
+                    if(rhs.CurrentZoneCell is {} rhsCurrentZoneCell)
+                    {
+                        item.CurrentZoneCell = rhsCurrentZoneCell.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.CurrentZoneCell));
+                    }
+                    else
+                    {
+                        item.CurrentZoneCell = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.XCZA = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
@@ -8809,10 +8884,17 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlacedObjectXCZRXCZAGetter>.Instance.Write(
                 writer: writer,
-                item: item.XCZR,
-                header: translationParams.ConvertToCustom(RecordTypes.XCZR));
+                items: item.PlacedObjectXCZRXCZA,
+                transl: (MutagenWriter subWriter, IPlacedObjectXCZRXCZAGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PlacedObjectXCZRXCZABinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
             {
                 ((VolumeReflectionProbeOffsetIntensityBinaryWriteTranslation)((IBinaryItem)VolumeReflectionProbeOffsetIntensityItem).BinaryWriteTranslator).Write(
@@ -8859,14 +8941,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.CurrentZoneCell,
-                header: translationParams.ConvertToCustom(RecordTypes.XCZC));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.XCZA,
-                header: translationParams.ConvertToCustom(RecordTypes.XCZA));
+            if (item.CurrentZoneCell is {} CurrentZoneCellItem)
+            {
+                ((PlacedObjectCurrentZoneCellBinaryWriteTranslation)((IBinaryItem)CurrentZoneCellItem).BinaryWriteTranslator).Write(
+                    item: CurrentZoneCellItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.Patrol is {} PatrolItem)
             {
                 ((PatrolBinaryWriteTranslation)((IBinaryItem)PatrolItem).BinaryWriteTranslator).Write(
@@ -9419,9 +9500,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCZR:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedObject_FieldIndex.XCZR;
+                    item.PlacedObjectXCZRXCZA.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlacedObjectXCZRXCZA>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: PlacedObjectXCZRXCZA_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: PlacedObjectXCZRXCZA.TryCreateFromBinary));
+                    return (int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA;
                 }
                 case RecordTypeInts.XVOI:
                 {
@@ -9465,16 +9550,12 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)PlacedObject_FieldIndex.LightArea;
                 }
                 case RecordTypeInts.XCZC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CurrentZoneCell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
-                }
                 case RecordTypeInts.XCZA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PlacedObject_FieldIndex.XCZA;
+                    item.CurrentZoneCell = Mutagen.Bethesda.Starfield.PlacedObjectCurrentZoneCell.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
                 }
                 case RecordTypeInts.XPRD:
                 {
@@ -9996,10 +10077,7 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _PrimitiveLocation;
         public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(_recordData.Slice(_PrimitiveLocation!.Value.Min), _package) : default;
         #endregion
-        #region XCZR
-        private int? _XCZRLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _XCZRLocation);
-        #endregion
+        public IReadOnlyList<IPlacedObjectXCZRXCZAGetter> PlacedObjectXCZRXCZA { get; private set; } = Array.Empty<IPlacedObjectXCZRXCZAGetter>();
         #region VolumeReflectionProbeOffsetIntensity
         private RangeInt32? _VolumeReflectionProbeOffsetIntensityLocation;
         public IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity => _VolumeReflectionProbeOffsetIntensityLocation.HasValue ? VolumeReflectionProbeOffsetIntensityBinaryOverlay.VolumeReflectionProbeOffsetIntensityFactory(_recordData.Slice(_VolumeReflectionProbeOffsetIntensityLocation!.Value.Min), _package) : default;
@@ -10022,14 +10100,7 @@ namespace Mutagen.Bethesda.Starfield
         public IPlacedObjectLightBarndoorDataGetter? LightBarndoorData => _LightBarndoorDataLocation.HasValue ? PlacedObjectLightBarndoorDataBinaryOverlay.PlacedObjectLightBarndoorDataFactory(_recordData.Slice(_LightBarndoorDataLocation!.Value.Min), _package) : default;
         #endregion
         public IAreaLightGetter? LightArea { get; private set; }
-        #region CurrentZoneCell
-        private int? _CurrentZoneCellLocation;
-        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CurrentZoneCellLocation);
-        #endregion
-        #region XCZA
-        private int? _XCZALocation;
-        public ReadOnlyMemorySlice<Byte>? XCZA => _XCZALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XCZALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IPlacedObjectCurrentZoneCellGetter? CurrentZoneCell { get; private set; }
         public IPatrolGetter? Patrol { get; private set; }
         public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region TeleportDestination
@@ -10384,8 +10455,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCZR:
                 {
-                    _XCZRLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.XCZR;
+                    this.PlacedObjectXCZRXCZA = this.ParseRepeatedTypelessSubrecord<IPlacedObjectXCZRXCZAGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: PlacedObjectXCZRXCZA_Registration.TriggerSpecs,
+                        factory: PlacedObjectXCZRXCZABinaryOverlay.PlacedObjectXCZRXCZAFactory);
+                    return (int)PlacedObject_FieldIndex.PlacedObjectXCZRXCZA;
                 }
                 case RecordTypeInts.XVOI:
                 {
@@ -10431,14 +10506,13 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)PlacedObject_FieldIndex.LightArea;
                 }
                 case RecordTypeInts.XCZC:
-                {
-                    _CurrentZoneCellLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
-                }
                 case RecordTypeInts.XCZA:
                 {
-                    _XCZALocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.XCZA;
+                    this.CurrentZoneCell = PlacedObjectCurrentZoneCellBinaryOverlay.PlacedObjectCurrentZoneCellFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
                 }
                 case RecordTypeInts.XPRD:
                 {
