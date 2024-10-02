@@ -20,6 +20,7 @@
           <Float name="RecoilArcRotate" />
           <Float name="ConeOfFireIronSightsMult" />
           <Float name="BaseStability" />
+          <UInt8 name="Unknown" />
         </Fields>
       </Data>
     </Fields>
