@@ -3611,6 +3611,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "VehicleConfigComponent":
                 case "IVehicleConfigComponentGetter":
                 case "IVehicleConfigComponent":
+                case "OverlayDesignatedPlacementInfoComponent":
+                case "IOverlayDesignatedPlacementInfoComponentGetter":
+                case "IOverlayDesignatedPlacementInfoComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":

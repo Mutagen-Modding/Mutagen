@@ -1002,6 +1002,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             OrbitalDataComponent_Registration.Instance,
             OrbitedDataComponent_Registration.Instance,
             Outfit_Registration.Instance,
+            OverlayDesignatedPlacementInfoComponent_Registration.Instance,
             Ownership_Registration.Instance,
             OwnerTarget_Registration.Instance,
             Package_Registration.Instance,

@@ -6721,5 +6721,8 @@
     <Compile Include="Records\Common Subrecords\VehicleWWiseData_Generated.cs">
       <DependentUpon>VehicleWWiseData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
