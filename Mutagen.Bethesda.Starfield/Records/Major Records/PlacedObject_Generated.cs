@@ -449,16 +449,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
-        #region LightGobo
+        #region GoboAnimatedProperties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LightGobo? _LightGobo;
-        public LightGobo? LightGobo
+        private PlacedObjectGoboAnimatedProperties? _GoboAnimatedProperties;
+        public PlacedObjectGoboAnimatedProperties? GoboAnimatedProperties
         {
-            get => _LightGobo;
-            set => _LightGobo = value;
+            get => _GoboAnimatedProperties;
+            set => _GoboAnimatedProperties = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILightGoboGetter? IPlacedObjectGetter.LightGobo => this.LightGobo;
+        IPlacedObjectGoboAnimatedPropertiesGetter? IPlacedObjectGetter.GoboAnimatedProperties => this.GoboAnimatedProperties;
         #endregion
         #region Collision
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ConstrainedDecal = initialValue;
                 this.IsIgnoredBySandbox = initialValue;
                 this.FactionRank = initialValue;
-                this.LightGobo = new MaskItem<TItem, LightGobo.Mask<TItem>?>(initialValue, new LightGobo.Mask<TItem>(initialValue));
+                this.GoboAnimatedProperties = new MaskItem<TItem, PlacedObjectGoboAnimatedProperties.Mask<TItem>?>(initialValue, new PlacedObjectGoboAnimatedProperties.Mask<TItem>(initialValue));
                 this.Collision = new MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>(initialValue, new PlacedObjectCollision.Mask<TItem>(initialValue));
                 this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
                 this.Count = initialValue;
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ConstrainedDecal,
                 TItem IsIgnoredBySandbox,
                 TItem FactionRank,
-                TItem LightGobo,
+                TItem GoboAnimatedProperties,
                 TItem Collision,
                 TItem PowerLinks,
                 TItem Count,
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ConstrainedDecal = ConstrainedDecal;
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.FactionRank = FactionRank;
-                this.LightGobo = new MaskItem<TItem, LightGobo.Mask<TItem>?>(LightGobo, new LightGobo.Mask<TItem>(LightGobo));
+                this.GoboAnimatedProperties = new MaskItem<TItem, PlacedObjectGoboAnimatedProperties.Mask<TItem>?>(GoboAnimatedProperties, new PlacedObjectGoboAnimatedProperties.Mask<TItem>(GoboAnimatedProperties));
                 this.Collision = new MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>(Collision, new PlacedObjectCollision.Mask<TItem>(Collision));
                 this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(PowerLinks, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
                 this.Count = Count;
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ConstrainedDecal;
             public TItem IsIgnoredBySandbox;
             public TItem FactionRank;
-            public MaskItem<TItem, LightGobo.Mask<TItem>?>? LightGobo { get; set; }
+            public MaskItem<TItem, PlacedObjectGoboAnimatedProperties.Mask<TItem>?>? GoboAnimatedProperties { get; set; }
             public MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>? Collision { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>? PowerLinks;
             public TItem Count;
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ConstrainedDecal, rhs.ConstrainedDecal)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
                 if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
-                if (!object.Equals(this.LightGobo, rhs.LightGobo)) return false;
+                if (!object.Equals(this.GoboAnimatedProperties, rhs.GoboAnimatedProperties)) return false;
                 if (!object.Equals(this.Collision, rhs.Collision)) return false;
                 if (!object.Equals(this.PowerLinks, rhs.PowerLinks)) return false;
                 if (!object.Equals(this.Count, rhs.Count)) return false;
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ConstrainedDecal);
                 hash.Add(this.IsIgnoredBySandbox);
                 hash.Add(this.FactionRank);
-                hash.Add(this.LightGobo);
+                hash.Add(this.GoboAnimatedProperties);
                 hash.Add(this.Collision);
                 hash.Add(this.PowerLinks);
                 hash.Add(this.Count);
@@ -1586,10 +1586,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ConstrainedDecal)) return false;
                 if (!eval(this.IsIgnoredBySandbox)) return false;
                 if (!eval(this.FactionRank)) return false;
-                if (LightGobo != null)
+                if (GoboAnimatedProperties != null)
                 {
-                    if (!eval(this.LightGobo.Overall)) return false;
-                    if (this.LightGobo.Specific != null && !this.LightGobo.Specific.All(eval)) return false;
+                    if (!eval(this.GoboAnimatedProperties.Overall)) return false;
+                    if (this.GoboAnimatedProperties.Specific != null && !this.GoboAnimatedProperties.Specific.All(eval)) return false;
                 }
                 if (Collision != null)
                 {
@@ -1897,10 +1897,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ConstrainedDecal)) return true;
                 if (eval(this.IsIgnoredBySandbox)) return true;
                 if (eval(this.FactionRank)) return true;
-                if (LightGobo != null)
+                if (GoboAnimatedProperties != null)
                 {
-                    if (eval(this.LightGobo.Overall)) return true;
-                    if (this.LightGobo.Specific != null && this.LightGobo.Specific.Any(eval)) return true;
+                    if (eval(this.GoboAnimatedProperties.Overall)) return true;
+                    if (this.GoboAnimatedProperties.Specific != null && this.GoboAnimatedProperties.Specific.Any(eval)) return true;
                 }
                 if (Collision != null)
                 {
@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ConstrainedDecal = eval(this.ConstrainedDecal);
                 obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
                 obj.FactionRank = eval(this.FactionRank);
-                obj.LightGobo = this.LightGobo == null ? null : new MaskItem<R, LightGobo.Mask<R>?>(eval(this.LightGobo.Overall), this.LightGobo.Specific?.Translate(eval));
+                obj.GoboAnimatedProperties = this.GoboAnimatedProperties == null ? null : new MaskItem<R, PlacedObjectGoboAnimatedProperties.Mask<R>?>(eval(this.GoboAnimatedProperties.Overall), this.GoboAnimatedProperties.Specific?.Translate(eval));
                 obj.Collision = this.Collision == null ? null : new MaskItem<R, PlacedObjectCollision.Mask<R>?>(eval(this.Collision.Overall), this.Collision.Specific?.Translate(eval));
                 if (PowerLinks != null)
                 {
@@ -2560,9 +2560,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FactionRank, "FactionRank");
                     }
-                    if (printMask?.LightGobo?.Overall ?? true)
+                    if (printMask?.GoboAnimatedProperties?.Overall ?? true)
                     {
-                        LightGobo?.Print(sb);
+                        GoboAnimatedProperties?.Print(sb);
                     }
                     if (printMask?.Collision?.Overall ?? true)
                     {
@@ -2887,7 +2887,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ConstrainedDecal;
             public Exception? IsIgnoredBySandbox;
             public Exception? FactionRank;
-            public MaskItem<Exception?, LightGobo.ErrorMask?>? LightGobo;
+            public MaskItem<Exception?, PlacedObjectGoboAnimatedProperties.ErrorMask?>? GoboAnimatedProperties;
             public MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>? Collision;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>? PowerLinks;
             public Exception? Count;
@@ -3018,8 +3018,8 @@ namespace Mutagen.Bethesda.Starfield
                         return IsIgnoredBySandbox;
                     case PlacedObject_FieldIndex.FactionRank:
                         return FactionRank;
-                    case PlacedObject_FieldIndex.LightGobo:
-                        return LightGobo;
+                    case PlacedObject_FieldIndex.GoboAnimatedProperties:
+                        return GoboAnimatedProperties;
                     case PlacedObject_FieldIndex.Collision:
                         return Collision;
                     case PlacedObject_FieldIndex.PowerLinks:
@@ -3236,8 +3236,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.FactionRank:
                         this.FactionRank = ex;
                         break;
-                    case PlacedObject_FieldIndex.LightGobo:
-                        this.LightGobo = new MaskItem<Exception?, LightGobo.ErrorMask?>(ex, null);
+                    case PlacedObject_FieldIndex.GoboAnimatedProperties:
+                        this.GoboAnimatedProperties = new MaskItem<Exception?, PlacedObjectGoboAnimatedProperties.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.Collision:
                         this.Collision = new MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>(ex, null);
@@ -3502,8 +3502,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.FactionRank:
                         this.FactionRank = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.LightGobo:
-                        this.LightGobo = (MaskItem<Exception?, LightGobo.ErrorMask?>?)obj;
+                    case PlacedObject_FieldIndex.GoboAnimatedProperties:
+                        this.GoboAnimatedProperties = (MaskItem<Exception?, PlacedObjectGoboAnimatedProperties.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.Collision:
                         this.Collision = (MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>?)obj;
@@ -3690,7 +3690,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ConstrainedDecal != null) return true;
                 if (IsIgnoredBySandbox != null) return true;
                 if (FactionRank != null) return true;
-                if (LightGobo != null) return true;
+                if (GoboAnimatedProperties != null) return true;
                 if (Collision != null) return true;
                 if (PowerLinks != null) return true;
                 if (Count != null) return true;
@@ -3932,7 +3932,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(FactionRank, "FactionRank");
                 }
-                LightGobo?.Print(sb);
+                GoboAnimatedProperties?.Print(sb);
                 Collision?.Print(sb);
                 if (PowerLinks is {} PowerLinksItem)
                 {
@@ -4185,7 +4185,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ConstrainedDecal = this.ConstrainedDecal.Combine(rhs.ConstrainedDecal);
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
-                ret.LightGobo = this.LightGobo.Combine(rhs.LightGobo, (l, r) => l.Combine(r));
+                ret.GoboAnimatedProperties = this.GoboAnimatedProperties.Combine(rhs.GoboAnimatedProperties, (l, r) => l.Combine(r));
                 ret.Collision = this.Collision.Combine(rhs.Collision, (l, r) => l.Combine(r));
                 ret.PowerLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PowerLinks?.Overall, rhs.PowerLinks?.Overall), Noggog.ExceptionExt.Combine(this.PowerLinks?.Specific, rhs.PowerLinks?.Specific));
                 ret.Count = this.Count.Combine(rhs.Count);
@@ -4292,7 +4292,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool ConstrainedDecal;
             public bool IsIgnoredBySandbox;
             public bool FactionRank;
-            public LightGobo.TranslationMask? LightGobo;
+            public PlacedObjectGoboAnimatedProperties.TranslationMask? GoboAnimatedProperties;
             public PlacedObjectCollision.TranslationMask? Collision;
             public PowerLink.TranslationMask? PowerLinks;
             public bool Count;
@@ -4444,7 +4444,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ConstrainedDecal, null));
                 ret.Add((IsIgnoredBySandbox, null));
                 ret.Add((FactionRank, null));
-                ret.Add((LightGobo != null ? LightGobo.OnOverall : DefaultOn, LightGobo?.GetCrystal()));
+                ret.Add((GoboAnimatedProperties != null ? GoboAnimatedProperties.OnOverall : DefaultOn, GoboAnimatedProperties?.GetCrystal()));
                 ret.Add((Collision != null ? Collision.OnOverall : DefaultOn, Collision?.GetCrystal()));
                 ret.Add((PowerLinks == null ? DefaultOn : !PowerLinks.GetCrystal().CopyNothing, PowerLinks?.GetCrystal()));
                 ret.Add((Count, null));
@@ -4694,7 +4694,7 @@ namespace Mutagen.Bethesda.Starfield
         new P3Float? ConstrainedDecal { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new Int32? FactionRank { get; set; }
-        new LightGobo? LightGobo { get; set; }
+        new PlacedObjectGoboAnimatedProperties? GoboAnimatedProperties { get; set; }
         new PlacedObjectCollision? Collision { get; set; }
         new ExtendedList<PowerLink> PowerLinks { get; }
         new Int32? Count { get; set; }
@@ -4813,7 +4813,7 @@ namespace Mutagen.Bethesda.Starfield
         P3Float? ConstrainedDecal { get; }
         Boolean IsIgnoredBySandbox { get; }
         Int32? FactionRank { get; }
-        ILightGoboGetter? LightGobo { get; }
+        IPlacedObjectGoboAnimatedPropertiesGetter? GoboAnimatedProperties { get; }
         IPlacedObjectCollisionGetter? Collision { get; }
         IReadOnlyList<IPowerLinkGetter> PowerLinks { get; }
         Int32? Count { get; }
@@ -5074,7 +5074,7 @@ namespace Mutagen.Bethesda.Starfield
         ConstrainedDecal = 42,
         IsIgnoredBySandbox = 43,
         FactionRank = 44,
-        LightGobo = 45,
+        GoboAnimatedProperties = 45,
         Collision = 46,
         PowerLinks = 47,
         Count = 48,
@@ -5334,7 +5334,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ConstrainedDecal = default;
             item.IsIgnoredBySandbox = default(Boolean);
             item.FactionRank = default;
-            item.LightGobo = null;
+            item.GoboAnimatedProperties = null;
             item.Collision = null;
             item.PowerLinks.Clear();
             item.Count = default;
@@ -5633,9 +5633,9 @@ namespace Mutagen.Bethesda.Starfield
             ret.ConstrainedDecal = item.ConstrainedDecal.Equals(rhs.ConstrainedDecal);
             ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
-            ret.LightGobo = EqualsMaskHelper.EqualsHelper(
-                item.LightGobo,
-                rhs.LightGobo,
+            ret.GoboAnimatedProperties = EqualsMaskHelper.EqualsHelper(
+                item.GoboAnimatedProperties,
+                rhs.GoboAnimatedProperties,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Collision = EqualsMaskHelper.EqualsHelper(
@@ -6021,10 +6021,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(FactionRankItem, "FactionRank");
             }
-            if ((printMask?.LightGobo?.Overall ?? true)
-                && item.LightGobo is {} LightGoboItem)
+            if ((printMask?.GoboAnimatedProperties?.Overall ?? true)
+                && item.GoboAnimatedProperties is {} GoboAnimatedPropertiesItem)
             {
-                LightGoboItem?.Print(sb, "LightGobo");
+                GoboAnimatedPropertiesItem?.Print(sb, "GoboAnimatedProperties");
             }
             if ((printMask?.Collision?.Overall ?? true)
                 && item.Collision is {} CollisionItem)
@@ -6554,13 +6554,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightGobo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GoboAnimatedProperties) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.LightGobo, rhs.LightGobo, out var lhsLightGobo, out var rhsLightGobo, out var isLightGoboEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.GoboAnimatedProperties, rhs.GoboAnimatedProperties, out var lhsGoboAnimatedProperties, out var rhsGoboAnimatedProperties, out var isGoboAnimatedPropertiesEqual))
                 {
-                    if (!((LightGoboCommon)((ILightGoboGetter)lhsLightGobo).CommonInstance()!).Equals(lhsLightGobo, rhsLightGobo, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightGobo))) return false;
+                    if (!((PlacedObjectGoboAnimatedPropertiesCommon)((IPlacedObjectGoboAnimatedPropertiesGetter)lhsGoboAnimatedProperties).CommonInstance()!).Equals(lhsGoboAnimatedProperties, rhsGoboAnimatedProperties, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.GoboAnimatedProperties))) return false;
                 }
-                else if (!isLightGoboEqual) return false;
+                else if (!isGoboAnimatedPropertiesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Collision) ?? true))
             {
@@ -6916,9 +6916,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(FactionRankitem);
             }
-            if (item.LightGobo is {} LightGoboitem)
+            if (item.GoboAnimatedProperties is {} GoboAnimatedPropertiesitem)
             {
-                hash.Add(LightGoboitem);
+                hash.Add(GoboAnimatedPropertiesitem);
             }
             if (item.Collision is {} Collisionitem)
             {
@@ -7938,20 +7938,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FactionRank = rhs.FactionRank;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightGobo) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GoboAnimatedProperties) ?? true))
             {
-                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightGobo);
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.GoboAnimatedProperties);
                 try
                 {
-                    if(rhs.LightGobo is {} rhsLightGobo)
+                    if(rhs.GoboAnimatedProperties is {} rhsGoboAnimatedProperties)
                     {
-                        item.LightGobo = rhsLightGobo.DeepCopy(
+                        item.GoboAnimatedProperties = rhsGoboAnimatedProperties.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightGobo));
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.GoboAnimatedProperties));
                     }
                     else
                     {
-                        item.LightGobo = default;
+                        item.GoboAnimatedProperties = default;
                     }
                 }
                 catch (Exception ex)
@@ -8962,15 +8962,12 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.FactionRank,
                 header: translationParams.ConvertToCustom(RecordTypes.XRNK));
-            if (item.LightGobo is {} LightGoboItem)
+            if (item.GoboAnimatedProperties is {} GoboAnimatedPropertiesItem)
             {
-                using (HeaderExport.Subrecord(writer, RecordTypes.XLGD))
-                {
-                    ((LightGoboBinaryWriteTranslation)((IBinaryItem)LightGoboItem).BinaryWriteTranslator).Write(
-                        item: LightGoboItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
+                ((PlacedObjectGoboAnimatedPropertiesBinaryWriteTranslation)((IBinaryItem)GoboAnimatedPropertiesItem).BinaryWriteTranslator).Write(
+                    item: GoboAnimatedPropertiesItem,
+                    writer: writer,
+                    translationParams: translationParams);
             }
             if (item.Collision is {} CollisionItem)
             {
@@ -9585,9 +9582,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLGD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LightGobo = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame);
-                    return (int)PlacedObject_FieldIndex.LightGobo;
+                    item.GoboAnimatedProperties = Mutagen.Bethesda.Starfield.PlacedObjectGoboAnimatedProperties.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.GoboAnimatedProperties;
                 }
                 case RecordTypeInts.XCOL:
                 {
@@ -10079,7 +10075,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FactionRankLocation;
         public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public ILightGoboGetter? LightGobo { get; private set; }
+        #region GoboAnimatedProperties
+        private RangeInt32? _GoboAnimatedPropertiesLocation;
+        public IPlacedObjectGoboAnimatedPropertiesGetter? GoboAnimatedProperties => _GoboAnimatedPropertiesLocation.HasValue ? PlacedObjectGoboAnimatedPropertiesBinaryOverlay.PlacedObjectGoboAnimatedPropertiesFactory(_recordData.Slice(_GoboAnimatedPropertiesLocation!.Value.Min), _package) : default;
+        #endregion
         #region Collision
         private RangeInt32? _CollisionLocation;
         public IPlacedObjectCollisionGetter? Collision => _CollisionLocation.HasValue ? PlacedObjectCollisionBinaryOverlay.PlacedObjectCollisionFactory(_recordData.Slice(_CollisionLocation!.Value.Min), _package) : default;
@@ -10541,12 +10540,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLGD:
                 {
-                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.LightGobo = LightGoboBinaryOverlay.LightGoboFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)PlacedObject_FieldIndex.LightGobo;
+                    _GoboAnimatedPropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.GoboAnimatedProperties;
                 }
                 case RecordTypeInts.XCOL:
                 {

@@ -52,7 +52,7 @@
       <P3Float name="ConstrainedDecal" recordType="XCDD" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <RefDirect name="LightGobo" refName="LightGobo" recordType="XLGD" />
+      <RefDirect name="GoboAnimatedProperties" refName="PlacedObjectGoboAnimatedProperties" recordType="XLGD" />
       <RefDirect name="Collision" refName="PlacedObjectCollision" />
       <RefList name="PowerLinks" refName="PowerLink" />
       <Int32 name="Count" recordType="XCNT" />
@@ -291,6 +291,32 @@
     <Fields>
       <Color name="UnknownColor" />
       <Int64 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectGoboAnimatedProperties" objType="Subrecord" recordType="XLGD">
+    <Fields>
+      <Float name="StaticRotation" />
+      <Float name="AnimatedRotationSpeed" />
+      <Float name="AnimatedWaveRotationSpeed" />
+      <Float name="AnimatedWaveRotationAmount" />
+      <Float name="StaticScaleU" />
+      <Float name="StaticScaleV" />
+      <Float name="WaveScalingSpeedU" />
+      <Float name="WaveScalingSpeedV" />
+      <Float name="WaveScalingAmountU" />
+      <Float name="WaveScalingAmountV" />
+      <Float name="StaticOffsetU" />
+      <Float name="StaticOffsetV" />
+      <Float name="RotationPivotU" />
+      <Float name="RotationPivotV" />
+      <Float name="ScrollSpeedU" />
+      <Float name="ScrollSpeedV" />
+      <Float name="WaveScrollSpeedU" />
+      <Float name="WaveScrollSpeedV" />
+      <Float name="WaveScrollAmountU" />
+      <Float name="WaveScrollAmountV" />
+      <Float name="RandomTimeOffsetRange" />
+      <Bool name="IsAnimated" byteLength="4" importantByteLength="1" />
     </Fields>
   </Object>
 </Loqui>

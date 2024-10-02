@@ -1074,6 +1074,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlacedObjectCollision_Registration.Instance,
             PlacedObjectDebugText_Registration.Instance,
             PlacedObjectDebugTextFormat_Registration.Instance,
+            PlacedObjectGoboAnimatedProperties_Registration.Instance,
             PlacedObjectLightBarndoorData_Registration.Instance,
             PlacedObjectLightColor_Registration.Instance,
             PlacedObjectLightFlicker_Registration.Instance,
