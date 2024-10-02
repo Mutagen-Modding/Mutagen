@@ -401,6 +401,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
+        #region NAM1
+        private readonly IFormLinkNullable<IMusicTypeGetter> _NAM1 = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> NAM1
+        {
+            get => _NAM1;
+            set => _NAM1.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.NAM1 => this.NAM1;
+        #endregion
         #region UnreportedCrimeFaction
         private readonly IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
         public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction
@@ -499,6 +509,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Faction = new MaskItem<TItem, LocationFaction.Mask<TItem>?>(initialValue, new LocationFaction.Mask<TItem>(initialValue));
                 this.ParentLocation = initialValue;
+                this.NAM1 = initialValue;
                 this.UnreportedCrimeFaction = initialValue;
                 this.WorldLocationMarkerRef = initialValue;
                 this.WorldLocationRadius = initialValue;
@@ -540,6 +551,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Properties2,
                 TItem Faction,
                 TItem ParentLocation,
+                TItem NAM1,
                 TItem UnreportedCrimeFaction,
                 TItem WorldLocationMarkerRef,
                 TItem WorldLocationRadius,
@@ -580,6 +592,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties2, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Faction = new MaskItem<TItem, LocationFaction.Mask<TItem>?>(Faction, new LocationFaction.Mask<TItem>(Faction));
                 this.ParentLocation = ParentLocation;
+                this.NAM1 = NAM1;
                 this.UnreportedCrimeFaction = UnreportedCrimeFaction;
                 this.WorldLocationMarkerRef = WorldLocationMarkerRef;
                 this.WorldLocationRadius = WorldLocationRadius;
@@ -622,6 +635,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties2;
             public MaskItem<TItem, LocationFaction.Mask<TItem>?>? Faction { get; set; }
             public TItem ParentLocation;
+            public TItem NAM1;
             public TItem UnreportedCrimeFaction;
             public TItem WorldLocationMarkerRef;
             public TItem WorldLocationRadius;
@@ -666,6 +680,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Properties2, rhs.Properties2)) return false;
                 if (!object.Equals(this.Faction, rhs.Faction)) return false;
                 if (!object.Equals(this.ParentLocation, rhs.ParentLocation)) return false;
+                if (!object.Equals(this.NAM1, rhs.NAM1)) return false;
                 if (!object.Equals(this.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction)) return false;
                 if (!object.Equals(this.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef)) return false;
                 if (!object.Equals(this.WorldLocationRadius, rhs.WorldLocationRadius)) return false;
@@ -702,6 +717,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Properties2);
                 hash.Add(this.Faction);
                 hash.Add(this.ParentLocation);
+                hash.Add(this.NAM1);
                 hash.Add(this.UnreportedCrimeFaction);
                 hash.Add(this.WorldLocationMarkerRef);
                 hash.Add(this.WorldLocationRadius);
@@ -960,6 +976,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Faction.Specific != null && !this.Faction.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ParentLocation)) return false;
+                if (!eval(this.NAM1)) return false;
                 if (!eval(this.UnreportedCrimeFaction)) return false;
                 if (!eval(this.WorldLocationMarkerRef)) return false;
                 if (!eval(this.WorldLocationRadius)) return false;
@@ -1216,6 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Faction.Specific != null && this.Faction.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ParentLocation)) return true;
+                if (eval(this.NAM1)) return true;
                 if (eval(this.UnreportedCrimeFaction)) return true;
                 if (eval(this.WorldLocationMarkerRef)) return true;
                 if (eval(this.WorldLocationRadius)) return true;
@@ -1535,6 +1553,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.Faction = this.Faction == null ? null : new MaskItem<R, LocationFaction.Mask<R>?>(eval(this.Faction.Overall), this.Faction.Specific?.Translate(eval));
                 obj.ParentLocation = eval(this.ParentLocation);
+                obj.NAM1 = eval(this.NAM1);
                 obj.UnreportedCrimeFaction = eval(this.UnreportedCrimeFaction);
                 obj.WorldLocationMarkerRef = eval(this.WorldLocationMarkerRef);
                 obj.WorldLocationRadius = eval(this.WorldLocationRadius);
@@ -1967,6 +1986,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ParentLocation, "ParentLocation");
                     }
+                    if (printMask?.NAM1 ?? true)
+                    {
+                        sb.AppendItem(NAM1, "NAM1");
+                    }
                     if (printMask?.UnreportedCrimeFaction ?? true)
                     {
                         sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
@@ -2033,6 +2056,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties2;
             public MaskItem<Exception?, LocationFaction.ErrorMask?>? Faction;
             public Exception? ParentLocation;
+            public Exception? NAM1;
             public Exception? UnreportedCrimeFaction;
             public Exception? WorldLocationMarkerRef;
             public Exception? WorldLocationRadius;
@@ -2095,6 +2119,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Faction;
                     case Location_FieldIndex.ParentLocation:
                         return ParentLocation;
+                    case Location_FieldIndex.NAM1:
+                        return NAM1;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         return UnreportedCrimeFaction;
                     case Location_FieldIndex.WorldLocationMarkerRef:
@@ -2189,6 +2215,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Location_FieldIndex.ParentLocation:
                         this.ParentLocation = ex;
+                        break;
+                    case Location_FieldIndex.NAM1:
+                        this.NAM1 = ex;
                         break;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         this.UnreportedCrimeFaction = ex;
@@ -2294,6 +2323,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Location_FieldIndex.ParentLocation:
                         this.ParentLocation = (Exception?)obj;
                         break;
+                    case Location_FieldIndex.NAM1:
+                        this.NAM1 = (Exception?)obj;
+                        break;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         this.UnreportedCrimeFaction = (Exception?)obj;
                         break;
@@ -2350,6 +2382,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Properties2 != null) return true;
                 if (Faction != null) return true;
                 if (ParentLocation != null) return true;
+                if (NAM1 != null) return true;
                 if (UnreportedCrimeFaction != null) return true;
                 if (WorldLocationMarkerRef != null) return true;
                 if (WorldLocationRadius != null) return true;
@@ -2766,6 +2799,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ParentLocation, "ParentLocation");
                 }
                 {
+                    sb.AppendItem(NAM1, "NAM1");
+                }
+                {
                     sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
                 }
                 {
@@ -2820,6 +2856,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Properties2 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties2?.Overall, rhs.Properties2?.Overall), Noggog.ExceptionExt.Combine(this.Properties2?.Specific, rhs.Properties2?.Specific));
                 ret.Faction = this.Faction.Combine(rhs.Faction, (l, r) => l.Combine(r));
                 ret.ParentLocation = this.ParentLocation.Combine(rhs.ParentLocation);
+                ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
                 ret.UnreportedCrimeFaction = this.UnreportedCrimeFaction.Combine(rhs.UnreportedCrimeFaction);
                 ret.WorldLocationMarkerRef = this.WorldLocationMarkerRef.Combine(rhs.WorldLocationMarkerRef);
                 ret.WorldLocationRadius = this.WorldLocationRadius.Combine(rhs.WorldLocationRadius);
@@ -2873,6 +2910,7 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectProperty.TranslationMask? Properties2;
             public LocationFaction.TranslationMask? Faction;
             public bool ParentLocation;
+            public bool NAM1;
             public bool UnreportedCrimeFaction;
             public bool WorldLocationMarkerRef;
             public bool WorldLocationRadius;
@@ -2898,6 +2936,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.ParentLocation = defaultOn;
+                this.NAM1 = defaultOn;
                 this.UnreportedCrimeFaction = defaultOn;
                 this.WorldLocationMarkerRef = defaultOn;
                 this.WorldLocationRadius = defaultOn;
@@ -2936,6 +2975,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Properties2 == null ? DefaultOn : !Properties2.GetCrystal().CopyNothing, Properties2?.GetCrystal()));
                 ret.Add((Faction != null ? Faction.OnOverall : DefaultOn, Faction?.GetCrystal()));
                 ret.Add((ParentLocation, null));
+                ret.Add((NAM1, null));
                 ret.Add((UnreportedCrimeFaction, null));
                 ret.Add((WorldLocationMarkerRef, null));
                 ret.Add((WorldLocationRadius, null));
@@ -3130,6 +3170,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<ObjectProperty>? Properties2 { get; set; }
         new LocationFaction? Faction { get; set; }
         new IFormLinkNullable<ILocationGetter> ParentLocation { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> NAM1 { get; set; }
         new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
         new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
@@ -3198,6 +3239,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IObjectPropertyGetter>? Properties2 { get; }
         ILocationFactionGetter? Faction { get; }
         IFormLinkNullableGetter<ILocationGetter> ParentLocation { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> NAM1 { get; }
         IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction { get; }
         IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         Single? WorldLocationRadius { get; }
@@ -3409,14 +3451,15 @@ namespace Mutagen.Bethesda.Starfield
         Properties2 = 27,
         Faction = 28,
         ParentLocation = 29,
-        UnreportedCrimeFaction = 30,
-        WorldLocationMarkerRef = 31,
-        WorldLocationRadius = 32,
-        ActorFadeMult = 33,
-        TNAM = 34,
-        Color = 35,
-        StarID = 36,
-        PlanetID = 37,
+        NAM1 = 30,
+        UnreportedCrimeFaction = 31,
+        WorldLocationMarkerRef = 32,
+        WorldLocationRadius = 33,
+        ActorFadeMult = 34,
+        TNAM = 35,
+        Color = 36,
+        StarID = 37,
+        PlanetID = 38,
     }
     #endregion
 
@@ -3427,9 +3470,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -3484,6 +3527,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.KSIZ,
                 RecordTypes.DATA,
                 RecordTypes.PNAM,
+                RecordTypes.NAM1,
                 RecordTypes.FNAM,
                 RecordTypes.MNAM,
                 RecordTypes.RNAM,
@@ -3559,6 +3603,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Properties2 = null;
             item.Faction = null;
             item.ParentLocation.Clear();
+            item.NAM1.Clear();
             item.UnreportedCrimeFaction.Clear();
             item.WorldLocationMarkerRef.Clear();
             item.WorldLocationRadius = default;
@@ -3606,6 +3651,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Properties2?.RemapLinks(mapping);
             obj.Faction?.RemapLinks(mapping);
             obj.ParentLocation.Relink(mapping);
+            obj.NAM1.Relink(mapping);
             obj.UnreportedCrimeFaction.Relink(mapping);
             obj.WorldLocationMarkerRef.Relink(mapping);
         }
@@ -3762,6 +3808,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ParentLocation = item.ParentLocation.Equals(rhs.ParentLocation);
+            ret.NAM1 = item.NAM1.Equals(rhs.NAM1);
             ret.UnreportedCrimeFaction = item.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction);
             ret.WorldLocationMarkerRef = item.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef);
             ret.WorldLocationRadius = item.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius);
@@ -4132,6 +4179,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
             }
+            if (printMask?.NAM1 ?? true)
+            {
+                sb.AppendItem(item.NAM1.FormKeyNullable, "NAM1");
+            }
             if (printMask?.UnreportedCrimeFaction ?? true)
             {
                 sb.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
@@ -4316,6 +4367,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.NAM1) ?? true))
+            {
+                if (!lhs.NAM1.Equals(rhs.NAM1)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
                 if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
@@ -4405,6 +4460,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Factionitem);
             }
             hash.Add(item.ParentLocation);
+            hash.Add(item.NAM1);
             hash.Add(item.UnreportedCrimeFaction);
             hash.Add(item.WorldLocationMarkerRef);
             if (item.WorldLocationRadius is {} WorldLocationRadiusitem)
@@ -4607,6 +4663,10 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.ParentLocation, out var ParentLocationInfo))
             {
                 yield return ParentLocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.NAM1, out var NAM1Info))
+            {
+                yield return NAM1Info;
             }
             if (FormLinkInformation.TryFactory(obj.UnreportedCrimeFaction, out var UnreportedCrimeFactionInfo))
             {
@@ -5321,6 +5381,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ParentLocation.SetTo(rhs.ParentLocation.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.NAM1) ?? true))
+            {
+                item.NAM1.SetTo(rhs.NAM1.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
                 item.UnreportedCrimeFaction.SetTo(rhs.UnreportedCrimeFaction.FormKeyNullable);
@@ -5771,6 +5835,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
+                item: item.NAM1,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
                 item: item.UnreportedCrimeFaction,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -6166,6 +6234,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.ParentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Location_FieldIndex.ParentLocation;
                 }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Location_FieldIndex.NAM1;
+                }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -6316,6 +6390,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ParentLocation
         private int? _ParentLocationLocation;
         public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _ParentLocationLocation);
+        #endregion
+        #region NAM1
+        private int? _NAM1Location;
+        public IFormLinkNullableGetter<IMusicTypeGetter> NAM1 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _NAM1Location);
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
@@ -6699,6 +6777,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ParentLocationLocation = (stream.Position - offset);
                     return (int)Location_FieldIndex.ParentLocation;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _NAM1Location = (stream.Position - offset);
+                    return (int)Location_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.FNAM:
                 {

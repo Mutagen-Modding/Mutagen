@@ -49,6 +49,7 @@
       <RefList name="Properties2" refName="ObjectProperty" recordType="PRPS" />
       <RefDirect name="Faction" refName="LocationFaction" />
       <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
+      <FormLink name="NAM1" recordType="NAM1" refName="MusicType" unknown="true" />
       <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
       <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
         <Interface>IPlacedSimple</Interface>
