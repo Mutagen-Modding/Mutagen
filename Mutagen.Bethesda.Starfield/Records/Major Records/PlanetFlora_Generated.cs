@@ -51,15 +51,15 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Model
-        private readonly IFormLink<IFloraGetter> _Model = new FormLink<IFloraGetter>();
-        public IFormLink<IFloraGetter> Model
+        #region Flora
+        private readonly IFormLink<IFloraGetter> _Flora = new FormLink<IFloraGetter>();
+        public IFormLink<IFloraGetter> Flora
         {
-            get => _Model;
-            set => _Model.SetTo(value);
+            get => _Flora;
+            set => _Flora.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFloraGetter> IPlanetFloraGetter.Model => this.Model;
+        IFormLinkGetter<IFloraGetter> IPlanetFloraGetter.Flora => this.Flora;
         #endregion
         #region Resource
         private readonly IFormLink<IMiscItemGetter> _Resource = new FormLink<IMiscItemGetter>();
@@ -113,17 +113,17 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Model = initialValue;
+                this.Flora = initialValue;
                 this.Resource = initialValue;
                 this.Frequency = initialValue;
             }
 
             public Mask(
-                TItem Model,
+                TItem Flora,
                 TItem Resource,
                 TItem Frequency)
             {
-                this.Model = Model;
+                this.Flora = Flora;
                 this.Resource = Resource;
                 this.Frequency = Frequency;
             }
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Model;
+            public TItem Flora;
             public TItem Resource;
             public TItem Frequency;
             #endregion
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Flora, rhs.Flora)) return false;
                 if (!object.Equals(this.Resource, rhs.Resource)) return false;
                 if (!object.Equals(this.Frequency, rhs.Frequency)) return false;
                 return true;
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Model);
+                hash.Add(this.Flora);
                 hash.Add(this.Resource);
                 hash.Add(this.Frequency);
                 return hash.ToHashCode();
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Model)) return false;
+                if (!eval(this.Flora)) return false;
                 if (!eval(this.Resource)) return false;
                 if (!eval(this.Frequency)) return false;
                 return true;
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Model)) return true;
+                if (eval(this.Flora)) return true;
                 if (eval(this.Resource)) return true;
                 if (eval(this.Frequency)) return true;
                 return false;
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Model = eval(this.Model);
+                obj.Flora = eval(this.Flora);
                 obj.Resource = eval(this.Resource);
                 obj.Frequency = eval(this.Frequency);
             }
@@ -219,9 +219,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlanetFlora.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Model ?? true)
+                    if (printMask?.Flora ?? true)
                     {
-                        sb.AppendItem(Model, "Model");
+                        sb.AppendItem(Flora, "Flora");
                     }
                     if (printMask?.Resource ?? true)
                     {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Model;
+            public Exception? Flora;
             public Exception? Resource;
             public Exception? Frequency;
             #endregion
@@ -266,8 +266,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetFlora_FieldIndex enu = (PlanetFlora_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFlora_FieldIndex.Model:
-                        return Model;
+                    case PlanetFlora_FieldIndex.Flora:
+                        return Flora;
                     case PlanetFlora_FieldIndex.Resource:
                         return Resource;
                     case PlanetFlora_FieldIndex.Frequency:
@@ -282,8 +282,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetFlora_FieldIndex enu = (PlanetFlora_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFlora_FieldIndex.Model:
-                        this.Model = ex;
+                    case PlanetFlora_FieldIndex.Flora:
+                        this.Flora = ex;
                         break;
                     case PlanetFlora_FieldIndex.Resource:
                         this.Resource = ex;
@@ -301,8 +301,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetFlora_FieldIndex enu = (PlanetFlora_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFlora_FieldIndex.Model:
-                        this.Model = (Exception?)obj;
+                    case PlanetFlora_FieldIndex.Flora:
+                        this.Flora = (Exception?)obj;
                         break;
                     case PlanetFlora_FieldIndex.Resource:
                         this.Resource = (Exception?)obj;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Model != null) return true;
+                if (Flora != null) return true;
                 if (Resource != null) return true;
                 if (Frequency != null) return true;
                 return false;
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Model, "Model");
+                    sb.AppendItem(Flora, "Flora");
                 }
                 {
                     sb.AppendItem(Resource, "Resource");
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Model = this.Model.Combine(rhs.Model);
+                ret.Flora = this.Flora.Combine(rhs.Flora);
                 ret.Resource = this.Resource.Combine(rhs.Resource);
                 ret.Frequency = this.Frequency.Combine(rhs.Frequency);
                 return ret;
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Model;
+            public bool Flora;
             public bool Resource;
             public bool Frequency;
             #endregion
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Model = defaultOn;
+                this.Flora = defaultOn;
                 this.Resource = defaultOn;
                 this.Frequency = defaultOn;
             }
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Model, null));
+                ret.Add((Flora, null));
                 ret.Add((Resource, null));
                 ret.Add((Frequency, null));
             }
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IPlanetFlora>,
         IPlanetFloraGetter
     {
-        new IFormLink<IFloraGetter> Model { get; set; }
+        new IFormLink<IFloraGetter> Flora { get; set; }
         new IFormLink<IMiscItemGetter> Resource { get; set; }
         new Byte Frequency { get; set; }
     }
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlanetFlora_Registration.Instance;
-        IFormLinkGetter<IFloraGetter> Model { get; }
+        IFormLinkGetter<IFloraGetter> Flora { get; }
         IFormLinkGetter<IMiscItemGetter> Resource { get; }
         Byte Frequency { get; }
 
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum PlanetFlora_FieldIndex
     {
-        Model = 0,
+        Flora = 0,
         Resource = 1,
         Frequency = 2,
     }
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetFlora item)
         {
             ClearPartial();
-            item.Model.Clear();
+            item.Flora.Clear();
             item.Resource.Clear();
             item.Frequency = default(Byte);
         }
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public void RemapLinks(IPlanetFlora obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Model.Relink(mapping);
+            obj.Flora.Relink(mapping);
             obj.Resource.Relink(mapping);
         }
         
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Starfield
             PlanetFlora.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Model = item.Model.Equals(rhs.Model);
+            ret.Flora = item.Flora.Equals(rhs.Flora);
             ret.Resource = item.Resource.Equals(rhs.Resource);
             ret.Frequency = item.Frequency == rhs.Frequency;
         }
@@ -872,9 +872,9 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             PlanetFlora.Mask<bool>? printMask = null)
         {
-            if (printMask?.Model ?? true)
+            if (printMask?.Flora ?? true)
             {
-                sb.AppendItem(item.Model.FormKey, "Model");
+                sb.AppendItem(item.Flora.FormKey, "Flora");
             }
             if (printMask?.Resource ?? true)
             {
@@ -893,9 +893,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Flora) ?? true))
             {
-                if (!lhs.Model.Equals(rhs.Model)) return false;
+                if (!lhs.Flora.Equals(rhs.Flora)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Resource) ?? true))
             {
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlanetFloraGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Model);
+            hash.Add(item.Flora);
             hash.Add(item.Resource);
             hash.Add(item.Frequency);
             return hash.ToHashCode();
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetFloraGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.Model);
+            yield return FormLinkInformation.Factory(obj.Flora);
             yield return FormLinkInformation.Factory(obj.Resource);
             yield break;
         }
@@ -948,9 +948,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Model) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Flora) ?? true))
             {
-                item.Model.SetTo(rhs.Model.FormKey);
+                item.Flora.SetTo(rhs.Flora.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetFlora_FieldIndex.Resource) ?? true))
             {
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Model);
+                item: item.Flora);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Resource);
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Starfield
             IPlanetFlora item,
             MutagenFrame frame)
         {
-            item.Model.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Flora.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Resource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Frequency = frame.ReadUInt8();
         }
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFloraGetter> Model => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IFloraGetter> Flora => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public IFormLinkGetter<IMiscItemGetter> Resource => FormLinkBinaryTranslation.Instance.OverlayFactory<IMiscItemGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Byte Frequency => _structData.Span[0x8];
         partial void CustomFactoryEnd(

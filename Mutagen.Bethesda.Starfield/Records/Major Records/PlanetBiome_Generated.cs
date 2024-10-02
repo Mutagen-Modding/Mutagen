@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -62,21 +63,21 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IBiomeGetter> IPlanetBiomeGetter.Biome => this.Biome;
         #endregion
-        #region Percentage
-        public Single Percentage { get; set; } = default(Single);
+        #region Chance
+        public Single Chance { get; set; } = default(Single);
         #endregion
         #region Unknown2
         public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
-        #region ResourceGenOverride
-        private readonly IFormLink<IStarfieldMajorRecordGetter> _ResourceGenOverride = new FormLink<IStarfieldMajorRecordGetter>();
-        public IFormLink<IStarfieldMajorRecordGetter> ResourceGenOverride
+        #region ResourceGeneration
+        private readonly IFormLink<IStarfieldMajorRecordGetter> _ResourceGeneration = new FormLink<IStarfieldMajorRecordGetter>();
+        public IFormLink<IStarfieldMajorRecordGetter> ResourceGeneration
         {
-            get => _ResourceGenOverride;
-            set => _ResourceGenOverride.SetTo(value);
+            get => _ResourceGeneration;
+            set => _ResourceGeneration.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IStarfieldMajorRecordGetter> IPlanetBiomeGetter.ResourceGenOverride => this.ResourceGenOverride;
+        IFormLinkGetter<IStarfieldMajorRecordGetter> IPlanetBiomeGetter.ResourceGeneration => this.ResourceGeneration;
         #endregion
         #region Fauna
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,8 +93,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region Unknown3
-        public Int32 Unknown3 { get; set; } = default(Int32);
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>> _Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>> Keywords
+        {
+            get => this._Keywords;
+            init => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> IPlanetBiomeGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        ExtendedList<IFormLinkGetter<IKeywordGetter>>? IKeyworded<IKeywordGetter>.Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value ?? new();
+        }
+        #endregion
         #endregion
         #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,31 +184,31 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Biome = initialValue;
-                this.Percentage = initialValue;
+                this.Chance = initialValue;
                 this.Unknown2 = initialValue;
-                this.ResourceGenOverride = initialValue;
+                this.ResourceGeneration = initialValue;
                 this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown3 = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
                 this.Unknown4 = initialValue;
             }
 
             public Mask(
                 TItem Biome,
-                TItem Percentage,
+                TItem Chance,
                 TItem Unknown2,
-                TItem ResourceGenOverride,
+                TItem ResourceGeneration,
                 TItem Fauna,
-                TItem Unknown3,
+                TItem Keywords,
                 TItem Flora,
                 TItem Unknown4)
             {
                 this.Biome = Biome;
-                this.Percentage = Percentage;
+                this.Chance = Chance;
                 this.Unknown2 = Unknown2;
-                this.ResourceGenOverride = ResourceGenOverride;
+                this.ResourceGeneration = ResourceGeneration;
                 this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Fauna, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown3 = Unknown3;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(Flora, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
                 this.Unknown4 = Unknown4;
             }
@@ -199,11 +223,11 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Biome;
-            public TItem Percentage;
+            public TItem Chance;
             public TItem Unknown2;
-            public TItem ResourceGenOverride;
+            public TItem ResourceGeneration;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Fauna;
-            public TItem Unknown3;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>? Flora;
             public TItem Unknown4;
             #endregion
@@ -219,11 +243,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Biome, rhs.Biome)) return false;
-                if (!object.Equals(this.Percentage, rhs.Percentage)) return false;
+                if (!object.Equals(this.Chance, rhs.Chance)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.ResourceGenOverride, rhs.ResourceGenOverride)) return false;
+                if (!object.Equals(this.ResourceGeneration, rhs.ResourceGeneration)) return false;
                 if (!object.Equals(this.Fauna, rhs.Fauna)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Flora, rhs.Flora)) return false;
                 if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
                 return true;
@@ -232,11 +256,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Biome);
-                hash.Add(this.Percentage);
+                hash.Add(this.Chance);
                 hash.Add(this.Unknown2);
-                hash.Add(this.ResourceGenOverride);
+                hash.Add(this.ResourceGeneration);
                 hash.Add(this.Fauna);
-                hash.Add(this.Unknown3);
+                hash.Add(this.Keywords);
                 hash.Add(this.Flora);
                 hash.Add(this.Unknown4);
                 return hash.ToHashCode();
@@ -248,9 +272,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Biome)) return false;
-                if (!eval(this.Percentage)) return false;
+                if (!eval(this.Chance)) return false;
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.ResourceGenOverride)) return false;
+                if (!eval(this.ResourceGeneration)) return false;
                 if (this.Fauna != null)
                 {
                     if (!eval(this.Fauna.Overall)) return false;
@@ -262,7 +286,17 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.Unknown3)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Flora != null)
                 {
                     if (!eval(this.Flora.Overall)) return false;
@@ -284,9 +318,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Biome)) return true;
-                if (eval(this.Percentage)) return true;
+                if (eval(this.Chance)) return true;
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.ResourceGenOverride)) return true;
+                if (eval(this.ResourceGeneration)) return true;
                 if (this.Fauna != null)
                 {
                     if (eval(this.Fauna.Overall)) return true;
@@ -298,7 +332,17 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.Unknown3)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Flora != null)
                 {
                     if (eval(this.Flora.Overall)) return true;
@@ -327,9 +371,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Biome = eval(this.Biome);
-                obj.Percentage = eval(this.Percentage);
+                obj.Chance = eval(this.Chance);
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.ResourceGenOverride = eval(this.ResourceGenOverride);
+                obj.ResourceGeneration = eval(this.ResourceGeneration);
                 if (Fauna != null)
                 {
                     obj.Fauna = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Fauna.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -344,7 +388,20 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Unknown3 = eval(this.Unknown3);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (Flora != null)
                 {
                     obj.Flora = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>?>(eval(this.Flora.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>());
@@ -383,17 +440,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Biome, "Biome");
                     }
-                    if (printMask?.Percentage ?? true)
+                    if (printMask?.Chance ?? true)
                     {
-                        sb.AppendItem(Percentage, "Percentage");
+                        sb.AppendItem(Chance, "Chance");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.ResourceGenOverride ?? true)
+                    if (printMask?.ResourceGeneration ?? true)
                     {
-                        sb.AppendItem(ResourceGenOverride, "ResourceGenOverride");
+                        sb.AppendItem(ResourceGeneration, "ResourceGeneration");
                     }
                     if ((printMask?.Fauna?.Overall ?? true)
                         && Fauna is {} FaunaItem)
@@ -416,9 +473,26 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Flora?.Overall ?? true)
                         && Flora is {} FloraItem)
@@ -468,11 +542,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Biome;
-            public Exception? Percentage;
+            public Exception? Chance;
             public Exception? Unknown2;
-            public Exception? ResourceGenOverride;
+            public Exception? ResourceGeneration;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Fauna;
-            public Exception? Unknown3;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>? Flora;
             public Exception? Unknown4;
             #endregion
@@ -485,16 +559,16 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PlanetBiome_FieldIndex.Biome:
                         return Biome;
-                    case PlanetBiome_FieldIndex.Percentage:
-                        return Percentage;
+                    case PlanetBiome_FieldIndex.Chance:
+                        return Chance;
                     case PlanetBiome_FieldIndex.Unknown2:
                         return Unknown2;
-                    case PlanetBiome_FieldIndex.ResourceGenOverride:
-                        return ResourceGenOverride;
+                    case PlanetBiome_FieldIndex.ResourceGeneration:
+                        return ResourceGeneration;
                     case PlanetBiome_FieldIndex.Fauna:
                         return Fauna;
-                    case PlanetBiome_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case PlanetBiome_FieldIndex.Keywords:
+                        return Keywords;
                     case PlanetBiome_FieldIndex.Flora:
                         return Flora;
                     case PlanetBiome_FieldIndex.Unknown4:
@@ -512,20 +586,20 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetBiome_FieldIndex.Biome:
                         this.Biome = ex;
                         break;
-                    case PlanetBiome_FieldIndex.Percentage:
-                        this.Percentage = ex;
+                    case PlanetBiome_FieldIndex.Chance:
+                        this.Chance = ex;
                         break;
                     case PlanetBiome_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
-                    case PlanetBiome_FieldIndex.ResourceGenOverride:
-                        this.ResourceGenOverride = ex;
+                    case PlanetBiome_FieldIndex.ResourceGeneration:
+                        this.ResourceGeneration = ex;
                         break;
                     case PlanetBiome_FieldIndex.Fauna:
                         this.Fauna = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case PlanetBiome_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case PlanetBiome_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case PlanetBiome_FieldIndex.Flora:
                         this.Flora = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>(ex, null);
@@ -546,20 +620,20 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetBiome_FieldIndex.Biome:
                         this.Biome = (Exception?)obj;
                         break;
-                    case PlanetBiome_FieldIndex.Percentage:
-                        this.Percentage = (Exception?)obj;
+                    case PlanetBiome_FieldIndex.Chance:
+                        this.Chance = (Exception?)obj;
                         break;
                     case PlanetBiome_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case PlanetBiome_FieldIndex.ResourceGenOverride:
-                        this.ResourceGenOverride = (Exception?)obj;
+                    case PlanetBiome_FieldIndex.ResourceGeneration:
+                        this.ResourceGeneration = (Exception?)obj;
                         break;
                     case PlanetBiome_FieldIndex.Fauna:
                         this.Fauna = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case PlanetBiome_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case PlanetBiome_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case PlanetBiome_FieldIndex.Flora:
                         this.Flora = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>)obj;
@@ -576,11 +650,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Biome != null) return true;
-                if (Percentage != null) return true;
+                if (Chance != null) return true;
                 if (Unknown2 != null) return true;
-                if (ResourceGenOverride != null) return true;
+                if (ResourceGeneration != null) return true;
                 if (Fauna != null) return true;
-                if (Unknown3 != null) return true;
+                if (Keywords != null) return true;
                 if (Flora != null) return true;
                 if (Unknown4 != null) return true;
                 return false;
@@ -612,13 +686,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Biome, "Biome");
                 }
                 {
-                    sb.AppendItem(Percentage, "Percentage");
+                    sb.AppendItem(Chance, "Chance");
                 }
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
                 {
-                    sb.AppendItem(ResourceGenOverride, "ResourceGenOverride");
+                    sb.AppendItem(ResourceGeneration, "ResourceGeneration");
                 }
                 if (Fauna is {} FaunaItem)
                 {
@@ -640,8 +714,25 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (Keywords is {} KeywordsItem)
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Flora is {} FloraItem)
                 {
@@ -673,11 +764,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Biome = this.Biome.Combine(rhs.Biome);
-                ret.Percentage = this.Percentage.Combine(rhs.Percentage);
+                ret.Chance = this.Chance.Combine(rhs.Chance);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.ResourceGenOverride = this.ResourceGenOverride.Combine(rhs.ResourceGenOverride);
+                ret.ResourceGeneration = this.ResourceGeneration.Combine(rhs.ResourceGeneration);
                 ret.Fauna = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Fauna?.Overall, rhs.Fauna?.Overall), Noggog.ExceptionExt.Combine(this.Fauna?.Specific, rhs.Fauna?.Specific));
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flora = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), Noggog.ExceptionExt.Combine(this.Flora?.Specific, rhs.Flora?.Specific));
                 ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
                 return ret;
@@ -704,11 +795,11 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Biome;
-            public bool Percentage;
+            public bool Chance;
             public bool Unknown2;
-            public bool ResourceGenOverride;
+            public bool ResourceGeneration;
             public bool Fauna;
-            public bool Unknown3;
+            public bool Keywords;
             public PlanetFlora.TranslationMask? Flora;
             public bool Unknown4;
             #endregion
@@ -721,11 +812,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Biome = defaultOn;
-                this.Percentage = defaultOn;
+                this.Chance = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.ResourceGenOverride = defaultOn;
+                this.ResourceGeneration = defaultOn;
                 this.Fauna = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.Keywords = defaultOn;
                 this.Unknown4 = defaultOn;
             }
 
@@ -743,11 +834,11 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Biome, null));
-                ret.Add((Percentage, null));
+                ret.Add((Chance, null));
                 ret.Add((Unknown2, null));
-                ret.Add((ResourceGenOverride, null));
+                ret.Add((ResourceGeneration, null));
                 ret.Add((Fauna, null));
-                ret.Add((Unknown3, null));
+                ret.Add((Keywords, null));
                 ret.Add((Flora == null ? DefaultOn : !Flora.GetCrystal().CopyNothing, Flora?.GetCrystal()));
                 ret.Add((Unknown4, null));
             }
@@ -825,15 +916,19 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IPlanetBiome :
         IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IPlanetBiome>,
         IPlanetBiomeGetter
     {
         new IFormLink<IBiomeGetter> Biome { get; set; }
-        new Single Percentage { get; set; }
+        new Single Chance { get; set; }
         new Int32 Unknown2 { get; set; }
-        new IFormLink<IStarfieldMajorRecordGetter> ResourceGenOverride { get; set; }
+        new IFormLink<IStarfieldMajorRecordGetter> ResourceGeneration { get; set; }
         new ExtendedList<IFormLinkGetter<INpcGetter>> Fauna { get; }
-        new Int32 Unknown3 { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
         new ExtendedList<PlanetFlora> Flora { get; }
         new MemorySlice<Byte> Unknown4 { get; set; }
     }
@@ -842,6 +937,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IPlanetBiomeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -852,11 +948,16 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlanetBiome_Registration.Instance;
         IFormLinkGetter<IBiomeGetter> Biome { get; }
-        Single Percentage { get; }
+        Single Chance { get; }
         Int32 Unknown2 { get; }
-        IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGenOverride { get; }
+        IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGeneration { get; }
         IReadOnlyList<IFormLinkGetter<INpcGetter>> Fauna { get; }
-        Int32 Unknown3 { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
+        #endregion
         IReadOnlyList<IPlanetFloraGetter> Flora { get; }
         ReadOnlyMemorySlice<Byte> Unknown4 { get; }
 
@@ -1029,11 +1130,11 @@ namespace Mutagen.Bethesda.Starfield
     internal enum PlanetBiome_FieldIndex
     {
         Biome = 0,
-        Percentage = 1,
+        Chance = 1,
         Unknown2 = 2,
-        ResourceGenOverride = 3,
+        ResourceGeneration = 3,
         Fauna = 4,
-        Unknown3 = 5,
+        Keywords = 5,
         Flora = 6,
         Unknown4 = 7,
     }
@@ -1122,11 +1223,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Biome.Clear();
-            item.Percentage = default(Single);
+            item.Chance = default(Single);
             item.Unknown2 = default(Int32);
-            item.ResourceGenOverride.Clear();
+            item.ResourceGeneration.Clear();
             item.Fauna.Clear();
-            item.Unknown3 = default(Int32);
+            item.Keywords.Clear();
             item.Flora.Clear();
             item.Unknown4 = Array.Empty<byte>();
         }
@@ -1135,8 +1236,9 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPlanetBiome obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Biome.Relink(mapping);
-            obj.ResourceGenOverride.Relink(mapping);
+            obj.ResourceGeneration.Relink(mapping);
             obj.Fauna.RemapLinks(mapping);
+            obj.Keywords.RemapLinks(mapping);
             obj.Flora.RemapLinks(mapping);
         }
         
@@ -1187,14 +1289,17 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Biome = item.Biome.Equals(rhs.Biome);
-            ret.Percentage = item.Percentage.EqualsWithin(rhs.Percentage);
+            ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ResourceGenOverride = item.ResourceGenOverride.Equals(rhs.ResourceGenOverride);
+            ret.ResourceGeneration = item.ResourceGeneration.Equals(rhs.ResourceGeneration);
             ret.Fauna = item.Fauna.CollectionEqualsHelper(
                 rhs.Fauna,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.Flora = item.Flora.CollectionEqualsHelper(
                 rhs.Flora,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1248,17 +1353,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Biome.FormKey, "Biome");
             }
-            if (printMask?.Percentage ?? true)
+            if (printMask?.Chance ?? true)
             {
-                sb.AppendItem(item.Percentage, "Percentage");
+                sb.AppendItem(item.Chance, "Chance");
             }
             if (printMask?.Unknown2 ?? true)
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if (printMask?.ResourceGenOverride ?? true)
+            if (printMask?.ResourceGeneration ?? true)
             {
-                sb.AppendItem(item.ResourceGenOverride.FormKey, "ResourceGenOverride");
+                sb.AppendItem(item.ResourceGeneration.FormKey, "ResourceGeneration");
             }
             if (printMask?.Fauna?.Overall ?? true)
             {
@@ -1274,9 +1379,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.Keywords?.Overall ?? true)
             {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Keywords)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if (printMask?.Flora?.Overall ?? true)
             {
@@ -1309,25 +1424,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Biome.Equals(rhs.Biome)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Percentage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Chance) ?? true))
             {
-                if (!lhs.Percentage.EqualsWithin(rhs.Percentage)) return false;
+                if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.ResourceGenOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.ResourceGeneration) ?? true))
             {
-                if (!lhs.ResourceGenOverride.Equals(rhs.ResourceGenOverride)) return false;
+                if (!lhs.ResourceGeneration.Equals(rhs.ResourceGeneration)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Fauna) ?? true))
             {
                 if (!lhs.Fauna.SequenceEqualNullable(rhs.Fauna)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Keywords) ?? true))
             {
-                if (lhs.Unknown3 != rhs.Unknown3) return false;
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Flora) ?? true))
             {
@@ -1344,11 +1459,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Biome);
-            hash.Add(item.Percentage);
+            hash.Add(item.Chance);
             hash.Add(item.Unknown2);
-            hash.Add(item.ResourceGenOverride);
+            hash.Add(item.ResourceGeneration);
             hash.Add(item.Fauna);
-            hash.Add(item.Unknown3);
+            hash.Add(item.Keywords);
             hash.Add(item.Flora);
             hash.Add(item.Unknown4);
             return hash.ToHashCode();
@@ -1366,8 +1481,12 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetBiomeGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Biome);
-            yield return FormLinkInformation.Factory(obj.ResourceGenOverride);
+            yield return FormLinkInformation.Factory(obj.ResourceGeneration);
             foreach (var item in obj.Fauna)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Keywords)
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1397,17 +1516,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Biome.SetTo(rhs.Biome.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Percentage) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Chance) ?? true))
             {
-                item.Percentage = rhs.Percentage;
+                item.Chance = rhs.Chance;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.ResourceGenOverride) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.ResourceGeneration) ?? true))
             {
-                item.ResourceGenOverride.SetTo(rhs.ResourceGenOverride.FormKey);
+                item.ResourceGeneration.SetTo(rhs.ResourceGeneration.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Fauna) ?? true))
             {
@@ -1428,9 +1547,24 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Keywords) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                errorMask?.PushIndex((int)PlanetBiome_FieldIndex.Keywords);
+                try
+                {
+                    item.Keywords.SetTo(
+                        rhs.Keywords
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Flora) ?? true))
             {
@@ -1573,11 +1707,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Biome);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Percentage);
+                item: item.Chance);
             writer.Write(item.Unknown2);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ResourceGenOverride);
+                item: item.ResourceGeneration);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Fauna,
@@ -1588,7 +1722,16 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            writer.Write(item.Unknown3);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Keywords,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetFloraGetter>.Instance.Write(
                 writer: writer,
                 items: item.Flora,
@@ -1647,15 +1790,19 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame)
         {
             item.Biome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Percentage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Chance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown2 = frame.ReadInt32();
-            item.ResourceGenOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ResourceGeneration.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Fauna.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                     amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
-            item.Unknown3 = frame.ReadInt32();
+            item.Keywords.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                    amount: checked((int)frame.ReadUInt32()),
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
             item.Flora.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetFlora>.Instance.Parse(
                     amount: checked((int)frame.ReadUInt32()),
@@ -1731,16 +1878,20 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IFormLinkGetter<IBiomeGetter> Biome => FormLinkBinaryTranslation.Instance.OverlayFactory<IBiomeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public Single Percentage => _structData.Slice(0x4, 0x4).Float();
+        public Single Chance => _structData.Slice(0x4, 0x4).Float();
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGenOverride => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> ResourceGeneration => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         #region Fauna
         public IReadOnlyList<IFormLinkGetter<INpcGetter>> Fauna => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INpcGetter>>(_structData.Slice(0x10), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
         protected int FaunaEndingPos;
         #endregion
-        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(FaunaEndingPos, 0x4));
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IKeywordGetter>>(_structData.Slice(FaunaEndingPos), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
+        protected int KeywordsEndingPos;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region Flora
-        public IReadOnlyList<IPlanetFloraGetter> Flora => BinaryOverlayList.FactoryByCountLength<IPlanetFloraGetter>(_structData.Slice(FaunaEndingPos + 0x4), _package, 9, countLength: 4, expectedLengthLength: 4, (s, p) => PlanetFloraBinaryOverlay.PlanetFloraFactory(s, p));
+        public IReadOnlyList<IPlanetFloraGetter> Flora => BinaryOverlayList.FactoryByCountLength<IPlanetFloraGetter>(_structData.Slice(KeywordsEndingPos), _package, 9, countLength: 4, expectedLengthLength: 4, (s, p) => PlanetFloraBinaryOverlay.PlanetFloraFactory(s, p));
         protected int FloraEndingPos;
         #endregion
         #region Unknown4
@@ -1768,7 +1919,8 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package)
         {
             ret.FaunaEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 4 + 4;
-            ret.FloraEndingPos = ret.FaunaEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos + 0x4)) * 9 + 4 + 4;
+            ret.KeywordsEndingPos = ret.FaunaEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos)) * 4 + 4;
+            ret.FloraEndingPos = ret.KeywordsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.KeywordsEndingPos)) * 9 + 4 + 4;
         }
 
         public static IPlanetBiomeGetter PlanetBiomeFactory(
