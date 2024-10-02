@@ -193,5 +193,106 @@ public class BinaryOverlayTests
         Assert.Equal(60, stream.Position);
         Assert.False(stream.Complete);
     }
+
+    [Theory, MutagenAutoData]
+    public void ParseRecordLocationsByCount_EndRecord(ModKey modKey)
+    {
+        MemoryTributary data = new MemoryTributary();
+        using (MutagenWriter writer = new MutagenWriter(data, GameConstants.Oblivion))
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAN))
+            {
+                writer.Write(1);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.DESC))
+            {
+                writer.Write(-1);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAF))
+            {
+                writer.Write(2);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAN))
+            {
+                writer.Write(1);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.DESC))
+            {
+                writer.Write(-2);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAF))
+            {
+                writer.Write(2);
+            }
+        }
+
+        data.Position = 0;
+        var triggers = new RecordTriggerSpecs(
+            allRecordTypes: RecordCollection.Factory(
+                RecordTypes.ATAN,
+                RecordTypes.ATAF,
+                RecordTypes.DESC),
+            triggeringRecordTypes: RecordCollection.Factory(RecordTypes.ATAN),
+            endRecordTypes: RecordCollection.Factory(RecordTypes.ATAF));
+        
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
+            stream,
+            3,
+            triggers,
+            GameConstants.Oblivion.SubConstants,
+            skipHeader: false);
+        Assert.Equal(2, pos.Count);
+        Assert.Equal(0, pos[0]);
+        Assert.Equal(30, pos[1]);
+        Assert.Equal(60, stream.Position);
+        Assert.True(stream.Complete);
+    }
+
+    [Theory, MutagenAutoData]
+    public void ParseRecordLocationsByCount_EndRecordWithUnrelatedMatchingAfter(ModKey modKey)
+    {
+        MemoryTributary data = new MemoryTributary();
+        using (MutagenWriter writer = new MutagenWriter(data, GameConstants.Oblivion))
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAN))
+            {
+                writer.Write(1);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.DESC))
+            {
+                writer.Write(-1);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAF))
+            {
+                writer.Write(2);
+            }
+            using (HeaderExport.Subrecord(writer, RecordTypes.DESC))
+            {
+                writer.Write(-2);
+            }
+        }
+
+        data.Position = 0;
+        var triggers = new RecordTriggerSpecs(
+            allRecordTypes: RecordCollection.Factory(
+                RecordTypes.ATAN,
+                RecordTypes.ATAF,
+                RecordTypes.DESC),
+            triggeringRecordTypes: RecordCollection.Factory(RecordTypes.ATAN),
+            endRecordTypes: RecordCollection.Factory(RecordTypes.ATAF));
+        
+        var stream = new OverlayStream(data.ToArray(), new ParsingMeta(GameConstants.Oblivion, modKey, masterReferences: null!));
+        var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
+            stream,
+            3,
+            triggers,
+            GameConstants.Oblivion.SubConstants,
+            skipHeader: false);
+        Assert.Equal(1, pos.Count);
+        Assert.Equal(0, pos[0]);
+        Assert.Equal(30, stream.Position);
+        Assert.False(stream.Complete);
+    }
     #endregion
 }

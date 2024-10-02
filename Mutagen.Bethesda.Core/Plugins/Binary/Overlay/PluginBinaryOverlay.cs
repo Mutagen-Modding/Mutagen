@@ -482,6 +482,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         translationParams = translationParams.ShortCircuit();
         var ret = new List<int>();
         int? lastParsed = null;
+        bool lastWasEnder = false;
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
@@ -535,6 +536,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 {
                     // If new record isn't before one we've already parsed, just continue
                     if (!triggersAlwaysAreNewRecords
+                        && !lastWasEnder
                         && lastParsed != null
                         && lastParsed.Value < index)
                     {
@@ -547,6 +549,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                     if (trigger.AllAreTriggers
                         || trigger.TriggeringRecordTypes.Contains(recType))
                     {
+                        lastWasEnder = false;
                         if (skipHeader)
                         {
                             stream.Position += varMeta.HeaderLength;
@@ -559,13 +562,15 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                             stream.Position += (int)varMeta.TotalLength;
                         }
                     }
-                    else if (trigger.EndRecordTypes.Contains(recType))
+                    else if (lastWasEnder)
                     {
-                        stream.Position += (int)varMeta.TotalLength;
+                        // Last was an ender record, and next record isn't a trigger.
+                        // Must be unrelated
                         break;
                     }
                     else
                     {
+                        lastWasEnder = trigger.EndRecordTypes.Contains(recType);
                         stream.Position += (int)varMeta.TotalLength;
                     }
 
