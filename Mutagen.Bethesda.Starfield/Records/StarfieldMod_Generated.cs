@@ -17810,12 +17810,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.ActorValueModulations is IFormLinkContainerGetter ActorValueModulationslinkCont)
+            foreach (var item in obj.ActorValueModulations.EnumerateFormLinks())
             {
-                foreach (var item in ActorValueModulationslinkCont.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.Challenges is IFormLinkContainerGetter ChallengeslinkCont)
             {

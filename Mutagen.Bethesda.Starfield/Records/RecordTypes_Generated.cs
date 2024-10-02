@@ -155,6 +155,7 @@ public partial class RecordTypes
     public static readonly RecordType AVFL = new(0x4C465641);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType AVMD = new(0x444D5641);
+    public static readonly RecordType AVMP = new(0x504D5641);
     public static readonly RecordType AVSG = new(0x47535641);
     public static readonly RecordType AWGT = new(0x54475741);
     public static readonly RecordType BAMT = new(0x544D4142);

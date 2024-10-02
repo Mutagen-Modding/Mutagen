@@ -153,6 +153,7 @@ public partial class RecordTypeInts
     public const int AVFL = 0x4C465641;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
+    public const int AVMP = 0x504D5641;
     public const int AVSG = 0x47535641;
     public const int AWGT = 0x54475741;
     public const int BAMT = 0x544D4142;
