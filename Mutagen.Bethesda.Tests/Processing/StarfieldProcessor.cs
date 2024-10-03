@@ -530,6 +530,11 @@ public class StarfieldProcessor : Processor
         {
             ProcessBool(xlgd, fileOffset, 0x54, 4, 1);
         }
+
+        foreach (var xplk in majorFrame.FindEnumerateSubrecords(RecordTypes.XPLK))
+        {
+            ProcessFormIDOverflow(xplk, fileOffset);
+        }
     }
 
     private void ProcessRagdollData(MajorRecordFrame majorFrame, long fileOffset)
