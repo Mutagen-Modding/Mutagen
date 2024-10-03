@@ -19,7 +19,6 @@
       <ByteArray name="SCPI" recordType="SCPI" unknown="true" />
       <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
       <FormLink name="SCPP" refName="Scene" recordType="SCPP" unknown="true" />
-      <Bool name="DEVT" recordType="DEVT" boolAsMarker="True" unknown="true" />
       <Bool name="SCSP" recordType="SCSP" boolAsMarker="True" unknown="true" />
       <List name="SPMA" recordType="SPMA" unknown="true" >
         <FormLink refName="Scene" />
@@ -41,6 +40,7 @@
       <List name="SPKY" recordType="SPKY" unknown="true" >
         <FormLink refName="Keyword" />
       </List>
+      <Bool name="DEVT" recordType="DEVT" boolAsMarker="True" unknown="true" />
     </Fields>
   </Object>
   <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">

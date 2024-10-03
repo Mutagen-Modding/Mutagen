@@ -3239,7 +3239,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SCPI,
                 RecordTypes.JNAM,
                 RecordTypes.SCPP,
-                RecordTypes.DEVT,
                 RecordTypes.SPMA,
                 RecordTypes.SPEX,
                 RecordTypes.SPRK,
@@ -3249,7 +3248,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SPPQ,
                 RecordTypes.SPKW,
                 RecordTypes.SPPK,
-                RecordTypes.SPKY);
+                RecordTypes.SPKY,
+                RecordTypes.DEVT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
