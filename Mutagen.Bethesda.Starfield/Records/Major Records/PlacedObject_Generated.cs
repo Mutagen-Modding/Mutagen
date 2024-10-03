@@ -5501,6 +5501,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            item.Clear();
             PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
                 frame: frame,
@@ -9735,7 +9736,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLCD:
                 {
-                    item.LightColors.SetTo(
+                    item.LightColors.AddRange(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlacedObjectLightColor>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: PlacedObjectLightColor_Registration.TriggerSpecs,
@@ -10181,7 +10182,10 @@ namespace Mutagen.Bethesda.Starfield
         public Single? LightVolumetricData => _LightVolumetricDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightVolumetricDataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
-        public IReadOnlyList<IPlacedObjectLightColorGetter> LightColors { get; private set; } = Array.Empty<IPlacedObjectLightColorGetter>();
+        #region LightColors
+        private ImmutableManyListWrapper<IPlacedObjectLightColorGetter>? _additiveLightColors;
+        public IReadOnlyList<IPlacedObjectLightColorGetter> LightColors => _additiveLightColors ?? ImmutableManyListWrapper<IPlacedObjectLightColorGetter>.Empty;
+        #endregion
         public IGroupedPackInGetter? GroupedPackIn { get; private set; }
         #region BlueprintPartOrigin
         private int? _BlueprintPartOriginLocation;
@@ -10686,7 +10690,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLCD:
                 {
-                    this.LightColors = BinaryOverlayList.FactoryByArray<IPlacedObjectLightColorGetter>(
+                    _additiveLightColors ??= new();
+                    var LightColorsTmp = BinaryOverlayList.FactoryByArray<IPlacedObjectLightColorGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         translationParams: translationParams,
@@ -10697,6 +10702,7 @@ namespace Mutagen.Bethesda.Starfield
                             triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
+                    _additiveLightColors.AddList(LightColorsTmp);
                     return (int)PlacedObject_FieldIndex.LightColors;
                 }
                 case RecordTypeInts.XWPK:

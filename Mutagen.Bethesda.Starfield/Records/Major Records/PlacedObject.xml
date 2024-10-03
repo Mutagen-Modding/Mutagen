@@ -51,7 +51,7 @@
       <P3Float name="ConstrainedDecal" recordType="XCDD" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <RefDirect name="GoboAnimatedProperties" refName="PlacedObjectGoboAnimatedProperties" recordType="XLGD" />
+      <RefDirect name="GoboAnimatedProperties" refName="PlacedObjectGoboAnimatedProperties" />
       <RefDirect name="Collision" refName="PlacedObjectCollision" />
       <RefList name="PowerLinks" refName="PowerLink" />
       <Int32 name="Count" recordType="XCNT" />
@@ -62,7 +62,7 @@
       <Bool name="LightStaticShadowMap" recordType="XLSM" byteLength="4" />
       <Float name="LightVolumetricData" recordType="XLVD" />
       <RefDirect name="Ownership" refName="Ownership"/>
-      <RefList name="LightColors" refName="PlacedObjectLightColor" />
+      <RefList name="LightColors" refName="PlacedObjectLightColor" additive="true" />
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
