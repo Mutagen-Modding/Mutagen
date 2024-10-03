@@ -6733,5 +6733,11 @@
     <Compile Include="Records\Major Records\PlacedObjectCurrentZoneCell_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SceneCollection_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

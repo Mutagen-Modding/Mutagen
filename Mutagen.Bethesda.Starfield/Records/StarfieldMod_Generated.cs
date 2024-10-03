@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
             _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
             _SoundKeywordMappings_Object = new StarfieldGroup<SoundKeywordMapping>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
+            _SceneCollections_Object = new StarfieldGroup<SceneCollection>(this);
             _AnimationSoundTagSets_Object = new StarfieldGroup<AnimationSoundTagSet>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _Biomes_Object = new StarfieldGroup<Biome>(this);
@@ -1080,6 +1081,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAttractionRuleGetter> IStarfieldModGetter.AttractionRules => _AttractionRules_Object;
         #endregion
+        #region SceneCollections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SceneCollection> _SceneCollections_Object;
+        public StarfieldGroup<SceneCollection> SceneCollections => _SceneCollections_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISceneCollectionGetter> IStarfieldModGetter.SceneCollections => _SceneCollections_Object;
+        #endregion
         #region AnimationSoundTagSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AnimationSoundTagSet> _AnimationSoundTagSets_Object;
@@ -1631,6 +1639,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SoundKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SceneCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimationSoundTagSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1810,6 +1819,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem InstanceNamingRules,
                 TItem SoundKeywordMappings,
                 TItem AttractionRules,
+                TItem SceneCollections,
                 TItem AnimationSoundTagSets,
                 TItem Resources,
                 TItem Biomes,
@@ -1987,6 +1997,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(InstanceNamingRules, new StarfieldGroup.Mask<TItem>(InstanceNamingRules));
                 this.SoundKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundKeywordMappings, new StarfieldGroup.Mask<TItem>(SoundKeywordMappings));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AttractionRules, new StarfieldGroup.Mask<TItem>(AttractionRules));
+                this.SceneCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SceneCollections, new StarfieldGroup.Mask<TItem>(SceneCollections));
                 this.AnimationSoundTagSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimationSoundTagSets, new StarfieldGroup.Mask<TItem>(AnimationSoundTagSets));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Biomes, new StarfieldGroup.Mask<TItem>(Biomes));
@@ -2174,6 +2185,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? InstanceNamingRules { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundKeywordMappings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AttractionRules { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SceneCollections { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimationSoundTagSets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Biomes { get; set; }
@@ -2362,6 +2374,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.InstanceNamingRules, rhs.InstanceNamingRules)) return false;
                 if (!object.Equals(this.SoundKeywordMappings, rhs.SoundKeywordMappings)) return false;
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
+                if (!object.Equals(this.SceneCollections, rhs.SceneCollections)) return false;
                 if (!object.Equals(this.AnimationSoundTagSets, rhs.AnimationSoundTagSets)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
@@ -2543,6 +2556,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.InstanceNamingRules);
                 hash.Add(this.SoundKeywordMappings);
                 hash.Add(this.AttractionRules);
+                hash.Add(this.SceneCollections);
                 hash.Add(this.AnimationSoundTagSets);
                 hash.Add(this.Resources);
                 hash.Add(this.Biomes);
@@ -3206,6 +3220,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.AttractionRules.Overall)) return false;
                     if (this.AttractionRules.Specific != null && !this.AttractionRules.Specific.All(eval)) return false;
+                }
+                if (SceneCollections != null)
+                {
+                    if (!eval(this.SceneCollections.Overall)) return false;
+                    if (this.SceneCollections.Specific != null && !this.SceneCollections.Specific.All(eval)) return false;
                 }
                 if (AnimationSoundTagSets != null)
                 {
@@ -4094,6 +4113,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AttractionRules.Overall)) return true;
                     if (this.AttractionRules.Specific != null && this.AttractionRules.Specific.Any(eval)) return true;
                 }
+                if (SceneCollections != null)
+                {
+                    if (eval(this.SceneCollections.Overall)) return true;
+                    if (this.SceneCollections.Specific != null && this.SceneCollections.Specific.Any(eval)) return true;
+                }
                 if (AnimationSoundTagSets != null)
                 {
                     if (eval(this.AnimationSoundTagSets.Overall)) return true;
@@ -4508,6 +4532,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.InstanceNamingRules = this.InstanceNamingRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.InstanceNamingRules.Overall), this.InstanceNamingRules.Specific?.Translate(eval));
                 obj.SoundKeywordMappings = this.SoundKeywordMappings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundKeywordMappings.Overall), this.SoundKeywordMappings.Specific?.Translate(eval));
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
+                obj.SceneCollections = this.SceneCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SceneCollections.Overall), this.SceneCollections.Specific?.Translate(eval));
                 obj.AnimationSoundTagSets = this.AnimationSoundTagSets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimationSoundTagSets.Overall), this.AnimationSoundTagSets.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.Biomes = this.Biomes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Biomes.Overall), this.Biomes.Specific?.Translate(eval));
@@ -5062,6 +5087,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AttractionRules?.Print(sb);
                     }
+                    if (printMask?.SceneCollections?.Overall ?? true)
+                    {
+                        SceneCollections?.Print(sb);
+                    }
                     if (printMask?.AnimationSoundTagSets?.Overall ?? true)
                     {
                         AnimationSoundTagSets?.Print(sb);
@@ -5430,6 +5459,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>? InstanceNamingRules;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundKeywordMapping.ErrorMask>?>? SoundKeywordMappings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SceneCollection.ErrorMask>?>? SceneCollections;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimationSoundTagSet.ErrorMask>?>? AnimationSoundTagSets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Biome.ErrorMask>?>? Biomes;
@@ -5734,6 +5764,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SoundKeywordMappings;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         return AttractionRules;
+                    case StarfieldMod_FieldIndex.SceneCollections:
+                        return SceneCollections;
                     case StarfieldMod_FieldIndex.AnimationSoundTagSets:
                         return AnimationSoundTagSets;
                     case StarfieldMod_FieldIndex.Resources:
@@ -6215,6 +6247,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SceneCollections:
+                        this.SceneCollections = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SceneCollection.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AnimationSoundTagSets:
                         this.AnimationSoundTagSets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimationSoundTagSet.ErrorMask>?>(ex, null);
@@ -6754,6 +6789,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SceneCollections:
+                        this.SceneCollections = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SceneCollection.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AnimationSoundTagSets:
                         this.AnimationSoundTagSets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimationSoundTagSet.ErrorMask>?>?)obj;
                         break;
@@ -7050,6 +7088,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (InstanceNamingRules != null) return true;
                 if (SoundKeywordMappings != null) return true;
                 if (AttractionRules != null) return true;
+                if (SceneCollections != null) return true;
                 if (AnimationSoundTagSets != null) return true;
                 if (Resources != null) return true;
                 if (Biomes != null) return true;
@@ -7251,6 +7290,7 @@ namespace Mutagen.Bethesda.Starfield
                 InstanceNamingRules?.Print(sb);
                 SoundKeywordMappings?.Print(sb);
                 AttractionRules?.Print(sb);
+                SceneCollections?.Print(sb);
                 AnimationSoundTagSets?.Print(sb);
                 Resources?.Print(sb);
                 Biomes?.Print(sb);
@@ -7435,6 +7475,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.InstanceNamingRules = this.InstanceNamingRules.Combine(rhs.InstanceNamingRules, (l, r) => l.Combine(r));
                 ret.SoundKeywordMappings = this.SoundKeywordMappings.Combine(rhs.SoundKeywordMappings, (l, r) => l.Combine(r));
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
+                ret.SceneCollections = this.SceneCollections.Combine(rhs.SceneCollections, (l, r) => l.Combine(r));
                 ret.AnimationSoundTagSets = this.AnimationSoundTagSets.Combine(rhs.AnimationSoundTagSets, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.Biomes = this.Biomes.Combine(rhs.Biomes, (l, r) => l.Combine(r));
@@ -7634,6 +7675,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<InstanceNamingRules.TranslationMask>? InstanceNamingRules;
             public StarfieldGroup.TranslationMask<SoundKeywordMapping.TranslationMask>? SoundKeywordMappings;
             public StarfieldGroup.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
+            public StarfieldGroup.TranslationMask<SceneCollection.TranslationMask>? SceneCollections;
             public StarfieldGroup.TranslationMask<AnimationSoundTagSet.TranslationMask>? AnimationSoundTagSets;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<Biome.TranslationMask>? Biomes;
@@ -7834,6 +7876,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((InstanceNamingRules != null ? InstanceNamingRules.OnOverall : DefaultOn, InstanceNamingRules?.GetCrystal()));
                 ret.Add((SoundKeywordMappings != null ? SoundKeywordMappings.OnOverall : DefaultOn, SoundKeywordMappings?.GetCrystal()));
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
+                ret.Add((SceneCollections != null ? SceneCollections.OnOverall : DefaultOn, SceneCollections?.GetCrystal()));
                 ret.Add((AnimationSoundTagSets != null ? AnimationSoundTagSets.OnOverall : DefaultOn, AnimationSoundTagSets?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((Biomes != null ? Biomes.OnOverall : DefaultOn, Biomes?.GetCrystal()));
@@ -8064,6 +8107,7 @@ namespace Mutagen.Bethesda.Starfield
             _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
             _SoundKeywordMappings_Object = new StarfieldGroup<SoundKeywordMapping>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
+            _SceneCollections_Object = new StarfieldGroup<SceneCollection>(this);
             _AnimationSoundTagSets_Object = new StarfieldGroup<AnimationSoundTagSet>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _Biomes_Object = new StarfieldGroup<Biome>(this);
@@ -8604,6 +8648,10 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.AttractionRules ?? true)
             {
                 this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
+            }
+            if (mask?.SceneCollections ?? true)
+            {
+                this.SceneCollections.RecordCache.Set(rhsMod.SceneCollections.RecordCache.Items);
             }
             if (mask?.AnimationSoundTagSets ?? true)
             {
@@ -9222,6 +9270,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<InstanceNamingRules> InstanceNamingRules { get; }
         new StarfieldGroup<SoundKeywordMapping> SoundKeywordMappings { get; }
         new StarfieldGroup<AttractionRule> AttractionRules { get; }
+        new StarfieldGroup<SceneCollection> SceneCollections { get; }
         new StarfieldGroup<AnimationSoundTagSet> AnimationSoundTagSets { get; }
         new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<Biome> Biomes { get; }
@@ -9417,6 +9466,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules { get; }
         IStarfieldGroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings { get; }
         IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
+        IStarfieldGroupGetter<ISceneCollectionGetter> SceneCollections { get; }
         IStarfieldGroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IBiomeGetter> Biomes { get; }
@@ -10148,62 +10198,63 @@ namespace Mutagen.Bethesda.Starfield
         InstanceNamingRules = 117,
         SoundKeywordMappings = 118,
         AttractionRules = 119,
-        AnimationSoundTagSets = 120,
-        Resources = 121,
-        Biomes = 122,
-        NavigationMeshObstacleCoverManagers = 123,
-        LensFlares = 124,
-        ObjectVisibilityManagers = 125,
-        SnapTemplateNodes = 126,
-        SnapTemplates = 127,
-        GroundCovers = 128,
-        MorphableObjects = 129,
-        Traversals = 130,
-        ResourceGenerationData = 131,
-        BiomeSwaps = 132,
-        Atmospheres = 133,
-        LeveledSpaceCells = 134,
-        SpeechChallenges = 135,
-        AimAssistPoses = 136,
-        VolumetricLightings = 137,
-        SurfaceBlocks = 138,
-        SurfacePatternConfigs = 139,
-        SurfacePatterns = 140,
-        SurfaceTrees = 141,
-        PlanetContentManagerTrees = 142,
-        BoneModifiers = 143,
-        SnapTemplateBehaviors = 144,
-        Planets = 145,
-        ConditionRecords = 146,
-        PlanetContentManagerBranchNodes = 147,
-        PlanetContentManagerContentNodes = 148,
-        Stars = 149,
-        WWiseEventDatas = 150,
-        ResearchProjects = 151,
-        AimOpticalSightMarkers = 152,
-        AmbienceSets = 153,
-        WeaponBarrelModels = 154,
-        SurfacePatternStyles = 155,
-        LayeredMaterialSwaps = 156,
-        ForceDatas = 157,
-        TerminalMenus = 158,
-        EffectSequences = 159,
-        SecondaryDamageLists = 160,
-        MaterialPaths = 161,
-        Clouds = 162,
-        FogVolumes = 163,
-        WWiseKeywordMappings = 164,
-        LegendaryItems = 165,
-        ParticleSystemDefineCollisions = 166,
-        SunPresets = 167,
-        PhotoModeFeatures = 168,
-        GameplayOptions = 169,
-        GameplayOptionsGroups = 170,
-        TimeOfDays = 171,
-        ActorValueModulations = 172,
-        Challenges = 173,
-        FacialExpressions = 174,
-        PERS = 175,
+        SceneCollections = 120,
+        AnimationSoundTagSets = 121,
+        Resources = 122,
+        Biomes = 123,
+        NavigationMeshObstacleCoverManagers = 124,
+        LensFlares = 125,
+        ObjectVisibilityManagers = 126,
+        SnapTemplateNodes = 127,
+        SnapTemplates = 128,
+        GroundCovers = 129,
+        MorphableObjects = 130,
+        Traversals = 131,
+        ResourceGenerationData = 132,
+        BiomeSwaps = 133,
+        Atmospheres = 134,
+        LeveledSpaceCells = 135,
+        SpeechChallenges = 136,
+        AimAssistPoses = 137,
+        VolumetricLightings = 138,
+        SurfaceBlocks = 139,
+        SurfacePatternConfigs = 140,
+        SurfacePatterns = 141,
+        SurfaceTrees = 142,
+        PlanetContentManagerTrees = 143,
+        BoneModifiers = 144,
+        SnapTemplateBehaviors = 145,
+        Planets = 146,
+        ConditionRecords = 147,
+        PlanetContentManagerBranchNodes = 148,
+        PlanetContentManagerContentNodes = 149,
+        Stars = 150,
+        WWiseEventDatas = 151,
+        ResearchProjects = 152,
+        AimOpticalSightMarkers = 153,
+        AmbienceSets = 154,
+        WeaponBarrelModels = 155,
+        SurfacePatternStyles = 156,
+        LayeredMaterialSwaps = 157,
+        ForceDatas = 158,
+        TerminalMenus = 159,
+        EffectSequences = 160,
+        SecondaryDamageLists = 161,
+        MaterialPaths = 162,
+        Clouds = 163,
+        FogVolumes = 164,
+        WWiseKeywordMappings = 165,
+        LegendaryItems = 166,
+        ParticleSystemDefineCollisions = 167,
+        SunPresets = 168,
+        PhotoModeFeatures = 169,
+        GameplayOptions = 170,
+        GameplayOptionsGroups = 171,
+        TimeOfDays = 172,
+        ActorValueModulations = 173,
+        Challenges = 174,
+        FacialExpressions = 175,
+        PERS = 176,
     }
     #endregion
 
@@ -10214,9 +10265,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 176;
+        public const ushort AdditionalFieldCount = 177;
 
-        public const ushort FieldCount = 176;
+        public const ushort FieldCount = 177;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10401,6 +10452,7 @@ namespace Mutagen.Bethesda.Starfield
             item.InstanceNamingRules.Clear();
             item.SoundKeywordMappings.Clear();
             item.AttractionRules.Clear();
+            item.SceneCollections.Clear();
             item.AnimationSoundTagSets.Clear();
             item.Resources.Clear();
             item.Biomes.Clear();
@@ -10562,6 +10614,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Zooms.RemapLinks(mapping);
             obj.InstanceNamingRules.RemapLinks(mapping);
             obj.SoundKeywordMappings.RemapLinks(mapping);
+            obj.SceneCollections.RemapLinks(mapping);
             obj.AnimationSoundTagSets.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
@@ -10755,6 +10808,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.InstanceNamingRules.Remove(keys);
             obj.SoundKeywordMappings.Remove(keys);
             obj.AttractionRules.Remove(keys);
+            obj.SceneCollections.Remove(keys);
             obj.AnimationSoundTagSets.Remove(keys);
             obj.Resources.Remove(keys);
             obj.Biomes.Remove(keys);
@@ -11819,6 +11873,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     obj.AttractionRules.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SceneCollection":
+                case "ISceneCollectionGetter":
+                case "ISceneCollection":
+                case "ISceneCollectionInternal":
+                    obj.SceneCollections.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -13515,6 +13577,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.InstanceNamingRules = MaskItemExt.Factory(item.InstanceNamingRules.GetEqualsMask(rhs.InstanceNamingRules, include), include);
             ret.SoundKeywordMappings = MaskItemExt.Factory(item.SoundKeywordMappings.GetEqualsMask(rhs.SoundKeywordMappings, include), include);
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
+            ret.SceneCollections = MaskItemExt.Factory(item.SceneCollections.GetEqualsMask(rhs.SceneCollections, include), include);
             ret.AnimationSoundTagSets = MaskItemExt.Factory(item.AnimationSoundTagSets.GetEqualsMask(rhs.AnimationSoundTagSets, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.Biomes = MaskItemExt.Factory(item.Biomes.GetEqualsMask(rhs.Biomes, include), include);
@@ -14094,6 +14157,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AttractionRules?.Overall ?? true)
             {
                 item.AttractionRules?.Print(sb, "AttractionRules");
+            }
+            if (printMask?.SceneCollections?.Overall ?? true)
+            {
+                item.SceneCollections?.Print(sb, "SceneCollections");
             }
             if (printMask?.AnimationSoundTagSets?.Overall ?? true)
             {
@@ -15288,6 +15355,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAttractionRulesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SceneCollections) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SceneCollections, rhs.SceneCollections, out var lhsSceneCollections, out var rhsSceneCollections, out var isSceneCollectionsEqual))
+                {
+                    if (!object.Equals(lhsSceneCollections, rhsSceneCollections)) return false;
+                }
+                else if (!isSceneCollectionsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimationSoundTagSets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimationSoundTagSets, rhs.AnimationSoundTagSets, out var lhsAnimationSoundTagSets, out var rhsAnimationSoundTagSets, out var isAnimationSoundTagSetsEqual))
@@ -15862,6 +15937,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.InstanceNamingRules);
             hash.Add(item.SoundKeywordMappings);
             hash.Add(item.AttractionRules);
+            hash.Add(item.SceneCollections);
             hash.Add(item.AnimationSoundTagSets);
             hash.Add(item.Resources);
             hash.Add(item.Biomes);
@@ -16530,6 +16606,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     return obj.AttractionRules;
+                case "SceneCollection":
+                case "ISceneCollectionGetter":
+                case "ISceneCollection":
+                case "ISceneCollectionInternal":
+                    return obj.SceneCollections;
                 case "AnimationSoundTagSet":
                 case "IAnimationSoundTagSetGetter":
                 case "IAnimationSoundTagSet":
@@ -16827,7 +16908,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[175];
+            Stream[] outputStreams = new Stream[176];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -16948,62 +17029,63 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 116, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 117, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.AttractionRules, 118, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 119, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 120, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Biomes, 121, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleCoverManagers, 122, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LensFlares, 123, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 124, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateNodes, 125, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 126, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GroundCovers, 127, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MorphableObjects, 128, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Traversals, 129, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ResourceGenerationData, 130, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 131, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Atmospheres, 132, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpaceCells, 133, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SpeechChallenges, 134, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistPoses, 135, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 136, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceBlocks, 137, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 138, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 139, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 140, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 141, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.BoneModifiers, 142, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 143, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 144, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 145, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerBranchNodes, 146, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerContentNodes, 147, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Stars, 148, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 149, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 150, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 151, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 152, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WeaponBarrelModels, 153, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 154, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 155, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ForceDatas, 156, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 157, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.EffectSequences, 158, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SecondaryDamageLists, 159, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.MaterialPaths, 160, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Clouds, 161, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 162, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 163, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 164, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 165, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.SunPresets, 166, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PhotoModeFeatures, 167, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GameplayOptions, 168, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.GameplayOptionsGroups, 169, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.TimeOfDays, 170, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 171, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Challenges, 172, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 173, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.PERS, 174, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SceneCollections, 119, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 120, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 121, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Biomes, 122, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleCoverManagers, 123, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LensFlares, 124, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 125, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateNodes, 126, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 127, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GroundCovers, 128, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MorphableObjects, 129, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Traversals, 130, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ResourceGenerationData, 131, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 132, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Atmospheres, 133, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpaceCells, 134, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SpeechChallenges, 135, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistPoses, 136, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 137, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceBlocks, 138, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 139, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 140, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 141, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 142, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BoneModifiers, 143, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 144, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 145, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 146, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerBranchNodes, 147, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerContentNodes, 148, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Stars, 149, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 150, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 151, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 152, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 153, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WeaponBarrelModels, 154, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 155, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 156, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ForceDatas, 157, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 158, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectSequences, 159, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SecondaryDamageLists, 160, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MaterialPaths, 161, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Clouds, 162, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 163, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 164, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 165, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 166, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SunPresets, 167, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PhotoModeFeatures, 168, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GameplayOptions, 169, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GameplayOptionsGroups, 170, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TimeOfDays, 171, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 172, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Challenges, 173, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 174, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PERS, 175, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -17168,6 +17250,7 @@ namespace Mutagen.Bethesda.Starfield
             count += item.InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SceneCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Biomes.RecordCache.Count > 0 ? 1 : default(uint);
@@ -17644,6 +17727,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SoundKeywordMappings.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SceneCollections.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -18303,6 +18390,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AttractionRules.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SceneCollections.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -19623,6 +19714,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     foreach (var item in obj.AttractionRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SceneCollection":
+                case "ISceneCollectionGetter":
+                case "ISceneCollection":
+                case "ISceneCollectionInternal":
+                    foreach (var item in obj.SceneCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -21348,6 +21448,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AttractionRules,
                 groupGetter: (m) => m.AttractionRules))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SceneCollection, ISceneCollectionGetter>(
+                srcGroup: obj.SceneCollections,
+                type: typeof(ISceneCollectionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SceneCollections,
+                groupGetter: (m) => m.SceneCollections))
             {
                 yield return item;
             }
@@ -23534,6 +23643,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.AttractionRules,
                         groupGetter: (m) => m.AttractionRules))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SceneCollection":
+                case "ISceneCollectionGetter":
+                case "ISceneCollection":
+                case "ISceneCollectionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SceneCollection, ISceneCollectionGetter>(
+                        srcGroup: obj.SceneCollections,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SceneCollections,
+                        groupGetter: (m) => m.SceneCollections))
                     {
                         yield return item;
                     }
@@ -27507,6 +27630,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SceneCollections) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SceneCollections);
+                try
+                {
+                    item.SceneCollections.DeepCopyIn(
+                        rhs: rhs.SceneCollections,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SceneCollections));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimationSoundTagSets) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AnimationSoundTagSets);
@@ -28848,6 +28991,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool InstanceNamingRules;
         public bool SoundKeywordMappings;
         public bool AttractionRules;
+        public bool SceneCollections;
         public bool AnimationSoundTagSets;
         public bool Resources;
         public bool Biomes;
@@ -29028,6 +29172,7 @@ namespace Mutagen.Bethesda.Starfield
             InstanceNamingRules = defaultValue;
             SoundKeywordMappings = defaultValue;
             AttractionRules = defaultValue;
+            SceneCollections = defaultValue;
             AnimationSoundTagSets = defaultValue;
             Resources = defaultValue;
             Biomes = defaultValue;
@@ -30448,6 +30593,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AttractionRulesItem).BinaryWriteTranslator).Write<IAttractionRuleGetter>(
                         item: AttractionRulesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SceneCollections ?? true)
+            {
+                var SceneCollectionsItem = item.SceneCollections;
+                if (SceneCollectionsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SceneCollectionsItem).BinaryWriteTranslator).Write<ISceneCollectionGetter>(
+                        item: SceneCollectionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -32804,6 +32960,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AttractionRules;
                 }
+                case RecordTypeInts.SCCO:
+                {
+                    if (importMask?.SceneCollections ?? true)
+                    {
+                        item.SceneCollections.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SceneCollections;
+                }
                 case RecordTypeInts.STAG:
                 {
                     if (importMask?.AnimationSoundTagSets ?? true)
@@ -34349,6 +34519,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package) : default;
         public IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new StarfieldGroup<AttractionRule>(this);
         #endregion
+        #region SceneCollections
+        private List<RangeInt64>? _SceneCollectionsLocations;
+        private IStarfieldGroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? StarfieldGroupBinaryOverlay<ISceneCollectionGetter>.StarfieldGroupFactory(_stream, _SceneCollectionsLocations, _package) : default;
+        public IStarfieldGroupGetter<ISceneCollectionGetter> SceneCollections => _SceneCollections ?? new StarfieldGroup<SceneCollection>(this);
+        #endregion
         #region AnimationSoundTagSets
         private List<RangeInt64>? _AnimationSoundTagSetsLocations;
         private IStarfieldGroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? StarfieldGroupBinaryOverlay<IAnimationSoundTagSetGetter>.StarfieldGroupFactory(_stream, _AnimationSoundTagSetsLocations, _package) : default;
@@ -35424,6 +35599,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AttractionRulesLocations ??= new();
                     _AttractionRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AttractionRules;
+                }
+                case RecordTypeInts.SCCO:
+                {
+                    _SceneCollectionsLocations ??= new();
+                    _SceneCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SceneCollections;
                 }
                 case RecordTypeInts.STAG:
                 {

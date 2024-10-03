@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SceneCollection" recordType="SCCO" objType="Record" baseClass="Fallout4MajorRecord">
+  <Object name="SceneCollection" recordType="SCCO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="QNAM" />
       <RefList name="Scenes" refName="SceneCollectionItem" />

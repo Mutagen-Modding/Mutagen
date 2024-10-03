@@ -1168,6 +1168,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Scene_Registration.Instance,
             SceneActor_Registration.Instance,
             SceneAdapter_Registration.Instance,
+            SceneCollection_Registration.Instance,
+            SceneCollectionItem_Registration.Instance,
             ScenePhase_Registration.Instance,
             ScenePhaseFragment_Registration.Instance,
             SceneScriptFragments_Registration.Instance,

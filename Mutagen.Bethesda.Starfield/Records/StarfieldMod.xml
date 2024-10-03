@@ -126,6 +126,7 @@
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
       <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
       <Group name="AttractionRules" refName="AttractionRule" />
+      <Group name="SceneCollections" refName="SceneCollection" />
       <Group name="AnimationSoundTagSets" refName="AnimationSoundTagSet" />
       <Group name="Resources" refName="Resource" />
       <Group name="Biomes" refName="Biome" />
