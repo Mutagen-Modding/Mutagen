@@ -27,20 +27,22 @@
   <Object name="PlanetBiome" objType="Subrecord" recordType="PPBD">
     <Fields>
       <FormLink name="Biome" refName="Biome" />
-      <Float name="Percentage" />
+      <Float name="Chance" />
       <Int32 name="Unknown2" unknown="true" />
-      <FormLink name="ResourceGenOverride" refName="StarfieldMajorRecord" unknown="true" />
+      <FormLink name="ResourceGeneration" refName="StarfieldMajorRecord" unknown="true" />
       <List name="Fauna" counterLength="4">
         <FormLink refName="Npc" />
       </List>
-      <Int32 name="Unknown3" unknown="true" />
+      <List name="Keywords" counterLength="4" >
+        <FormLink refName="Keyword" />
+      </List>
       <RefList name="Flora" counterLength="4" expectedLengthLength="4" refName="PlanetFlora" />
       <ByteArray name="Unknown4" unknown="true" />
     </Fields>
   </Object>
   <Object name="PlanetFlora" objType="Subrecord">
     <Fields>
-      <FormLink name="Model" refName="Flora" />
+      <FormLink name="Flora" refName="Flora" />
       <FormLink name="Resource" refName="MiscItem" />
       <UInt8 name="Frequency" />
     </Fields>

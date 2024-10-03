@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Keyword
         private int _KeywordLocation => _QSTALocation!.Value.Min + 0x8;
         private bool _Keyword_IsSet => _QSTALocation.HasValue && !QSTADataTypeState.HasFlag(QuestObjectiveTarget.QSTADataType.Break0);
-        public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_KeywordLocation, 0x4), isSet: _Keyword_IsSet);
+        public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_KeywordLocation, 0x4), isSet: _Keyword_IsSet) : FormLink<IKeywordGetter>.Null;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

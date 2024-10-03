@@ -234,9 +234,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISceneGetter> ISceneGetter.SCPP => this.SCPP;
         #endregion
-        #region DEVT
-        public Boolean DEVT { get; set; } = default(Boolean);
-        #endregion
         #region SCSP
         public Boolean SCSP { get; set; } = default(Boolean);
         #endregion
@@ -341,6 +338,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region DEVT
+        public Boolean DEVT { get; set; } = default(Boolean);
+        #endregion
 
         #region To String
 
@@ -383,7 +383,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SCPI = initialValue;
                 this.JNAM = initialValue;
                 this.SCPP = initialValue;
-                this.DEVT = initialValue;
                 this.SCSP = initialValue;
                 this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -395,6 +394,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DEVT = initialValue;
             }
 
             public Mask(
@@ -422,7 +422,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SCPI,
                 TItem JNAM,
                 TItem SCPP,
-                TItem DEVT,
                 TItem SCSP,
                 TItem SPMA,
                 TItem SPEX,
@@ -433,7 +432,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SPPQ,
                 TItem SPKW,
                 TItem SPPK,
-                TItem SPKY)
+                TItem SPKY,
+                TItem DEVT)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -460,7 +460,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SCPI = SCPI;
                 this.JNAM = JNAM;
                 this.SCPP = SCPP;
-                this.DEVT = DEVT;
                 this.SCSP = SCSP;
                 this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPMA, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPEX, Enumerable.Empty<(int Index, TItem Value)>());
@@ -472,6 +471,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKW, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPPK, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKY, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DEVT = DEVT;
             }
 
             #pragma warning disable CS8618
@@ -500,7 +500,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem SCPI;
             public TItem JNAM;
             public TItem SCPP;
-            public TItem DEVT;
             public TItem SCSP;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SPMA;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SPEX;
@@ -512,6 +511,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SPKW;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SPPK;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SPKY;
+            public TItem DEVT;
             #endregion
 
             #region Equals
@@ -542,7 +542,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SCPI, rhs.SCPI)) return false;
                 if (!object.Equals(this.JNAM, rhs.JNAM)) return false;
                 if (!object.Equals(this.SCPP, rhs.SCPP)) return false;
-                if (!object.Equals(this.DEVT, rhs.DEVT)) return false;
                 if (!object.Equals(this.SCSP, rhs.SCSP)) return false;
                 if (!object.Equals(this.SPMA, rhs.SPMA)) return false;
                 if (!object.Equals(this.SPEX, rhs.SPEX)) return false;
@@ -554,6 +553,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SPKW, rhs.SPKW)) return false;
                 if (!object.Equals(this.SPPK, rhs.SPPK)) return false;
                 if (!object.Equals(this.SPKY, rhs.SPKY)) return false;
+                if (!object.Equals(this.DEVT, rhs.DEVT)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -576,7 +576,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SCPI);
                 hash.Add(this.JNAM);
                 hash.Add(this.SCPP);
-                hash.Add(this.DEVT);
                 hash.Add(this.SCSP);
                 hash.Add(this.SPMA);
                 hash.Add(this.SPEX);
@@ -588,6 +587,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SPKW);
                 hash.Add(this.SPPK);
                 hash.Add(this.SPKY);
+                hash.Add(this.DEVT);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -667,7 +667,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.SCPI)) return false;
                 if (!eval(this.JNAM)) return false;
                 if (!eval(this.SCPP)) return false;
-                if (!eval(this.DEVT)) return false;
                 if (!eval(this.SCSP)) return false;
                 if (this.SPMA != null)
                 {
@@ -729,6 +728,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.DEVT)) return false;
                 return true;
             }
             #endregion
@@ -806,7 +806,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.SCPI)) return true;
                 if (eval(this.JNAM)) return true;
                 if (eval(this.SCPP)) return true;
-                if (eval(this.DEVT)) return true;
                 if (eval(this.SCSP)) return true;
                 if (this.SPMA != null)
                 {
@@ -868,6 +867,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.DEVT)) return true;
                 return false;
             }
             #endregion
@@ -956,7 +956,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SCPI = eval(this.SCPI);
                 obj.JNAM = eval(this.JNAM);
                 obj.SCPP = eval(this.SCPP);
-                obj.DEVT = eval(this.DEVT);
                 obj.SCSP = eval(this.SCSP);
                 if (SPMA != null)
                 {
@@ -1033,6 +1032,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.DEVT = eval(this.DEVT);
             }
             #endregion
 
@@ -1179,10 +1179,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SCPP, "SCPP");
                     }
-                    if (printMask?.DEVT ?? true)
-                    {
-                        sb.AppendItem(DEVT, "DEVT");
-                    }
                     if (printMask?.SCSP ?? true)
                     {
                         sb.AppendItem(SCSP, "SCSP");
@@ -1312,6 +1308,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.DEVT ?? true)
+                    {
+                        sb.AppendItem(DEVT, "DEVT");
+                    }
                 }
             }
             #endregion
@@ -1340,7 +1340,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? SCPI;
             public Exception? JNAM;
             public Exception? SCPP;
-            public Exception? DEVT;
             public Exception? SCSP;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SPMA;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SPEX;
@@ -1352,6 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SPKW;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SPPK;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SPKY;
+            public Exception? DEVT;
             #endregion
 
             #region IErrorMask
@@ -1394,8 +1394,6 @@ namespace Mutagen.Bethesda.Starfield
                         return JNAM;
                     case Scene_FieldIndex.SCPP:
                         return SCPP;
-                    case Scene_FieldIndex.DEVT:
-                        return DEVT;
                     case Scene_FieldIndex.SCSP:
                         return SCSP;
                     case Scene_FieldIndex.SPMA:
@@ -1418,6 +1416,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SPPK;
                     case Scene_FieldIndex.SPKY:
                         return SPKY;
+                    case Scene_FieldIndex.DEVT:
+                        return DEVT;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1479,9 +1479,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Scene_FieldIndex.SCPP:
                         this.SCPP = ex;
                         break;
-                    case Scene_FieldIndex.DEVT:
-                        this.DEVT = ex;
-                        break;
                     case Scene_FieldIndex.SCSP:
                         this.SCSP = ex;
                         break;
@@ -1514,6 +1511,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Scene_FieldIndex.SPKY:
                         this.SPKY = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.DEVT:
+                        this.DEVT = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1577,9 +1577,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Scene_FieldIndex.SCPP:
                         this.SCPP = (Exception?)obj;
                         break;
-                    case Scene_FieldIndex.DEVT:
-                        this.DEVT = (Exception?)obj;
-                        break;
                     case Scene_FieldIndex.SCSP:
                         this.SCSP = (Exception?)obj;
                         break;
@@ -1613,6 +1610,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Scene_FieldIndex.SPKY:
                         this.SPKY = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case Scene_FieldIndex.DEVT:
+                        this.DEVT = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1639,7 +1639,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (SCPI != null) return true;
                 if (JNAM != null) return true;
                 if (SCPP != null) return true;
-                if (DEVT != null) return true;
                 if (SCSP != null) return true;
                 if (SPMA != null) return true;
                 if (SPEX != null) return true;
@@ -1651,6 +1650,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SPKW != null) return true;
                 if (SPPK != null) return true;
                 if (SPKY != null) return true;
+                if (DEVT != null) return true;
                 return false;
             }
             #endregion
@@ -1785,9 +1785,6 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(SCPP, "SCPP");
                 }
                 {
-                    sb.AppendItem(DEVT, "DEVT");
-                }
-                {
                     sb.AppendItem(SCSP, "SCSP");
                 }
                 if (SPMA is {} SPMAItem)
@@ -1905,6 +1902,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(DEVT, "DEVT");
+                }
             }
             #endregion
 
@@ -1930,7 +1930,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SCPI = this.SCPI.Combine(rhs.SCPI);
                 ret.JNAM = this.JNAM.Combine(rhs.JNAM);
                 ret.SCPP = this.SCPP.Combine(rhs.SCPP);
-                ret.DEVT = this.DEVT.Combine(rhs.DEVT);
                 ret.SCSP = this.SCSP.Combine(rhs.SCSP);
                 ret.SPMA = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SPMA?.Overall, rhs.SPMA?.Overall), Noggog.ExceptionExt.Combine(this.SPMA?.Specific, rhs.SPMA?.Specific));
                 ret.SPEX = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SPEX?.Overall, rhs.SPEX?.Overall), Noggog.ExceptionExt.Combine(this.SPEX?.Specific, rhs.SPEX?.Specific));
@@ -1942,6 +1941,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SPKW = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SPKW?.Overall, rhs.SPKW?.Overall), Noggog.ExceptionExt.Combine(this.SPKW?.Specific, rhs.SPKW?.Specific));
                 ret.SPPK = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SPPK?.Overall, rhs.SPPK?.Overall), Noggog.ExceptionExt.Combine(this.SPPK?.Specific, rhs.SPPK?.Specific));
                 ret.SPKY = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SPKY?.Overall, rhs.SPKY?.Overall), Noggog.ExceptionExt.Combine(this.SPKY?.Specific, rhs.SPKY?.Specific));
+                ret.DEVT = this.DEVT.Combine(rhs.DEVT);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1981,7 +1981,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool SCPI;
             public bool JNAM;
             public bool SCPP;
-            public bool DEVT;
             public bool SCSP;
             public bool SPMA;
             public bool SPEX;
@@ -1993,6 +1992,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool SPKW;
             public bool SPPK;
             public bool SPKY;
+            public bool DEVT;
             #endregion
 
             #region Ctors
@@ -2012,7 +2012,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SCPI = defaultOn;
                 this.JNAM = defaultOn;
                 this.SCPP = defaultOn;
-                this.DEVT = defaultOn;
                 this.SCSP = defaultOn;
                 this.SPMA = defaultOn;
                 this.SPEX = defaultOn;
@@ -2024,6 +2023,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SPKW = defaultOn;
                 this.SPPK = defaultOn;
                 this.SPKY = defaultOn;
+                this.DEVT = defaultOn;
             }
 
             #endregion
@@ -2048,7 +2048,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SCPI, null));
                 ret.Add((JNAM, null));
                 ret.Add((SCPP, null));
-                ret.Add((DEVT, null));
                 ret.Add((SCSP, null));
                 ret.Add((SPMA, null));
                 ret.Add((SPEX, null));
@@ -2060,6 +2059,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SPKW, null));
                 ret.Add((SPPK, null));
                 ret.Add((SPKY, null));
+                ret.Add((DEVT, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2228,7 +2228,6 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? SCPI { get; set; }
         new MemorySlice<Byte>? JNAM { get; set; }
         new IFormLinkNullable<ISceneGetter> SCPP { get; set; }
-        new Boolean DEVT { get; set; }
         new Boolean SCSP { get; set; }
         new ExtendedList<IFormLinkGetter<ISceneGetter>>? SPMA { get; set; }
         new ExtendedList<IFormLinkGetter<ISceneGetter>>? SPEX { get; set; }
@@ -2240,6 +2239,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? SPKW { get; set; }
         new ExtendedList<IFormLinkGetter<IPerkGetter>>? SPPK { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? SPKY { get; set; }
+        new Boolean DEVT { get; set; }
     }
 
     public partial interface ISceneInternal :
@@ -2281,7 +2281,6 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? SCPI { get; }
         ReadOnlyMemorySlice<Byte>? JNAM { get; }
         IFormLinkNullableGetter<ISceneGetter> SCPP { get; }
-        Boolean DEVT { get; }
         Boolean SCSP { get; }
         IReadOnlyList<IFormLinkGetter<ISceneGetter>>? SPMA { get; }
         IReadOnlyList<IFormLinkGetter<ISceneGetter>>? SPEX { get; }
@@ -2293,6 +2292,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? SPKW { get; }
         IReadOnlyList<IFormLinkGetter<IPerkGetter>>? SPPK { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? SPKY { get; }
+        Boolean DEVT { get; }
 
     }
 
@@ -2486,18 +2486,18 @@ namespace Mutagen.Bethesda.Starfield
         SCPI = 21,
         JNAM = 22,
         SCPP = 23,
-        DEVT = 24,
-        SCSP = 25,
-        SPMA = 26,
-        SPEX = 27,
-        SPRK = 28,
-        SPRW = 29,
-        SPRP = 30,
-        SPDF = 31,
-        SPPQ = 32,
-        SPKW = 33,
-        SPPK = 34,
-        SPKY = 35,
+        SCSP = 24,
+        SPMA = 25,
+        SPEX = 26,
+        SPRK = 27,
+        SPRW = 28,
+        SPRP = 29,
+        SPDF = 30,
+        SPPQ = 31,
+        SPKW = 32,
+        SPPK = 33,
+        SPKY = 34,
+        DEVT = 35,
     }
     #endregion
 
@@ -2573,7 +2573,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SCPI,
                 RecordTypes.JNAM,
                 RecordTypes.SCPP,
-                RecordTypes.DEVT,
                 RecordTypes.SCSP,
                 RecordTypes.SPMA,
                 RecordTypes.SPEX,
@@ -2584,7 +2583,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SPPQ,
                 RecordTypes.SPKW,
                 RecordTypes.SPPK,
-                RecordTypes.SPKY);
+                RecordTypes.SPKY,
+                RecordTypes.DEVT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -2646,7 +2646,6 @@ namespace Mutagen.Bethesda.Starfield
             item.SCPI = default;
             item.JNAM = default;
             item.SCPP.Clear();
-            item.DEVT = default(Boolean);
             item.SCSP = default(Boolean);
             item.SPMA = null;
             item.SPEX = null;
@@ -2658,6 +2657,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SPKW = null;
             item.SPPK = null;
             item.SPKY = null;
+            item.DEVT = default(Boolean);
             base.Clear(item);
         }
         
@@ -2791,7 +2791,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.SCPI = MemorySliceExt.SequenceEqual(item.SCPI, rhs.SCPI);
             ret.JNAM = MemorySliceExt.SequenceEqual(item.JNAM, rhs.JNAM);
             ret.SCPP = item.SCPP.Equals(rhs.SCPP);
-            ret.DEVT = item.DEVT == rhs.DEVT;
             ret.SCSP = item.SCSP == rhs.SCSP;
             ret.SPMA = item.SPMA.CollectionEqualsHelper(
                 rhs.SPMA,
@@ -2818,6 +2817,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.SPKY,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.DEVT = item.DEVT == rhs.DEVT;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2986,10 +2986,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.SCPP.FormKeyNullable, "SCPP");
             }
-            if (printMask?.DEVT ?? true)
-            {
-                sb.AppendItem(item.DEVT, "DEVT");
-            }
             if (printMask?.SCSP ?? true)
             {
                 sb.AppendItem(item.SCSP, "SCSP");
@@ -3090,6 +3086,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.DEVT ?? true)
+            {
+                sb.AppendItem(item.DEVT, "DEVT");
             }
         }
         
@@ -3217,10 +3217,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SCPP.Equals(rhs.SCPP)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.DEVT) ?? true))
-            {
-                if (lhs.DEVT != rhs.DEVT) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.SCSP) ?? true))
             {
                 if (lhs.SCSP != rhs.SCSP) return false;
@@ -3264,6 +3260,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.SPKY) ?? true))
             {
                 if (!lhs.SPKY.SequenceEqualNullable(rhs.SPKY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.DEVT) ?? true))
+            {
+                if (lhs.DEVT != rhs.DEVT) return false;
             }
             return true;
         }
@@ -3340,7 +3340,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(JNAMItem);
             }
             hash.Add(item.SCPP);
-            hash.Add(item.DEVT);
             hash.Add(item.SCSP);
             hash.Add(item.SPMA);
             hash.Add(item.SPEX);
@@ -3358,6 +3357,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SPKW);
             hash.Add(item.SPPK);
             hash.Add(item.SPKY);
+            hash.Add(item.DEVT);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3759,10 +3759,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SCPP.SetTo(rhs.SCPP.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.DEVT) ?? true))
-            {
-                item.DEVT = rhs.DEVT;
-            }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.SCSP) ?? true))
             {
                 item.SCSP = rhs.SCSP;
@@ -3935,6 +3931,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.DEVT) ?? true))
+            {
+                item.DEVT = rhs.DEVT;
             }
             DeepCopyInCustom(
                 item: item,
@@ -4203,10 +4203,6 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.SCPP));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.DEVT,
-                header: translationParams.ConvertToCustom(RecordTypes.DEVT));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
                 item: item.SCSP,
                 header: translationParams.ConvertToCustom(RecordTypes.SCSP));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISceneGetter>>.Instance.Write(
@@ -4279,6 +4275,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.DEVT,
+                header: translationParams.ConvertToCustom(RecordTypes.DEVT));
         }
 
         public static partial void WriteBinaryActionsCustom(
@@ -4497,11 +4497,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.SCPP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Scene_FieldIndex.SCPP;
                 }
-                case RecordTypeInts.DEVT:
-                {
-                    item.DEVT = true;
-                    return (int)Scene_FieldIndex.DEVT;
-                }
                 case RecordTypeInts.SCSP:
                 {
                     item.SCSP = true;
@@ -4583,6 +4578,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Scene_FieldIndex.SPKY;
+                }
+                case RecordTypeInts.DEVT:
+                {
+                    item.DEVT = true;
+                    return (int)Scene_FieldIndex.DEVT;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -4718,10 +4718,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SCPPLocation;
         public IFormLinkNullableGetter<ISceneGetter> SCPP => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISceneGetter>(_package, _recordData, _SCPPLocation);
         #endregion
-        #region DEVT
-        private int? _DEVTLocation;
-        public Boolean DEVT => _DEVTLocation.HasValue ? true : default(Boolean);
-        #endregion
         #region SCSP
         private int? _SCSPLocation;
         public Boolean SCSP => _SCSPLocation.HasValue ? true : default(Boolean);
@@ -4751,6 +4747,10 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? SPKW { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPerkGetter>>? SPPK { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? SPKY { get; private set; }
+        #region DEVT
+        private int? _DEVTLocation;
+        public Boolean DEVT => _DEVTLocation.HasValue ? true : default(Boolean);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4933,11 +4933,6 @@ namespace Mutagen.Bethesda.Starfield
                     _SCPPLocation = (stream.Position - offset);
                     return (int)Scene_FieldIndex.SCPP;
                 }
-                case RecordTypeInts.DEVT:
-                {
-                    _DEVTLocation = (stream.Position - offset);
-                    return (int)Scene_FieldIndex.DEVT;
-                }
                 case RecordTypeInts.SCSP:
                 {
                     _SCSPLocation = (stream.Position - offset);
@@ -5017,6 +5012,11 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Scene_FieldIndex.SPKY;
+                }
+                case RecordTypeInts.DEVT:
+                {
+                    _DEVTLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.DEVT;
                 }
                 case RecordTypeInts.XXXX:
                 {

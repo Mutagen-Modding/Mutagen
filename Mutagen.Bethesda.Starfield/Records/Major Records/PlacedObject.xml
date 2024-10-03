@@ -17,6 +17,7 @@
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <RefList name="PlacedObjectXCZRXCZA" refName="PlacedObjectXCZRXCZA" />
       <RefDirect name="VolumeReflectionProbeOffsetIntensity" refName="VolumeReflectionProbeOffsetIntensity" />
       <RefDirect name="DebugText" refName="PlacedObjectDebugText" />
       <FormLink name="Emittance" recordType="XEMI">
@@ -26,8 +27,7 @@
       <RefDirect name="Lighting" refName="PlacedObjectLighting" />
       <RefDirect name="LightBarndoorData" refName="PlacedObjectLightBarndoorData" />
       <RefDirect name="LightArea" refName="AreaLight" recordType="XALD" />
-      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
-      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
+      <RefDirect name="CurrentZoneCell" refName="PlacedObjectCurrentZoneCell" />
       <RefDirect name="Patrol" refName="Patrol" />
       <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
@@ -51,7 +51,7 @@
       <P3Float name="ConstrainedDecal" recordType="XCDD" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <RefDirect name="LightGobo" refName="LightGobo" recordType="XLGD" />
+      <RefDirect name="GoboAnimatedProperties" refName="PlacedObjectGoboAnimatedProperties" />
       <RefDirect name="Collision" refName="PlacedObjectCollision" />
       <RefList name="PowerLinks" refName="PowerLink" />
       <Int32 name="Count" recordType="XCNT" />
@@ -62,15 +62,19 @@
       <Bool name="LightStaticShadowMap" recordType="XLSM" byteLength="4" />
       <Float name="LightVolumetricData" recordType="XLVD" />
       <RefDirect name="Ownership" refName="Ownership"/>
-      <RefList name="LightColors" refName="PlacedObjectLightColor" />
+      <RefList name="LightColors" refName="PlacedObjectLightColor" additive="true" />
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
       <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
+      <FormLink name="XWCN" recordType="XWCN" refName="Static" unknown="true" />
+      <ByteArray name="XWCU" recordType="XWCU" unknown="true" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
       <UInt32 name="XTRI" recordType="XTRI" unknown="true" />
       <RefDirect name="LightRoundedness" refName="LightRoundness" recordType="XLRD" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <FormLink name="XLIB" recordType="XLIB" refName="LeveledItem" unknown="true" />
       <RefList name="SnapLinks" refName="SnapLink" recordType="XSL1" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
       <Float name="GeometryDirtinessScale" recordType="XGDS" />
@@ -78,7 +82,6 @@
       <RefList name="Properties" refName="ObjectProperty" recordType="XPPS" />
       <RefDirect name="ExternalEmittance" refName="ExternalEmittance" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
-      <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
       <RefDirect name="Spline" refName="PlacedObjectSpline" />
       <ByteArray name="XNSE" recordType="XNSE" unknown="true" />
       <FormLink name="AttachRef" recordType="XATR">
@@ -287,6 +290,44 @@
     <Fields>
       <Color name="UnknownColor" />
       <Int64 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectGoboAnimatedProperties" objType="Subrecord" recordType="XLGD">
+    <Fields>
+      <Float name="StaticRotation" />
+      <Float name="AnimatedRotationSpeed" />
+      <Float name="AnimatedWaveRotationSpeed" />
+      <Float name="AnimatedWaveRotationAmount" />
+      <Float name="StaticScaleU" />
+      <Float name="StaticScaleV" />
+      <Float name="WaveScalingSpeedU" />
+      <Float name="WaveScalingSpeedV" />
+      <Float name="WaveScalingAmountU" />
+      <Float name="WaveScalingAmountV" />
+      <Float name="StaticOffsetU" />
+      <Float name="StaticOffsetV" />
+      <Float name="RotationPivotU" />
+      <Float name="RotationPivotV" />
+      <Float name="ScrollSpeedU" />
+      <Float name="ScrollSpeedV" />
+      <Float name="WaveScrollSpeedU" />
+      <Float name="WaveScrollSpeedV" />
+      <Float name="WaveScrollAmountU" />
+      <Float name="WaveScrollAmountV" />
+      <Float name="RandomTimeOffsetRange" />
+      <Bool name="IsAnimated" byteLength="4" importantByteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectXCZRXCZA" objType="Subrecord" >
+    <Fields>
+      <FormLink name="XCZR" recordType="XCZR" unknown="true" refName="PlacedObject" nullable="False" />
+      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectCurrentZoneCell" objType="Subrecord" >
+    <Fields>
+      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
+      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

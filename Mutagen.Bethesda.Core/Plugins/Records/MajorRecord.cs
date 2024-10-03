@@ -34,7 +34,7 @@ public partial interface IMajorRecordInternal
 
 public partial interface IMajorRecordGetter : 
     IFormVersionGetter, 
-    IMajorRecordIdentifier,
+    IMajorRecordIdentifierGetter,
     IFormLinkContainerGetter,
     IAssetLinkContainerGetter,
     IFormLinkIdentifier,

@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Plugins.Records;
 
-public interface IMajorRecordIdentifier : IFormKeyGetter
+public interface IMajorRecordIdentifierGetter : IFormKeyGetter
 {
     /// <summary>
     /// The usually unique string identifier assigned to the Major Record
@@ -8,7 +8,7 @@ public interface IMajorRecordIdentifier : IFormKeyGetter
     string? EditorID { get; }
 }
 
-public record MajorRecordIdentifier : IMajorRecordIdentifier
+public record MajorRecordIdentifier : IMajorRecordIdentifierGetter
 {
     public required FormKey FormKey { get; init; }
     public string? EditorID { get; init; }
@@ -25,13 +25,13 @@ public record MajorRecordIdentifier : IMajorRecordIdentifier
         return HashCode.Combine(FormKey, EditorID?.GetHashCode(StringComparison.OrdinalIgnoreCase));
     }
     
-    public static IEqualityComparer<IMajorRecordIdentifier> EqualityComparer => _equalityComparer;
+    public static IEqualityComparer<IMajorRecordIdentifierGetter> EqualityComparer => _equalityComparer;
 
     private static readonly Comparer _equalityComparer = new();
 
-    class Comparer : IEqualityComparer<IMajorRecordIdentifier>
+    class Comparer : IEqualityComparer<IMajorRecordIdentifierGetter>
     {
-        public bool Equals(IMajorRecordIdentifier? x, IMajorRecordIdentifier? y)
+        public bool Equals(IMajorRecordIdentifierGetter? x, IMajorRecordIdentifierGetter? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
@@ -40,19 +40,19 @@ public record MajorRecordIdentifier : IMajorRecordIdentifier
                    && string.Equals(x.EditorID, y.EditorID, StringComparison.OrdinalIgnoreCase);
         }
         
-        public int GetHashCode(IMajorRecordIdentifier obj)
+        public int GetHashCode(IMajorRecordIdentifierGetter obj)
         {
             return HashCode.Combine(obj.FormKey, obj.EditorID?.GetHashCode(StringComparison.OrdinalIgnoreCase));
         }
     }
 }
 
-public interface IMajorRecordIdentifier<TMajorGetter> : IMajorRecordIdentifier
+public interface IMajorRecordIdentifierGetter<TMajorGetter> : IMajorRecordIdentifierGetter
     where TMajorGetter : class, IMajorRecordQueryableGetter
 {
 }
 
-public record MajorRecordIdentifier<TMajorGetter> : MajorRecordIdentifier, IMajorRecordIdentifier<TMajorGetter>
+public record MajorRecordIdentifier<TMajorGetter> : MajorRecordIdentifier, IMajorRecordIdentifierGetter<TMajorGetter>
     where TMajorGetter : class, IMajorRecordQueryableGetter
 {
 }

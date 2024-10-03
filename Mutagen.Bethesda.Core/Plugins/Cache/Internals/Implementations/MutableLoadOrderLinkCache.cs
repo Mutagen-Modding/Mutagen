@@ -924,7 +924,7 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         throw new MissingRecordException(editorId, types.ToArray());
     }
 
-    private IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
+    private IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
     {
         CheckDisposal();
 
@@ -937,27 +937,27 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         return AllIdentifiersNoUniqueness(type, cancel)
             .Distinct(x => x.FormKey);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
         where TMajor : class, IMajorRecordQueryableGetter
     {
         return AllIdentifiers(typeof(TMajor), cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         return types.SelectMany(type => AllIdentifiersNoUniqueness(type, cancel))
             .Distinct(x => x.FormKey);
@@ -2069,7 +2069,7 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
         throw new MissingRecordException(editorId, types.ToArray());
     }
 
-    private IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
+    private IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
     {
         CheckDisposal();
             
@@ -2078,27 +2078,27 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         return AllIdentifiersNoUniqueness(type, cancel)
             .Distinct(x => x.FormKey);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
         where TMajor : class, IMajorRecordQueryableGetter
     {
         return AllIdentifiers(typeof(TMajor), cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         return types.SelectMany(type => AllIdentifiersNoUniqueness(type, cancel))
             .Distinct(x => x.FormKey);

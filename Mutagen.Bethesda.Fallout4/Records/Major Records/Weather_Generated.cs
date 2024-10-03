@@ -8357,42 +8357,42 @@ namespace Mutagen.Bethesda.Fallout4
         #region ImageSpaceSunrise
         private int _ImageSpaceSunriseLocation => _IMSPLocation!.Value.Min;
         private bool _ImageSpaceSunrise_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunriseLocation, 0x4), isSet: _ImageSpaceSunrise_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise => _ImageSpaceSunrise_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunriseLocation, 0x4), isSet: _ImageSpaceSunrise_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceDay
         private int _ImageSpaceDayLocation => _IMSPLocation!.Value.Min + 0x4;
         private bool _ImageSpaceDay_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceDayLocation, 0x4), isSet: _ImageSpaceDay_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay => _ImageSpaceDay_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceDayLocation, 0x4), isSet: _ImageSpaceDay_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceSunset
         private int _ImageSpaceSunsetLocation => _IMSPLocation!.Value.Min + 0x8;
         private bool _ImageSpaceSunset_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunsetLocation, 0x4), isSet: _ImageSpaceSunset_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset => _ImageSpaceSunset_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceSunsetLocation, 0x4), isSet: _ImageSpaceSunset_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceNight
         private int _ImageSpaceNightLocation => _IMSPLocation!.Value.Min + 0xC;
         private bool _ImageSpaceNight_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceNightLocation, 0x4), isSet: _ImageSpaceNight_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight => _ImageSpaceNight_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceNightLocation, 0x4), isSet: _ImageSpaceNight_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceEarlySunrise
         private int _ImageSpaceEarlySunriseLocation => _IMSPLocation!.Value.Min + 0x10;
         private bool _ImageSpaceEarlySunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4), isSet: _ImageSpaceEarlySunrise_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => _ImageSpaceEarlySunrise_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4), isSet: _ImageSpaceEarlySunrise_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunrise
         private int _ImageSpaceLateSunriseLocation => _IMSPLocation!.Value.Min + 0x14;
         private bool _ImageSpaceLateSunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4), isSet: _ImageSpaceLateSunrise_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => _ImageSpaceLateSunrise_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4), isSet: _ImageSpaceLateSunrise_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceEarlySunset
         private int _ImageSpaceEarlySunsetLocation => _IMSPLocation!.Value.Min + 0x18;
         private bool _ImageSpaceEarlySunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4), isSet: _ImageSpaceEarlySunset_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => _ImageSpaceEarlySunset_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4), isSet: _ImageSpaceEarlySunset_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunset
         private int _ImageSpaceLateSunsetLocation => _IMSPLocation!.Value.Min + 0x1C;
         private bool _ImageSpaceLateSunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4), isSet: _ImageSpaceLateSunset_IsSet);
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => _ImageSpaceLateSunset_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceGetter>(_package, _recordData.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4), isSet: _ImageSpaceLateSunset_IsSet) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region GodRays
         private RangeInt32? _GodRaysLocation;

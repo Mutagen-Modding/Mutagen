@@ -1,23 +1,20 @@
 using System.Diagnostics.CodeAnalysis;
-using GameFinder.Common;
 using GameFinder.RegistryUtils;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.Steam.Models.ValueTypes;
 using Microsoft.Win32;
-using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using FileSystem = NexusMods.Paths.FileSystem;
 
-namespace Mutagen.Bethesda.Installs.DI;
+namespace Mutagen.Bethesda.Installs;
 
-public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
+public sealed class GameLocator
 {
     internal static readonly GameLocator Instance = new();
 
     private readonly Lazy<SteamHandler?> _steam;
     private readonly Lazy<GOGHandler?> _gog;
-    private readonly Lazy<IEnumerable<AHandler>> _handlers;
 
     public GameLocator()
     {
@@ -44,22 +41,9 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
             return default;
         });
-        _handlers = new Lazy<IEnumerable<AHandler>>(() =>
-        {
-            var ret = new List<AHandler>();
-            if (_steam.Value != null)
-            {
-                ret.Add(_steam.Value);
-            }
-            if (_gog.Value != null)
-            {
-                ret.Add(_gog.Value);
-            }
-            return ret;
-        });
     }
 
-    private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
+    public IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
     {
         foreach (var source in Games[release].GameSources)
         {
@@ -82,7 +66,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         return false;
     }
 
-    private bool TryGetGameDirectory(IGameSource gameSource, [MaybeNullWhen(false)] out DirectoryPath path)
+    public bool TryGetGameDirectory(IGameSource gameSource, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         switch (gameSource)
         {
@@ -158,21 +142,6 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
         directoryPath = default;
         return false;
-    }
-
-    [Obsolete("Will be made private at some point")]
-    public bool TryGetGameDirectoryFromRegistry(GameRelease release,
-        [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        var gameRegistration = Games[release].GameSources.OfType<RegistryGameSource>().FirstOrDefault();
-
-        if (gameRegistration == null)
-        {
-            path = default;
-            return false;
-        }
-
-        return TryGetGameDirectoryFromRegistry(gameRegistration, out path);
     }
 
     private bool TryGetGameDirectoryFromRegistry(
@@ -402,49 +371,4 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         };
         Games = games;
     }
-
-    #region Interface Implementations
-
-    IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)
-    {
-        return GetAllGameDirectories(release)
-            .Select(path => new DirectoryPath(Path.Combine(path, "Data")));
-    }
-
-    bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
-    {
-        return TryGetDataDirectory(release, out path);
-    }
-
-    DirectoryPath IDataDirectoryLookup.Get(GameRelease release)
-    {
-        return GetDataDirectory(release);
-    }
-
-    IEnumerable<DirectoryPath> IGameDirectoryLookup.GetAll(GameRelease release)
-    {
-        return GetAllGameDirectories(release);
-    }
-
-    bool IGameDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
-    {
-        return TryGetGameDirectory(release, out path);
-    }
-
-    DirectoryPath? IGameDirectoryLookup.TryGet(GameRelease release)
-    {
-        if (TryGetGameDirectory(release, out var path))
-        {
-            return path;
-        }
-
-        return null;
-    }
-
-    DirectoryPath IGameDirectoryLookup.Get(GameRelease release)
-    {
-        return GetGameDirectory(release);
-    }
-
-    #endregion
 }

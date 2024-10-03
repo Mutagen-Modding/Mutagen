@@ -153,6 +153,7 @@ public partial class RecordTypeInts
     public const int AVFL = 0x4C465641;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
+    public const int AVMP = 0x504D5641;
     public const int AVSG = 0x47535641;
     public const int AWGT = 0x54475741;
     public const int BAMT = 0x544D4142;
@@ -806,6 +807,7 @@ public partial class RecordTypeInts
     public const int SAKD = 0x444B4153;
     public const int SAPT = 0x54504153;
     public const int SCCM = 0x4D434353;
+    public const int SCCO = 0x4F434353;
     public const int SCEN = 0x4E454353;
     public const int SCFC = 0x43464353;
     public const int SCOL = 0x4C4F4353;
@@ -1105,6 +1107,7 @@ public partial class RecordTypeInts
     public const int XCWT = 0x54574358;
     public const int XCZA = 0x415A4358;
     public const int XCZC = 0x435A4358;
+    public const int XCZR = 0x525A4358;
     public const int XDTF = 0x46544458;
     public const int XDTS = 0x53544458;
     public const int XEED = 0x44454558;
@@ -1125,6 +1128,7 @@ public partial class RecordTypeInts
     public const int XLCN = 0x4E434C58;
     public const int XLFD = 0x44464C58;
     public const int XLGD = 0x44474C58;
+    public const int XLIB = 0x42494C58;
     public const int XLIG = 0x47494C58;
     public const int XLKR = 0x524B4C58;
     public const int XLKT = 0x544B4C58;

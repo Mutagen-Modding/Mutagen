@@ -379,15 +379,19 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAliasVoiceTypeGetter> IQuestReferenceAliasGetter.VoiceTypes => this.VoiceTypes;
         #endregion
-        #region TerminalMenu
-        private readonly IFormLinkNullable<ITerminalGetter> _TerminalMenu = new FormLinkNullable<ITerminalGetter>();
-        public IFormLinkNullable<ITerminalGetter> TerminalMenu
-        {
-            get => _TerminalMenu;
-            set => _TerminalMenu.SetTo(value);
-        }
+        #region TerminalMenus
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITerminalGetter> IQuestReferenceAliasGetter.TerminalMenu => this.TerminalMenu;
+        private ExtendedList<IFormLinkGetter<ITerminalGetter>> _TerminalMenus = new ExtendedList<IFormLinkGetter<ITerminalGetter>>();
+        public ExtendedList<IFormLinkGetter<ITerminalGetter>> TerminalMenus
+        {
+            get => this._TerminalMenus;
+            init => this._TerminalMenus = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ITerminalGetter>> IQuestReferenceAliasGetter.TerminalMenus => _TerminalMenus;
+        #endregion
+
         #endregion
 
         #region To String
@@ -463,7 +467,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ScriptComment = initialValue;
                 this.VoiceTypes = initialValue;
-                this.TerminalMenu = initialValue;
+                this.TerminalMenus = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -500,7 +504,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem PackageData,
                 TItem ScriptComment,
                 TItem VoiceTypes,
-                TItem TerminalMenu)
+                TItem TerminalMenus)
             : base()
             {
                 this.ID = ID;
@@ -536,7 +540,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PackageData, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ScriptComment = ScriptComment;
                 this.VoiceTypes = VoiceTypes;
-                this.TerminalMenu = TerminalMenu;
+                this.TerminalMenus = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TerminalMenus, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -581,7 +585,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PackageData;
             public TItem ScriptComment;
             public TItem VoiceTypes;
-            public TItem TerminalMenu;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TerminalMenus;
             #endregion
 
             #region Equals
@@ -628,7 +632,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.PackageData, rhs.PackageData)) return false;
                 if (!object.Equals(this.ScriptComment, rhs.ScriptComment)) return false;
                 if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
-                if (!object.Equals(this.TerminalMenu, rhs.TerminalMenu)) return false;
+                if (!object.Equals(this.TerminalMenus, rhs.TerminalMenus)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -667,7 +671,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.PackageData);
                 hash.Add(this.ScriptComment);
                 hash.Add(this.VoiceTypes);
-                hash.Add(this.TerminalMenu);
+                hash.Add(this.TerminalMenus);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -808,7 +812,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.ScriptComment)) return false;
                 if (!eval(this.VoiceTypes)) return false;
-                if (!eval(this.TerminalMenu)) return false;
+                if (this.TerminalMenus != null)
+                {
+                    if (!eval(this.TerminalMenus.Overall)) return false;
+                    if (this.TerminalMenus.Specific != null)
+                    {
+                        foreach (var item in this.TerminalMenus.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -947,7 +961,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.ScriptComment)) return true;
                 if (eval(this.VoiceTypes)) return true;
-                if (eval(this.TerminalMenu)) return true;
+                if (this.TerminalMenus != null)
+                {
+                    if (eval(this.TerminalMenus.Overall)) return true;
+                    if (this.TerminalMenus.Specific != null)
+                    {
+                        foreach (var item in this.TerminalMenus.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -1090,7 +1114,20 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.ScriptComment = eval(this.ScriptComment);
                 obj.VoiceTypes = eval(this.VoiceTypes);
-                obj.TerminalMenu = eval(this.TerminalMenu);
+                if (TerminalMenus != null)
+                {
+                    obj.TerminalMenus = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TerminalMenus.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (TerminalMenus.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.TerminalMenus.Specific = l;
+                        foreach (var item in TerminalMenus.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -1354,9 +1391,26 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(VoiceTypes, "VoiceTypes");
                     }
-                    if (printMask?.TerminalMenu ?? true)
+                    if ((printMask?.TerminalMenus?.Overall ?? true)
+                        && TerminalMenus is {} TerminalMenusItem)
                     {
-                        sb.AppendItem(TerminalMenu, "TerminalMenu");
+                        sb.AppendLine("TerminalMenus =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TerminalMenusItem.Overall);
+                            if (TerminalMenusItem.Specific != null)
+                            {
+                                foreach (var subItem in TerminalMenusItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1402,7 +1456,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PackageData;
             public Exception? ScriptComment;
             public Exception? VoiceTypes;
-            public Exception? TerminalMenu;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TerminalMenus;
             #endregion
 
             #region IErrorMask
@@ -1477,8 +1531,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ScriptComment;
                     case QuestReferenceAlias_FieldIndex.VoiceTypes:
                         return VoiceTypes;
-                    case QuestReferenceAlias_FieldIndex.TerminalMenu:
-                        return TerminalMenu;
+                    case QuestReferenceAlias_FieldIndex.TerminalMenus:
+                        return TerminalMenus;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1588,8 +1642,8 @@ namespace Mutagen.Bethesda.Starfield
                     case QuestReferenceAlias_FieldIndex.VoiceTypes:
                         this.VoiceTypes = ex;
                         break;
-                    case QuestReferenceAlias_FieldIndex.TerminalMenu:
-                        this.TerminalMenu = ex;
+                    case QuestReferenceAlias_FieldIndex.TerminalMenus:
+                        this.TerminalMenus = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1701,8 +1755,8 @@ namespace Mutagen.Bethesda.Starfield
                     case QuestReferenceAlias_FieldIndex.VoiceTypes:
                         this.VoiceTypes = (Exception?)obj;
                         break;
-                    case QuestReferenceAlias_FieldIndex.TerminalMenu:
-                        this.TerminalMenu = (Exception?)obj;
+                    case QuestReferenceAlias_FieldIndex.TerminalMenus:
+                        this.TerminalMenus = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1746,7 +1800,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (PackageData != null) return true;
                 if (ScriptComment != null) return true;
                 if (VoiceTypes != null) return true;
-                if (TerminalMenu != null) return true;
+                if (TerminalMenus != null) return true;
                 return false;
             }
             #endregion
@@ -1973,8 +2027,25 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(VoiceTypes, "VoiceTypes");
                 }
+                if (TerminalMenus is {} TerminalMenusItem)
                 {
-                    sb.AppendItem(TerminalMenu, "TerminalMenu");
+                    sb.AppendLine("TerminalMenus =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TerminalMenusItem.Overall);
+                        if (TerminalMenusItem.Specific != null)
+                        {
+                            foreach (var subItem in TerminalMenusItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -2017,7 +2088,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.PackageData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PackageData?.Overall, rhs.PackageData?.Overall), Noggog.ExceptionExt.Combine(this.PackageData?.Specific, rhs.PackageData?.Specific));
                 ret.ScriptComment = this.ScriptComment.Combine(rhs.ScriptComment);
                 ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes);
-                ret.TerminalMenu = this.TerminalMenu.Combine(rhs.TerminalMenu);
+                ret.TerminalMenus = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TerminalMenus?.Overall, rhs.TerminalMenus?.Overall), Noggog.ExceptionExt.Combine(this.TerminalMenus?.Specific, rhs.TerminalMenus?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2073,7 +2144,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool PackageData;
             public bool ScriptComment;
             public bool VoiceTypes;
-            public bool TerminalMenu;
+            public bool TerminalMenus;
             #endregion
 
             #region Ctors
@@ -2106,7 +2177,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PackageData = defaultOn;
                 this.ScriptComment = defaultOn;
                 this.VoiceTypes = defaultOn;
-                this.TerminalMenu = defaultOn;
+                this.TerminalMenus = defaultOn;
             }
 
             #endregion
@@ -2147,7 +2218,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((PackageData, null));
                 ret.Add((ScriptComment, null));
                 ret.Add((VoiceTypes, null));
-                ret.Add((TerminalMenu, null));
+                ret.Add((TerminalMenus, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2266,7 +2337,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
         new String? ScriptComment { get; set; }
         new IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; set; }
-        new IFormLinkNullable<ITerminalGetter> TerminalMenu { get; set; }
+        new ExtendedList<IFormLinkGetter<ITerminalGetter>> TerminalMenus { get; }
     }
 
     public partial interface IQuestReferenceAliasGetter :
@@ -2321,7 +2392,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
         String? ScriptComment { get; }
         IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes { get; }
-        IFormLinkNullableGetter<ITerminalGetter> TerminalMenu { get; }
+        IReadOnlyList<IFormLinkGetter<ITerminalGetter>> TerminalMenus { get; }
 
     }
 
@@ -2499,7 +2570,7 @@ namespace Mutagen.Bethesda.Starfield
         PackageData = 30,
         ScriptComment = 31,
         VoiceTypes = 32,
-        TerminalMenu = 33,
+        TerminalMenus = 33,
     }
     #endregion
 
@@ -2668,7 +2739,7 @@ namespace Mutagen.Bethesda.Starfield
             item.PackageData.Clear();
             item.ScriptComment = default;
             item.VoiceTypes.Clear();
-            item.TerminalMenu.Clear();
+            item.TerminalMenus.Clear();
             base.Clear(item);
         }
         
@@ -2703,7 +2774,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Factions.RemapLinks(mapping);
             obj.PackageData.RemapLinks(mapping);
             obj.VoiceTypes.Relink(mapping);
-            obj.TerminalMenu.Relink(mapping);
+            obj.TerminalMenus.RemapLinks(mapping);
         }
         
         #endregion
@@ -2837,7 +2908,10 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ScriptComment = string.Equals(item.ScriptComment, rhs.ScriptComment);
             ret.VoiceTypes = item.VoiceTypes.Equals(rhs.VoiceTypes);
-            ret.TerminalMenu = item.TerminalMenu.Equals(rhs.TerminalMenu);
+            ret.TerminalMenus = item.TerminalMenus.CollectionEqualsHelper(
+                rhs.TerminalMenus,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3105,9 +3179,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.VoiceTypes.FormKeyNullable, "VoiceTypes");
             }
-            if (printMask?.TerminalMenu ?? true)
+            if (printMask?.TerminalMenus?.Overall ?? true)
             {
-                sb.AppendItem(item.TerminalMenu.FormKeyNullable, "TerminalMenu");
+                sb.AppendLine("TerminalMenus =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.TerminalMenus)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
         }
         
@@ -3284,9 +3368,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.VoiceTypes.Equals(rhs.VoiceTypes)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)QuestReferenceAlias_FieldIndex.TerminalMenu) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestReferenceAlias_FieldIndex.TerminalMenus) ?? true))
             {
-                if (!lhs.TerminalMenu.Equals(rhs.TerminalMenu)) return false;
+                if (!lhs.TerminalMenus.SequenceEqualNullable(rhs.TerminalMenus)) return false;
             }
             return true;
         }
@@ -3377,7 +3461,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(ScriptCommentitem);
             }
             hash.Add(item.VoiceTypes);
-            hash.Add(item.TerminalMenu);
+            hash.Add(item.TerminalMenus);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3512,9 +3596,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return VoiceTypesInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.TerminalMenu, out var TerminalMenuInfo))
+            foreach (var item in obj.TerminalMenus)
             {
-                yield return TerminalMenuInfo;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -3948,9 +4032,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.VoiceTypes.SetTo(rhs.VoiceTypes.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestReferenceAlias_FieldIndex.TerminalMenu) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestReferenceAlias_FieldIndex.TerminalMenus) ?? true))
             {
-                item.TerminalMenu.SetTo(rhs.TerminalMenu.FormKeyNullable);
+                errorMask?.PushIndex((int)QuestReferenceAlias_FieldIndex.TerminalMenus);
+                try
+                {
+                    item.TerminalMenus.SetTo(
+                        rhs.TerminalMenus
+                            .Select(b => (IFormLinkGetter<ITerminalGetter>)new FormLink<ITerminalGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -4276,10 +4375,16 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITerminalGetter>>.Instance.Write(
                 writer: writer,
-                item: item.TerminalMenu,
-                header: translationParams.ConvertToCustom(RecordTypes.ALTM));
+                items: item.TerminalMenus,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ITerminalGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.ALTM));
+                });
         }
 
         public void Write(
@@ -4585,9 +4690,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALTM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TerminalMenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)QuestReferenceAlias_FieldIndex.TerminalMenu;
+                    item.TerminalMenus.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITerminalGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ALTM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)QuestReferenceAlias_FieldIndex.TerminalMenus;
                 }
                 default:
                     return ParseResult.Stop;
@@ -4735,10 +4843,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _VoiceTypesLocation;
         public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAliasVoiceTypeGetter>(_package, _recordData, _VoiceTypesLocation);
         #endregion
-        #region TerminalMenu
-        private int? _TerminalMenuLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> TerminalMenu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalGetter>(_package, _recordData, _TerminalMenuLocation);
-        #endregion
+        public IReadOnlyList<IFormLinkGetter<ITerminalGetter>> TerminalMenus { get; private set; } = Array.Empty<IFormLinkGetter<ITerminalGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -5054,8 +5159,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALTM:
                 {
-                    _TerminalMenuLocation = (stream.Position - offset);
-                    return (int)QuestReferenceAlias_FieldIndex.TerminalMenu;
+                    this.TerminalMenus = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ITerminalGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ITerminalGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.ALTM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)QuestReferenceAlias_FieldIndex.TerminalMenus;
                 }
                 default:
                     return ParseResult.Stop;

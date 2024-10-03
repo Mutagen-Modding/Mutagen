@@ -4,17 +4,17 @@
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="QNAM" />
       <RefList name="Scenes" refName="SceneCollectionItem" />
-      <Int32 name="VNAM" recordType="VNAM" />
-      <List name="XNAMs">
+      <Int32 name="VNAM" recordType="VNAM" unknown="true" />
+      <List name="XNAMs" unknown="true" >
         <Int64 recordType="XNAM" />
       </List>
-      <Int32 name="VNAM2" recordType="VNAM" />
+      <Int32 name="VNAM2" recordType="VNAM" unknown="true" />
     </Fields>
   </Object>
   <Object name="SceneCollectionItem" objType="Subrecord">
     <Fields>
       <FormLink name="Scene" refName="Scene" recordType="SNAM" nullable="False" />
-      <UInt64 name="XNAM" recordType="XNAM" />
+      <UInt64 name="XNAM" recordType="XNAM" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

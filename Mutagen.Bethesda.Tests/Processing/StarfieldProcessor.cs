@@ -214,6 +214,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "RSPJ", "DESC" },
                     new RecordType[] { "CHAL", "DESC" },
                     new RecordType[] { "RACE", "DESC" },
+                    new RecordType[] { "WEAP", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]
@@ -528,6 +529,11 @@ public class StarfieldProcessor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.XLGD, out var xlgd))
         {
             ProcessBool(xlgd, fileOffset, 0x54, 4, 1);
+        }
+
+        foreach (var xplk in majorFrame.FindEnumerateSubrecords(RecordTypes.XPLK))
+        {
+            ProcessFormIDOverflow(xplk, fileOffset);
         }
     }
 

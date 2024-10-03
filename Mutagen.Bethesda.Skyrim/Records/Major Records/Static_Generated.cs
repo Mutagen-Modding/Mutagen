@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IMaterialObjectGetter> Material => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialObjectGetter>(_package, _recordData.Span.Slice(_MaterialLocation, 0x4), isSet: _Material_IsSet);
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialObjectGetter>(_package, _recordData.Span.Slice(_MaterialLocation, 0x4), isSet: _Material_IsSet) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x8;

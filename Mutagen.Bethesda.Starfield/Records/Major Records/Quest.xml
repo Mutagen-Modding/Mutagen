@@ -198,7 +198,9 @@
       <FormLink name="VoiceTypes" recordType="VTCK">
         <Interface>IAliasVoiceType</Interface>
       </FormLink>
-      <FormLink name="TerminalMenu" recordType="ALTM" refName="Terminal" />
+      <List name="TerminalMenus">
+        <FormLink recordType="ALTM" refName="Terminal" />
+      </List>
     </Fields>
   </Object>
   <Object name="QuestLocationAlias" objType="Subrecord" baseClass="AQuestAlias" >

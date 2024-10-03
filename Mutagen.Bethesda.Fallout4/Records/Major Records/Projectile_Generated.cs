@@ -3717,12 +3717,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Light
         private int _LightLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _Light_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet);
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
         private int _MuzzleFlashLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _MuzzleFlash_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> MuzzleFlash => FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLocation, 0x4), isSet: _MuzzleFlash_IsSet);
+        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLocation, 0x4), isSet: _MuzzleFlash_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _DNAMLocation!.Value.Min + 0x18;
@@ -3737,12 +3737,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Explosion
         private int _ExplosionLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _Explosion_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet);
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Sound
         private int _SoundLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _Sound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DNAMLocation!.Value.Min + 0x28;
@@ -3762,17 +3762,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region CountdownSound
         private int _CountdownSoundLocation => _DNAMLocation!.Value.Min + 0x34;
         private bool _CountdownSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_CountdownSoundLocation, 0x4), isSet: _CountdownSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_CountdownSoundLocation, 0x4), isSet: _CountdownSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DisaleSound
         private int _DisaleSoundLocation => _DNAMLocation!.Value.Min + 0x38;
         private bool _DisaleSound_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_DisaleSoundLocation, 0x4), isSet: _DisaleSound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_DisaleSoundLocation, 0x4), isSet: _DisaleSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DefaultWeaponSource
         private int _DefaultWeaponSourceLocation => _DNAMLocation!.Value.Min + 0x3C;
         private bool _DefaultWeaponSource_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet);
+        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
         private int _ConeSpreadLocation => _DNAMLocation!.Value.Min + 0x40;
@@ -3797,12 +3797,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region DecalData
         private int _DecalDataLocation => _DNAMLocation!.Value.Min + 0x50;
         private bool _DecalData_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ITextureSetGetter> DecalData => FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _recordData.Span.Slice(_DecalDataLocation, 0x4), isSet: _DecalData_IsSet);
+        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _recordData.Span.Slice(_DecalDataLocation, 0x4), isSet: _DecalData_IsSet) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
         private int _CollisionLayerLocation => _DNAMLocation!.Value.Min + 0x54;
         private bool _CollisionLayer_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(_package, _recordData.Span.Slice(_CollisionLayerLocation, 0x4), isSet: _CollisionLayer_IsSet);
+        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(_package, _recordData.Span.Slice(_CollisionLayerLocation, 0x4), isSet: _CollisionLayer_IsSet) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
         #region TracerFrequency
         private int _TracerFrequencyLocation => _DNAMLocation!.Value.Min + 0x58;
@@ -3812,7 +3812,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VATSProjectile
         private int _VATSProjectileLocation => _DNAMLocation!.Value.Min + 0x59;
         private bool _VATSProjectile_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> VATSProjectile => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_VATSProjectileLocation, 0x4), isSet: _VATSProjectile_IsSet);
+        public IFormLinkGetter<IProjectileGetter> VATSProjectile => _VATSProjectile_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_VATSProjectileLocation, 0x4), isSet: _VATSProjectile_IsSet) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;

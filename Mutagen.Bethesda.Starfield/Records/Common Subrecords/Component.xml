@@ -563,4 +563,9 @@
       <RefDirect name="Material" refName="VehicleMaterialTable" />
     </Fields>
   </Object>
+  <Object name="OverlayDesignatedPlacementInfoComponent" objType="Subrecord" baseClass="AComponent" >
+    <Fields>
+      <Int32 name="DATA" recordType="DATA" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

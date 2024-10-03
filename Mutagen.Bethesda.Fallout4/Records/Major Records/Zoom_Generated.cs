@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ImagespaceModifier
         private int _ImagespaceModifierLocation => _GNAMLocation!.Value.Min + 0x8;
         private bool _ImagespaceModifier_IsSet => _GNAMLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImagespaceModifierLocation, 0x4), isSet: _ImagespaceModifier_IsSet);
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImagespaceModifierLocation, 0x4), isSet: _ImagespaceModifier_IsSet) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region CameraOffset
         private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;

@@ -717,7 +717,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         if ((bool)(list.CustomData?.GetOrDefault(Additive) ?? false))
                         {
                             sb.AppendLine($"private ImmutableManyListWrapper<{list.ItemTypeName(getter: true)}>? _additive{typeGen.Name};");
-                            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => _additive{typeGen.Name}{(list.Nullable ? null : $" ?? Array.Empty<{list.ItemTypeName(getter: true)}>()")};");
+                            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => _additive{typeGen.Name}{(list.Nullable ? null : $" ?? ImmutableManyListWrapper<{list.ItemTypeName(getter: true)}>.Empty")};");
                         }
                         else
                         {

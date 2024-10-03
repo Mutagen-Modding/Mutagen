@@ -10,6 +10,7 @@
       <FormLink name="Distance" recordType="DNAM" refName="Global" />
       <FormLink name="Cooldown" recordType="CNAM" refName="Global" />
       <FormLink name="Faction" recordType="BNAM" refName="Faction" />
+      <FormLink name="PNAM" recordType="PNAM" refName="AffinityEvent" unknown="true" />
     </Fields>
   </Object>
   <Object name="ActorReaction" objType="Subrecord">

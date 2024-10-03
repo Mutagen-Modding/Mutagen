@@ -138,7 +138,8 @@
         <Compile Include="Fonts\FontMapping.cs" />
         <Compile Include="Inis\DI\IIniPathLookup.cs" />
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
-        <Compile Include="Installs\DI\GameLocator.cs" />
+        <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
+        <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />
         <Compile Include="Installs\GameLocations.cs" />
         <Compile Include="Installs\GameMetaData.cs" />

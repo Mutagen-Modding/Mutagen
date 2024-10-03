@@ -283,7 +283,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormLinkBinaryTranslation.Instance.OverlayFactory<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(_package, {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X}), isSet: _{typeGen.Name}_IsSet{(linkType.MaxIsNone ? ", maxIsNull: true" : null)});");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(_package, {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X}), isSet: _{typeGen.Name}_IsSet{(linkType.MaxIsNone ? ", maxIsNull: true" : null)}) : {linkType.DirectTypeName(getter: true)}.Null;");
             }
         }
     }

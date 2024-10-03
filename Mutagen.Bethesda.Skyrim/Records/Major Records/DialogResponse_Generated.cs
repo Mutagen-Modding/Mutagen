@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         private int _SoundLocation => _TRDTLocation!.Value.Min + 0x10;
         private bool _Sound_IsSet => _TRDTLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet);
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _TRDTLocation!.Value.Min + 0x14;

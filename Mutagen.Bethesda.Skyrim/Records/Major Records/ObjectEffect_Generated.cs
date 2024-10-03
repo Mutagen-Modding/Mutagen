@@ -2473,12 +2473,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value.Min + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => FormLinkBinaryTranslation.Instance.OverlayFactory<IObjectEffectGetter>(_package, _recordData.Span.Slice(_BaseEnchantmentLocation, 0x4), isSet: _BaseEnchantment_IsSet);
+        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IObjectEffectGetter>(_package, _recordData.Span.Slice(_BaseEnchantmentLocation, 0x4), isSet: _BaseEnchantment_IsSet) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value.Min + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public IFormLinkGetter<IFormListGetter> WornRestrictions => FormLinkBinaryTranslation.Instance.OverlayFactory<IFormListGetter>(_package, _recordData.Span.Slice(_WornRestrictionsLocation, 0x4), isSet: _WornRestrictions_IsSet);
+        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IFormListGetter>(_package, _recordData.Span.Slice(_WornRestrictionsLocation, 0x4), isSet: _WornRestrictions_IsSet) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(

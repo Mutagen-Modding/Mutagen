@@ -155,6 +155,7 @@ public partial class RecordTypes
     public static readonly RecordType AVFL = new(0x4C465641);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType AVMD = new(0x444D5641);
+    public static readonly RecordType AVMP = new(0x504D5641);
     public static readonly RecordType AVSG = new(0x47535641);
     public static readonly RecordType AWGT = new(0x54475741);
     public static readonly RecordType BAMT = new(0x544D4142);
@@ -808,6 +809,7 @@ public partial class RecordTypes
     public static readonly RecordType SAKD = new(0x444B4153);
     public static readonly RecordType SAPT = new(0x54504153);
     public static readonly RecordType SCCM = new(0x4D434353);
+    public static readonly RecordType SCCO = new(0x4F434353);
     public static readonly RecordType SCEN = new(0x4E454353);
     public static readonly RecordType SCFC = new(0x43464353);
     public static readonly RecordType SCOL = new(0x4C4F4353);
@@ -1107,6 +1109,7 @@ public partial class RecordTypes
     public static readonly RecordType XCWT = new(0x54574358);
     public static readonly RecordType XCZA = new(0x415A4358);
     public static readonly RecordType XCZC = new(0x435A4358);
+    public static readonly RecordType XCZR = new(0x525A4358);
     public static readonly RecordType XDTF = new(0x46544458);
     public static readonly RecordType XDTS = new(0x53544458);
     public static readonly RecordType XEED = new(0x44454558);
@@ -1127,6 +1130,7 @@ public partial class RecordTypes
     public static readonly RecordType XLCN = new(0x4E434C58);
     public static readonly RecordType XLFD = new(0x44464C58);
     public static readonly RecordType XLGD = new(0x44474C58);
+    public static readonly RecordType XLIB = new(0x42494C58);
     public static readonly RecordType XLIG = new(0x47494C58);
     public static readonly RecordType XLKR = new(0x524B4C58);
     public static readonly RecordType XLKT = new(0x544B4C58);

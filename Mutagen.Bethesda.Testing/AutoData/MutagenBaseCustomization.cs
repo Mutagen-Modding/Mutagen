@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog.Testing.AutoFixture;
 
@@ -25,6 +25,7 @@ public class MutagenBaseCustomization : ICustomization
         fixture.Customizations.Add(new OrderBuilder());
         fixture.Customizations.Add(new AbstractSubclassBuilder());
         fixture.Customizations.Add(new AssetLinkBuilder());
+        fixture.Customizations.Add(new DataRelativePathBuilder());
         fixture.Inject<IMutagenEncodingProvider>(MutagenEncoding.Default);
     }
 }

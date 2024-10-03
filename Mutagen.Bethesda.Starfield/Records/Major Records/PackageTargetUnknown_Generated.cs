@@ -55,6 +55,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Data
         public Int32 Data { get; set; } = default(Int32);
         #endregion
+        #region Type
+        public Int32 Type { get; set; } = default(Int32);
+        #endregion
 
         #region To String
 
@@ -97,14 +100,17 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Data = initialValue;
+                this.Type = initialValue;
             }
 
             public Mask(
                 TItem CountOrDistance,
-                TItem Data)
+                TItem Data,
+                TItem Type)
             : base(CountOrDistance: CountOrDistance)
             {
                 this.Data = Data;
+                this.Type = Type;
             }
 
             #pragma warning disable CS8618
@@ -117,6 +123,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Data;
+            public TItem Type;
             #endregion
 
             #region Equals
@@ -131,12 +138,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Data);
+                hash.Add(this.Type);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -148,6 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Data)) return false;
+                if (!eval(this.Type)) return false;
                 return true;
             }
             #endregion
@@ -157,6 +167,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Data)) return true;
+                if (eval(this.Type)) return true;
                 return false;
             }
             #endregion
@@ -173,6 +184,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Data = eval(this.Data);
+                obj.Type = eval(this.Type);
             }
             #endregion
 
@@ -195,6 +207,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Data, "Data");
                     }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
                 }
             }
             #endregion
@@ -207,6 +223,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? Data;
+            public Exception? Type;
             #endregion
 
             #region IErrorMask
@@ -217,6 +234,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PackageTargetUnknown_FieldIndex.Data:
                         return Data;
+                    case PackageTargetUnknown_FieldIndex.Type:
+                        return Type;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -229,6 +248,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PackageTargetUnknown_FieldIndex.Data:
                         this.Data = ex;
+                        break;
+                    case PackageTargetUnknown_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -244,6 +266,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PackageTargetUnknown_FieldIndex.Data:
                         this.Data = (Exception?)obj;
                         break;
+                    case PackageTargetUnknown_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -254,6 +279,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Data != null) return true;
+                if (Type != null) return true;
                 return false;
             }
             #endregion
@@ -283,6 +309,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Data, "Data");
                 }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -292,6 +321,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Data = this.Data.Combine(rhs.Data);
+                ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -315,6 +345,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool Data;
+            public bool Type;
             #endregion
 
             #region Ctors
@@ -324,6 +355,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Data = defaultOn;
+                this.Type = defaultOn;
             }
 
             #endregion
@@ -332,6 +364,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Data, null));
+                ret.Add((Type, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -404,6 +437,7 @@ namespace Mutagen.Bethesda.Starfield
         IPackageTargetUnknownGetter
     {
         new Int32 Data { get; set; }
+        new Int32 Type { get; set; }
     }
 
     public partial interface IPackageTargetUnknownGetter :
@@ -413,6 +447,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => PackageTargetUnknown_Registration.Instance;
         Int32 Data { get; }
+        Int32 Type { get; }
 
     }
 
@@ -559,6 +594,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         CountOrDistance = 0,
         Data = 1,
+        Type = 2,
     }
     #endregion
 
@@ -569,9 +605,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(PackageTargetUnknown.Mask<>);
 
@@ -638,6 +674,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Data = default(Int32);
+            item.Type = default(Int32);
             base.Clear(item);
         }
         
@@ -706,6 +743,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Data = item.Data == rhs.Data;
+            ret.Type = item.Type == rhs.Type;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -759,6 +797,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Data, "Data");
             }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
         }
         
         public static PackageTargetUnknown_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
@@ -784,6 +826,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Data != rhs.Data) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PackageTargetUnknown_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -802,6 +848,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Data);
+            hash.Add(item.Type);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -853,6 +900,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)PackageTargetUnknown_FieldIndex.Data) ?? true))
             {
                 item.Data = rhs.Data;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackageTargetUnknown_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
             }
             DeepCopyInCustom(
                 item: item,
@@ -978,6 +1029,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer);
             writer.Write(item.Data);
+            writer.Write(item.Type);
         }
 
         public void Write(
@@ -1026,6 +1078,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 frame: frame);
             item.Data = frame.ReadInt32();
+            item.Type = frame.ReadInt32();
         }
 
     }
@@ -1073,6 +1126,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public Int32 Type => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1098,13 +1152,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x10,
+                length: 0x14,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
             var ret = new PackageTargetUnknownBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x10;
+            stream.Position += 0x14;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -321,16 +321,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActivatorGetter.WaterMaterial => this.WaterMaterial;
         #endregion
-        #region Water
-        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
-        public IFormLinkNullable<IWaterGetter> Water
-        {
-            get => _Water;
-            set => _Water.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.Water => this.Water;
-        #endregion
         #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundReference? _LoopingSound;
@@ -357,6 +347,16 @@ namespace Mutagen.Bethesda.Starfield
         public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IActivatorGetter.ActivateTextOverride => this.ActivateTextOverride;
+        #endregion
+        #region Water
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.Water => this.Water;
         #endregion
         #region Flags
         public Activator.Flag? Flags { get; set; }
@@ -449,10 +449,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.NativeTerminal = initialValue;
                 this.MarkerColor = initialValue;
                 this.WaterMaterial = initialValue;
-                this.Water = initialValue;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.ActivateSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.ActivateTextOverride = initialValue;
+                this.Water = initialValue;
                 this.Flags = initialValue;
                 this.ActivationAngle = initialValue;
                 this.INAM = initialValue;
@@ -488,10 +488,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem NativeTerminal,
                 TItem MarkerColor,
                 TItem WaterMaterial,
-                TItem Water,
                 TItem LoopingSound,
                 TItem ActivateSound,
                 TItem ActivateTextOverride,
+                TItem Water,
                 TItem Flags,
                 TItem ActivationAngle,
                 TItem INAM,
@@ -526,10 +526,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.NativeTerminal = NativeTerminal;
                 this.MarkerColor = MarkerColor;
                 this.WaterMaterial = WaterMaterial;
-                this.Water = Water;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopingSound, new SoundReference.Mask<TItem>(LoopingSound));
                 this.ActivateSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ActivateSound, new SoundReference.Mask<TItem>(ActivateSound));
                 this.ActivateTextOverride = ActivateTextOverride;
+                this.Water = Water;
                 this.Flags = Flags;
                 this.ActivationAngle = ActivationAngle;
                 this.INAM = INAM;
@@ -566,10 +566,10 @@ namespace Mutagen.Bethesda.Starfield
             public TItem NativeTerminal;
             public TItem MarkerColor;
             public TItem WaterMaterial;
-            public TItem Water;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopingSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? ActivateSound { get; set; }
             public TItem ActivateTextOverride;
+            public TItem Water;
             public TItem Flags;
             public TItem ActivationAngle;
             public TItem INAM;
@@ -608,10 +608,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
                 if (!object.Equals(this.MarkerColor, rhs.MarkerColor)) return false;
                 if (!object.Equals(this.WaterMaterial, rhs.WaterMaterial)) return false;
-                if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
                 if (!object.Equals(this.ActivateSound, rhs.ActivateSound)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ActivationAngle, rhs.ActivationAngle)) return false;
                 if (!object.Equals(this.INAM, rhs.INAM)) return false;
@@ -642,10 +642,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.NativeTerminal);
                 hash.Add(this.MarkerColor);
                 hash.Add(this.WaterMaterial);
-                hash.Add(this.Water);
                 hash.Add(this.LoopingSound);
                 hash.Add(this.ActivateSound);
                 hash.Add(this.ActivateTextOverride);
+                hash.Add(this.Water);
                 hash.Add(this.Flags);
                 hash.Add(this.ActivationAngle);
                 hash.Add(this.INAM);
@@ -751,7 +751,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.NativeTerminal)) return false;
                 if (!eval(this.MarkerColor)) return false;
                 if (!eval(this.WaterMaterial)) return false;
-                if (!eval(this.Water)) return false;
                 if (LoopingSound != null)
                 {
                     if (!eval(this.LoopingSound.Overall)) return false;
@@ -763,6 +762,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ActivateSound.Specific != null && !this.ActivateSound.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ActivateTextOverride)) return false;
+                if (!eval(this.Water)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ActivationAngle)) return false;
                 if (!eval(this.INAM)) return false;
@@ -881,7 +881,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.NativeTerminal)) return true;
                 if (eval(this.MarkerColor)) return true;
                 if (eval(this.WaterMaterial)) return true;
-                if (eval(this.Water)) return true;
                 if (LoopingSound != null)
                 {
                     if (eval(this.LoopingSound.Overall)) return true;
@@ -893,6 +892,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ActivateSound.Specific != null && this.ActivateSound.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ActivateTextOverride)) return true;
+                if (eval(this.Water)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.ActivationAngle)) return true;
                 if (eval(this.INAM)) return true;
@@ -1002,10 +1002,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.NativeTerminal = eval(this.NativeTerminal);
                 obj.MarkerColor = eval(this.MarkerColor);
                 obj.WaterMaterial = eval(this.WaterMaterial);
-                obj.Water = eval(this.Water);
                 obj.LoopingSound = this.LoopingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LoopingSound.Overall), this.LoopingSound.Specific?.Translate(eval));
                 obj.ActivateSound = this.ActivateSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ActivateSound.Overall), this.ActivateSound.Specific?.Translate(eval));
                 obj.ActivateTextOverride = eval(this.ActivateTextOverride);
+                obj.Water = eval(this.Water);
                 obj.Flags = eval(this.Flags);
                 obj.ActivationAngle = eval(this.ActivationAngle);
                 obj.INAM = eval(this.INAM);
@@ -1187,10 +1187,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(WaterMaterial, "WaterMaterial");
                     }
-                    if (printMask?.Water ?? true)
-                    {
-                        sb.AppendItem(Water, "Water");
-                    }
                     if (printMask?.LoopingSound?.Overall ?? true)
                     {
                         LoopingSound?.Print(sb);
@@ -1202,6 +1198,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ActivateTextOverride ?? true)
                     {
                         sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -1269,10 +1269,10 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? NativeTerminal;
             public Exception? MarkerColor;
             public Exception? WaterMaterial;
-            public Exception? Water;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopingSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? ActivateSound;
             public Exception? ActivateTextOverride;
+            public Exception? Water;
             public Exception? Flags;
             public Exception? ActivationAngle;
             public Exception? INAM;
@@ -1326,14 +1326,14 @@ namespace Mutagen.Bethesda.Starfield
                         return MarkerColor;
                     case Activator_FieldIndex.WaterMaterial:
                         return WaterMaterial;
-                    case Activator_FieldIndex.Water:
-                        return Water;
                     case Activator_FieldIndex.LoopingSound:
                         return LoopingSound;
                     case Activator_FieldIndex.ActivateSound:
                         return ActivateSound;
                     case Activator_FieldIndex.ActivateTextOverride:
                         return ActivateTextOverride;
+                    case Activator_FieldIndex.Water:
+                        return Water;
                     case Activator_FieldIndex.Flags:
                         return Flags;
                     case Activator_FieldIndex.ActivationAngle:
@@ -1414,9 +1414,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.WaterMaterial:
                         this.WaterMaterial = ex;
                         break;
-                    case Activator_FieldIndex.Water:
-                        this.Water = ex;
-                        break;
                     case Activator_FieldIndex.LoopingSound:
                         this.LoopingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
@@ -1425,6 +1422,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Activator_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = ex;
+                        break;
+                    case Activator_FieldIndex.Water:
+                        this.Water = ex;
                         break;
                     case Activator_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1512,9 +1512,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.WaterMaterial:
                         this.WaterMaterial = (Exception?)obj;
                         break;
-                    case Activator_FieldIndex.Water:
-                        this.Water = (Exception?)obj;
-                        break;
                     case Activator_FieldIndex.LoopingSound:
                         this.LoopingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
@@ -1523,6 +1520,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Activator_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.Water:
+                        this.Water = (Exception?)obj;
                         break;
                     case Activator_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1568,10 +1568,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (NativeTerminal != null) return true;
                 if (MarkerColor != null) return true;
                 if (WaterMaterial != null) return true;
-                if (Water != null) return true;
                 if (LoopingSound != null) return true;
                 if (ActivateSound != null) return true;
                 if (ActivateTextOverride != null) return true;
+                if (Water != null) return true;
                 if (Flags != null) return true;
                 if (ActivationAngle != null) return true;
                 if (INAM != null) return true;
@@ -1713,13 +1713,13 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(WaterMaterial, "WaterMaterial");
                 }
-                {
-                    sb.AppendItem(Water, "Water");
-                }
                 LoopingSound?.Print(sb);
                 ActivateSound?.Print(sb);
                 {
                     sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
@@ -1777,10 +1777,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
                 ret.WaterMaterial = this.WaterMaterial.Combine(rhs.WaterMaterial);
-                ret.Water = this.Water.Combine(rhs.Water);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound, (l, r) => l.Combine(r));
                 ret.ActivateSound = this.ActivateSound.Combine(rhs.ActivateSound, (l, r) => l.Combine(r));
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
+                ret.Water = this.Water.Combine(rhs.Water);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ActivationAngle = this.ActivationAngle.Combine(rhs.ActivationAngle);
                 ret.INAM = this.INAM.Combine(rhs.INAM);
@@ -1828,10 +1828,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool NativeTerminal;
             public bool MarkerColor;
             public bool WaterMaterial;
-            public bool Water;
             public SoundReference.TranslationMask? LoopingSound;
             public SoundReference.TranslationMask? ActivateSound;
             public bool ActivateTextOverride;
+            public bool Water;
             public bool Flags;
             public bool ActivationAngle;
             public bool INAM;
@@ -1856,8 +1856,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.NativeTerminal = defaultOn;
                 this.MarkerColor = defaultOn;
                 this.WaterMaterial = defaultOn;
-                this.Water = defaultOn;
                 this.ActivateTextOverride = defaultOn;
+                this.Water = defaultOn;
                 this.Flags = defaultOn;
                 this.ActivationAngle = defaultOn;
                 this.INAM = defaultOn;
@@ -1888,10 +1888,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((NativeTerminal, null));
                 ret.Add((MarkerColor, null));
                 ret.Add((WaterMaterial, null));
-                ret.Add((Water, null));
                 ret.Add((LoopingSound != null ? LoopingSound.OnOverall : DefaultOn, LoopingSound?.GetCrystal()));
                 ret.Add((ActivateSound != null ? ActivateSound.OnOverall : DefaultOn, ActivateSound?.GetCrystal()));
                 ret.Add((ActivateTextOverride, null));
+                ret.Add((Water, null));
                 ret.Add((Flags, null));
                 ret.Add((ActivationAngle, null));
                 ret.Add((INAM, null));
@@ -2102,10 +2102,10 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ITerminalMenuGetter> NativeTerminal { get; set; }
         new Color? MarkerColor { get; set; }
         new String? WaterMaterial { get; set; }
-        new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new SoundReference? LoopingSound { get; set; }
         new SoundReference? ActivateSound { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new Activator.Flag? Flags { get; set; }
         new UInt16? ActivationAngle { get; set; }
         new MemorySlice<Byte>? INAM { get; set; }
@@ -2192,10 +2192,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal { get; }
         Color? MarkerColor { get; }
         String? WaterMaterial { get; }
-        IFormLinkNullableGetter<IWaterGetter> Water { get; }
         ISoundReferenceGetter? LoopingSound { get; }
         ISoundReferenceGetter? ActivateSound { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
         Activator.Flag? Flags { get; }
         UInt16? ActivationAngle { get; }
         ReadOnlyMemorySlice<Byte>? INAM { get; }
@@ -2401,10 +2401,10 @@ namespace Mutagen.Bethesda.Starfield
         NativeTerminal = 24,
         MarkerColor = 25,
         WaterMaterial = 26,
-        Water = 27,
-        LoopingSound = 28,
-        ActivateSound = 29,
-        ActivateTextOverride = 30,
+        LoopingSound = 27,
+        ActivateSound = 28,
+        ActivateTextOverride = 29,
+        Water = 30,
         Flags = 31,
         ActivationAngle = 32,
         INAM = 33,
@@ -2489,10 +2489,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NTRM,
                 RecordTypes.PNAM,
                 RecordTypes.WMAT,
-                RecordTypes.WTFM,
                 RecordTypes.ALSH,
                 RecordTypes.ACSH,
                 RecordTypes.ATTX,
+                RecordTypes.WTFM,
                 RecordTypes.FNAM,
                 RecordTypes.JNAM,
                 RecordTypes.INAM,
@@ -2565,10 +2565,10 @@ namespace Mutagen.Bethesda.Starfield
             item.NativeTerminal.Clear();
             item.MarkerColor = default;
             item.WaterMaterial = default;
-            item.Water.Clear();
             item.LoopingSound = null;
             item.ActivateSound = null;
             item.ActivateTextOverride = default;
+            item.Water.Clear();
             item.Flags = default;
             item.ActivationAngle = default;
             item.INAM = default;
@@ -2603,9 +2603,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.Properties?.RemapLinks(mapping);
             obj.ForcedLocations?.RemapLinks(mapping);
             obj.NativeTerminal.Relink(mapping);
-            obj.Water.Relink(mapping);
             obj.LoopingSound?.RemapLinks(mapping);
             obj.ActivateSound?.RemapLinks(mapping);
+            obj.Water.Relink(mapping);
             obj.Conditions?.RemapLinks(mapping);
             obj.NavmeshGeometry?.RemapLinks(mapping);
         }
@@ -2771,7 +2771,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
             ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
             ret.WaterMaterial = string.Equals(item.WaterMaterial, rhs.WaterMaterial);
-            ret.Water = item.Water.Equals(rhs.Water);
             ret.LoopingSound = EqualsMaskHelper.EqualsHelper(
                 item.LoopingSound,
                 rhs.LoopingSound,
@@ -2783,6 +2782,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.Water = item.Water.Equals(rhs.Water);
             ret.Flags = item.Flags == rhs.Flags;
             ret.ActivationAngle = item.ActivationAngle == rhs.ActivationAngle;
             ret.INAM = MemorySliceExt.SequenceEqual(item.INAM, rhs.INAM);
@@ -2979,10 +2979,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(WaterMaterialItem, "WaterMaterial");
             }
-            if (printMask?.Water ?? true)
-            {
-                sb.AppendItem(item.Water.FormKeyNullable, "Water");
-            }
             if ((printMask?.LoopingSound?.Overall ?? true)
                 && item.LoopingSound is {} LoopingSoundItem)
             {
@@ -2997,6 +2993,10 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ActivateTextOverride is {} ActivateTextOverrideItem)
             {
                 sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+            }
+            if (printMask?.Water ?? true)
+            {
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
@@ -3191,10 +3191,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.WaterMaterial, rhs.WaterMaterial)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Water) ?? true))
-            {
-                if (!lhs.Water.Equals(rhs.Water)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoopingSound, rhs.LoopingSound, out var lhsLoopingSound, out var rhsLoopingSound, out var isLoopingSoundEqual))
@@ -3214,6 +3210,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
                 if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
             {
@@ -3323,7 +3323,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(WaterMaterialitem);
             }
-            hash.Add(item.Water);
             if (item.LoopingSound is {} LoopingSounditem)
             {
                 hash.Add(LoopingSounditem);
@@ -3336,6 +3335,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ActivateTextOverrideitem);
             }
+            hash.Add(item.Water);
             if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
@@ -3455,10 +3455,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return NativeTerminalInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
-            {
-                yield return WaterInfo;
-            }
             if (obj.LoopingSound is {} LoopingSoundItems)
             {
                 foreach (var item in LoopingSoundItems.EnumerateFormLinks())
@@ -3472,6 +3468,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
+            {
+                yield return WaterInfo;
             }
             if (obj.Conditions is {} ConditionsItem)
             {
@@ -3920,10 +3920,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.WaterMaterial = rhs.WaterMaterial;
             }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Water) ?? true))
-            {
-                item.Water.SetTo(rhs.Water.FormKeyNullable);
-            }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.LoopingSound);
@@ -3979,6 +3975,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
                 item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Water) ?? true))
+            {
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
             {
@@ -4357,10 +4357,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.WaterMaterial,
                 header: translationParams.ConvertToCustom(RecordTypes.WMAT),
                 binaryType: StringBinaryType.NullTerminate);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Water,
-                header: translationParams.ConvertToCustom(RecordTypes.WTFM));
             if (item.LoopingSound is {} LoopingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ALSH))
@@ -4387,6 +4383,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ATTX),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Water,
+                header: translationParams.ConvertToCustom(RecordTypes.WTFM));
             EnumBinaryTranslation<Activator.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
@@ -4659,12 +4659,6 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Activator_FieldIndex.WaterMaterial;
                 }
-                case RecordTypeInts.WTFM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Activator_FieldIndex.Water;
-                }
                 case RecordTypeInts.ALSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
@@ -4685,6 +4679,12 @@ namespace Mutagen.Bethesda.Starfield
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Activator_FieldIndex.ActivateTextOverride;
+                }
+                case RecordTypeInts.WTFM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Activator_FieldIndex.Water;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -4867,15 +4867,15 @@ namespace Mutagen.Bethesda.Starfield
         private int? _WaterMaterialLocation;
         public String? WaterMaterial => _WaterMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region Water
-        private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
-        #endregion
         public ISoundReferenceGetter? LoopingSound { get; private set; }
         public ISoundReferenceGetter? ActivateSound { get; private set; }
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
         public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region Water
+        private int? _WaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -5107,11 +5107,6 @@ namespace Mutagen.Bethesda.Starfield
                     _WaterMaterialLocation = (stream.Position - offset);
                     return (int)Activator_FieldIndex.WaterMaterial;
                 }
-                case RecordTypeInts.WTFM:
-                {
-                    _WaterLocation = (stream.Position - offset);
-                    return (int)Activator_FieldIndex.Water;
-                }
                 case RecordTypeInts.ALSH:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
@@ -5134,6 +5129,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ActivateTextOverrideLocation = (stream.Position - offset);
                     return (int)Activator_FieldIndex.ActivateTextOverride;
+                }
+                case RecordTypeInts.WTFM:
+                {
+                    _WaterLocation = (stream.Position - offset);
+                    return (int)Activator_FieldIndex.Water;
                 }
                 case RecordTypeInts.FNAM:
                 {

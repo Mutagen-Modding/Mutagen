@@ -101,6 +101,9 @@ namespace Mutagen.Bethesda.Starfield
         #region BaseStability
         public Single BaseStability { get; set; } = default(Single);
         #endregion
+        #region Unknown
+        public Byte Unknown { get; set; } = default(Byte);
+        #endregion
 
         #region To String
 
@@ -142,6 +145,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RecoilArcRotate = initialValue;
                 this.ConeOfFireIronSightsMult = initialValue;
                 this.BaseStability = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
@@ -167,7 +171,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem RecoilArc,
                 TItem RecoilArcRotate,
                 TItem ConeOfFireIronSightsMult,
-                TItem BaseStability)
+                TItem BaseStability,
+                TItem Unknown)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -193,6 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RecoilArcRotate = RecoilArcRotate;
                 this.ConeOfFireIronSightsMult = ConeOfFireIronSightsMult;
                 this.BaseStability = BaseStability;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -220,6 +226,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem RecoilArcRotate;
             public TItem ConeOfFireIronSightsMult;
             public TItem BaseStability;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -249,6 +256,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.RecoilArcRotate, rhs.RecoilArcRotate)) return false;
                 if (!object.Equals(this.ConeOfFireIronSightsMult, rhs.ConeOfFireIronSightsMult)) return false;
                 if (!object.Equals(this.BaseStability, rhs.BaseStability)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -270,6 +278,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.RecoilArcRotate);
                 hash.Add(this.ConeOfFireIronSightsMult);
                 hash.Add(this.BaseStability);
+                hash.Add(this.Unknown);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -296,6 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.RecoilArcRotate)) return false;
                 if (!eval(this.ConeOfFireIronSightsMult)) return false;
                 if (!eval(this.BaseStability)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -320,6 +330,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.RecoilArcRotate)) return true;
                 if (eval(this.ConeOfFireIronSightsMult)) return true;
                 if (eval(this.BaseStability)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -351,6 +362,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.RecoilArcRotate = eval(this.RecoilArcRotate);
                 obj.ConeOfFireIronSightsMult = eval(this.ConeOfFireIronSightsMult);
                 obj.BaseStability = eval(this.BaseStability);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -433,6 +445,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(BaseStability, "BaseStability");
                     }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
                 }
             }
             #endregion
@@ -460,6 +476,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? RecoilArcRotate;
             public Exception? ConeOfFireIronSightsMult;
             public Exception? BaseStability;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -500,6 +517,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ConeOfFireIronSightsMult;
                     case AimModel_FieldIndex.BaseStability:
                         return BaseStability;
+                    case AimModel_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -557,6 +576,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AimModel_FieldIndex.BaseStability:
                         this.BaseStability = ex;
+                        break;
+                    case AimModel_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -617,6 +639,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AimModel_FieldIndex.BaseStability:
                         this.BaseStability = (Exception?)obj;
                         break;
+                    case AimModel_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -642,6 +667,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (RecoilArcRotate != null) return true;
                 if (ConeOfFireIronSightsMult != null) return true;
                 if (BaseStability != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -716,6 +742,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(BaseStability, "BaseStability");
                 }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -740,6 +769,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.RecoilArcRotate = this.RecoilArcRotate.Combine(rhs.RecoilArcRotate);
                 ret.ConeOfFireIronSightsMult = this.ConeOfFireIronSightsMult.Combine(rhs.ConeOfFireIronSightsMult);
                 ret.BaseStability = this.BaseStability.Combine(rhs.BaseStability);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -778,6 +808,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool RecoilArcRotate;
             public bool ConeOfFireIronSightsMult;
             public bool BaseStability;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -802,6 +833,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RecoilArcRotate = defaultOn;
                 this.ConeOfFireIronSightsMult = defaultOn;
                 this.BaseStability = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -825,6 +857,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((RecoilArcRotate, null));
                 ret.Add((ConeOfFireIronSightsMult, null));
                 ret.Add((BaseStability, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -985,6 +1018,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single RecoilArcRotate { get; set; }
         new Single ConeOfFireIronSightsMult { get; set; }
         new Single BaseStability { get; set; }
+        new Byte Unknown { get; set; }
     }
 
     public partial interface IAimModelInternal :
@@ -1018,6 +1052,7 @@ namespace Mutagen.Bethesda.Starfield
         Single RecoilArcRotate { get; }
         Single ConeOfFireIronSightsMult { get; }
         Single BaseStability { get; }
+        Byte Unknown { get; }
 
     }
 
@@ -1210,6 +1245,7 @@ namespace Mutagen.Bethesda.Starfield
         RecoilArcRotate = 20,
         ConeOfFireIronSightsMult = 21,
         BaseStability = 22,
+        Unknown = 23,
     }
     #endregion
 
@@ -1220,9 +1256,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(AimModel.Mask<>);
 
@@ -1316,6 +1352,7 @@ namespace Mutagen.Bethesda.Starfield
             item.RecoilArcRotate = default(Single);
             item.ConeOfFireIronSightsMult = default(Single);
             item.BaseStability = default(Single);
+            item.Unknown = default(Byte);
             base.Clear(item);
         }
         
@@ -1416,6 +1453,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.RecoilArcRotate = item.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate);
             ret.ConeOfFireIronSightsMult = item.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult);
             ret.BaseStability = item.BaseStability.EqualsWithin(rhs.BaseStability);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1528,6 +1566,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.BaseStability ?? true)
             {
                 sb.AppendItem(item.BaseStability, "BaseStability");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1643,6 +1685,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.BaseStability.EqualsWithin(rhs.BaseStability)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
             return true;
         }
         
@@ -1687,6 +1733,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.RecoilArcRotate);
             hash.Add(item.ConeOfFireIronSightsMult);
             hash.Add(item.BaseStability);
+            hash.Add(item.Unknown);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1853,6 +1900,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
             {
                 item.BaseStability = rhs.BaseStability;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2069,6 +2120,7 @@ namespace Mutagen.Bethesda.Starfield
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.BaseStability);
+                writer.Write(item.Unknown);
             }
         }
 
@@ -2191,7 +2243,9 @@ namespace Mutagen.Bethesda.Starfield
                     item.ConeOfFireIronSightsMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.BaseStability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)AimModel_FieldIndex.BaseStability;
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Unknown = dataFrame.ReadUInt8();
+                    return (int)AimModel_FieldIndex.Unknown;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2332,6 +2386,11 @@ namespace Mutagen.Bethesda.Starfield
         private bool _BaseStability_IsSet => _ANAMLocation.HasValue;
         public Single BaseStability => _BaseStability_IsSet ? _recordData.Slice(_BaseStabilityLocation, 4).Float() : default(Single);
         #endregion
+        #region Unknown
+        private int _UnknownLocation => _ANAMLocation!.Value.Min + 0x40;
+        private bool _Unknown_IsSet => _ANAMLocation.HasValue;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2404,7 +2463,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     _ANAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)AimModel_FieldIndex.BaseStability;
+                    return (int)AimModel_FieldIndex.Unknown;
                 }
                 default:
                     return base.FillRecordType(

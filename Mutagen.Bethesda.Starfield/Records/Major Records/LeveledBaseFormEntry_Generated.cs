@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Reference
         private int _ReferenceLocation => _LVLOLocation!.Value.Min + 0x4;
         private bool _Reference_IsSet => _LVLOLocation.HasValue;
-        public IFormLinkGetter<ILeveledBaseFormTargetGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledBaseFormTargetGetter>(_package, _recordData.Span.Slice(_ReferenceLocation, 0x4), isSet: _Reference_IsSet);
+        public IFormLinkGetter<ILeveledBaseFormTargetGetter> Reference => _Reference_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledBaseFormTargetGetter>(_package, _recordData.Span.Slice(_ReferenceLocation, 0x4), isSet: _Reference_IsSet) : FormLink<ILeveledBaseFormTargetGetter>.Null;
         #endregion
         #region Count
         private int _CountLocation => _LVLOLocation!.Value.Min + 0x8;

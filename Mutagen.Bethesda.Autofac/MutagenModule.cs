@@ -41,7 +41,7 @@ public class MutagenModule : Module
             .As(typeof(ILoadOrderImporter<>));
         builder.RegisterGeneric(typeof(ModImporter<>))
             .As(typeof(IModImporter<>));
-        builder.RegisterType<GameLocator>()
+        builder.RegisterType<GameLocatorLookupCache>()
             .As<IGameDirectoryLookup>()
             .As<IDataDirectoryLookup>();
     }

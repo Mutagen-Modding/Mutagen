@@ -16,13 +16,13 @@ partial class APackageTarget
         RefAlias,
         InterruptData,
         Self,
-        Keyword,
-        Unknown
+        Keyword
     }
 
     public static APackageTarget CreateFromBinary(MutagenFrame frame)
     {
-        APackageTarget target = ((APackageTarget.Type)frame.ReadUInt32()) switch
+        var i = frame.ReadInt32();
+        APackageTarget target = ((APackageTarget.Type)i) switch
         {
             APackageTarget.Type.SpecificReference => new PackageTargetSpecificReference()
             {
@@ -56,11 +56,11 @@ partial class APackageTarget
             {
                 Keyword = new FormLink<IKeywordGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
             },
-            APackageTarget.Type.Unknown => new PackageTargetUnknown()
+            _ => new PackageTargetUnknown()
             {
-                Data = frame.ReadInt32()
+                Data = frame.ReadInt32(),
+                Type = i
             },
-            _ => throw new NotImplementedException(),
         };
         target.CountOrDistance = frame.ReadInt32();
         return target;
@@ -113,7 +113,7 @@ partial class APackageTargetBinaryWriteTranslation
                 FormKeyBinaryTranslation.Instance.Write(writer, r.Keyword);
                 break;
             case PackageTargetUnknown r:
-                writer.Write((int)APackageTarget.Type.Unknown);
+                writer.Write(r.Type);
                 writer.Write(r.Data);
                 break;
             default:

@@ -6721,5 +6721,23 @@
     <Compile Include="Records\Common Subrecords\VehicleWWiseData_Generated.cs">
       <DependentUpon>VehicleWWiseData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectGoboAnimatedProperties_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectXCZRXCZA_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectCurrentZoneCell_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollection_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -380,7 +380,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
     {
         return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
         {
-            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
+            _dataFolderGetter = (m, p) => GameLocatorLookupCache.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
@@ -674,7 +674,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
     {
         return new BinaryWriteBuilder<TModGetter>(_params with
         {
-            _dataFolderGetter = static (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease),
+            _dataFolderGetter = static (m, p) => GameLocatorLookupCache.Instance.GetDataDirectory(m.GameRelease),
             _loadOrderSetter = static (m, p, alreadyKnownMasters) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
@@ -772,7 +772,7 @@ public record BinaryWriteBuilderDataFolderChoice<TModGetter>
     {
         return new BinaryWriteBuilder<TModGetter>(_param with
         {
-            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+            _dataFolderGetter = (m, p) => GameLocatorLookupCache.Instance.GetDataDirectory(m.GameRelease)
         });
     }
     
@@ -848,7 +848,7 @@ public record BinaryModdedWriteBuilderDataFolderChoice<TModGetter> : IBinaryModd
     {
         return new BinaryModdedWriteBuilder<TModGetter>(_mod, _param with
         {
-            _dataFolderGetter = (m, p) => GameLocator.Instance.GetDataDirectory(m.GameRelease)
+            _dataFolderGetter = (m, p) => GameLocatorLookupCache.Instance.GetDataDirectory(m.GameRelease)
         });
     }
 
