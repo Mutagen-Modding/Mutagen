@@ -34,16 +34,16 @@
     <PackageVersion Include="Microsoft.Reactive.Testing" Version="6.0.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Noggog.Autofac">
-      <Version>[2.65.1-nightly-20240911-092507]</Version>
+      <Version>[2.65.1-nightly-20241003-194820]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.CSharpExt">
-      <Version>[2.65.1-nightly-20240911-092507]</Version>
+      <Version>[2.65.1-nightly-20241003-194820]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.Testing">
-      <Version>[2.65.1-nightly-20240911-092507]</Version>
+      <Version>[2.65.1-nightly-20241003-194820]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.WPF">
-      <Version>[2.65.1-nightly-20240911-092507]</Version>
+      <Version>[2.65.1-nightly-20241003-194820]</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI" Version="20.1.1" />
     <PackageVersion Include="ReactiveUI.Fody" Version="19.5.41" />
