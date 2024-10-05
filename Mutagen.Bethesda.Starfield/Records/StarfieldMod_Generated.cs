@@ -13160,6 +13160,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Locations is IAssetLinkContainer LocationslinkCont)
+            {
+                foreach (var item in LocationslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ArtObjects is IAssetLinkContainer ArtObjectslinkCont)
             {
                 foreach (var item in ArtObjectslinkCont.EnumerateListedAssetLinks())
@@ -13389,6 +13396,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.MaterialTypes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Locations.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ReferenceGroups.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Layers.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -25053,6 +25061,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Locations is IAssetLinkContainerGetter LocationslinkCont)
+            {
+                foreach (var item in LocationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
