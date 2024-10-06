@@ -14,12 +14,28 @@ public class RecordCompactionCompatibilityDetector
         return IsCompatible(mod, range.Value);
     }
     
+    public bool CouldBeSmallMasterCompatible(IModGetter mod)
+    {
+        var range = GetSmallMasterRange(mod);
+        if (range == null) return false;
+
+        return CouldBeCompatible(mod, range.Value);
+    }
+    
     public bool IsMediumMasterCompatible(IModGetter mod)
     {
         var range = GetMediumMasterRange(mod);
         if (range == null) return false;
 
         return IsCompatible(mod, range.Value);
+    }
+    
+    public bool CouldBeMediumMasterCompatible(IModGetter mod)
+    {
+        var range = GetMediumMasterRange(mod);
+        if (range == null) return false;
+
+        return CouldBeCompatible(mod, range.Value);
     }
 
     public RangeUInt32? GetSmallMasterRange(IModGetter mod)
@@ -61,6 +77,16 @@ public class RecordCompactionCompatibilityDetector
         }
 
         return true;
+    }
+    
+    private bool CouldBeCompatible(IModGetter modGetter, RangeUInt32 range)
+    {
+        var rangeSize = range.Difference;
+        ModKey patchModKey = modGetter.ModKey;
+        var numOriginating = modGetter
+            .EnumerateMajorRecords()
+            .Count(x => x.FormKey.ModKey.Equals(patchModKey));
+        return rangeSize >= numOriginating;
     }
     
     public void ThrowIfIncompatible(IModGetter mod)
