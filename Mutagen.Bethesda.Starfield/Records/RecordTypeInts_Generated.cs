@@ -324,6 +324,7 @@ public partial class RecordTypeInts
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
     public const int ENIT = 0x54494E45;
+    public const int EOVR = 0x52564F45;
     public const int EPF2 = 0x32465045;
     public const int EPF3 = 0x33465045;
     public const int EPFB = 0x42465045;
