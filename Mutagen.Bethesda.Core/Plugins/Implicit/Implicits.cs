@@ -147,6 +147,11 @@ public static class Implicits
             "OldMars.esm",
             "BlueprintShips-Starfield.esm",
             "ShatteredSpace.esm",
+            "SFBGS006.esm",
+            "SFBGS007.esm",
+            "SFBGS003.esm",
+            "SFBGS008.esm",
+            "SFBGS004.esm",
         };
         Starfield = new ImplicitRegistration(
             GameRelease.Starfield,

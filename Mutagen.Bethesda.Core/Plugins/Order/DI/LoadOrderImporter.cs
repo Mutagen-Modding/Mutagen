@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -116,6 +117,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
     private readonly IFileSystem _fileSystem;
     private readonly IGameReleaseContext _gameRelease;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IKeyedMasterStyleReader _keyedMasterStyleReader;
     public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
     public IModImporter Importer { get; }
 
@@ -124,11 +126,13 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
         IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider loadOrderListingsProvider,
+        IKeyedMasterStyleReader keyedMasterStyleReader,
         IModImporter importer)
     {
         _fileSystem = fileSystem;
         _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
+        _keyedMasterStyleReader = keyedMasterStyleReader;
         LoadOrderListingsProvider = loadOrderListingsProvider;
         Importer = importer;
     }
@@ -142,17 +146,13 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
         {
             param = param with
             {
-                MasterFlagsLookup = new LoadOrder<IModFlagsGetter>(loList
+                MasterFlagsLookup = new LoadOrder<IModMasterStyledGetter>(loList
                     .Select(listing =>
                     {
                         var modPath = new ModPath(listing.ModKey,
                             _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
                         if (!_fileSystem.File.Exists(modPath)) return null;
-                        using var mod = ModInstantiator.ImportGetter(modPath, _gameRelease.Release, new BinaryReadParameters()
-                        {
-                            FileSystem = _fileSystem
-                        });
-                        return new ModFlags(mod);
+                        return _keyedMasterStyleReader.ReadFrom(modPath);
                     })
                     .NotNull())
             };

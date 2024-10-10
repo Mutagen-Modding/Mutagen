@@ -326,6 +326,7 @@ public partial class RecordTypes
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType ENCH = new(0x48434E45);
     public static readonly RecordType ENIT = new(0x54494E45);
+    public static readonly RecordType EOVR = new(0x52564F45);
     public static readonly RecordType EPF2 = new(0x32465045);
     public static readonly RecordType EPF3 = new(0x33465045);
     public static readonly RecordType EPFB = new(0x42465045);

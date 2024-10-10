@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Noggog;
@@ -498,6 +499,9 @@ public sealed record GameEnvironmentBuilder
             Release,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
+            new KeyedMasterStyleReader(
+                Release,
+                fs),
             new ModImporter(
                 fs,
                 Release));

@@ -3,7 +3,8 @@
   <Object name="Planet" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
-      <RefList name="Worldspaces" refName="PlanetWorldspace" recordType="CNAM" nullable="False" />
+      <ByteArray name="EOVR" recordType="EOVR" unknown="true" />
+      <RefList name="Worldspaces" refName="PlanetWorldspace" recordType="CNAM" />
       <RefList name="Biomes" refName="PlanetBiome" />
       <FormLink name="SurfaceTree" refName="SurfaceTree" recordType="FNAM" />
       <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
