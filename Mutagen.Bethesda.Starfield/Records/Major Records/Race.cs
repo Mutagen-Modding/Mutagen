@@ -67,6 +67,14 @@ public partial class Race
         LowPriorityPushable = 0x0020_0000_0000_0000,
         CannotUsePlayableItems = 0x0040_0000_0000_0000
     }
+
+    partial void CustomCtor()
+    {
+        for (int key = 0; key < 64; ++key)
+        {
+            BipedObjects[(BipedObject)key] = new();
+        }
+    }
 }
 
 partial class RaceBinaryCreateTranslation
