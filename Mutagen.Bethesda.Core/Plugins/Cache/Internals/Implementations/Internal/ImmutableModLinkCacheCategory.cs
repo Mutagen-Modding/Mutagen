@@ -16,6 +16,11 @@ internal sealed class ImmutableModLinkCacheCategory<TKey>
     internal readonly Lazy<IReadOnlyCache<LinkCacheItem, TKey>> _untypedMajorRecords;
     private readonly Dictionary<Type, IReadOnlyCache<LinkCacheItem, TKey>> _majorRecords = new();
 
+    static ImmutableModLinkCacheCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+    
     public ImmutableModLinkCacheCategory(
         InternalImmutableModLinkCache parent,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,

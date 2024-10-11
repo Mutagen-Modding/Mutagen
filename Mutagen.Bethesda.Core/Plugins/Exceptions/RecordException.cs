@@ -13,6 +13,11 @@ public class RecordException : Exception
     public Type? RecordType { get; private set; }
     public string? EditorID { get; private set; }
 
+    static RecordException()
+    {
+        Warmup.Init();
+    }
+
     public RecordException(FormKey? formKey, Type? recordType, ModKey? modKey, string? edid)
     {
         FormKey = formKey;

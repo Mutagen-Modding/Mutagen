@@ -18,6 +18,7 @@ public class GetterTypeMapper : IGetterTypeMapper
     
     public GetterTypeMapper(IMetaInterfaceMapGetter meta)
     {
+        Warmup.Init();
         _meta = meta;
     }
 

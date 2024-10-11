@@ -10,6 +10,11 @@ namespace Mutagen.Bethesda.Plugins;
 /// </summary>
 public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
 {
+    static IFormLinkIdentifier()
+    {
+        Warmup.Init();
+    }
+    
     public static string GetString(IFormLinkIdentifier ident, bool simpleType = false) => 
         GetString(ident.FormKey, ident.Type, simpleType: simpleType);
     
