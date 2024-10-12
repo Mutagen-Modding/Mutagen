@@ -226,7 +226,7 @@ partial class WeatherBinaryWriteTranslation
     public static partial void WriteBinaryCloudTexturesParseCustom(MutagenWriter writer, IWeatherGetter item)
     {
         var cloudTex = item.CloudTextures;
-        for (int i = 0; i < cloudTex.Length; i++)
+        for (int i = 0; i < cloudTex.Count; i++)
         {
             if (cloudTex[i] is not {} tex) continue;
             using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
@@ -404,10 +404,10 @@ partial class WeatherBinaryWriteTranslation
 partial class WeatherBinaryOverlay
 {
     private readonly IAssetLink<SkyrimTextureAssetType>?[] _cloudTextures = new IAssetLink<SkyrimTextureAssetType>?[29];
-    public ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures => _cloudTextures;
+    public IReadOnlyList<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures => _cloudTextures;
 
     private readonly CloudLayer[] _clouds = ArrayExt.Create(WeatherBinaryCreateTranslation.NumLayers, (i) => new CloudLayer());
-    public ReadOnlyMemorySlice<ICloudLayerGetter> Clouds => _clouds;
+    public IReadOnlyList<ICloudLayerGetter> Clouds => _clouds;
 
     int? _directionalLoc;
 

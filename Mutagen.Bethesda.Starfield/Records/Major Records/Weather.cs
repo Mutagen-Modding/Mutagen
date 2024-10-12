@@ -365,7 +365,7 @@ partial class WeatherBinaryOverlay
     public ReadOnlyMemorySlice<string?> CloudTextures => _cloudTextures;
 
     private readonly CloudLayer[] _clouds = ArrayExt.Create(WeatherBinaryCreateTranslation.NumLayers, (i) => new CloudLayer());
-    public ReadOnlyMemorySlice<ICloudLayerGetter> Clouds => _clouds;
+    public IReadOnlyList<ICloudLayerGetter> Clouds => _clouds;
 
     int? _directionalLoc;
 
