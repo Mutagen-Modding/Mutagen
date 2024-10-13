@@ -70,6 +70,7 @@ Use the [MkDocs guide](https://squidfunk.github.io/mkdocs-material/reference/) f
 This step saves your changes locally and prepares them to be uploaded and merged.
 
 Once committed, you can Push them up to your Fork on GitHub's servers
+
 ![Commit Changes](images/committing.png){ width="350" }
 
 #### Create Pull Request
