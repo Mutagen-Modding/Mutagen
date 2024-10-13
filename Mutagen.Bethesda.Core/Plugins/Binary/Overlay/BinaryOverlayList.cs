@@ -599,7 +599,10 @@ internal abstract class BinaryOverlayList
         var subLen = finalPos - stream.Position;
         var mem = stream.RemainingMemory.Slice(0, subLen);
 
-        if (trimNullSuffix && mem.Length > 0 && mem[^1] == 0)
+        if (trimNullSuffix
+            && mem.Length > 1 
+            && mem[^1] == 0
+            && mem[^2] == 0)
         {
             mem = mem.Slice(0, mem.Length - 1);
         }
