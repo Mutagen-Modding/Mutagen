@@ -148,3 +148,4 @@ nav:
       - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
       - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: Correctness.md
+  - Contributing: Contributing.md
