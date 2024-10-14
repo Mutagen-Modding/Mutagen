@@ -26,7 +26,7 @@ Usually you will be provided a state from which ModContexts can be retrieved
     ``` { .cs hl_lines=1 }
     foreach (var context in environment.LoadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(environment.LinkCache))
     {
-        Console.WriteLine($"Found npc {context.Record.FormKey} {context.Record.EditorID}, which was found in mod {context.ModKey}");
+        Console.WriteLine($"Found object {context.Record.FormKey} {context.Record.EditorID}, which was found in mod {context.ModKey}");
     }
     ```
 
