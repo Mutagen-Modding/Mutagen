@@ -35,3 +35,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REQUIREMENTS: ./docs/requirements.txt
+          EXTRA_PACKAGES: mkdocs-glightbox
