@@ -34,6 +34,9 @@ extra_css:
 
 plugins:
   - search
+  - glightbox:
+      zoomable: true
+      draggable: true
 
 theme:
   name: material
