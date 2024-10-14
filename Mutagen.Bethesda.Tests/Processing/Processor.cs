@@ -1008,7 +1008,7 @@ public abstract class Processor
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))
             .ToDictionary(x => x.x,
-                x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary(x => x.Key, x => x.Value))));
+                x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.StringsLookup.ToDictionary(x => x.Key, x => x.Value))));
 
         var deadKeys = KnownDeadStringKeys();
 
@@ -1029,7 +1029,7 @@ public abstract class Processor
                 overlayDict.Remove(entry.OrigIndex);
                 if (entry.Fill)
                 {
-                    if (!overlay.Value.TryLookup(entry.OrigIndex, out var str))
+                    if (!overlay.Value.StringsLookup.TryLookup(entry.OrigIndex, out var str))
                     {
                         throw new ArgumentException();
                     }
@@ -1107,11 +1107,11 @@ public abstract class Processor
             var major = stream.GetMajorRecord();
             foreach (var alignment in stringAlignmentsForAll)
             {
-                alignment.Handler(stream.Position, major, ret, overlay.Value);
+                alignment.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
             }
             if (stringAlignmentLookup.TryGetValue(major.RecordType, out var instructions))
             {
-                instructions.Handler(stream.Position, major, ret, overlay.Value);
+                instructions.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
             }
         }
 
