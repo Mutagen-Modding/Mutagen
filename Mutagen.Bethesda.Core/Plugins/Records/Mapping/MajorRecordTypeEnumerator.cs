@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using Loqui;
 using Noggog;
+
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 public record RecordTypes(Type ClassType, Type GetterType, Type SetterType);
