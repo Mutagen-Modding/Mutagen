@@ -16,6 +16,25 @@
 }
 
 .md-grid {
-    width: 100%;
-    max-width: 1900px;
+  width: 100%;
+  max-width: 1900px;
 }
+
+.tabbed-labels > label {
+  background-color: (219.29deg 73.01% 27.85% / 64%)
+}
+
+/* the source theme uses this for selected tabs and goes out to 9 as well */
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(1),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(2),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(3),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(4),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(5),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(6),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(7),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(8),
+.tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels > :nth-child(9)
+{
+    background-color: #a95914c7;
+}
+
