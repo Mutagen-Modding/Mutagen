@@ -10,6 +10,11 @@ public static class MajorRecordTypeEnumerator
 {
 	private static readonly ConcurrentDictionary<GameCategory, List<RecordTypes>> Registrations = new();
 
+	static MajorRecordTypeEnumerator()
+	{
+		Warmup.Init();
+	}
+
 	private static List<RecordTypes> GetRegistrations(GameCategory cat)
 	{
 		var categoryString = Enums<GameCategory>.ToStringFast((int) cat);
