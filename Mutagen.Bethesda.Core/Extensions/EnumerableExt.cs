@@ -4,11 +4,6 @@ namespace Mutagen.Bethesda;
 
 internal static class EnumerableExt
 {
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumer)
-    {
-        return enumer.Where(x => x != null).Cast<T>();
-    }
-
     public static ExtendedList<T> CastExtendedList<T>(this ExtendedList<T> enumer)
     {
         return enumer;
