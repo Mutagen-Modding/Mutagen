@@ -8,7 +8,6 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -18,6 +17,7 @@ internal sealed class ModHeaderWriteLogic
     private readonly List<Action<IModContext<IMajorRecordGetter>>> _recordContextIterationActions = new();
     private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();
     private readonly BinaryWriteParameters _params;
+    private static readonly RecordCompactionCompatibilityDetector _recordCompactionDetector = new();
 
     private readonly ModKey _modKey;
     private readonly Dictionary<ModKey, FormKey?> _modKeys = new();
@@ -157,7 +157,17 @@ internal sealed class ModHeaderWriteLogic
         IModHeaderCommon modHeader,
         IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
-        HandleDisallowedLowerFormIDs();
+        HandleDisallowedLowerFormIDs(); 
+        SetOutgoingMasters(writer, mod, modHeader, masterFlagLookup);
+        CompactionAudit(modHeader);
+        SetNumRecords(mod, modHeader);
+        SetNextFormID(mod, modHeader);
+        SetOverriddenForms(modHeader);
+    }
+    
+    private void SetOutgoingMasters(MutagenWriter writer, IModGetter mod, IModHeaderCommon modHeader,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
+    {
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
         writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Factory(
             mod.GameRelease,
@@ -165,12 +175,23 @@ internal sealed class ModHeaderWriteLogic
             mod.GetMasterStyle(),
             writer.MetaData.MasterReferences,
             masterFlagLookup);
+        
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-        if (_params.RecordCount != RecordCountOption.NoCheck)
+    }
+    
+    private void CompactionAudit(IModHeaderCommon modHeader)
+    {
+        var smallIndex = _constants.SmallMasterFlag;
+        if (smallIndex.HasValue 
+            && Enums.HasFlag(modHeader.RawFlags, smallIndex.Value)
+            && _uniqueRecordsFromMod > Constants.SmallMasterLimit)
         {
-            // Can't use raw count, as more gets considered in this tally
-            modHeader.NumRecords = mod.GetRecordCount();
+            throw new ArgumentException($"Small Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.SmallMasterLimit}");
         }
+    }
+
+    private void SetNextFormID(IModGetter mod, IModHeaderCommon modHeader)
+    {
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
             bool? forceLowerBound = null;
@@ -180,16 +201,15 @@ internal sealed class ModHeaderWriteLogic
             }
             modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.GetDefaultInitialNextFormID(forceLowerBound);
         }
+    }
 
-        var lightIndex = _constants.SmallMasterFlag;
-        if (lightIndex.HasValue 
-            && Enums.HasFlag(modHeader.RawFlags, lightIndex.Value)
-            && _uniqueRecordsFromMod > Constants.SmallMasterLimit)
+    private void SetNumRecords(IModGetter mod, IModHeaderCommon modHeader)
+    {
+        if (_params.RecordCount != RecordCountOption.NoCheck)
         {
-            throw new ArgumentException($"Small Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.SmallMasterLimit}");
+            // Can't use raw count, as more gets considered in this tally
+            modHeader.NumRecords = mod.GetRecordCount();
         }
-
-        SetOverriddenForms(modHeader);
     }
 
     #region Master Content Sync Logic
@@ -269,13 +289,12 @@ internal sealed class ModHeaderWriteLogic
                 break;
             case FormIDCompactionOption.Iterate:
             {
-                var detector = new RecordCompactionCompatibilityDetector();
-                var formIdRange = detector.GetRange(_mod);
+                var formIdRange = _recordCompactionDetector.GetRange(_mod);
                 if (formIdRange != null)
                 {
                     _recordIterationActions.Add(maj =>
                     {
-                        detector.ThrowIfIncompatible(_mod, formIdRange.Value, maj);
+                        _recordCompactionDetector.ThrowIfIncompatible(_mod, formIdRange.Value, maj);
                     });
                 }
                 break;
