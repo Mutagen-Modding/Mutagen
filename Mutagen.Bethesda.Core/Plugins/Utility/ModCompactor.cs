@@ -21,6 +21,10 @@ public class ModCompactor
         var range = _compactionCompatibilityDetector.GetSmallMasterRange(mod);
         if (!mod.CanBeSmallMaster || !range.HasValue) throw new ArgumentException("Cannot be small master");
         mod.IsSmallMaster = true;
+        if (mod.CanBeMediumMaster)
+        {
+            mod.IsMediumMaster = false;
+        }
         DoCompacting(mod, range.Value);
     }
     
@@ -28,8 +32,45 @@ public class ModCompactor
     {
         var range = _compactionCompatibilityDetector.GetMediumMasterRange(mod);
         if (!mod.CanBeMediumMaster || !range.HasValue) throw new ArgumentException("Cannot be medium master");
+        if (mod.CanBeSmallMaster)
+        {
+            mod.IsSmallMaster = false;
+        }
         mod.IsMediumMaster = true;
         DoCompacting(mod, range.Value);
+    }
+    
+    public void CompactToFullMaster(IMod mod)
+    {
+        var range = _compactionCompatibilityDetector.GetFullMasterRange(mod, potential: false);
+        if (mod.CanBeSmallMaster)
+        {
+            mod.IsSmallMaster = false;
+        }
+
+        if (mod.CanBeMediumMaster)
+        {
+            mod.IsMediumMaster = false;
+        }
+        DoCompacting(mod, range);
+    }
+
+    public void CompactTo(IMod mod, MasterStyle style)
+    {
+        switch (style)
+        {
+            case MasterStyle.Full:
+                CompactToFullMaster(mod);
+                break;
+            case MasterStyle.Small:
+                CompactToSmallMaster(mod);
+                break;
+            case MasterStyle.Medium:
+                CompactToMediumMaster(mod);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(style), style, null);
+        }
     }
 
     private static void DoCompacting(IMod mod, RangeUInt32 range)

@@ -108,4 +108,36 @@ public class ModCompactorTests
             modCompactor.CompactToMediumMaster(mod);
         });
     }
+    
+    [Theory, MutagenModAutoData]
+    public void AlreadyFullMasterCompatible(
+        SkyrimMod mod,
+        SkyrimNpc n,
+        ModCompactor modCompactor)
+    {
+        var n2 = mod.Npcs.AddNew(FormKey.Factory($"000810:{mod.ModKey.FileName}"));
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        modCompactor.CompactToFullMaster(mod);
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        mod.Npcs.Records.Select(x => x.FormKey)
+            .Should().Equal(n.FormKey, n2.FormKey);
+    }
+    
+    [Theory, MutagenModAutoData]
+    public void CompactRecordToFullMasterWithoutLowRange(
+        SkyrimMod mod,
+        SkyrimNpc n,
+        ModCompactor modCompactor)
+    {
+        var n2 = mod.Npcs.AddNew(FormKey.Factory($"000010:{mod.ModKey.FileName}"));
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        modCompactor.CompactToFullMaster(mod);
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        mod.Npcs.Records.Select(x => x.FormKey)
+            .Should().Equal(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1));
+    }
 }
