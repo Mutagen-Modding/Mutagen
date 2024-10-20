@@ -23,14 +23,14 @@ internal sealed class ModHeaderWriteLogic
     private readonly Dictionary<ModKey, FormKey?> _modKeys = new();
     private uint _numRecords;
     private uint? _nextFormID;
-    private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
     private readonly GameCategory _category;
-    private FormKey? _disallowedFormKey;
+    private FormKey? _disallowedLowerFormKey;
     private uint _higherFormIDRange;
     private GameConstants _constants;
     private readonly IModGetter _mod;
     private readonly HashSet<FormKey> _overriddenForms = new();
+    private RangeUInt32? _recordRange;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters param,
@@ -73,7 +73,7 @@ internal sealed class ModHeaderWriteLogic
         AddNextFormIDActions();
         AddFormIDUniqueness();
         AddFormIDCompactionLogic();
-        AddSmallFormLimit(modHeader);
+        AddCompactionTracking(modHeader);
         AddCompressionCheck();
         AddDisallowedLowerFormIDs();
         RegisterOverriddenFormsFishing();
@@ -159,7 +159,6 @@ internal sealed class ModHeaderWriteLogic
     {
         HandleDisallowedLowerFormIDs(); 
         SetOutgoingMasters(writer, mod, modHeader, masterFlagLookup);
-        CompactionAudit(modHeader);
         SetNumRecords(mod, modHeader);
         SetNextFormID(mod, modHeader);
         SetOverriddenForms(modHeader);
@@ -177,17 +176,6 @@ internal sealed class ModHeaderWriteLogic
             masterFlagLookup);
         
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-    }
-    
-    private void CompactionAudit(IModHeaderCommon modHeader)
-    {
-        var smallIndex = _constants.SmallMasterFlag;
-        if (smallIndex.HasValue 
-            && Enums.HasFlag(modHeader.RawFlags, smallIndex.Value)
-            && _uniqueRecordsFromMod > Constants.SmallMasterLimit)
-        {
-            throw new ArgumentException($"Small Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.SmallMasterLimit}");
-        }
     }
 
     private void SetNextFormID(IModGetter mod, IModHeaderCommon modHeader)
@@ -289,7 +277,7 @@ internal sealed class ModHeaderWriteLogic
                 break;
             case FormIDCompactionOption.Iterate:
             {
-                var formIdRange = _recordCompactionDetector.GetRange(_mod);
+                var formIdRange = _recordCompactionDetector.GetAllowedRange(_mod, potential: true);
                 if (formIdRange != null)
                 {
                     _recordIterationActions.Add(maj =>
@@ -365,16 +353,25 @@ internal sealed class ModHeaderWriteLogic
     }
     #endregion
 
-    #region Small Master Form Limit
-    private void AddSmallFormLimit(IModHeaderCommon header)
+    #region Compaction
+    private void AddCompactionTracking(IModHeaderCommon header)
     {
-        var lightIndex = _constants.SmallMasterFlag;
-        if (!lightIndex.HasValue || !Enums.HasFlag(header.RawFlags, lightIndex.Value)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)
             {
-                _uniqueRecordsFromMod++;
+                if (_recordRange == null)
+                {
+                    _recordRange = new RangeUInt32(maj.FormKey.ID);
+                }
+                else if (maj.FormKey.ID > _recordRange.Value.Max)
+                {
+                    _recordRange = new RangeUInt32(_recordRange.Value.Min, maj.FormKey.ID);
+                }
+                else if (maj.FormKey.ID < _recordRange.Value.Min)
+                {
+                    _recordRange = new RangeUInt32(maj.FormKey.ID, _recordRange.Value.Max);
+                }
             }
         });
     }
@@ -410,7 +407,7 @@ internal sealed class ModHeaderWriteLogic
                     if (maj.FormKey.ModKey != _modKey) return;
                     if (_higherFormIDRange > maj.FormKey.ID)
                     {
-                        _disallowedFormKey = maj.FormKey;
+                        _disallowedLowerFormKey = maj.FormKey;
                     }
                 });
                 break;
@@ -420,18 +417,18 @@ internal sealed class ModHeaderWriteLogic
     private void HandleDisallowedLowerFormIDs()
     {
         if (_numRecords == 0) return;
-        if (_disallowedFormKey == null) return;
+        if (_disallowedLowerFormKey == null) return;
 
         switch (_params.LowerRangeDisallowedHandler)
         {
             case NoCheckIfLowerRangeDisallowed:
                 return;
             case ThrowIfLowerRangeDisallowed:
-                throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+                throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);
             case AddPlaceholderMasterIfLowerRangeDisallowed placeholder:
                 if (placeholder.ModKey == null)
                 {
-                    throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+                    throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);
                 }
                 _modKeys[placeholder.ModKey.Value] = null;
                 break;
