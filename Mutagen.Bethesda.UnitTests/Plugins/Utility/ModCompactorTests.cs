@@ -21,8 +21,10 @@ public class ModCompactorTests
         ModCompactor modCompactor)
     {
         mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
         modCompactor.CompactToSmallMaster(mod);
         mod.IsSmallMaster.Should().BeTrue();
+        mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
             .Should().Equal(n.FormKey, n2.FormKey);
     }
@@ -38,8 +40,10 @@ public class ModCompactorTests
         var n3 = mod.Npcs.AddReturn(
             new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
         mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
         modCompactor.CompactToSmallMaster(mod);
         mod.IsSmallMaster.Should().BeTrue();
+        mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
             .Should().Equal(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
     }
@@ -55,6 +59,7 @@ public class ModCompactorTests
             mod.Npcs.AddNew();
         }
         mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
         Assert.Throws<TargetInvocationException>(() =>
         {
             modCompactor.CompactToSmallMaster(mod);
@@ -68,8 +73,10 @@ public class ModCompactorTests
         StarfieldNpc n2,
         ModCompactor modCompactor)
     {
+        mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         modCompactor.CompactToMediumMaster(mod);
+        mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
             .Should().Equal(n.FormKey, n2.FormKey);
@@ -85,8 +92,10 @@ public class ModCompactorTests
             new Starfield.Npc(FormKey.Factory($"080000:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
         var n3 = mod.Npcs.AddReturn(
             new Starfield.Npc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
+        mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         modCompactor.CompactToMediumMaster(mod);
+        mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
             .Should().Equal(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
@@ -102,6 +111,7 @@ public class ModCompactorTests
         {
             mod.Npcs.AddNew();
         }
+        mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         Assert.Throws<TargetInvocationException>(() =>
         {
@@ -139,5 +149,65 @@ public class ModCompactorTests
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
             .Should().Equal(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1));
+    }
+    
+    [Theory, MutagenModAutoData]
+    public void CompactToWithFallbackSmall(
+        SkyrimMod mod,
+        SkyrimNpc n,
+        ModCompactor modCompactor)
+    {
+        var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
+        var n3 = mod.Npcs.AddReturn(
+            new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        mod.IsSmallMaster.Should().BeTrue();
+        mod.IsMediumMaster.Should().BeFalse();
+        mod.Npcs.Records.Select(x => x.FormKey)
+            .Should().Equal(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
+    }
+    
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
+    public void CompactToWithFallbackSmallFallbackToMedium(
+        StarfieldMod mod,
+        StarfieldNpc n,
+        ModCompactor modCompactor)
+    {
+        var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
+        var n3 = mod.Npcs.AddReturn(
+            new StarfieldNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
+        for (int i = 0; i < 4096; i++)
+        {
+            mod.Npcs.AddNew();
+        }
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeTrue();
+        mod.Npcs.Records.Count().Should().Be(4099);
+    }
+    
+    [Theory, MutagenModAutoData]
+    public void CompactToWithFallbackSmallFallbackToFull(
+        SkyrimMod mod,
+        SkyrimNpc n,
+        ModCompactor modCompactor)
+    {
+        var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
+        var n3 = mod.Npcs.AddReturn(
+            new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
+        for (int i = 0; i < 4096; i++)
+        {
+            mod.Npcs.AddNew();
+        }
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        mod.IsSmallMaster.Should().BeFalse();
+        mod.IsMediumMaster.Should().BeFalse();
+        mod.Npcs.Records.Count().Should().Be(4099);
     }
 }

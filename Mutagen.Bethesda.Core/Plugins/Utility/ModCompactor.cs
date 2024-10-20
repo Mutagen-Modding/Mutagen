@@ -73,6 +73,52 @@ public class ModCompactor
         }
     }
 
+    public void CompactToWithFallback(IMod mod, MasterStyle style)
+    {
+        var targetStyle = style;
+        if (style == MasterStyle.Small)
+        {
+            if (!mod.CanBeSmallMaster) throw new ArgumentException("Cannot be small master");
+
+            try
+            {
+                CompactToSmallMaster(mod);
+                return;
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is not FormIDCompactionOutOfBoundsException)
+                {
+                    throw;
+                }
+            }
+            catch (FormIDCompactionOutOfBoundsException e)
+            {
+            }
+            targetStyle = MasterStyle.Medium;
+        }
+        if (style == MasterStyle.Medium || (targetStyle == MasterStyle.Medium && mod.CanBeMediumMaster))
+        {
+            try
+            {
+                CompactToMediumMaster(mod);
+                return;
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is not FormIDCompactionOutOfBoundsException)
+                {
+                    throw;
+                }
+            }
+            catch (FormIDCompactionOutOfBoundsException e)
+            {
+            }
+        }
+        
+        CompactToFullMaster(mod);
+    }
+
     private static void DoCompacting(IMod mod, RangeUInt32 range)
     {
         ModToGenericCallHelper.InvokeFromCategory(
