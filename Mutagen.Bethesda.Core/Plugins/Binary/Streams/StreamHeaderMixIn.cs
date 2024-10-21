@@ -28,7 +28,20 @@ public static class StreamHeaderMixIn
     public static ModHeader GetModHeader<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
-        return new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
+        var initialPos = stream.Position;
+        var remaining = stream.Remaining;
+        try
+        {
+            return new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
+        }
+        catch (ArgumentException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+        }
+        catch (EndOfStreamException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+        }
     }
 
     /// <summary>
@@ -45,7 +58,20 @@ public static class StreamHeaderMixIn
     public static ModHeader ReadModHeader<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
-        return new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
+        var initialPos = stream.Position;
+        var remaining = stream.Remaining;
+        try
+        {
+            return new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
+        }
+        catch (ArgumentException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+        }
+        catch (EndOfStreamException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+        }
     }
 
     /// <summary>
@@ -109,8 +135,22 @@ public static class StreamHeaderMixIn
     public static ModHeaderFrame GetModHeaderFrame<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
-        var meta = GetModHeader(stream, constants, readSafe: readSafe);
-        return new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        var initialPos = stream.Position;
+        var remaining = stream.Remaining;
+        int? expected = null;
+        try
+        {
+            var meta = GetModHeader(stream, constants, readSafe: readSafe);
+            return new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        }
+        catch (ArgumentException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+        }
+        catch (EndOfStreamException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+        }
     }
 
     /// <summary>
@@ -127,8 +167,23 @@ public static class StreamHeaderMixIn
     public static ModHeaderFrame ReadModHeaderFrame<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
-        var meta = GetModHeader(stream, constants, readSafe: readSafe);
-        return new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        var initialPos = stream.Position;
+        var remaining = stream.Remaining;
+        int? expected = null;
+        try
+        {
+            var meta = GetModHeader(stream, constants, readSafe: readSafe);
+            expected = checked((int)meta.TotalLength);
+            return new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        }
+        catch (ArgumentException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+        }
+        catch (EndOfStreamException e)
+        {
+            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+        }
     }
 
     /// <summary>
