@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog.Testing.IO;
 using Xunit;
@@ -23,7 +24,7 @@ public class BinaryOverlayTests
                     FileSystem = fs
                 });
         }
-        catch (ArgumentException)
+        catch (MalformedDataException)
         {
         }
         // Assert that file is released from wrapper's internal stream
