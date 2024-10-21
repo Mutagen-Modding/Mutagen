@@ -36,11 +36,11 @@ public static class StreamHeaderMixIn
         }
         catch (ArgumentException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
         catch (EndOfStreamException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
     }
 
@@ -66,11 +66,11 @@ public static class StreamHeaderMixIn
         }
         catch (ArgumentException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
         catch (EndOfStreamException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
     }
 
@@ -145,11 +145,11 @@ public static class StreamHeaderMixIn
         }
         catch (ArgumentException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
         catch (EndOfStreamException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
     }
 
@@ -178,11 +178,11 @@ public static class StreamHeaderMixIn
         }
         catch (ArgumentException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
         catch (EndOfStreamException e)
         {
-            throw new MalformedDataException($"Could not read enough data to pase a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
+            throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
     }
 
