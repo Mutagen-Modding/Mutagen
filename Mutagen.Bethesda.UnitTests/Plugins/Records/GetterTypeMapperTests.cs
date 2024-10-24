@@ -9,6 +9,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 public class GetterTypeMapperTests
 {
     [Fact]
+    public void Warmup()
+    {
+        var mapper = new GetterTypeMapper(null!);
+    }
+    
+    [Fact]
+    public void Warmup2()
+    {
+        GetterTypeMapping.Instance.TryGetGetterType("Test", out var getter);
+    }
+    
+    [Fact]
     internal void Typical()
     {
         GetterTypeMapping.Instance.TryGetGetterType(typeof(Armor), out var result)
