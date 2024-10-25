@@ -332,6 +332,40 @@ public static class ListsModsMixIn
     }
     
     /// <summary>
+    /// Checks whether a given mod is in the collection of listings.
+    /// </summary>
+    /// <param name="loadOrder">Load order to look through</param>
+    /// <param name="modKey">ModKey to look for</param>
+    /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
+    /// <returns>True if ModKey is in the listings, with the desired enabled state</returns>
+    public static bool ListsMod(this ILoadOrderGetter<ILoadOrderListingGetter> loadOrder, ModKey modKey, bool? enabled = null)
+    {
+        if (loadOrder.TryGetValue(modKey, out var listing))
+        {
+            return listing.Enabled;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Asserts a given mod is in the collection of listings.
+    /// </summary>
+    /// <param name="loadOrder">Load order to look through</param>
+    /// <param name="modKey">ModKey to look for</param>
+    /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
+    /// <param name="message">Message to attach to exception if mod doesn't exist</param>
+    /// <exception cref="MissingModException">
+    /// Thrown if given mod is not on the collection of listings
+    /// </exception>
+    public static void AssertListsMod(this ILoadOrderGetter<ILoadOrderListingGetter> loadOrder, ModKey modKey, bool? enabled = null, string? message = null)
+    {
+        if (!ListsMod(loadOrder, modKey, enabled))
+        {
+            throw new MissingModException(modKey, message: message);
+        }
+    }
+    
+    /// <summary>
     /// Checks whether a given mod is in the collection of keys.
     /// </summary>
     /// <param name="loadOrder">LoadOrder to query</param>
@@ -651,7 +685,7 @@ public static class ListsModsMixIn
     }
         
     public static bool TryGetIfEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TListing item)
-        where TListing : IModListingGetter
+        where TListing : ILoadOrderListingGetter
     {
         if (loadOrder.TryGetValue(modKey, out var listing)
             && listing.Enabled)
@@ -665,7 +699,7 @@ public static class ListsModsMixIn
     }
 
     public static TListing GetIfEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
-        where TListing : IModListingGetter
+        where TListing : ILoadOrderListingGetter
     {
         if (TryGetIfEnabled(loadOrder, modKey, out var listing))
         {
