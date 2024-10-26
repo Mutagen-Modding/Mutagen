@@ -21,4 +21,14 @@ public class FormLinkInformationTests
         fk.FormKey.Should().Be(FormKey.Factory("123456:Skyrim.esm"));
         fk.Type.Should().Be(typeof(Npc));
     }
+
+    [Fact]
+    public void TryToStandardizedIdentifier()
+    {
+        var fk = FormLinkInformation.Factory("123456:Skyrim.esm<Skyrim.Npc>");
+        fk.TryToStandardizedIdentifier(out var standardized)
+            .Should().BeTrue();
+        standardized.FormKey.Should().Be(FormKey.Factory("123456:Skyrim.esm"));
+        standardized.Type.Should().Be(typeof(INpcGetter));
+    }
 }
