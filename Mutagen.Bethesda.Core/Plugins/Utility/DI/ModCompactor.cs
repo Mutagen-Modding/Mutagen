@@ -1,17 +1,25 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Utility;
+namespace Mutagen.Bethesda.Plugins.Utility.DI;
 
-public class ModCompactor
+public interface IModCompactor
 {
-    private readonly RecordCompactionCompatibilityDetector _compactionCompatibilityDetector;
+    void CompactToSmallMaster(IMod mod);
+    void CompactToMediumMaster(IMod mod);
+    void CompactToFullMaster(IMod mod);
+    void CompactTo(IMod mod, MasterStyle style);
+    void CompactToWithFallback(IMod mod, MasterStyle style);
+}
+
+public class ModCompactor : IModCompactor
+{
+    private readonly IRecordCompactionCompatibilityDetector _compactionCompatibilityDetector;
     
-    public ModCompactor(RecordCompactionCompatibilityDetector compactionCompatibilityDetector)
+    public ModCompactor(IRecordCompactionCompatibilityDetector compactionCompatibilityDetector)
     {
         _compactionCompatibilityDetector = compactionCompatibilityDetector;
     }

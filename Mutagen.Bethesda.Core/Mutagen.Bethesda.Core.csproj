@@ -548,8 +548,8 @@
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
         <Compile Include="Plugins\Utility\CategoryToGenericCallHelper.cs" />
+        <Compile Include="Plugins\Utility\DI\ModCompactor.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
-        <Compile Include="Plugins\Utility\ModCompactor.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>

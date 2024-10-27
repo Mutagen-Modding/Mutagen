@@ -5,11 +5,13 @@ using Mutagen.Bethesda.Environments.DI;
 // using Mutagen.Bethesda.Fonts.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.IO.DI;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Plugins.Utility.DI;
 using Noggog.Autofac;
 using Module = Autofac.Module;
 
@@ -30,6 +32,8 @@ public class MutagenModule : Module
                 typeof(IModActivator),
                 typeof(IIniPathLookup),
                 typeof(IModFilesMover),
+                typeof(IModCompactor),
+                typeof(IRecordCompactionCompatibilityDetector),
                 typeof(IMasterReferenceReaderFactory))
             .NotInjection()
             .AsMatchingInterface();

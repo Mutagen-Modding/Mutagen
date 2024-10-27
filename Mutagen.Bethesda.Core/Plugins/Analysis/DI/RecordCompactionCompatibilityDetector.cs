@@ -4,7 +4,24 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
-public class RecordCompactionCompatibilityDetector
+public interface IRecordCompactionCompatibilityDetector
+{
+    bool IsSmallMasterCompatible(IModGetter mod);
+    bool CouldBeSmallMasterCompatible(IModGetter mod);
+    bool IsMediumMasterCompatible(IModGetter mod);
+    bool CouldBeMediumMasterCompatible(IModGetter mod);
+    RangeUInt32? GetSmallMasterRange(IModGetter mod);
+    RangeUInt32? GetMediumMasterRange(IModGetter mod);
+    RangeUInt32 GetFullMasterRange(IModGetter mod, bool potential);
+    RangeUInt32? GetAllowedRange(IModGetter mod, bool potential);
+    void IterateAndThrowIfIncompatible(IModGetter mod, bool potential);
+    void ThrowIfIncompatible(
+        IModGetter mod, 
+        RangeUInt32 range,
+        IMajorRecordGetter rec);
+}
+
+public class RecordCompactionCompatibilityDetector : IRecordCompactionCompatibilityDetector
 {
     
     public bool IsSmallMasterCompatible(IModGetter mod)
