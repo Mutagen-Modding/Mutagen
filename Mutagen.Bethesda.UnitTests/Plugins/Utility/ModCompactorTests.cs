@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
+using Autofac;
 using FluentAssertions;
+using Mutagen.Bethesda.Autofac;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Plugins.Utility.DI;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Starfield;
@@ -14,16 +15,28 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Utility;
 
 public class ModCompactorTests
 {
+    public class Payload
+    {
+        public IModCompactor Sut { get; }
+
+        public Payload()
+        {
+            var b = new ContainerBuilder();
+            b.RegisterModule<MutagenModule>();
+            Sut = b.Build().Resolve<IModCompactor>();
+        }
+    }
+    
     [Theory, MutagenModAutoData]
     public void AlreadySmallMasterCompatible(
         SkyrimMod mod,
         SkyrimNpc n,
         SkyrimNpc n2,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToSmallMaster(mod);
+        sut.Sut.CompactToSmallMaster(mod);
         mod.IsSmallMaster.Should().BeTrue();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -34,7 +47,7 @@ public class ModCompactorTests
     public void CompactRecordToSmallMaster(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddReturn(
             new SkyrimNpc(FormKey.Factory($"010000:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
@@ -42,7 +55,7 @@ public class ModCompactorTests
             new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToSmallMaster(mod);
+        sut.Sut.CompactToSmallMaster(mod);
         mod.IsSmallMaster.Should().BeTrue();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -53,7 +66,7 @@ public class ModCompactorTests
     public void FailToCompactRecordToSmallMaster(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         for (int i = 0; i < 4096; i++)
         {
@@ -63,7 +76,7 @@ public class ModCompactorTests
         mod.IsMediumMaster.Should().BeFalse();
         Assert.Throws<TargetInvocationException>(() =>
         {
-            modCompactor.CompactToSmallMaster(mod);
+            sut.Sut.CompactToSmallMaster(mod);
         });
     }
     
@@ -72,11 +85,11 @@ public class ModCompactorTests
         StarfieldMod mod,
         StarfieldNpc n,
         StarfieldNpc n2,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToMediumMaster(mod);
+        sut.Sut.CompactToMediumMaster(mod);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -87,7 +100,7 @@ public class ModCompactorTests
     public void CompactRecordToMediumMaster(
         StarfieldMod mod,
         StarfieldNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddReturn(
             new Starfield.Npc(FormKey.Factory($"080000:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
@@ -95,7 +108,7 @@ public class ModCompactorTests
             new Starfield.Npc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToMediumMaster(mod);
+        sut.Sut.CompactToMediumMaster(mod);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -106,7 +119,7 @@ public class ModCompactorTests
     public void FailToCompactRecordToMediumMaster(
         StarfieldMod mod,
         StarfieldNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         for (int i = 0; i < 65536; i++)
         {
@@ -116,7 +129,7 @@ public class ModCompactorTests
         mod.IsMediumMaster.Should().BeFalse();
         Assert.Throws<TargetInvocationException>(() =>
         {
-            modCompactor.CompactToMediumMaster(mod);
+            sut.Sut.CompactToMediumMaster(mod);
         });
     }
     
@@ -124,12 +137,12 @@ public class ModCompactorTests
     public void AlreadyFullMasterCompatible(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"000810:{mod.ModKey.FileName}"));
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToFullMaster(mod);
+        sut.Sut.CompactToFullMaster(mod);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -140,12 +153,12 @@ public class ModCompactorTests
     public void CompactRecordToFullMasterWithoutLowRange(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"000010:{mod.ModKey.FileName}"));
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToFullMaster(mod);
+        sut.Sut.CompactToFullMaster(mod);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -156,14 +169,14 @@ public class ModCompactorTests
     public void CompactToWithFallbackSmall(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
         var n3 = mod.Npcs.AddReturn(
             new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.Should().BeTrue();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
@@ -174,7 +187,7 @@ public class ModCompactorTests
     public void CompactToWithFallbackSmallFallbackToMedium(
         StarfieldMod mod,
         StarfieldNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
         var n3 = mod.Npcs.AddReturn(
@@ -185,7 +198,7 @@ public class ModCompactorTests
         }
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeTrue();
         mod.Npcs.Records.Count().Should().Be(4099);
@@ -195,7 +208,7 @@ public class ModCompactorTests
     public void CompactToWithFallbackSmallFallbackToFull(
         SkyrimMod mod,
         SkyrimNpc n,
-        ModCompactor modCompactor)
+        Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
         var n3 = mod.Npcs.AddReturn(
@@ -206,7 +219,7 @@ public class ModCompactorTests
         }
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
-        modCompactor.CompactToWithFallback(mod, MasterStyle.Small);
+        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.Should().BeFalse();
         mod.IsMediumMaster.Should().BeFalse();
         mod.Npcs.Records.Count().Should().Be(4099);
