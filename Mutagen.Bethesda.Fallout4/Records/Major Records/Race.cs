@@ -120,7 +120,7 @@ partial class RaceBinaryCreateTranslation
             var subFrame = frame.ReadSubrecord();
             if (subFrame.RecordType != RecordTypes.NAME)
             {
-                throw new ArgumentException($"Unexpected record type: {subFrame.RecordType} != {RecordTypes.NAME}");
+                throw new ArgumentException($"Unexpected record type: {subFrame.RecordType} != {RecordTypes.NAME}.  Race.NAME is expected to come in a set of {NumBipedObjectNames}, exactly.");
             }
 
             data.Name = subFrame.AsString(frame.MetaData.Encodings.NonTranslated);

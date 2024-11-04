@@ -41,7 +41,7 @@ public class ListBinaryTranslation<TWriter, TReader, TItem>
         BinarySubParseDelegate<TReader, TItem> transl)
     {
         var ret = new ExtendedList<TItem>();
-        while (reader.Remaining > 1 || reader.GetUInt8() != 0)
+        while (reader.Remaining > 1)
         {
             if (transl(reader, out var subItem))
             {

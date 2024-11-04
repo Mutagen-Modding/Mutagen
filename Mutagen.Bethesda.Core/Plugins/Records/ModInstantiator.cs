@@ -89,6 +89,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         static ModInstantiator()
         {
+            Warmup.Init();
             bool createActivator = true;
             var type = typeof(TMod);
             if (type.Name.EndsWith("DisposableGetter"))

@@ -4,14 +4,32 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
-public class RecordCompactionCompatibilityDetector
+public interface IRecordCompactionCompatibilityDetector
 {
+    bool IsSmallMasterCompatible(IModGetter mod);
+    bool CouldBeSmallMasterCompatible(IModGetter mod);
+    bool IsMediumMasterCompatible(IModGetter mod);
+    bool CouldBeMediumMasterCompatible(IModGetter mod);
+    RangeUInt32? GetSmallMasterRange(IModGetter mod);
+    RangeUInt32? GetMediumMasterRange(IModGetter mod);
+    RangeUInt32 GetFullMasterRange(IModGetter mod, bool potential);
+    RangeUInt32? GetAllowedRange(IModGetter mod, bool potential);
+    void IterateAndThrowIfIncompatible(IModGetter mod, bool potential);
+    void ThrowIfIncompatible(
+        IModGetter mod, 
+        RangeUInt32 range,
+        IMajorRecordGetter rec);
+}
+
+public class RecordCompactionCompatibilityDetector : IRecordCompactionCompatibilityDetector
+{
+    
     public bool IsSmallMasterCompatible(IModGetter mod)
     {
         var range = GetSmallMasterRange(mod);
         if (range == null) return false;
 
-        return IsCompatible(mod, range.Value);
+        return IterateToCheckCompatibility(mod, range.Value);
     }
     
     public bool CouldBeSmallMasterCompatible(IModGetter mod)
@@ -19,7 +37,7 @@ public class RecordCompactionCompatibilityDetector
         var range = GetSmallMasterRange(mod);
         if (range == null) return false;
 
-        return CouldBeCompatible(mod, range.Value);
+        return IterateToCheckCouldBeCompatible(mod, range.Value);
     }
     
     public bool IsMediumMasterCompatible(IModGetter mod)
@@ -27,7 +45,7 @@ public class RecordCompactionCompatibilityDetector
         var range = GetMediumMasterRange(mod);
         if (range == null) return false;
 
-        return IsCompatible(mod, range.Value);
+        return IterateToCheckCompatibility(mod, range.Value);
     }
     
     public bool CouldBeMediumMasterCompatible(IModGetter mod)
@@ -35,7 +53,7 @@ public class RecordCompactionCompatibilityDetector
         var range = GetMediumMasterRange(mod);
         if (range == null) return false;
 
-        return CouldBeCompatible(mod, range.Value);
+        return IterateToCheckCouldBeCompatible(mod, range.Value);
     }
 
     public RangeUInt32? GetSmallMasterRange(IModGetter mod)
@@ -52,7 +70,24 @@ public class RecordCompactionCompatibilityDetector
         return new RangeUInt32(lowerRange, FormID.MediumIdMask);
     }
 
-    public RangeUInt32? GetRange(IModGetter mod)
+    public RangeUInt32 GetFullMasterRange(IModGetter mod, bool potential)
+    {
+        return GetFullMasterRange(mod, mod.MasterReferences.Count, potential);
+    }
+
+    internal RangeUInt32 GetFullMasterRange(IModGetter mod, int masterCount, bool potential)
+    {
+        var lowerRange = mod.GetDefaultInitialNextFormID(
+            forceUseLowerFormIDRanges: potential || masterCount > 0 ? null : false);
+        return new RangeUInt32(lowerRange, FormID.FullIdMask);
+    }
+
+    public RangeUInt32? GetAllowedRange(IModGetter mod, bool potential)
+    {
+        return GetAllowedRange(mod, mod.MasterReferences.Count, potential);
+    }
+
+    internal RangeUInt32? GetAllowedRange(IModGetter mod, int masterCount, bool potential)
     {
         if (mod.IsMediumMaster)
         {
@@ -63,10 +98,10 @@ public class RecordCompactionCompatibilityDetector
             return GetSmallMasterRange(mod);
         }
 
-        return null;
+        return GetFullMasterRange(mod, masterCount, potential);
     }
     
-    private bool IsCompatible(IModGetter modGetter, RangeUInt32 range)
+    private bool IterateToCheckCompatibility(IModGetter modGetter, RangeUInt32 range)
     {
         ModKey patchModKey = modGetter.ModKey;
         
@@ -79,7 +114,7 @@ public class RecordCompactionCompatibilityDetector
         return true;
     }
     
-    private bool CouldBeCompatible(IModGetter modGetter, RangeUInt32 range)
+    private bool IterateToCheckCouldBeCompatible(IModGetter modGetter, RangeUInt32 range)
     {
         var rangeSize = range.Difference;
         ModKey patchModKey = modGetter.ModKey;
@@ -89,9 +124,9 @@ public class RecordCompactionCompatibilityDetector
         return rangeSize >= numOriginating;
     }
     
-    public void ThrowIfIncompatible(IModGetter mod)
+    public void IterateAndThrowIfIncompatible(IModGetter mod, bool potential)
     {
-        RangeUInt32? formIdRange = GetRange(mod);
+        RangeUInt32? formIdRange = GetAllowedRange(mod, potential);
 
         if (formIdRange == null) return;
         

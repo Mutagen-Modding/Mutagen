@@ -65,6 +65,11 @@ internal static class MajorRecordContextEnumerableUtility
         Match
     }
 
+    static MajorRecordContextEnumerableUtility()
+    {
+        Warmup.Init();
+    }
+    
     public static TypeMatch GetMatch(Type type, string fullName)
     {
         if (!LoquiRegistration.TryGetRegister(type, out var regis)) return TypeMatch.NotMatch;

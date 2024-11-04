@@ -40,6 +40,11 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
     private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> _winningContexts = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>>> _allContexts = new();
 
+    static ImmutableLoadOrderLinkCacheContextCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+    
     public ImmutableLoadOrderLinkCacheContextCategory(
         GameCategory category,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,

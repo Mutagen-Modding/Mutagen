@@ -20,6 +20,11 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
     private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<LinkCacheItem>>> _allRecords = new();
 
+    static ImmutableLoadOrderLinkCacheCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+
     public ImmutableLoadOrderLinkCacheCategory(
         GameCategory gameCategory,
         bool hasAny,

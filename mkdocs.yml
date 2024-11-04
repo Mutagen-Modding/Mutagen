@@ -34,6 +34,9 @@ extra_css:
 
 plugins:
   - search
+  - glightbox:
+      zoomable: true
+      draggable: true
 
 theme:
   name: material
@@ -148,3 +151,4 @@ nav:
       - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
       - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: Correctness.md
+  - Contributing: Contributing.md

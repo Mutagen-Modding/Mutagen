@@ -24,6 +24,7 @@ public static class Warmup
         lock (_lock)
         {
             if (_warmedUp) return _registrations;
+            _warmedUp = true;
             
             List<IProtocolRegistration> protocols = new()
             {
@@ -52,7 +53,6 @@ public static class Warmup
             GetterTypeMapping.Warmup();
             MetaInterfaceMapping.Warmup();
             OverrideMaskRegistrations.Warmup();
-            _warmedUp = true;
             
             return _registrations;
         }

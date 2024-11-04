@@ -22,6 +22,7 @@ public static class MajorRecordInstantiator<TMajor>
 
     static MajorRecordInstantiator()
     {
+        Warmup.Init();
         if (!LoquiRegistration.TryGetRegister(typeof(TMajor), out var regis))
         {
             throw new ArgumentException("Tried to instantiate a record not registered in Loqui");

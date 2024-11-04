@@ -303,3 +303,23 @@ if (formLinkOfRecordOfInterest.TryResolveSimpleContext(someLinkCache, out var co
     }
 }
 ```
+
+## Find all Major Record Types
+``` cs
+foreach (var recTypes in MajorRecordTypeEnumerator.GetMajorRecordTypesFor(GameCategory.Skyrim))
+{
+    Console.WriteLine($"Getter: {recTypes.GetterType}");
+    Console.WriteLine($"Setter: {recTypes.SetterType}");
+    Console.WriteLine($"Class: {recTypes.ClassType}");
+}
+```
+
+## Find all Major Record Types for Top Level Groups
+```cs
+foreach (var recTypes in MajorRecordTypeEnumerator.GetTopLevelMajorRecordTypesFor(GameCategory.Skyrim))
+{
+    Console.WriteLine($"Getter: {recTypes.GetterType}");
+    Console.WriteLine($"Setter: {recTypes.SetterType}");
+    Console.WriteLine($"Class: {recTypes.ClassType}");
+}
+```

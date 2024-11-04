@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<ICloudLayerGetter> IWeatherGetter.Clouds => _Clouds;
+        IReadOnlyList<ICloudLayerGetter> IWeatherGetter.Clouds => _Clouds;
         #endregion
 
         #endregion
@@ -3713,7 +3713,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
         IFormLinkNullableGetter<IArtObjectGetter> CameraEffect { get; }
         ReadOnlyMemorySlice<Byte>? CLDC { get; }
-        ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
+        IReadOnlyList<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
         IWeatherColorGetter FogNearColor { get; }
         IWeatherColorGetter UnknownColor { get; }
@@ -4369,8 +4369,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.CameraEffect = item.CameraEffect.Equals(rhs.CameraEffect);
             ret.CLDC = MemorySliceExt.SequenceEqual(item.CLDC, rhs.CLDC);
-            ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
-                item.Clouds,
+            ret.Clouds = item.Clouds.CollectionEqualsHelper(
                 rhs.Clouds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
@@ -4943,7 +4942,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
             {
-                if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
+                if (!lhs.Clouds.SequenceEqual(rhs.Clouds, (l, r) => ((CloudLayerCommon)((ICloudLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Clouds)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
             {

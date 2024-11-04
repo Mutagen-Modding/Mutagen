@@ -32,6 +32,11 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
     private readonly Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>> _untypedContexts;
     private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>> _contexts = new();
 
+    static ImmutableModLinkCacheContextCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+    
     public ImmutableModLinkCacheContextCategory(
         ImmutableModLinkCache<TMod, TModGetter> parent,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,

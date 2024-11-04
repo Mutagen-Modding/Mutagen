@@ -36,6 +36,11 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
     private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordGetter>>> _winningContexts = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>>> _allContexts = new();
 
+    static ImmutableLoadOrderLinkCacheSimpleContextCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+
     public ImmutableLoadOrderLinkCacheSimpleContextCategory(
         GameCategory category,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,
