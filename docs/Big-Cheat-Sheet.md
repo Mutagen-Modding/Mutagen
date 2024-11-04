@@ -338,3 +338,27 @@ catch (Exception e)
 ```
 
 [:octicons-arrow-right-24: Exception Enrichment](best-practices/Enrich-Exceptions.md)
+
+## Call Generic Function by Mod Type
+```cs
+public class MyClass
+{
+    public void DoSomeThings(IMod mod)
+    {
+        ModToGenericCallHelper.InvokeFromCategory(
+            this,
+            mod.GameRelease.ToCategory(),
+            typeof(MyClass).GetMethod(nameof(DoSomeThingsGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!,
+            new object[] { mod });
+    }
+
+    private void DoSomeThingsGeneric<TMod, TModGetter>(TMod mod)
+        where TModGetter : IModGetter
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+    {
+        // Actual logic
+    }
+}
+```
+
+[:octicons-arrow-right-24: Common to Generic Crossover](plugins/other-utility.md#common-to-generic-crossover)

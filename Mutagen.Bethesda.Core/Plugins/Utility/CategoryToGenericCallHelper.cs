@@ -6,9 +6,8 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 
 public static class ModToGenericCallHelper
 {
-    public static object? InvokeFromCategory(IModGetter mod, MethodInfo methodInfo, params object?[] parameters)
+    public static object? InvokeFromCategory<TSource>(TSource sourceObj, GameCategory category, MethodInfo methodInfo, params object?[] parameters)
     {
-        var category = mod.GameRelease.ToCategory();
         var typeStr = $"Mutagen.Bethesda.{category}.{category}Mod";
 
         Warmup.Init();
@@ -20,21 +19,21 @@ public static class ModToGenericCallHelper
 
         var genMethod = methodInfo.MakeGenericMethod(new Type[] { regis.SetterType, regis.GetterType });
 
-        return genMethod.Invoke(mod, parameters);
+        return genMethod.Invoke(sourceObj, parameters);
     }
     
-    public static async Task InvokeFromCategoryAsync(IModGetter mod, MethodInfo methodInfo, params object?[] parameters)
+    public static async Task InvokeFromCategoryAsync<TSource>(TSource sourceObj, GameCategory category, MethodInfo methodInfo, params object?[] parameters)
     {
-        var obj = InvokeFromCategory(mod, methodInfo, parameters);
+        var obj = InvokeFromCategory(sourceObj, category, methodInfo, parameters);
         if (obj is Task t)
         {
             await t;
         }
     }
     
-    public static async Task<TRet> InvokeFromCategoryAsync<TRet>(IModGetter mod, MethodInfo methodInfo, params object?[] parameters)
+    public static async Task<TRet> InvokeFromCategoryAsync<TSource, TRet>(TSource sourceObj, GameCategory category, MethodInfo methodInfo, params object?[] parameters)
     {
-        var obj = InvokeFromCategory(mod, methodInfo, parameters);
+        var obj = InvokeFromCategory(sourceObj, category, methodInfo, parameters);
         if (obj is Task<TRet> t)
         {
             await t;
