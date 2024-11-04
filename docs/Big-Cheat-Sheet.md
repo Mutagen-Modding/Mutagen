@@ -323,3 +323,18 @@ foreach (var recTypes in MajorRecordTypeEnumerator.GetTopLevelMajorRecordTypesFo
     Console.WriteLine($"Class: {recTypes.ClassType}");
 }
 ```
+
+## Enrich Exceptions
+```cs
+var majorRecordContext = ...;
+try
+{
+    // Access majorRecordContext and potentially throw
+}
+catch (Exception e)
+{
+    throw RecordException.Enrich(e, majorRecordContext);
+}
+```
+
+[:octicons-arrow-right-24: Exception Enrichment](best-practices/Enrich-Exceptions.md)
