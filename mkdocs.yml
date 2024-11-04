@@ -123,6 +123,7 @@ nav:
     - ITPO Avoidance: best-practices/ITPO-Avoidance.md
     - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
+    - Enriching Exceptions: best-practices/Enrich-Exceptions.md
     # - Testing:
     # - Auto Fixture:
     # - Major Record Test Building:
