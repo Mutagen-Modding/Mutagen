@@ -62,7 +62,7 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing: plugins/Importing.md
+    - Importing and Construction: plugins/Importing-and-Construction.md
     - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
@@ -72,7 +72,6 @@ nav:
     - Asset Links: plugins/AssetLink.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
     - Printing: plugins/Printing.md
-    - Mod Construction and Importing: plugins/Mod-Construction-and-Importing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Specific Records:
       - plugins/specific/index.md
