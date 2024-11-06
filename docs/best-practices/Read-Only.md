@@ -12,7 +12,7 @@ In most example code, APIs, and projects you look at the code will mostly be dea
 The best practice is to convert from readonly interfaces to mutable version as late as possible.  This allows the systems to avoid parsing the whole record when it's not applicable.
 
 ### Readonly Increases Speed
-A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Binary-Importing.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
+A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Importing.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
 
 As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 

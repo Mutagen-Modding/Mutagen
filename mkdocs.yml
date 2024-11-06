@@ -62,8 +62,8 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing: plugins/Binary-Importing.md
-    - Exporting: plugins/Binary-Exporting.md
+    - Importing: plugins/Importing.md
+    - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
     - Equality Checks: plugins/Equality-Checks.md

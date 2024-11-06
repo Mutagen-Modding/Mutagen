@@ -32,7 +32,7 @@ var mod = OblivionMod.CreateFromBinary(
 This import call will only process and import Potions and NPCs.
 
 !!! info "Generally Unused"
-    Generally this feature is unused, as [Binary Overlays](Binary-Importing.md#read-only-mod-importing) handle the situation of selectively accessing data much better.
+    Generally this feature is unused, as [Binary Overlays](Importing.md#read-only-mod-importing) handle the situation of selectively accessing data much better.
 	
 ## Read Only Mod Importing
 The Binary Overlay imports mods in a readonly, on-demand fashion.  Only fields that are accessed get parsed, which saves a lot of time and work.
