@@ -1,4 +1,4 @@
-# Binary Exporting
+# Exporting
 
 ## Exporting
 
@@ -143,6 +143,3 @@ mod.WriteToBinary(
 ```
 
 This extra information helps keep the masters in proper order, as the load order information is provided for the write call to use.  
-
-## Compaction
-

@@ -70,6 +70,7 @@ nav:
     - Translation Masks: plugins/Translation-Masks.md
     - Flags and Enums: plugins/Flags-and-Enums.md
     - Asset Links: plugins/AssetLink.md
+    - Compaction: plugins/Compaction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
     - Printing: plugins/Printing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md

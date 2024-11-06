@@ -150,6 +150,7 @@
         <Compile Include="Installs\SteamGameSource.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
+        <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -551,6 +552,7 @@
         <Compile Include="Plugins\Utility\CategoryToGenericCallHelper.cs" />
         <Compile Include="Plugins\Utility\DI\ModCompactor.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
+        <Compile Include="Plugins\Utility\ModCompaction.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
