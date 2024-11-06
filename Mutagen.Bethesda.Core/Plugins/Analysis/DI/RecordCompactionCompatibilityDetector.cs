@@ -23,7 +23,6 @@ public interface IRecordCompactionCompatibilityDetector
 
 public class RecordCompactionCompatibilityDetector : IRecordCompactionCompatibilityDetector
 {
-    
     public bool IsSmallMasterCompatible(IModGetter mod)
     {
         var range = GetSmallMasterRange(mod);
