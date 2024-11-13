@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem Axis,
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         Axis = 5,
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetPosConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetPosConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetPosConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetPosConditionData_FieldIndex)((int)index);
