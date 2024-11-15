@@ -2060,19 +2060,19 @@ namespace Mutagen.Bethesda.Skyrim
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceWalk,
-                    divisor: 57,295799255371094f,
+                    divisor: 57.295799255371094f,
                     multiplier: null);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceRun,
-                    divisor: 57,295799255371094f,
+                    divisor: 57.295799255371094f,
                     multiplier: null);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
                     FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.RotateWhileMovingRun,
-                        divisor: 57,295799255371094f,
+                        divisor: 57.295799255371094f,
                         multiplier: null);
                 }
             }
@@ -2208,12 +2208,12 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateInPlaceWalk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57,295799255371094f,
+                        multiplier: 57.295799255371094f,
                         divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateInPlaceRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57,295799255371094f,
+                        multiplier: 57.295799255371094f,
                         divisor: null);
                     if (dataFrame.Complete)
                     {
@@ -2223,7 +2223,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateWhileMovingRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57,295799255371094f,
+                        multiplier: 57.295799255371094f,
                         divisor: null);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;
                 }
@@ -2343,17 +2343,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region RotateInPlaceWalk
         private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value.Min + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _recordData.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57,2958f : default(Single);
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _recordData.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region RotateInPlaceRun
         private int _RotateInPlaceRunLocation => _SPEDLocation!.Value.Min + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _recordData.Slice(_RotateInPlaceRunLocation, 4).Float() * 57,2958f : default(Single);
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _recordData.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region RotateWhileMovingRun
         private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value.Min + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
-        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _recordData.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57,2958f : default(Single);
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _recordData.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
