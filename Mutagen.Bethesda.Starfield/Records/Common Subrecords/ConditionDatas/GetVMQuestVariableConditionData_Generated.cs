@@ -466,6 +466,19 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetVMQuestVariableConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetVMQuestVariableConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is IFormLinkOrIndex<IQuestGetter> v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
         #endregion
 
         #region Binary Translation

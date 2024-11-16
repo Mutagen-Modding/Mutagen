@@ -466,6 +466,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HasAssociationTypeAnyConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HasAssociationTypeAnyConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public object? Parameter1
+        {
+            get => AssociationType;
+            set => AssociationType = (value is IFormLinkOrIndex<IAssociationTypeGetter> v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
         #endregion
 
         #region Binary Translation

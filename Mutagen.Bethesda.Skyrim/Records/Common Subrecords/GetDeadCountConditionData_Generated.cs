@@ -466,6 +466,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetDeadCountConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetDeadCountConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public object? Parameter1
+        {
+            get => Npc;
+            set => Npc = (value is IFormLinkOrIndex<INpcGetter> v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
         #endregion
 
         #region Binary Translation

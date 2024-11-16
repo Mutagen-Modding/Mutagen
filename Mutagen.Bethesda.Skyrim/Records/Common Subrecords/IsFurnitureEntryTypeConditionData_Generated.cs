@@ -454,6 +454,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public object? Parameter1
+        {
+            get => FurnitureEntryType;
+            set => FurnitureEntryType = (value is FurnitureEntryType v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IsFurnitureEntryTypeConditionDataBinaryWriteTranslation.Instance;

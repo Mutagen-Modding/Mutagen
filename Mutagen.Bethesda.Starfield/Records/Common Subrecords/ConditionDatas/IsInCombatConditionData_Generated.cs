@@ -454,6 +454,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IsInCombatConditionDataBinaryWriteTranslation.Instance;

@@ -454,6 +454,25 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public object? Parameter1
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IsFlyingMountPatrolQueudConditionDataBinaryWriteTranslation.Instance;

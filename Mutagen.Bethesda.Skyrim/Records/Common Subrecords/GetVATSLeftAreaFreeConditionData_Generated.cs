@@ -48,21 +48,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetVATSLeftAreaFreeConditionData()
         {
-            _FirstUnusedIntParameter = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
+            _Target = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstUnusedIntParameter
-        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _FirstUnusedIntParameter = default!;
-        public IFormLinkOrIndex<IPlacedSimpleGetter> FirstUnusedIntParameter
+        #region Target
+        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _Target = default!;
+        public IFormLinkOrIndex<IPlacedSimpleGetter> Target
         {
-            get => _FirstUnusedIntParameter;
-            set => _FirstUnusedIntParameter.SetTo(value);
+            get => _Target;
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IGetVATSLeftAreaFreeConditionDataGetter.FirstUnusedIntParameter => this.FirstUnusedIntParameter;
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IGetVATSLeftAreaFreeConditionDataGetter.Target => this.Target;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstUnusedIntParameter = initialValue;
+                this.Target = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
                 this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
-                TItem FirstUnusedIntParameter,
+                TItem Target,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
-                this.FirstUnusedIntParameter = FirstUnusedIntParameter;
+                this.Target = Target;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstUnusedIntParameter;
+            public TItem Target;
             public TItem FirstUnusedStringParameter;
             public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstUnusedIntParameter, rhs.FirstUnusedIntParameter)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
                 if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstUnusedIntParameter);
+                hash.Add(this.Target);
                 hash.Add(this.FirstUnusedStringParameter);
                 hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstUnusedIntParameter)) return false;
+                if (!eval(this.Target)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
                 if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstUnusedIntParameter)) return true;
+                if (eval(this.Target)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
                 if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstUnusedIntParameter = eval(this.FirstUnusedIntParameter);
+                obj.Target = eval(this.Target);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
                 obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
@@ -249,9 +249,9 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetVATSLeftAreaFreeConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstUnusedIntParameter ?? true)
+                    if (printMask?.Target ?? true)
                     {
-                        sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstUnusedIntParameter;
+            public Exception? Target;
             public Exception? FirstUnusedStringParameter;
             public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
@@ -288,8 +288,8 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVATSLeftAreaFreeConditionData_FieldIndex enu = (GetVATSLeftAreaFreeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedIntParameter:
-                        return FirstUnusedIntParameter;
+                    case GetVATSLeftAreaFreeConditionData_FieldIndex.Target:
+                        return Target;
                     case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
                     case GetVATSLeftAreaFreeConditionData_FieldIndex.SecondUnusedIntParameter:
@@ -306,8 +306,8 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVATSLeftAreaFreeConditionData_FieldIndex enu = (GetVATSLeftAreaFreeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedIntParameter:
-                        this.FirstUnusedIntParameter = ex;
+                    case GetVATSLeftAreaFreeConditionData_FieldIndex.Target:
+                        this.Target = ex;
                         break;
                     case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
@@ -329,8 +329,8 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVATSLeftAreaFreeConditionData_FieldIndex enu = (GetVATSLeftAreaFreeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedIntParameter:
-                        this.FirstUnusedIntParameter = (Exception?)obj;
+                    case GetVATSLeftAreaFreeConditionData_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
                         break;
                     case GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstUnusedIntParameter != null) return true;
+                if (Target != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
                 if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                    sb.AppendItem(Target, "Target");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstUnusedIntParameter = this.FirstUnusedIntParameter.Combine(rhs.FirstUnusedIntParameter);
+                ret.Target = this.Target.Combine(rhs.Target);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
                 ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstUnusedIntParameter;
+            public bool Target;
             public bool FirstUnusedStringParameter;
             public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstUnusedIntParameter = defaultOn;
+                this.Target = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
                 this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstUnusedIntParameter, null));
+                ret.Add((Target, null));
                 ret.Add((FirstUnusedStringParameter, null));
                 ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
@@ -466,6 +466,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetVATSLeftAreaFreeConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetVATSLeftAreaFreeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public object? Parameter1
+        {
+            get => Target;
+            set => Target = (value is IFormLinkOrIndex<IPlacedSimpleGetter> v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -530,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetVATSLeftAreaFreeConditionDataGetter,
         ILoquiObjectSetter<IGetVATSLeftAreaFreeConditionData>
     {
-        new IFormLinkOrIndex<IPlacedSimpleGetter> FirstUnusedIntParameter { get; set; }
+        new IFormLinkOrIndex<IPlacedSimpleGetter> Target { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -543,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetVATSLeftAreaFreeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetVATSLeftAreaFreeConditionData_Registration.Instance;
-        IFormLinkOrIndexGetter<IPlacedSimpleGetter> FirstUnusedIntParameter { get; }
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> Target { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -696,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
-        FirstUnusedIntParameter = 5,
+        Target = 5,
         FirstUnusedStringParameter = 6,
         SecondUnusedIntParameter = 7,
         SecondUnusedStringParameter = 8,
@@ -778,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSLeftAreaFreeConditionData item)
         {
             ClearPartial();
-            item.FirstUnusedIntParameter.Clear();
+            item.Target.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
@@ -794,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IGetVATSLeftAreaFreeConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.FirstUnusedIntParameter.Relink(mapping);
+            obj.Target.Relink(mapping);
         }
         
         #endregion
@@ -850,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim
             GetVATSLeftAreaFreeConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstUnusedIntParameter = item.FirstUnusedIntParameter.Equals(rhs.FirstUnusedIntParameter);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
@@ -903,9 +916,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstUnusedIntParameter ?? true)
+            if (printMask?.Target ?? true)
             {
-                sb.AppendItem(item.FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                sb.AppendItem(item.Target, "Target");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
@@ -950,9 +963,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.Target) ?? true))
             {
-                if (!lhs.FirstUnusedIntParameter.Equals(rhs.FirstUnusedIntParameter)) return false;
+                if (!lhs.Target.Equals(rhs.Target)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -983,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetVATSLeftAreaFreeConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstUnusedIntParameter);
+            hash.Add(item.Target);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
@@ -1017,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var l in obj.FirstUnusedIntParameter.EnumerateFormLinks())
+            foreach (var l in obj.Target.EnumerateFormLinks())
             {
                 yield return l;
             }
@@ -1045,9 +1058,9 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.Target) ?? true))
             {
-                item.FirstUnusedIntParameter.SetTo(rhs.FirstUnusedIntParameter);
+                item.Target.SetTo(rhs.Target);
             }
             if ((copyMask?.GetShouldTranslate((int)GetVATSLeftAreaFreeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1186,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer);
             FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstUnusedIntParameter);
+                item: item.Target);
             writer.Write(item.SecondUnusedIntParameter);
         }
 
@@ -1237,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame);
             FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
-                item: item.FirstUnusedIntParameter);
+                item: item.Target);
             item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 

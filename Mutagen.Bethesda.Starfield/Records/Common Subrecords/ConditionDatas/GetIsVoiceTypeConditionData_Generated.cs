@@ -466,6 +466,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetIsVoiceTypeConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetIsVoiceTypeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is IFormLinkOrIndex<IVoiceTypeGetter> v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
         #endregion
 
         #region Binary Translation

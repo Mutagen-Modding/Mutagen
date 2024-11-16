@@ -454,6 +454,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public object? Parameter1
+        {
+            get => SpellSource;
+            set => SpellSource = (value is CastSource v ? v : throw new ArgumentException());
+        }
+        public object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HasEquippedSpellConditionDataBinaryWriteTranslation.Instance;
