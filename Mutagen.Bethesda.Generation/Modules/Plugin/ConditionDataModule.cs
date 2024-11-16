@@ -1,4 +1,5 @@
 ﻿using Loqui.Generation;
+using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
@@ -6,13 +7,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class ConditionDataModule : GenerationModule
 {
+    public override Task PreLoad(ObjectGeneration obj)
+    {
+        var data = obj.GetObjectData();
+        data.GenerateConditionData = obj.Node.GetAttribute("generateConditionData", defaultVal: true);
+        return base.PreLoad(obj);
+    }
+    
     public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         await base.GenerateInClass(obj, sb);
 
         if (obj.Abstract) return;
         if (obj.GetObjectType() != ObjectType.Subrecord) return;
+        if (obj.BaseClass is null) return;
         if (obj.BaseClassName != "ConditionData") return;
+        if (obj.GetObjectData().GenerateConditionData == false) return;
 
         var i = 1;
         foreach (var field in obj.Fields)
@@ -37,25 +47,12 @@ public class ConditionDataModule : GenerationModule
                     var name = field.Name;
                     var setterTypeName = field.TypeName(false);
                     sb.AppendLine($"get => {name};");
-                    sb.AppendLine($"set => {name} = value as {setterTypeName} ?? throw new ArgumentNullException();");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine();
-                    }
+                    sb.AppendLine($"set => {name} = (value is {setterTypeName} v ? v : throw new ArgumentException());");
                 }
 
             }
 
             i++;
-        }
-
-        if (obj.Fields.Exists(f => !f.Name.Contains("Unused")))
-        {
-            Console.WriteLine();
-            Console.WriteLine(obj.Name);
-            foreach (var f in obj.Fields.Where(f => !f.Name.Contains("Unused"))) {
-                Console.WriteLine(f.Name);
-            }
         }
     }
 }
