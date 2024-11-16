@@ -17,4 +17,19 @@ partial class GetVATSValueActionConditionData
         Heal,
         PlayerDeath,
     }
+
+    public object? Parameter1
+    {
+        get => ValueFunction.VatsAction;
+        set
+        {
+
+        }
+    }
+
+    public object? Parameter2
+    {
+        get => null;
+        set => Value = value is GetVATSValueActionConditionData.Action v ? v : throw new ArgumentException();
+    }
 }
