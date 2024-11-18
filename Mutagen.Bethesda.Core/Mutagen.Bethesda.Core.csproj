@@ -10,13 +10,12 @@
         <PackageId>Mutagen.Bethesda.Core</PackageId>
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains only the core components without the generated records.</Description>
         <IsPackable>true</IsPackable>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
-        <DebugType>embedded</DebugType>
+        <DebugType>portable</DebugType>
         <DebugSymbols>true</DebugSymbols>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="ini-parser-netstandard" />

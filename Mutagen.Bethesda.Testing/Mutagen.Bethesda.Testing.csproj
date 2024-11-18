@@ -5,6 +5,12 @@
         <PackageId>Mutagen.Bethesda.Testing</PackageId>
         <Description>A C# library for helping write tests for Mutagen</Description>
         <IsPackable>true</IsPackable>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>

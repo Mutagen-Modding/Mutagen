@@ -4,14 +4,15 @@
 	<TargetFrameworks>net8.0</TargetFrameworks>
     <Description>A C# library containing the very minimal basics about Bethesda structures.  Meant to be a lightweight import with some basic definitions</Description>
     <IsPackable>true</IsPackable>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>Mutagen.Bethesda</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

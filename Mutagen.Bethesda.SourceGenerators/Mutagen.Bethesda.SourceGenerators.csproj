@@ -5,6 +5,8 @@
         <PackageId>Mutagen.Bethesda.SourceGenerators</PackageId>
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains source generators to provide extra build-time functionality</Description>
         <IsPackable>true</IsPackable>
+        <DebugSymbols>false</DebugSymbols>
+        <IncludeSymbols>false</IncludeSymbols>
         <IncludeBuildOutput>false</IncludeBuildOutput>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>

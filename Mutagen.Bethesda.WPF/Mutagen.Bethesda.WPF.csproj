@@ -4,6 +4,12 @@
 	<TargetFrameworks>net8.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <IsPackable>true</IsPackable>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <Description>A C# library for Mutagen/Bethesda related WPF controls and styling</Description>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -35,9 +41,5 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
   </ItemGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Mutagen.Bethesda.WPF.xml</DocumentationFile>
-  </PropertyGroup>
 
 </Project>

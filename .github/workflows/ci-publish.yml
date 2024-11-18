@@ -101,11 +101,11 @@ jobs:
     - name: Pack Preview
       if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}" --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Pack Release
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
@@ -115,7 +115,7 @@ jobs:
         tag: ${{ github.event.release.tag_name }}
         file_glob: "true"
     - name: Publish to Nuget.org
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols
+      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
   
   update-nightly:
     needs: [build-test-push, activity-short-circuit]
