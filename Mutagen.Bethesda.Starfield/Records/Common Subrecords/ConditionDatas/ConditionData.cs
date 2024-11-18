@@ -1,8 +1,38 @@
 ﻿using System.Buffers.Binary;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Starfield;
+
+public static class ConditionDataExtension
+{
+    public static bool TryGetParameter1(this IConditionDataGetter conditionData, [MaybeNullWhen(false)] out Type type, [MaybeNullWhen(false)] out object value)
+    {
+        type = conditionData.Parameter1Type;
+        if (type is null)
+        {
+            value = null;
+            return false;
+        }
+
+        value = conditionData.Parameter1;
+        return value is not null;
+    }
+
+    public static bool TrySetParameter1(this IConditionData conditionData, object? value)
+    {
+        try
+        {
+            conditionData.Parameter1 = value;
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+}
 
 partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParameter
 {
