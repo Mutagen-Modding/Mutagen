@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GetVATSValueDismemberPartConditionData
 {
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => ValueFunction.DismemberPart;
         set
@@ -12,9 +12,9 @@ public partial class GetVATSValueDismemberPartConditionData
 
         }
     }
-    public Type? Parameter1Type => typeof(ValueFunction);
+    public override Type? Parameter1Type => typeof(ValueFunction);
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => null;
         set
@@ -22,5 +22,5 @@ public partial class GetVATSValueDismemberPartConditionData
 
         }
     }
-    public Type? Parameter2Type => null;
+    public override Type? Parameter2Type => null;
 }

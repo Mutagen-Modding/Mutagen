@@ -25,21 +25,21 @@ public partial class GetEventDataConditionData : IConditionStringParameter
 
     Condition.Function IConditionDataGetter.Function => Condition.Function.GetEventData;
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => (int)Function << 16 | (int)Member;
         set => (Function, Member) = value is null
             ? (EventFunction.GetIsID, EventMember.None)
             : ((EventFunction)((int)value >> 16), (EventMember)((int)value & 0xFFFF));
     }
-    public Type? Parameter1Type => typeof(int);
+    public override Type? Parameter1Type => typeof(int);
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => Record;
         set => Record = value as IFormLink<ISkyrimMajorRecordGetter> ?? throw new ArgumentNullException();
     }
-    public Type? Parameter2Type => typeof(object);
+    public override Type? Parameter2Type => typeof(object);
 
     public enum EventMember : ushort
     {

@@ -19,11 +19,25 @@ partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParame
     string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
+    public abstract object? Parameter1 { get; set; }
+    public abstract Type? Parameter1Type { get; }
+    public abstract object? Parameter2 { get; set; }
+    public abstract Type? Parameter2Type { get; }
 }
 
 public partial interface IConditionDataGetter
 {
     Condition.Function Function { get; }
+    object? Parameter1 { get; }
+    Type? Parameter1Type { get; }
+    object? Parameter2 { get; }
+    Type? Parameter2Type { get; }
+}
+
+public partial interface IConditionData
+{
+    object? Parameter1 { get; set; }
+    object? Parameter2 { get; set; }
 }
 
 partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditionStringParameterGetter
@@ -33,6 +47,10 @@ partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditio
     string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
+    public object? Parameter1 => throw new NotImplementedException();
+    public Type? Parameter1Type => throw new NotImplementedException();
+    public object? Parameter2 => throw new NotImplementedException();
+    public Type? Parameter2Type => throw new NotImplementedException();
 }
 
 partial class ConditionDataBinaryOverlay

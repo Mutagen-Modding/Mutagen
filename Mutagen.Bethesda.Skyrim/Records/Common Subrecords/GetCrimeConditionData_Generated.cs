@@ -466,21 +466,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetCrimeConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetCrimeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public object? Parameter1
+        public override object? Parameter1
         {
             get => Criminal;
             set => Criminal = (value is IFormLinkOrIndex<IPlacedNpcGetter> v ? v : throw new ArgumentException());
         }
-        public Type? Parameter1Type
+        public override Type? Parameter1Type
         {
             get => typeof(IFormLinkOrIndexGetter<IPlacedNpcGetter>);
         }
-        public object? Parameter2
+        public override object? Parameter2
         {
             get => CrimeType;
             set => CrimeType = (value is CrimeType v ? v : throw new ArgumentException());
         }
-        public Type? Parameter2Type
+        public override Type? Parameter2Type
         {
             get => typeof(CrimeType);
         }

@@ -466,16 +466,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HasShoutConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HasShoutConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public object? Parameter1
+        public override object? Parameter1
         {
             get => Shout;
             set => Shout = (value is IFormLinkOrIndex<IShoutGetter> v ? v : throw new ArgumentException());
         }
-        public Type? Parameter1Type
+        public override Type? Parameter1Type
         {
             get => typeof(IFormLinkOrIndexGetter<IShoutGetter>);
         }
-        public object? Parameter2
+        public override object? Parameter2
         {
             get => null;
             set
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             }
         }
-        public Type? Parameter2Type
+        public override Type? Parameter2Type
         {
             get => null;
         }

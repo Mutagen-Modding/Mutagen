@@ -466,21 +466,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetKeywordDataForAliasConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetKeywordDataForAliasConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public object? Parameter1
+        public override object? Parameter1
         {
             get => LocationAliasIndex;
             set => LocationAliasIndex = (value is Int32 v ? v : throw new ArgumentException());
         }
-        public Type? Parameter1Type
+        public override Type? Parameter1Type
         {
             get => typeof(Int32);
         }
-        public object? Parameter2
+        public override object? Parameter2
         {
             get => Keyword;
             set => Keyword = (value is IFormLinkOrIndex<IKeywordGetter> v ? v : throw new ArgumentException());
         }
-        public Type? Parameter2Type
+        public override Type? Parameter2Type
         {
             get => typeof(IFormLinkOrIndexGetter<IKeywordGetter>);
         }

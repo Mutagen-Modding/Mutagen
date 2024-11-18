@@ -488,21 +488,21 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public object? Parameter1
+        public override object? Parameter1
         {
             get => Function;
             set => Function = (value is Condition.Function v ? v : throw new ArgumentException());
         }
-        public Type? Parameter1Type
+        public override Type? Parameter1Type
         {
             get => typeof(Condition.Function);
         }
-        public object? Parameter2
+        public override object? Parameter2
         {
             get => ParameterOne;
             set => ParameterOne = (value is Int32 v ? v : throw new ArgumentException());
         }
-        public Type? Parameter2Type
+        public override Type? Parameter2Type
         {
             get => typeof(Int32);
         }

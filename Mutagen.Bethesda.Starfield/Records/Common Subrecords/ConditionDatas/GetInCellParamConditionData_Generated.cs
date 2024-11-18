@@ -474,21 +474,21 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetInCellParamConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetInCellParamConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public object? Parameter1
+        public override object? Parameter1
         {
             get => FirstParameter;
             set => FirstParameter = (value is IFormLinkOrIndex<ICellGetter> v ? v : throw new ArgumentException());
         }
-        public Type? Parameter1Type
+        public override Type? Parameter1Type
         {
             get => typeof(IFormLinkOrIndexGetter<ICellGetter>);
         }
-        public object? Parameter2
+        public override object? Parameter2
         {
             get => SecondParameter;
             set => SecondParameter = (value is IFormLinkOrIndex<IPlacedSimpleGetter> v ? v : throw new ArgumentException());
         }
-        public Type? Parameter2Type
+        public override Type? Parameter2Type
         {
             get => typeof(IFormLinkOrIndexGetter<IPlacedSimpleGetter>);
         }

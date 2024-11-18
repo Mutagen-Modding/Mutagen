@@ -18,7 +18,7 @@ partial class UnknownConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => null;
         set
@@ -26,9 +26,9 @@ partial class UnknownConditionData : IConditionStringParameter
 
         }
     }
-    public Type? Parameter1Type => null;
+    public override Type? Parameter1Type => null;
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => null;
         set
@@ -36,5 +36,5 @@ partial class UnknownConditionData : IConditionStringParameter
 
         }
     }
-    public Type? Parameter2Type => null;
+    public override Type? Parameter2Type => null;
 }

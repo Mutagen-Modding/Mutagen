@@ -3,7 +3,7 @@
 public partial class GetVATSValueTargetPartConditionData
 {
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => ValueFunction.TargetPart;
         set
@@ -11,12 +11,12 @@ public partial class GetVATSValueTargetPartConditionData
 
         }
     }
-    public Type? Parameter1Type => typeof(ValueFunction);
+    public override Type? Parameter1Type => typeof(ValueFunction);
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => Value;
         set => Value = value is ActorValue v ? v : throw new ArgumentException();
     }
-    public Type? Parameter2Type => typeof(ActorValue);
+    public override Type? Parameter2Type => typeof(ActorValue);
 }

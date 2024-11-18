@@ -32,7 +32,7 @@ public class ConditionDataModule : GenerationModule
             var isUnusedParameter = field.Name.Contains("Unused");
 
             // Parameter property
-            sb.AppendLine($"public object? Parameter{i}");
+            sb.AppendLine($"public override object? Parameter{i}");
             using (sb.CurlyBrace())
             {
                 if (isUnusedParameter)
@@ -55,7 +55,7 @@ public class ConditionDataModule : GenerationModule
             }
 
             // ParameterType property
-            sb.AppendLine($"public Type? Parameter{i}Type");
+            sb.AppendLine($"public override Type? Parameter{i}Type");
             using (sb.CurlyBrace())
             {
                 if (isUnusedParameter)

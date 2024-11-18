@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GetVATSValueWeaponTypeConditionData
 {
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => ValueFunction.WeaponTypeIs;
         set
@@ -12,12 +12,12 @@ public partial class GetVATSValueWeaponTypeConditionData
 
         }
     }
-    public Type? Parameter1Type => typeof(ValueFunction);
+    public override Type? Parameter1Type => typeof(ValueFunction);
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => null;
         set => Value = value is WeaponAnimationType v ? v : throw new ArgumentException();
     }
-    public Type? Parameter2Type => typeof(WeaponAnimationType);
+    public override Type? Parameter2Type => typeof(WeaponAnimationType);
 }

@@ -18,7 +18,7 @@ partial class GetVATSValueActionConditionData
         PlayerDeath,
     }
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => ValueFunction.VatsAction;
         set
@@ -26,12 +26,12 @@ partial class GetVATSValueActionConditionData
 
         }
     }
-    public Type? Parameter1Type => typeof(ValueFunction);
+    public override Type? Parameter1Type => typeof(ValueFunction);
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => null;
         set => Value = value is GetVATSValueActionConditionData.Action v ? v : throw new ArgumentException();
     }
-    public Type? Parameter2Type => typeof(GetVATSValueActionConditionData.Action);
+    public override Type? Parameter2Type => typeof(GetVATSValueActionConditionData.Action);
 }

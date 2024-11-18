@@ -19,20 +19,10 @@ partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParame
     string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
-    object? IConditionDataGetter.Parameter1 => throw new NotImplementedException();
-    Type? IConditionDataGetter.Parameter1Type => throw new NotImplementedException();
-    object? IConditionDataGetter.Parameter2 => throw new NotImplementedException();
-    Type? IConditionDataGetter.Parameter2Type => throw new NotImplementedException();
-    object? IConditionData.Parameter1
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    object? IConditionData.Parameter2
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
+    public abstract object? Parameter1 { get; set; }
+    public abstract Type? Parameter1Type { get; }
+    public abstract object? Parameter2 { get; set; }
+    public abstract Type? Parameter2Type { get; }
 }
 
 public partial interface IConditionDataGetter

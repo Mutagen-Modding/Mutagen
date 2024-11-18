@@ -3,7 +3,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GetVATSValueUnknownConditionData
 {
 
-    public object? Parameter1
+    public override object? Parameter1
     {
         get => -1;
         set
@@ -11,9 +11,9 @@ public partial class GetVATSValueUnknownConditionData
 
         }
     }
-    public Type? Parameter1Type => null;
+    public override Type? Parameter1Type => null;
 
-    public object? Parameter2
+    public override object? Parameter2
     {
         get => null;
         set
@@ -21,5 +21,5 @@ public partial class GetVATSValueUnknownConditionData
 
         }
     }
-    public Type? Parameter2Type => null;
+    public override Type? Parameter2Type => null;
 }
