@@ -11,6 +11,7 @@ public partial class GetVATSValueUnknownConditionData
 
         }
     }
+    public Type? Parameter1Type => null;
 
     public object? Parameter2
     {
@@ -20,4 +21,5 @@ public partial class GetVATSValueUnknownConditionData
 
         }
     }
+    public Type? Parameter2Type => null;
 }

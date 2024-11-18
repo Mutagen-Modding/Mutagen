@@ -471,10 +471,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Quest;
             set => Quest = (value is IFormLinkOrIndex<IQuestGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IQuestGetter>);
+        }
         public object? Parameter2
         {
             get => Stage;
             set => Stage = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(Int32);
         }
         #endregion
 

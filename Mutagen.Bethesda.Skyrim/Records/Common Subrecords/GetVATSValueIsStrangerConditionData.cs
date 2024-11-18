@@ -12,6 +12,7 @@ public partial class GetVATSValueIsStrangerConditionData
 
         }
     }
+    public Type? Parameter1Type => typeof(ValueFunction);
 
     public object? Parameter2
     {
@@ -21,4 +22,5 @@ public partial class GetVATSValueIsStrangerConditionData
 
         }
     }
+    public Type? Parameter2Type => null;
 }

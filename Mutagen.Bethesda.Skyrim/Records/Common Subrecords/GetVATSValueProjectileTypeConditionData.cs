@@ -12,10 +12,12 @@ public partial class GetVATSValueProjectileTypeConditionData
 
         }
     }
+    public Type? Parameter1Type => typeof(ValueFunction);
 
     public object? Parameter2
     {
         get => null;
         set => Value = value is Projectile.TypeEnum v ? v : throw new ArgumentException();
     }
+    public Type? Parameter2Type => typeof(Projectile.TypeEnum);
 }

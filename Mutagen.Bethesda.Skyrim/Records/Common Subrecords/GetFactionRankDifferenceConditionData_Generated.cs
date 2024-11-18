@@ -479,10 +479,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Faction;
             set => Faction = (value is IFormLinkOrIndex<IFactionGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IFactionGetter>);
+        }
         public object? Parameter2
         {
             get => TargetNpc;
             set => TargetNpc = (value is IFormLinkOrIndex<IPlacedNpcGetter> v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IPlacedNpcGetter>);
         }
         #endregion
 

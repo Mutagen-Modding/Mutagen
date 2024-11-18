@@ -503,10 +503,18 @@ namespace Mutagen.Bethesda.Starfield
             get => Function;
             set => Function = (value is GetEventDataConditionData.EventFunction v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(GetEventDataConditionData.EventFunction);
+        }
         public object? Parameter2
         {
             get => Member;
             set => Member = (value is GetEventDataConditionData.EventMember v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(GetEventDataConditionData.EventMember);
         }
         #endregion
 

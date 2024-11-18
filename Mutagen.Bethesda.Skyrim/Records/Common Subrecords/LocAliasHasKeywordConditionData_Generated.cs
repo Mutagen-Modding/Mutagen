@@ -471,10 +471,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => LocationAliasIndex;
             set => LocationAliasIndex = (value is Int32 v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(Int32);
+        }
         public object? Parameter2
         {
             get => Keyword;
             set => Keyword = (value is IFormLinkOrIndex<IKeywordGetter> v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IKeywordGetter>);
         }
         #endregion
 

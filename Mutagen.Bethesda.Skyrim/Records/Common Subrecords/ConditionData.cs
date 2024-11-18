@@ -24,18 +24,22 @@ partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParame
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
+    public Type? Parameter1Type => throw new NotImplementedException();
     public object? Parameter2
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
+    public Type? Parameter2Type => throw new NotImplementedException();
 }
 
 public partial interface IConditionDataGetter
 {
     Condition.Function Function { get; }
     public object? Parameter1 { get; }
+    public Type? Parameter1Type { get; }
     public object? Parameter2 { get; }
+    public Type? Parameter2Type { get; }
 }
 
 public partial interface IConditionData
@@ -52,7 +56,9 @@ partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditio
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
     public object? Parameter1 => throw new NotImplementedException();
+    public Type? Parameter1Type => throw new NotImplementedException();
     public object? Parameter2 => throw new NotImplementedException();
+    public Type? Parameter2Type => throw new NotImplementedException();
 }
 
 partial class ConditionDataBinaryOverlay

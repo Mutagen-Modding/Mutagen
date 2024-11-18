@@ -471,10 +471,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Scene;
             set => Scene = (value is IFormLinkOrIndex<ISceneGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ISceneGetter>);
+        }
         public object? Parameter2
         {
             get => SceneActionIndex;
             set => SceneActionIndex = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(Int32);
         }
         #endregion
 

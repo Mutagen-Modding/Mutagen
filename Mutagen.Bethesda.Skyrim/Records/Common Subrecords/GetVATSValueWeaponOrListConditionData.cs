@@ -12,10 +12,12 @@ public partial class GetVATSValueWeaponOrListConditionData
 
         }
     }
+    public Type? Parameter1Type => typeof(ValueFunction);
 
     public object? Parameter2
     {
         get => null;
         set => Value = value is IFormLink<IWeaponOrListGetter> v ? v : throw new ArgumentException();
     }
+    public Type? Parameter2Type => typeof(IFormLink<IWeaponOrListGetter>);
 }

@@ -471,10 +471,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Criminal;
             set => Criminal = (value is IFormLinkOrIndex<IPlacedNpcGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IPlacedNpcGetter>);
+        }
         public object? Parameter2
         {
             get => CrimeType;
             set => CrimeType = (value is CrimeType v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(CrimeType);
         }
         #endregion
 

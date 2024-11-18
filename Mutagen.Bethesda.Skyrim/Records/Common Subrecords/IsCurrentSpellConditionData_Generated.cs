@@ -471,10 +471,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Spell;
             set => Spell = (value is IFormLinkOrIndex<ISpellGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ISpellGetter>);
+        }
         public object? Parameter2
         {
             get => SpellSource;
             set => SpellSource = (value is CastSource v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(CastSource);
         }
         #endregion
 

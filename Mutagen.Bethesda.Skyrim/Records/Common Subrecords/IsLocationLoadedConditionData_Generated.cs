@@ -471,6 +471,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => Location;
             set => Location = (value is IFormLinkOrIndex<ILocationGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ILocationGetter>);
+        }
         public object? Parameter2
         {
             get => null;
@@ -478,6 +482,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

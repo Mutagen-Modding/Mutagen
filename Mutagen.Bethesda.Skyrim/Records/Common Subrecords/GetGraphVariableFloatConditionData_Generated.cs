@@ -463,10 +463,18 @@ namespace Mutagen.Bethesda.Skyrim
 
             }
         }
+        public Type? Parameter1Type
+        {
+            get => null;
+        }
         public object? Parameter2
         {
             get => GraphVariable;
             set => GraphVariable = (value is String v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(String);
         }
         #endregion
 

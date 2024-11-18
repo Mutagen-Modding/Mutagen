@@ -479,10 +479,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => TargetNpc;
             set => TargetNpc = (value is IFormLinkOrIndex<IPlacedNpcGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IPlacedNpcGetter>);
+        }
         public object? Parameter2
         {
             get => AssociationType;
             set => AssociationType = (value is IFormLinkOrIndex<IAssociationTypeGetter> v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IAssociationTypeGetter>);
         }
         #endregion
 

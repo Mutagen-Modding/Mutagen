@@ -471,6 +471,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => VoiceTypeOrList;
             set => VoiceTypeOrList = (value is IFormLinkOrIndex<IVoiceTypeOrListGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IVoiceTypeOrListGetter>);
+        }
         public object? Parameter2
         {
             get => null;
@@ -478,6 +482,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

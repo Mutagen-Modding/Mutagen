@@ -460,6 +460,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => ActorValue;
             set => ActorValue = (value is ActorValue v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(ActorValue);
+        }
         public object? Parameter2
         {
             get => null;
@@ -467,6 +471,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

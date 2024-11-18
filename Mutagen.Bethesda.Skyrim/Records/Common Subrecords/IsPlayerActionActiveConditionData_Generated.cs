@@ -460,6 +460,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => PlayerAction;
             set => PlayerAction = (value is PlayerAction v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(PlayerAction);
+        }
         public object? Parameter2
         {
             get => null;
@@ -467,6 +471,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

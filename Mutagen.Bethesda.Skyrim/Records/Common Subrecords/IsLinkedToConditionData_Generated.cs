@@ -479,10 +479,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => Target;
             set => Target = (value is IFormLinkOrIndex<IPlacedSimpleGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IPlacedSimpleGetter>);
+        }
         public object? Parameter2
         {
             get => Keyword;
             set => Keyword = (value is IFormLinkOrIndex<IKeywordGetter> v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IKeywordGetter>);
         }
         #endregion
 

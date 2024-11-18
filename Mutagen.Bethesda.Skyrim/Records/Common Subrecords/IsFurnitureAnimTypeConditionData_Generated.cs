@@ -460,6 +460,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => FurnitureAnimType;
             set => FurnitureAnimType = (value is FurnitureAnimType v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(FurnitureAnimType);
+        }
         public object? Parameter2
         {
             get => null;
@@ -467,6 +471,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

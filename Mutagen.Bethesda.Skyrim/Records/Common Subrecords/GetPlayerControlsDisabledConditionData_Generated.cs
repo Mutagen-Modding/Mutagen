@@ -460,10 +460,18 @@ namespace Mutagen.Bethesda.Skyrim
             get => PlayerControlsParameterOne;
             set => PlayerControlsParameterOne = (value is Int32 v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(Int32);
+        }
         public object? Parameter2
         {
             get => PlayerControlsParameterTwo;
             set => PlayerControlsParameterTwo = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(Int32);
         }
         #endregion
 

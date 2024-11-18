@@ -12,6 +12,7 @@ public partial class GetVATSValueCripplePartConditionData
 
         }
     }
+    public Type? Parameter1Type => typeof(ValueFunction);
 
     public object? Parameter2
     {
@@ -21,4 +22,5 @@ public partial class GetVATSValueCripplePartConditionData
 
         }
     }
+    public Type? Parameter2Type => null;
 }

@@ -32,12 +32,14 @@ public partial class GetEventDataConditionData : IConditionStringParameter
             ? (EventFunction.GetIsID, EventMember.None)
             : ((EventFunction)((int)value >> 16), (EventMember)((int)value & 0xFFFF));
     }
+    public Type? Parameter1Type => typeof(int);
 
     public object? Parameter2
     {
         get => Record;
         set => Record = value as IFormLink<ISkyrimMajorRecordGetter> ?? throw new ArgumentNullException();
     }
+    public Type? Parameter2Type => typeof(object);
 
     public enum EventMember : ushort
     {

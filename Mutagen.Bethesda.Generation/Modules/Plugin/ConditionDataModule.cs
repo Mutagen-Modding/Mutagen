@@ -29,11 +29,13 @@ public class ConditionDataModule : GenerationModule
         {
             if (i > 2) break;
             if (field.Name.Contains("UnusedStringParameter")) continue;
+            var isUnusedParameter = field.Name.Contains("Unused");
 
+            // Parameter property
             sb.AppendLine($"public object? Parameter{i}");
             using (sb.CurlyBrace())
             {
-                if (field.Name.Contains("Unused"))
+                if (isUnusedParameter)
                 {
                     sb.AppendLine("get => null;");
                     sb.AppendLine("set");
@@ -50,6 +52,21 @@ public class ConditionDataModule : GenerationModule
                     sb.AppendLine($"set => {name} = (value is {setterTypeName} v ? v : throw new ArgumentException());");
                 }
 
+            }
+
+            // ParameterType property
+            sb.AppendLine($"public Type? Parameter{i}Type");
+            using (sb.CurlyBrace())
+            {
+                if (isUnusedParameter)
+                {
+                    sb.AppendLine("get => null;");
+                }
+                else
+                {
+                    var name = field.TypeName(true);
+                    sb.AppendLine($"get => typeof({name});");
+                }
             }
 
             i++;

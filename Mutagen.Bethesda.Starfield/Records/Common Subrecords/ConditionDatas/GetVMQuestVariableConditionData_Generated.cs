@@ -471,6 +471,10 @@ namespace Mutagen.Bethesda.Starfield
             get => FirstParameter;
             set => FirstParameter = (value is IFormLinkOrIndex<IQuestGetter> v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IQuestGetter>);
+        }
         public object? Parameter2
         {
             get => null;
@@ -478,6 +482,10 @@ namespace Mutagen.Bethesda.Starfield
             {
 
             }
+        }
+        public Type? Parameter2Type
+        {
+            get => null;
         }
         #endregion
 

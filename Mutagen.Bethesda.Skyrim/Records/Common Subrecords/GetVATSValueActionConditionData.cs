@@ -26,10 +26,12 @@ partial class GetVATSValueActionConditionData
 
         }
     }
+    public Type? Parameter1Type => typeof(ValueFunction);
 
     public object? Parameter2
     {
         get => null;
         set => Value = value is GetVATSValueActionConditionData.Action v ? v : throw new ArgumentException();
     }
+    public Type? Parameter2Type => typeof(GetVATSValueActionConditionData.Action);
 }

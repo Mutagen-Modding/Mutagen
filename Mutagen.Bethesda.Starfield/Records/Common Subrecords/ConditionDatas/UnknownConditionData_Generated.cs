@@ -493,10 +493,18 @@ namespace Mutagen.Bethesda.Starfield
             get => Function;
             set => Function = (value is Condition.Function v ? v : throw new ArgumentException());
         }
+        public Type? Parameter1Type
+        {
+            get => typeof(Condition.Function);
+        }
         public object? Parameter2
         {
             get => ParameterOne;
             set => ParameterOne = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public Type? Parameter2Type
+        {
+            get => typeof(Int32);
         }
         #endregion
 
