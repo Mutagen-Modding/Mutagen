@@ -7,7 +7,6 @@
         <IsPackable>true</IsPackable>
         <DebugSymbols>false</DebugSymbols>
         <IncludeSymbols>false</IncludeSymbols>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>
 

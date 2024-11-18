@@ -1,12 +1,93 @@
-﻿using Microsoft.CodeAnalysis.Testing;
+﻿using System.Runtime.CompilerServices;
+using Autofac.Features.OwnedInstances;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
 using Mutagen.Bethesda.SourceGenerators.CustomAspectInterface;
+using Noggog;
 using Xunit;
-using VerifyCS = Mutagen.Bethesda.UnitTests.SourceGenerators.CSharpSourceGeneratorVerifier<Mutagen.Bethesda.SourceGenerators.CustomAspectInterface.CustomAspectInterfaceGenerator>;
 
 namespace Mutagen.Bethesda.UnitTests.SourceGenerators;
 
 public class CustomAspectGeneratorTests: IClassFixture<LoadMetadataReferenceFixture>
 {
+    public class SourceGenerationTestHelper
+    {
+        private static bool AutoVerify = false;
+
+        private static VerifySettings GetVerifySettings()
+        {
+            var verifySettings = new VerifySettings();
+    #if DEBUG
+            if (AutoVerify)
+            {
+                verifySettings.AutoVerify();
+            }
+    #else
+            verifySettings.DisableDiff();
+    #endif
+            return verifySettings;
+        }
+        
+        public static Task VerifySerialization(string source, [CallerFilePath] string sourceFile = "")
+        {
+            // Parse the provided string into a C# syntax tree
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+        
+            IEnumerable<PortableExecutableReference> references = new[]
+            {
+                MetadataReference.CreateFromFile(typeof(Owned<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(FilePath).Assembly.Location),
+            };
+            
+            // Create a Roslyn compilation for the syntax tree.
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName: "Tests",
+                syntaxTrees: new[] { syntaxTree },
+                references: references);
+
+            // Create an instance of our incremental source generator
+            var generator = new CustomAspectInterfaceGenerator();
+
+            // The GeneratorDriver is used to run our generator against a compilation
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        
+            // Run the source generator!
+            driver = driver.RunGenerators(compilation);
+            
+            // Use verify to snapshot test the source generator output!
+            return Verifier.Verify(driver, GetVerifySettings(), sourceFile);
+        }
+
+        public static GeneratorDriverRunResult RunSourceGenerator(string source)
+        {
+            // Parse the provided string into a C# syntax tree
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+
+            IEnumerable<PortableExecutableReference> references = new[]
+            {
+                MetadataReference.CreateFromFile(typeof(FilePath).Assembly.Location),
+            };
+
+            // Create a Roslyn compilation for the syntax tree.
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName: "Tests",
+                syntaxTrees: new[] { syntaxTree },
+                references: references);
+
+            // Create an instance of our incremental source generator
+            var generator = new CustomAspectInterfaceGenerator();
+
+            // The GeneratorDriver is used to run our generator against a compilation
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+
+            // Run the source generator!
+            driver = driver.RunGenerators(compilation);
+            
+            return driver.GetRunResult();
+        }
+    }
+    
     private readonly LoadMetadataReferenceFixture metadata;
 
     public CustomAspectGeneratorTests(LoadMetadataReferenceFixture metadata)
@@ -46,61 +127,6 @@ namespace SomeNamespace
     }
 }
 ";
-            
-        const string generated = @"using Mutagen.Bethesda.Skyrim;
-
-namespace SomeNamespace
-{
-    #region Wrappers
-    public class IArmorWrapper : ISomeCustomAspect
-    {
-        private readonly IArmor _wrapped;
-        public Mutagen.Bethesda.Plugins.IFormLinkNullable<Mutagen.Bethesda.Skyrim.ISoundDescriptorGetter> PickUpSound
-        {
-            get => _wrapped.PickUpSound;
-        }
-
-        public IArmorWrapper(IArmor rhs)
-        {
-            _wrapped = rhs;
-        }
-    }
-
-
-    #endregion
-
-    #region Mix Ins
-    public static class WrapperMixIns
-    {
-        public static IArmorWrapper AsISomeCustomAspect(this IArmor rhs)
-        {
-            return new IArmorWrapper(rhs);
-        }
-
-    }
-    #endregion
-
-}
-";
-        var testState = new VerifyCS.Test
-        {
-            TestState =
-            {
-                Sources =
-                {
-                    ("SomeFile.cs", source)
-                },
-                GeneratedSources =
-                {
-                    (typeof(CustomAspectInterfaceGenerator), "CustomAspectInterfaces.g.cs", generated)
-                },
-            },
-            CompilerDiagnostics = CompilerDiagnostics.None,
-        };
-        foreach (var meta in metadata.MetadataReferences)
-        {
-            testState.TestState.AdditionalReferences.Add(meta);
-        }
-        await testState.RunAsync();
+        await SourceGenerationTestHelper.VerifySerialization(source);
     }
 }

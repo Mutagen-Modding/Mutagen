@@ -27,6 +27,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+      <PackageReference Include="Verify.DiffPlex" />
+      <PackageReference Include="Verify.SourceGenerators" />
+      <PackageReference Include="Verify.Xunit" />
   </ItemGroup>
 
   <ItemGroup>

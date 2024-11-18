@@ -58,6 +58,9 @@
     <PackageVersion Include="System.IO.Compression" Version="4.3.0" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+      <PackageVersion Include="Verify.DiffPlex" Version="3.1.2" />
+      <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
+      <PackageVersion Include="Verify.Xunit" Version="28.3.1" />
     <PackageVersion Include="xunit" Version="2.9.0" />
     <PackageVersion Include="xunit.runner.console" Version="2.9.0">
       <PrivateAssets>all</PrivateAssets>
