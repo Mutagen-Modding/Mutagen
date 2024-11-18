@@ -4,7 +4,7 @@
     <Fields>
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
       <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
-      <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
+      <Int32 name="RunOnTypeIndex" default="-1" binary="NoGeneration" />
       <Bool name="UseAliases" binary="NoGeneration" />
       <Bool name="UsePackageData" binary="NoGeneration" />
     </Fields>

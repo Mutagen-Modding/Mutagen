@@ -925,7 +925,7 @@ partial class ConditionBinaryCreateTranslation
             FormLinkBinaryTranslation.Instance.Parse(
                 reader: frame,
                 defaultVal: FormKey.Null));
-        item.Unknown3 = frame.ReadInt32();
+        item.RunOnTypeIndex = frame.ReadInt32();
     }
     
     public static ConditionData? CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
@@ -2650,7 +2650,7 @@ partial class ConditionBinaryWriteTranslation
         
         EnumBinaryTranslation<RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(writer, data.RunOnType, 4);
         FormLinkBinaryTranslation.Instance.Write(writer, data.Reference);
-        writer.Write(item.Data.Unknown3);
+        writer.Write(item.Data.RunOnTypeIndex);
     }
 }
 
