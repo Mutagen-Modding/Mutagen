@@ -19,33 +19,35 @@ partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParame
     string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
-    public object? Parameter1
+    object? IConditionDataGetter.Parameter1 => throw new NotImplementedException();
+    Type? IConditionDataGetter.Parameter1Type => throw new NotImplementedException();
+    object? IConditionDataGetter.Parameter2 => throw new NotImplementedException();
+    Type? IConditionDataGetter.Parameter2Type => throw new NotImplementedException();
+    object? IConditionData.Parameter1
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
-    public Type? Parameter1Type => throw new NotImplementedException();
-    public object? Parameter2
+    object? IConditionData.Parameter2
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
-    public Type? Parameter2Type => throw new NotImplementedException();
 }
 
 public partial interface IConditionDataGetter
 {
     Condition.Function Function { get; }
-    public object? Parameter1 { get; }
-    public Type? Parameter1Type { get; }
-    public object? Parameter2 { get; }
-    public Type? Parameter2Type { get; }
+    object? Parameter1 { get; }
+    Type? Parameter1Type { get; }
+    object? Parameter2 { get; }
+    Type? Parameter2Type { get; }
 }
 
 public partial interface IConditionData
 {
-    public object? Parameter1 { get; set; }
-    public object? Parameter2 { get; set; }
+    object? Parameter1 { get; set; }
+    object? Parameter2 { get; set; }
 }
 
 partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditionStringParameterGetter
