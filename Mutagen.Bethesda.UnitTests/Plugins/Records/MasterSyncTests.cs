@@ -1,8 +1,10 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Xunit;
+using Mutagen.Bethesda.Testing.AutoData;
+using Noggog;
 using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
@@ -11,13 +13,13 @@ public class MasterSyncTests
 {
     #region MasterFlagSync
 
-    [Fact]
-    public void MasterFlagSync_MasterThrow()
+    [Theory, MutagenAutoData]
+    public void MasterFlagSync_MasterThrow(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
-        var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
+        var masterPath = Path.Combine(existingFolder, "Test.esp");
         Assert.Throws<ArgumentException>(() =>
         {
             masterMod.BeginWrite
@@ -25,17 +27,18 @@ public class MasterSyncTests
                 .WithNoLoadOrder()
                 .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                 .NoMastersListContentCheck()
+                .WithFileSystem(fileSystem)
                 .Write();
         });
     }
 
-    [Fact]
-    public void MasterFlagSync_ChildThrow()
+    [Theory, MutagenAutoData]
+    public void MasterFlagSync_ChildThrow(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
-        var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
+        var masterPath = Path.Combine(existingFolder, "Test.esm");
         Assert.Throws<ArgumentException>(() =>
         {
             masterMod.BeginWrite
@@ -43,17 +46,18 @@ public class MasterSyncTests
                 .WithNoLoadOrder()
                 .WithModKeySync(ModKeyOption.ThrowIfMisaligned)
                 .NoMastersListContentCheck()
+                .WithFileSystem(fileSystem)
                 .Write();
         });
     }
     #endregion
 
     #region MasterListSync
-    [Fact]
-    public void MasterListSync_AddMissingToEmpty()
+    [Theory, MutagenAutoData]
+    public void MasterListSync_AddMissingToEmpty(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
         var other = ModKey.FromNameAndExtension("Other.esp");
@@ -62,24 +66,27 @@ public class MasterSyncTests
         mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
         mod.Npcs.RecordCache.Set(otherNpc);
         otherNpc.Race.FormKey = new FormKey(knights, 0x123456);
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create.FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Equal(2, reimport.MasterReferences.Count);
         Assert.Contains(knights, reimport.MasterReferences.Select(m => m.Master));
         Assert.Contains(other, reimport.MasterReferences.Select(m => m.Master));
     }
 
-    [Fact]
-    public void MasterListSync_RemoveUnnecessary()
+    [Theory, MutagenAutoData]
+    public void MasterListSync_RemoveUnnecessary(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
         var mod = new OblivionMod(obliv);
@@ -89,14 +96,18 @@ public class MasterSyncTests
         {
             Master = ModKey.FromNameAndExtension("Other.esp")
         });
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Equal(
             reimport.ModHeader.MasterReferences.Select(m => m.Master),
             new ModKey[]
@@ -105,33 +116,37 @@ public class MasterSyncTests
             });
     }
 
-    [Fact]
-    public void MasterListSync_SkipNulls()
+    [Theory, MutagenAutoData]
+    public void MasterListSync_SkipNulls(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var mod = new OblivionMod(obliv);
         var npc = mod.Npcs.AddNew();
         npc.Race.Clear();
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Empty(reimport.ModHeader.MasterReferences);
     }
     #endregion
 
     #region Master Order Sync
-    [Fact]
-    public void MasterOrderSync_Typical()
+    [Theory, MutagenAutoData]
+    public void MasterOrderSync_Typical(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
         var other = ModKey.FromNameAndExtension("Other.esp");
@@ -140,14 +155,18 @@ public class MasterSyncTests
         mod.Npcs.RecordCache.Set(knightsNpc);
         var otherNpc = new Npc(new FormKey(other, 0x123456));
         mod.Npcs.RecordCache.Set(otherNpc);
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Equal(
             new ModKey[]
             {
@@ -157,11 +176,11 @@ public class MasterSyncTests
             reimport.ModHeader.MasterReferences.Select(m => m.Master));
     }
 
-    [Fact]
-    public void MasterOrderSync_EsmFirst()
+    [Theory, MutagenAutoData]
+    public void MasterOrderSync_EsmFirst(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var first = ModKey.FromNameAndExtension("First.esp");
         var second = ModKey.FromNameAndExtension("Second.esp");
@@ -170,15 +189,19 @@ public class MasterSyncTests
         mod.Npcs.RecordCache.Set(secondNpc);
         var firstNpc = new Npc(new FormKey(first, 0x123456));
         mod.Npcs.RecordCache.Set(firstNpc);
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithMastersListOrdering(MastersListOrderingOption.MastersFirst)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Equal(
             new ModKey[]
             {
@@ -188,11 +211,11 @@ public class MasterSyncTests
             reimport.ModHeader.MasterReferences.Select(m => m.Master));
     }
 
-    [Fact]
-    public void MasterOrderSync_ByLoadOrder()
+    [Theory, MutagenAutoData]
+    public void MasterOrderSync_ByLoadOrder(
+        IFileSystem fileSystem,
+        DirectoryPath existingFolder)
     {
-        Warmup.Init();
-        using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var esm = ModKey.FromNameAndExtension("First.esm");
         var esp = ModKey.FromNameAndExtension("Second.esp");
@@ -201,7 +224,7 @@ public class MasterSyncTests
         mod.Npcs.RecordCache.Set(espNpc);
         var esmNpc = new Npc(new FormKey(esm, 0x123456));
         mod.Npcs.RecordCache.Set(esmNpc);
-        var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+        var modPath = Path.Combine(existingFolder, obliv.ToString());
         var loadOrder = new ModKey[]
         {
             esm,
@@ -213,8 +236,12 @@ public class MasterSyncTests
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithMastersListOrdering(loadOrder)
+            .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+        using var reimport = OblivionMod.Create
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
         Assert.Equal(
             loadOrder,
             reimport.ModHeader.MasterReferences.Select(m => m.Master));
