@@ -3,6 +3,7 @@ using GameFinder.RegistryUtils;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.Steam.Models.ValueTypes;
+using GameFinder.StoreHandlers.Xbox;
 using Microsoft.Win32;
 using Noggog;
 using FileSystem = NexusMods.Paths.FileSystem;
@@ -15,6 +16,7 @@ public sealed class GameLocator
 
     private readonly Lazy<SteamHandler?> _steam;
     private readonly Lazy<GOGHandler?> _gog;
+    private readonly Lazy<XboxHandler?> _xbox;
 
     public GameLocator()
     {
@@ -37,6 +39,15 @@ public sealed class GameLocator
             if (OperatingSystem.IsWindows())
             {
                 return new GOGHandler(WindowsRegistry.Shared, FileSystem.Shared);
+            }
+
+            return default;
+        });
+        _xbox = new Lazy<XboxHandler?>(() =>
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return new XboxHandler(FileSystem.Shared);
             }
 
             return default;
@@ -76,6 +87,8 @@ public sealed class GameLocator
                 return TryGetSteamGameFolder(steam, out path);
             case GogGameSource gog:
                 return TryGetGogGameFolder(gog, out path);
+            case XboxGameSource xbox:
+                return TryGetXboxGameFolder(xbox, out path);
             default:
                 throw new NotImplementedException();
         }
@@ -132,6 +145,24 @@ public sealed class GameLocator
         {
             var find = _gog.Value.FindOneGameById(
                 GOGGameId.From(gogGameSource.Id.Value),
+                out var err);
+            if (find != null)
+            {
+                directoryPath = find.Path.GetFullPath();
+                return true;
+            }
+        }
+
+        directoryPath = default;
+        return false;
+    }
+
+    private bool TryGetXboxGameFolder(XboxGameSource gameSource, out DirectoryPath directoryPath)
+    {
+        if (gameSource.Id != null && _xbox.Value != null)
+        {
+            var find = _xbox.Value.FindOneGameById(
+                XboxGameId.From(gameSource.Id),
                 out var err);
             if (find != null)
             {
@@ -326,6 +357,10 @@ public sealed class GameLocator
                     new SteamGameSource()
                     {
                         Id = 1716740
+                    },
+                    new XboxGameSource()
+                    {
+                        Id = "BethesdaSoftworks.ProjectGold"
                     },
                 },
                 RequiredFiles: new string[]

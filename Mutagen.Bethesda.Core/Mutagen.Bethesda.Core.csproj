@@ -28,6 +28,7 @@
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
+        <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
         <DocumentationFile>obj\Release\net6.0\Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -147,6 +148,7 @@
         <Compile Include="Installs\RegistryGameSource.cs" />
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
+        <Compile Include="Installs\XboxGameSource.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />
