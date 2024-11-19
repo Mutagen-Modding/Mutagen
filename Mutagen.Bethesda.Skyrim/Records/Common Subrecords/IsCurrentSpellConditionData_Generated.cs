@@ -466,6 +466,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsCurrentSpellConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IsCurrentSpellConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override object? Parameter1
+        {
+            get => Spell;
+            set => Spell = (value is IFormLinkOrIndex<ISpellGetter> v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ISpellGetter>);
+        }
+        public override object? Parameter2
+        {
+            get => SpellSource;
+            set => SpellSource = (value is CastSource v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(CastSource);
+        }
         #endregion
 
         #region Binary Translation

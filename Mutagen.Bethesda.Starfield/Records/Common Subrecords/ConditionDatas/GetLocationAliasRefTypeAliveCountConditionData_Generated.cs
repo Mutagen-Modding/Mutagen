@@ -466,6 +466,24 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetLocationAliasRefTypeAliveCountConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetLocationAliasRefTypeAliveCountConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(Int32);
+        }
+        public override object? Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is IFormLinkOrIndex<ILocationReferenceTypeGetter> v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ILocationReferenceTypeGetter>);
+        }
         #endregion
 
         #region Binary Translation

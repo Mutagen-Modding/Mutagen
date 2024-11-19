@@ -454,6 +454,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => PlayerAction;
+            set => PlayerAction = (value is PlayerAction v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(PlayerAction);
+        }
+        public override object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public override Type? Parameter2Type
+        {
+            get => null;
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IsPlayerActionActiveConditionDataBinaryWriteTranslation.Instance;

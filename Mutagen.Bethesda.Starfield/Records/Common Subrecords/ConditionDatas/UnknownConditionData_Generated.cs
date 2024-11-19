@@ -487,6 +487,27 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => Function;
+            set => Function = (value is Condition.Function v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(Condition.Function);
+        }
+        public override object? Parameter2
+        {
+            get => ParameterOne;
+            set => ParameterOne = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(Int32);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => UnknownConditionDataBinaryWriteTranslation.Instance;

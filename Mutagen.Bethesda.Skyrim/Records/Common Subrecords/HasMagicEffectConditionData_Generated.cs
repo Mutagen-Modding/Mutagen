@@ -466,6 +466,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HasMagicEffectConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HasMagicEffectConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override object? Parameter1
+        {
+            get => MagicEffect;
+            set => MagicEffect = (value is IFormLinkOrIndex<IMagicEffectGetter> v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IMagicEffectGetter>);
+        }
+        public override object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public override Type? Parameter2Type
+        {
+            get => null;
+        }
         #endregion
 
         #region Binary Translation

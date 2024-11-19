@@ -454,6 +454,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => MiscStat;
+            set => MiscStat = (value is MiscStatEnum v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(MiscStatEnum);
+        }
+        public override object? Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public override Type? Parameter2Type
+        {
+            get => null;
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetPCMiscStatConditionDataBinaryWriteTranslation.Instance;

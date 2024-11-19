@@ -454,6 +454,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => PlayerControlsParameterOne;
+            set => PlayerControlsParameterOne = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(Int32);
+        }
+        public override object? Parameter2
+        {
+            get => PlayerControlsParameterTwo;
+            set => PlayerControlsParameterTwo = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(Int32);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetPlayerControlsDisabledConditionDataBinaryWriteTranslation.Instance;

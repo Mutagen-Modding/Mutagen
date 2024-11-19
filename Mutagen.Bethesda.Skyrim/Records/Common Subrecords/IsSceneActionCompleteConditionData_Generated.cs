@@ -466,6 +466,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsSceneActionCompleteConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IsSceneActionCompleteConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override object? Parameter1
+        {
+            get => Scene;
+            set => Scene = (value is IFormLinkOrIndex<ISceneGetter> v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ISceneGetter>);
+        }
+        public override object? Parameter2
+        {
+            get => SceneActionIndex;
+            set => SceneActionIndex = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(Int32);
+        }
         #endregion
 
         #region Binary Translation

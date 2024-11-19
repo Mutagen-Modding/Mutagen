@@ -454,6 +454,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public override Type? Parameter1Type
+        {
+            get => null;
+        }
+        public override object? Parameter2
+        {
+            get => GraphVariable;
+            set => GraphVariable = (value is String v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(String);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetGraphVariableIntConditionDataBinaryWriteTranslation.Instance;
