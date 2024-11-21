@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem FirstUnusedIntParameter,
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
@@ -454,6 +454,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        public override Type? Parameter1Type
+        {
+            get => null;
+        }
+        public override object? Parameter2
+        {
+            get => GraphVariable;
+            set => GraphVariable = (value is String v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(String);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetGraphVariableFloatConditionDataBinaryWriteTranslation.Instance;
@@ -677,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         FirstUnusedIntParameter = 5,
@@ -914,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetGraphVariableFloatConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetGraphVariableFloatConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetGraphVariableFloatConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetGraphVariableFloatConditionData_FieldIndex)((int)index);

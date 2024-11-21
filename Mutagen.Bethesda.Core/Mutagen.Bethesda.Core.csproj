@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -10,13 +10,12 @@
         <PackageId>Mutagen.Bethesda.Core</PackageId>
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains only the core components without the generated records.</Description>
         <IsPackable>true</IsPackable>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
-        <DebugType>embedded</DebugType>
+        <DebugType>portable</DebugType>
         <DebugSymbols>true</DebugSymbols>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="ini-parser-netstandard" />
@@ -29,6 +28,7 @@
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
+        <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
         <DocumentationFile>obj\Release\net6.0\Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -148,6 +148,7 @@
         <Compile Include="Installs\RegistryGameSource.cs" />
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
+        <Compile Include="Installs\XboxGameSource.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />

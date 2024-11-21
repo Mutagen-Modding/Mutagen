@@ -20,6 +20,7 @@ public class MutagenObjData
     public RecordCollection AdditionalContainedRecordTypes = new();
     public string TriggeringSource;
     public bool CustomBinary;
+    public bool GenerateConditionData;
     public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;
     public bool BinaryOverlayGenerateCtor;
     public CustomEnd CustomBinaryEnd;

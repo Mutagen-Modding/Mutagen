@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IConditionDataGetter.Reference => this.Reference;
         #endregion
-        #region Unknown3
-        public static readonly Int32 Unknown3Default = -1;
-        public Int32 Unknown3 { get; set; } = Unknown3Default;
+        #region RunOnTypeIndex
+        public static readonly Int32 RunOnTypeIndexDefault = -1;
+        public Int32 RunOnTypeIndex { get; set; } = RunOnTypeIndexDefault;
         #endregion
         #region UseAliases
         public Boolean UseAliases { get; set; } = default(Boolean);
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.RunOnType = initialValue;
                 this.Reference = initialValue;
-                this.Unknown3 = initialValue;
+                this.RunOnTypeIndex = initialValue;
                 this.UseAliases = initialValue;
                 this.UsePackageData = initialValue;
             }
@@ -126,13 +126,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData)
             {
                 this.RunOnType = RunOnType;
                 this.Reference = Reference;
-                this.Unknown3 = Unknown3;
+                this.RunOnTypeIndex = RunOnTypeIndex;
                 this.UseAliases = UseAliases;
                 this.UsePackageData = UsePackageData;
             }
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem RunOnType;
             public TItem Reference;
-            public TItem Unknown3;
+            public TItem RunOnTypeIndex;
             public TItem UseAliases;
             public TItem UsePackageData;
             #endregion
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
                 if (!object.Equals(this.Reference, rhs.Reference)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.RunOnTypeIndex, rhs.RunOnTypeIndex)) return false;
                 if (!object.Equals(this.UseAliases, rhs.UseAliases)) return false;
                 if (!object.Equals(this.UsePackageData, rhs.UsePackageData)) return false;
                 return true;
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.RunOnType);
                 hash.Add(this.Reference);
-                hash.Add(this.Unknown3);
+                hash.Add(this.RunOnTypeIndex);
                 hash.Add(this.UseAliases);
                 hash.Add(this.UsePackageData);
                 return hash.ToHashCode();
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!eval(this.RunOnType)) return false;
                 if (!eval(this.Reference)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.RunOnTypeIndex)) return false;
                 if (!eval(this.UseAliases)) return false;
                 if (!eval(this.UsePackageData)) return false;
                 return true;
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (eval(this.RunOnType)) return true;
                 if (eval(this.Reference)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.RunOnTypeIndex)) return true;
                 if (eval(this.UseAliases)) return true;
                 if (eval(this.UsePackageData)) return true;
                 return false;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 obj.RunOnType = eval(this.RunOnType);
                 obj.Reference = eval(this.Reference);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.RunOnTypeIndex = eval(this.RunOnTypeIndex);
                 obj.UseAliases = eval(this.UseAliases);
                 obj.UsePackageData = eval(this.UsePackageData);
             }
@@ -248,9 +248,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Reference, "Reference");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.RunOnTypeIndex ?? true)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(RunOnTypeIndex, "RunOnTypeIndex");
                     }
                     if (printMask?.UseAliases ?? true)
                     {
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public Exception? RunOnType;
             public Exception? Reference;
-            public Exception? Unknown3;
+            public Exception? RunOnTypeIndex;
             public Exception? UseAliases;
             public Exception? UsePackageData;
             #endregion
@@ -301,8 +301,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return RunOnType;
                     case ConditionData_FieldIndex.Reference:
                         return Reference;
-                    case ConditionData_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case ConditionData_FieldIndex.RunOnTypeIndex:
+                        return RunOnTypeIndex;
                     case ConditionData_FieldIndex.UseAliases:
                         return UseAliases;
                     case ConditionData_FieldIndex.UsePackageData:
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ConditionData_FieldIndex.Reference:
                         this.Reference = ex;
                         break;
-                    case ConditionData_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case ConditionData_FieldIndex.RunOnTypeIndex:
+                        this.RunOnTypeIndex = ex;
                         break;
                     case ConditionData_FieldIndex.UseAliases:
                         this.UseAliases = ex;
@@ -348,8 +348,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ConditionData_FieldIndex.Reference:
                         this.Reference = (Exception?)obj;
                         break;
-                    case ConditionData_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case ConditionData_FieldIndex.RunOnTypeIndex:
+                        this.RunOnTypeIndex = (Exception?)obj;
                         break;
                     case ConditionData_FieldIndex.UseAliases:
                         this.UseAliases = (Exception?)obj;
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (RunOnType != null) return true;
                 if (Reference != null) return true;
-                if (Unknown3 != null) return true;
+                if (RunOnTypeIndex != null) return true;
                 if (UseAliases != null) return true;
                 if (UsePackageData != null) return true;
                 return false;
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Reference, "Reference");
                 }
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(RunOnTypeIndex, "RunOnTypeIndex");
                 }
                 {
                     sb.AppendItem(UseAliases, "UseAliases");
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
                 ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.RunOnTypeIndex = this.RunOnTypeIndex.Combine(rhs.RunOnTypeIndex);
                 ret.UseAliases = this.UseAliases.Combine(rhs.UseAliases);
                 ret.UsePackageData = this.UsePackageData.Combine(rhs.UsePackageData);
                 return ret;
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool OnOverall;
             public bool RunOnType;
             public bool Reference;
-            public bool Unknown3;
+            public bool RunOnTypeIndex;
             public bool UseAliases;
             public bool UsePackageData;
             #endregion
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OnOverall = onOverall;
                 this.RunOnType = defaultOn;
                 this.Reference = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.RunOnTypeIndex = defaultOn;
                 this.UseAliases = defaultOn;
                 this.UsePackageData = defaultOn;
             }
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((RunOnType, null));
                 ret.Add((Reference, null));
-                ret.Add((Unknown3, null));
+                ret.Add((RunOnTypeIndex, null));
                 ret.Add((UseAliases, null));
                 ret.Add((UsePackageData, null));
             }
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Condition.RunOnType RunOnType { get; set; }
         new IFormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
-        new Int32 Unknown3 { get; set; }
+        new Int32 RunOnTypeIndex { get; set; }
         new Boolean UseAliases { get; set; }
         new Boolean UsePackageData { get; set; }
     }
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration StaticRegistration => ConditionData_Registration.Instance;
         Condition.RunOnType RunOnType { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
-        Int32 Unknown3 { get; }
+        Int32 RunOnTypeIndex { get; }
         Boolean UseAliases { get; }
         Boolean UsePackageData { get; }
 
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
     }
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.RunOnType = default(Condition.RunOnType);
             item.Reference.Clear();
-            item.Unknown3 = ConditionData.Unknown3Default;
+            item.RunOnTypeIndex = ConditionData.RunOnTypeIndexDefault;
             item.UseAliases = default(Boolean);
             item.UsePackageData = default(Boolean);
         }
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.RunOnType = item.RunOnType == rhs.RunOnType;
             ret.Reference = item.Reference.Equals(rhs.Reference);
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.RunOnTypeIndex = item.RunOnTypeIndex == rhs.RunOnTypeIndex;
             ret.UseAliases = item.UseAliases == rhs.UseAliases;
             ret.UsePackageData = item.UsePackageData == rhs.UsePackageData;
         }
@@ -932,9 +932,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Reference.FormKey, "Reference");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.RunOnTypeIndex ?? true)
             {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.RunOnTypeIndex, "RunOnTypeIndex");
             }
             if (printMask?.UseAliases ?? true)
             {
@@ -961,9 +961,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnTypeIndex) ?? true))
             {
-                if (lhs.Unknown3 != rhs.Unknown3) return false;
+                if (lhs.RunOnTypeIndex != rhs.RunOnTypeIndex) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UseAliases) ?? true))
             {
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
             var hash = new HashCode();
             hash.Add(item.RunOnType);
             hash.Add(item.Reference);
-            hash.Add(item.Unknown3);
+            hash.Add(item.RunOnTypeIndex);
             hash.Add(item.UseAliases);
             hash.Add(item.UsePackageData);
             return hash.ToHashCode();
@@ -1025,9 +1025,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Reference.SetTo(rhs.Reference.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnTypeIndex) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                item.RunOnTypeIndex = rhs.RunOnTypeIndex;
             }
             if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UseAliases) ?? true))
             {
