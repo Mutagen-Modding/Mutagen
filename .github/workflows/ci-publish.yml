@@ -127,7 +127,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Reset nightly to release
+    - name: Reset nightly to main
       run: |
         head_sha=$(git rev-parse --verify HEAD)
         echo "head_sha=$head_sha"
