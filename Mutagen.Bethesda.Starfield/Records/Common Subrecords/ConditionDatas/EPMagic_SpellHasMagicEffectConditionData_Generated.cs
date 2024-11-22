@@ -466,6 +466,24 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EPMagic_SpellHasMagicEffectConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EPMagic_SpellHasMagicEffectConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is IFormLinkOrIndex<IMagicEffectGetter> v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IMagicEffectGetter>);
+        }
+        public override object? Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(Int32);
+        }
         #endregion
 
         #region Binary Translation

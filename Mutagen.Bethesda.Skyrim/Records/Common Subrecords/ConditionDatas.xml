@@ -4,12 +4,12 @@
     <Fields>
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
       <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
-      <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
+      <Int32 name="RunOnTypeIndex" default="-1" binary="NoGeneration" />
       <Bool name="UseAliases" binary="NoGeneration" />
       <Bool name="UsePackageData" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
+  <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Function" enumName="Condition.Function" byteLength="2" binary="NoGeneration" />
       <Int32 name="ParameterOne" />
@@ -18,7 +18,7 @@
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="GetEventDataConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetEventDataConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum enumName="GetEventDataConditionData.EventFunction" name="Function" byteLength="2" />
       <Enum enumName="GetEventDataConditionData.EventMember" name="Member" byteLength="2" />
@@ -27,125 +27,125 @@
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="AGetVATSValueConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
+  <Object name="AGetVATSValueConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <CustomLogic name="ValueFunctionParse" />
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueWeaponConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueWeaponConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value" refName="Weapon" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueWeaponOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueWeaponOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value">
         <Interface>IWeaponOrList</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="GetVATSValueTargetConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueTargetConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value" refName="Npc" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueTargetOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueTargetOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value">
         <Interface>INpcOrList</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="GetVATSValueTargetDistanceConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueTargetDistanceConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueTargetPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueTargetPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="ActorValue" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueActionConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueActionConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="GetVATSValueActionConditionData.Action" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueIsSuccessConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueIsSuccessConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueIsCriticalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueIsCriticalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueCriticalEffectConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueCriticalEffectConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value" refName="Spell" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueCriticalEffectOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueCriticalEffectOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <FormLink name="Value">
         <Interface>ISpellOrList</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="GetVATSValueIsFatalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueIsFatalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueExplodePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueExplodePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueDismemberPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueDismemberPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueCripplePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueCripplePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueWeaponTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueWeaponTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="WeaponAnimationType" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueIsStrangerConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueIsStrangerConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueIsParalyzingPalmConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueIsParalyzingPalmConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="Unused" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueProjectileTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueProjectileTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="Projectile.TypeEnum" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueDeliveryTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueDeliveryTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="TargetType" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueCastingTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueCastingTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Enum name="Value" enumName="CastType" />
     </Fields>
   </Object>
-  <Object name="GetVATSValueUnknownConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration">
+  <Object name="GetVATSValueUnknownConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" generateConditionData="false">
     <Fields>
       <Int32 name="ValueType" />
       <Int32 name="Value" />
@@ -2155,7 +2155,7 @@
   </Object>
   <Object name="GetVATSRightAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <FormLinkOrIndex name="FirstUnusedIntParameter">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
       </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
@@ -2165,7 +2165,7 @@
   </Object>
   <Object name="GetVATSLeftAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <FormLinkOrIndex name="FirstUnusedIntParameter">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
       </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />

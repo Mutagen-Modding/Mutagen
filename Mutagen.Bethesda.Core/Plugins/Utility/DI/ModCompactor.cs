@@ -18,10 +18,12 @@ public interface IModCompactor
 public class ModCompactor : IModCompactor
 {
     private readonly IRecordCompactionCompatibilityDetector _compactionCompatibilityDetector;
+    private readonly MethodInfo _methodInfo;
     
     public ModCompactor(IRecordCompactionCompatibilityDetector compactionCompatibilityDetector)
     {
         _compactionCompatibilityDetector = compactionCompatibilityDetector;
+        _methodInfo = typeof(ModCompactor).GetMethod(nameof(DoCompactingGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
     }
     
     public void CompactToSmallMaster(IMod mod)
@@ -127,15 +129,16 @@ public class ModCompactor : IModCompactor
         CompactToFullMaster(mod);
     }
 
-    private static void DoCompacting(IMod mod, RangeUInt32 range)
+    private void DoCompacting(IMod mod, RangeUInt32 range)
     {
         ModToGenericCallHelper.InvokeFromCategory(
-            mod,
-            typeof(ModCompactor).GetMethod(nameof(DoCompactingGeneric), BindingFlags.NonPublic | BindingFlags.Static)!,
+            this,
+            mod.GameRelease.ToCategory(),
+            _methodInfo,
             new object[] { mod, range });
     }
     
-    private static void DoCompactingGeneric<TMod, TModGetter>(TMod mod, RangeUInt32 range)
+    private void DoCompactingGeneric<TMod, TModGetter>(TMod mod, RangeUInt32 range)
         where TModGetter : IModGetter
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
     {

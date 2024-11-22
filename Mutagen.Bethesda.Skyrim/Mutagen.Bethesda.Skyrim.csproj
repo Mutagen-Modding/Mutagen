@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Mutagen.Bethesda.Skyrim.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Remove="Pex\**" />
@@ -894,6 +895,69 @@
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\GetVATSValueActionConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueTargetConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueTargetOrListConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueTargetDistanceConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueCastingTypeConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueCripplePartConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueCriticalEffectConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueCriticalEffectOrListConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueDeliveryTypeConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueDismemberPartConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueExplodePartConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueIsCriticalConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueIsFatalConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueIsParalyzingPalmConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueIsStrangerConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueIsSuccessConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueProjectileTypeConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueTargetPartConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueUnknownConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueWeaponConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueWeaponOrListConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueWeaponTypeConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\GetVelocityConditionData.cs">

@@ -62,17 +62,17 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing: plugins/Binary-Importing.md
-    - Exporting: plugins/Binary-Exporting.md
+    - Importing and Construction: plugins/Importing-and-Construction.md
+    - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
     - Equality Checks: plugins/Equality-Checks.md
     - Translation Masks: plugins/Translation-Masks.md
     - Flags and Enums: plugins/Flags-and-Enums.md
     - Asset Links: plugins/AssetLink.md
+    - Compaction: plugins/Compaction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
     - Printing: plugins/Printing.md
-    - Mod Construction and Importing: plugins/Mod-Construction-and-Importing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Specific Records:
       - plugins/specific/index.md
@@ -123,6 +123,7 @@ nav:
     - ITPO Avoidance: best-practices/ITPO-Avoidance.md
     - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
+    - Enriching Exceptions: best-practices/Enrich-Exceptions.md
     # - Testing:
     # - Auto Fixture:
     # - Major Record Test Building:

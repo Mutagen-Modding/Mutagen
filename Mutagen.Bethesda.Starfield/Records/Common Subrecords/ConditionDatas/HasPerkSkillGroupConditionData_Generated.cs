@@ -454,6 +454,27 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override object? Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is PerkSkillGroup v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter1Type
+        {
+            get => typeof(PerkSkillGroup);
+        }
+        public override object? Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is PerkSkillGroup v ? v : throw new ArgumentException());
+        }
+        public override Type? Parameter2Type
+        {
+            get => typeof(PerkSkillGroup);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HasPerkSkillGroupConditionDataBinaryWriteTranslation.Instance;
