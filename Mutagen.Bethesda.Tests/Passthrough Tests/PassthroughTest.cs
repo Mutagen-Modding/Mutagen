@@ -606,6 +606,7 @@ public abstract class PassthroughTest
             .WithRecordCount(RecordCountOption.NoCheck)
             .NoNextFormIDProcessing()
             .NoFormIDUniquenessCheck()
+            .NoFormIDCompactnessCheck()
             .WithMastersListOrdering(masterRefs)
             .SingleThread();
     }
