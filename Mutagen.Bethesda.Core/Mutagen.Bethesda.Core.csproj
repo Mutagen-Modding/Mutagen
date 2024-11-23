@@ -30,9 +30,6 @@
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
         <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
     </ItemGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
-        <DocumentationFile>obj\Release\net6.0\Mutagen.Bethesda.Core.xml</DocumentationFile>
-    </PropertyGroup>
     <ItemGroup>
         <Compile Include="Archives\Archive.cs" />
         <Compile Include="Archives\Ba2\Ba2EntryType.cs" />
