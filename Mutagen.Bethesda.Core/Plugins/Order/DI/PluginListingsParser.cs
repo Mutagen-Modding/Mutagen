@@ -30,13 +30,23 @@ public sealed class PluginListingsParser : IPluginListingsParser
     /// <inheritdoc />
     public IEnumerable<ILoadOrderListingGetter> Parse(Stream stream)
     {
+        uint currentLine = 0;
         using var streamReader = new StreamReader(stream);
         while (!streamReader.EndOfStream)
         {
+            currentLine++;
             var str = streamReader.ReadLine().AsSpan();
             str = _commentTrimmer.Trim(str);
             if (MemoryExtensions.IsWhiteSpace(str) || str.Length == 0) continue;
-            yield return _listingParser.FromString(str);
+
+            if (_listingParser.TryFromString(str, out var listing))
+            {
+                yield return listing;
+            }
+            else
+            {
+                throw new InvalidDataException($"Load order file had malformed line at line {currentLine}: \"{str}\"");
+            }
         }
     }
 }
