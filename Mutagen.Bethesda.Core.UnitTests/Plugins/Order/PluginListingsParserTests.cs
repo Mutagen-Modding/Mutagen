@@ -73,4 +73,22 @@ ModB.esp#Hello
             new LoadOrderListing("ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
     }
+
+    [Fact]
+    public void PrintLinesOnFailure()
+    {
+        var parser = new PluginListingsParser(
+            new PluginListingCommentTrimmer(),
+            new LoadOrderListingParser(
+                new HasEnabledMarkersInjection(true)));
+
+        parser.Invoking(p => p.Parse(GetStream(
+@"*ModA.esm
+ModB.esp
+*Malformed"))
+            .ToList())
+            .Should()
+            .Throw<InvalidDataException>()
+            .WithMessage("Load order file had malformed line at line 3: \"*Malformed\"");
+    }
 }
