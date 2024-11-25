@@ -89,6 +89,6 @@ ModB.esp
             .ToList())
             .Should()
             .Throw<InvalidDataException>()
-            .WithMessage("Load order file had malformed line at line 3: \"*Malformed\"");
+            .WithMessage("Load order file had malformed entry at line 3: \"*Malformed\"");
     }
 }

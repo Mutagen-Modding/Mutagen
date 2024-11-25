@@ -45,7 +45,7 @@ public sealed class PluginListingsParser : IPluginListingsParser
             }
             else
             {
-                throw new InvalidDataException($"Load order file had malformed line at line {currentLine}: \"{str}\"");
+                throw new InvalidDataException($"Load order file had malformed entry at line {currentLine}: \"{str}\"");
             }
         }
     }
