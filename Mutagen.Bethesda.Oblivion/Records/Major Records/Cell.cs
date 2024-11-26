@@ -339,10 +339,10 @@ partial class CellBinaryOverlay
             ret.Add(stream.Position - startingPos);
             stream.Position += (int)cellMeta.TotalLength;
             if (stream.Complete) break;
-            if (!stream.TryGetGroupHeader(out var groupFrame)) continue;
-            if (groupFrame.GroupType == (int)GroupTypeEnum.CellChildren)
+            while (stream.TryGetGroupHeader(out var groupMeta)
+                   && groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
             {
-                stream.Position += (int)groupFrame.TotalLength;
+                stream.Position += (int)groupMeta.TotalLength;
             }
         }
         return ret.ToArray();

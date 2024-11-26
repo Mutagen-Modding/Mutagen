@@ -302,8 +302,6 @@ public abstract class PassthroughTest
         var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
         var trimmedPath = TrimmedFileName(tmp.Dir.Path);
 
-        var masterRefs = MasterReferenceCollection.FromPath(new ModPath(ModKey, FilePath.Path), GameRelease);
-
         // Do normal
         if (Settings.TestNormal)
         {
@@ -333,9 +331,7 @@ public abstract class PassthroughTest
                     {
                         await BuildWriter(
                                 mod.BeginWrite
-                                    .ToPath(outputPath)
-                                    .WithDefaultLoadOrder(),
-                                masterRefs,
+                                    .ToPath(outputPath),
                                 stringsWriter)
                             .WriteAsync();
                         GC.Collect();
@@ -375,9 +371,7 @@ public abstract class PassthroughTest
                         {
                             await BuildWriter(
                                     mod.BeginWrite
-                                        .ToPath(outputPath)
-                                        .WithDefaultLoadOrder(),
-                                    masterRefs,
+                                        .ToPath(outputPath),
                                     stringsWriter)
                                 .WriteAsync();
                         }
@@ -440,9 +434,7 @@ public abstract class PassthroughTest
                             {
                                 await BuildWriter(
                                         wrapper.BeginWrite
-                                            .ToPath(binaryOverlayPath)
-                                            .WithDefaultLoadOrder(),
-                                        masterRefs,
+                                            .ToPath(binaryOverlayPath),
                                         stringsWriter)
                                     .WriteAsync();
                             }
@@ -495,9 +487,7 @@ public abstract class PassthroughTest
                     {
                         await BuildWriter(
                                 copyIn.BeginWrite
-                                    .ToPath(copyInPath)
-                                    .WithDefaultLoadOrder(),
-                                masterRefs,
+                                    .ToPath(copyInPath),
                                 stringsWriter)
                             .WriteAsync();
                     }
@@ -595,18 +585,19 @@ public abstract class PassthroughTest
     }
 
     public IBinaryModdedWriteBuilder BuildWriter(
-        IBinaryModdedWriteBuilder builder,
-        IReadOnlyMasterReferenceCollection masterRefs,
+        IBinaryModdedWriteBuilderLoadOrderChoice builder,
         StringsWriter stringsWriter)
     {
         return builder
+            .WithLoadOrderFromHeaderMasters()
+            .WithDefaultDataFolder()
             .WithStringsWriter(stringsWriter)
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.NoCheck)
             .WithRecordCount(RecordCountOption.NoCheck)
             .NoNextFormIDProcessing()
             .NoFormIDUniquenessCheck()
-            .WithMastersListOrdering(masterRefs)
+            .NoFormIDCompactnessCheck()
             .SingleThread();
     }
 

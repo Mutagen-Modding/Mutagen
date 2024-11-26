@@ -19,6 +19,4 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
-  <Target Name="SetVersion" />
-  
 </Project>

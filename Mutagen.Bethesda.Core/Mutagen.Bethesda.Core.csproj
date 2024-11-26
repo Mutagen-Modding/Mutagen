@@ -30,9 +30,6 @@
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
         <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
     </ItemGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
-        <DocumentationFile>obj\Release\net6.0\Mutagen.Bethesda.Core.xml</DocumentationFile>
-    </PropertyGroup>
     <ItemGroup>
         <Compile Include="Archives\Archive.cs" />
         <Compile Include="Archives\Ba2\Ba2EntryType.cs" />
@@ -324,6 +321,7 @@
         <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
         <Compile Include="Plugins\Masters\DI\FormIDTranslator.cs" />
         <Compile Include="Plugins\Masters\DI\IKeyedMasterStyleReader.cs" />
+        <Compile Include="Plugins\Masters\DI\MasterFlagsLookupCompiler.cs" />
         <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
