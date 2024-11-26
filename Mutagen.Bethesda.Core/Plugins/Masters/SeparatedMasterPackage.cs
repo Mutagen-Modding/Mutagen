@@ -194,11 +194,11 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             }
         }
 
-        foreach (var master in masters.Masters.Select(x => x.          Master))
+        foreach (var master in masters.Masters.Select(x => x.Master))
         {
             if (masterFlagLookup == null)
             {
-                throw new MissingModMappingException();
+                throw new MissingModMappingException("Master flag lookup was not provided.");
             }
             if (!masterFlagLookup.TryGetValue(master, out var mod))
             {
