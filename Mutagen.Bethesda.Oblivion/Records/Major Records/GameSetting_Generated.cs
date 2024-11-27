@@ -1134,11 +1134,11 @@ namespace Mutagen.Bethesda.Oblivion
             IGameSettingGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GMST)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.GMST)))
                 {
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1151,10 +1151,10 @@ namespace Mutagen.Bethesda.Oblivion
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

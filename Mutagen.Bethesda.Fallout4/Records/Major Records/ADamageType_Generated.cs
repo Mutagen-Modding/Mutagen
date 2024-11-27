@@ -1191,11 +1191,11 @@ namespace Mutagen.Bethesda.Fallout4
             IADamageTypeGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DMGT)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.DMGT)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1208,10 +1208,10 @@ namespace Mutagen.Bethesda.Fallout4
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

@@ -1184,11 +1184,11 @@ namespace Mutagen.Bethesda.Skyrim
             IHairGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.HAIR)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.HAIR)))
                 {
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1201,10 +1201,10 @@ namespace Mutagen.Bethesda.Skyrim
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

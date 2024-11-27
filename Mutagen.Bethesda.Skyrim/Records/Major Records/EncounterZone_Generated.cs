@@ -1667,11 +1667,11 @@ namespace Mutagen.Bethesda.Skyrim
             IEncounterZoneGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ECZN)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.ECZN)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1686,10 +1686,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

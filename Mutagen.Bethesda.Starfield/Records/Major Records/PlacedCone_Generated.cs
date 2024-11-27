@@ -1475,11 +1475,11 @@ namespace Mutagen.Bethesda.Starfield
             IPlacedConeGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PCON)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.PCON)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1492,10 +1492,10 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

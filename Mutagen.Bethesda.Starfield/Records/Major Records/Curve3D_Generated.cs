@@ -1288,11 +1288,11 @@ namespace Mutagen.Bethesda.Starfield
             ICurve3DGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CUR3)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.CUR3)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1307,10 +1307,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

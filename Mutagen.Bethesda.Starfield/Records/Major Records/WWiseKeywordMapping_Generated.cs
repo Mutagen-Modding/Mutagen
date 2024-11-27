@@ -1723,11 +1723,11 @@ namespace Mutagen.Bethesda.Starfield
             IWWiseKeywordMappingGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WKMF)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.WKMF)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1742,10 +1742,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

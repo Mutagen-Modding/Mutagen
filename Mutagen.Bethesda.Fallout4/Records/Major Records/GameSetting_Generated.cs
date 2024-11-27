@@ -1161,11 +1161,11 @@ namespace Mutagen.Bethesda.Fallout4
             IGameSettingGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GMST)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.GMST)))
                 {
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1178,10 +1178,10 @@ namespace Mutagen.Bethesda.Fallout4
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

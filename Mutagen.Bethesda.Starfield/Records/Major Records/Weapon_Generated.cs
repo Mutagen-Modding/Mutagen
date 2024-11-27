@@ -12002,11 +12002,11 @@ namespace Mutagen.Bethesda.Starfield
             IWeaponGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WEAP)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.WEAP)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -12021,10 +12021,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

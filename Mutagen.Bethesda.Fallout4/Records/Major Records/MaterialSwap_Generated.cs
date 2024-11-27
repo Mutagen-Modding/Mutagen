@@ -1504,11 +1504,11 @@ namespace Mutagen.Bethesda.Fallout4
             IMaterialSwapGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MSWP)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.MSWP)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1523,10 +1523,10 @@ namespace Mutagen.Bethesda.Fallout4
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

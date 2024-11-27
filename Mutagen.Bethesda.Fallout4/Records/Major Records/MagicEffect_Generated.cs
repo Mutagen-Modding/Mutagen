@@ -4575,11 +4575,11 @@ namespace Mutagen.Bethesda.Fallout4
             IMagicEffectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MGEF)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.MGEF)))
                 {
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -4594,10 +4594,10 @@ namespace Mutagen.Bethesda.Fallout4
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

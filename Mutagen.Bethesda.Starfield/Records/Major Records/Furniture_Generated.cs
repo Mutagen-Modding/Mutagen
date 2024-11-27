@@ -4813,11 +4813,11 @@ namespace Mutagen.Bethesda.Starfield
             IFurnitureGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FURN)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.FURN)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -4833,10 +4833,10 @@ namespace Mutagen.Bethesda.Starfield
                         using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { } // End Marker
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

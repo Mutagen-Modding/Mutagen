@@ -1448,11 +1448,11 @@ namespace Mutagen.Bethesda.Fallout4
             IZoomGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ZOOM)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.ZOOM)))
                 {
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1467,10 +1467,10 @@ namespace Mutagen.Bethesda.Fallout4
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

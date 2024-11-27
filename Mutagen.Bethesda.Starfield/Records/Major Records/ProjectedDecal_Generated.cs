@@ -2559,11 +2559,11 @@ namespace Mutagen.Bethesda.Starfield
             IProjectedDecalGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PDCL)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.PDCL)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -2578,10 +2578,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

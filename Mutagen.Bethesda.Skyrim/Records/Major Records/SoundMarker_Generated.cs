@@ -1558,11 +1558,11 @@ namespace Mutagen.Bethesda.Skyrim
             ISoundMarkerGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SOUN)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.SOUN)))
                 {
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1577,10 +1577,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

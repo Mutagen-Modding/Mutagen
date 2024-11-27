@@ -2914,11 +2914,11 @@ namespace Mutagen.Bethesda.Skyrim
             ILightGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LIGH)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.LIGH)))
                 {
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -2933,10 +2933,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

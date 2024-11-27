@@ -1617,11 +1617,11 @@ namespace Mutagen.Bethesda.Starfield
             IUnknownObjectModificationGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.OMOD)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.OMOD)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1634,10 +1634,10 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

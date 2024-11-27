@@ -1416,11 +1416,11 @@ namespace Mutagen.Bethesda.Fallout4
             IAnimatedObjectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ANIO)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.ANIO)))
                 {
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1435,10 +1435,10 @@ namespace Mutagen.Bethesda.Fallout4
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

@@ -2627,11 +2627,11 @@ namespace Mutagen.Bethesda.Starfield
             ISnapTemplateNodeGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.STND)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.STND)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -2646,10 +2646,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

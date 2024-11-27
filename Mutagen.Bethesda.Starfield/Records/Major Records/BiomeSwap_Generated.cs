@@ -1184,11 +1184,11 @@ namespace Mutagen.Bethesda.Starfield
             IBiomeSwapGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.OSWP)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.OSWP)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1201,10 +1201,10 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

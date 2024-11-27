@@ -3269,11 +3269,11 @@ namespace Mutagen.Bethesda.Fallout4
             ISceneGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SCEN)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.SCEN)))
                 {
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -3288,10 +3288,10 @@ namespace Mutagen.Bethesda.Fallout4
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

@@ -3696,11 +3696,11 @@ namespace Mutagen.Bethesda.Starfield
             ITerminalGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.TERM)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.TERM)))
                 {
                     StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -3716,10 +3716,10 @@ namespace Mutagen.Bethesda.Starfield
                         using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { } // End Marker
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

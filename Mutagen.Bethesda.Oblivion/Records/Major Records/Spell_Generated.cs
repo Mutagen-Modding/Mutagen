@@ -1567,11 +1567,11 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SPEL)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.SPEL)))
                 {
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1586,10 +1586,10 @@ namespace Mutagen.Bethesda.Oblivion
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

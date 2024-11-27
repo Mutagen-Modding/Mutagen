@@ -2013,11 +2013,11 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedNpcGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ACHR)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.ACHR)))
                 {
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -2032,10 +2032,10 @@ namespace Mutagen.Bethesda.Oblivion
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

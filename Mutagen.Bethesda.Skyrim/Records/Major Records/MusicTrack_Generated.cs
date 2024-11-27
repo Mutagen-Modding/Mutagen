@@ -2235,11 +2235,11 @@ namespace Mutagen.Bethesda.Skyrim
             IMusicTrackGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MUST)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.MUST)))
                 {
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -2254,10 +2254,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

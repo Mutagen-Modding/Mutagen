@@ -1371,11 +1371,11 @@ namespace Mutagen.Bethesda.Skyrim
             IGlobalFloatGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GLOB)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.GLOB)))
                 {
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
@@ -1390,10 +1390,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.MetaData.FormVersion = null;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 

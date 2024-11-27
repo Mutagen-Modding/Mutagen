@@ -1560,11 +1560,11 @@ namespace Mutagen.Bethesda.Fallout4
             INpcModificationGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.OMOD)))
+            try
             {
-                try
+                using (HeaderExport.Record(
+                    writer: writer,
+                    record: translationParams.ConvertToCustom(RecordTypes.OMOD)))
                 {
                     WriteEmbedded(
                         item: item,
@@ -1577,10 +1577,10 @@ namespace Mutagen.Bethesda.Fallout4
                             translationParams: translationParams);
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, item);
             }
         }
 
