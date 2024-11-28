@@ -1463,28 +1463,13 @@ namespace Mutagen.Bethesda.Skyrim
             IPlacedBeamGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                using (HeaderExport.Record(
-                    writer: writer,
-                    record: translationParams.ConvertToCustom(RecordTypes.PBEA)))
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.PBEA,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(

@@ -1265,30 +1265,7 @@ namespace Mutagen.Bethesda.Starfield
             IGameSettingGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                using (HeaderExport.Record(
-                    writer: writer,
-                    record: translationParams.ConvertToCustom(RecordTypes.GMST)))
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            throw new NotImplementedException();
         }
 
         public override void Write(

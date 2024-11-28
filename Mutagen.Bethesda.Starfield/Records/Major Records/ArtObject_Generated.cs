@@ -2514,30 +2514,13 @@ namespace Mutagen.Bethesda.Starfield
             IArtObjectGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                using (HeaderExport.Record(
-                    writer: writer,
-                    record: translationParams.ConvertToCustom(RecordTypes.ARTO)))
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.ARTO,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(

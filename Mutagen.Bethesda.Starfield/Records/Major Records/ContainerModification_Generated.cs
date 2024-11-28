@@ -1560,28 +1560,13 @@ namespace Mutagen.Bethesda.Starfield
             IContainerModificationGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                using (HeaderExport.Record(
-                    writer: writer,
-                    record: translationParams.ConvertToCustom(RecordTypes.OMOD)))
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        AObjectModificationBinaryWriteTranslation.WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.OMOD,
+                writeEmbedded: AObjectModificationBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(

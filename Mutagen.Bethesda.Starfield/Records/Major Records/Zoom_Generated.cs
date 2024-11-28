@@ -1714,30 +1714,13 @@ namespace Mutagen.Bethesda.Starfield
             IZoomGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                using (HeaderExport.Record(
-                    writer: writer,
-                    record: translationParams.ConvertToCustom(RecordTypes.ZOOM)))
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.ZOOM,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(

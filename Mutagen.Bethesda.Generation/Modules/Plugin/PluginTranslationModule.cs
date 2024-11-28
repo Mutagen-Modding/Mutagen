@@ -3247,11 +3247,35 @@ public class PluginTranslationModule : BinaryTranslationModule
         var isMajor = await obj.IsMajorRecord();
         var hasRecType = obj.TryGetRecordType(out var recType);
         var writerNameToUse = WriterMemberName;
+        
         if (isMajor)
         {
-            sb.AppendLine("try");
+            if (obj.Abstract)
+            {
+                sb.AppendLine("throw new NotImplementedException();");
+            }
+            else
+            {
+                var firstBase = obj.BaseClassTrail().FirstOrDefault(x => x.HasEmbeddedFields());
+                using (var f = sb.Call($"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.WriteMajorRecord)}"))
+                {
+                    f.AddPassArg("writer");
+                    f.AddPassArg("item");
+                    f.AddPassArg("translationParams");
+                    f.Add($"type: {obj.RecordTypeHeaderName(obj.GetRecordType())}");
+                    f.Add($"writeEmbedded: {TranslationWriteClass(firstBase)}.WriteEmbedded");
+                    f.Add($"writeRecordTypes: WriteRecordTypes");
+                    var endMarkers = obj.BaseClassTrail().And(obj)
+                        .Where(x => x.GetObjectData().EndMarkerType.HasValue)
+                        .ToArray();
+                    if (endMarkers.Length == 1)
+                    {
+                        f.Add($"endMarker: {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)}");
+                    }
+                }
+            }
         }
-        using (sb.CurlyBrace(doIt: isMajor))
+        else
         {
             if (hasRecType)
             {
@@ -3337,80 +3361,54 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                 }
-                if (isMajor)
-                {
-                    sb.AppendLine($"if (!item.IsDeleted)");
-                }
 
-                using (sb.CurlyBrace(doIt: isMajor))
+                if (obj.HasRecordTypeFields())
                 {
-                    if (obj.HasRecordTypeFields())
+                    using (var args = sb.Call(
+                               $"WriteRecordTypes"))
                     {
-                        if (isMajor)
+                        args.AddPassArg($"item");
+                        args.Add($"writer: {writerNameToUse}");
+                        if (obj.GetObjectType() == ObjectType.Mod)
                         {
-                            sb.AppendLine(
-                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                            args.AddPassArg($"importMask");
                         }
-
+                        else
+                        {
+                            args.AddPassArg($"translationParams");
+                        }
+                    }
+                }
+                else
+                {
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasRecordTypeFields());
+                    if (firstBase != null)
+                    {
                         using (var args = sb.Call(
-                                   $"WriteRecordTypes"))
+                                   $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
                             args.Add($"writer: {writerNameToUse}");
-                            if (obj.GetObjectType() == ObjectType.Mod)
-                            {
-                                args.AddPassArg($"importMask");
-                            }
-                            else
-                            {
-                                args.AddPassArg($"translationParams");
-                            }
-                        }
-                        if (isMajor)
-                        {
-                            sb.AppendLine(
-                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                            args.AddPassArg($"translationParams");
                         }
                     }
-                    else
-                    {
-                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasRecordTypeFields());
-                        if (firstBase != null)
-                        {
-                            using (var args = sb.Call(
-                                       $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
-                            {
-                                args.AddPassArg($"item");
-                                args.Add($"writer: {writerNameToUse}");
-                                args.AddPassArg($"translationParams");
-                            }
-                        }
-                    }
+                }
 
-                    var endMarkers = obj.BaseClassTrail().And(obj)
-                        .Where(x => x.GetObjectData().EndMarkerType.HasValue)
-                        .ToArray();
-                    if (endMarkers.Length > 1)
-                    {
-                        throw new ArgumentException("Cannot have two end markers");
-                    }
+                var endMarkers = obj.BaseClassTrail().And(obj)
+                    .Where(x => x.GetObjectData().EndMarkerType.HasValue)
+                    .ToArray();
+                if (endMarkers.Length > 1)
+                {
+                    throw new ArgumentException("Cannot have two end markers");
+                }
 
-                    if (endMarkers.Length == 1)
-                    {
-                        sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)})) {{ }} // End Marker");
-                    }
-
+                if (endMarkers.Length == 1)
+                {
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)})) {{ }} // End Marker");
                 }
             }
         }
-        if (isMajor)
-        {
-            sb.AppendLine("catch (Exception ex)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine($"throw RecordException.Enrich(ex, item);");
-            }
-        }
+        
         if (data.CustomBinaryEnd != CustomEnd.Off)
         {
             using (var args = sb.Call(

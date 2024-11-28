@@ -1526,23 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionMajorRecordGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                if (!item.IsDeleted)
-                {
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            throw new NotImplementedException();
         }
 
         public override void Write(
