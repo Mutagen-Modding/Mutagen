@@ -580,6 +580,10 @@ partial class PerkRankBinaryOverlay
         triggeringRecordTypes: new RecordCollection()
         {
             RecordTypes.PRKE
+        },
+        endRecordTypes: new RecordCollection()
+        {
+            RecordTypes.PRKF
         });
     
     partial void EffectsCustomParse(
