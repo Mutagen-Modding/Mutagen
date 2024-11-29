@@ -749,6 +749,7 @@ public partial class RecordTypes
     public static readonly RecordType PTTA = new(0x41545450);
     public static readonly RecordType PUSE = new(0x45535550);
     public static readonly RecordType PUSH = new(0x48535550);
+    public static readonly RecordType QDUP = new(0x50554451);
     public static readonly RecordType QMDP = new(0x50444D51);
     public static readonly RecordType QMDS = new(0x53444D51);
     public static readonly RecordType QMDT = new(0x54444D51);

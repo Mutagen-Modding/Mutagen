@@ -576,4 +576,39 @@ internal static class PluginUtilityTranslation
                 fileSystem: writeParameters.FileSystem.GetOrDefault())
         };
     }
+
+    internal static void WriteMajorRecord<TMajor>(
+        MutagenWriter writer,
+        TypedWriteParams translationParams,
+        RecordType type,
+        TMajor item,
+        Action<TMajor, MutagenWriter> writeEmbedded,
+        Action<TMajor, MutagenWriter, TypedWriteParams> writeRecordTypes,
+        RecordType? endMarker = null)
+        where TMajor : IMajorRecordGetter
+    {
+        try
+        {
+            using (HeaderExport.Record(
+                       writer: writer,
+                       record: translationParams.ConvertToCustom(type)))
+            {
+                writeEmbedded(item, writer);
+                if (!item.IsDeleted)
+                {
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    writeRecordTypes(item, writer, translationParams);
+                    writer.MetaData.FormVersion = null;
+                    if (endMarker != null)
+                    {
+                        using (HeaderExport.Subrecord(writer, endMarker.Value)) { }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, item);
+        }
+    }
 }

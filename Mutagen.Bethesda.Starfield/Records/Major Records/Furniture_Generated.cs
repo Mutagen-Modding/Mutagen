@@ -4813,31 +4813,14 @@ namespace Mutagen.Bethesda.Starfield
             IFurnitureGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FURN)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                        using (HeaderExport.Subrecord(writer, RecordTypes.STOP)) { } // End Marker
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.FURN,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes,
+                endMarker: RecordTypes.STOP);
         }
 
         public override void Write(

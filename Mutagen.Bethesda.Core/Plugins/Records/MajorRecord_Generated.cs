@@ -1602,25 +1602,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             IMajorRecordGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                if (!item.IsDeleted)
-                {
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            throw new NotImplementedException();
         }
 
         public virtual void Write(

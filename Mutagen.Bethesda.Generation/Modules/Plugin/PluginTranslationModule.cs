@@ -3247,74 +3247,98 @@ public class PluginTranslationModule : BinaryTranslationModule
         var isMajor = await obj.IsMajorRecord();
         var hasRecType = obj.TryGetRecordType(out var recType);
         var writerNameToUse = WriterMemberName;
-        if (hasRecType)
+        
+        if (isMajor)
         {
-            if (obj.GetObjectType() == ObjectType.Subrecord)
+            if (obj.Abstract)
             {
-                using (var args = sb.Call(
-                           $"using ({nameof(HeaderExport)}.Subrecord",
-                           ")",
-                           semiColon: false))
-                {
-                    args.AddPassArg(writerNameToUse);
-                    args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
-                    args.Add($"overflowRecord: translationParams.{nameof(TypedWriteParams.OverflowRecordType)}");
-                    args.Add("out var writerToUse");
-                }
-
-                writerNameToUse = "writerToUse";
+                sb.AppendLine("throw new NotImplementedException();");
             }
             else
             {
-                using (var args = sb.Call(
-                           $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
-                           ")",
-                           semiColon: false))
+                var firstBase = obj.BaseClassTrail().FirstOrDefault(x => x.HasEmbeddedFields());
+                using (var f = sb.Call($"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.WriteMajorRecord)}"))
                 {
-                    args.AddPassArg(writerNameToUse);
-                    args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    f.AddPassArg("writer");
+                    f.AddPassArg("item");
+                    f.AddPassArg("translationParams");
+                    f.Add($"type: {obj.RecordTypeHeaderName(obj.GetRecordType())}");
+                    f.Add($"writeEmbedded: {TranslationWriteClass(firstBase)}.WriteEmbedded");
+                    f.Add($"writeRecordTypes: WriteRecordTypes");
+                    var endMarkers = obj.BaseClassTrail().And(obj)
+                        .Where(x => x.GetObjectData().EndMarkerType.HasValue)
+                        .ToArray();
+                    if (endMarkers.Length == 1)
+                    {
+                        f.Add($"endMarker: {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)}");
+                    }
                 }
             }
         }
-        using (sb.CurlyBrace(doIt: hasRecType))
+        else
         {
-            if (isMajor)
+            if (hasRecType)
             {
-                sb.AppendLine("try");
-            }
-            if (obj.GetObjectType() == ObjectType.Mod)
-            {
-                sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
-                sb.AppendLine($"if (param.Parallel.{nameof(ParallelWriteParameters.MaxDegreeOfParallelism)} != 1)");
-                using (sb.CurlyBrace())
+                if (obj.GetObjectType() == ObjectType.Subrecord)
                 {
                     using (var args = sb.Call(
-                               $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.WriteParallel"))
+                               $"using ({nameof(HeaderExport)}.Subrecord",
+                               ")",
+                               semiColon: false))
                     {
-                        args.AddPassArg("item");
-                        args.Add($"writer: {writerNameToUse}");
-                        args.AddPassArg("param");
-                        args.AddPassArg("modKey");
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                        args.Add($"overflowRecord: translationParams.{nameof(TypedWriteParams.OverflowRecordType)}");
+                        args.Add("out var writerToUse");
                     }
-                    sb.AppendLine("return;");
+
+                    writerNameToUse = "writerToUse";
                 }
-                using (var args = sb.Call(
-                           $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
+                else
                 {
-                    args.AddPassArg("param");
-                    args.Add($"writer: {writerNameToUse}");
-                    args.Add("mod: item");
-                    args.Add("modHeader: item.ModHeader.DeepCopy()");
-                    args.AddPassArg("modKey");
+                    using (var args = sb.Call(
+                               $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
+                               ")",
+                               semiColon: false))
+                    {
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    }
                 }
             }
-            using (sb.CurlyBrace(doIt: isMajor))
+            using (sb.CurlyBrace(doIt: hasRecType))
             {
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
+                    sb.AppendLine($"if (param.Parallel.{nameof(ParallelWriteParameters.MaxDegreeOfParallelism)} != 1)");
+                    using (sb.CurlyBrace())
+                    {
+                        using (var args = sb.Call(
+                                   $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.WriteParallel"))
+                        {
+                            args.AddPassArg("item");
+                            args.Add($"writer: {writerNameToUse}");
+                            args.AddPassArg("param");
+                            args.AddPassArg("modKey");
+                        }
+                        sb.AppendLine("return;");
+                    }
+                    using (var args = sb.Call(
+                               $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
+                    {
+                        args.AddPassArg("param");
+                        args.Add($"writer: {writerNameToUse}");
+                        args.Add("mod: item");
+                        args.Add("modHeader: item.ModHeader.DeepCopy()");
+                        args.AddPassArg("modKey");
+                    }
+                }
                 if (data.MarkerType.HasValue)
                 {
                     sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }} // Start Marker");
                 }
-                
+
                 if (obj.HasEmbeddedFields())
                 {
                     using (var args = sb.Call(
@@ -3337,80 +3361,54 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                 }
-                if (isMajor)
-                {
-                    sb.AppendLine($"if (!item.IsDeleted)");
-                }
 
-                using (sb.CurlyBrace(doIt: isMajor))
+                if (obj.HasRecordTypeFields())
                 {
-                    if (obj.HasRecordTypeFields())
+                    using (var args = sb.Call(
+                               $"WriteRecordTypes"))
                     {
-                        if (isMajor)
+                        args.AddPassArg($"item");
+                        args.Add($"writer: {writerNameToUse}");
+                        if (obj.GetObjectType() == ObjectType.Mod)
                         {
-                            sb.AppendLine(
-                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                            args.AddPassArg($"importMask");
                         }
-
+                        else
+                        {
+                            args.AddPassArg($"translationParams");
+                        }
+                    }
+                }
+                else
+                {
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasRecordTypeFields());
+                    if (firstBase != null)
+                    {
                         using (var args = sb.Call(
-                                   $"WriteRecordTypes"))
+                                   $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
                             args.Add($"writer: {writerNameToUse}");
-                            if (obj.GetObjectType() == ObjectType.Mod)
-                            {
-                                args.AddPassArg($"importMask");
-                            }
-                            else
-                            {
-                                args.AddPassArg($"translationParams");
-                            }
-                        }
-                        if (isMajor)
-                        {
-                            sb.AppendLine(
-                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                            args.AddPassArg($"translationParams");
                         }
                     }
-                    else
-                    {
-                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasRecordTypeFields());
-                        if (firstBase != null)
-                        {
-                            using (var args = sb.Call(
-                                       $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
-                            {
-                                args.AddPassArg($"item");
-                                args.Add($"writer: {writerNameToUse}");
-                                args.AddPassArg($"translationParams");
-                            }
-                        }
-                    }
-
-                    var endMarkers = obj.BaseClassTrail().And(obj)
-                        .Where(x => x.GetObjectData().EndMarkerType.HasValue)
-                        .ToArray();
-                    if (endMarkers.Length > 1)
-                    {
-                        throw new ArgumentException("Cannot have two end markers");
-                    }
-
-                    if (endMarkers.Length == 1)
-                    {
-                        sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)})) {{ }} // End Marker");
-                    }
-
                 }
-            }
-            if (isMajor)
-            {
-                sb.AppendLine("catch (Exception ex)");
-                using (sb.CurlyBrace())
+
+                var endMarkers = obj.BaseClassTrail().And(obj)
+                    .Where(x => x.GetObjectData().EndMarkerType.HasValue)
+                    .ToArray();
+                if (endMarkers.Length > 1)
                 {
-                    sb.AppendLine($"throw RecordException.Enrich(ex, item);");
+                    throw new ArgumentException("Cannot have two end markers");
+                }
+
+                if (endMarkers.Length == 1)
+                {
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)})) {{ }} // End Marker");
                 }
             }
         }
+        
         if (data.CustomBinaryEnd != CustomEnd.Off)
         {
             using (var args = sb.Call(

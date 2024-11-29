@@ -339,6 +339,23 @@ catch (Exception e)
 
 [:octicons-arrow-right-24: Exception Enrichment](best-practices/Enrich-Exceptions.md)
 
+## Detect if PlacedObject is inside Worldspace
+```cs
+var loadOrder = ...;
+var linkCache = ...;
+
+foreach (var placedObjectContext in loadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(linkCache))
+{
+    Console.WriteLine($"Checking placed object: {placedObjectContext.Record}");
+    if (placedObjectContext.TryGetParent<IWorldspaceGetter>(out var worldspace))
+    {
+        Console.WriteLine($"Was in worldspace: {worldspace}");
+    }
+}
+```
+
+[:octicons-arrow-right-24: Mod Context Parents](linkcache/ModContexts.md/#parent-concepts)
+
 ## Call Generic Function by Mod Type
 ```cs
 public class MyClass

@@ -12,6 +12,9 @@
       <FormLink name="Location" recordType="LNAM" refName="Location" />
       <FormLink name="QuestTimeLimit" recordType="QTLM" refName="Global" />
       <FormLink name="SourceQuest" recordType="QSRC" refName="Quest" />
+      <List name="QDUPs" recordType="QDUP" unknown="true" >
+        <FormLink refName="DialogResponses" />
+      </List>
       <List name="TextDisplayGlobals">
         <FormLink recordType="QTGL" refName="Global" />
       </List>
