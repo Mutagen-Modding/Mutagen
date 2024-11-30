@@ -74,7 +74,6 @@ internal sealed class ModHeaderWriteLogic
         AddFormIDUniqueness();
         AddFormIDCompactionLogic();
         AddCompactionTracking(modHeader);
-        AddCompressionCheck();
         AddDisallowedLowerFormIDs();
         RegisterOverriddenFormsFishing();
     }
@@ -375,22 +374,6 @@ internal sealed class ModHeaderWriteLogic
             }
         });
     }
-    #endregion
-
-    #region Compression Check
-
-    private void AddCompressionCheck()
-    {
-        _recordIterationActions.Add(maj =>
-        {
-            if (maj.IsCompressed)
-            {
-                throw new NotImplementedException(
-                    "Writing with compression enabled is not currently supported.  https://github.com/Mutagen-Modding/Mutagen/issues/235");
-            }
-        });
-    }
-
     #endregion
 
     #region DisallowedLowerFormIDs

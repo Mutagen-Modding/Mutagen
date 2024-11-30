@@ -44,8 +44,6 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
             slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
             // Set length bytes
             BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
-            // Remove compression flag
-            BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
             // Copy uncompressed data over
             using (var stream = new ZLibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
             {
