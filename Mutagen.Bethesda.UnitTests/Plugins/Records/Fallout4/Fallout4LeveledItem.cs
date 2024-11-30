@@ -14,8 +14,8 @@ public class Fallout4LeveledItemChanceNoneTests : ASpecificCaseTest<LeveledItem,
     public override void TestItem(ILeveledItemGetter item)
     {
         item.Entries.Should().HaveCount(1);
-        item.Entries[0].Data.Should().NotBeNull();
-        item.Entries[0].Data.ChanceNone.Should().Be(new Percent(0.83));
+        item.Entries![0].Data.Should().NotBeNull();
+        item.Entries[0].Data!.ChanceNone.Should().Be(new Percent(0.83));
     }
 }
 
@@ -28,7 +28,7 @@ public class Fallout4LeveledItemChanceNoneOverflowTests : ASpecificCaseTest<Leve
     public override void TestItem(ILeveledItemGetter item)
     {
         item.Entries.Should().HaveCount(1);
-        item.Entries[0].Data.Should().NotBeNull();
-        item.Entries[0].Data.ChanceNone.Should().Be(new Percent(0));
+        item.Entries![0].Data.Should().NotBeNull();
+        item.Entries[0].Data!.ChanceNone.Should().Be(new Percent(0));
     }
 }
