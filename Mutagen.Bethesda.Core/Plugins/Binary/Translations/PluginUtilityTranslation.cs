@@ -120,7 +120,7 @@ internal static class PluginUtilityTranslation
                         translationParams: translationParams);
                 }
                 catch (Exception ex)
-                when (ex is not SubrecordException)
+                    when (ex is not SubrecordException)
                 {
                     throw new SubrecordException(
                         subMeta.RecordType,
@@ -258,7 +258,7 @@ internal static class PluginUtilityTranslation
             frame: frame);
         var lastParsed = new PreviousParse();
         Dictionary<RecordType, int>? recordParseCount = null;
-        
+
         // Keep going past the frame, as subrecord frames might not contain followup subrecords
         // when bundled.  Rely on Stop commands to break accordingly
         while (!frame.Reader.Complete)
@@ -318,7 +318,7 @@ internal static class PluginUtilityTranslation
 
         frame.Position += groupMeta.TypeAndLengthLength;
         frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
-            
+
         fillStructs?.Invoke(
             record: record,
             frame: frame);
@@ -565,12 +565,12 @@ internal static class PluginUtilityTranslation
     {
         if (writeParameters.StringsWriter != null) return writeParameters;
         if (!mod.UsingLocalization) return writeParameters;
-        
+
         return writeParameters with
         {
             StringsWriter = new StringsWriter(
-                release: mod.GameRelease, 
-                modKey: modKey, 
+                release: mod.GameRelease,
+                modKey: modKey,
                 writeDirectory: Path.Combine(Path.GetDirectoryName(path)!, "Strings"),
                 encodingProvider: MutagenEncoding.Default,
                 fileSystem: writeParameters.FileSystem.GetOrDefault())
@@ -594,16 +594,18 @@ internal static class PluginUtilityTranslation
                        record: translationParams.ConvertToCustom(type)))
             {
                 writeEmbedded(item, writer);
-                if (!item.IsDeleted)
+                if (item.IsDeleted) return;
+
+                writer.MetaData.FormVersion = item.FormVersion;
+                using (CompressionExport.Compression(item.IsCompressed, writer, out var writerToUse))
                 {
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    writeRecordTypes(item, writer, translationParams);
-                    writer.MetaData.FormVersion = null;
+                    writeRecordTypes(item, writerToUse, translationParams);
                     if (endMarker != null)
                     {
-                        using (HeaderExport.Subrecord(writer, endMarker.Value)) { }
+                        using (HeaderExport.Subrecord(writer, endMarker.Value)) {}
                     }
                 }
+                writer.MetaData.FormVersion = null;
             }
         }
         catch (Exception ex)
