@@ -1,19 +1,19 @@
 namespace Mutagen.Bethesda.Skyrim;
 
 [Obsolete("This function is deprecated and will not work in current versions of the Creation Kit. Use GetVMScriptVariable instead.")]
-public partial class GetScriptVariableConditionData : IConditionStringParameter
+public partial class GetScriptVariableConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => VariableName;
+    string? IConditionParametersGetter.StringParameter2 => VariableName;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => VariableName;
         set => VariableName = value;

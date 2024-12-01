@@ -1,19 +1,19 @@
 namespace Mutagen.Bethesda.Skyrim;
 
 [Obsolete("This function is a no-op and always returns 0")]
-public partial class IsHorseStolenConditionData : IConditionStringParameter
+public partial class IsHorseStolenConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;

@@ -3,6 +3,7 @@ using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
+
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class ConditionDataModule : GenerationModule
@@ -32,7 +33,7 @@ public class ConditionDataModule : GenerationModule
             var isUnusedParameter = field.Name.Contains("Unused");
 
             // Parameter property
-            sb.AppendLine($"public override object? Parameter{i}");
+            sb.AppendLine($"object? IConditionParameters.Parameter{i}");
             using (sb.CurlyBrace())
             {
                 if (isUnusedParameter)
@@ -51,11 +52,23 @@ public class ConditionDataModule : GenerationModule
                     sb.AppendLine($"get => {name};");
                     sb.AppendLine($"set => {name} = (value is {setterTypeName} v ? v : throw new ArgumentException());");
                 }
-
+            }
+            
+            sb.AppendLine($"object? IConditionParametersGetter.Parameter{i}");
+            using (sb.CurlyBrace())
+            {
+                if (isUnusedParameter)
+                {
+                    sb.AppendLine("get => null;");
+                }
+                else
+                {
+                    sb.AppendLine($"get => {field.Name};");
+                }
             }
 
             // ParameterType property
-            sb.AppendLine($"public override Type? Parameter{i}Type");
+            sb.AppendLine($"Type? IConditionParametersGetter.Parameter{i}Type");
             using (sb.CurlyBrace())
             {
                 if (isUnusedParameter)

@@ -1118,16 +1118,16 @@ partial class ConditionBinaryCreateTranslation
     private static void ParseString<TStream>(TStream frame, IConditionData funcData)
         where TStream : IMutagenReadStream
     {
-        if (funcData is not IConditionStringParameter stringParameter) return;
+        if (funcData is not IConditionParameters parameters) return;
         if (!frame.TryGetSubrecord(out var subMeta)) return;
         switch (subMeta.RecordType.TypeInt)
         {
             case RecordTypeInts.CIS1:
-                stringParameter.FirstStringParameter =
+                parameters.StringParameter1 =
                     BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             case RecordTypeInts.CIS2:
-                stringParameter.SecondStringParameter =
+                parameters.StringParameter2 =
                     BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             default:
@@ -2453,8 +2453,8 @@ partial class ConditionBinaryWriteTranslation
 
     public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
     {
-        if (obj is not IConditionStringParameter stringParameter) return;
-        if (stringParameter.FirstStringParameter is { } param1)
+        if (obj is not IConditionParametersGetter parameters) return;
+        if (parameters.StringParameter1 is { } param1)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
             {
@@ -2462,7 +2462,7 @@ partial class ConditionBinaryWriteTranslation
             }
         }
 
-        if (stringParameter.SecondStringParameter is { } param2)
+        if (parameters.StringParameter2 is { } param2)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
             {

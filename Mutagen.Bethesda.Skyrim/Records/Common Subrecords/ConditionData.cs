@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public static class ConditionDataExtension
 {
-    public static bool TryGetParameter1(this IConditionDataGetter conditionData, [MaybeNullWhen(false)] out Type type, [MaybeNullWhen(false)] out object value)
+    public static bool TryGetParameter1(this IConditionParametersGetter conditionData, [MaybeNullWhen(false)] out Type type, [MaybeNullWhen(false)] out object value)
     {
         type = conditionData.Parameter1Type;
         if (type is null)
@@ -20,7 +20,7 @@ public static class ConditionDataExtension
         return value is not null;
     }
 
-    public static bool TrySetParameter1(this IConditionData conditionData, object? value)
+    public static bool TrySetParameter1(this IConditionParameters conditionData, object? value)
     {
         try
         {
@@ -34,53 +34,53 @@ public static class ConditionDataExtension
     }
 }
 
-partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParameter
+partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionParameters
 {
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();
     }
-    string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
-    string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
+    object? IConditionParameters.Parameter1
+    {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
+    object? IConditionParameters.Parameter2
+    {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
+    string? IConditionParametersGetter.StringParameter1 => throw new NotImplementedException();
+    string? IConditionParametersGetter.StringParameter2 => throw new NotImplementedException();
+    object? IConditionParametersGetter.Parameter1 => throw new NotImplementedException();
+    object? IConditionParametersGetter.Parameter2 => throw new NotImplementedException();
+    Type? IConditionParametersGetter.Parameter1Type => throw new NotImplementedException();
+    Type? IConditionParametersGetter.Parameter2Type => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
-    public abstract object? Parameter1 { get; set; }
-    public abstract Type? Parameter1Type { get; }
-    public abstract object? Parameter2 { get; set; }
-    public abstract Type? Parameter2Type { get; }
 }
 
 public partial interface IConditionDataGetter
 {
     Condition.Function Function { get; }
-    object? Parameter1 { get; }
-    Type? Parameter1Type { get; }
-    object? Parameter2 { get; }
-    Type? Parameter2Type { get; }
 }
 
-public partial interface IConditionData
-{
-    object? Parameter1 { get; set; }
-    object? Parameter2 { get; set; }
-}
-
-partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditionStringParameterGetter
+partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditionParametersGetter
 {
     public bool UseAliases { get; internal set; }
     public bool UsePackageData { get; internal set; }
-    string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
-    string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
+    string? IConditionParametersGetter.StringParameter1 => throw new NotImplementedException();
+    string? IConditionParametersGetter.StringParameter2 => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();
-    public object? Parameter1 => throw new NotImplementedException();
-    public Type? Parameter1Type => throw new NotImplementedException();
-    public object? Parameter2 => throw new NotImplementedException();
-    public Type? Parameter2Type => throw new NotImplementedException();
+    object? IConditionParametersGetter.Parameter1 => throw new NotImplementedException();
+    object? IConditionParametersGetter.Parameter2 => throw new NotImplementedException();
+    Type? IConditionParametersGetter.Parameter1Type => throw new NotImplementedException();
+    Type? IConditionParametersGetter.Parameter2Type => throw new NotImplementedException();
 }
 
 partial class ConditionDataBinaryOverlay

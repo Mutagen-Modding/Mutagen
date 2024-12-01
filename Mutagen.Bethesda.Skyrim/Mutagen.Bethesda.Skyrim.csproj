@@ -1053,7 +1053,7 @@
     <Compile Include="Records\Common Subrecords\HasTwoHandedWeaponEquippedConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\IConditionStringParameter.cs">
+    <Compile Include="Records\Common Subrecords\IConditionParameters.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\IsActorAVictimConditionData.cs">

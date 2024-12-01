@@ -1,18 +1,18 @@
 namespace Mutagen.Bethesda.Skyrim;
 
-public partial class GetVMScriptVariableConditionData : IConditionStringParameter
+public partial class GetVMScriptVariableConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => VariableName;
+    string? IConditionParametersGetter.StringParameter2 => VariableName;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => VariableName;
         set => VariableName = value;

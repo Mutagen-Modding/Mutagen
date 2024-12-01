@@ -474,21 +474,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetInCellParamConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetInCellParamConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public override object? Parameter1
+        object? IConditionParameters.Parameter1
         {
             get => Cell;
             set => Cell = (value is IFormLinkOrIndex<ICellGetter> v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter1Type
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => Cell;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
         {
             get => typeof(IFormLinkOrIndexGetter<ICellGetter>);
         }
-        public override object? Parameter2
+        object? IConditionParameters.Parameter2
         {
             get => Target;
             set => Target = (value is IFormLinkOrIndex<IPlacedSimpleGetter> v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter2Type
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => Target;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
         {
             get => typeof(IFormLinkOrIndexGetter<IPlacedSimpleGetter>);
         }
