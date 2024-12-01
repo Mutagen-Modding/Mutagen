@@ -194,6 +194,11 @@ partial class Fallout4ModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial Fallout4Mod DeepCopyGetNew(IFallout4ModGetter item)
+    {
+        return new Fallout4Mod(item.ModKey, item.Fallout4Release);
+    }
 }
 
 internal partial class Fallout4ModBinaryOverlay

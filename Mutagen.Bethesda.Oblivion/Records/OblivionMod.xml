@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="OblivionMod" objType="Mod" ctorPermission="protected" usesStringFiles="false">
+  <Object name="OblivionMod" objType="Mod" ctorPermission="protected" usesStringFiles="false" generateDeepCopyNew="false">
     <Fields>
       <RefDirect name="ModHeader" refName="OblivionModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />

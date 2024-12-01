@@ -204,6 +204,11 @@ partial class SkyrimModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial SkyrimMod DeepCopyGetNew(ISkyrimModGetter item)
+    {
+        return new SkyrimMod(item.ModKey, item.SkyrimRelease);
+    }
 }
 
 internal partial class SkyrimModBinaryOverlay

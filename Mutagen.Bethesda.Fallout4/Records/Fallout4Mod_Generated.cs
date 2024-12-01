@@ -20723,11 +20723,12 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy);
         #endregion
         
+        public partial Fallout4Mod DeepCopyGetNew(IFallout4ModGetter item);
         public Fallout4Mod DeepCopy(
             IFallout4ModGetter item,
             Fallout4Mod.TranslationMask? copyMask = null)
         {
-            Fallout4Mod ret = (Fallout4Mod)((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout4ModSetterTranslationCommon)((IFallout4ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -20743,7 +20744,7 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4Mod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Fallout4Mod ret = (Fallout4Mod)((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout4ModSetterTranslationCommon)((IFallout4ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -20759,7 +20760,7 @@ namespace Mutagen.Bethesda.Fallout4
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Fallout4Mod ret = (Fallout4Mod)((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout4ModSetterTranslationCommon)((IFallout4ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,

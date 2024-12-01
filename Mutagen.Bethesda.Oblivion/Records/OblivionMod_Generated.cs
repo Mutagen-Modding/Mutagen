@@ -10200,11 +10200,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool deepCopy);
         #endregion
         
+        public partial OblivionMod DeepCopyGetNew(IOblivionModGetter item);
         public OblivionMod DeepCopy(
             IOblivionModGetter item,
             OblivionMod.TranslationMask? copyMask = null)
         {
-            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -10220,7 +10221,7 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -10236,7 +10237,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,

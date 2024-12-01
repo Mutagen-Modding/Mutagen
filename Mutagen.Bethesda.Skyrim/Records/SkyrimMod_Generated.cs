@@ -19461,11 +19461,12 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy);
         #endregion
         
+        public partial SkyrimMod DeepCopyGetNew(ISkyrimModGetter item);
         public SkyrimMod DeepCopy(
             ISkyrimModGetter item,
             SkyrimMod.TranslationMask? copyMask = null)
         {
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -19481,7 +19482,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -19497,7 +19498,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,

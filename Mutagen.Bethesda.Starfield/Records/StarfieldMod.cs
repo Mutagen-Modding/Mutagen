@@ -201,6 +201,11 @@ partial class StarfieldModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial StarfieldMod DeepCopyGetNew(IStarfieldModGetter item)
+    {
+        return new StarfieldMod(item.ModKey, item.StarfieldRelease);
+    }
 }
 
 internal partial class StarfieldModBinaryOverlay

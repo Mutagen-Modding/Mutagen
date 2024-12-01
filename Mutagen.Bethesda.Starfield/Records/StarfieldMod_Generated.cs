@@ -28801,11 +28801,12 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy);
         #endregion
         
+        public partial StarfieldMod DeepCopyGetNew(IStarfieldModGetter item);
         public StarfieldMod DeepCopy(
             IStarfieldModGetter item,
             StarfieldMod.TranslationMask? copyMask = null)
         {
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -28821,7 +28822,7 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -28837,7 +28838,7 @@ namespace Mutagen.Bethesda.Starfield
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,

@@ -185,6 +185,11 @@ partial class OblivionModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial OblivionMod DeepCopyGetNew(IOblivionModGetter item)
+    {
+        return new OblivionMod(item.ModKey);
+    }
 }
 
 internal partial class OblivionModBinaryOverlay
