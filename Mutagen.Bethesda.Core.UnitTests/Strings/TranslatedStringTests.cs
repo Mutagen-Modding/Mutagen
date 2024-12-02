@@ -6,6 +6,26 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Strings;
 
+public class TranslatedStringCoreTests
+{
+    [Fact]
+    public void NotNullStringImplicitCast()
+    {
+        TranslatedString? str = "Hello";
+        str.Should().NotBeNull();
+        str.String.Should().Be("Hello");
+        str.TryLookup(Language.English, out var outStr).Should().BeTrue();
+        outStr.Should().Be("Hello");
+    }
+    
+    [Fact]
+    public void NullStringImplicitCast()
+    {
+        TranslatedString? str = default(string?);
+        str.Should().BeNull();
+    }
+}
+
 public abstract class ATranslatedStringTests
 {
     public const string EnglishString = "Hello";
