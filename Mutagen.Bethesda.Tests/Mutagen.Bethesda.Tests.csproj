@@ -3,15 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
@@ -29,17 +22,5 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Passthrough Tests\StarfieldPassthroughTest.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
-    <Compile Update="Processing\StarfieldProcessor.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
   </ItemGroup>
 </Project>
