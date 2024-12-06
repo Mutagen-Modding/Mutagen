@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Mutagen.Bethesda.Plugins.Assets;
 
 namespace Noggog;
@@ -30,13 +31,10 @@ public static class AssetLinkExt
         src.GivenPath.TrimStart(item: item);
 
     public static bool TryTrimEnd(this IAssetLinkGetter src, string item, out string result) =>
-        src.GivenPath.TryTrimEnd(item: item, result: out result);
+        src.GivenPath.TryTrimStringFromEnd(item: item, result: out result);
 
     public static string TrimEnd(this IAssetLinkGetter src, string item) =>
-        src.GivenPath.TrimEnd(item: item);
-
-    public static byte[] ToBytes(this IAssetLinkGetter str) =>
-        str.GivenPath.ToBytes();
+        src.GivenPath.TrimStringFromEnd(item: item);
 
 #if NETSTANDARD2_0
 #else

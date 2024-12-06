@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             var type = typeof(TMod);
             if (type.Name.EndsWith("DisposableGetter"))
             {
-                var className = type.Name.TrimEnd("DisposableGetter") + "Getter";
+                var className = type.Name.TrimStringFromEnd("DisposableGetter") + "Getter";
                 type = Type.GetType($"{type.Namespace}.{className}, {type.Namespace}");
                 createActivator = false;
             }

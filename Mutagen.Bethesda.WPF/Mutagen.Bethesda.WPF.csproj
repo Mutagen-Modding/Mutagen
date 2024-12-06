@@ -21,6 +21,7 @@
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Extended.Wpf.Toolkit" />
     <PackageReference Include="Humanizer.Core" />
+      <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" />
   </ItemGroup>
 
   <ItemGroup>
