@@ -4,8 +4,9 @@ public partial class ActorValueModulation
 {
     public enum TypeEnum
     {
-        SimpleGroup,
-        ComplexGroup,
+        None,
+        Simple,
+        Complex,
         Modulation
     }
 
