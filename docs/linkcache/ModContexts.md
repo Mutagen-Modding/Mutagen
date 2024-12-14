@@ -103,34 +103,43 @@ var overrideRecord = modContext.GetOrAddAsOverride(outgoingMod);
 ```
 
 ### Parent Concepts
-A ModContext has a reference to the parent record in nested scenarios, such as PlacedObject parent Cell
+A ModContext has a reference to the parent record in nested scenarios, such as PlacedObject parent Cell or Worldspace
 
-#### TryGetParent
+#### Parent Lookup
 === "TryGet"
     ``` { .cs hl_lines=3 }
     var modContext = ...;
 
-    if (modContext.TryGetParent<ICellGetter>(out var cell))
+    if (modContext.TryGetParent<IWorldspaceGetter>(out var worldspace))
     {
-        Console.WriteLine($"The parent record was a cell: {cell.FormKey}");
+        Console.WriteLine($"The record was underneath a worldspace: {worldspace.FormKey}");
     }
     ```
 === "TryGetContext"
     ``` { .cs hl_lines=3 }
     var modContext = ...;
 
-    if (modContext.TryGetParentContext<ICell, ICellGetter>(out var cell))
+    if (modContext.TryGetParentContext<IWorldspace, IWorldspaceGetter>(out var worldspaceContext))
     {
-        Console.WriteLine($"The parent record was a cell: {cell.FormKey}");
+        Console.WriteLine($"The record was underneath a worldspace: {worldspaceContext.Record.FormKey}");
+    }
+    ```
+=== "IsUnderneath"
+    ``` { .cs hl_lines=3 }
+    var modContext = ...;
+
+    if (modContext.IsUnderneath<IWorldspaceGetter>())
+    {
+        Console.WriteLine($"The record was underneath a worldspace");
     }
     ```
 === "TryGetSimpleContext"
     ``` { .cs hl_lines=3 }
     var modContext = ...;
 
-    if (modContext.TryGetParentSimpleContext<ICellGetter>(out var cell))
+    if (modContext.TryGetParentSimpleContext<IWorldspaceGetter>(out var worldspaceContext))
     {
-        Console.WriteLine($"The parent record was a cell: {cell.FormKey}");
+        Console.WriteLine($"The record was underneath a worldspace: {worldspaceContext.FormKey}");
     }
     ```
 
