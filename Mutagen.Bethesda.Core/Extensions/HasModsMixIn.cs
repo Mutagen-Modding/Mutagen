@@ -1,15 +1,27 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda;
 
 public static class HasModsMixIn
 {
+    private static bool CheckListing(IModListingGetter listing, bool? enabled, bool? present)
+    {
+        return (present == null || listing.ExistsOnDisk == present)
+               && (enabled == null || listing.Enabled == enabled);
+    }
+    
+    private static bool CheckListingWithMod<TMod>(IModListingGetter<TMod> listing, bool? enabled, bool? present)
+        where TMod : class, IModKeyed
+    {
+        return CheckListing(listing, enabled: enabled, present: present)
+               && (present == null || listing.Mod != null);
+    }
+    
     /// <summary>
-    /// Checks whether a given mod is in the collection of listings.
+    /// Checks whether a given mod is in the collection of listings and exists on disk.
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="modKey">ModKey to look for</param>
@@ -20,8 +32,7 @@ public static class HasModsMixIn
         foreach (var listing in listings)
         {
             if (listing.ModKey == modKey
-                && listing.ExistsOnDisk
-                && (enabled == null || listing.Enabled == enabled))
+                && CheckListing(listing, enabled, present: true))
             {
                 return true;
             }
@@ -30,7 +41,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts a given mod is in the collection of listings.
+    /// Asserts a given mod is in the collection of listings and exists on disk.
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="modKey">ModKey to look for</param>
@@ -48,7 +59,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -59,7 +70,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -73,7 +84,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -86,7 +97,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in listings)
         {
-            if ((enabled == null || listing.Enabled == enabled)
+            if (CheckListing(listing, enabled, present: true)
                 && set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -97,7 +108,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -111,7 +122,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="message">Message to attach to exception if mod doesn't exist</param>
@@ -131,8 +142,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in listings)
         {
-            if (listing.ExistsOnDisk
-                && (enabled == null || listing.Enabled == enabled)
+            if (CheckListing(listing, enabled, present: true)
                 && set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -146,7 +156,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -158,7 +168,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -173,18 +183,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether a given mod is in the collection of keys.
-    /// </summary>
-    /// <param name="keys">Listings to look through</param>
-    /// <param name="modKey">ModKey to look for</param>
-    /// <returns>True if ModKey is in the listings, with the desired enabled state</returns>
-    public static bool ModExists(this IEnumerable<ModKey> keys, ModKey modKey)
-    {
-        return keys.Contains(modKey);
-    }
-
-    /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="keys">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -196,7 +195,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in keys)
         {
-            if (!listing.ExistsOnDisk) return false;
+            if (!CheckListing(listing, enabled: null, present: true)) return false;
             if (set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -207,7 +206,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="keys">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -220,7 +219,7 @@ public static class HasModsMixIn
     }
     
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -235,8 +234,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in listings)
         {
-            if (enabled != null && listing.Enabled != enabled) continue;
-            if (present != null && (listing.Mod != null) != present) continue;
+            if (!CheckListingWithMod(listing, enabled: enabled, present: present)) continue;
             if (set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -247,7 +245,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -263,7 +261,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="listings">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -285,8 +283,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in listings)
         {
-            if (enabled != null && listing.Enabled != enabled) continue;
-            if (present != null && (listing.Mod != null) != present) continue;
+            if (!CheckListingWithMod(listing, enabled: enabled, present: present)) continue;
             if (set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -301,7 +298,7 @@ public static class HasModsMixIn
     }
     
     /// <summary>
-    /// Checks whether a given mod is in the collection of listings.
+    /// Checks whether a given mod is in the collection of listings and exists on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKey">ModKey to look for</param>
@@ -311,14 +308,14 @@ public static class HasModsMixIn
     {
         if (loadOrder.TryGetValue(modKey, out var listing))
         {
-            return enabled == null || listing.Enabled == enabled;
+            return CheckListing(listing, enabled: enabled, present: true);
         }
 
         return false;
     }
 
     /// <summary>
-    /// Asserts a given mod is in the collection of listings.
+    /// Asserts a given mod is in the collection of listings and exists on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKey">ModKey to look for</param>
@@ -336,7 +333,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -352,7 +349,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -365,7 +362,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="message">Message to attach to exception if mod doesn't exist</param>
@@ -379,7 +376,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -390,7 +387,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="modKeys">ModKeys to look for</param>
@@ -404,7 +401,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -417,7 +414,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in loadOrder.ListedOrder)
         {
-            if (listing.Enabled == enabled
+            if (CheckListing(listing, enabled, present: true)
                 && set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -428,7 +425,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -442,7 +439,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -458,7 +455,7 @@ public static class HasModsMixIn
         var set = modKeys.ToHashSet();
         foreach (var listing in loadOrder.ListedOrder)
         {
-            if (listing.Enabled == enabled
+            if (CheckListing(listing, enabled, present: true)
                 && set.Remove(listing.ModKey)
                 && set.Count == 0)
             {
@@ -472,7 +469,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Checks whether all of a given set of ModKeys are in the collection of listings.
+    /// Checks whether all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
@@ -484,7 +481,7 @@ public static class HasModsMixIn
     }
 
     /// <summary>
-    /// Asserts all of a given set of ModKeys are in the collection of listings.
+    /// Asserts all of a given set of ModKeys are in the collection of listings and exist on disk
     /// </summary>
     /// <param name="loadOrder">Listings to look through</param>
     /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
