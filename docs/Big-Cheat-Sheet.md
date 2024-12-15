@@ -25,16 +25,16 @@ If you're just copy pasting code, often it will not compile because some require
 [:octicons-arrow-right-24: Environments](environment/index.md)
 
 ## Retrieve a Mod From a Load Order
+=== "Resolve"
+    ``` cs
+    var mod = myLoadOrder.ResolveMod("MyMod.esp");
+    ```
 === "TryGet"
     ``` cs
     if (myLoadOrder.TryGetValue("MyMod.esp", out var mod))
     {
         // ..
     }
-    ```
-=== "Direct Index"
-    ``` cs
-    var mod = myLoadOrder["MyMod.esp"];
     ```
 
 [:octicons-arrow-right-24: Mod Retrieval](loadorder/index.md#accessing-specific-listings)
