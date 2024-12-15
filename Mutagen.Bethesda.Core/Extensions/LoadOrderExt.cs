@@ -205,4 +205,18 @@ public static class LoadOrderExt
             loadOrder.ListedOrder
                 .Where(filter));
     }
+
+    public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, IReadOnlyCollection<ModKey> modKeys)
+        where TListing : IModKeyed
+    {
+        return new LoadOrder<TListing>(
+            loadOrder.ListedOrder
+                .Where(x => modKeys.Contains(x.ModKey)));
+    }
+
+    public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, params ModKey[] modKeys)
+        where TListing : IModKeyed
+    {
+        return FilterToMods(loadOrder, modKeys.ToHashSet());
+    }
 }
