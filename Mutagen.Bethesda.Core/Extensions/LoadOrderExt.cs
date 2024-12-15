@@ -110,7 +110,7 @@ public static class LoadOrderExt
     {
         return loadOrder
             .Select(x => x.Mod)
-            .NotNull();
+            .WhereNotNull();
     }
 
     /// <summary>
