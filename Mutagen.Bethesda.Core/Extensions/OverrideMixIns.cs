@@ -607,8 +607,8 @@ public static class OverrideMixIns
     /// <param name="major">Major record to query and potentially copy</param>
     /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
     public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter major)
-        where TMajor : class, IMajorRecordInternal, TMajorGetter
-        where TMajorGetter : class, IMajorRecordGetter
+        where TMajor : IMajorRecordInternal, TMajorGetter
+        where TMajorGetter : IMajorRecordGetter
     {
         try
         {
@@ -617,7 +617,12 @@ public static class OverrideMixIns
                 return existingMajor;
             }
             var mask = OverrideMaskRegistrations.Get<TMajor>();
-            existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
+            var copy = major.DeepCopy(mask as MajorRecord.TranslationMask);
+            if (copy is not TMajor rhs)
+            {
+                throw new InvalidOperationException($"DeepCopy did not return a record of the expected type {typeof(TMajor).Name}");
+            }
+            existingMajor = rhs;
             group.RecordCache.Set(existingMajor);
             return existingMajor;
         }

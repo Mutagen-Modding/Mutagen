@@ -173,7 +173,7 @@ public static class IGroupMixIns
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid, FormKey? formKey = null)
-        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajor : IMajorRecord, TMajorGetter
         where TMajorGetter : IMajorRecordGetter
     {
         return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, edid, formKey);
@@ -187,7 +187,7 @@ public static class IGroupMixIns
     /// <param name="formKey">FormKey to use for the record</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, FormKey? formKey)
-        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajor : IMajorRecord, TMajorGetter
         where TMajorGetter : IMajorRecordGetter
     {
         return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, formKey);
@@ -202,13 +202,17 @@ public static class IGroupMixIns
     /// <param name="formKey">FormKey to use for the record.  If non null, EditorID will not be used</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, string? edid, FormKey? formKey = null)
-        where TMajor : class, IMajorRecord, TSharedParent
+        where TMajor : IMajorRecord, TSharedParent
         where TMajorGetter : TSharedParent
         where TSharedParent : IMajorRecordGetter
     {
         try
         {
-            var newRec = (source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid)) as TMajor)!;
+            var dup = source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid));
+            if (dup is not TMajor newRec)
+            {
+                throw new InvalidOperationException($"Duplicate did not return a record of the expected type {typeof(TMajor).Name}");
+            }
             group.Add(newRec);
             return newRec;
         }
@@ -226,7 +230,7 @@ public static class IGroupMixIns
     /// <param name="formKey">FormKey to use for the record</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, FormKey? formKey)
-        where TMajor : class, IMajorRecord, TSharedParent
+        where TMajor : IMajorRecord, TSharedParent
         where TMajorGetter : TSharedParent
         where TSharedParent : IMajorRecordGetter
     {
