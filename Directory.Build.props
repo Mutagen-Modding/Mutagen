@@ -16,7 +16,7 @@
         <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Noggog</Authors>
-        <PackageOutputPath>..\outputPackages</PackageOutputPath>
+        <PackageOutputPath>..\nupkg</PackageOutputPath>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>

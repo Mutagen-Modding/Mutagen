@@ -297,4 +297,4 @@ Mutagen.Bethesda.Starfield/Mutagen.Bethesda.Starfield.xml
 .vscode
 Mutagen.Bethesda.Tests/config/
 
-outputPackages/
+nupkg/
