@@ -48,21 +48,21 @@ namespace Mutagen.Bethesda.Starfield
         #region Ctor
         public GetIsVoiceTypeConditionData()
         {
-            _FirstParameter = new FormLinkOrIndex<IVoiceTypeGetter>(this);
+            _VoiceTypeOrList = new FormLinkOrIndex<IVoiceTypeOrListGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        private readonly IFormLinkOrIndex<IVoiceTypeGetter> _FirstParameter = default!;
-        public IFormLinkOrIndex<IVoiceTypeGetter> FirstParameter
+        #region VoiceTypeOrList
+        private readonly IFormLinkOrIndex<IVoiceTypeOrListGetter> _VoiceTypeOrList = default!;
+        public IFormLinkOrIndex<IVoiceTypeOrListGetter> VoiceTypeOrList
         {
-            get => _FirstParameter;
-            set => _FirstParameter.SetTo(value);
+            get => _VoiceTypeOrList;
+            set => _VoiceTypeOrList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrIndexGetter<IVoiceTypeGetter> IGetIsVoiceTypeConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkOrIndexGetter<IVoiceTypeOrListGetter> IGetIsVoiceTypeConditionDataGetter.VoiceTypeOrList => this.VoiceTypeOrList;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
+                this.VoiceTypeOrList = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
                 this.SecondParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Unknown3,
                 TItem UseAliases,
                 TItem UsePackageData,
-                TItem FirstParameter,
+                TItem VoiceTypeOrList,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
                 TItem SecondUnusedStringParameter)
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Starfield
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
-                this.FirstParameter = FirstParameter;
+                this.VoiceTypeOrList = VoiceTypeOrList;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondParameter = SecondParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem FirstParameter;
+            public TItem VoiceTypeOrList;
             public TItem FirstUnusedStringParameter;
             public TItem SecondParameter;
             public TItem SecondUnusedStringParameter;
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.VoiceTypeOrList, rhs.VoiceTypeOrList)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
                 if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
+                hash.Add(this.VoiceTypeOrList);
                 hash.Add(this.FirstUnusedStringParameter);
                 hash.Add(this.SecondParameter);
                 hash.Add(this.SecondUnusedStringParameter);
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.VoiceTypeOrList)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
                 if (!eval(this.SecondParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
+                if (eval(this.VoiceTypeOrList)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
                 if (eval(this.SecondParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
+                obj.VoiceTypeOrList = eval(this.VoiceTypeOrList);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
                 obj.SecondParameter = eval(this.SecondParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
@@ -249,9 +249,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(GetIsVoiceTypeConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.VoiceTypeOrList ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(VoiceTypeOrList, "VoiceTypeOrList");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
+            public Exception? VoiceTypeOrList;
             public Exception? FirstUnusedStringParameter;
             public Exception? SecondParameter;
             public Exception? SecondUnusedStringParameter;
@@ -288,8 +288,8 @@ namespace Mutagen.Bethesda.Starfield
                 GetIsVoiceTypeConditionData_FieldIndex enu = (GetIsVoiceTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsVoiceTypeConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
+                    case GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList:
+                        return VoiceTypeOrList;
                     case GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
                     case GetIsVoiceTypeConditionData_FieldIndex.SecondParameter:
@@ -306,8 +306,8 @@ namespace Mutagen.Bethesda.Starfield
                 GetIsVoiceTypeConditionData_FieldIndex enu = (GetIsVoiceTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsVoiceTypeConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList:
+                        this.VoiceTypeOrList = ex;
                         break;
                     case GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
@@ -329,8 +329,8 @@ namespace Mutagen.Bethesda.Starfield
                 GetIsVoiceTypeConditionData_FieldIndex enu = (GetIsVoiceTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsVoiceTypeConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList:
+                        this.VoiceTypeOrList = (Exception?)obj;
                         break;
                     case GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
+                if (VoiceTypeOrList != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
                 if (SecondParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(VoiceTypeOrList, "VoiceTypeOrList");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.VoiceTypeOrList = this.VoiceTypeOrList.Combine(rhs.VoiceTypeOrList);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
                 ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
+            public bool VoiceTypeOrList;
             public bool FirstUnusedStringParameter;
             public bool SecondParameter;
             public bool SecondUnusedStringParameter;
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
+                this.VoiceTypeOrList = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
                 this.SecondParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
+                ret.Add((VoiceTypeOrList, null));
                 ret.Add((FirstUnusedStringParameter, null));
                 ret.Add((SecondParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
@@ -468,16 +468,16 @@ namespace Mutagen.Bethesda.Starfield
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetIsVoiceTypeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         object? IConditionParameters.Parameter1
         {
-            get => FirstParameter;
-            set => FirstParameter = (value is IFormLinkOrIndex<IVoiceTypeGetter> v ? v : throw new ArgumentException());
+            get => VoiceTypeOrList;
+            set => VoiceTypeOrList = (value is IFormLinkOrIndex<IVoiceTypeOrListGetter> v ? v : throw new ArgumentException());
         }
         object? IConditionParametersGetter.Parameter1
         {
-            get => FirstParameter;
+            get => VoiceTypeOrList;
         }
         Type? IConditionParametersGetter.Parameter1Type
         {
-            get => typeof(IFormLinkOrIndexGetter<IVoiceTypeGetter>);
+            get => typeof(IFormLinkOrIndexGetter<IVoiceTypeOrListGetter>);
         }
         object? IConditionParameters.Parameter2
         {
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Starfield
         IGetIsVoiceTypeConditionDataGetter,
         ILoquiObjectSetter<IGetIsVoiceTypeConditionData>
     {
-        new IFormLinkOrIndex<IVoiceTypeGetter> FirstParameter { get; set; }
+        new IFormLinkOrIndex<IVoiceTypeOrListGetter> VoiceTypeOrList { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IGetIsVoiceTypeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetIsVoiceTypeConditionData_Registration.Instance;
-        IFormLinkOrIndexGetter<IVoiceTypeGetter> FirstParameter { get; }
+        IFormLinkOrIndexGetter<IVoiceTypeOrListGetter> VoiceTypeOrList { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Starfield
         Unknown3 = 2,
         UseAliases = 3,
         UsePackageData = 4,
-        FirstParameter = 5,
+        VoiceTypeOrList = 5,
         FirstUnusedStringParameter = 6,
         SecondParameter = 7,
         SecondUnusedStringParameter = 8,
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGetIsVoiceTypeConditionData item)
         {
             ClearPartial();
-            item.FirstParameter.Clear();
+            item.VoiceTypeOrList.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IGetIsVoiceTypeConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.FirstParameter.Relink(mapping);
+            obj.VoiceTypeOrList.Relink(mapping);
         }
         
         #endregion
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Starfield
             GetIsVoiceTypeConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter.Equals(rhs.FirstParameter);
+            ret.VoiceTypeOrList = item.VoiceTypeOrList.Equals(rhs.VoiceTypeOrList);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
@@ -929,9 +929,9 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.VoiceTypeOrList ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.VoiceTypeOrList, "VoiceTypeOrList");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
@@ -976,9 +976,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList) ?? true))
             {
-                if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
+                if (!lhs.VoiceTypeOrList.Equals(rhs.VoiceTypeOrList)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGetIsVoiceTypeConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.VoiceTypeOrList);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var l in obj.FirstParameter.EnumerateFormLinks())
+            foreach (var l in obj.VoiceTypeOrList.EnumerateFormLinks())
             {
                 yield return l;
             }
@@ -1071,9 +1071,9 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList) ?? true))
             {
-                item.FirstParameter.SetTo(rhs.FirstParameter);
+                item.VoiceTypeOrList.SetTo(rhs.VoiceTypeOrList);
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer);
             FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstParameter);
+                item: item.VoiceTypeOrList);
             writer.Write(item.SecondParameter);
         }
 
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Starfield
                 frame: frame);
             FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
-                item: item.FirstParameter);
+                item: item.VoiceTypeOrList);
             item.SecondParameter = frame.ReadInt32();
         }
 

@@ -1737,7 +1737,9 @@
   </Object>
   <Object name="GetIsVoiceTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <FormLinkOrIndex refName="VoiceType" name="FirstParameter" />
+      <FormLinkOrIndex name="VoiceTypeOrList">
+        <Interface>IVoiceTypeOrList</Interface>
+      </FormLinkOrIndex>
       <String name="FirstUnusedStringParameter" nullable="true" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
       <String name="SecondUnusedStringParameter" nullable="true" binary="NoGeneration" />
