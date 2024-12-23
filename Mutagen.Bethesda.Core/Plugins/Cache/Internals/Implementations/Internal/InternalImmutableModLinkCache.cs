@@ -28,7 +28,8 @@ internal sealed class InternalImmutableModLinkCache
             this, 
             prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
             x => TryGet<FormKey>.Succeed(x.FormKey),
-            x => x.IsNull);
+            x => x.IsNull,
+            equalityComparer: null);
         _editorIdCache = new ImmutableModLinkCacheCategory<string>(
             this,
             prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -37,7 +38,8 @@ internal sealed class InternalImmutableModLinkCache
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
         ListedOrder = new List<IModGetter>()
         {
             sourceMod

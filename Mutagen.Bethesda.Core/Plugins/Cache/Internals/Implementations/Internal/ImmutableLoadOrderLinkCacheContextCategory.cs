@@ -37,6 +37,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
     private readonly IReadOnlyList<TModGetter> _listedOrder;
     private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
     private readonly Func<TKey, bool> _shortCircuit;
+    private readonly IEqualityComparer<TKey>? _equalityComparer;
     private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> _winningContexts = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>>> _allContexts = new();
 
@@ -53,7 +54,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         ILinkCache linkCache,
         IReadOnlyList<TModGetter> listedOrder,
         Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
-        Func<TKey, bool> shortCircuit)
+        Func<TKey, bool> shortCircuit,
+        IEqualityComparer<TKey>? equalityComparer)
     {
         _category = category;
         _metaInterfaceMapGetter = metaInterfaceMapGetter;
@@ -63,6 +65,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         _listedOrder = listedOrder;
         _keyGetter = keyGetter;
         _shortCircuit = shortCircuit;
+        _equalityComparer = equalityComparer;
     }
 
     public bool TryResolveContext(
@@ -88,7 +91,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
             // Get cache object by type
             if (!_winningContexts.TryGetValue(type, out cache))
             {
-                cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+                cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>(_equalityComparer);
                 if (type.Equals(typeof(IMajorRecord))
                     || type.Equals(typeof(IMajorRecordGetter)))
                 {
@@ -196,7 +199,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> cache;
         lock (_allContexts)
         {
-            cache = _allContexts.GetOrAdd(type);
+            cache = _allContexts.GetOrAdd(type, () => new DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>>(_equalityComparer));
         }
 
         // Grab the formkey's list
