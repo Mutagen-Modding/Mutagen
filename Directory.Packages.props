@@ -31,14 +31,14 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Noggog.Autofac">
-      <Version>[2.70.0-alpha.14]</Version>
+      <Version>[2.70.0-alpha.15]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.CSharpExt" Version="2.70.0-alpha.15" />
     <PackageVersion Include="Noggog.Testing">
-      <Version>[2.70.0-alpha.14]</Version>
+      <Version>[2.70.0-alpha.15]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.WPF">
-      <Version>[2.70.0-alpha.14]</Version>
+      <Version>[2.70.0-alpha.15]</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI" Version="20.1.63" />
     <PackageVersion Include="ReactiveUI.Fody" Version="19.5.41" />
