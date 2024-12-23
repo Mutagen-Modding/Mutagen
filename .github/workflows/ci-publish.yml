@@ -100,13 +100,8 @@ jobs:
         dotnet restore Mutagen.Records.sln
     - name: Build
       run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
-    - name: Pack Preview
-      if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
+    - name: Pack
       run: |
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
-    - name: Pack Release
-      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
-      run: | 
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
