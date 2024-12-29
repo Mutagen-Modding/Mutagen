@@ -1,6 +1,5 @@
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
-using Noggog;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 

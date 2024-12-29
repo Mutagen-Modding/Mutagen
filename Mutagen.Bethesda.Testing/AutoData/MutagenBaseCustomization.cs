@@ -26,6 +26,7 @@ public class MutagenBaseCustomization : ICustomization
         fixture.Customizations.Add(new AbstractSubclassBuilder());
         fixture.Customizations.Add(new AssetLinkBuilder());
         fixture.Customizations.Add(new DataRelativePathBuilder());
+        fixture.Customizations.Add(new FormKeyBuilder());
         fixture.Inject<IMutagenEncodingProvider>(MutagenEncoding.Default);
     }
 }
