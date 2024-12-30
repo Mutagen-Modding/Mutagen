@@ -276,17 +276,18 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 fs,
                 new GetApplicableArchivePaths(
                     fs,
-                    new GetArchiveIniListings(
-                        fs,
-                        new IniPathProvider(
-                            Release,
-                            new IniPathLookup(
-                                gameDirectoryLookup))),
                     new CheckArchiveApplicability(
                         archiveExt),
                     dataDirectory,
                     archiveExt,
-                    loListings),
+                    new CachedArchiveListingDetailsProvider(
+                        loListings,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                Release,
+                                new IniPathLookup(
+                                    gameDirectoryLookup))))),
                 Release));
 
         return new GameEnvironmentState<TMod, TModGetter>(
@@ -560,17 +561,18 @@ public sealed record GameEnvironmentBuilder
                 fs,
                 new GetApplicableArchivePaths(
                     fs,
-                    new GetArchiveIniListings(
-                        fs,
-                        new IniPathProvider(
-                            Release,
-                            new IniPathLookup(
-                                gameDirectoryLookup))),
                     new CheckArchiveApplicability(
                         archiveExt),
                     dataDirectory,
                     archiveExt,
-                    loListings),
+                    new CachedArchiveListingDetailsProvider(
+                        loListings,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                Release,
+                                new IniPathLookup(
+                                    gameDirectoryLookup))))),
                 Release));
         
         return new GameEnvironmentState(

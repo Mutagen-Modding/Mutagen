@@ -223,17 +223,18 @@ public sealed class GameEnvironmentState :
                 fs,
                 new GetApplicableArchivePaths(
                     fs,
-                    new GetArchiveIniListings(
-                        fs,
-                        new IniPathProvider(
-                            gameReleaseInjection,
-                            new IniPathLookup(
-                                gameDirLookup))),
                     new CheckArchiveApplicability(
                         archiveExt),
                     dataDirectory,
                     archiveExt,
-                    loListingsProvider),
+                    new CachedArchiveListingDetailsProvider(
+                        loListingsProvider,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                gameReleaseInjection,
+                                new IniPathLookup(
+                                    gameDirLookup))))),
                 gameReleaseInjection));
         return new GameEnvironmentProvider<IModGetter>(
                 gameReleaseInjection,
@@ -375,17 +376,18 @@ public sealed class GameEnvironmentState<TMod> :
                 fs,
                 new GetApplicableArchivePaths(
                     fs,
-                    new GetArchiveIniListings(
-                        fs,
-                        new IniPathProvider(
-                            gameReleaseInjection,
-                            new IniPathLookup(
-                                gameDirLookup))),
                     new CheckArchiveApplicability(
                         archiveExt),
                     dataDirectory,
                     archiveExt,
-                    loListingsProvider),
+                    new CachedArchiveListingDetailsProvider(
+                        loListingsProvider,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                gameReleaseInjection,
+                                new IniPathLookup(
+                                    gameDirLookup))))),
                 gameReleaseInjection));
         return new GameEnvironmentProvider<TMod>(
                 gameReleaseInjection,
@@ -539,17 +541,18 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                 fs,
                 new GetApplicableArchivePaths(
                     fs,
-                    new GetArchiveIniListings(
-                        fs,
-                        new IniPathProvider(
-                            gameReleaseInjection,
-                            new IniPathLookup(
-                                gameDirLookup))),
                     new CheckArchiveApplicability(
                         archiveExt),
                     dataDirectory,
                     archiveExt,
-                    loListingsProvider),
+                    new CachedArchiveListingDetailsProvider(
+                        loListingsProvider,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                gameReleaseInjection,
+                                new IniPathLookup(
+                                    gameDirLookup))))),
                 gameReleaseInjection));
         return new GameEnvironmentProvider<TModSetter, TModGetter>(
                 gameReleaseInjection,

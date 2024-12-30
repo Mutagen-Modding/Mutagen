@@ -1,7 +1,6 @@
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Archives.DI;
@@ -11,8 +10,7 @@ public interface IGetApplicableArchivePaths
     /// <summary>
     /// Enumerates all Archives
     /// </summary>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
-    IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true);
+    IEnumerable<FilePath> Get();
 
     /// <summary>
     /// Enumerates all applicable Archives for a given ModKey<br/>
@@ -20,61 +18,52 @@ public interface IGetApplicableArchivePaths
     /// NOTE:  It is currently a bit experimental
     /// </summary>
     /// <param name="modKey">ModKey to query about</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
-    IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true);
+    IEnumerable<FilePath> Get(ModKey modKey);
 }
 
 public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
 {
     private readonly IFileSystem _fileSystem;
-    private readonly IGetArchiveIniListings _iniListings;
     private readonly ICheckArchiveApplicability _applicability;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     private readonly IArchiveExtensionProvider _archiveExtension;
-    private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
+    private readonly IArchiveListingDetailsProvider _archiveListingDetailsProvider;
 
     public GetApplicableArchivePaths(
         IFileSystem fileSystem,
-        IGetArchiveIniListings iniListings,
         ICheckArchiveApplicability applicability,
         IDataDirectoryProvider dataDirectoryProvider,
         IArchiveExtensionProvider archiveExtension,
-        ILoadOrderListingsProvider loadOrderListingsProvider)
+        IArchiveListingDetailsProvider ArchiveListingDetailsProvider)
     {
         _fileSystem = fileSystem;
-        _iniListings = iniListings;
         _applicability = applicability;
         _dataDirectoryProvider = dataDirectoryProvider;
         _archiveExtension = archiveExtension;
-        _loadOrderListingsProvider = loadOrderListingsProvider;
+        _archiveListingDetailsProvider = ArchiveListingDetailsProvider;
     }
         
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(bool returnEmptyIfMissing = true)
+    public IEnumerable<FilePath> Get()
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer(emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
+        return GetInternal(default(ModKey?), GetPriorityOrderComparer());
     }
 
     /// <inheritdoc />
-    public IEnumerable<FilePath> Get(ModKey modKey, bool returnEmptyIfMissing = true)
+    public IEnumerable<FilePath> Get(ModKey modKey)
     {
-        return Get(modKey, GetPriorityOrderComparer(emptyIfMissing: returnEmptyIfMissing), returnEmptyIfMissing);
+        return Get(modKey, GetPriorityOrderComparer());
     }
 
-    private IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
+    private IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering)
     {
-        return GetInternal(modKey, archiveOrdering, returnEmptyIfMissing);
+        return GetInternal(modKey, archiveOrdering);
     }
         
-    private IEnumerable<FilePath> GetInternal(ModKey? modKey, IComparer<FileName>? archiveOrdering, bool returnEmptyIfMissing = true)
+    private IEnumerable<FilePath> GetInternal(ModKey? modKey, IComparer<FileName>? archiveOrdering)
     {
         if (modKey.HasValue && modKey.Value.IsNull)
-        {
-            return Enumerable.Empty<FilePath>();
-        }
-
-        if (returnEmptyIfMissing && !_fileSystem.Directory.Exists(_dataDirectoryProvider.Path))
         {
             return Enumerable.Empty<FilePath>();
         }
@@ -82,19 +71,10 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
         if (modKey != null)
         {
-            IReadOnlyCollection<FileName> iniListedArchives;
-            if (returnEmptyIfMissing)
-            {
-                iniListedArchives = (IReadOnlyCollection<FileName>?)_iniListings.TryGet()?.ToHashSet() ?? Array.Empty<FileName>();
-            }
-            else
-            {
-                iniListedArchives = _iniListings.Get().ToHashSet();
-            }
             ret = ret
                 .Where(archive =>
                 {
-                    if (iniListedArchives.Contains(archive.Name)) return true;
+                    if (_archiveListingDetailsProvider.Contains(archive.Name)) return true;
                     return _applicability.IsApplicable(modKey.Value, archive.Name);
                 });
         }
@@ -106,23 +86,13 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
     }
 
 
-    private IComparer<FileName>? GetPriorityOrderComparer(bool emptyIfMissing)
+    private IComparer<FileName>? GetPriorityOrderComparer()
     {
-        IReadOnlyList<FileName> archiveOrderingList;
-        if (emptyIfMissing)
-        {
-            archiveOrderingList = _iniListings.TryGet()?.ToList() ?? [];
-        }
-        else
-        {
-            archiveOrderingList = _iniListings.Get().ToList();
-        }
-        if (archiveOrderingList.Count == 0) return null;
-        archiveOrderingList.Reverse();
+        if (_archiveListingDetailsProvider.Empty) return null;
         return Comparer<FileName>.Create((a, b) =>
         {
-            var indexA = archiveOrderingList.IndexOf(a);
-            var indexB = archiveOrderingList.IndexOf(b);
+            var indexA = _archiveListingDetailsProvider.PriorityIndexFor(a);
+            var indexB = _archiveListingDetailsProvider.PriorityIndexFor(b);
             if (indexA == -1 && indexB == -1) return 0;
             if (indexA == -1) return 1;
             if (indexB == -1) return -1;

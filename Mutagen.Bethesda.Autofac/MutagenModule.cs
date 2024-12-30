@@ -54,5 +54,7 @@ public class MutagenModule : Module
             .AsSelf();
         builder.RegisterType<ArchiveAssetProvider>()
             .AsSelf();
+        builder.RegisterType<CachedArchiveListingDetailsProvider>()
+            .AsImplementedInterfaces();
     }
 }

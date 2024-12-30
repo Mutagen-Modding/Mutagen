@@ -45,16 +45,17 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         var ext = new ArchiveExtensionProvider(gameReleaseInjection);
         return new GetApplicableArchivePaths(
             fs, 
-            new GetArchiveIniListings(
-                fs,
-                new IniPathProvider(
-                    gameReleaseInjection,
-                    new IniPathLookupInjection(MyDocumentsPath))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),
             ext,
-            new LoadOrderListingsInjection(Array.Empty<ModKey>()));
+            new CachedArchiveListingDetailsProvider(
+                new LoadOrderListingsInjection(Array.Empty<ModKey>()),
+                new GetArchiveIniListings(
+                    fs,
+                    new IniPathProvider(
+                        gameReleaseInjection,
+                        new IniPathLookupInjection(MyDocumentsPath)))));
     }
 
     #region No ModKey
