@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+
 namespace Mutagen.Bethesda.Assets.DI;
 
 public class GameAssetProvider : IAssetProvider

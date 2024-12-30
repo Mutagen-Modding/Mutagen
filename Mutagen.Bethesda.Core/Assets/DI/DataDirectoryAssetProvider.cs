@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
+
 namespace Mutagen.Bethesda.Assets.DI;
 
 public class DataDirectoryAssetProvider : IAssetProvider

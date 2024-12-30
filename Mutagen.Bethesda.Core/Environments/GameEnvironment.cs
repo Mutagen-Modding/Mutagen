@@ -1,4 +1,7 @@
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Assets.DI;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
@@ -76,6 +79,11 @@ public interface IGameEnvironment : IDisposable
     /// Convenience Link Cache to use created from the provided Load Order object
     /// </summary>
     ILinkCache LinkCache { get; }
+    
+    /// <summary>
+    /// Convenience Asset Provider created from the environment's context
+    /// </summary>
+    IAssetProvider AssetProvider { get; }
 }
 
 public interface IGameEnvironment<TMod> : IGameEnvironment
@@ -123,6 +131,8 @@ public sealed class GameEnvironmentState :
     public ILinkCache LinkCache { get; }
 
     public ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder { get; }
+    
+    public IAssetProvider AssetProvider { get; }
 
     public GameEnvironmentState(
         GameRelease gameRelease,
@@ -131,6 +141,7 @@ public sealed class GameEnvironmentState :
         FilePath? creationClubListingsFilePath,
         ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
         ILinkCache linkCache,
+        IAssetProvider assetProvider,
         bool dispose = true)
     {
         GameRelease = gameRelease;
@@ -139,6 +150,7 @@ public sealed class GameEnvironmentState :
         CreationClubListingsFilePath = creationClubListingsFilePath;
         LoadOrder = loadOrder;
         LinkCache = linkCache;
+        AssetProvider = assetProvider;
         _dispose = dispose;
     }
 
@@ -155,10 +167,13 @@ public sealed class GameEnvironmentState :
         LinkCachePreferences? linkCachePrefs = null)
     {
         Warmup.Init();
+        var fs = IFileSystemExt.DefaultFilesystem;
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
+        var gameDir = new GameDirectoryInjection(gameFolder);
+        var gameDirLookup = new GameDirectoryLookupInjection(release, gameDir.Path);
         var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             new PluginListingsParser(
                 new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
@@ -172,37 +187,60 @@ public sealed class GameEnvironmentState :
             category,
             new CreationClubEnabledProvider(
                 category),
-            new GameDirectoryInjection(gameFolder));
+            gameDir);
+        var archiveExt = new ArchiveExtensionProvider(gameReleaseInjection);
+        var loListingsProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        
+        var assetProvider = new GameAssetProvider(
+            new DataDirectoryAssetProvider(
+                fs,
+                dataDirectory),
+            new ArchiveAssetProvider(
+                fs,
+                new GetApplicableArchivePaths(
+                    fs,
+                    new GetArchiveIniListings(
+                        fs,
+                        new IniPathProvider(
+                            gameReleaseInjection,
+                            new IniPathLookup(
+                                gameDirLookup))),
+                    new CheckArchiveApplicability(
+                        archiveExt),
+                    dataDirectory,
+                    archiveExt,
+                    loListingsProvider),
+                gameReleaseInjection));
         return new GameEnvironmentProvider<IModGetter>(
                 gameReleaseInjection,
                 new LoadOrderImporter<IModGetter>(
                     IFileSystemExt.DefaultFilesystem,
                     dataDirectory,
-                    new LoadOrderListingsProvider(
-                        new OrderListings(),
-                        new ImplicitListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            new ImplicitListingModKeyProvider(
-                                gameReleaseInjection)),
-                        new PluginListingsProvider(
-                            gameReleaseInjection,
-                            new TimestampedPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                                pluginRawListingsReader,
-                                dataDirectory,
-                                pluginListingsPathProvider),
-                            new EnabledPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                pluginRawListingsReader,
-                                pluginListingsPathProvider)),
-                        new CreationClubListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            creationClubListingsPathProvider,
-                            new CreationClubRawListingsReader())),
+                    loListingsProvider,
                     new ModImporter(
                         IFileSystemExt.DefaultFilesystem,
                         gameReleaseInjection),
@@ -212,7 +250,8 @@ public sealed class GameEnvironmentState :
                         dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
-                creationClubListingsPathProvider)
+                creationClubListingsPathProvider,
+                assetProvider)
             .Construct();
     }
 
@@ -246,6 +285,8 @@ public sealed class GameEnvironmentState<TMod> :
 
     public ILinkCache LinkCache { get; }
 
+    public IAssetProvider AssetProvider { get; }
+
     public GameEnvironmentState(
         GameRelease gameRelease,
         DirectoryPath dataFolderPath,
@@ -253,6 +294,7 @@ public sealed class GameEnvironmentState<TMod> :
         FilePath? creationClubListingsFilePath,
         ILoadOrder<IModListing<TMod>> loadOrder,
         ILinkCache linkCache,
+        IAssetProvider assetProvider,
         bool dispose = true)
     {
         GameRelease = gameRelease;
@@ -262,6 +304,7 @@ public sealed class GameEnvironmentState<TMod> :
         LoadOrder = loadOrder;
         LinkCache = linkCache;
         _dispose = dispose;
+        AssetProvider = assetProvider;
     }
 
     public void Dispose()
@@ -277,10 +320,13 @@ public sealed class GameEnvironmentState<TMod> :
         LinkCachePreferences? linkCachePrefs = null)
     {
         Warmup.Init();
+        var fs = IFileSystemExt.DefaultFilesystem;
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
+        var gameDir = new GameDirectoryInjection(gameFolder);
+        var gameDirLookup = new GameDirectoryLookupInjection(release, gameDir.Path);
         var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             new PluginListingsParser(
                 new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
@@ -295,36 +341,58 @@ public sealed class GameEnvironmentState<TMod> :
             new CreationClubEnabledProvider(
                 category),
             new GameDirectoryInjection(gameFolder));
+        var loListingsProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        var archiveExt = new ArchiveExtensionProvider(gameReleaseInjection);
+        var assetProvider = new GameAssetProvider(
+            new DataDirectoryAssetProvider(
+                fs,
+                dataDirectory),
+            new ArchiveAssetProvider(
+                fs,
+                new GetApplicableArchivePaths(
+                    fs,
+                    new GetArchiveIniListings(
+                        fs,
+                        new IniPathProvider(
+                            gameReleaseInjection,
+                            new IniPathLookup(
+                                gameDirLookup))),
+                    new CheckArchiveApplicability(
+                        archiveExt),
+                    dataDirectory,
+                    archiveExt,
+                    loListingsProvider),
+                gameReleaseInjection));
         return new GameEnvironmentProvider<TMod>(
                 gameReleaseInjection,
                 new LoadOrderImporter<TMod>(
                     IFileSystemExt.DefaultFilesystem,
                     dataDirectory,
-                    new LoadOrderListingsProvider(
-                        new OrderListings(),
-                        new ImplicitListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            new ImplicitListingModKeyProvider(
-                                gameReleaseInjection)),
-                        new PluginListingsProvider(
-                            gameReleaseInjection,
-                            new TimestampedPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                                pluginRawListingsReader,
-                                dataDirectory,
-                                pluginListingsPathProvider),
-                            new EnabledPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                pluginRawListingsReader,
-                                pluginListingsPathProvider)),
-                        new CreationClubListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            creationClubListingsPathProvider,
-                            new CreationClubRawListingsReader())),
+                    loListingsProvider,
                     new ModImporter<TMod>(
                         IFileSystemExt.DefaultFilesystem,
                         gameReleaseInjection),
@@ -334,7 +402,8 @@ public sealed class GameEnvironmentState<TMod> :
                         dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
-                creationClubListingsPathProvider)
+                creationClubListingsPathProvider,
+                assetProvider)
             .Construct();
     }
 
@@ -376,6 +445,11 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     /// Convenience Link Cache to use created from the provided Load Order object
     /// </summary>
     public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
+    
+    /// <summary>
+    /// Convenience Asset Provider created from the environment's context
+    /// </summary>
+    public IAssetProvider AssetProvider { get; }
 
     public GameEnvironmentState(
         GameRelease gameRelease,
@@ -384,6 +458,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         FilePath? creationClubListingsFilePath,
         ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
         ILinkCache<TModSetter, TModGetter> linkCache,
+        IAssetProvider assetProvider,
         bool dispose = true)
     {
         GameRelease = gameRelease;
@@ -392,6 +467,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         CreationClubListingsFilePath = creationClubListingsFilePath;
         LoadOrder = loadOrder;
         LinkCache = linkCache;
+        AssetProvider = assetProvider;
         _dispose = dispose;
     }
 
@@ -408,10 +484,13 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         LinkCachePreferences? linkCachePrefs = null)
     {
         Warmup.Init();
+        var fs = IFileSystemExt.DefaultFilesystem;
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
+        var gameDir = new GameDirectoryInjection(gameFolder);
+        var gameDirLookup = new GameDirectoryLookupInjection(release, gameDir.Path);
         var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             new PluginListingsParser(
                 new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
@@ -426,36 +505,58 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
             new CreationClubEnabledProvider(
                 category),
             new GameDirectoryInjection(gameFolder));
+        var loListingsProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        var archiveExt = new ArchiveExtensionProvider(gameReleaseInjection);
+        var assetProvider = new GameAssetProvider(
+            new DataDirectoryAssetProvider(
+                fs,
+                dataDirectory),
+            new ArchiveAssetProvider(
+                fs,
+                new GetApplicableArchivePaths(
+                    fs,
+                    new GetArchiveIniListings(
+                        fs,
+                        new IniPathProvider(
+                            gameReleaseInjection,
+                            new IniPathLookup(
+                                gameDirLookup))),
+                    new CheckArchiveApplicability(
+                        archiveExt),
+                    dataDirectory,
+                    archiveExt,
+                    loListingsProvider),
+                gameReleaseInjection));
         return new GameEnvironmentProvider<TModSetter, TModGetter>(
                 gameReleaseInjection,
                 new LoadOrderImporter<TModGetter>(
                     IFileSystemExt.DefaultFilesystem,
                     dataDirectory,
-                    new LoadOrderListingsProvider(
-                        new OrderListings(),
-                        new ImplicitListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            new ImplicitListingModKeyProvider(
-                                gameReleaseInjection)),
-                        new PluginListingsProvider(
-                            gameReleaseInjection,
-                            new TimestampedPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                                new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = false},
-                                pluginRawListingsReader,
-                                dataDirectory,
-                                pluginListingsPathProvider),
-                            new EnabledPluginListingsProvider(
-                                IFileSystemExt.DefaultFilesystem,
-                                pluginRawListingsReader,
-                                pluginListingsPathProvider)),
-                        new CreationClubListingsProvider(
-                            IFileSystemExt.DefaultFilesystem,
-                            dataDirectory,
-                            creationClubListingsPathProvider,
-                            new CreationClubRawListingsReader())),
+                    loListingsProvider,
                     new ModImporter<TModGetter>(
                         IFileSystemExt.DefaultFilesystem,
                         gameReleaseInjection),
@@ -465,7 +566,8 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                         dataDirectory)),
                 dataDirectory,
                 pluginListingsPathProvider,
-                creationClubListingsPathProvider)
+                creationClubListingsPathProvider,
+                assetProvider)
             .Construct();
     }
 
