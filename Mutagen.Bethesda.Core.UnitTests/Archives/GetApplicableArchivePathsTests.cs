@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Inis;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Noggog;
 using Noggog.Testing.IO;
@@ -44,38 +45,23 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         var ext = new ArchiveExtensionProvider(gameReleaseInjection);
         return new GetApplicableArchivePaths(
             fs, 
-            new GetArchiveIniListings(
-                fs,
-                new IniPathProvider(
-                    gameReleaseInjection,
-                    new IniPathLookupInjection(MyDocumentsPath))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),
-            ext);
+            ext,
+            new CachedArchiveListingDetailsProvider(
+                new LoadOrderListingsInjection(Array.Empty<ModKey>()),
+                new GetArchiveIniListings(
+                    fs,
+                    new IniPathProvider(
+                        gameReleaseInjection,
+                        new IniPathLookupInjection(MyDocumentsPath)))));
     }
 
     #region No ModKey
+    
     [Fact]
-    public void NoModKey_Unordered()
-    {
-        var fs = GetFileSystem();
-        fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, SkyrimBsa), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, SomeExplicitListingBsa), string.Empty);
-        var get = GetClass(fs);
-        var applicable = get.Get(Enumerable.Empty<FileName>())
-            .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
-            Path.Combine(BaseFolder, MyModBsa),
-            Path.Combine(BaseFolder, SkyrimBsa),
-            Path.Combine(BaseFolder, SomeExplicitListingBsa),
-        });
-    }
-
-    [Fact]
-    public void NoModKey_Ordered()
+    public void NoModKey()
     {
         var fs = GetFileSystem();
         fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
@@ -102,7 +88,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
     {
         var fs = GetFileSystem();
         var get = GetClass(fs);
-        get.Get(TestConstants.Skyrim, Enumerable.Empty<FileName>())
+        get.Get(TestConstants.Skyrim)
             .Should().BeEmpty();
     }
 
@@ -119,41 +105,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
     }
 
     [Fact]
-    public void BaseMod_Unordered()
-    {
-        var fs = GetFileSystem();
-        var get = GetClass(fs);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, SkyrimBsa), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, SomeExplicitListingBsa), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
-        var applicable = get.Get(TestConstants.Skyrim, Enumerable.Empty<FileName>())
-            .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
-            Path.Combine(BaseFolder, SkyrimBsa),
-            Path.Combine(BaseFolder, SomeExplicitListingBsa)
-        });
-    }
-
-    [Fact]
-    public void Typical_Unordered()
-    {
-        var fs = GetFileSystem();
-        var get = GetClass(fs);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, $"{TestConstants.MasterModKey2.Name}.bsa"), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, SomeExplicitListingBsa), string.Empty);
-        fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
-        var applicable = get.Get(TestConstants.MasterModKey2, Enumerable.Empty<FileName>())
-            .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
-            Path.Combine(BaseFolder, $"{TestConstants.MasterModKey2.Name}.bsa"),
-            Path.Combine(BaseFolder, SomeExplicitListingBsa)
-        });
-    }
-
-    [Fact]
-    public void BaseMod_Ordered()
+    public void BaseMod()
     {
         var fs = GetFileSystem();
         var get = GetClass(fs);
@@ -170,7 +122,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
     }
 
     [Fact]
-    public void Typical_Ordered()
+    public void Typical()
     {
         var fs = GetFileSystem();
         var get = GetClass(fs);
@@ -182,7 +134,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         applicable.Should().Equal(new FilePath[]
         {
             Path.Combine(BaseFolder, SomeExplicitListingBsa),
-            Path.Combine(BaseFolder, $"{TestConstants.MasterModKey2.Name}.bsa"),
+            Path.Combine(BaseFolder, $"{TestConstants.MasterModKey2.Name}.bsa")
         });
     }
     #endregion

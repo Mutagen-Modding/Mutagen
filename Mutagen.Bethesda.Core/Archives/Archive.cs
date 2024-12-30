@@ -5,6 +5,8 @@ using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Stream = System.IO.Stream;
 
 namespace Mutagen.Bethesda.Archives;
@@ -14,23 +16,28 @@ public static class Archive
     private static GetApplicableArchivePaths GetApplicableArchivePathsDi(
         GameRelease release, 
         DirectoryPath dataFolderPath,
-        IFileSystem? fileSystem = null)
+        IEnumerable<ModKey>? modOrdering,
+        IFileSystem? fileSystem)
     {
         fileSystem ??= fileSystem.GetOrDefault();
         var gameReleaseInjection = new GameReleaseInjection(release);
         var ext = new ArchiveExtensionProvider(gameReleaseInjection);
+        var lo = new LoadOrderListingsInjection(
+            modOrdering.EmptyIfNull().Select(x => new LoadOrderListing(x, enabled: true)));
         return new GetApplicableArchivePaths(
             fileSystem,
-            new GetArchiveIniListings(
-                fileSystem,
-                new IniPathProvider(
-                    new GameReleaseInjection(release),
-                    new IniPathLookup(
-                        GameLocatorLookupCache.Instance))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(dataFolderPath),
-            ext);
+            ext,
+            new CachedArchiveListingDetailsProvider(
+                lo,
+                new GetArchiveIniListings(
+                    fileSystem,
+                    new IniPathProvider(
+                        new GameReleaseInjection(release),
+                        new IniPathLookup(
+                            GameLocatorLookupCache.Instance)))));
     }
         
     /// <summary>
@@ -78,8 +85,8 @@ public static class Archive
         GameRelease release, DirectoryPath dataFolderPath, IFileSystem? fileSystem = null, 
         bool returnEmptyIfMissing = true)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(returnEmptyIfMissing: returnEmptyIfMissing);
+        return GetApplicableArchivePathsDi(release, dataFolderPath, modOrdering: null, fileSystem: fileSystem)
+            .Get();
     }
 
     /// <summary>
@@ -89,13 +96,12 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
         IEnumerable<FileName>? archiveOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
+        return GetApplicableArchivePathsDi(release, dataFolderPath, archiveOrdering.EmptyIfNull().Select(ModKey.FromFileName), fileSystem)
+            .Get();
     }
 
     /// <summary>
@@ -105,13 +111,12 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modOrdering">Archive ordering overload based on a mod order.  Empty enumerable means no ordering.</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
         IEnumerable<ModKey>? modOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
+        return GetApplicableArchivePathsDi(release, dataFolderPath, modOrdering, fileSystem)
+            .Get();
     }
 
     /// <summary>
@@ -123,13 +128,12 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
         ModKey modKey, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey, returnEmptyIfMissing: returnEmptyIfMissing);
+        return GetApplicableArchivePathsDi(release, dataFolderPath, modOrdering: null, fileSystem: fileSystem)
+            .Get(modKey);
     }
 
     /// <summary>
@@ -142,33 +146,13 @@ public static class Archive
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
         ModKey modKey, IEnumerable<FileName>? archiveOrdering, 
-        IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
+        IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey, archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
-    }
-
-    /// <summary>
-    /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
-    /// This call is intended to return Archives related to one specific mod.<br/>
-    /// NOTE:  It is currently a bit experimental
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <param name="modKey">ModKey to query about</param>
-    /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
-    /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">If ini file is missing, return empty instead of throwing an exception</param>
-    /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
-        ModKey modKey, IComparer<FileName>? archiveOrdering, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
-    {
-        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
-            .Get(modKey, archiveOrdering, returnEmptyIfMissing: returnEmptyIfMissing);
+        return GetApplicableArchivePathsDi(release, dataFolderPath, archiveOrdering.EmptyIfNull().Select(ModKey.FromFileName), fileSystem)
+            .Get(modKey);
     }
 
     /// <summary>
