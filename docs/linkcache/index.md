@@ -9,7 +9,7 @@ It powers a lot of functionality, such as:
 - [Iterating over all versions of a record](Previous-Override-Iteration.md) within a [Load Order](../loadorder/index.md)
 
 ## Construction
-Every LinkCache is created relative to some mods.  It will look up and return records relative to these mods.
+Every LinkCache is created relative to some mods in "listed" order (as opposed to priority order).  It will look up and return records relative to these mods.  
 
 === "Single"
     ``` { .cs hl_lines=2 }
