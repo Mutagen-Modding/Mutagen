@@ -7,9 +7,56 @@ using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using StrongInject;
 using Stream = System.IO.Stream;
 
 namespace Mutagen.Bethesda.Archives;
+
+[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
+[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
+[Register(typeof(GetArchiveIniListings), typeof(IGetArchiveIniListings))]
+[Register(typeof(CachedArchiveListingDetailsProvider), typeof(IArchiveListingDetailsProvider))]
+[Register(typeof(ArchiveExtensionProvider), typeof(IArchiveExtensionProvider))]
+[Register(typeof(CheckArchiveApplicability), typeof(ICheckArchiveApplicability))]
+[Register(typeof(GetApplicableArchivePaths))]
+partial class ArchiveContainer : IContainer<GetApplicableArchivePaths>
+{
+    [Instance] private readonly IFileSystem _fileSystem;
+    [Instance] private readonly IGameReleaseContext _gameReleaseContext;
+    [Instance] private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
+    [Instance] private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    [Instance] private readonly IGameDirectoryLookup _gameDirectoryLookup = GameLocatorLookupCache.Instance;
+
+    public ArchiveContainer(
+        IFileSystem fileSystem, 
+        IGameReleaseContext GameReleaseContext,
+        ILoadOrderListingsProvider LoadOrderListingsProvider,
+        IDataDirectoryProvider DataDirectoryProvider)
+    {
+        _fileSystem = fileSystem;
+        _gameReleaseContext = GameReleaseContext;
+        _loadOrderListingsProvider = LoadOrderListingsProvider;
+        _dataDirectoryProvider = DataDirectoryProvider;
+    }
+}
+
+[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
+[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
+[Register(typeof(GetArchiveIniListings))]
+partial class GetArchiveIniListingsContainer : IContainer<GetArchiveIniListings>
+{
+    [Instance] private readonly IFileSystem _fileSystem;
+    [Instance] private readonly IGameReleaseContext _gameReleaseContext;
+    [Instance] private readonly IGameDirectoryLookup _gameDirectoryLookup = GameLocatorLookupCache.Instance;
+    
+    public GetArchiveIniListingsContainer(
+        IFileSystem? fileSystem,
+        GameRelease release)
+    {
+        _fileSystem = fileSystem.GetOrDefault();
+        _gameReleaseContext = new GameReleaseInjection(release);
+    }
+}
 
 public static class Archive
 {
@@ -19,25 +66,13 @@ public static class Archive
         IEnumerable<ModKey>? modOrdering,
         IFileSystem? fileSystem)
     {
-        fileSystem ??= fileSystem.GetOrDefault();
-        var gameReleaseInjection = new GameReleaseInjection(release);
-        var ext = new ArchiveExtensionProvider(gameReleaseInjection);
-        var lo = new LoadOrderListingsInjection(
-            modOrdering.EmptyIfNull().Select(x => new LoadOrderListing(x, enabled: true)));
-        return new GetApplicableArchivePaths(
-            fileSystem,
-            new CheckArchiveApplicability(
-                ext),
-            new DataDirectoryInjection(dataFolderPath),
-            ext,
-            new CachedArchiveListingDetailsProvider(
-                lo,
-                new GetArchiveIniListings(
-                    fileSystem,
-                    new IniPathProvider(
-                        new GameReleaseInjection(release),
-                        new IniPathLookup(
-                            GameLocatorLookupCache.Instance)))));
+        var cont = new ArchiveContainer(
+            fileSystem: fileSystem.GetOrDefault(),
+            new GameReleaseInjection(release),
+            new LoadOrderListingsInjection(
+                modOrdering.EmptyIfNull().Select(x => new LoadOrderListing(x, enabled: true))),
+            new DataDirectoryInjection(dataFolderPath));
+        return cont.Resolve().Value;
     }
         
     /// <summary>
@@ -182,12 +217,8 @@ public static class Archive
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
     public static IEnumerable<FileName> GetIniListings(GameRelease release, IFileSystem? fileSystem = null)
     {
-        return new GetArchiveIniListings(
-                fileSystem.GetOrDefault(),
-                new IniPathProvider(
-                    new GameReleaseInjection(release),
-                    new IniPathLookup(
-                        GameLocatorLookupCache.Instance)))
+        return new GetArchiveIniListingsContainer(fileSystem, release)
+            .Resolve().Value
             .Get();
     }
 
@@ -200,12 +231,8 @@ public static class Archive
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
     public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path, IFileSystem? fileSystem = null)
     {
-        return new GetArchiveIniListings(
-                fileSystem.GetOrDefault(),
-                new IniPathProvider(
-                    new GameReleaseInjection(release),
-                    new IniPathLookup(
-                        GameLocatorLookupCache.Instance)))
+        return new GetArchiveIniListingsContainer(fileSystem, release)
+            .Resolve().Value
             .Get(path);
     }
 
@@ -218,12 +245,8 @@ public static class Archive
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
     public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream, IFileSystem? fileSystem = null)
     {
-        return new GetArchiveIniListings(
-                fileSystem.GetOrDefault(),
-                new IniPathProvider(
-                    new GameReleaseInjection(release),
-                    new IniPathLookup(
-                        GameLocatorLookupCache.Instance)))
+        return new GetArchiveIniListingsContainer(fileSystem, release)
+            .Resolve().Value
             .Get(iniStream);
     }
 }

@@ -23,6 +23,7 @@
         <PackageReference Include="Loqui" />
         <PackageReference Include="Noggog.CSharpExt" />
         <PackageReference Include="SharpZipLib" />
+        <PackageReference Include="StrongInject" PrivateAssets="All" />
         <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
