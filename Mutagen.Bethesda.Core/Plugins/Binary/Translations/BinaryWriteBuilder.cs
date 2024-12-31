@@ -1,8 +1,10 @@
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -1832,19 +1834,20 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
 
                     return p._param with
                     {
                         MastersContentCustomOverride = (mods) =>
                         {
-                            return TransitiveMasterLocator.GetAllMasters(
-                                p._gameRelease,
+                            var locator = new TransitiveMasterLocator(
+                                p._param.FileSystem.GetOrDefault(),
+                                new DataDirectoryInjection(dataFolder),
+                                new GameReleaseInjection(p._gameRelease));
+                            return locator.GetAllMasters(
                                 mod.ModKey,
                                 mods,
-                                p._knownModLoadOrder,
-                                dataFolder,
-                                p._param.FileSystem);
+                                p._knownModLoadOrder);
                         }
                     };
                 },
@@ -2551,19 +2554,20 @@ public record BinaryWriteBuilder<TModGetter>
             {
                 _masterSyncAction = static (mod, p) =>
                 {
-                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param);
+                    var dataFolder = p._dataFolderGetter?.Invoke(mod, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
 
                     return p._param with
                     {
                         MastersContentCustomOverride = (mods) =>
                         {
-                            return TransitiveMasterLocator.GetAllMasters(
-                                p._gameRelease,
+                            var locator = new TransitiveMasterLocator(
+                                p._param.FileSystem.GetOrDefault(),
+                                new DataDirectoryInjection(dataFolder),
+                                new GameReleaseInjection(p._gameRelease));
+                            return locator.GetAllMasters(
                                 mod.ModKey,
                                 mods,
-                                p._knownModLoadOrder,
-                                dataFolder,
-                                p._param.FileSystem);
+                                p._knownModLoadOrder);
                         }
                     };
                 },
