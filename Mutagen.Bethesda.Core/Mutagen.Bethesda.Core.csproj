@@ -26,9 +26,9 @@
         <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
-        <PackageReference Include="GameFinder.StoreHandlers.GOG" />
-        <PackageReference Include="GameFinder.StoreHandlers.Steam" />
-        <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
+        <PackageReference Include="GameFinder.StoreHandlers.GOG" PrivateAssets="all" />
+        <PackageReference Include="GameFinder.StoreHandlers.Steam" PrivateAssets="all" />
+        <PackageReference Include="GameFinder.StoreHandlers.Xbox" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Archives\Archive.cs" />
