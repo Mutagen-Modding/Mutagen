@@ -206,6 +206,21 @@ public static class LoadOrderExt
                 .Where(filter));
     }
 
+    public static LoadOrder<TListing> WhereEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder)
+        where TListing : ILoadOrderListingGetter
+    {
+        return new LoadOrder<TListing>(
+            loadOrder.ListedOrder
+                .Where(x => x.Enabled));
+    }
+
+    public static ILoadOrderGetter<IModListingGetter<TModItem>> WhereEnabledAndExisting<TModItem>(this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder)
+        where TModItem : class, IModKeyed
+    {
+        return loadOrder
+            .Where(x => x.Enabled && x.ExistsOnDisk);
+    }
+
     public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, IReadOnlyCollection<ModKey> modKeys)
         where TListing : IModKeyed
     {
