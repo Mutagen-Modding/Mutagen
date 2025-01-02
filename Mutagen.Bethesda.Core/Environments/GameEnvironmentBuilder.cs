@@ -96,6 +96,16 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     }
 
     /// <summary>
+    /// Sets the load order to the given listings
+    /// </summary>
+    /// <param name="loadOrder">Load Order to get listings from</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(ILoadOrderGetter loadOrder)
+    {
+        return TransformLoadOrderListings(_ => loadOrder.ListedOrder.Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x, enabled: true)).ToArray());
+    }
+
+    /// <summary>
     /// Exposes the load order for transformation by the user with mod objects loaded and accessible
     /// </summary>
     /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
