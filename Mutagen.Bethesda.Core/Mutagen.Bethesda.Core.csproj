@@ -23,13 +23,13 @@
         <PackageReference Include="Loqui" />
         <PackageReference Include="Noggog.CSharpExt" />
         <PackageReference Include="SharpZipLib" />
-        <PackageReference Include="StrongInject" PrivateAssets="All" />
+        <PackageReference Include="StrongInject" />
         <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
-        <PackageReference Include="GameFinder.StoreHandlers.GOG" PrivateAssets="all" />
-        <PackageReference Include="GameFinder.StoreHandlers.Steam" PrivateAssets="all" />
-        <PackageReference Include="GameFinder.StoreHandlers.Xbox" PrivateAssets="all" />
+        <PackageReference Include="GameFinder.StoreHandlers.GOG" />
+        <PackageReference Include="GameFinder.StoreHandlers.Steam" />
+        <PackageReference Include="GameFinder.StoreHandlers.Xbox" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Archives\Archive.cs" />

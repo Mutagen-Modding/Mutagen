@@ -173,6 +173,7 @@ public class WriteBuilderTests
             .ToPath(modPath)
             .WithLoadOrder(transientMasterMod, master)
             .WithFileSystem(fileSystem)
+            .WithDataFolder(existingDataDir)
             .WithAllParentMasters()
             .Write();
 
@@ -180,6 +181,7 @@ public class WriteBuilderTests
             .FromPath(modPath)
             .WithKnownMasters(transientMasterMod, master)
             .WithFileSystem(fileSystem)
+            .WithDataFolder(existingDataDir)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should()
             .Equal(transientMasterModKey, masterModKey);
@@ -215,6 +217,7 @@ public class WriteBuilderTests
         mod.BeginWrite
             .ToPath(modPath)
             .WithLoadOrder(transientMasterMod, master)
+            .WithDataFolder(existingDataDir)
             .WithFileSystem(fileSystem)
             .WithAllParentMasters()
             .Write();
@@ -223,6 +226,7 @@ public class WriteBuilderTests
             .FromPath(modPath)
             .WithKnownMasters(transientMasterMod, master)
             .WithFileSystem(fileSystem)
+            .WithDataFolder(existingDataDir)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master).Should()
             .Equal(transientMasterModKey, masterModKey);
