@@ -389,7 +389,11 @@ public static class OverrideMixIns
         var passedRecords = new HashSet<FormKey>();
         foreach (var mod in mods)
         {
-            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type))
+            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type)
+                         .Catch((e) =>
+                         {
+                             throw RecordException.Enrich(e, mod.ModKey);
+                         }))
             {
                 if (!passedRecords.Add(record.Record.FormKey)) continue;
                 if (!includeDeletedRecords && record.Record.IsDeleted) continue;

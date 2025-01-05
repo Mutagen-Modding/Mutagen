@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -153,11 +154,18 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
 
                 void AddRecords(TModGetter mod, Type type, bool throwIfUnknown)
                 {
-                    foreach (var record in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                    try
                     {
-                        var key = _keyGetter(record.Record);
-                        if (key.Failed) continue;
-                        cache.AddIfMissing(key.Value, record);
+                        foreach (var record in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                        {
+                            var key = _keyGetter(record.Record);
+                            if (key.Failed) continue;
+                            cache.AddIfMissing(key.Value, record);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw RecordException.Enrich(e, mod.ModKey);
                     }
                 }
 
@@ -241,19 +249,26 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
 
                     void AddRecords(TModGetter mod, Type type, bool throwIfUnknown)
                     {
-                        foreach (var item in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                        try
                         {
-                            var iterKey = _keyGetter(item.Record);
-                            if (iterKey.Failed) continue;
-                            if (!cache.TryGetValue(iterKey.Value, out var targetList))
+                            foreach (var item in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
                             {
-                                targetList = ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>.Empty;
+                                var iterKey = _keyGetter(item.Record);
+                                if (iterKey.Failed) continue;
+                                if (!cache.TryGetValue(iterKey.Value, out var targetList))
+                                {
+                                    targetList = ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>.Empty;
+                                }
+                                cache.Set(iterKey.Value, targetList.Add(item));
                             }
-                            cache.Set(iterKey.Value, targetList.Add(item));
+                            if (cache.TryGetValue(key, out var requeriedList))
+                            {
+                                list = requeriedList;
+                            }
                         }
-                        if (cache.TryGetValue(key, out var requeriedList))
+                        catch (Exception e)
                         {
-                            list = requeriedList;
+                            throw RecordException.Enrich(e, mod.ModKey);
                         }
                     }
 
