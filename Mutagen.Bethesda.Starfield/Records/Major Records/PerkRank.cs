@@ -310,10 +310,6 @@ partial class PerkRankBinaryCreateTranslation
                         {
                             entryPointEffect.PerkEntryID = epfb.Value.AsUInt16();
                         }
-                        else if (epft.HasValue)
-                        {
-                            throw new MalformedDataException($"Did not have expected EPFB record to go with the EPFT record");
-                        }
                         effect = entryPointEffect;
                         break;
                     default:
